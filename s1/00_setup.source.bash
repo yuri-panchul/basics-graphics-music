@@ -1,3 +1,41 @@
+set -Eeuo pipefail  # See the meaning in scripts/README.md
+# set -x  # Print each command
+
+setup_source_bash_already_run=1
+
+#-----------------------------------------------------------------------------
+
+script=$(basename "$0")
+log="$PWD/log.txt"
+
+cd $(dirname "$0")
+mkdir -p run
+cd run
+
+#-----------------------------------------------------------------------------
+
+error ()
+{
+    printf "$script: error: $*\n" 1>&2
+    exit 1
+}
+
+#-----------------------------------------------------------------------------
+
+warning ()
+{
+    printf "$script: warning: $*\n" 1>&2
+}
+
+#-----------------------------------------------------------------------------
+
+info ()
+{
+    printf "$script: $*\n" 1>&2
+}
+
+#-----------------------------------------------------------------------------
+
 is_command_available ()
 {
     command -v $1 &> /dev/null
@@ -115,13 +153,7 @@ fi
 #-----------------------------------------------------------------------------
 
 export QUESTA_ROOTDIR="$FIRST_VERSION_DIR/$QUESTA_DIR"
-
-if [ -z "${PATH-}" ]
-then
-    export PATH="$QUESTA_ROOTDIR/$QUESTA_BIN_DIR"
-else
-    export PATH="$PATH:$QUESTA_ROOTDIR/$QUESTA_BIN_DIR"
-fi
+export PATH="${PATH:+$PATH:}$QUESTA_ROOTDIR/$QUESTA_BIN_DIR"
 
 if [ -z "${LD_LIBRARY_PATH-}" ]
 then
@@ -131,7 +163,7 @@ else
 fi
 
 export QUARTUS_ROOTDIR="$FIRST_VERSION_DIR/$QUARTUS_DIR"
-export PATH="$PATH:$QUARTUS_ROOTDIR/$QUARTUS_BIN_DIR"
+export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$QUARTUS_BIN_DIR"
 
 #-----------------------------------------------------------------------------
 

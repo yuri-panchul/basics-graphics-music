@@ -105,6 +105,12 @@ intel_fpga_setup_quartus ()
         INTELFPGA_INSTALL_PARENT_DIR="$HOME"
         QUARTUS_BIN_DIR=bin
 
+        if ! [ -d "$INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR" ]
+        then
+            INTELFPGA_INSTALL_PARENT_DIR_FIRST="$INTELFPGA_INSTALL_PARENT_DIR"
+            INTELFPGA_INSTALL_PARENT_DIR=/opt
+        fi
+
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
     then
@@ -122,6 +128,21 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
+    if ! [ -d "$INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR" ]
+    then
+        if [ -z "${INTELFPGA_INSTALL_PARENT_DIR_FIRST-}" ]
+        then
+            error "expected to find '$INTELFPGA_INSTALL_DIR' directory"  \
+                  "in '$INTELFPGA_INSTALL_PARENT_DIR'"
+        else
+            error "expected to find '$INTELFPGA_INSTALL_DIR' directory"  \
+                  "either in '$INTELFPGA_INSTALL_PARENT_DIR_FIRST'"      \
+                  "or in '$INTELFPGA_INSTALL_PARENT_DIR'"
+        fi
+    fi
+
+    #-------------------------------------------------------------------------
+
     FIND_COMMAND="$find_to_run $INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR -mindepth 1 -maxdepth 1 -type d -print"
     FIRST_VERSION_DIR=$($FIND_COMMAND -quit)
 
@@ -134,7 +155,7 @@ intel_fpga_setup_quartus ()
     #-------------------------------------------------------------------------
 
     export QUARTUS_ROOTDIR="$FIRST_VERSION_DIR/$QUARTUS_DIR"
-    export PATH="$PATH:$QUARTUS_ROOTDIR/$QUARTUS_BIN_DIR"
+    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$QUARTUS_BIN_DIR"
 
     #-------------------------------------------------------------------------
 
@@ -168,7 +189,7 @@ intel_fpga_setup_quartus ()
        &&   [ -f /usr/lib64/libcrypt.so   ]
     then
         ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
-        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD"
     fi
 }
 
