@@ -2,22 +2,22 @@
 
 module strobe_gen
 # (
-    parameter width = 0
+  parameter width = 0
 )
 (
-    input  clk,
-    input  reset,
-    output strobe
+  input  clk,
+  input  rst,
+  output strobe
 );
 
-    logic [width - 1:0] cnt;
+  logic [width - 1:0] cnt;
 
-    always_ff @ (posedge clk or posedge reset)
-      if (reset)
-        cnt <= '0;
-      else
-        cnt <= cnt + width' (1);
+  always_ff @ (posedge clk or posedge rst)
+    if (rst)
+      cnt <= '0;
+    else
+      cnt <= cnt + width' (1);
 
-    assign strobe = ~| cnt;  // Same as (cnt == '0)
+  assign strobe = ~| cnt;  // Same as (cnt == '0)
 
 endmodule
