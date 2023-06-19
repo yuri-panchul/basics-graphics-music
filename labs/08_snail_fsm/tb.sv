@@ -1,6 +1,7 @@
 module tb;
 
-  localparam w_key   = 4,
+  localparam clk_mhz = 1,
+             w_key   = 4,
              w_sw    = 8,
              w_led   = 8,
              w_digit = 8,
@@ -17,6 +18,7 @@ module tb;
 
   top
   # (
+    .clk_mhz ( clk_mhz ),
     .w_key   ( w_key   ),
     .w_sw    ( w_sw    ),
     .w_led   ( w_led   ),

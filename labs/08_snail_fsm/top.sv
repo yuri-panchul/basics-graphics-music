@@ -1,6 +1,7 @@
 module top
 # (
-  parameter w_key   = 4,
+  parameter clk_mhz = 50,
+            w_key   = 4,
             w_sw    = 8,
             w_led   = 8,
             w_digit = 8,
@@ -50,14 +51,19 @@ module top
   wire enable;
   wire fsm_in, moore_fsm_out, mealy_fsm_out;
 
-  strobe_gen i_strobe_gen (.strobe (enable), .*);
+  // Generate a strobe signal approximately 3 times a second
+
+  strobe_gen
+  # (.clk_mhz (clk_mhz), .n_times_a_second (3))
+  i_strobe_gen
+  (.strobe (enable), .*);
 
   shift_reg # (.depth (w_led)) i_shift_reg
   (
-      .en      ( enable ),
-      .seq_in  ( ~& key ),  // Same as key != { w_key { 1'b1 } }
-      .seq_out ( fsm_in ),
-      .par_out ( led    ),
+      .en      (   enable ),
+      .seq_in  ( | key    ),
+      .seq_out (   fsm_in ),
+      .par_out (   led    ),
       .*
   );
 
@@ -78,20 +84,17 @@ module top
   //  e     c
   //  |     |
   //   --d--  h
-  //
-  //  0 means light
 
   always_comb
   begin
     case ({ mealy_fsm_out, moore_fsm_out })
-    2'b00: abcdefgh = 8'b1111_1111;
-    2'b01: abcdefgh = 8'b0011_1001;  // Moore only
-    2'b10: abcdefgh = 8'b1100_0101;  // Mealy only
-    2'b11: abcdefgh = 8'b0000_0001;
+    2'b00: abcdefgh = 8'b0000_0000;
+    2'b01: abcdefgh = 8'b1100_0110;  // Moore only
+    2'b10: abcdefgh = 8'b0011_1010;  // Mealy only
+    2'b11: abcdefgh = 8'b1111_1110;
     endcase
 
-    digit = '1;
-    digit [0] = 1'b0;
+    digit = w_digit' (1);
   end
 
   // Exercise: Implement FSM for recognizing other sequence,

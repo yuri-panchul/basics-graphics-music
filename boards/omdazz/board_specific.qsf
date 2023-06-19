@@ -32,31 +32,31 @@ set_instance_assignment -name IO_STANDARD               "3.3-V LVTTL" -to *
 set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 
 set_location_assignment PIN_23  -to clk
-set_location_assignment PIN_25  -to reset_n
+set_location_assignment PIN_25  -to rst_n
 
-set_location_assignment PIN_91  -to key_sw[0]
-set_location_assignment PIN_90  -to key_sw[1]
-set_location_assignment PIN_89  -to key_sw[2]
-set_location_assignment PIN_88  -to key_sw[3]
+set_location_assignment PIN_91  -to key_sw_n[0]
+set_location_assignment PIN_90  -to key_sw_n[1]
+set_location_assignment PIN_89  -to key_sw_n[2]
+set_location_assignment PIN_88  -to key_sw_n[3]
 
-set_location_assignment PIN_87  -to led[0]
-set_location_assignment PIN_86  -to led[1]
-set_location_assignment PIN_85  -to led[2]
-set_location_assignment PIN_84  -to led[3]
+set_location_assignment PIN_87  -to led_n[0]
+set_location_assignment PIN_86  -to led_n[1]
+set_location_assignment PIN_85  -to led_n[2]
+set_location_assignment PIN_84  -to led_n[3]
 
-set_location_assignment PIN_127 -to abcdefgh[0]
-set_location_assignment PIN_124 -to abcdefgh[1]
-set_location_assignment PIN_126 -to abcdefgh[2]
-set_location_assignment PIN_132 -to abcdefgh[3]
-set_location_assignment PIN_129 -to abcdefgh[4]
-set_location_assignment PIN_125 -to abcdefgh[5]
-set_location_assignment PIN_121 -to abcdefgh[6]
-set_location_assignment PIN_128 -to abcdefgh[7]
+set_location_assignment PIN_127 -to abcdefgh_n[0]
+set_location_assignment PIN_124 -to abcdefgh_n[1]
+set_location_assignment PIN_126 -to abcdefgh_n[2]
+set_location_assignment PIN_132 -to abcdefgh_n[3]
+set_location_assignment PIN_129 -to abcdefgh_n[4]
+set_location_assignment PIN_125 -to abcdefgh_n[5]
+set_location_assignment PIN_121 -to abcdefgh_n[6]
+set_location_assignment PIN_128 -to abcdefgh_n[7]
 
-set_location_assignment PIN_133 -to digit[0]
-set_location_assignment PIN_135 -to digit[1]
-set_location_assignment PIN_136 -to digit[2]
-set_location_assignment PIN_137 -to digit[3]
+set_location_assignment PIN_133 -to digit_n[0]
+set_location_assignment PIN_135 -to digit_n[1]
+set_location_assignment PIN_136 -to digit_n[2]
+set_location_assignment PIN_137 -to digit_n[3]
 
 set_location_assignment PIN_64  -to gpio[0]
 set_location_assignment PIN_65  -to gpio[1]

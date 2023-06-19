@@ -2,7 +2,9 @@
 
 module strobe_gen
 # (
-  parameter width = 0
+  parameter clk_mhz          = 50,
+            n_times_a_second = 3,
+            width            = $clog2 (clk_mhz * 1000000 / n_times_a_second)
 )
 (
   input  clk,
@@ -19,5 +21,7 @@ module strobe_gen
       cnt <= cnt + width' (1);
 
   assign strobe = ~| cnt;  // Same as (cnt == '0)
+
+  // Exercise: Make this strobe generation precise
 
 endmodule
