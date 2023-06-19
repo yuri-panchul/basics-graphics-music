@@ -1,0 +1,4 @@
+set_global_assignment -name SYSTEMVERILOG_FILE strobe_gen.sv
+set_global_assignment -name SYSTEMVERILOG_FILE shift_reg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE snail_moore_fsm.sv
+set_global_assignment -name SYSTEMVERILOG_FILE snail_mealy_fsm.sv
