@@ -34,14 +34,16 @@ module top
   inout  logic [w_gpio  - 1:0] gpio
 );
 
-  assign led      = '0;
-  assign abcdefgh = '0;
-  assign digit    = '0;
-  assign vsync    = '0;
-  assign hsync    = '0;
-  assign red      = '0;
-  assign green    = '0;
-  assign blue     = '0;
+  //--------------------------------------------------------------------------
+
+  // assign led      = '0;
+  // assign abcdefgh = '0;
+  // assign digit    = '0;
+     assign vsync    = '0;
+     assign hsync    = '0;
+     assign red      = '0;
+     assign green    = '0;
+     assign blue     = '0;
 
   //--------------------------------------------------------------------------
 

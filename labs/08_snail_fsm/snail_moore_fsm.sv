@@ -1,3 +1,5 @@
+// Asynchronous reset here is needed for some FPGA boards we use
+
 module snail_moore_fsm
 (
   input  clk,

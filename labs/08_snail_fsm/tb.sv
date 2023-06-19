@@ -1,17 +1,37 @@
 module tb;
 
-  logic     clk;
-  logic     rst;
+  localparam w_key   = 4,
+             w_sw    = 8,
+             w_led   = 8,
+             w_digit = 8,
+             w_gpio  = 20
+
+  //--------------------------------------------------------------------------
+
+  logic       clk;
+  logic       rst;
   logic [3:0] key;
   logic [7:0] sw;
 
-  top i_top
+  //--------------------------------------------------------------------------
+
+  top
+  # (
+    .w_key   ( w_key   ),
+    .w_sw    ( w_sw    ),
+    .w_led   ( w_led   ),
+    .w_digit ( w_digit ),
+    .w_gpio  ( w_gpio  )
+  )
+  i_top
   (
     .clk ( clk ),
     .rst ( rst ),
     .key ( key ),
     .sw  ( sw  )
   );
+
+  //--------------------------------------------------------------------------
 
   initial
   begin
@@ -21,6 +41,8 @@ module tb;
       # 5 clk = ~ clk;
   end
 
+  //--------------------------------------------------------------------------
+
   initial
   begin
     rst <= 1'bx;
@@ -29,6 +51,8 @@ module tb;
     repeat (2) @ (posedge clk);
     rst <= 1'b0;
   end
+
+  //--------------------------------------------------------------------------
 
   initial
   begin

@@ -1,4 +1,4 @@
-// Asynchronous reset here is needed for the FPGA board we use
+// Asynchronous reset here is needed for some FPGA boards we use
 
 module shift_reg
 # (
