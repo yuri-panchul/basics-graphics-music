@@ -5,7 +5,7 @@ setup_source_bash_already_run=1
 
 #-----------------------------------------------------------------------------
 #
-#   General routines
+#   Directory setup
 #
 #-----------------------------------------------------------------------------
 
@@ -16,6 +16,32 @@ cd $(dirname "$0")
 mkdir -p run
 cd run
 
+#-----------------------------------------------------------------------------
+
+package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
+all_fpga_boards_dir="$package_dir/boards"
+script_dir="$package_dir/scripts"
+
+#-----------------------------------------------------------------------------
+#
+#   Platform-specific workarounds
+#
+#-----------------------------------------------------------------------------
+
+# A workaround for a find problem when running bash under Microsoft Windows
+
+find_to_run=find
+true_find=/usr/bin/find
+
+if [ -x "$true_find" ]
+then
+    find_to_run="$true_find"
+fi
+
+#-----------------------------------------------------------------------------
+#
+#   General routines
+#
 #-----------------------------------------------------------------------------
 
 error ()
@@ -71,18 +97,6 @@ is_command_available_or_error_and_install ()
 
     is_command_available_or_error $1 "" "$how_to_install"
 }
-
-#-----------------------------------------------------------------------------
-
-# A workaround for a find problem when running bash under Microsoft Windows
-
-find_to_run=find
-true_find=/usr/bin/find
-
-if [ -x "$true_find" ]
-then
-    find_to_run="$true_find"
-fi
 
 #-----------------------------------------------------------------------------
 #
@@ -284,6 +298,58 @@ icarus_verilog_setup ()
 
 #-----------------------------------------------------------------------------
 #
+#   FPGA Board setup
+#
+#-----------------------------------------------------------------------------
+
+fpga_board_setup ()
+{
+    available_fpga_boards=$($find_to_run "$all_fpga_boards_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
+
+    select_file="$package_dir/fpga_board_selection"
+
+    if ! [ -f $select_file ]
+    then
+        info "There is no FPGA board selection file at \"$select_file\"" \
+             "Please select an FPGA board amoung the following supported:"
+
+        PS3="Your choice: "
+
+        select fpga_board in $available_fpga_boards exit
+        do
+            if [ $fpga_board == "exit" ] ; then
+                error "FPGA board is not selected, please run the script again"
+            fi
+
+            if [ -z "${fpga_board-}" ] ; then
+                error "Invalid FPGA board choice, please run the script again"
+            fi
+
+            info "FPGA board selected: $fpga_board"
+            break
+        done
+
+        > $select_file
+        
+        for i_fpga_board in $available_fpga_boards
+        do
+            comment="# "
+            [ $i_fpga_board == $fpga_board ] && comment=""
+            printf "$comment$i_fpga_board\n" >> $select_file
+        done
+
+        info "Created an FPGA board selection file: $select_file"
+    fi
+
+    fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
+
+    [ -n "${fpga_board-}" ] || \
+       error "No FPGA board is selected in $select_file:" \
+             "\n\n$(cat "$select_file")\n\n"
+}
+
+#-----------------------------------------------------------------------------
+#
 #   Calling routines
 #
 #-----------------------------------------------------------------------------
@@ -294,3 +360,5 @@ if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
 fi
 
 is_command_available iverilog || icarus_verilog_setup
+
+fpga_board_setup

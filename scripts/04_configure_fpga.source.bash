@@ -1,14 +1,12 @@
-scripts_dir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
-
 [ -z "${setup_source_bash_already_run-}" ] && \
-. "$scripts_dir/00_setup.source.bash"
+. "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source.bash"
 
 is_command_available_or_error quartus_pgm " from Intel FPGA Quartus Prime package"
 
 if [ "$OSTYPE" = "linux-gnu" ]
 then
     rules_dir=/etc/udev/rules.d
-    rules_file="$scripts_dir/90-intel-fpga.rules"
+    rules_file="$script_dir/90-intel-fpga.rules"
 
     if ! grep -q USB-Blaster $rules_dir/*
     then

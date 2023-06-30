@@ -1,8 +1,8 @@
-scripts_dir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
-. "$scripts_dir/00_setup.source.bash"
+. "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source.bash"
 
 > fpga_top.qpf
-cp ../../../scripts/*.qsf .
+cp ../../../boards/*.qsf .
+cp ../../../boards/*.sdc .
 
 #-----------------------------------------------------------------------------
 
@@ -28,4 +28,4 @@ then
     error "synthesis failed"
 fi
 
-. "$scripts_dir/04_configure_fpga.source.bash"
+. "$script_dir/04_configure_fpga.source.bash"
