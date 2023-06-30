@@ -305,11 +305,13 @@ icarus_verilog_setup ()
 
 fpga_board_setup ()
 {
+    [[ $script =~ fpga ]] || return
+
     available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
 
     select_file="$package_dir/fpga_board_selection"
 
-    if ! [ -f $select_file ]
+    if ! [ -f "$select_file" ]
     then
         info "There is no FPGA board selection file at \"$select_file\"" \
              "Please select an FPGA board amoung the following supported:"
