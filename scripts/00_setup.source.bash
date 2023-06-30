@@ -19,7 +19,7 @@ cd run
 #-----------------------------------------------------------------------------
 
 package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
-all_fpga_boards_dir="$package_dir/boards"
+board_dir="$package_dir/boards"
 script_dir="$package_dir/scripts"
 
 #-----------------------------------------------------------------------------
@@ -304,7 +304,7 @@ icarus_verilog_setup ()
 
 fpga_board_setup ()
 {
-    available_fpga_boards=$($find_to_run "$all_fpga_boards_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
+    available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
 
     select_file="$package_dir/fpga_board_selection"
 
