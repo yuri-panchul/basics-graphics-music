@@ -330,23 +330,23 @@ fpga_board_setup ()
             break
         done
 
-        > $select_file
+        > "$select_file"
         
         for i_fpga_board in $available_fpga_boards
         do
             comment="# "
             [ $i_fpga_board == $fpga_board ] && comment=""
-            printf "$comment$i_fpga_board\n" >> $select_file
+            printf "$comment$i_fpga_board\n" >> "$select_file"
         done
 
-        info "Created an FPGA board selection file: $select_file"
+        info "Created an FPGA board selection file: \"$select_file\""
     fi
 
     fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
 
     [ -n "${fpga_board-}" ] || \
-       error "No FPGA board is selected in $select_file:" \
-             "\n\n$(cat "$select_file")\n\n"
+       error "No FPGA board is selected in \"$select_file:\"" \
+             "\n\n$(cat \"$select_file\")\n\n"
 }
 
 #-----------------------------------------------------------------------------
