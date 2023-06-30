@@ -10,22 +10,14 @@ run_icarus_verilog_with_top ()
 
     is_command_available_or_error_and_install iverilog
 
-    tb_top_log="$log"
+    iverilog -g2005-sv \
+         -I ..      -I "$lab_dir/common" \
+            ../*.sv    "$lab_dir/common/*.sv" \
+        2>&1 | tee "$log"
 
-    iverilog_args="-g2005-sv"
-    iverilog_args+=" -I ..      -I ../../../../common"
-    iverilog_args+="    ../*.sv    ../../../../common/*.sv"
+    vvp a.out 2>&1 | tee "$log"
 
-    if [ -n "${tb_top-}" ] && [ -f ../${tb_top}.sv ] ; then
-        iverilog_args="-s $tb_top $iverilog_args"
-        tb_top_log="$(dirname "$log")/log_$tb_top.txt"
-    fi
-
-    iverilog $iverilog_args 2>&1 | tee "$tb_top_log"
-
-    vvp a.out 2>&1 | tee "$tb_top_log"
-
-    if grep -m 1 ERROR "$tb_top_log" ; then
+    if grep -m 1 ERROR "$log" ; then
         warning errors detected
     else
         for f in log_*.txt ; do
@@ -38,12 +30,6 @@ run_icarus_verilog_with_top ()
     is_command_available_or_error_and_install gtkwave
 
     gtkwave_script=../gtkwave.tcl
-
-    if [ -n "${tb_top-}" ] ; then
-        gtkwave_script=../gtkwave_$tb_top.tcl
-    else
-        gtkwave_script=../gtkwave.tcl
-    fi
 
     gtkwave_options=
 

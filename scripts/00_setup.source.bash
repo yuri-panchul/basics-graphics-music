@@ -20,6 +20,7 @@ cd run
 
 package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
 board_dir="$package_dir/boards"
+lab_dir="$package_dir/labs"
 script_dir="$package_dir/scripts"
 
 #-----------------------------------------------------------------------------
