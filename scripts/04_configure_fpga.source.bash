@@ -19,20 +19,39 @@ fi
 
 quartus_pgm -l &> cable_list
 
-CABLE_NAME_1=$(set +o pipefail; grep "1) " cable_list | sed 's/.*1) //')
-CABLE_NAME_2=$(set +o pipefail; grep "2) " cable_list | sed 's/.*2) //')
+cable_name_1=$(set +o pipefail; grep "1) " cable_list | sed 's/.*1) //')
+cable_name_2=$(set +o pipefail; grep "2) " cable_list | sed 's/.*2) //')
 
-if [ -n "${CABLE_NAME_1-}" ]
+if [ -n "${cable_name_1-}" ]
 then
-    if [ -n "${CABLE_NAME_2-}" ]
+    if [ -n "${cable_name_2-}" ]
     then
-        warning "more than one cable is connected: $CABLE_NAME_1 and $CABLE_NAME_2"
+        warning "more than one cable is connected:" \
+                "$cable_name_1 and $cable_name_2"
     fi
 
-    info "using cable $CABLE_NAME_1"
-    quartus_pgm --no_banner -c "$CABLE_NAME_1" --mode=jtag -o "P;fpga_top.sof"
+    info "using cable $cable_name_1"
+
+    config_file_1=fpga_top.sof
+    config_file_2=fpga_top.pof
+
+    config_file=$config_file_1
+
+    if ! [ -f $config_file ]
+    then
+        config_file=$config_file_2
+
+        if ! [ -f $config_file ]
+        then
+            error "Neither $config_file_1 nor $config_file_2" \
+                  "config file is available"
+        fi
+    fi
+
+    quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
 else
-    error "cannot detect a USB-Blaster cable connected"
+    error "cannot detect a USB-Blaster cable connected" \
+          "for $fpga_board FPGA board"
 fi
 
 rm cable_list

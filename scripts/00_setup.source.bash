@@ -47,7 +47,7 @@ fi
 
 error ()
 {
-    printf "$script: error: %s\n" $* 1>&2
+    printf "$script: error: %s\n" "$*" 1>&2
     exit 1
 }
 
@@ -55,14 +55,14 @@ error ()
 
 warning ()
 {
-    printf "$script: warning: %s\n" $* 1>&2
+    printf "$script: warning: %s\n" "$*" 1>&2
 }
 
 #-----------------------------------------------------------------------------
 
 info ()
 {
-    printf "$script: %s\n" $* 1>&2
+    printf "$script: %s\n" "$*" 1>&2
 }
 
 #-----------------------------------------------------------------------------
@@ -322,12 +322,12 @@ fpga_board_setup ()
 
         select fpga_board in $available_fpga_boards exit
         do
-            if [ $fpga_board == "exit" ] ; then
-                error "FPGA board is not selected, please run the script again"
-            fi
-
             if [ -z "${fpga_board-}" ] ; then
                 error "Invalid FPGA board choice, please run the script again"
+            fi
+
+            if [ $fpga_board == "exit" ] ; then
+                error "FPGA board is not selected, please run the script again"
             fi
 
             info "FPGA board selected: $fpga_board"

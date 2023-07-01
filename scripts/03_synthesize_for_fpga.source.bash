@@ -2,7 +2,7 @@
 
 > fpga_top.qpf
 cp "$board_dir"/*.{qsf,sdc} .
-cp "$board_dir"/$fpga_board/*.{qsf,sdc} .
+cp "$board_dir"/$fpga_board/*.qsf .
 
 #-----------------------------------------------------------------------------
 
@@ -10,10 +10,10 @@ cp "$board_dir"/$fpga_board/*.{qsf,sdc} .
 
 if false && is_command_available iverilog
 then
-    iverilog -g2005-sv                       \
-      -I ..      -I ../../../../common       \
-         ../*.sv    ../../../../common/*.sv  \
-      2>&1 | tee "$log"
+    iverilog -g2005-sv \
+         -I ..      -I "$lab_dir/common" \
+            ../*.sv    "$lab_dir/common"/*.sv \
+        2>&1 | tee "$log"
 
     vvp a.out 2>&1 | tee -a "$log"
 fi
