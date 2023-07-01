@@ -358,12 +358,13 @@ fpga_board_setup ()
 
         info "${extra_info}Please select an FPGA board amoung the following supported:"
 
-        PS3="Your choice: "
+        PS3="Your choice (a number): "
 
         select fpga_board in $available_fpga_boards exit
         do
             if [ -z "${fpga_board-}" ] ; then
-                error "Invalid FPGA board choice, please run the script again"
+                info "Invalid FPGA board choice, please choose one of the listed numbers again"
+                continue
             fi
 
             if [ $fpga_board == "exit" ] ; then
