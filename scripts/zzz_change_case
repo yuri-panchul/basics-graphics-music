@@ -1,0 +1,14 @@
+
+sed -i s/ALL_VERSION_DIRS/all_version_dirs/g *.bash
+sed -i s/ALT_ICARUS_INSTALL_PATH/alt_icarus_install_path/g *.bash
+sed -i s/DEFAULT_LM_LICENSE_FILE/default_lm_license_file/g *.bash
+sed -i s/FIND_COMMAND/find_command/g *.bash
+sed -i s/FIRST_VERSION_DIR/first_version_dir/g *.bash
+sed -i s/INTELFPGA_INSTALL_DIR/intelfpga_install_dir/g *.bash
+sed -i s/INTELFPGA_INSTALL_PARENT_DIR/intelfpga_install_parent_dir/g *.bash
+sed -i s/INTELFPGA_INSTALL_PARENT_DIR_FIRST/intelfpga_install_parent_dir_first/g *.bash
+sed -i s/QUARTUS_BIN_DIR/quartus_bin_dir/g *.bash
+sed -i s/QUARTUS_DIR/quartus_dir/g *.bash
+sed -i s/QUESTA_BIN_DIR/questa_bin_dir/g *.bash
+sed -i s/QUESTA_DIR/questa_dir/g *.bash
+sed -i s/QUESTA_LIB_DIR/questa_lib_dir/g *.bash
