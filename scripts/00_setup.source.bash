@@ -313,10 +313,50 @@ fpga_board_setup ()
 
     select_file="$package_dir/fpga_board_selection"
 
+    fpga_board_extract_command="set +eo pipefail; grep -o '^[^#/-]*' \"$select_file\" | grep -m 1 -o '^[[:alnum:]_]*'"
+
+    if [ -f "$select_file" ] && [ -n "${force_removing_fpga_board_selection-}" ]
+    then
+        fpga_board=$(fpga_board_extract_command)
+
+        if [ -n "${fpga_board-}" ] ; then
+           info "Currently no FPGA board is selected in \"$select_file:\"" \
+                "\n\n$(cat \"$select_file\")\n\n"
+        else
+           info "The current contents of \"$select_file:\"" \
+                "\n\n$(cat \"$select_file\")\n" \
+                "\nThe currently selected FPGA board: $fpga_board"
+        fi
+
+        # read:
+        #
+        # -n nchars return after reading NCHARS characters rather than waiting
+        #           for a newline, but honor a delimiter if fewer than
+        #           NCHARS characters are read before the delimiter
+        #
+        # -p prompt output the string PROMPT without a trailing newline before
+        #           attempting to read
+        #
+        # -r        do not allow backslashes to escape any characters
+        # -s        do not echo input coming from a terminal
+
+        read -n 1 -r -p "Are you sure to overwrite FPGA board selection file at \"$select_file\" ? "
+        printf "\n"
+
+        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+            rm -rf "$select_file"
+        fi
+    fi
+
     if ! [ -f "$select_file" ]
     then
-        info "There is no FPGA board selection file at \"$select_file\"" \
-             "Please select an FPGA board amoung the following supported:"
+        extra_info=
+
+        if [ -z "${force_removing_fpga_board_selection-}" ] ; then
+            extra_info="There is no FPGA board selection file at \"$select_file\" "
+        fi
+
+        info "${extra_info}Please select an FPGA board amoung the following supported:"
 
         PS3="Your choice: "
 
@@ -335,7 +375,7 @@ fpga_board_setup ()
         done
 
         > "$select_file"
-        
+
         for i_fpga_board in $available_fpga_boards
         do
             comment="# "
@@ -346,7 +386,7 @@ fpga_board_setup ()
         info "Created an FPGA board selection file: \"$select_file\""
     fi
 
-    fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
+    fpga_board=$(fpga_board_extract_command)
 
     [ -n "${fpga_board-}" ] || \
        error "No FPGA board is selected in \"$select_file:\"" \
