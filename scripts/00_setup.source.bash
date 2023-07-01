@@ -303,6 +303,20 @@ icarus_verilog_setup ()
 #
 #-----------------------------------------------------------------------------
 
+create_fpga_board_select_file()
+{
+    > "$select_file"
+
+    for i_fpga_board in $available_fpga_boards
+    do
+        comment="# "
+        [ $i_fpga_board == $fpga_board ] && comment=""
+        printf "$comment$i_fpga_board\n" >> "$select_file"
+    done
+
+    info "Created an FPGA board selection file: \"$select_file\""
+}
+
 fpga_board_setup ()
 {
     if ! [[ $script =~ fpga ]] ; then
@@ -375,16 +389,7 @@ fpga_board_setup ()
             break
         done
 
-        > "$select_file"
-
-        for i_fpga_board in $available_fpga_boards
-        do
-            comment="# "
-            [ $i_fpga_board == $fpga_board ] && comment=""
-            printf "$comment$i_fpga_board\n" >> "$select_file"
-        done
-
-        info "Created an FPGA board selection file: \"$select_file\""
+        create_fpga_board_select_file
 
         read -n 1 -r -p "Would you like to create run directories for synthesis based on your FPGA board selection? "
         printf "\n"
