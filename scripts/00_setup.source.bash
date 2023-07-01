@@ -47,7 +47,7 @@ fi
 
 error ()
 {
-    printf "$script: error: $*\n" 1>&2
+    printf "$script: error: %s\n" $* 1>&2
     exit 1
 }
 
@@ -55,14 +55,14 @@ error ()
 
 warning ()
 {
-    printf "$script: warning: $*\n" 1>&2
+    printf "$script: warning: %s\n" $* 1>&2
 }
 
 #-----------------------------------------------------------------------------
 
 info ()
 {
-    printf "$script: $*\n" 1>&2
+    printf "$script: %s\n" $* 1>&2
 }
 
 #-----------------------------------------------------------------------------
@@ -305,7 +305,9 @@ icarus_verilog_setup ()
 
 fpga_board_setup ()
 {
-    [[ $script =~ fpga ]] || return
+    if ! [[ $script =~ fpga ]] ; then
+        return
+    fi
 
     available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
 
