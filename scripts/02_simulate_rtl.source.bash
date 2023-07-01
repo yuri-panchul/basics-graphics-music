@@ -2,27 +2,19 @@
 
 #-----------------------------------------------------------------------------
 
-run_icarus_verilog_with_top ()
+run_icarus_verilog ()
 {
-    tb_top=${1-}
-
-    #-------------------------------------------------------------------------
-
     is_command_available_or_error_and_install iverilog
 
     iverilog -g2005-sv \
          -I ..      -I "$lab_dir/common" \
-            ../*.sv    "$lab_dir/common/*.sv" \
+            ../*.sv    "$lab_dir/common"/*.sv \
         2>&1 | tee "$log"
 
     vvp a.out 2>&1 | tee "$log"
 
     if grep -m 1 ERROR "$log" ; then
         warning errors detected
-    else
-        for f in log_*.txt ; do
-            [ -f "$f" ] && cp $f ..
-        done
     fi
 
     #-------------------------------------------------------------------------
@@ -58,19 +50,6 @@ run_icarus_verilog_with_top ()
     fi
 
     $gtkwave dump.vcd $gtkwave_options
-}
-
-#-----------------------------------------------------------------------------
-
-run_icarus_verilog ()
-{
-    if [ -f ../tb.sv ] && [ -f ../tb_fpga_top.sv ]
-    then
-        run_icarus_verilog_with_top tb
-        run_icarus_verilog_with_top tb_fpga_top
-    else
-        run_icarus_verilog_with_top
-    fi
 }
 
 #-----------------------------------------------------------------------------
