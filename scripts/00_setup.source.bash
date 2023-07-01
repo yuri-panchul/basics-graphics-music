@@ -9,19 +9,19 @@ setup_source_bash_already_run=1
 #
 #-----------------------------------------------------------------------------
 
+package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
+board_dir="$package_dir/boards"
+lab_dir="$package_dir/labs"
+script_dir="$package_dir/scripts"
+
+#-----------------------------------------------------------------------------
+
 script=$(basename "$0")
 log="$PWD/log.txt"
 
 cd $(dirname "$0")
 mkdir -p run
 cd run
-
-#-----------------------------------------------------------------------------
-
-package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
-board_dir="$package_dir/boards"
-lab_dir="$package_dir/labs"
-script_dir="$package_dir/scripts"
 
 #-----------------------------------------------------------------------------
 #
@@ -47,7 +47,7 @@ fi
 
 error ()
 {
-    printf "$script: error: %s\n" "$*" 1>&2
+    printf "$script: error: %s\n" $* 1>&2
     exit 1
 }
 
@@ -55,14 +55,14 @@ error ()
 
 warning ()
 {
-    printf "$script: warning: %s\n" "$*" 1>&2
+    printf "$script: warning: %s\n" $* 1>&2
 }
 
 #-----------------------------------------------------------------------------
 
 info ()
 {
-    printf "$script: %s\n" "$*" 1>&2
+    printf "$script: %s\n" $* 1>&2
 }
 
 #-----------------------------------------------------------------------------
