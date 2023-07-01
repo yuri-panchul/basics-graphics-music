@@ -47,7 +47,7 @@ fi
 
 error ()
 {
-    printf "$script: error: %s\n" $* 1>&2
+    printf "$script: error: $*\n" 1>&2
     exit 1
 }
 
@@ -55,14 +55,14 @@ error ()
 
 warning ()
 {
-    printf "$script: warning: %s\n" $* 1>&2
+    printf "$script: warning: $*\n" 1>&2
 }
 
 #-----------------------------------------------------------------------------
 
 info ()
 {
-    printf "$script: %s\n" $* 1>&2
+    printf "$script: $*\n" 1>&2
 }
 
 #-----------------------------------------------------------------------------
@@ -313,19 +313,19 @@ fpga_board_setup ()
 
     select_file="$package_dir/fpga_board_selection"
 
-    fpga_board_extract_command="set +eo pipefail; grep -o '^[^#/-]*' \"$select_file\" | grep -m 1 -o '^[[:alnum:]_]*'"
-
     if [ -f "$select_file" ] && [ -n "${force_removing_fpga_board_selection-}" ]
     then
-        fpga_board=$(fpga_board_extract_command)
+        fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
+
+        select_file_contents=$(cat "$select_file")
 
         if [ -n "${fpga_board-}" ] ; then
-           info "Currently no FPGA board is selected in \"$select_file:\"" \
-                "\n\n$(cat \"$select_file\")\n\n"
-        else
            info "The current contents of \"$select_file:\"" \
-                "\n\n$(cat \"$select_file\")\n" \
-                "\nThe currently selected FPGA board: $fpga_board"
+                "\n\n$select_file_contents" \
+                "\n\nThe currently selected FPGA board: $fpga_board"
+        else
+           info "Currently no FPGA board is selected in \"$select_file:\"" \
+                "\n\n$select_file_contents\n\n"
         fi
 
         # read:
@@ -386,11 +386,13 @@ fpga_board_setup ()
         info "Created an FPGA board selection file: \"$select_file\""
     fi
 
-    fpga_board=$(fpga_board_extract_command)
+    fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
+
+    select_file_contents=$(cat "$select_file")
 
     [ -n "${fpga_board-}" ] || \
        error "No FPGA board is selected in \"$select_file:\"" \
-             "\n\n$(cat \"$select_file\")\n\n"
+             "\n\n$select_file_contents\n\n"
 }
 
 #-----------------------------------------------------------------------------
