@@ -112,75 +112,75 @@ intel_fpga_setup_quartus ()
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    INTELFPGA_INSTALL_DIR=intelFPGA_lite
-    QUARTUS_DIR=quartus
+    intelfpga_install_dir=intelFPGA_lite
+    quartus_dir=quartus
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
-        INTELFPGA_INSTALL_PARENT_DIR="$HOME"
-        QUARTUS_BIN_DIR=bin
+        intelfpga_install_parent_dir="$HOME"
+        quartus_bin_dir=bin
 
-        if ! [ -d "$INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR" ]
+        if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
         then
-            INTELFPGA_INSTALL_PARENT_DIR_FIRST="$INTELFPGA_INSTALL_PARENT_DIR"
-            INTELFPGA_INSTALL_PARENT_DIR=/opt
+            intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
+            intelfpga_install_parent_dir=/opt
         fi
 
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
     then
-        INTELFPGA_INSTALL_PARENT_DIR=/c
-        QUARTUS_BIN_DIR=bin64
+        intelfpga_install_parent_dir=/c
+        quartus_bin_dir=bin64
     else
         error "this script does not support your OS / platform '$OSTYPE'"
     fi
 
-    if ! [ -d "$INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR" ]
+    if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
     then
-        error "expected to find '$INTELFPGA_INSTALL_DIR' directory"  \
-              " in '$INTELFPGA_INSTALL_PARENT_DIR'"
+        error "expected to find '$intelfpga_install_dir' directory"  \
+              " in '$intelfpga_install_parent_dir'"
     fi
 
     #-------------------------------------------------------------------------
 
-    if ! [ -d "$INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR" ]
+    if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
     then
-        if [ -z "${INTELFPGA_INSTALL_PARENT_DIR_FIRST-}" ]
+        if [ -z "${intelfpga_install_parent_dir_first-}" ]
         then
-            error "expected to find '$INTELFPGA_INSTALL_DIR' directory"  \
-                  "in '$INTELFPGA_INSTALL_PARENT_DIR'"
+            error "expected to find '$intelfpga_install_dir' directory"  \
+                  "in '$intelfpga_install_parent_dir'"
         else
-            error "expected to find '$INTELFPGA_INSTALL_DIR' directory"  \
-                  "either in '$INTELFPGA_INSTALL_PARENT_DIR_FIRST'"      \
-                  "or in '$INTELFPGA_INSTALL_PARENT_DIR'"
+            error "expected to find '$intelfpga_install_dir' directory"  \
+                  "either in '$intelfpga_install_parent_dir_first'"      \
+                  "or in '$intelfpga_install_parent_dir'"
         fi
     fi
 
     #-------------------------------------------------------------------------
 
-    FIND_COMMAND="$find_to_run $INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR -mindepth 1 -maxdepth 1 -type d -print"
-    FIRST_VERSION_DIR=$($FIND_COMMAND -quit)
+    find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
+    first_version_dir=$($find_command -quit)
 
-    if [ -z "${FIRST_VERSION_DIR-}" ]
+    if [ -z "${first_version_dir-}" ]
     then
         error "cannot find any version of Intel FPGA installed in "  \
-              "'$INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR'"
+              "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
     fi
 
     #-------------------------------------------------------------------------
 
-    export QUARTUS_ROOTDIR="$FIRST_VERSION_DIR/$QUARTUS_DIR"
-    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$QUARTUS_BIN_DIR"
+    export QUARTUS_ROOTDIR="$first_version_dir/$quartus_dir"
+    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
 
     #-------------------------------------------------------------------------
 
-    ALL_VERSION_DIRS=$($FIND_COMMAND | xargs echo)
+    all_version_dirs=$($find_command | xargs echo)
 
-    if [ "$FIRST_VERSION_DIR" != "$ALL_VERSION_DIRS" ]
+    if [ "$first_version_dir" != "$all_version_dirs" ]
     then
         warning 1 "multiple Intel FPGA versions installed in"  \
-                "'$INTELFPGA_INSTALL_PARENT_DIR/$INTELFPGA_INSTALL_DIR':"  \
-                "'$ALL_VERSION_DIRS'"
+                "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
+                "'$all_version_dirs'"
 
         info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
         info "PATH=$PATH"
@@ -192,8 +192,8 @@ intel_fpga_setup_quartus ()
                    [ -d "$QUARTUS_ROOTDIR" ]  \
     || error "directory '$QUARTUS_ROOTDIR' expected"
 
-                   [ -d "$QUARTUS_ROOTDIR/$QUARTUS_BIN_DIR" ]  \
-    || error "directory '$QUARTUS_ROOTDIR/$QUARTUS_BIN_DIR' expected"
+                   [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  \
+    || error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
 
     #-------------------------------------------------------------------------
 
@@ -221,9 +221,9 @@ intel_fpga_setup_questa ()
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    if    [ -z "${INTELFPGA_INSTALL_DIR-}"        ]  \
-       || [ -z "${INTELFPGA_INSTALL_PARENT_DIR-}" ]  \
-       || [ -z "${FIRST_VERSION_DIR-}"            ]
+    if    [ -z "${intelfpga_install_dir-}"        ]  \
+       || [ -z "${intelfpga_install_parent_dir-}" ]  \
+       || [ -z "${first_version_dir-}"            ]
     then
         error "Intel FPGA Quartus was supposed to be setup first. "  \
               "Probably internal error."
@@ -231,53 +231,53 @@ intel_fpga_setup_questa ()
 
     #-------------------------------------------------------------------------
 
-    QUESTA_DIR=questa_fse
+    questa_dir=questa_fse
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
-        QUESTA_BIN_DIR=bin
-        QUESTA_LIB_DIR=linux_x86_64
+        questa_bin_dir=bin
+        questa_lib_dir=linux_x86_64
 
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
     then
-        QUESTA_BIN_DIR=win64
-        QUESTA_LIB_DIR=win64
+        questa_bin_dir=win64
+        questa_lib_dir=win64
     else
         error "this script does not support your OS / platform '$OSTYPE'"
     fi
 
     #-------------------------------------------------------------------------
 
-    DEFAULT_LM_LICENSE_FILE="$HOME/flexlm/license.dat"
+    default_lm_license_file="$HOME/flexlm/license.dat"
 
-    if [ -f "$DEFAULT_LM_LICENSE_FILE" ]
+    if [ -f "$default_lm_license_file" ]
     then
         if [ -z "${LM_LICENSE_FILE-}" ] ; then
-            export LM_LICENSE_FILE="$DEFAULT_LM_LICENSE_FILE"
+            export LM_LICENSE_FILE="$default_lm_license_file"
         fi
 
         if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
-            export MGLS_LICENSE_FILE="$DEFAULT_LM_LICENSE_FILE"
+            export MGLS_LICENSE_FILE="$default_lm_license_file"
         fi
     fi
 
     #-------------------------------------------------------------------------
 
     # Check if Quartus is installed without Questa
-    [ -d "$FIRST_VERSION_DIR/$QUESTA_DIR" ] || return 0
+    [ -d "$first_version_dir/$questa_dir" ] || return 0
 
-    export QUESTA_ROOTDIR="$FIRST_VERSION_DIR/$QUESTA_DIR"
-    export PATH="${PATH:+$PATH:}$QUESTA_ROOTDIR/$QUESTA_BIN_DIR"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$QUESTA_ROOTDIR/$QUESTA_LIB_DIR"
+    export QUESTA_ROOTDIR="$first_version_dir/$questa_dir"
+    export PATH="${PATH:+$PATH:}$QUESTA_ROOTDIR/$questa_bin_dir"
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$QUESTA_ROOTDIR/$questa_lib_dir"
 
     #-------------------------------------------------------------------------
 
                    [ -d "$QUESTA_ROOTDIR" ]  \
     || error "directory '$QUESTA_ROOTDIR' expected"
 
-                   [ -d "$QUESTA_ROOTDIR/$QUESTA_BIN_DIR" ]  \
-    || error "directory '$QUESTA_ROOTDIR/$QUESTA_BIN_DIR' expected"
+                   [ -d "$QUESTA_ROOTDIR/$questa_bin_dir" ]  \
+    || error "directory '$QUESTA_ROOTDIR/$questa_bin_dir' expected"
 }
 
 #-----------------------------------------------------------------------------
@@ -288,12 +288,12 @@ intel_fpga_setup_questa ()
 
 icarus_verilog_setup ()
 {
-    ALT_ICARUS_INSTALL_PATH="$HOME/install/iverilog"
+    alt_icarus_install_path="$HOME/install/iverilog"
 
-    if [ -d "$ALT_ICARUS_INSTALL_PATH" ]
+    if [ -d "$alt_icarus_install_path" ]
     then
-        export PATH="${PATH:+$PATH:}$ALT_ICARUS_INSTALL_PATH/bin"
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$ALT_ICARUS_INSTALL_PATH/lib"
+        export PATH="${PATH:+$PATH:}$alt_icarus_install_path/bin"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$alt_icarus_install_path/lib"
     fi
 }
 
