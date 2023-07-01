@@ -385,6 +385,13 @@ fpga_board_setup ()
         done
 
         info "Created an FPGA board selection file: \"$select_file\""
+
+        read -n 1 -r -p "Would you like to create run directories for synthesis based on your FPGA board selection? "
+        printf "\n"
+
+        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+            info TODO
+        fi
     fi
 
     fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
