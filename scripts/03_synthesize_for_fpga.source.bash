@@ -1,8 +1,6 @@
 . "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source.bash"
 
-> fpga_top.qpf
-cp "$board_dir"/*.{qsf,sdc} .
-cp "$board_dir"/$fpga_board/*.qsf .
+setup_run_directory_for_fpga_synthesis
 
 #-----------------------------------------------------------------------------
 

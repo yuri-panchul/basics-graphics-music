@@ -306,7 +306,7 @@ icarus_verilog_setup ()
 
 #-----------------------------------------------------------------------------
 #
-#   FPGA Board setup
+#   FPGA board setup
 #
 #-----------------------------------------------------------------------------
 
@@ -326,6 +326,35 @@ create_fpga_board_select_file()
 
 #-----------------------------------------------------------------------------
 
+setup_run_directory_for_fpga_synthesis()
+{
+    dir="${1:-.}"
+    parent_dir=$(readlink -f "$dir/..")
+
+    rm -rf "$dir/*"
+
+    > "$dir/fpga_top.qpf"
+
+    cat "$board_dir"/*.qsf "$board_dir/$fpga_board"/*.{qsf,sdc} "$dir"
+
+    printf "set_global_assignment -name SEARCH_PATH \"$lab_dir/common\""  \
+        > "$dir/project_files.qsf"
+
+    find "$parent_dir" "$lab_dir/common" \
+      -type f  \
+      \( -name "*.sv" ! -name "top.sv" ! -name "tb.sv" \)  \
+      -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
+      >> "$dir/project_files.qsf"
+
+    if [ -f "$parent_dir/extra_project_files.qsf" ] ; then
+        cp "$parent_dir/extra_project_files.qsf" "$dir"
+    else
+        > "$dir/extra_project_files.qsf"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
 create_new_run_directories_for_fpga_synthesis()
 {
     $find_to_run -name '*synthesize_for_fpga.bash' \
@@ -333,10 +362,8 @@ create_new_run_directories_for_fpga_synthesis()
     do
         dir=$(readlink -f "$(dirname "$file")/run")
         info "Setting up: \"$dir\""
-
-        rm -rf "$dir"
-        mkdir  "$dir"
-        cp "$board_dir"/*.qsf "$board_dir/$fpga_board"/*.{qsf,sdc} "$dir"
+        mkdir -p "$dir"
+        setup_run_directory_for_fpga_synthesis $dir
     done
 }
 
