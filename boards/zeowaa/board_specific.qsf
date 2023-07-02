@@ -2,6 +2,7 @@
 # set_global_assignment -name DEVICE EP4CE10E22C8
 
 set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
 
@@ -103,7 +104,7 @@ set_location_assignment PIN_55  -to gpio[18]
 # GND pin on the board
 # GND pin on the board
 
-# set_location_assignment PIN_15  -to uart_rx
+  set_location_assignment PIN_15  -to uart_rx
 # set_location_assignment PIN_16  -to uart_tx
 
 # set_location_assignment PIN_11  -to ps2_clk

@@ -28,6 +28,8 @@ module board_specific_top
   output                   vga_vsync,
   output [            2:0] vga_rgb,
 
+  input                    rx,
+
   inout  [w_gpio    - 1:0] gpio
 );
 
