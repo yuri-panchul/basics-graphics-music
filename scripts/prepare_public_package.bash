@@ -55,15 +55,15 @@ f=$(git ls-files --others ..)
 
 if [ -n "${f-}" ]
 then
-    error "there are files in the tree, ignored by git,"                    \
-          "based on .gitignore list."                                       \
-          "\nThis repository is not supposed to have the ignored files."    \
-          "\nYou need to remove them before preparing a release package."   \
-          "\nSpecifically:\n\n$f"                                           \
-          "\n\nYou can also see the file list by running:"                  \
-          "\n    git clean -d -x -n $pkg_src_root"                          \
-          "\n\nAfter reviewing (be careful!),"                              \
-          "you can remove them by running:"                                 \
+    error "there are files in the tree, ignored by git,"                   \
+          "based on .gitignore list."                                      \
+          "\nThis repository is not supposed to have the ignored files."   \
+          "\nYou need to remove them before preparing a release package."  \
+          "\nSpecifically:\n\n$f"                                          \
+          "\n\nYou can also see the file list by running:"                 \
+          "\n    git clean -d -x -n $pkg_src_root"                         \
+          "\n\nAfter reviewing (be careful!),"                             \
+          "you can remove them by running:"                                \
           "\n    git clean -d -x -f $pkg_src_root"
 fi
 
