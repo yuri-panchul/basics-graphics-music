@@ -49,10 +49,10 @@ module board_specific_top
   i_top
   (
     .clk      (   MAX10_CLK1_50   ),
-    .rst      (   SW [W_SW]       ),
+    .rst      (   SW [w_sw]       ),
 
     .key      ( ~ KEY             ),
-    .sw       (   SW [W_SW - 1:0] ),
+    .sw       (   SW [w_sw - 1:0] ),
 
     .led      (   LEDR            ),
 
