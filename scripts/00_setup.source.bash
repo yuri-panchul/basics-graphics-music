@@ -422,6 +422,7 @@ fpga_board_setup ()
         printf "\n"
 
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+            printf "\n"
             create_new_run_directories_for_fpga_synthesis
         fi
     fi
