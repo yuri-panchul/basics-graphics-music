@@ -20,8 +20,6 @@ module board_specific_top
   output [         7:0] hex1,
   output [         7:0] hex2,
   output [         7:0] hex3,
-  output [         7:0] hex4,
-  output [         7:0] hex5,
 
   output                vga_hs,
   output                vga_vs,
@@ -94,7 +92,5 @@ module board_specific_top
   assign hex1 = digit [1] ? ~ hgfedcba : '1;
   assign hex2 = digit [2] ? ~ hgfedcba : '1;
   assign hex3 = digit [3] ? ~ hgfedcba : '1;
-  assign hex4 = digit [4] ? ~ hgfedcba : '1;
-  assign hex5 = digit [5] ? ~ hgfedcba : '1;
 
 endmodule
