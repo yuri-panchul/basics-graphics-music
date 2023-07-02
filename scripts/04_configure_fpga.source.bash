@@ -32,8 +32,8 @@ then
 
     info "using cable $cable_name_1"
 
-    config_file_1=fpga_top.sof
-    config_file_2=fpga_top.pof
+    config_file_1=fpga_project.sof
+    config_file_2=fpga_project.pof
 
     config_file=$config_file_1
 

@@ -20,7 +20,7 @@ fi
 
 is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
 
-if ! quartus_sh --no_banner --flow compile fpga_top 2>&1 | tee -a "$log"
+if ! quartus_sh --no_banner --flow compile fpga_project 2>&1 | tee -a "$log"
 then
     grep -i -A 5 error "$log" 2>&1
     error "synthesis failed"
