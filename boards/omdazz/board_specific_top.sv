@@ -80,7 +80,7 @@ module board_specific_top
 
   assign led_n      = ~ led;
 
-  asign  abcdefgh_n = ~ abcdefgh;
+  assign abcdefgh_n = ~ abcdefgh;
   assign digit_n    = ~ digit;
 
   assign rgb        = { | red, | green, | blue };

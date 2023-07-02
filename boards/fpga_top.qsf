@@ -1,7 +1,0 @@
-set_global_assignment -name NUM_PARALLEL_PROCESSORS   4
-set_global_assignment -name PROJECT_OUTPUT_DIRECTORY  .
-set_global_assignment -name TOP_LEVEL_ENTITY          board_specific_top
-set_global_assignment -name SDC_FILE                  board_specific.sdc
-
-source project_files.qsf
-source board_specific.qsf
