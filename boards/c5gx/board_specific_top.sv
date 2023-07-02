@@ -49,7 +49,7 @@ module board_specific_top
   i_top
   (
     .clk      (   CLOCK_50_B8A ),
-    .rst      ( ~ CPU_RESET_N  ),
+    .rst      ( ~ CPU_RESET_n  ),
 
     .key      ( ~ KEY          ),
     .sw       (   SW           ),
@@ -82,9 +82,9 @@ module board_specific_top
     end
   endgenerate
 
-  assign hex0 = digit [0] ? ~ hgfedcba [$left (hex0):0] : '1;
-  assign hex1 = digit [1] ? ~ hgfedcba [$left (hex1):0] : '1;
-  assign hex2 = digit [2] ? ~ hgfedcba [$left (hex2):0] : '1;
-  assign hex3 = digit [3] ? ~ hgfedcba [$left (hex3):0] : '1;
+  assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
+  assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
+  assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
+  assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
 
 endmodule
