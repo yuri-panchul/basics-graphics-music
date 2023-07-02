@@ -20,7 +20,7 @@ set_false_path -from * -to [get_ports {vga_rgb[*]}]
 set_false_path -from [get_ports {gpio[*]}] -to [all_clocks]
 set_false_path -from * -to [get_ports {gpio[*]}]
 
-set_false_path -from uart_rx -to [all_clocks]
+# set_false_path -from uart_rx -to [all_clocks]
 # set_false_path -from * -to uart_tx
 
 # ps2_clk

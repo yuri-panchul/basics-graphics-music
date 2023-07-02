@@ -28,8 +28,6 @@ module board_specific_top
   output                   vga_vsync,
   output [            2:0] vga_rgb,
 
-  input                    uart_rx,
-
   inout  [w_gpio    - 1:0] gpio
 );
 
@@ -60,25 +58,25 @@ module board_specific_top
   )
   i_top
   (
-    .clk      (   clk       ),
-    .rst      ( ~ key [3]   ),
+    .clk      (   clk         ),
+    .rst      ( ~ key_n [3]   ),
 
-    .key      ( ~ key [2:0] ),
-    .sw       (   sw        ),
+    .key      ( ~ key_n [2:0] ),
+    .sw       (   sw          ),
 
-    .led      (   led       ),
+    .led      (   led         ),
 
-    .abcdefgh (   abcdefgh  ),
-    .digit    (   digit     ),
+    .abcdefgh (   abcdefgh    ),
+    .digit    (   digit       ),
 
-    .vsync    (   vga_vsync ),
-    .hsync    (   vga_hsync ),
+    .vsync    (   vga_vsync   ),
+    .hsync    (   vga_hsync   ),
 
-    .red      (   red       ),
-    .green    (   green     ),
-    .blue     (   blue      ),
+    .red      (   red         ),
+    .green    (   green       ),
+    .blue     (   blue        ),
 
-    .gpio     (   gpio      )
+    .gpio     (   gpio        )
   );
 
   //--------------------------------------------------------------------------

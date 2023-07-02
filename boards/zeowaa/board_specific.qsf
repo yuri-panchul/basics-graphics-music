@@ -103,7 +103,7 @@ set_location_assignment PIN_55  -to gpio[18]
 # GND pin on the board
 # GND pin on the board
 
-  set_location_assignment PIN_15  -to uart_rx
+# set_location_assignment PIN_15  -to uart_rx
 # set_location_assignment PIN_16  -to uart_tx
 
 # set_location_assignment PIN_11  -to ps2_clk
