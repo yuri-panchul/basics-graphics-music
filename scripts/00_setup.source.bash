@@ -429,7 +429,7 @@ fpga_board_setup ()
 
     if ! [[ " $available_fpga_boards " =~ " $fpga_board " ]] ; then
         # This error may happen if people mess with the selection file
-    
+
         error "The selected FPGA board $fpga_board"  \
               "is not one of the available boards: $available_fpga_boards"
     fi
