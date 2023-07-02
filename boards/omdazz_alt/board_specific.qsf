@@ -1,0 +1,62 @@
+  set_global_assignment -name DEVICE EP4CE6E22C8
+# set_global_assignment -name DEVICE EP4CE10E22C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+
+# For some reason this setting is necessary even for Cyclone IV.
+# It does not route the design without it on omdazz / rzrd.net board.
+
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+set_location_assignment PIN_23  -to clk
+set_location_assignment PIN_25  -to rst_n
+
+set_location_assignment PIN_91  -to key_sw_n[0]
+set_location_assignment PIN_90  -to key_sw_n[1]
+set_location_assignment PIN_89  -to key_sw_n[2]
+set_location_assignment PIN_88  -to key_sw_n[3]
+
+set_location_assignment PIN_87  -to led_n[0]
+set_location_assignment PIN_86  -to led_n[1]
+set_location_assignment PIN_85  -to led_n[2]
+set_location_assignment PIN_84  -to led_n[3]
+
+set_location_assignment PIN_127 -to abcdefgh_n[0]
+set_location_assignment PIN_124 -to abcdefgh_n[1]
+set_location_assignment PIN_126 -to abcdefgh_n[2]
+set_location_assignment PIN_132 -to abcdefgh_n[3]
+set_location_assignment PIN_129 -to abcdefgh_n[4]
+set_location_assignment PIN_125 -to abcdefgh_n[5]
+set_location_assignment PIN_121 -to abcdefgh_n[6]
+set_location_assignment PIN_128 -to abcdefgh_n[7]
+
+set_location_assignment PIN_133 -to digit_n[0]
+set_location_assignment PIN_135 -to digit_n[1]
+set_location_assignment PIN_136 -to digit_n[2]
+set_location_assignment PIN_137 -to digit_n[3]
+
+set_location_assignment PIN_64  -to gpio[0]
+set_location_assignment PIN_65  -to gpio[1]
+set_location_assignment PIN_66  -to gpio[2]
+set_location_assignment PIN_67  -to gpio[3]
+set_location_assignment PIN_68  -to gpio[4]
+set_location_assignment PIN_69  -to gpio[5]
+set_location_assignment PIN_70  -to gpio[6]
+set_location_assignment PIN_71  -to gpio[7]
+set_location_assignment PIN_72  -to gpio[8]
+set_location_assignment PIN_73  -to gpio[9]
+set_location_assignment PIN_74  -to gpio[10]
+set_location_assignment PIN_75  -to gpio[11]
+set_location_assignment PIN_76  -to gpio[12]
+set_location_assignment PIN_77  -to gpio[13]
+
+set_location_assignment PIN_110 -to buzzer
+
+set_location_assignment PIN_101 -to hsync
+set_location_assignment PIN_103 -to vsync
+
+set_location_assignment PIN_104 -to rgb[0]
+set_location_assignment PIN_105 -to rgb[1]
+set_location_assignment PIN_106 -to rgb[2]
