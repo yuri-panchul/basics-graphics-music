@@ -1,0 +1,133 @@
+  set_global_assignment -name DEVICE EP4CE6E22C8
+# set_global_assignment -name DEVICE EP4CE10E22C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+
+  set_location_assignment PIN_23  -to clk
+# set_location_assignment PIN_24  -to clk_user
+# set_location_assignment PIN_88  -to clk_in_1
+# set_location_assignment PIN_89  -to clk_in_2
+
+set_location_assignment PIN_86  -to key_n[0]
+set_location_assignment PIN_87  -to key_n[1]
+set_location_assignment PIN_91  -to key_n[2]
+set_location_assignment PIN_90  -to key_n[3]
+
+set_location_assignment PIN_68  -to sw_n[0]
+set_location_assignment PIN_67  -to sw_n[1]
+set_location_assignment PIN_66  -to sw_n[2]
+set_location_assignment PIN_65  -to sw_n[3]
+set_location_assignment PIN_64  -to sw_n[4]
+set_location_assignment PIN_60  -to sw_n[5]
+set_location_assignment PIN_59  -to sw_n[6]
+set_location_assignment PIN_58  -to sw_n[7]
+
+set_location_assignment PIN_69  -to led_n[0]
+set_location_assignment PIN_70  -to led_n[1]
+set_location_assignment PIN_71  -to led_n[2]
+set_location_assignment PIN_75  -to led_n[3]
+set_location_assignment PIN_76  -to led_n[4]
+set_location_assignment PIN_77  -to led_n[5]
+set_location_assignment PIN_84  -to led_n[6]
+set_location_assignment PIN_83  -to led_n[7]
+set_location_assignment PIN_80  -to led_n[8]
+set_location_assignment PIN_74  -to led_n[9]
+set_location_assignment PIN_73  -to led_n[10]
+set_location_assignment PIN_72  -to led_n[11]
+
+set_location_assignment PIN_115 -to abcdefgh_n[0]
+set_location_assignment PIN_119 -to abcdefgh_n[1]
+set_location_assignment PIN_120 -to abcdefgh_n[2]
+set_location_assignment PIN_121 -to abcdefgh_n[3]
+set_location_assignment PIN_124 -to abcdefgh_n[4]
+set_location_assignment PIN_125 -to abcdefgh_n[5]
+set_location_assignment PIN_126 -to abcdefgh_n[6]
+set_location_assignment PIN_127 -to abcdefgh_n[7]
+
+set_location_assignment PIN_128 -to digit_n[0]
+set_location_assignment PIN_129 -to digit_n[1]
+set_location_assignment PIN_132 -to digit_n[2]
+set_location_assignment PIN_133 -to digit_n[3]
+set_location_assignment PIN_135 -to digit_n[4]
+set_location_assignment PIN_136 -to digit_n[5]
+set_location_assignment PIN_137 -to digit_n[6]
+set_location_assignment PIN_138 -to digit_n[7]
+
+# If this signal is not commented out and is not used, it makes annoying sound
+# set_location_assignment PIN_141 -to buzzer
+
+set_location_assignment PIN_143 -to vga_vsync
+set_location_assignment PIN_142 -to vga_hsync
+set_location_assignment PIN_144 -to vga_rgb[0]
+set_location_assignment PIN_1   -to vga_rgb[1]
+set_location_assignment PIN_2   -to vga_rgb[2]
+
+set_location_assignment PIN_30  -to gpio[0]
+set_location_assignment PIN_28  -to gpio[1]
+
+set_location_assignment PIN_32  -to gpio[2]
+set_location_assignment PIN_31  -to gpio[3]
+
+set_location_assignment PIN_34  -to gpio[4]
+set_location_assignment PIN_33  -to gpio[5]
+
+set_location_assignment PIN_39  -to gpio[6]
+set_location_assignment PIN_38  -to gpio[7]
+
+# GND pin on the board
+# GND pin on the board
+
+set_location_assignment PIN_42  -to gpio[8]
+set_location_assignment PIN_43  -to gpio[9]
+
+set_location_assignment PIN_44  -to gpio[10]
+set_location_assignment PIN_46  -to gpio[11]
+
+set_location_assignment PIN_49  -to gpio[12]
+set_location_assignment PIN_50  -to gpio[13]
+
+# GND pin on the board
+# GND pin on the board
+
+set_location_assignment PIN_52  -to gpio[14]
+set_location_assignment PIN_51  -to gpio[15]
+
+set_location_assignment PIN_54  -to gpio[16]
+set_location_assignment PIN_53  -to gpio[17]
+
+# PIN_58 is used as SW[7]
+set_location_assignment PIN_55  -to gpio[18]
+
+# GND pin on the board
+# GND pin on the board
+
+  set_location_assignment PIN_15  -to uart_rx
+# set_location_assignment PIN_16  -to uart_tx
+
+# set_location_assignment PIN_11  -to ps2_clk
+# set_location_assignment PIN_10  -to ps2_data
+
+# set_location_assignment PIN_3   -to eeprom_sda
+# set_location_assignment PIN_7   -to eeprom_sck
+
+# LCD1602/12864
+
+# set_location_assignment PIN_101 -to lcd_d0
+# set_location_assignment PIN_103 -to lcd_d1
+# set_location_assignment PIN_104 -to lcd_d2
+# set_location_assignment PIN_105 -to lcd_d3
+# set_location_assignment PIN_106 -to lcd_d4
+# set_location_assignment PIN_110 -to lcd_d5
+# set_location_assignment PIN_111 -to lcd_d6
+# set_location_assignment PIN_112 -to lcd_d7
+# set_location_assignment PIN_85  -to lcd_rs
+# set_location_assignment PIN_99  -to lcd_wr
+# set_location_assignment PIN_100 -to lcd_en
+
+# Useful information
+#
+# http://land-boards.com/blwiki/index.php?title=A-C4E6_Cyclone_IV_FPGA_EP4CE6E22C8N_Development_Board
+# http://land-boards.com/blwiki/index.php?title=A-C4E10_Cyclone_IV_FPGA_EP4CE10E22C8N_Development_Board
