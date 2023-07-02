@@ -19,9 +19,16 @@ script_dir="$package_dir/scripts"
 script=$(basename "$0")
 log="$PWD/log.txt"
 
-cd $(dirname "$0")
-mkdir -p run
-cd run
+if [[ $script =~ choose_fpga_board ]]
+then
+    offer_to_create_a_new_fpga_board_select_file=1
+then
+    offer_to_create_a_new_fpga_board_select_file=0
+
+    cd $(dirname "$0")
+    mkdir -p run
+    cd run
+fi
 
 #-----------------------------------------------------------------------------
 #
@@ -200,7 +207,7 @@ intel_fpga_setup_quartus ()
     # Workarounds for Quartus library problems
     # that are uncovered under RED OS from https://www.red-soft.ru
 
-    if    ! [ -f /usr/lib64/libcrypt.so.1 ] \
+    if    ! [ -f /usr/lib64/libcrypt.so.1 ]  \
        &&   [ -f /usr/lib64/libcrypt.so   ]
     then
         ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
@@ -317,61 +324,74 @@ create_fpga_board_select_file()
     info "Created an FPGA board selection file: \"$select_file\""
 }
 
+#-----------------------------------------------------------------------------
+
+create_new_run_directories_for_fpga_synthesis()
+{
+    $find_to_run -name '*synthesize_for_fpga.bash' \
+        | while read file
+    do
+        dir=$(dirname "$file")
+        rm -rf "$dir/run"
+        mkdir  "$dir/run"
+        cp "$board_dir"/*.qsf "$board_dir/$fpga_board"/*.{qsf,sdc} "$dir/run"
+    done
+}
+
+#-----------------------------------------------------------------------------
+
 fpga_board_setup ()
 {
     if ! [[ $script =~ fpga ]] ; then
         return
     fi
 
-    available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
-
     select_file="$package_dir/fpga_board_selection"
 
-    if [ -f "$select_file" ] && [ -n "${force_removing_fpga_board_selection-}" ]
+    if [ -f "$select_file" ]
     then
         fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
-
         select_file_contents=$(cat "$select_file")
 
-        if [ -n "${fpga_board-}" ] ; then
-           info "The current contents of \"$select_file:\"" \
-                "\n\n$select_file_contents" \
-                "\n\nThe currently selected FPGA board: $fpga_board"
-        else
-           info "Currently no FPGA board is selected in \"$select_file:\"" \
-                "\n\n$select_file_contents\n\n"
+        if [ -z "${fpga_board-}" ] ; then
+            offer_to_create_a_new_fpga_board_select_file=1
         fi
 
-        # read:
-        #
-        # -n nchars return after reading NCHARS characters rather than waiting
-        #           for a newline, but honor a delimiter if fewer than
-        #           NCHARS characters are read before the delimiter
-        #
-        # -p prompt output the string PROMPT without a trailing newline before
-        #           attempting to read
-        #
-        # -r        do not allow backslashes to escape any characters
-        # -s        do not echo input coming from a terminal
+        if [ $offer_to_create_a_new_fpga_board_select_file = 1 ]  \
+        then
+            if [ -n "${fpga_board-}" ] ; then
+               info "The current contents of \"$select_file:\""  \
+                    "\n\n$select_file_contents"  \
+                    "\n\nThe currently selected FPGA board: $fpga_board"
+            else
+               info "Currently no FPGA board is selected in \"$select_file:\""  \
+                    "\n\n$select_file_contents\n\n"
+            fi
 
-        read -n 1 -r -p "Are you sure to overwrite FPGA board selection file at \"$select_file\" ? "
-        printf "\n"
+            # read:
+            #
+            # -n nchars return after reading NCHARS characters rather than waiting
+            #           for a newline, but honor a delimiter if fewer than
+            #           NCHARS characters are read before the delimiter
+            #
+            # -p prompt output the string PROMPT without a trailing newline before
+            #           attempting to read
+            #
+            # -r        do not allow backslashes to escape any characters
+            # -s        do not echo input coming from a terminal
 
-        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-            rm -rf "$select_file"
+            read -n 1 -r -p "Would you like to choose a new board and overwrite FPGA board selection file at \"$select_file\"? "
+            printf "\n"
+            [[ "$REPLY" =~ ^[Yy]$ ]] || exit 1
         fi
     fi
 
-    if ! [ -f "$select_file" ]
+    if    ! [ -f "$select_file" ]  \
+       ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
     then
-        extra_info=
+        available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
 
-        if [ -z "${force_removing_fpga_board_selection-}" ] ; then
-            extra_info="There is no FPGA board selection file at \"$select_file\" "
-        fi
-
-        info "${extra_info}Please select an FPGA board amoung the following supported:"
-
+        info "Please select an FPGA board amoung the following supported:"
         PS3="Your choice (a number): "
 
         select fpga_board in $available_fpga_boards exit
@@ -382,7 +402,8 @@ fpga_board_setup ()
             fi
 
             if [ $fpga_board == "exit" ] ; then
-                error "FPGA board is not selected, please run the script again"
+                info "FPGA board is not selected, please run the script again"
+                exit 1
             fi
 
             info "FPGA board selected: $fpga_board"
@@ -391,21 +412,13 @@ fpga_board_setup ()
 
         create_fpga_board_select_file
 
-        read -n 1 -r -p "Would you like to create run directories for synthesis based on your FPGA board selection? "
+        read -n 1 -r -p "Would you like to create new run directories for synthesis based on your FPGA board selection? "
         printf "\n"
 
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-            info TODO
+            create_new_run_directories_for_fpga_synthesis
         fi
     fi
-
-    fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
-
-    select_file_contents=$(cat "$select_file")
-
-    [ -n "${fpga_board-}" ] || \
-       error "No FPGA board is selected in \"$select_file:\"" \
-             "\n\n$select_file_contents\n\n"
 }
 
 #-----------------------------------------------------------------------------
