@@ -27,7 +27,7 @@ module board_specific_top
   output [           3:0] vga_g,
   output [           3:0] vga_b,
 
-  inout  [          35:0] gpio
+  inout  [w_gpio   - 1:0] gpio
 );
 
   //--------------------------------------------------------------------------
