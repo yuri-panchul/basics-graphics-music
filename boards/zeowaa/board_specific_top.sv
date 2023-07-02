@@ -16,7 +16,7 @@ module board_specific_top
   input                    clk_in_2,
 
   input  [w_key + 1 - 1:0] key_n,  // One key is used as a reset
-  input  [w_sw      - 1:0] sw,
+  input  [w_sw      - 1:0] sw_n,
   output [w_led     - 1:0] led_n,
 
   output [            7:0] abcdefgh_n,
@@ -64,7 +64,7 @@ module board_specific_top
     .rst      ( ~ key_n [3]   ),
 
     .key      ( ~ key_n [2:0] ),
-    .sw       (   sw          ),
+    .sw       ( ~ sw_n        ),
 
     .led      (   led         ),
 
