@@ -416,7 +416,7 @@ fpga_board_setup ()
 
         create_fpga_board_select_file
 
-        read -n 1 -r -p "Would you like to create new run directories for synthesis based on your FPGA board selection? [y/n] "
+        read -n 1 -r -p "Would you like to create the new run directories for the synthesis of all labs in the package, based on your FPGA board selection? We recommend to do this if you plan to work with Quartus GUI rather than with the synthesis scripts. [y/n] "
         printf "\n"
 
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
