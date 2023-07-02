@@ -32,8 +32,8 @@ module board_specific_top
 
   //--------------------------------------------------------------------------
 
-  logic [          7:0] abcdefgh;
-  logic [w_digit - 1:0] digit;
+  wire [          7:0] abcdefgh;
+  wire [w_digit - 1:0] digit;
 
   //--------------------------------------------------------------------------
 
@@ -48,41 +48,45 @@ module board_specific_top
   )
   i_top
   (
-    .clk      ( max10_clk1_50   ),
-    .rst      ( sw [w_sw]       ),
+    .clk      (   max10_clk1_50   ),
+    .rst      (   sw [w_sw]       ),
 
-    .key      ( key             ),
-    .sw       ( sw [w_sw - 1:0] ),
+    .key      ( ~ key             ),
+    .sw       (   sw [w_sw - 1:0] ),
 
-    .led      ( ledr            ),
+    .led      (   ledr            ),
 
-    .abcdefgh ( abcdefgh        ),
-    .digit    ( digit           ),
+    .abcdefgh (   abcdefgh        ),
+    .digit    (   digit           ),
 
-    .vsync    ( vga_vs          ),
-    .hsync    ( vga_hs          ),
+    .vsync    (   vga_vs          ),
+    .hsync    (   vga_hs          ),
 
-    .red      ( vga_r           ),
-    .green    ( vga_g           ),
-    .blue     ( vga_b           ),
+    .red      (   vga_r           ),
+    .green    (   vga_g           ),
+    .blue     (   vga_b           ),
 
-    .gpio     ( gpio            )
+    .gpio     (   gpio            )
   );
 
   //--------------------------------------------------------------------------
 
   wire [$left (abcdefgh):0] hgfedcba;
 
-  for (genvar i = 0; i < $bits (abcdefgh); i ++)
-  begin : abc
-    assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-  end
+  generate
+    genvar i;
 
-  assign hex0 = digit [0] ? hgfedcba : '0;
-  assign hex1 = digit [1] ? hgfedcba : '0;
-  assign hex2 = digit [2] ? hgfedcba : '0;
-  assign hex3 = digit [3] ? hgfedcba : '0;
-  assign hex4 = digit [4] ? hgfedcba : '0;
-  assign hex5 = digit [5] ? hgfedcba : '0;
+    for (i = 0; i < $bits (abcdefgh); i ++)
+    begin : abc
+      assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+    end
+  endgenerate
+
+  assign hex0 = digit [0] ? ~ hgfedcba : '1;
+  assign hex1 = digit [1] ? ~ hgfedcba : '1;
+  assign hex2 = digit [2] ? ~ hgfedcba : '1;
+  assign hex3 = digit [3] ? ~ hgfedcba : '1;
+  assign hex4 = digit [4] ? ~ hgfedcba : '1;
+  assign hex5 = digit [5] ? ~ hgfedcba : '1;
 
 endmodule
