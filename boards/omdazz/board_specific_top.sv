@@ -4,9 +4,9 @@ module board_specific_top
 # (
   parameter clk_mhz = 50,
             w_key   = 4,
-            w_sw    = 8,
-            w_led   = 8,
-            w_digit = 8,
+            w_sw    = 4,
+            w_led   = 4,
+            w_digit = 4,
             w_gpio  = 14
 )
 (

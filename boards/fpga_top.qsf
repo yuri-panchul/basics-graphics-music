@@ -1,20 +1,7 @@
-set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
-set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
+set_global_assignment -name NUM_PARALLEL_PROCESSORS   4
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY  .
+set_global_assignment -name TOP_LEVEL_ENTITY          board_specific_top
+set_global_assignment -name SDC_FILE                  board_specific.sdc
 
-set_global_assignment   -name TOP_LEVEL_ENTITY          fpga_top
-
-set_global_assignment   -name SEARCH_PATH               ..
-set_global_assignment   -name SEARCH_PATH               ../../../../common
-
-#set_global_assignment   -name SYSTEMVERILOG_FILE        counter.sv
-#set_global_assignment   -name SYSTEMVERILOG_FILE        counter_with_enable.sv
-#set_global_assignment   -name SYSTEMVERILOG_FILE        seven_segment_digit.sv
-#set_global_assignment   -name SYSTEMVERILOG_FILE        slow_clk_gen.sv
-#set_global_assignment   -name SYSTEMVERILOG_FILE        strobe_gen.sv
-#set_global_assignment   -name SYSTEMVERILOG_FILE        fpga_top.sv
-
-set_global_assignment   -name SDC_FILE                   ../../../scripts/fpga_top.sdc
-
-source common_files.qsf
 source project_files.qsf
 source board_specific.qsf

@@ -335,22 +335,25 @@ setup_run_directory_for_fpga_synthesis()
 
     > "$dir/fpga_top.qpf"
 
-    cat "$board_dir"/*.qsf "$board_dir/$fpga_board"/*.{qsf,sdc} "$dir"
+    cp "$board_dir"/*.qsf "$board_dir/$fpga_board"/*.{qsf,sdc} "$dir"
 
-    printf "set_global_assignment -name SEARCH_PATH \"$lab_dir/common\""  \
-        > "$dir/project_files.qsf"
+    cat << EOF > "$dir/project_files.qsf"
+set_global_assignment -name SEARCH_PATH "$parent_dir"
+set_global_assignment -name SEARCH_PATH "$board_dir/$fpga_board"
+set_global_assignment -name SEARCH_PATH "$lab_dir/common"
 
-    find "$parent_dir" "$lab_dir/common" \
-      -type f  \
-      \( -name "*.sv" ! -name "top.sv" ! -name "tb.sv" \)  \
+EOF
+
+    find "$parent_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
+      -type f -name '*.sv' -not -name tb.sv  \
       -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
       >> "$dir/project_files.qsf"
 
     if [ -f "$parent_dir/extra_project_files.qsf" ] ; then
-        cp "$parent_dir/extra_project_files.qsf" "$dir"
-    else
-        > "$dir/extra_project_files.qsf"
+        cat "$parent_dir/extra_project_files.qsf" >> "$dir/project_files.qsf"
     fi
+
+    exit
 }
 
 #-----------------------------------------------------------------------------

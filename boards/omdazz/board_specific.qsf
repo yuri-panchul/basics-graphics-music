@@ -1,30 +1,9 @@
-  set_global_assignment -name DEVICE                    EP4CE6E22C8
-# set_global_assignment -name DEVICE                    EP4CE10E22C8
-
-set_global_assignment   -name VERILOG_INPUT_VERSION     SYSTEMVERILOG_2005
-
-set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
-set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
-
-set_global_assignment   -name TOP_LEVEL_ENTITY          fpga_top
-
-set_global_assignment   -name SEARCH_PATH               ..
-set_global_assignment   -name SEARCH_PATH               ../../../../common
-
-set_global_assignment   -name SYSTEMVERILOG_FILE        counter.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        counter_with_enable.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        seven_segment_4_digits.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        slow_clk_gen.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        strobe_gen.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        fpga_top.sv
-
-set_global_assignment   -name SDC_FILE                  ../../../scripts/fpga_top.sdc
-
-source ../fpga_top_extra.qsf
+  set_global_assignment -name DEVICE EP4CE6E22C8
+# set_global_assignment -name DEVICE EP4CE10E22C8
 
 set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
 
-set_instance_assignment -name IO_STANDARD               "3.3-V LVTTL" -to *
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
 
 # For some reason this setting is necessary even for Cyclone IV.
 # It does not route the design without it on omdazz / rzrd.net board.
