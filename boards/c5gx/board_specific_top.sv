@@ -9,7 +9,7 @@ module board_specific_top
 )
 (
   input                 CLOCK_50_B8A,
-  input                 CPU_RESET_N,
+  input                 CPU_RESET_n,
 
   input  [w_key  - 1:0] KEY,
   input  [w_sw   - 1:0] SW,
