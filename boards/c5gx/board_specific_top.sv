@@ -16,10 +16,10 @@ module board_specific_top
   output [         9:0] LEDR,
   output [         7:0] LEDG,
 
-  output [         7:0] HEX0,
-  output [         7:0] HEX1,
-  output [         7:0] HEX2,
-  output [         7:0] HEX3,
+  output [         6:0] HEX0,
+  output [         6:0] HEX1,
+  output [         6:0] HEX2,
+  output [         6:0] HEX3,
 
   input                 UART_RX,
 
@@ -82,9 +82,9 @@ module board_specific_top
     end
   endgenerate
 
-  assign HEX0 = digit [0] ? ~ hgfedcba : '1;
-  assign HEX1 = digit [1] ? ~ hgfedcba : '1;
-  assign HEX2 = digit [2] ? ~ hgfedcba : '1;
-  assign HEX3 = digit [3] ? ~ hgfedcba : '1;
+  assign hex0 = digit [0] ? ~ hgfedcba [$left (hex0):0] : '1;
+  assign hex1 = digit [1] ? ~ hgfedcba [$left (hex1):0] : '1;
+  assign hex2 = digit [2] ? ~ hgfedcba [$left (hex2):0] : '1;
+  assign hex3 = digit [3] ? ~ hgfedcba [$left (hex3):0] : '1;
 
 endmodule
