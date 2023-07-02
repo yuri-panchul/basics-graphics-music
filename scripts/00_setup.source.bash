@@ -22,7 +22,7 @@ log="$PWD/log.txt"
 if [[ $script =~ choose_fpga_board ]]
 then
     offer_to_create_a_new_fpga_board_select_file=1
-then
+else
     offer_to_create_a_new_fpga_board_select_file=0
 
     cd $(dirname "$0")
