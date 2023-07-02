@@ -1,34 +1,14 @@
-set_global_assignment   -name DEVICE                    10M50DAF484C7G
-
-set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
-set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
-
-set_global_assignment   -name TOP_LEVEL_ENTITY          fpga_top
-
-set_global_assignment   -name SEARCH_PATH               ..
-set_global_assignment   -name SEARCH_PATH               ../../../../common
-
-set_global_assignment   -name SYSTEMVERILOG_FILE        counter.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        counter_with_enable.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        seven_segment_digit.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        slow_clk_gen.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        strobe_gen.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        fpga_top.sv
-
-set_global_assignment   -name SDC_FILE                  ../../../scripts/fpga_top.sdc
-
-source ../fpga_top_extra.qsf
-
+set_global_assignment   -name DEVICE 10M50DAF484C7G
 set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
 
-set_instance_assignment -name IO_STANDARD               "3.3-V LVTTL" -to *
-set_instance_assignment -name IO_STANDARD               "3.3 V Schmitt Trigger" -to key[0]
-set_instance_assignment -name IO_STANDARD               "3.3 V Schmitt Trigger" -to key[1]
-set_instance_assignment -name IO_STANDARD               "3.3 V Schmitt Trigger" -to arduino_reset_n
+  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+  set_instance_assignment -name IO_STANDARD "3.3 V Schmitt Trigger" -to key[0]
+  set_instance_assignment -name IO_STANDARD "3.3 V Schmitt Trigger" -to key[1]
+# set_instance_assignment -name IO_STANDARD "3.3 V Schmitt Trigger" -to arduino_reset_n
 
-set_location_assignment PIN_N5   -to adc_clk_10
-set_location_assignment PIN_P11  -to max10_clk1_50
-set_location_assignment PIN_N14  -to max10_clk2_50
+# set_location_assignment PIN_N5   -to adc_clk_10
+  set_location_assignment PIN_P11  -to max10_clk1_50
+# set_location_assignment PIN_N14  -to max10_clk2_50
 
 set_location_assignment PIN_B8   -to key[0]
 set_location_assignment PIN_A7   -to key[1]
@@ -44,16 +24,16 @@ set_location_assignment PIN_A14  -to sw[7]
 set_location_assignment PIN_B14  -to sw[8]
 set_location_assignment PIN_F15  -to sw[9]
 
-set_location_assignment PIN_A8   -to led[0]
-set_location_assignment PIN_A9   -to led[1]
-set_location_assignment PIN_A10  -to led[2]
-set_location_assignment PIN_B10  -to led[3]
-set_location_assignment PIN_D13  -to led[4]
-set_location_assignment PIN_C13  -to led[5]
-set_location_assignment PIN_E14  -to led[6]
-set_location_assignment PIN_D14  -to led[7]
-set_location_assignment PIN_A11  -to led[8]
-set_location_assignment PIN_B11  -to led[9]
+set_location_assignment PIN_A8   -to ledr[0]
+set_location_assignment PIN_A9   -to ledr[1]
+set_location_assignment PIN_A10  -to ledr[2]
+set_location_assignment PIN_B10  -to ledr[3]
+set_location_assignment PIN_D13  -to ledr[4]
+set_location_assignment PIN_C13  -to ledr[5]
+set_location_assignment PIN_E14  -to ledr[6]
+set_location_assignment PIN_D14  -to ledr[7]
+set_location_assignment PIN_A11  -to ledr[8]
+set_location_assignment PIN_B11  -to ledr[9]
 
 set_location_assignment PIN_C14  -to hex0[0]
 set_location_assignment PIN_E15  -to hex0[1]
@@ -158,6 +138,9 @@ set_location_assignment PIN_N2   -to vga_b[3]
 # set_location_assignment PIN_U22  -to dram_ras_n
 # set_location_assignment PIN_J21  -to dram_udqm
 # set_location_assignment PIN_V20  -to dram_we_n
+
+# set_location_assignment PIN_R3   -to clk_i2c_scl
+# set_location_assignment PIN_P3   -to clk_i2c_sda
 
 # set_location_assignment PIN_AB16 -to gsensor_cs_n
 # set_location_assignment PIN_Y14  -to gsensor_int[1]
