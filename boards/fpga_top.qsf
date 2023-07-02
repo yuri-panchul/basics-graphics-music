@@ -1,222 +1,43 @@
-set_global_assignment   -name DEVICE                    10M50DAF484C7G
-
 set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
 set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
 
 set_global_assignment   -name TOP_LEVEL_ENTITY          fpga_top
 
 set_global_assignment   -name SEARCH_PATH               ..
-set_global_assignment   -name SEARCH_PATH               ../../../../common
+#set_global_assignment   -name SEARCH_PATH               ../../../../common
 
-set_global_assignment   -name SYSTEMVERILOG_FILE        counter.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        counter_with_enable.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        seven_segment_digit.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        slow_clk_gen.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        strobe_gen.sv
-set_global_assignment   -name SYSTEMVERILOG_FILE        fpga_top.sv
+#set_global_assignment   -name SYSTEMVERILOG_FILE        counter.sv
+#set_global_assignment   -name SYSTEMVERILOG_FILE        counter_with_enable.sv
+#set_global_assignment   -name SYSTEMVERILOG_FILE        seven_segment_digit.sv
+#set_global_assignment   -name SYSTEMVERILOG_FILE        slow_clk_gen.sv
+#set_global_assignment   -name SYSTEMVERILOG_FILE        strobe_gen.sv
+#set_global_assignment   -name SYSTEMVERILOG_FILE        fpga_top.sv
 
-set_global_assignment   -name SDC_FILE                  ../../../scripts/fpga_top.sdc
+#set_global_assignment   -name SDC_FILE                  ../../../scripts/fpga_top.sdc
 
-source ../fpga_top_extra.qsf
+#source ../fpga_top_extra.qsf
 
-set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+source board_specific.qsf
 
-set_instance_assignment -name IO_STANDARD               "3.3-V LVTTL" -to *
-set_instance_assignment -name IO_STANDARD               "3.3 V Schmitt Trigger" -to key[0]
-set_instance_assignment -name IO_STANDARD               "3.3 V Schmitt Trigger" -to key[1]
-set_instance_assignment -name IO_STANDARD               "3.3 V Schmitt Trigger" -to arduino_reset_n
+set script [file tail [info script]]
 
-set_location_assignment PIN_N5   -to adc_clk_10
-set_location_assignment PIN_P11  -to max10_clk1_50
-set_location_assignment PIN_N14  -to max10_clk2_50
+set common "../../common"
 
-set_location_assignment PIN_B8   -to key[0]
-set_location_assignment PIN_A7   -to key[1]
+for {set i 1} {$i <= 3} {incr i} {
+    if {[file isdirectory $common]} {
+        break
+    }
 
-set_location_assignment PIN_C10  -to sw[0]
-set_location_assignment PIN_C11  -to sw[1]
-set_location_assignment PIN_D12  -to sw[2]
-set_location_assignment PIN_C12  -to sw[3]
-set_location_assignment PIN_A12  -to sw[4]
-set_location_assignment PIN_B12  -to sw[5]
-set_location_assignment PIN_A13  -to sw[6]
-set_location_assignment PIN_A14  -to sw[7]
-set_location_assignment PIN_B14  -to sw[8]
-set_location_assignment PIN_F15  -to sw[9]
+    set common "../$common"
+}
 
-set_location_assignment PIN_A8   -to led[0]
-set_location_assignment PIN_A9   -to led[1]
-set_location_assignment PIN_A10  -to led[2]
-set_location_assignment PIN_B10  -to led[3]
-set_location_assignment PIN_D13  -to led[4]
-set_location_assignment PIN_C13  -to led[5]
-set_location_assignment PIN_E14  -to led[6]
-set_location_assignment PIN_D14  -to led[7]
-set_location_assignment PIN_A11  -to led[8]
-set_location_assignment PIN_B11  -to led[9]
+if {! [file isdirectory $common]} {
+    puts stderr "$script: cannot find \"common\" directory in the tree"
+    exit 1
+}
 
-set_location_assignment PIN_C14  -to hex0[0]
-set_location_assignment PIN_E15  -to hex0[1]
-set_location_assignment PIN_C15  -to hex0[2]
-set_location_assignment PIN_C16  -to hex0[3]
-set_location_assignment PIN_E16  -to hex0[4]
-set_location_assignment PIN_D17  -to hex0[5]
-set_location_assignment PIN_C17  -to hex0[6]
-set_location_assignment PIN_D15  -to hex0[7]
-set_location_assignment PIN_C18  -to hex1[0]
-set_location_assignment PIN_D18  -to hex1[1]
-set_location_assignment PIN_E18  -to hex1[2]
-set_location_assignment PIN_B16  -to hex1[3]
-set_location_assignment PIN_A17  -to hex1[4]
-set_location_assignment PIN_A18  -to hex1[5]
-set_location_assignment PIN_B17  -to hex1[6]
-set_location_assignment PIN_A16  -to hex1[7]
-set_location_assignment PIN_B20  -to hex2[0]
-set_location_assignment PIN_A20  -to hex2[1]
-set_location_assignment PIN_B19  -to hex2[2]
-set_location_assignment PIN_A21  -to hex2[3]
-set_location_assignment PIN_B21  -to hex2[4]
-set_location_assignment PIN_C22  -to hex2[5]
-set_location_assignment PIN_B22  -to hex2[6]
-set_location_assignment PIN_A19  -to hex2[7]
-set_location_assignment PIN_F21  -to hex3[0]
-set_location_assignment PIN_E22  -to hex3[1]
-set_location_assignment PIN_E21  -to hex3[2]
-set_location_assignment PIN_C19  -to hex3[3]
-set_location_assignment PIN_C20  -to hex3[4]
-set_location_assignment PIN_D19  -to hex3[5]
-set_location_assignment PIN_E17  -to hex3[6]
-set_location_assignment PIN_D22  -to hex3[7]
-set_location_assignment PIN_F18  -to hex4[0]
-set_location_assignment PIN_E20  -to hex4[1]
-set_location_assignment PIN_E19  -to hex4[2]
-set_location_assignment PIN_J18  -to hex4[3]
-set_location_assignment PIN_H19  -to hex4[4]
-set_location_assignment PIN_F19  -to hex4[5]
-set_location_assignment PIN_F20  -to hex4[6]
-set_location_assignment PIN_F17  -to hex4[7]
-set_location_assignment PIN_J20  -to hex5[0]
-set_location_assignment PIN_K20  -to hex5[1]
-set_location_assignment PIN_L18  -to hex5[2]
-set_location_assignment PIN_N18  -to hex5[3]
-set_location_assignment PIN_M20  -to hex5[4]
-set_location_assignment PIN_N19  -to hex5[5]
-set_location_assignment PIN_N20  -to hex5[6]
-set_location_assignment PIN_L19  -to hex5[7]
+foreach file [glob -directory $common -- "*.sv"] {
+    puts $file
+}
 
-set_location_assignment PIN_N3   -to vga_hs
-set_location_assignment PIN_N1   -to vga_vs
-set_location_assignment PIN_AA1  -to vga_r[0]
-set_location_assignment PIN_V1   -to vga_r[1]
-set_location_assignment PIN_Y2   -to vga_r[2]
-set_location_assignment PIN_Y1   -to vga_r[3]
-set_location_assignment PIN_W1   -to vga_g[0]
-set_location_assignment PIN_T2   -to vga_g[1]
-set_location_assignment PIN_R2   -to vga_g[2]
-set_location_assignment PIN_R1   -to vga_g[3]
-set_location_assignment PIN_P1   -to vga_b[0]
-set_location_assignment PIN_T1   -to vga_b[1]
-set_location_assignment PIN_P4   -to vga_b[2]
-set_location_assignment PIN_N2   -to vga_b[3]
-
-# set_location_assignment PIN_U17  -to dram_addr[0]
-# set_location_assignment PIN_W19  -to dram_addr[1]
-# set_location_assignment PIN_V18  -to dram_addr[2]
-# set_location_assignment PIN_U18  -to dram_addr[3]
-# set_location_assignment PIN_U19  -to dram_addr[4]
-# set_location_assignment PIN_T18  -to dram_addr[5]
-# set_location_assignment PIN_T19  -to dram_addr[6]
-# set_location_assignment PIN_R18  -to dram_addr[7]
-# set_location_assignment PIN_P18  -to dram_addr[8]
-# set_location_assignment PIN_P19  -to dram_addr[9]
-# set_location_assignment PIN_T20  -to dram_addr[10]
-# set_location_assignment PIN_P20  -to dram_addr[11]
-# set_location_assignment PIN_R20  -to dram_addr[12]
-# set_location_assignment PIN_T21  -to dram_ba[0]
-# set_location_assignment PIN_T22  -to dram_ba[1]
-# set_location_assignment PIN_U21  -to dram_cas_n
-# set_location_assignment PIN_N22  -to dram_cke
-# set_location_assignment PIN_L14  -to dram_clk
-# set_location_assignment PIN_U20  -to dram_cs_n
-# set_location_assignment PIN_Y21  -to dram_dq[0]
-# set_location_assignment PIN_Y20  -to dram_dq[1]
-# set_location_assignment PIN_AA22 -to dram_dq[2]
-# set_location_assignment PIN_AA21 -to dram_dq[3]
-# set_location_assignment PIN_Y22  -to dram_dq[4]
-# set_location_assignment PIN_W22  -to dram_dq[5]
-# set_location_assignment PIN_W20  -to dram_dq[6]
-# set_location_assignment PIN_V21  -to dram_dq[7]
-# set_location_assignment PIN_P21  -to dram_dq[8]
-# set_location_assignment PIN_J22  -to dram_dq[9]
-# set_location_assignment PIN_H21  -to dram_dq[10]
-# set_location_assignment PIN_H22  -to dram_dq[11]
-# set_location_assignment PIN_G22  -to dram_dq[12]
-# set_location_assignment PIN_G20  -to dram_dq[13]
-# set_location_assignment PIN_G19  -to dram_dq[14]
-# set_location_assignment PIN_F22  -to dram_dq[15]
-# set_location_assignment PIN_V22  -to dram_ldqm
-# set_location_assignment PIN_U22  -to dram_ras_n
-# set_location_assignment PIN_J21  -to dram_udqm
-# set_location_assignment PIN_V20  -to dram_we_n
-
-# set_location_assignment PIN_AB16 -to gsensor_cs_n
-# set_location_assignment PIN_Y14  -to gsensor_int[1]
-# set_location_assignment PIN_Y13  -to gsensor_int[2]
-# set_location_assignment PIN_AB15 -to gsensor_sclk
-# set_location_assignment PIN_V11  -to gsensor_sdi
-# set_location_assignment PIN_V12  -to gsensor_sdo
-
-# set_location_assignment PIN_F16  -to arduino_reset_n
-# set_location_assignment PIN_AB5  -to arduino_io[0]
-# set_location_assignment PIN_AB6  -to arduino_io[1]
-# set_location_assignment PIN_AB7  -to arduino_io[2]
-# set_location_assignment PIN_AB8  -to arduino_io[3]
-# set_location_assignment PIN_AB9  -to arduino_io[4]
-# set_location_assignment PIN_Y10  -to arduino_io[5]
-# set_location_assignment PIN_AA11 -to arduino_io[6]
-# set_location_assignment PIN_AA12 -to arduino_io[7]
-# set_location_assignment PIN_AB17 -to arduino_io[8]
-# set_location_assignment PIN_AA17 -to arduino_io[9]
-# set_location_assignment PIN_AB19 -to arduino_io[10]
-# set_location_assignment PIN_AA19 -to arduino_io[11]
-# set_location_assignment PIN_Y19  -to arduino_io[12]
-# set_location_assignment PIN_AB20 -to arduino_io[13]
-# set_location_assignment PIN_AB21 -to arduino_io[14]
-# set_location_assignment PIN_AA20 -to arduino_io[15]
-
-set_location_assignment PIN_V10  -to gpio[0]
-set_location_assignment PIN_W10  -to gpio[1]
-set_location_assignment PIN_V9   -to gpio[2]
-set_location_assignment PIN_W9   -to gpio[3]
-set_location_assignment PIN_V8   -to gpio[4]
-set_location_assignment PIN_W8   -to gpio[5]
-set_location_assignment PIN_V7   -to gpio[6]
-set_location_assignment PIN_W7   -to gpio[7]
-set_location_assignment PIN_W6   -to gpio[8]
-set_location_assignment PIN_V5   -to gpio[9]
-set_location_assignment PIN_W5   -to gpio[10]
-set_location_assignment PIN_AA15 -to gpio[11]
-set_location_assignment PIN_AA14 -to gpio[12]
-set_location_assignment PIN_W13  -to gpio[13]
-set_location_assignment PIN_W12  -to gpio[14]
-set_location_assignment PIN_AB13 -to gpio[15]
-set_location_assignment PIN_AB12 -to gpio[16]
-set_location_assignment PIN_Y11  -to gpio[17]
-set_location_assignment PIN_AB11 -to gpio[18]
-set_location_assignment PIN_W11  -to gpio[19]
-set_location_assignment PIN_AB10 -to gpio[20]
-set_location_assignment PIN_AA10 -to gpio[21]
-set_location_assignment PIN_AA9  -to gpio[22]
-set_location_assignment PIN_Y8   -to gpio[23]
-set_location_assignment PIN_AA8  -to gpio[24]
-set_location_assignment PIN_Y7   -to gpio[25]
-set_location_assignment PIN_AA7  -to gpio[26]
-set_location_assignment PIN_Y6   -to gpio[27]
-set_location_assignment PIN_AA6  -to gpio[28]
-set_location_assignment PIN_Y5   -to gpio[29]
-set_location_assignment PIN_AA5  -to gpio[30]
-set_location_assignment PIN_Y4   -to gpio[31]
-set_location_assignment PIN_AB3  -to gpio[32]
-set_location_assignment PIN_Y3   -to gpio[33]
-set_location_assignment PIN_AB2  -to gpio[34]
-set_location_assignment PIN_AA2  -to gpio[35]
+exit 0
