@@ -4,7 +4,7 @@ set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
 set_global_assignment   -name TOP_LEVEL_ENTITY          fpga_top
 
 set_global_assignment   -name SEARCH_PATH               ..
-#set_global_assignment   -name SEARCH_PATH               ../../../../common
+set_global_assignment   -name SEARCH_PATH               ../../../../common
 
 #set_global_assignment   -name SYSTEMVERILOG_FILE        counter.sv
 #set_global_assignment   -name SYSTEMVERILOG_FILE        counter_with_enable.sv
@@ -13,31 +13,8 @@ set_global_assignment   -name SEARCH_PATH               ..
 #set_global_assignment   -name SYSTEMVERILOG_FILE        strobe_gen.sv
 #set_global_assignment   -name SYSTEMVERILOG_FILE        fpga_top.sv
 
-#set_global_assignment   -name SDC_FILE                  ../../../scripts/fpga_top.sdc
+set_global_assignment   -name SDC_FILE                   ../../../scripts/fpga_top.sdc
 
-#source ../fpga_top_extra.qsf
-
+source common_files.qsf
+source project_files.qsf
 source board_specific.qsf
-
-set script [file tail [info script]]
-
-set common "../../common"
-
-for {set i 1} {$i <= 3} {incr i} {
-    if {[file isdirectory $common]} {
-        break
-    }
-
-    set common "../$common"
-}
-
-if {! [file isdirectory $common]} {
-    puts stderr "$script: cannot find \"common\" directory in the tree"
-    exit 1
-}
-
-foreach file [glob -directory $common -- "*.sv"] {
-    puts $file
-}
-
-exit 0
