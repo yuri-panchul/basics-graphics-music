@@ -8,26 +8,26 @@ module board_specific_top
             w_gpio  = 36
 )
 (
-  input                   max10_clk1_50,
+  input                   MAX10_CLK1_50,
 
-  input  [w_key    - 1:0] key,
-  input  [w_sw + 1 - 1:0] sw,  // One sw is used as a reset
-  output [w_led    - 1:0] ledr,
+  input  [w_key    - 1:0] KEY,
+  input  [w_sw + 1 - 1:0] SW,  // One sw is used as a reset
+  output [w_led    - 1:0] LEDR,
 
-  output [           7:0] hex0,
-  output [           7:0] hex1,
-  output [           7:0] hex2,
-  output [           7:0] hex3,
-  output [           7:0] hex4,
-  output [           7:0] hex5,
+  output [           7:0] HEX0,
+  output [           7:0] HEX1,
+  output [           7:0] HEX2,
+  output [           7:0] HEX3,
+  output [           7:0] HEX4,
+  output [           7:0] HEX5,
 
-  output                  vga_hs,
-  output                  vga_vs,
-  output [           3:0] vga_r,
-  output [           3:0] vga_g,
-  output [           3:0] vga_b,
+  output                  VGA_HS,
+  output                  VGA_VS,
+  output [           3:0] VGA_R,
+  output [           3:0] VGA_G,
+  output [           3:0] VGA_B,
 
-  inout  [w_gpio   - 1:0] gpio
+  inout  [w_gpio   - 1:0] GPIO
 );
 
   //--------------------------------------------------------------------------
@@ -48,25 +48,25 @@ module board_specific_top
   )
   i_top
   (
-    .clk      (   max10_clk1_50   ),
-    .rst      (   sw [w_sw]       ),
+    .clk      (   MAX10_CLK1_50   ),
+    .rst      (   SW [W_SW]       ),
 
-    .key      ( ~ key             ),
-    .sw       (   sw [w_sw - 1:0] ),
+    .key      ( ~ KEY             ),
+    .sw       (   SW [W_SW - 1:0] ),
 
-    .led      (   ledr            ),
+    .led      (   LEDR            ),
 
     .abcdefgh (   abcdefgh        ),
     .digit    (   digit           ),
 
-    .vsync    (   vga_vs          ),
-    .hsync    (   vga_hs          ),
+    .vsync    (   VGA_VS          ),
+    .hsync    (   VGA_HS          ),
 
-    .red      (   vga_r           ),
-    .green    (   vga_g           ),
-    .blue     (   vga_b           ),
+    .red      (   VGA_R           ),
+    .green    (   VGA_G           ),
+    .blue     (   VGA_B           ),
 
-    .gpio     (   gpio            )
+    .gpio     (   GPIO            )
   );
 
   //--------------------------------------------------------------------------
@@ -82,11 +82,11 @@ module board_specific_top
     end
   endgenerate
 
-  assign hex0 = digit [0] ? ~ hgfedcba : '1;
-  assign hex1 = digit [1] ? ~ hgfedcba : '1;
-  assign hex2 = digit [2] ? ~ hgfedcba : '1;
-  assign hex3 = digit [3] ? ~ hgfedcba : '1;
-  assign hex4 = digit [4] ? ~ hgfedcba : '1;
-  assign hex5 = digit [5] ? ~ hgfedcba : '1;
+  assign HEX0 = digit [0] ? ~ hgfedcba : '1;
+  assign HEX1 = digit [1] ? ~ hgfedcba : '1;
+  assign HEX2 = digit [2] ? ~ hgfedcba : '1;
+  assign HEX3 = digit [3] ? ~ hgfedcba : '1;
+  assign HEX4 = digit [4] ? ~ hgfedcba : '1;
+  assign HEX5 = digit [5] ? ~ hgfedcba : '1;
 
 endmodule
