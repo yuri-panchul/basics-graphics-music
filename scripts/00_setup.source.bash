@@ -350,14 +350,14 @@ fpga_board_setup ()
 
     if [ -f "$select_file" ]
     then
-        fpga_board=$(set +eo pipefail; grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*')
+        fpga_board=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
         select_file_contents=$(cat "$select_file")
 
         if [ -z "${fpga_board-}" ] ; then
             offer_to_create_a_new_fpga_board_select_file=1
         fi
 
-        if [ $offer_to_create_a_new_fpga_board_select_file = 1 ]  \
+        if [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
         then
             if [ -n "${fpga_board-}" ] ; then
                info "The current contents of \"$select_file:\""  \
@@ -365,7 +365,7 @@ fpga_board_setup ()
                     "\n\nThe currently selected FPGA board: $fpga_board"
             else
                info "Currently no FPGA board is selected in \"$select_file:\""  \
-                    "\n\n$select_file_contents\n\n"
+                    "\n\n$select_file_contents\n"
             fi
 
             # read:
@@ -380,17 +380,21 @@ fpga_board_setup ()
             # -r        do not allow backslashes to escape any characters
             # -s        do not echo input coming from a terminal
 
-            read -n 1 -r -p "Would you like to choose a new board and overwrite FPGA board selection file at \"$select_file\"? "
+            read -n 1 -r -p "Would you like to choose a new board and overwrite FPGA board selection file at \"$select_file\"? [y/n] "
             printf "\n"
-            [[ "$REPLY" =~ ^[Yy]$ ]] || exit 1
+
+            if ! [[ "$REPLY" =~ ^[Yy]$ ]] ; then
+                info Exiting
+                exit 0
+            fi
         fi
     fi
+
+    available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
 
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
     then
-        available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f ')
-
         info "Please select an FPGA board amoung the following supported:"
         PS3="Your choice (a number): "
 
@@ -403,7 +407,7 @@ fpga_board_setup ()
 
             if [ $fpga_board == "exit" ] ; then
                 info "FPGA board is not selected, please run the script again"
-                exit 1
+                exit 0
             fi
 
             info "FPGA board selected: $fpga_board"
@@ -412,13 +416,17 @@ fpga_board_setup ()
 
         create_fpga_board_select_file
 
-        read -n 1 -r -p "Would you like to create new run directories for synthesis based on your FPGA board selection? "
+        read -n 1 -r -p "Would you like to create new run directories for synthesis based on your FPGA board selection? [y/n] "
         printf "\n"
 
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
             create_new_run_directories_for_fpga_synthesis
         fi
     fi
+
+    [[ "$available_fpga_boards" =~ '(^|\s+)'$fpga_board'(?=\s+|$)' ]]  \
+        error "The selected FPGA board $fpga_board"  \
+           "is not one of the available boards: $available_fpga_boards"
 }
 
 #-----------------------------------------------------------------------------
