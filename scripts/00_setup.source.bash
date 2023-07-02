@@ -331,10 +331,12 @@ create_new_run_directories_for_fpga_synthesis()
     $find_to_run -name '*synthesize_for_fpga.bash' \
         | while read file
     do
-        dir=$(dirname "$file")
-        rm -rf "$dir/run"
-        mkdir  "$dir/run"
-        cp "$board_dir"/*.qsf "$board_dir/$fpga_board"/*.{qsf,sdc} "$dir/run"
+        dir=$(readlink -f "$(dirname "$file")/run")
+        info "Setting up: \"$dir\""
+
+        rm -rf "$dir"
+        mkdir  "$dir"
+        cp "$board_dir"/*.qsf "$board_dir/$fpga_board"/*.{qsf,sdc} "$dir"
     done
 }
 
