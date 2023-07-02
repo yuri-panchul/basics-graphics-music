@@ -15,10 +15,4 @@ set_false_path -from * -to [get_ports {HEX1[*]}]
 set_false_path -from * -to [get_ports {HEX2[*]}]
 set_false_path -from * -to [get_ports {HEX3[*]}]
 
-set_false_path -from * -to VGA_HS
-set_false_path -from * -to VGA_VS
-set_false_path -from * -to [get_ports {VGA_R[*]}]
-set_false_path -from * -to [get_ports {VGA_G[*]}]
-set_false_path -from * -to [get_ports {VGA_B[*]}]
-
 set_false_path -from * -to [get_ports {GPIO[*]}]

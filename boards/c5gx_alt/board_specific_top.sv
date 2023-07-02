@@ -21,12 +21,6 @@ module board_specific_top
   output [         7:0] hex2,
   output [         7:0] hex3,
 
-  output                vga_hs,
-  output                vga_vs,
-  output [         3:0] vga_r,
-  output [         3:0] vga_g,
-  output [         3:0] vga_b,
-
   input                 uart_rx,
 
   inout  [w_gpio - 1:0] gpio
@@ -65,12 +59,12 @@ module board_specific_top
     .abcdefgh (   abcdefgh     ),
     .digit    (   digit        ),
 
-    .vsync    (   vga_vs       ),
-    .hsync    (   vga_hs       ),
+    .vsync    (                ),
+    .hsync    (                ),
 
-    .red      (   vga_r        ),
-    .green    (   vga_g        ),
-    .blue     (   vga_b        ),
+    .red      (                ),
+    .green    (                ),
+    .blue     (                ),
 
     .gpio     (   gpio         )
   );
