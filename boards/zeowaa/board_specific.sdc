@@ -47,7 +47,3 @@ set_false_path -from uart_rx -to [all_clocks]
 #
 # http://land-boards.com/blwiki/index.php?title=A-C4E6_Cyclone_IV_FPGA_EP4CE6E22C8N_Development_Board
 # http://land-boards.com/blwiki/index.php?title=A-C4E10_Cyclone_IV_FPGA_EP4CE10E22C8N_Development_Board
-
-if {[file exists top_extra.sdc]} {
-    source top_extra.sdc
-}
