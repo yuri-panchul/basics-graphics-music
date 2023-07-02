@@ -331,7 +331,7 @@ setup_run_directory_for_fpga_synthesis()
     dir="${1:-.}"
     parent_dir=$(readlink -f "$dir/..")
 
-    rm -rf "$dir/*"
+    rm -rf "$dir"/*
 
     > "$dir/fpga_project.qpf"
 
