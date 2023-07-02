@@ -424,9 +424,12 @@ fpga_board_setup ()
         fi
     fi
 
-    [[ "$available_fpga_boards" =~ '(^|\s+)'$fpga_board'(?=\s+|$)' ]]  \
+    if ! [[ "$available_fpga_boards" =~ "(^|\\s+)$fpga_board(?=\\s+|$)" ]] ; then
+        # This error may happen if people mess with the selection file
+    
         error "The selected FPGA board $fpga_board"  \
-           "is not one of the available boards: $available_fpga_boards"
+              "is not one of the available boards: $available_fpga_boards"
+    fi
 }
 
 #-----------------------------------------------------------------------------
