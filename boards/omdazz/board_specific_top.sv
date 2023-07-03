@@ -7,7 +7,7 @@ module board_specific_top
             w_sw    = 4,
             w_led   = 4,
             w_digit = 4,
-            w_GPIO  = 14
+            w_gpio  = 14
 )
 (
   input                  CLK,
@@ -27,7 +27,7 @@ module board_specific_top
 
   input                  UART_RXD,
 
-  inout  [w_GPIO  - 1:0] GPIO
+  inout  [w_gpio  - 1:0] GPIO
 );
 
   //--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ module board_specific_top
     .w_sw    ( w_sw    ),
     .w_led   ( w_led   ),
     .w_digit ( w_digit ),
-    .w_GPIO  ( w_GPIO  )
+    .w_gpio  ( w_gpio  )
   )
   i_top
   (
@@ -70,7 +70,7 @@ module board_specific_top
     .green    (   green     ),
     .blue     (   blue      ),
 
-    .GPIO     (   GPIO      )
+    .gpio     (   GPIO      )
   );
 
   //--------------------------------------------------------------------------

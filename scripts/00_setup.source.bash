@@ -19,7 +19,7 @@ script_dir="$package_dir/scripts"
 script=$(basename "$0")
 log="$PWD/log.txt"
 
-if [[ $script =~ choose_fpga_board ]]
+if [[ $script =~ choose.*fpga_board ]]
 then
     offer_to_create_a_new_fpga_board_select_file=1
 else
