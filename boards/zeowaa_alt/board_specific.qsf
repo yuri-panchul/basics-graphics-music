@@ -101,8 +101,11 @@ set_location_assignment PIN_55  -to gpio[18]
 # GND pin on the board
 # GND pin on the board
 
-  set_location_assignment PIN_15  -to uart_rx
-# set_location_assignment PIN_16  -to uart_tx
+# clk_in_1 (see above)
+# clk_in_2 (see above)
+
+  set_location_assignment PIN_114 -to uart_rx
+# set_location_assignment PIN_115 -to uart_tx
 
 # If this signal is not commented out and is not used, it makes annoying sound
 # set_location_assignment PIN_141 -to buzzer
