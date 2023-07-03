@@ -84,7 +84,7 @@ is_command_available ()
 is_command_available_or_error ()
 {
     is_command_available $1 ||  \
-        error "program $1$2 is not in the path or cannot be run$3"
+        error "program $1${2-} is not in the path or cannot be run${3-}"
 }
 
 #-----------------------------------------------------------------------------
@@ -473,9 +473,10 @@ fpga_board_setup ()
 #
 #-----------------------------------------------------------------------------
 
+is_command_available quartus  || intel_fpga_setup_quartus
+
 if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
-    is_command_available quartus || intel_fpga_setup_quartus
-    is_command_available vsim    || intel_fpga_setup_questa
+    is_command_available vsim || intel_fpga_setup_questa
 fi
 
 is_command_available iverilog || icarus_verilog_setup
