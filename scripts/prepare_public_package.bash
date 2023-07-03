@@ -43,10 +43,10 @@ then
           "before preparing a release package."                \
           "\nSpecifically:\n\n$f"                              \
           "\n\nYou can also see the file list by running:"     \
-          "\n    git clean -d -n \"$pkg_src_root\""            \
+          "\n    (cd \"$pkg_src_root\" ; git clean -d -n)"     \
           "\n\nAfter reviewing (be careful!),"                 \
           "you can remove them by running:"                    \
-          "\n    git clean -d -f \"$pkg_src_root\""            \
+          "\n    (cd \"$pkg_src_root\" ; git clean -d -f)"     \
           "\n\nNote that \"git clean\" without \"-x\" option"  \
           "does not see the files from the .gitignore list."
 fi
@@ -61,10 +61,10 @@ then
           "\nYou need to remove them before preparing a release package."  \
           "\nSpecifically:\n\n$f"                                          \
           "\n\nYou can also see the file list by running:"                 \
-          "\n    git clean -d -x -n \"$pkg_src_root\""                     \
+          "\n    (cd \"$pkg_src_root\" ; git clean -d -x -n)"              \
           "\n\nAfter reviewing (be careful!),"                             \
           "you can remove them by running:"                                \
-          "\n    git clean -d -x -f \"$pkg_src_root\""
+          "\n    (cd \"$pkg_src_root\" ; git clean -d -x -f)"
 fi
 
 f=$(git ls-files --modified ..)
