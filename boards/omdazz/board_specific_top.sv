@@ -7,40 +7,37 @@ module board_specific_top
             w_sw    = 4,
             w_led   = 4,
             w_digit = 4,
-            w_gpio  = 14
+            w_GPIO  = 14
 )
 (
-  input                  clk,
-  input                  rst_n,
+  input                  CLK,
+  input                  RESET,
 
-  input  [w_key   - 1:0] key_sw_n,
-  output [w_led   - 1:0] led_n,
+  input  [w_key   - 1:0] KEY,
+  output [w_led   - 1:0] LED,
 
-  output [          7:0] abcdefgh_n,
-  output [w_digit - 1:0] digit_n,
+  output [          7:0] SEG,
+  output [w_digit - 1:0] DIG,
 
-  output                 buzzer,
+  output                 VGA_HSYNC,
+  output                 VGA_VSYNC,
+  output                 VGA_R,
+  output                 VGA_G,
+  output                 VGA_B,
 
-  output                 hsync,
-  output                 vsync,
-  output [          2:0] rgb,
+  input                  UART_RXD,
 
-  inout  [w_gpio  - 1:0] gpio
+  inout  [w_GPIO  - 1:0] GPIO
 );
 
   //--------------------------------------------------------------------------
 
-  assign buzzer = 1'b1;
+  wire [w_led   - 1:0] led;
 
-  //--------------------------------------------------------------------------
+  wire [          7:0] abcdefgh;
+  wire [w_digit - 1:0] digit;
 
-  logic [w_led   - 1:0] led;
-  logic [          7:0] abcdefgh;
-  logic [w_digit - 1:0] digit;
-
-  logic [          3:0] red;
-  logic [          3:0] green;
-  logic [          3:0] blue;
+  wire [          3:0] red, green, blue;
 
   //--------------------------------------------------------------------------
 
@@ -51,38 +48,40 @@ module board_specific_top
     .w_sw    ( w_sw    ),
     .w_led   ( w_led   ),
     .w_digit ( w_digit ),
-    .w_gpio  ( w_gpio  )
+    .w_GPIO  ( w_GPIO  )
   )
   i_top
   (
-    .clk      (   clk      ),
-    .rst      ( ~ rst_n    ),
+    .clk      (   CLK       ),
+    .rst      ( ~ RESET     ),
 
-    .key      ( ~ key_sw_n ),
-    .sw       ( ~ key_sw_n ),
+    .key      ( ~ KEY       ),
+    .sw       ( ~ KEY       ),
 
-    .led      (   led      ),
+    .led      (   led       ),
 
-    .abcdefgh (   abcdefgh ),
-    .digit    (   digit    ),
+    .abcdefgh (   abcdefgh  ),
+    .digit    (   digit     ),
 
-    .vsync    (   vsync    ),
-    .hsync    (   hsync    ),
+    .vsync    (   VGA_VSYNC ),
+    .hsync    (   VGA_HSYNC ),
 
-    .red      (   red      ),
-    .green    (   green    ),
-    .blue     (   blue     ),
+    .red      (   red       ),
+    .green    (   green     ),
+    .blue     (   blue      ),
 
-    .gpio     (   gpio     )
+    .GPIO     (   GPIO      )
   );
 
   //--------------------------------------------------------------------------
 
-  assign led_n      = ~ led;
+  assign LED   = ~ led;
 
-  assign abcdefgh_n = ~ abcdefgh;
-  assign digit_n    = ~ digit;
+  assign SEG   = ~ abcdefgh;
+  assign DIG   = ~ digit;
 
-  assign rgb        = { | red, | green, | blue };
+  assign VGA_R = | red;
+  assign VGA_G = | green;
+  assign VGA_B = | blue;
 
 endmodule

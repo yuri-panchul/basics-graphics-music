@@ -15,4 +15,5 @@ set_false_path -from * -to [get_ports {HEX1[*]}]
 set_false_path -from * -to [get_ports {HEX2[*]}]
 set_false_path -from * -to [get_ports {HEX3[*]}]
 
+# set_false_path -from * -to UART_TX
 set_false_path -from * -to [get_ports {GPIO[*]}]

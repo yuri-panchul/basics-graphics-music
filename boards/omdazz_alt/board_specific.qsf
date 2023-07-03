@@ -37,6 +37,16 @@ set_location_assignment PIN_135 -to digit_n[1]
 set_location_assignment PIN_136 -to digit_n[2]
 set_location_assignment PIN_137 -to digit_n[3]
 
+set_location_assignment PIN_101 -to hsync
+set_location_assignment PIN_103 -to vsync
+
+set_location_assignment PIN_104 -to rgb[0]
+set_location_assignment PIN_105 -to rgb[1]
+set_location_assignment PIN_106 -to rgb[2]
+
+# set_location_assignment PIN_114 -to uart_txd
+set_location_assignment PIN_115 -to uart_rxd
+
 set_location_assignment PIN_64  -to gpio[0]
 set_location_assignment PIN_65  -to gpio[1]
 set_location_assignment PIN_66  -to gpio[2]
@@ -52,11 +62,4 @@ set_location_assignment PIN_75  -to gpio[11]
 set_location_assignment PIN_76  -to gpio[12]
 set_location_assignment PIN_77  -to gpio[13]
 
-set_location_assignment PIN_110 -to buzzer
-
-set_location_assignment PIN_101 -to hsync
-set_location_assignment PIN_103 -to vsync
-
-set_location_assignment PIN_104 -to rgb[0]
-set_location_assignment PIN_105 -to rgb[1]
-set_location_assignment PIN_106 -to rgb[2]
+# set_location_assignment PIN_110 -to buzzer

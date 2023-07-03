@@ -2,14 +2,17 @@ create_clock -period "50.0 MHz" [get_ports clk]
 
 derive_clock_uncertainty
 
-set_false_path -from [get_ports {key_sw_n[*]}] -to [all_clocks]
-set_false_path -from [get_ports {gpio[*]}]     -to [all_clocks]
+set_false_path -from [get_ports {KEY[*]}]  -to [all_clocks]
+set_false_path -from UART_RXD              -to [all_clocks]
+set_false_path -from [get_ports {GPIO[*]}] -to [all_clocks]
 
-set_false_path -from * -to [get_ports {led_n[*]}]
-set_false_path -from * -to [get_ports {abcdefgh_n[*]}]
-set_false_path -from * -to [get_ports {digit_n[*]}]
-set_false_path -from * -to buzzer
-set_false_path -from * -to hsync
-set_false_path -from * -to vsync
-set_false_path -from * -to [get_ports {rgb[*]}]
-set_false_path -from * -to [get_ports {gpio[*]}]
+set_false_path -from * -to [get_ports {LED[*]}]
+
+set_false_path -from * -to [get_ports {SEG[*]}]
+set_false_path -from * -to [get_ports {DIG[*]}]
+
+set_false_path -from * -to [get_ports {VGA*}]
+
+# set_false_path -from * -to UART_TXD
+
+set_false_path -from * -to [get_ports {GPIO[*]}]

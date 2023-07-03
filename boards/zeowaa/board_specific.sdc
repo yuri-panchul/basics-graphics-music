@@ -4,24 +4,23 @@ derive_clock_uncertainty
 
 set_false_path -from [get_ports {KEY_N[*]}] -to [all_clocks]
 set_false_path -from [get_ports {SW_N[*]}]  -to [all_clocks]
+set_false_path -from UART_RX                -to [all_clocks]
+set_false_path -from [get_ports {GPIO[*]}]  -to [all_clocks]
 
 set_false_path -from * -to [get_ports {LED_N[*]}]
 
 set_false_path -from * -to [get_ports {ABCDEFGH_N[*]}]
 set_false_path -from * -to [get_ports {DIGIT_N[*]}]
 
-# If this signal is not commented out and is not used, it makes annoying sound
-# set_false_path -from * -to BUZZER
-
 set_false_path -from * -to VGA_VSYNC
 set_false_path -from * -to VGA_HSYNC
 set_false_path -from * -to [get_ports {VGA_RGB[*]}]
 
-set_false_path -from [get_ports {GPIO[*]}] -to [all_clocks]
 set_false_path -from * -to [get_ports {GPIO[*]}]
 
-# set_false_path -from UART_RX -to [all_clocks]
 # set_false_path -from * -to UART_TX
+
+# BUZZER
 
 # PS2_CLK
 # PS2_DATA

@@ -19,20 +19,14 @@ module board_specific_top
   output [            7:0] ABCDEFGH_N,
   output [w_digit   - 1:0] DIGIT_N,
 
-  output                   BUZZER,
-
   output                   VGA_HSYNC,
   output                   VGA_VSYNC,
   output [            2:0] VGA_RGB,
 
-  input                    RX,
+  input                    UART_RX,
 
   inout  [w_gpio    - 1:0] GPIO
 );
-
-  //--------------------------------------------------------------------------
-
-  assign BUZZER = 1'b1;
 
   //--------------------------------------------------------------------------
 

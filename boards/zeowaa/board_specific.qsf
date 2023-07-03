@@ -56,9 +56,6 @@ set_location_assignment PIN_136 -to DIGIT_N[5]
 set_location_assignment PIN_137 -to DIGIT_N[6]
 set_location_assignment PIN_138 -to DIGIT_N[7]
 
-# If this signal is not commented out and is not used, it makes annoying sound
-# set_location_assignment PIN_141 -to BUZZER
-
 set_location_assignment PIN_143 -to VGA_VSYNC
 set_location_assignment PIN_142 -to VGA_HSYNC
 set_location_assignment PIN_144 -to VGA_RGB[0]
@@ -106,6 +103,9 @@ set_location_assignment PIN_55  -to GPIO[18]
 
   set_location_assignment PIN_15  -to UART_RX
 # set_location_assignment PIN_16  -to UART_TX
+
+# If this signal is not commented out and is not used, it makes annoying sound
+# set_location_assignment PIN_141 -to BUZZER
 
 # set_location_assignment PIN_11  -to PS2_CLK
 # set_location_assignment PIN_10  -to PS2_DATA

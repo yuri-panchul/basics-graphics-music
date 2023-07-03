@@ -22,20 +22,14 @@ module board_specific_top
   output [            7:0] abcdefgh_n,
   output [w_digit   - 1:0] digit_n,
 
-  output                   buzzer,
-
   output                   vga_hsync,
   output                   vga_vsync,
   output [            2:0] vga_rgb,
 
-  input                    rx,
+  input                    uart_rx,
 
   inout  [w_gpio    - 1:0] gpio
 );
-
-  //--------------------------------------------------------------------------
-
-  assign buzzer = 1'b1;
 
   //--------------------------------------------------------------------------
 
