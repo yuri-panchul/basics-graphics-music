@@ -335,14 +335,25 @@ setup_run_directory_for_fpga_synthesis()
 
     > "$dir/fpga_project.qpf"
 
+    # We need relative paths here because Quartus under Windows
+    # does not like /c/... full paths.
+
+    # We don't need quotation marks around relative paths
+    # because these particular relative paths
+    # are expected to contain only alnums, underscores and slashes.
+
+    rel_parent_dir=$(realpath --relative-to="$dir" "$parent_dir")
+    rel_board_dir=$(realpath  --relative-to="$dir" "$board_dir")
+    rel_lab_dir=$(realpath    --relative-to="$dir" "$lab_dir")
+
     cat << EOF > "$dir/fpga_project.qsf"
 set_global_assignment -name NUM_PARALLEL_PROCESSORS  4
 set_global_assignment -name TOP_LEVEL_ENTITY         board_specific_top
-set_global_assignment -name SDC_FILE                 "$board_dir/$fpga_board/board_specific.sdc"
+set_global_assignment -name SDC_FILE                 $rel_board_dir/$fpga_board/board_specific.sdc
 
-set_global_assignment -name SEARCH_PATH "$parent_dir"
-set_global_assignment -name SEARCH_PATH "$board_dir/$fpga_board"
-set_global_assignment -name SEARCH_PATH "$lab_dir/common"
+set_global_assignment -name SEARCH_PATH $rel_parent_dir
+set_global_assignment -name SEARCH_PATH $rel_board_dir/$fpga_board
+set_global_assignment -name SEARCH_PATH $rel_lab_dir/common
 
 EOF
 
@@ -362,7 +373,7 @@ EOF
 
 create_new_run_directories_for_fpga_synthesis()
 {
-    $find_to_run -name '*synthesize_for_fpga.bash' \
+    $find_to_run "$lab_dir" -name '*synthesize_for_fpga.bash' \
         | while read file
     do
         dir=$(readlink -f "$(dirname "$file")/run")
