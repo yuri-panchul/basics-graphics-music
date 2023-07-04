@@ -1,0 +1,1 @@
+set_global_assignment -name SYSTEMVERILOG_FILE flip_flop_fifo_empty_full_optimized_and_debug_2.sv
