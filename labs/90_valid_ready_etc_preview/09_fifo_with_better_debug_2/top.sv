@@ -99,7 +99,8 @@ module top
     = debug_ptrs [ 0 +: $clog2 (fifo_depth)];
 
   wire [w_digit - 1:0] dots_from_ptrs
-    = (w_digit' (1) << wr_ptr) | (w_digit' (1) << rd_ptr);
+    =   (w_digit' (1) << (fifo_depth - 1 - wr_ptr))
+      | (w_digit' (1) << (fifo_depth - 1 - rd_ptr));
 
   //--------------------------------------------------------------------------
 
@@ -196,7 +197,7 @@ module top
 
   always_comb
     if ((digit & debug_valid_mirrored) == '0)
-      abcdefgh = sign_empty_entry;
+      abcdefgh = sign_empty_entry | abcdefgh_pre [0];
     else
       abcdefgh = abcdefgh_pre;
 
