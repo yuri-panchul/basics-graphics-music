@@ -121,7 +121,7 @@ set_location_assignment PIN_Y24  -to HEX3[0]
 # set_location_assignment PIN_AB25 -to HDMI_TX_D[21]
 # set_location_assignment PIN_AC25 -to HDMI_TX_D[22]
 # set_location_assignment PIN_AD25 -to HDMI_TX_D[23]
- 
+
 #============================================================
 # ADC SPI
 #============================================================
