@@ -1,6 +1,6 @@
 // Asynchronous reset here is needed for one of FPGA boards we use
 
-`include "config.vh"
+`include "config.svh"
 
 module seven_segment_display
 # (
@@ -64,7 +64,7 @@ module seven_segment_display
     else if (cnt == 16'b0)
     begin
       adigefgh <= dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
-      digit    <= { digit [0], digit [w_digit - 1: 1] }
+      digit    <= { digit [0], digit [w_digit - 1: 1] };
       index    <= (index == '0 ? w_index' (w_digit - 1) : index - 1'd1);
     end
   end

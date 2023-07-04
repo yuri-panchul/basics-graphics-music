@@ -1,6 +1,6 @@
 // Asynchronous reset here is needed for one of FPGA boards we use
 
-`include "config.vh"
+`include "config.svh"
 
 module slow_clk_gen
 # (
@@ -26,7 +26,7 @@ module slow_clk_gen
     end
     else if (cnt == '0)
     begin
-      cnt <= w_cnt' (half_period - 1))
+      cnt <= w_cnt' (half_period - 1);
       slow_clk_raw <= ~ slow_clk_raw;
     end
     else

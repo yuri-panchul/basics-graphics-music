@@ -73,10 +73,10 @@ module top
   wire empty, full;
 
   // Either of two leftmost keys is pressed
-  wire push = ~ full & key_sw [3:2] != 2'b11;
+  wire push = ~ full & key [1];
 
   // Either of two rightmost keys is pressed
-  wire pop  = ~ empty & key_sw [1:0] != 2'b11;
+  wire pop  = ~ empty & key [0];
 
   // With this implementation of FIFO
   // we can actually push into a full FIFO
@@ -86,7 +86,7 @@ module top
   // because we assume that the logic that pushes
   // is separated from the logic that pops.
   //
-  // wire push = (~ full | pop) & key_sw [3:2] != 2'b11;
+  // wire push = (~ full | pop) & key [1];
 
   wire [31:0] debug;
 
