@@ -4,56 +4,67 @@
 
 `ifndef SIMULATION
 
-module fpga_top
+module top
+# (
+  parameter clk_mhz = 50,
+            w_key   = 4,
+            w_sw    = 8,
+            w_led   = 8,
+            w_digit = 8,
+            w_gpio  = 20
+)
 (
-  input              clk,
-  input              reset_n,
+  input                        clk,
+  input                        rst,
 
-  input        [3:0] key_sw,
-  output       [3:0] led,
+  // Keys, switches, LEDs
 
-  output logic [7:0] abcdefgh,
-  output       [3:0] digit,
+  input        [w_key   - 1:0] key,
+  input        [w_sw    - 1:0] sw,
+  output logic [w_led   - 1:0] led,
 
-  output             buzzer,
+  // A dynamic seven-segment display
 
-  output             hsync,
-  output             vsync,
-  output       [2:0] rgb
+  output logic [          7:0] abcdefgh,
+  output logic [w_digit - 1:0] digit,
+
+  // VGA
+
+  output logic                 vsync,
+  output logic                 hsync,
+  output logic [          3:0] red,
+  output logic [          3:0] green,
+  output logic [          3:0] blue,
+
+  // General-purpose Input/Output
+
+  inout  logic [w_gpio  - 1:0] gpio
 );
 
   //--------------------------------------------------------------------------
 
-  wire rst = ~ reset_n;
-
-  assign led    = '1;
-  assign buzzer = 1'b1;
-  assign hsync  = 1'b1;
-  assign vsync  = 1'b1;
-  assign rgb    = 3'b0;
-
-  //--------------------------------------------------------------------------
-
-  `ifdef SIMULATION
-
-    wire slow_clk = clk;
-
-  `else
-
-    wire slow_clk_raw, slow_clk;
-
-    slow_clk_gen # (26) i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
-
-    // "global" is Intel FPGA-specific primitive to route
-    // a signal coming from data into clock tree
-
-    global i_global (.in (slow_clk_raw), .out (slow_clk));
-
-  `endif  // `ifdef SIMULATION
+  // assign led      = '0;
+  // assign abcdefgh = '0;
+  // assign digit    = '0;
+     assign vsync    = '0;
+     assign hsync    = '0;
+     assign red      = '0;
+     assign green    = '0;
+     assign blue     = '0;
 
   //--------------------------------------------------------------------------
 
-  localparam fifo_width = 4, fifo_depth = 4;
+  wire slow_clk_raw, slow_clk;
+  slow_clk_gen # (26) i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
+
+  // "global" is Intel FPGA-specific primitive to route
+  // a signal coming from data into clock tree
+
+  global i_global (.in (slow_clk_raw), .out (slow_clk));
+
+  //--------------------------------------------------------------------------
+
+  localparam fifo_width = 4, fifo_depth = 5;
 
   wire [fifo_width - 1:0] write_data;
   wire [fifo_width - 1:0] read_data;
@@ -138,25 +149,37 @@ module fpga_top
 
   //--------------------------------------------------------------------------
 
+  localparam read_data_digit  = 0,
+             write_data_digit = w_digit >= 4 ? 3 : 1;
+
+  localparam w_number = w_digit * 4;
+
+  wire [w_number - 1:0] number
+      w_digit >= 4 ?
+          w_number' ({ write_data , wr_ptr , rd_ptr , read_data })  // 4-digit
+        : w_number' ({ write_data , read_data })            // 2-digit display
+
   wire [7:0] abcdefgh_pre;
 
-  seven_segment_4_digits i_display
+  seven_segment_display # (w_digit) i_display
   (
     .clk      (clk),
-    .number   ({ write_data , wr_ptr , rd_ptr , read_data }),
-    .dots     (4'b0),
+    .number   (number),
+    .dots     ('0),
     .abcdefgh (abcdefgh_pre),
     .digit    (digit),
     .*
   );
 
-  localparam sign_full  = 8'b01111111,
-             sign_empty = 8'b11101111;
+  localparam sign_full  = 8'b1000_0000,
+             sign_empty = 8'b0001_0000;
 
   always_comb
-    if (digit == 4'b1110 & empty)
+    if (digit [read_data_digit] & empty)
+    begin
       abcdefgh = sign_empty;
-    else if (digit == 4'b0111 & full)
+    end
+    else if (digit [write_data_digit] & full)
       abcdefgh = sign_full;
     else
       abcdefgh = abcdefgh_pre;
