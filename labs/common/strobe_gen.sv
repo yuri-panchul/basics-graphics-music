@@ -1,5 +1,7 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
+`include "config.svh"
+
 module strobe_gen
 # (
   parameter clk_mhz          = 50,

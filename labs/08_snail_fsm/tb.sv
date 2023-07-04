@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module tb;
 
   localparam clk_mhz = 1,

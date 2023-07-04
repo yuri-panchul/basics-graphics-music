@@ -1,5 +1,7 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
+`include "config.svh"
+
 module shift_reg
 # (
   parameter depth = 0
