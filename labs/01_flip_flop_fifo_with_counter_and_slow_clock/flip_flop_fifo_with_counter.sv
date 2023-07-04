@@ -4,7 +4,7 @@
 
 module flip_flop_fifo_with_counter
 # (
-  parameter width = 8, depth = 10
+  parameter width = 1, depth = 0
 )
 (
   input                clk,

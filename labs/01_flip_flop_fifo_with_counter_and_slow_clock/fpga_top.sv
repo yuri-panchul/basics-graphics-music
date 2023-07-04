@@ -2,6 +2,8 @@
 
 `include "config.svh"
 
+`ifndef SIMULATION
+
 module fpga_top
 (
   input              clk,
@@ -160,3 +162,5 @@ module fpga_top
       abcdefgh = abcdefgh_pre;
 
 endmodule
+
+`endif
