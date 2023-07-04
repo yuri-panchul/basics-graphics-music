@@ -91,7 +91,8 @@ module top
 
   //--------------------------------------------------------------------------
 
+  assign led      = w_led'   ({ dec0, dec1, dec2, dec3 });
   assign abcdefgh = key [2] ? { dec0, dec1 } : { dec2, dec3 };
-  assign digit    = '1;
+  assign digit    = w_digit' ({ dec0, dec1, dec2, dec3 });
 
 endmodule
