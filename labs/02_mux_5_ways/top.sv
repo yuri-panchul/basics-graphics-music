@@ -50,31 +50,50 @@ module top
 
   //--------------------------------------------------------------------------
 
-  
-  wire a = key [0];
-  wire b = key [1];   
+  wire a   = key [0];
+  wire b   = key [1];
+  wire sel = key [2];
 
-  wire result = a ^ b;
+  //--------------------------------------------------------------------------
 
-  assign led [0] = result;
+  // Five different implementations
 
-  assign led [1] = key [0] ^ key [1];
+  wire mux0 = sel ? a : b;
 
-  // Exercise 1: Change the code below.
-  // Assign to led [2] the result of AND operation
+  //--------------------------------------------------------------------------
 
-  assign led [2] = 1'b0;
+  wire [1:0] ab = { a, b };
+  assign mux1 = ab [sel];  
 
-  // Exercise 2: Change the code below.
-  // Assign to led [3] the result of XOR operation 
-  // without using "^" operation.
+  //--------------------------------------------------------------------------
+
+  logic mux2;
+
+  always_comb
+    if (sel)
+      mux2 = a;
+    else
+      mux2 = b;
+
+  //--------------------------------------------------------------------------
+
+  logic mux3;
+
+  always_comb
+    case (sel)
+    1'b1: mux3 = a;
+    1'b0: mux3 = b;
+    endcase
+
+  //--------------------------------------------------------------------------
+
+  // Use concatenation operation to combine 4 signals:
+  assign led = { mux0, mux1, mux2, mux3 };
+
+  //--------------------------------------------------------------------------
+
+  // Exercise: Implement mux
+  // without using "?" operation, "if", "case" or a bit selection.
   // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
-
-  assign led [3] = 1'b0;
-
-  // Exercise 3: Create an illustration to De Morgan's laws:
-  //
-  // ~ (a & b) == ~ a | ~ b
-  // ~ (a | b) == ~ a & ~ b
 
 endmodule
