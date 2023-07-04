@@ -45,7 +45,7 @@ module tb;
 
     repeat (8)
     begin
-       #10
+       # 10 
        key <= $urandom ();
        sw  <= $urandom ();
     end

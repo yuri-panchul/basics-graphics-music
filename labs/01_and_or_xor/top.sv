@@ -58,7 +58,7 @@ module top
 
   assign led [0] = result;
 
-  assign led [1] = key [0] ^ key [1]);
+  assign led [1] = key [0] ^ key [1];
 
   // Exercise 1: Change the code below.
   // Assign to led [2] the result of AND operation
@@ -71,5 +71,10 @@ module top
   // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
   assign led [3] = 1'b0;
+
+  // Exercise 3: Create an illustration to De Morgan's laws:
+  //
+  // ~ (a & b) == ~ a | ~ b
+  // ~ (a | b) == ~ a & ~ b
 
 endmodule
