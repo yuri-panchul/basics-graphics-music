@@ -2,66 +2,81 @@
 
 `include "config.svh"
 
-module fpga_top
+`ifndef SIMULATION
+
+module top
+# (
+  parameter clk_mhz = 50,
+            w_key   = 4,
+            w_sw    = 8,
+            w_led   = 8,
+            w_digit = 8,
+            w_gpio  = 20
+)
 (
-  input              clk,
-  input              reset_n,
+  input                        clk,
+  input                        rst,
 
-  input        [3:0] key_sw,
-  output       [3:0] led,
+  // Keys, switches, LEDs
 
-  output logic [7:0] abcdefgh,
-  output       [3:0] digit,
+  input        [w_key   - 1:0] key,
+  input        [w_sw    - 1:0] sw,
+  output logic [w_led   - 1:0] led,
 
-  output             buzzer,
+  // A dynamic seven-segment display
 
-  output             hsync,
-  output             vsync,
-  output       [2:0] rgb
+  output logic [          7:0] abcdefgh,
+  output logic [w_digit - 1:0] digit,
+
+  // VGA
+
+  output logic                 vsync,
+  output logic                 hsync,
+  output logic [          3:0] red,
+  output logic [          3:0] green,
+  output logic [          3:0] blue,
+
+  // General-purpose Input/Output
+
+  inout  logic [w_gpio  - 1:0] gpio
 );
 
   //--------------------------------------------------------------------------
 
-  wire rst = ~ reset_n;
-
-  assign led    = '1;
-  assign buzzer = 1'b1;
-  assign hsync  = 1'b1;
-  assign vsync  = 1'b1;
-  assign rgb    = 3'b0;
-
-  //--------------------------------------------------------------------------
-
-  `ifdef SIMULATION
-
-    wire slow_clk = clk;
-
-  `else
-
-    wire slow_clk_raw, slow_clk;
-
-    slow_clk_gen # (26) i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
-
-    // "global" is Intel FPGA-specific primitive to route
-    // a signal coming from data into clock tree
-
-    global i_global (.in (slow_clk_raw), .out (slow_clk));
-
-  `endif  // `ifdef SIMULATION
+  // assign led      = '0;
+  // assign abcdefgh = '0;
+  // assign digit    = '0;
+     assign vsync    = '0;
+     assign hsync    = '0;
+     assign red      = '0;
+     assign green    = '0;
+     assign blue     = '0;
 
   //--------------------------------------------------------------------------
 
-  localparam fifo_width = 4, fifo_depth = 4;
+  wire slow_clk_raw, slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+  i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
+
+  // "global" is Intel FPGA-specific primitive to route
+  // a signal coming from data into clock tree
+
+  global i_global (.in (slow_clk_raw), .out (slow_clk));
+
+  //--------------------------------------------------------------------------
+
+  localparam fifo_width = 4, fifo_depth = 5;
 
   wire [fifo_width - 1:0] write_data;
   wire [fifo_width - 1:0] read_data;
   wire empty, full;
 
   // Either of two leftmost keys is pressed
-  wire push = ~ full & key_sw [3:2] != 2'b11;
+  wire push = ~ full & key [1];
 
   // Either of two rightmost keys is pressed
-  wire pop  = ~ empty & key_sw [1:0] != 2'b11;
+  wire pop  = ~ empty & key [0];
 
   // With this implementation of FIFO
   // we can actually push into a full FIFO
@@ -71,7 +86,7 @@ module fpga_top
   // because we assume that the logic that pushes
   // is separated from the logic that pops.
   //
-  // wire push = (~ full | pop) & key_sw [3:2] != 2'b11;
+  // wire push = (~ full | pop) & key [1];
 
   wire [fifo_depth - 1:0]                   debug_valid;
   wire [fifo_depth - 1:0][fifo_width - 1:0] debug_data;
@@ -136,27 +151,27 @@ module fpga_top
 
   wire [7:0] abcdefgh_pre;
 
-  seven_segment_4_digits i_display
+  seven_segment_display # (w_digit) i_display
   (
     .clk      (clk),
     .number   (debug_data),
-    .dots     ({ 4 { full }}),
+    .dots     ({ 4 { ~ full } }),
     .abcdefgh (abcdefgh_pre),
     .digit    (digit),
     .*
   );
 
-  //--------------------------------------------------------------------------
-
-  localparam sign_empty_head  = 8'b00001111,
-             sign_empty_entry = 8'b01101111;
+  localparam sign_empty_head  = 8'b11110000,
+             sign_empty_entry = 8'b10010000;
 
   always_comb
-    if (digit == 4'b1110 & empty)
+    if (digit == w_digit' (1) & empty)
       abcdefgh = sign_empty_head;
-    else if ((digit | debug_valid) != 4'b1111)
+    else if ((digit | debug_valid) == '0)
       abcdefgh = sign_empty_entry;
     else
       abcdefgh = abcdefgh_pre;
 
 endmodule
+
+`endif
