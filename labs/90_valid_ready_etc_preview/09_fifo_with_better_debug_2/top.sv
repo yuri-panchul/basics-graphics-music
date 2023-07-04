@@ -88,6 +88,21 @@ module top
   //
   // wire push = (~ full | pop) & key [1];
 
+  //--------------------------------------------------------------------------
+
+  wire [31:0] debug_ptrs;
+
+  wire [$clog2 (fifo_depth) - 1:0] wr_ptr
+    = debug_ptrs [16 +: $clog2 (fifo_depth)];
+
+  wire [$clog2 (fifo_depth) - 1:0] rd_ptr
+    = debug_ptrs [ 0 +: $clog2 (fifo_depth)];
+
+  wire [w_digit - 1:0] dots_from_ptrs
+    = (w_digit' (1) << wr_ptr) | (w_digit' (1) << rd_ptr);
+
+  //--------------------------------------------------------------------------
+
   wire [fifo_depth - 1:0]                   debug_valid;
   wire [fifo_depth - 1:0][fifo_width - 1:0] debug_data;
 
@@ -169,7 +184,7 @@ module top
   (
     .clk      (clk),
     .number   (debug_data_mirrored),
-    .dots     ('0),
+    .dots     (dots_from_ptrs),
     .abcdefgh (abcdefgh_pre),
     .digit    (digit),
     .*

@@ -16,6 +16,8 @@ module flip_flop_fifo_empty_full_optimized_and_debug_2
   output               empty,
   output               full,
 
+  output [       31:0]              debug_ptrs,
+
   output [depth - 1:0]              debug_valid,
   output [depth - 1:0][width - 1:0] debug_data
 );
@@ -105,6 +107,9 @@ module flip_flop_fifo_empty_full_optimized_and_debug_2
 
   // TODO: Implement the debug signal generation
   // START_SOLUTION
+
+  assign debug_ptrs [31:16] = 16' (wr_ptr);
+  assign debug_ptrs [15:00] = 16' (rd_ptr);
 
   generate
     genvar i;
