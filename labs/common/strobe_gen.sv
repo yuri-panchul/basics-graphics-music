@@ -16,7 +16,7 @@ module strobe_gen
   localparam period = clk_mhz * 1000 * 1000 / strobe_hz,
              w_cnt  = $clog2 (period);
 
-  wire [w_cnt - 1:0] cnt;
+  logic [w_cnt - 1:0] cnt;
 
   always_ff @ (posedge clk or posedge rst)
     if (rst)

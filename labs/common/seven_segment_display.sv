@@ -4,7 +4,7 @@
 
 module seven_segment_display
 # (
-  w_digit = 1
+  w_digit = 2
 )
 (
   input  clk,
@@ -57,7 +57,8 @@ module seven_segment_display
     if (rst)
       index <= '0;
     else if (cnt == 16'b0)
-      index <= (index == w_index' (w_digit - 1) ? '0 : index + 1'd1);
+      index <= (index == w_index' (w_digit - 1) ?
+        w_index' (0) : index + 1'd1);
 
   assign abcdefgh = dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
   assign digit    = w_digit' (1'b1) << index;

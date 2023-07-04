@@ -16,7 +16,7 @@ module slow_clk_gen
   localparam half_period = fast_clk_mhz * 1000 * 1000 / slow_clk_hz / 2,
              w_cnt = $clog2 (half_period);
 
-  wire [w_cnt - 1:0] cnt;
+  logic [w_cnt - 1:0] cnt;
 
   always_ff @ (posedge clk or posedge rst)
     if (rst)
