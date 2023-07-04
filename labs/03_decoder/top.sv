@@ -56,7 +56,7 @@ module top
 
   // Implementation 1: tedious
 
-  wire dec0;
+  wire [3:0] dec0;
 
   assign dec0 [0] = ~ in [1] & ~ in [0];
   assign dec0 [1] = ~ in [1] &   in [0];
@@ -65,7 +65,7 @@ module top
 
   // Implementation 2: case
 
-  logic dec1;
+  logic [3:0] dec1;
 
   always_comb
     case (in)
@@ -77,11 +77,11 @@ module top
 
   // Implementation 3: shift
 
-  wire dec2 = 4'b0001 << in;
+  wire [3:0] dec2 = 4'b0001 << in;
 
   // Implementation 4: index
 
-  logic dec3;
+  logic [3:0] dec3;
 
   always_comb
   begin
