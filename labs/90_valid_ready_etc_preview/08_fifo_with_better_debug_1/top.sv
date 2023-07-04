@@ -66,7 +66,7 @@ module top
 
   //--------------------------------------------------------------------------
 
-  localparam fifo_width = 4, fifo_depth = 5;
+  localparam fifo_width = 4, fifo_depth = w_digit;
 
   wire [fifo_width - 1:0] write_data;
   wire [fifo_width - 1:0] read_data;
@@ -155,7 +155,7 @@ module top
   (
     .clk      (clk),
     .number   (debug_data),
-    .dots     ({ 4 { ~ full } }),
+    .dots     ({ w_digit { full } }),
     .abcdefgh (abcdefgh_pre),
     .digit    (digit),
     .*
@@ -167,7 +167,7 @@ module top
   always_comb
     if (digit == w_digit' (1) & empty)
       abcdefgh = sign_empty_head;
-    else if ((digit | debug_valid) == '0)
+    else if ((digit & debug_valid) == '0)
       abcdefgh = sign_empty_entry;
     else
       abcdefgh = abcdefgh_pre;
