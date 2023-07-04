@@ -1,5 +1,7 @@
 `include "config.svh"
 
+`ifdef SIMULATION
+
 module fifo_monitor
 # (
   parameter width = 1,
@@ -94,3 +96,5 @@ module fifo_monitor
   end
 
 endmodule
+
+`endif

@@ -55,7 +55,9 @@ module top
   //--------------------------------------------------------------------------
 
   wire slow_clk_raw, slow_clk;
-  slow_clk_gen # (26) i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
+
+    slow_clk_gen # (.clk_mhz (clk_mhz), .times_per_sec (3))
+  i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
 
   // "global" is Intel FPGA-specific primitive to route
   // a signal coming from data into clock tree
@@ -155,9 +157,9 @@ module top
   localparam w_number = w_digit * 4;
 
   wire [w_number - 1:0] number
-      w_digit >= 4 ?
+    = w_digit >= 4 ?
           w_number' ({ write_data , wr_ptr , rd_ptr , read_data })  // 4-digit
-        : w_number' ({ write_data , read_data })            // 2-digit display
+        : w_number' ({ write_data , read_data });           // 2-digit display
 
   wire [7:0] abcdefgh_pre;
 
