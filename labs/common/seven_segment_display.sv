@@ -57,13 +57,13 @@ module seven_segment_display
   begin
     if (rst)
     begin
-      adigefgh <= dig_to_seg (0);
+      abcdefgh <= dig_to_seg (0);
       digit    <= w_digit' (1'b1);
       index    <= '0;
     end
     else if (cnt == 16'b0)
     begin
-      adigefgh <= dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
+      abcdefgh <= dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
       digit    <= { digit [0], digit [w_digit - 1: 1] };
       index    <= (index == '0 ? w_index' (w_digit - 1) : index - 1'd1);
     end

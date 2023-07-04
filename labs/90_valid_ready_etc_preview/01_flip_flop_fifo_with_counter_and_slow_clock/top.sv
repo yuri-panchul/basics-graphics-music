@@ -56,7 +56,7 @@ module top
 
   wire slow_clk_raw, slow_clk;
 
-    slow_clk_gen # (.clk_mhz (clk_mhz), .times_per_sec (3))
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (3))
   i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
 
   // "global" is Intel FPGA-specific primitive to route
