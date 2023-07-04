@@ -1,9 +1,11 @@
 `include "config.svh"
 
+`ifdef SIMULATION
+
 module fifo_monitor
 # (
-  parameter width = 8,
-            depth = 2,
+  parameter width = 1,
+            depth = 0,
             allow_push_when_full_with_pop = 0
 )
 (
@@ -94,3 +96,5 @@ module fifo_monitor
   end
 
 endmodule
+
+`endif
