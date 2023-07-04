@@ -56,7 +56,7 @@ module top
 
   wire slow_clk_raw, slow_clk;
 
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (3))
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
   i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
 
   // "global" is Intel FPGA-specific primitive to route
@@ -152,7 +152,8 @@ module top
   //--------------------------------------------------------------------------
 
   localparam read_data_digit  = 0,
-             write_data_digit = w_digit >= 4 ? 3 : 1;
+             write_data_digit = w_digit >= 4 ? 3 : 1,
+             digit_mask       = ~ (~ 0 << (write_data_digit + 1));
 
   localparam w_number = w_digit * 4;
 
@@ -183,8 +184,10 @@ module top
     end
     else if (digit [write_data_digit] & full)
       abcdefgh = sign_full;
-    else
+    else if (digit & digit_mask)
       abcdefgh = abcdefgh_pre;
+    else
+      abcdefgh = '0;
 
 endmodule
 

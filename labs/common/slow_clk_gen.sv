@@ -13,7 +13,7 @@ module slow_clk_gen
   output logic slow_clk_raw
 );
 
-  localparam half_period = fast_clk_mhz / slow_clk_hz / 2,
+  localparam half_period = fast_clk_mhz * 1000 * 1000 / slow_clk_hz / 2,
              w_cnt = $clog2 (half_period);
 
   wire [w_cnt - 1:0] cnt;

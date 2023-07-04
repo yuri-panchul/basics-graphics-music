@@ -13,8 +13,8 @@ module seven_segment_display
   input  [w_digit * 4 - 1:0] number,
   input  [w_digit     - 1:0] dots,
 
-  output logic [7:0] abcdefgh,
-  output logic [7:0] digit
+  output [7:0] abcdefgh,
+  output [7:0] digit
 );
 
   function [7:0] dig_to_seg (input [3:0] dig);
@@ -54,19 +54,12 @@ module seven_segment_display
   logic [w_index - 1:0] index;
 
   always @ (posedge clk or posedge rst)
-  begin
     if (rst)
-    begin
-      abcdefgh <= dig_to_seg (0);
-      digit    <= w_digit' (1'b1);
-      index    <= '0;
-    end
+      index <= '0;
     else if (cnt == 16'b0)
-    begin
-      abcdefgh <= dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
-      digit    <= { digit [0], digit [w_digit - 1: 1] };
-      index    <= (index == '0 ? w_index' (w_digit - 1) : index - 1'd1);
-    end
-  end
+      index <= (index == w_index' (w_digit - 1) ? '0 : index + 1'd1);
+
+  assign abcdefgh = dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
+  assign digit    = w_digit' (1'b1) << index;
 
 endmodule
