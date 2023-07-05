@@ -94,36 +94,19 @@ module top
   // Implementation 3: Combination of priority arbiter
   // and encoder without priority
 
-  localparam w = $bits (in);
+  localparam w = 4;
 
   wire [w - 1:0] c = { ~ in [w - 2:0] & c [w - 2:0], 1'b1 };
   wire [w - 1:0] g = in & c;
 
-  `ifdef __ICARUS__
-
-    // Icarus does not support unique case
-
-    always_comb
-      case (g)
-      4'b0001: enc2 = 2'd0;
-      4'b0010: enc2 = 2'd1;
-      4'b0100: enc2 = 2'd2;
-      4'b1000: enc2 = 2'd3;
-      default: enc2 = 2'd0;
-      endcase
-
-  `else
-
-    always_comb
-      unique case (g)
-      4'b0001: enc2 = 2'd0;
-      4'b0010: enc2 = 2'd1;
-      4'b0100: enc2 = 2'd2;
-      4'b1000: enc2 = 2'd3;
-      default: enc2 = 2'd0;
-      endcase
-
-  `endif
+  always_comb
+    unique case (g)
+    4'b0001: enc2 = 2'd0;
+    4'b0010: enc2 = 2'd1;
+    4'b0100: enc2 = 2'd2;
+    4'b1000: enc2 = 2'd3;
+    default: enc2 = 2'd0;
+    endcase
 
   /*
   // A variation of Implementation 3: Using unusual case of "case"
