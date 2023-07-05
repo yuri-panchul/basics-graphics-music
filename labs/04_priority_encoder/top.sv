@@ -50,20 +50,20 @@ module top
 
   //--------------------------------------------------------------------------
 
-  wire [3:0] in;
+  wire [2:0] in;
 
   generate
 
-    if (w_key >= 4)              // Board with at least 4 keys
-      assign in = key [3:0];
-    else if (w_sw >= 4)          // Board with at least 4 switches
-      assign in = sw  [3:0];
-    else if (w_key + w_sw >= 4)  // Board with at least 4 keys + switches
-      assign in = 4' ({ key, sw });
+    if (w_key >= 3)              // Board with at least 3 keys
+      assign in = key [2:0];
+    else if (w_sw >= 3)          // Board with at least 3 switches
+      assign in = sw  [2:0];
+    else if (w_key + w_sw >= 3)  // Board with at least 3 keys + switches
+      assign in = 3' ({ key, sw });
     else if (w_key >= 2)         // Board with at least 2 keys
-      assign in = { key [3:2], key [1:0] };
-    else                         // Corner case: repeat a key 4 times
-      assign in = { 4 { key [0] } };
+      assign in = { key [0], key [1:0] };
+    else                         // Corner case: repeat a key 3 times
+      assign in = { 3 { key [0] } };
 
   endgenerate
 
@@ -77,34 +77,31 @@ module top
          if (in [0]) enc0 = 2'd0;
     else if (in [1]) enc0 = 2'd1;
     else if (in [2]) enc0 = 2'd2;
-    else if (in [3]) enc0 = 2'd3;
     else             enc0 = 2'd0;
 
   // Implementation 2. Priority encoder using casez
 
   always_comb
     casez (in)
-    4'b???1: enc1 = 2'd0;
-    4'b??10: enc1 = 2'd1;
-    4'b?100: enc1 = 2'd2;
-    4'b1000: enc1 = 2'd3;
+    3'b??1:  enc1 = 2'd0;
+    3'b?10:  enc1 = 2'd1;
+    3'b100:  enc1 = 2'd2;
     default: enc1 = 2'd0;
     endcase
 
   // Implementation 3: Combination of priority arbiter
   // and encoder without priority
 
-  localparam w = 4;
+  localparam w = 3;
 
   wire [w - 1:0] c = { ~ in [w - 2:0] & c [w - 2:0], 1'b1 };
   wire [w - 1:0] g = in & c;
 
   always_comb
     unique case (g)
-    4'b0001: enc2 = 2'd0;
-    4'b0010: enc2 = 2'd1;
-    4'b0100: enc2 = 2'd2;
-    4'b1000: enc2 = 2'd3;
+    3'b001:  enc2 = 2'd0;
+    3'b010:  enc2 = 2'd1;
+    3'b100:  enc2 = 2'd2;
     default: enc2 = 2'd0;
     endcase
 
@@ -116,7 +113,6 @@ module top
     g [0]:   enc2 = 2'd0;
     g [1]:   enc2 = 2'd1;
     g [2]:   enc2 = 2'd2;
-    g [3]:   enc2 = 2'd3;
     default: enc2 = 2'd0;
     endcase
   */
