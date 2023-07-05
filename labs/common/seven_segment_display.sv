@@ -4,7 +4,7 @@
 
 module seven_segment_display
 # (
-  w_digit = 2
+  parameter w_digit = 2
 )
 (
   input  clk,
