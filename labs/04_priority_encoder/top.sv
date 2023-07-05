@@ -74,22 +74,22 @@ module top
   // Implementation 1. Priority encoder using a chain of "ifs"
 
   always_comb
-           if (in [0]) enc0 = 2'd0;
-      else if (in [1]) enc0 = 2'd1;
-      else if (in [2]) enc0 = 2'd2;
-      else if (in [3]) enc0 = 2'd3;
-      else             enc0 = 2'd0;
+         if (in [0]) enc0 = 2'd0;
+    else if (in [1]) enc0 = 2'd1;
+    else if (in [2]) enc0 = 2'd2;
+    else if (in [3]) enc0 = 2'd3;
+    else             enc0 = 2'd0;
 
   // Implementation 2. Priority encoder using casez
 
   always_comb
-      casez (in)
-      4'b???1: enc1 = 2'd0;
-      4'b??10: enc1 = 2'd1;
-      4'b?100: enc1 = 2'd2;
-      4'b1000: enc1 = 2'd3;
-      default: enc1 = 2'd0;
-      endcase
+    casez (in)
+    4'b???1: enc1 = 2'd0;
+    4'b??10: enc1 = 2'd1;
+    4'b?100: enc1 = 2'd2;
+    4'b1000: enc1 = 2'd3;
+    default: enc1 = 2'd0;
+    endcase
 
   // Implementation 3: Combination of priority arbiter
   // and encoder without priority
@@ -99,7 +99,22 @@ module top
   wire [w - 1:0] c = { ~ in [w - 2:0] & c [w - 2:0], 1'b1 };
   wire [w - 1:0] g = in & c;
 
-  always_comb
+  `ifdef __ICARUS__
+
+    // Icarus does not support unique case
+
+    always_comb
+      case (g)
+      4'b0001: enc2 = 2'd0;
+      4'b0010: enc2 = 2'd1;
+      4'b0100: enc2 = 2'd2;
+      4'b1000: enc2 = 2'd3;
+      default: enc2 = 2'd0;
+      endcase
+
+  `else
+
+    always_comb
       unique case (g)
       4'b0001: enc2 = 2'd0;
       4'b0010: enc2 = 2'd1;
@@ -108,17 +123,19 @@ module top
       default: enc2 = 2'd0;
       endcase
 
+  `endif
+
   /*
   // A variation of Implementation 3: Using unusual case of "case"
 
   always_comb
-      unique case (1'b1)
-      g [0]:   enc2 = 2'd0;
-      g [1]:   enc2 = 2'd1;
-      g [2]:   enc2 = 2'd2;
-      g [3]:   enc2 = 2'd3;
-      default: enc2 = 2'd0;
-      endcase
+    unique case (1'b1)
+    g [0]:   enc2 = 2'd0;
+    g [1]:   enc2 = 2'd1;
+    g [2]:   enc2 = 2'd2;
+    g [3]:   enc2 = 2'd3;
+    default: enc2 = 2'd0;
+    endcase
   */
 
   // A note on obsolete practice:
@@ -132,19 +149,29 @@ module top
 
   // Implementation 4: Using "for" loop
 
-  always_comb
-  begin
+  `ifdef __ICARUS__
+
+    // Icarus does not support break statement
+
+    assign enc3 = enc2;
+
+  `else
+
+    always_comb
+    begin
       enc3 = '0;
 
       for (int i = 0; i < $bits (in); i ++)
       begin
-          if (in [i])
-          begin
-              enc3 = 2' (i);
-              break;
-          end
+        if (in [i])
+        begin
+          enc3 = 2' (i);
+          break;
+        end
       end
-  end
+    end
+
+  `endif
 
   //--------------------------------------------------------------------------
 
