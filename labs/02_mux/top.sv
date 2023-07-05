@@ -87,13 +87,18 @@ module top
 
   //--------------------------------------------------------------------------
 
-  // Use concatenation operation to combine 4 signals:
-  assign led = { mux0, mux1, mux2, mux3 };
-
-  //--------------------------------------------------------------------------
-
   // Exercise: Implement mux
   // without using "?" operation, "if", "case" or a bit selection.
   // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
+
+  wire mux4 = 1'b0;
+
+  //--------------------------------------------------------------------------
+
+  // Use concatenation operation for 5 signals:
+
+  assign led      = w_led'   ({ mux0, mux1, mux2, mux3, mux4 });
+  assign abcdefgh = { 3'b0,     mux0, mux1, mux2, mux3, mux4 };
+  assign digit    = w_digit' ({ mux0, mux1, mux2, mux3, mux4 });
 
 endmodule

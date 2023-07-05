@@ -62,16 +62,19 @@ module top
   //--------------------------------------------------------------------------
 
   // Exercise 1: Change the code below.
-  // Assign to led [2] the result of AND operation
+  // Assign to led [2] the result of AND operation.
+  //
+  // If led [2] is not available on your board,
+  // comment out the code above and reuse led [0].
 
-  assign led [2] = 1'b0;
+  // assign led [2] =
 
   // Exercise 2: Change the code below.
   // Assign to led [3] the result of XOR operation 
   // without using "^" operation.
   // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
-  assign led [3] = 1'b0;
+  // assign led [3] =
 
   // Exercise 3: Create an illustration to De Morgan's laws:
   //
