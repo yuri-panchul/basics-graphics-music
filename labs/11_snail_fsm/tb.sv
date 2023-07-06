@@ -69,19 +69,22 @@ module tb;
 
     @ (negedge rst);
 
-    for (int i = 0; i < 50; i ++)
+    repeat (50)
     begin
-      // Enable override
-
-      if (i == 20)
-        force i_top.enable = 1'b1;
-      else if (i == 40)
-        release i_top.enable;
-
       @ (posedge clk);
 
       key <= $urandom ();
       sw  <= $urandom ();
+    end
+
+    // To change only one key
+
+    key <= '0;
+
+    repeat (50)
+    begin
+      @ (posedge clk);
+      key [0] <= $urandom ();
     end
 
     $finish;

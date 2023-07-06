@@ -1,5 +1,9 @@
 `include "config.svh"
 
+   `define IMPLEMENTATION_1
+// `define IMPLEMENTATION_2
+// `define IMPLEMENTATION_3
+
 module top
 # (
   parameter clk_mhz = 50,
@@ -50,60 +54,96 @@ module top
 
   //--------------------------------------------------------------------------
 
-  // Exercise 1: Free running counter.
-  // How do you change the speed of LED blinking?
-  // Try different bit slices to display.
+  wire [7:0] req = 8' ({ sw, key });
+  wire [7:0] gnt1, gnt2;
 
-  logic [31:0] cnt;
+  assign led      = w_led'  (gnt1);
+  assign abcdefgh = gnt2;
+  assign digit    = w_digit (gnt2);
 
-  always_ff @ (posedge clk or posedge rst)
-    if (rst)
-      cnt <= '0;
-    else
-      cnt <= cnt + 1'd1;
+  wire enable;
 
-  assign led      = cnt [ $left (cnt) -: w_led   ];
-  assign abcdefgh = cnt [ $left (cnt) -: 8       ];
-  assign digit    = cnt [ $left (cnt) -: w_digit ];
+  //--------------------------------------------------------------------------
 
-  // Exercise 2: Key-controlled counter.
-  // Comment out the code above.
-  // Uncomment and synthesize the code below.
-  // Press the key to see the counter incrementing.
-  //
-  // Change the design, for example:
-  //
-  // 1. One key is used to increment, another to decrement.
-  //
-  // 2. Two counters controlled by different keys
-  // displayed in different groups of LEDs.
+  `ifdef IMPLEMENTATION_1
 
-  /*
+  // Generate a strobe signal 3 times a second
 
-  wire any_key = | key;
+  strobe_gen
+  # (.clk_mhz (clk_mhz), .strobe_hz (3))
+  i_strobe_gen
+  (
+    .clk    ( clk    ),
+    .rst    ( rst    ),
+    .strobe ( enable )
+  );
 
-  logic any_key_r;
+     arbiter_1_dumb_big_blob
+  // arbiter_2_rotate_priority_rotate_verbose
+  // arbiter_3_rotate_priority_case_rotate
+  // arbiter_4_rotate_priority_3_assigns_rotate
+  // arbiter_5_rotate_priority_rotate_brief
+  arb1
+  (
+    .clk ( clk    ),
+    .rst ( rst    ),
+    .ena ( enable ),
+    .req ( req    ),
+    .gnt ( gnt1   )
+  );
 
-  always_ff @ (posedge clk or posedge rst)
-    if (rst)
-      any_key_r <= '0;
-    else
-      any_key_r <= any_key;
+  // arbiter_1_dumb_big_blob
+     arbiter_2_rotate_priority_rotate_verbose
+  // arbiter_3_rotate_priority_case_rotate
+  // arbiter_4_rotate_priority_3_assigns_rotate
+  // arbiter_5_rotate_priority_rotate_brief
+  arb2
+  (
+    .clk ( clk    ),
+    .rst ( rst    ),
+    .ena ( enable ),
+    .req ( req    ),
+    .gnt ( gnt2   )
+  );
 
-  wire any_key_pressed = ~ any_key & any_key_r;
+  `endif
 
-  logic [w_led - 1:0] cnt;
+  //--------------------------------------------------------------------------
 
-  always_ff @ (posedge clk or posedge rst)
-    if (rst)
-      cnt <= '0;
-    else if (any_key_pressed)
-      cnt <= cnt + 1'd1;
+  `ifdef IMPLEMENTATION_2
 
-  assign led      = w_led'   (cnt);
-  assign abcdefgh = 8'       (cnt);
-  assign digit    = w_digit' (cnt);
+  // New shorter System Verilog syntax
 
-  */
+  strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
+  i_strobe_gen (.strobe (enable), .*);
+
+  strobe_gen # (.width (24)) enable_src (.strobe (enable), .*);
+
+  arbiter_3_rotate_priority_case_rotate arb1
+    (.ena (enable), .gnt (gnt1), .*);
+
+  arbiter_4_rotate_priority_3_assigns_rotate arb2
+    (.ena (enable), .gnt (gnt2), .*);
+
+  `endif
+
+  //--------------------------------------------------------------------------
+
+  `ifdef IMPLEMENTATION_3
+
+  // Passing signals by position - not recommended.
+  // Can lead to difficult to debug bugs
+  // in industrial code with many signals.
+
+  strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
+  i_strobe_gen (clk, rst, enable);
+
+  arbiter_1_dumb_big_blob
+  arb1 (clk, rst, enable, req, gnt1);
+
+  arbiter_5_rotate_priority_rotate_brief
+  arb2 (clk, rst, enable, req, gnt2);
+
+  `endif
 
 endmodule

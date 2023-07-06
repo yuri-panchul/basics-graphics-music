@@ -77,16 +77,6 @@ module tb;
       sw  <= $urandom ();
     end
 
-    // To change only one key
-
-    key <= '0;
-
-    repeat (50)
-    begin
-      @ (posedge clk);
-      key [0] <= $urandom ();
-    end
-
     $finish;
   end
 
