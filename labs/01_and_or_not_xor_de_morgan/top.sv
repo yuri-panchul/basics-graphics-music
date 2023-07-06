@@ -51,7 +51,7 @@ module top
   //--------------------------------------------------------------------------
 
   wire a = key [0];
-  wire b = key [1];   
+  wire b = key [1];
 
   wire result = a ^ b;
 
@@ -70,7 +70,7 @@ module top
   // assign led [2] =
 
   // Exercise 2: Change the code below.
-  // Assign to led [3] the result of XOR operation 
+  // Assign to led [3] the result of XOR operation
   // without using "^" operation.
   // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
