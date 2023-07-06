@@ -56,15 +56,15 @@ module top
 
   logic [31:0] cnt;
 
-  always_ff @ (posedge clk or posedge reset)
-    if (reset)
+  always_ff @ (posedge clk or posedge rst)
+    if (rst)
       cnt <= '0;
     else
       cnt <= cnt + 1'd1;
 
-  assign led      = cnt [$left -: w_led];
-  assign abcdefgh = cnt [$left -: 8];
-  assign digit    = cnt [$left -: w_digit];
+  assign led      = cnt [ $left ( led      ) -: w_led   ];
+  assign abcdefgh = cnt [ $left ( abcdefgh ) -: 8       ];
+  assign digit    = cnt [ $left ( digit    ) -: w_digit ];
 
   // Exercise 2: Key-controlled counter.
   // Comment out the code above.
@@ -84,8 +84,8 @@ module top
 
   logic any_key_r;
 
-  always_ff @ (posedge clk or posedge reset)
-    if (reset)
+  always_ff @ (posedge clk or posedge rst)
+    if (rst)
       any_key_r <= '0;
     else
       any_key_r <= any_key;
@@ -94,8 +94,8 @@ module top
 
   logic [3:0] cnt;
 
-  always_ff @ (posedge clk or posedge reset)
-    if (reset)
+  always_ff @ (posedge clk or posedge rst)
+    if (rst)
       cnt <= '0;
     else if (any_key_pressed)
       cnt <= cnt + 1'd1;
