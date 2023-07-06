@@ -44,7 +44,7 @@ module seven_segment_display
 
   logic [15:0] cnt;
 
-  always @ (posedge clk or posedge rst)
+  always_ff @ (posedge clk or posedge rst)
     if (rst)
       cnt <= 16'd0;
     else
@@ -53,7 +53,7 @@ module seven_segment_display
   localparam w_index = $clog2 (w_digit);
   logic [w_index - 1:0] index;
 
-  always @ (posedge clk or posedge rst)
+  always_ff @ (posedge clk or posedge rst)
     if (rst)
       index <= '0;
     else if (cnt == 16'b0)
