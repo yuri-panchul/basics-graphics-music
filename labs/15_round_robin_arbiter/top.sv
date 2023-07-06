@@ -57,9 +57,9 @@ module top
   wire [7:0] req = 8' ({ sw, key });
   wire [7:0] gnt1, gnt2;
 
-  assign led      = w_led'  (gnt1);
+  assign led      = w_led' (gnt1);
   assign abcdefgh = gnt2;
-  assign digit    = w_digit (gnt2);
+  assign digit    = w_digit' (gnt2);
 
   wire enable;
 
