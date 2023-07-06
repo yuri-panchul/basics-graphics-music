@@ -79,7 +79,11 @@ module tb;
         release i_top.enable;
 
       @ (posedge clk);
-      key <= $urandom ();
+
+      if (i >= 20 && i <= 40)
+        key <= $urandom_range (0, 1);
+      else
+        key <= $urandom ();
     end
 
     $finish;
