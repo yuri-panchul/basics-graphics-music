@@ -189,9 +189,9 @@ intel_fpga_setup_quartus ()
                 "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
                 "'$all_version_dirs'"
 
-        info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
-        info "PATH=$PATH"
-        info "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+        info "QUARTUS_ROOTDIR=${QUARTUS_ROOTDIR-}"
+        info "PATH=${PATH-}"
+        info "LD_LIBRARY_PATH=${LD_LIBRARY_PATH-}"
     fi
 
     #-------------------------------------------------------------------------
