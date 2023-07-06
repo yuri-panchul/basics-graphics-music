@@ -79,6 +79,6 @@ module board_specific_top
   assign ABCDEFGH_N = ~ abcdefgh;
   assign DIGIT_N    = ~ digit;
 
-  assign RGB        = { | red, | green, | blue };
+  assign VGA_RGB    = { | red, | green, | blue };
 
 endmodule

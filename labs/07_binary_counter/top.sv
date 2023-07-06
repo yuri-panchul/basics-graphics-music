@@ -62,9 +62,9 @@ module top
     else
       cnt <= cnt + 1'd1;
 
-  assign led      = cnt [ $left ( led      ) -: w_led   ];
-  assign abcdefgh = cnt [ $left ( abcdefgh ) -: 8       ];
-  assign digit    = cnt [ $left ( digit    ) -: w_digit ];
+  assign led      = cnt [ $left (cnt) -: w_led   ];
+  assign abcdefgh = cnt [ $left (cnt) -: 8       ];
+  assign digit    = cnt [ $left (cnt) -: w_digit ];
 
   // Exercise 2: Key-controlled counter.
   // Comment out the code above.
@@ -92,13 +92,17 @@ module top
 
   wire any_key_pressed = ~ any_key & any_key_r;
 
-  logic [3:0] cnt;
+  logic [w_led - 1:0] cnt;
 
   always_ff @ (posedge clk or posedge rst)
     if (rst)
       cnt <= '0;
     else if (any_key_pressed)
       cnt <= cnt + 1'd1;
+
+  assign led      = w_led'   (cnt);
+  assign abcdefgh = 8'       (cnt);
+  assign digit    = w_digit' (cnt);
 
   */
 
