@@ -1,6 +1,17 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
-`define USE_INMP_441_MIC_ON_OLD_POSITION
+// `define USE_OBSOLETE_DIGILENT_MIC
+// `define USE_INMP_441_MIC_ON_OLD_POSITION
+
+`ifdef USE_OBSOLETE_DIGILENT_MIC
+    `define USE_SDRAM_PINS_AS_GPIO
+`elsif USE_INMP_441_MIC_ON_OLD_POSITION
+    `define USE_SDRAM_PINS_AS_GPIO
+`else
+    `define USE_LCD_AS_GPIO
+`endif
+
+//----------------------------------------------------------------------------
 
 module board_specific_top
 # (
@@ -9,7 +20,14 @@ module board_specific_top
               w_sw    = 4,
               w_led   = 4,
               w_digit = 4,
+
+              `ifdef USE_SDRAM_PINS_AS_GPIO
               w_gpio  = 14
+              `elif USE_LCD_AS_GPIO
+              w_gpio  = 11
+              `else
+              w_gpio  = 1
+              `endif
 )
 (
     input                  CLK,
@@ -29,7 +47,7 @@ module board_specific_top
 
     input                  UART_RXD,
 
-    inout  [w_gpio  - 1:0] GPIO,  // This is not really a GPIO
+    inout  [w_gpio  - 1:0] PSEUDO_GPIO_USING_SDRAM_PINS,
 
     inout                  LCD_RS,
     inout                  LCD_RW,
@@ -80,7 +98,11 @@ module board_specific_top
 
         .mic      (   mic       ),
 
-        .gpio     (   GPIO      )
+        `ifdef USE_SDRAM_PINS_AS_GPIO
+            .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
+        `elif USE_LCD_AS_GPIO
+            .gpio ({ LCD_RS, LCD_RW, LCD_E, LCD_D })
+        `endif
     );
 
     //------------------------------------------------------------------------
@@ -102,16 +124,16 @@ module board_specific_top
 
     digilent_pmod_mic3_spi_receiver i_microphone
     (
-        .clk   ( CLK       ),
-        .rst   ( ~ RESET   ),
-        .cs    ( GPIO  [0] ),
-        .sck   ( GPIO  [6] ),
-        .sdo   ( GPIO  [4] ),
-        .value ( mic_16    )
+        .clk   ( CLK                               ),
+        .rst   ( ~ RESET                           ),
+        .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
+        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
+        .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
+        .value ( mic_16                            )
     );
 
-    assign GPIO [ 8] = 1'b0;  // GND
-    assign GPIO [10] = 1'b1;  // VCC
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [ 8] = 1'b0;  // GND
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [10] = 1'b1;  // VCC
 
     assign mic = { mic_16, 8'b0 };
 
@@ -121,17 +143,17 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK       ),
-        .rst   ( ~ RESET   ),
-        .lr    ( GPIO  [5] ),
-        .ws    ( GPIO  [3] ),
-        .sck   ( GPIO  [1] ),
-        .sd    ( GPIO  [0] ),
-        .value ( mic       )
+        .clk   ( CLK                               ),
+        .rst   ( ~ RESET                           ),
+        .lr    ( PSEUDO_GPIO_USING_SDRAM_PINS  [5] ),
+        .ws    ( PSEUDO_GPIO_USING_SDRAM_PINS  [3] ),
+        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [1] ),
+        .sd    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
+        .value ( mic                               )
     );
 
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [4] = 1'b0;  // GND
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [2] = 1'b1;  // VCC
 
     //------------------------------------------------------------------------
 

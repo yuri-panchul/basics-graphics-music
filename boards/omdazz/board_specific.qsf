@@ -46,20 +46,20 @@ set_location_assignment PIN_106 -to VGA_R
 # set_location_assignment PIN_114 -to UART_TXD
 set_location_assignment PIN_115 -to UART_RXD
 
-set_location_assignment PIN_64 -to GPIO[0]
-set_location_assignment PIN_65 -to GPIO[1]
-set_location_assignment PIN_66 -to GPIO[2]
-set_location_assignment PIN_67 -to GPIO[3]
-set_location_assignment PIN_68 -to GPIO[4]
-set_location_assignment PIN_69 -to GPIO[5]
-set_location_assignment PIN_70 -to GPIO[6]
-set_location_assignment PIN_71 -to GPIO[7]
-set_location_assignment PIN_72 -to GPIO[8]
-set_location_assignment PIN_73 -to GPIO[9]
-set_location_assignment PIN_74 -to GPIO[10]
-set_location_assignment PIN_75 -to GPIO[11]
-set_location_assignment PIN_76 -to GPIO[12]
-set_location_assignment PIN_77 -to GPIO[13]
+set_location_assignment PIN_64 -to PSEUDO_GPIO_USING_SDRAM_PINS[0]
+set_location_assignment PIN_65 -to PSEUDO_GPIO_USING_SDRAM_PINS[1]
+set_location_assignment PIN_66 -to PSEUDO_GPIO_USING_SDRAM_PINS[2]
+set_location_assignment PIN_67 -to PSEUDO_GPIO_USING_SDRAM_PINS[3]
+set_location_assignment PIN_68 -to PSEUDO_GPIO_USING_SDRAM_PINS[4]
+set_location_assignment PIN_69 -to PSEUDO_GPIO_USING_SDRAM_PINS[5]
+set_location_assignment PIN_70 -to PSEUDO_GPIO_USING_SDRAM_PINS[6]
+set_location_assignment PIN_71 -to PSEUDO_GPIO_USING_SDRAM_PINS[7]
+set_location_assignment PIN_72 -to PSEUDO_GPIO_USING_SDRAM_PINS[8]
+set_location_assignment PIN_73 -to PSEUDO_GPIO_USING_SDRAM_PINS[9]
+set_location_assignment PIN_74 -to PSEUDO_GPIO_USING_SDRAM_PINS[10]
+set_location_assignment PIN_75 -to PSEUDO_GPIO_USING_SDRAM_PINS[11]
+set_location_assignment PIN_76 -to PSEUDO_GPIO_USING_SDRAM_PINS[12]
+set_location_assignment PIN_77 -to PSEUDO_GPIO_USING_SDRAM_PINS[13]
 
 # set_location_assignment PIN_110 -to BUZZER
 
