@@ -103,7 +103,7 @@ module board_specific_top
   digilent_pmod_mic3_spi_receiver i_microphone
   (
     .clk   ( clk       ),
-    .reset ( reset     ),
+    .rst   ( rst       ),
     .cs    ( GPIO  [0] ),
     .sck   ( GPIO  [6] ),
     .sdo   ( GPIO  [4] ),
@@ -122,7 +122,7 @@ module board_specific_top
   inmp441_mic_i2s_receiver i_microphone
   (
     .clk   ( clk       ),
-    .reset ( reset     ),
+    .rst   ( rst       ),
     .lr    ( GPIO  [5] ),
     .ws    ( GPIO  [3] ),
     .sck   ( GPIO  [1] ),
@@ -140,7 +140,7 @@ module board_specific_top
   inmp441_mic_i2s_receiver i_microphone
   (
     .clk   ( clk       ),
-    .reset ( reset     ),
+    .rst   ( rst       ),
     .lr    ( LCD_D [1] ),
     .ws    ( LCD_D [2] ),
     .sck   ( LCD_D [3] ),

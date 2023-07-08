@@ -274,25 +274,25 @@ module top
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            abcdefgh <= 8'b11111111;
+            abcdefgh <= 8'b00000000;
         else
             case (t_note)
-            C  : abcdefgh <= 8'b01100011;  // C   // abcdefgh
-            Cs : abcdefgh <= 8'b01100010;  // C#
-            D  : abcdefgh <= 8'b10000101;  // D   //   --a--
-            Ds : abcdefgh <= 8'b10000100;  // D#  //  |     |
-            E  : abcdefgh <= 8'b01100001;  // E   //  f     b
-            F  : abcdefgh <= 8'b01110001;  // F   //  |     |
-            Fs : abcdefgh <= 8'b01110000;  // F#  //   --g--
-            G  : abcdefgh <= 8'b01000011;  // G   //  |     |
-            Gs : abcdefgh <= 8'b01000010;  // G#  //  e     c
-            A  : abcdefgh <= 8'b00010001;  // A   //  |     |
-            As : abcdefgh <= 8'b00010000;  // A#  //   --d--  h
-            B  : abcdefgh <= 8'b11000001;  // B
-            default : abcdefgh <= 8'b11111111;
+            C  : abcdefgh <= 8'b10011100;  // C   // abcdefgh
+            Cs : abcdefgh <= 8'b10011101;  // C#
+            D  : abcdefgh <= 8'b01111010;  // D   //   --a--
+            Ds : abcdefgh <= 8'b01111011;  // D#  //  |     |
+            E  : abcdefgh <= 8'b10011110;  // E   //  f     b
+            F  : abcdefgh <= 8'b10001110;  // F   //  |     |
+            Fs : abcdefgh <= 8'b10001111;  // F#  //   --g--
+            G  : abcdefgh <= 8'b10111100;  // G   //  |     |
+            Gs : abcdefgh <= 8'b10111101;  // G#  //  e     c
+            A  : abcdefgh <= 8'b11101110;  // A   //  |     |
+            As : abcdefgh <= 8'b11101111;  // A#  //   --d--  h
+            B  : abcdefgh <= 8'b00111110;  // B
+            default : abcdefgh <= 8'b00000000;
             endcase
 
-    assign digit = 4'b1110;
+    assign digit = w_digit' (1);
 
     //------------------------------------------------------------------------
     //
