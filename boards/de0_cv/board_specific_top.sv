@@ -53,7 +53,7 @@ module board_specific_top
     i_top
     (
         .clk      (   CLOCK_50           ),
-        .rst      (   RESET_N            ),
+        .rst      ( ~ RESET_N            ),
 
         .key      ( ~ KEY                ),
         .sw       (   SW                 ),
@@ -98,13 +98,13 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLOCK_50   ),
-        .rst   ( RESET_N    ),
-        .lr    ( GPIO_0 [5] ),
-        .ws    ( GPIO_0 [3] ),
-        .sck   ( GPIO_0 [1] ),
-        .sd    ( GPIO_0 [0] ),
-        .value ( mic        )
+        .clk   (   CLOCK_50   ),
+        .rst   ( ~ RESET_N    ),
+        .lr    (   GPIO_0 [5] ),
+        .ws    (   GPIO_0 [3] ),
+        .sck   (   GPIO_0 [1] ),
+        .sd    (   GPIO_0 [0] ),
+        .value (   mic        )
     );
 
     assign GPIO_0 [4] = 1'b0;  // GND
