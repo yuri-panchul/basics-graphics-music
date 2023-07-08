@@ -97,10 +97,11 @@ then
 fi
 
 exclude_urg="--exclude-dir=urgReport"
+exclude_urg_and_mk="$exclude_urg --exclude=\*.mk"
 
-if grep -rqI $exclude_urg $'\t' ../*
+if grep -rqI $exclude_urg_and_mk $'\t' ../*
 then
-    grep -rlI $exclude_urg $'\t' ../*
+    grep -rlI $exclude_urg_and_mk $'\t' ../*
 
     error "there are text files with tabulation characters." \
           "\nTabs should not be used." \
@@ -109,10 +110,10 @@ then
           "\nPlease replace the tabs with spaces" \
           "before checking in or creating a package." \
           "\nYou can find them by doing:" \
-          "\ngrep -rlI $exclude_urg \$'\\\\t' \"$pkg_src_root\"/*" \
+          "\ngrep -rlI $exclude_urg_and_mk \$'\\\\t' \"$pkg_src_root\"/*" \
           "\nYou can fix them by doing the following," \
           "but make sure to review the fixes:" \
-          "\ngrep -rlI $exclude_urg \$'\\\\t' \"$pkg_src_root\"/*" \
+          "\ngrep -rlI $exclude_urg_and_mk \$'\\\\t' \"$pkg_src_root\"/*" \
           "| xargs sed -i 's/\\\\t/    /g'"
 fi
 
