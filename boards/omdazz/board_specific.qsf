@@ -77,18 +77,23 @@ set_location_assignment PIN_77 -to GPIO[13]
 # VSS
 # VDD
 # V0
-
-# set_location_assignment PIN_141 -to LCD_RS
-# set_location_assignment PIN_138 -to LCD_RW
-# set_location_assignment PIN_143 -to LCD_E
-# set_location_assignment PIN_142 -to LCD_D[0]
-# set_location_assignment PIN_1   -to LCD_D[1]
-# set_location_assignment PIN_144 -to LCD_D[2]
-# set_location_assignment PIN_3   -to LCD_D[3]
-# set_location_assignment PIN_2   -to LCD_D[4]
-# set_location_assignment PIN_10  -to LCD_D[5]
-# set_location_assignment PIN_7   -to LCD_D[6]
-# set_location_assignment PIN_11  -to LCD_D[7]
+set_location_assignment PIN_141 -to LCD_RS
+set_location_assignment PIN_138 -to LCD_RW
+set_location_assignment PIN_143 -to LCD_E
+set_location_assignment PIN_142 -to LCD_D[0]
+set_location_assignment PIN_1   -to LCD_D[1]
+set_location_assignment PIN_144 -to LCD_D[2]
+set_location_assignment PIN_3   -to LCD_D[3]
+set_location_assignment PIN_2   -to LCD_D[4]
+set_location_assignment PIN_10  -to LCD_D[5]
+set_location_assignment PIN_7   -to LCD_D[6]
+set_location_assignment PIN_11  -to LCD_D[7]
+# CS1
+# CS2
+# RST
+# VEE
+# TVCC
+# GND
 
 # set_location_assignment PIN_43  -to SDRAM_CLK
 # set_location_assignment PIN_58  -to SDRAM_CKE
