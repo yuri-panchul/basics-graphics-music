@@ -30,6 +30,8 @@ else
     cd run
 fi
 
+lab_name=$(basename "$(readlink -f ..)")
+
 #-----------------------------------------------------------------------------
 #
 #   Platform-specific workarounds
