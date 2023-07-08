@@ -30,13 +30,15 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    logic [w_led   - 1:0] led;
-    logic [          7:0] abcdefgh;
-    logic [w_digit - 1:0] digit;
+    wire [w_led   - 1:0] led;
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
 
-    logic [          3:0] red;
-    logic [          3:0] green;
-    logic [          3:0] blue;
+    wire [          3:0] red;
+    wire [          3:0] green;
+    wire [          3:0] blue;
+
+    wire [         23:0] mic;
 
     //------------------------------------------------------------------------
 
@@ -69,6 +71,7 @@ module board_specific_top
         .green    (   green       ),
         .blue     (   blue        ),
 
+        .mic      (   mic         ),
         .gpio     (   GPIO        )
     );
 
@@ -80,5 +83,21 @@ module board_specific_top
     assign DIGIT_N    = ~ digit;
 
     assign VGA_RGB    = { | red, | green, | blue };
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( CLK      ),
+        .rst   ( ~ RESET  ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [3] ),
+        .sck   ( GPIO [1] ),
+        .sd    ( GPIO [0] ),
+        .value ( mic      )
+    );
+
+    assign GPIO [4] = 1'b0;  // GND
+    assign GPIO [2] = 1'b1;  // VCC
 
 endmodule
