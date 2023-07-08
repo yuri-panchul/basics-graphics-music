@@ -36,6 +36,8 @@ module top
     output logic [          3:0] green,
     output logic [          3:0] blue,
 
+    input        [         23:0] mic,
+
     // General-purpose Input/Output
 
     inout  logic [w_gpio  - 1:0] gpio

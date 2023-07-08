@@ -96,6 +96,8 @@ then
           "\ngrep -rlIU \$'\\\\r\$' \"$pkg_src_root\"/* | xargs dos2unix"
 fi
 
+# For some reason "--exclude=\*.mk" does not work here
+
 exclude_urg="--exclude-dir=urgReport"
 exclude_urg_and_mk="$exclude_urg --exclude=*.mk"
 

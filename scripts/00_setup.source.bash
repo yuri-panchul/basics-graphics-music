@@ -30,6 +30,8 @@ else
     cd run
 fi
 
+lab_name=$(basename "$(readlink -f ..)")
+
 #-----------------------------------------------------------------------------
 #
 #   Platform-specific workarounds
@@ -479,6 +481,30 @@ fpga_board_setup ()
 }
 
 #-----------------------------------------------------------------------------
+
+openlane_setup ()
+{
+    if ! [[ $script =~ asic ]] ; then
+        return
+    fi
+
+    default_openlane_dir="$HOME/OpenLane"
+
+    if   [ -n "${OPENLANE_ROOTDIR-}" ] && [ -d "${OPENLANE_ROOTDIR-}" ] ; then
+        openlane_dir="$OPENLANE_ROOTDIR"
+    elif [ -n "${OPENLANE_HOME-}" ] && [ -d "${OPENLANE_HOME-}" ] ; then
+        openlane_dir="$OPENLANE_HOME"
+    elif [ -d "$default_openlane_dir" ] ; then
+        openlane_dir="$default_openlane_dir"
+    else
+        error "Cannot find OpenLane directory for ASIC synthesis and layout editor." \
+              "By default it is expected at \"$default_openlane_dir\"," \
+              "but its location can be set by the enviroment variable OPENLANE_ROOTDIR" \
+              "or (second priority) OPENLANE_HOME"
+    fi
+}
+
+#-----------------------------------------------------------------------------
 #
 #   Calling routines
 #
@@ -493,3 +519,4 @@ fi
 is_command_available iverilog || icarus_verilog_setup
 
 fpga_board_setup
+openlane_setup

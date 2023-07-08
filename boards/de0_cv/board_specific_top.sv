@@ -53,7 +53,7 @@ module board_specific_top
     i_top
     (
         .clk      (   CLOCK_50           ),
-        .rst      (   RESET_N            ),
+        .rst      ( ~ RESET_N            ),
 
         .key      ( ~ KEY                ),
         .sw       (   SW                 ),
@@ -87,24 +87,24 @@ module board_specific_top
         end
     endgenerate
 
-    assign HEX0 = digit [0] ? ~ hgfedcba : '1;
-    assign HEX1 = digit [1] ? ~ hgfedcba : '1;
-    assign HEX2 = digit [2] ? ~ hgfedcba : '1;
-    assign HEX3 = digit [3] ? ~ hgfedcba : '1;
-    assign HEX4 = digit [4] ? ~ hgfedcba : '1;
-    assign HEX5 = digit [5] ? ~ hgfedcba : '1;
+    assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
+    assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
+    assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
+    assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
+    assign HEX4 = digit [4] ? ~ hgfedcba [$left (HEX4):0] : '1;
+    assign HEX5 = digit [5] ? ~ hgfedcba [$left (HEX5):0] : '1;
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLOCK_50   ),
-        .rst   ( RESET_N    ),
-        .lr    ( GPIO_0 [5] ),
-        .ws    ( GPIO_0 [3] ),
-        .sck   ( GPIO_0 [1] ),
-        .sd    ( GPIO_0 [0] ),
-        .value ( mic        )
+        .clk   (   CLOCK_50   ),
+        .rst   ( ~ RESET_N    ),
+        .lr    (   GPIO_0 [5] ),
+        .ws    (   GPIO_0 [3] ),
+        .sck   (   GPIO_0 [1] ),
+        .sd    (   GPIO_0 [0] ),
+        .value (   mic        )
     );
 
     assign GPIO_0 [4] = 1'b0;  // GND
