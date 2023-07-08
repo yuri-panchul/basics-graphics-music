@@ -63,6 +63,15 @@ module top
 
     //------------------------------------------------------------------------
 
+    generate
+        if (w_led > 2)
+        begin : unused_led
+            assign led [w_led - 1:2] = '0;
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
     // Exercise 1: Change the code below.
     // Assign to led [2] the result of AND operation.
     //
