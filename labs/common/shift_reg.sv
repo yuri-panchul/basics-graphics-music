@@ -4,7 +4,7 @@
 
 module shift_reg
 # (
-    parameter depth = 0
+    parameter depth = 2
 )
 (
     input                      clk,

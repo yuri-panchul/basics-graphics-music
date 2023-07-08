@@ -14,6 +14,8 @@
 `elsif __ICARUS__
     // Icarus Verilog http://iverilog.icarus.com
 `elsif VERILATOR
+    // Underscore below is needed so that Verilator
+    // does not recognize this comment as a directive.
     // _ Verilator https://www.veripool.org/wiki/verilator
 `elsif XILINX_ISIM
     // Xilinx ISE Simulator

@@ -12,8 +12,15 @@ if [ -f ../asic_config.tcl ] ; then
     cp ../asic_config.tcl "$design_dir"/config.tcl
 fi
 
-cp ../*.sv* "$lab_dir/common"/*.svh "$design_dir/src"
-#cp ../*.sv* "$lab_dir/common"/*.sv* "$design_dir/src"
+find "$parent_dir" "$lab_dir/common"  \
+    -type f -name '*.sv*' -not -name tb.sv  \
+        | xargs -I % cp %  "$design_dir/src"
+
+cp ../*.sv "$lab_dir/common"/*.sv* "$design_dir/src"
+
+if [ -f ../extra_asic_srcasic_config.tcl ] ; then
+    cp ../asic_config.tcl "$design_dir"/config.tcl
+fi
 
 cd "$openlane_dir"
 make quick_run QUICK_RUN_DESIGN=$lab_name |& tee "$log"
