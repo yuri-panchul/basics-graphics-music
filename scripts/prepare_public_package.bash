@@ -97,7 +97,7 @@ then
 fi
 
 exclude_urg="--exclude-dir=urgReport"
-exclude_urg_and_mk="$exclude_urg --exclude=*.mk"
+exclude_urg_and_mk="$exclude_urg --exclude="\*".mk"
 
 if grep -rqI $exclude_urg_and_mk $'\t' ../*
 then
