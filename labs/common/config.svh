@@ -14,7 +14,7 @@
 `elsif __ICARUS__
     // Icarus Verilog http://iverilog.icarus.com
 `elsif VERILATOR
-    // Verilator https://www.veripool.org/wiki/verilator
+    // _ Verilator https://www.veripool.org/wiki/verilator
 `elsif XILINX_ISIM
     // Xilinx ISE Simulator
 `elsif XILINX_SIMULATOR

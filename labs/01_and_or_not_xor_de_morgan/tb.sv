@@ -1,5 +1,7 @@
 `include "config.svh"
 
+`ifdef SIMULATION
+
 module tb;
 
     localparam clk_mhz = 1,
@@ -54,3 +56,5 @@ module tb;
     end
 
 endmodule
+
+`endif

@@ -13,4 +13,4 @@ fi
 cp ../*.sv* "$lab_dir/common"/*.sv* "$design_dir/src"
 
 cd "$openlane_dir"
-make -n quick_run QUICK_RUN_DESIGN=$lab_name |& tee "$log"
+make quick_run QUICK_RUN_DESIGN=$lab_name |& tee "$log"
