@@ -13,8 +13,8 @@ module seven_segment_display
     input  [w_digit * 4 - 1:0] number,
     input  [w_digit     - 1:0] dots,
 
-    output [7:0] abcdefgh,
-    output [7:0] digit
+    output [              7:0] abcdefgh,
+    output [w_digit     - 1:0] digit
 );
 
     function [7:0] dig_to_seg (input [3:0] dig);

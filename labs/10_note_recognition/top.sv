@@ -61,7 +61,10 @@ module top
     //
     //------------------------------------------------------------------------
 
-    // seven_segment_4_digits i_7segment (.number (value), .*);
+    wire [w_digit - 1:0] dots = '0;
+
+    localparam w_number = w_digit * 4;
+    seven_segment_display # (w_digit) i_7segment (.number (w_number' (value)), .*);
 
     //------------------------------------------------------------------------
     //
@@ -110,7 +113,8 @@ module top
     //
     //------------------------------------------------------------------------
 
-    // seven_segment_4_digits i_7segment (.number (counter), .*);
+    // seven_segment_display # (w_digit)
+    // i_7segment (.number (w_number' (counter)), .*);
 
     //------------------------------------------------------------------------
     //
@@ -119,11 +123,8 @@ module top
     //
     //------------------------------------------------------------------------
 
-    `ifndef USE_OBSOLETE_DIGILENT_MIC
-    // seven_segment_4_digits i_7segment (.number (distance), .*);
-    `else
-    // seven_segment_4_digits i_7segment (.number (distance [19:4]), .*);
-    `endif
+    // seven_segment_display # (w_digit)
+    // i_7segment (.number (w_number' (distance [19:4])), .*);
 
     //------------------------------------------------------------------------
     //
@@ -271,7 +272,7 @@ module top
     //  The output to seven segment display
     //
     //------------------------------------------------------------------------
-
+/*
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             abcdefgh <= 8'b00000000;
@@ -293,7 +294,7 @@ module top
             endcase
 
     assign digit = w_digit' (1);
-
+*/
     //------------------------------------------------------------------------
     //
     //  Exercise 4: Replace filtered note with unfiltered note.
