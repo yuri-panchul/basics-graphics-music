@@ -30,16 +30,15 @@ last_run_dir=$(ls -d "$runs_dir"/RUN* | sort | tail -1)
 
 ! [ -z "${last_run_dir-}" ] || error "No RUN directory"
 
-                                                                   # 01_main.log
-                                                                   # 02_main_violation.log
-                                                                   # 09_mca_sta_violation.rpt
-   cp "$last_run_dir"/results/synthesis/snail_moore_fsm.v          03_synthesis.v    \
-&& cp "$last_run_dir"/results/placement/snail_moore_fsm.resized.v  04_placement.v    \
-&& cp "$last_run_dir"/results/cts/snail_moore_fsm.resized.v        05_cts.v          \
-&& cp "$last_run_dir"/results/routing/snail_moore_fsm.resized.v    06_routing.v      \
-&& cp "$last_run_dir"/results/final/verilog/gl/snail_moore_fsm.v   07_final.v        \
-&& cp "$last_run_dir"/reports/signoff/29-rcx_mca_sta.rpt           08_mca_sta.rpt    \
-&& cp "$last_run_dir"/reports/signoff/29-rcx_mca_sta.area.rpt      10_mca_area.rpt   \
-&& cp "$last_run_dir"/reports/signoff/29-rcx_mca_sta.power.rpt     11_mca_power.rpt  \
-&& cp "$last_run_dir"/results/signoff/snail_moore_fsm.mag          12_magic.mag      \
+cp "$log" 01_main.log
+
+   cp "$last_run_dir"/results/synthesis/top.v                   02_synthesis.v    \
+&& cp "$last_run_dir"/results/placement/top.resized.v           03_placement.v    \
+&& cp "$last_run_dir"/results/cts/top.resized.v                 04_cts.v          \
+&& cp "$last_run_dir"/results/routing/top.resized.v             05_routing.v      \
+&& cp "$last_run_dir"/results/final/verilog/gl/top.v            06_final.v        \
+&& cp "$last_run_dir"/reports/signoff/29-rcx_mca_sta.rpt        07_mca_sta.rpt    \
+&& cp "$last_run_dir"/reports/signoff/29-rcx_mca_sta.area.rpt   08_mca_area.rpt   \
+&& cp "$last_run_dir"/reports/signoff/29-rcx_mca_sta.power.rpt  09_mca_power.rpt  \
+&& cp "$last_run_dir"/results/signoff/top.mag                   10_magic.mag      \
 || error "Cannot copy something"
