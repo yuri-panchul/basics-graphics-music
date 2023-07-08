@@ -87,12 +87,12 @@ module board_specific_top
         end
     endgenerate
 
-    assign HEX0 = digit [0] ? ~ hgfedcba : '1;
-    assign HEX1 = digit [1] ? ~ hgfedcba : '1;
-    assign HEX2 = digit [2] ? ~ hgfedcba : '1;
-    assign HEX3 = digit [3] ? ~ hgfedcba : '1;
-    assign HEX4 = digit [4] ? ~ hgfedcba : '1;
-    assign HEX5 = digit [5] ? ~ hgfedcba : '1;
+    assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
+    assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
+    assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
+    assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
+    assign HEX4 = digit [4] ? ~ hgfedcba [$left (HEX4):0] : '1;
+    assign HEX5 = digit [5] ? ~ hgfedcba [$left (HEX5):0] : '1;
 
     //------------------------------------------------------------------------
 
