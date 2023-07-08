@@ -35,6 +35,8 @@ module board_specific_top
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
+    wire [         23:0] mic;
+
     //------------------------------------------------------------------------
 
     top
@@ -66,6 +68,7 @@ module board_specific_top
         .green    (                ),
         .blue     (                ),
 
+        .mic      (   mic          ),
         .gpio     (   GPIO         )
     );
 
@@ -86,5 +89,21 @@ module board_specific_top
     assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
     assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
     assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   (   CLOCK_50_B8A ),
+        .rst   ( ~ CPU_RESET_n  ),
+        .lr    (   GPIO [5]     ),
+        .ws    (   GPIO [3]     ),
+        .sck   (   GPIO [1]     ),
+        .sd    (   GPIO [0]     ),
+        .value (   mic          )
+    );
+
+    assign GPIO [4] = 1'b0;  // GND
+    assign GPIO [2] = 1'b1;  // VCC
 
 endmodule
