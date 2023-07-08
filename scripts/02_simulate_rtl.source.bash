@@ -9,9 +9,9 @@ run_icarus_verilog ()
     iverilog -g2005-sv \
          -I ..      -I "$lab_dir/common" \
             ../*.sv    "$lab_dir/common"/*.sv \
-        2>&1 | tee "$log"
+        |& tee "$log"
 
-    vvp a.out 2>&1 | tee "$log"
+    vvp a.out |& tee "$log"
 
     if grep -m 1 ERROR "$log" ; then
         warning errors detected

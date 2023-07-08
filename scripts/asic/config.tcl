@@ -1,6 +1,6 @@
 # User config
 
-set ::env(DESIGN_NAME) snail_moore_fsm
+set ::env(DESIGN_NAME) top
 set ::env(VERILOG_FILES) [glob $::env(DESIGN_DIR)/src/*.sv]
 
 set ::env(CLOCK_PORT) "clk"

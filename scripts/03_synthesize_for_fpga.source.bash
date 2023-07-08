@@ -11,16 +11,16 @@ then
     iverilog -g2005-sv \
          -I ..      -I "$lab_dir/common" \
             ../*.sv    "$lab_dir/common"/*.sv \
-        2>&1 | tee "$log"
+        |& tee "$log"
 
-    vvp a.out 2>&1 | tee -a "$log"
+    vvp a.out |& tee -a "$log"
 fi
 
 #-----------------------------------------------------------------------------
 
 is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
 
-if ! quartus_sh --no_banner --flow compile fpga_project 2>&1 | tee -a "$log"
+if ! quartus_sh --no_banner --flow compile fpga_project |& tee -a "$log"
 then
     grep -i -A 5 error "$log" 2>&1
     error "synthesis failed"
