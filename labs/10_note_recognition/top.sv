@@ -62,9 +62,10 @@ module top
     //------------------------------------------------------------------------
 
     wire [w_digit - 1:0] dots = '0;
-
     localparam w_number = w_digit * 4;
-    seven_segment_display # (w_digit) i_7segment (.number (w_number' (value)), .*);
+
+    // seven_segment_display # (w_digit)
+    // i_7segment (.number (w_number' (value)), .*);
 
     //------------------------------------------------------------------------
     //
@@ -272,7 +273,7 @@ module top
     //  The output to seven segment display
     //
     //------------------------------------------------------------------------
-/*
+
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             abcdefgh <= 8'b00000000;
@@ -294,7 +295,7 @@ module top
             endcase
 
     assign digit = w_digit' (1);
-*/
+
     //------------------------------------------------------------------------
     //
     //  Exercise 4: Replace filtered note with unfiltered note.
