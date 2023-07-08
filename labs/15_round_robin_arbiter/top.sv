@@ -6,144 +6,144 @@
 
 module top
 # (
-  parameter clk_mhz = 50,
-            w_key   = 4,
-            w_sw    = 8,
-            w_led   = 8,
-            w_digit = 8,
-            w_gpio  = 20
+    parameter clk_mhz = 50,
+              w_key   = 4,
+              w_sw    = 8,
+              w_led   = 8,
+              w_digit = 8,
+              w_gpio  = 20
 )
 (
-  input                        clk,
-  input                        rst,
+    input                        clk,
+    input                        rst,
 
-  // Keys, switches, LEDs
+    // Keys, switches, LEDs
 
-  input        [w_key   - 1:0] key,
-  input        [w_sw    - 1:0] sw,
-  output logic [w_led   - 1:0] led,
+    input        [w_key   - 1:0] key,
+    input        [w_sw    - 1:0] sw,
+    output logic [w_led   - 1:0] led,
 
-  // A dynamic seven-segment display
+    // A dynamic seven-segment display
 
-  output logic [          7:0] abcdefgh,
-  output logic [w_digit - 1:0] digit,
+    output logic [          7:0] abcdefgh,
+    output logic [w_digit - 1:0] digit,
 
-  // VGA
+    // VGA
 
-  output logic                 vsync,
-  output logic                 hsync,
-  output logic [          3:0] red,
-  output logic [          3:0] green,
-  output logic [          3:0] blue,
+    output logic                 vsync,
+    output logic                 hsync,
+    output logic [          3:0] red,
+    output logic [          3:0] green,
+    output logic [          3:0] blue,
 
-  // General-purpose Input/Output
+    // General-purpose Input/Output
 
-  inout  logic [w_gpio  - 1:0] gpio
+    inout  logic [w_gpio  - 1:0] gpio
 );
 
-  //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-  // assign led      = '0;
-  // assign abcdefgh = '0;
-  // assign digit    = '0;
-     assign vsync    = '0;
-     assign hsync    = '0;
-     assign red      = '0;
-     assign green    = '0;
-     assign blue     = '0;
+    // assign led      = '0;
+    // assign abcdefgh = '0;
+    // assign digit    = '0;
+       assign vsync    = '0;
+       assign hsync    = '0;
+       assign red      = '0;
+       assign green    = '0;
+       assign blue     = '0;
 
-  //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-  wire [7:0] req = 8' ({ sw, key });
-  wire [7:0] gnt1, gnt2;
+    wire [7:0] req = 8' ({ sw, key });
+    wire [7:0] gnt1, gnt2;
 
-  assign led      = w_led' (gnt1);
-  assign abcdefgh = gnt2;
-  assign digit    = w_digit' (gnt2);
+    assign led      = w_led' (gnt1);
+    assign abcdefgh = gnt2;
+    assign digit    = w_digit' (gnt2);
 
-  wire enable;
+    wire enable;
 
-  //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-  `ifdef IMPLEMENTATION_1
+    `ifdef IMPLEMENTATION_1
 
-  // Generate a strobe signal 3 times a second
+    // Generate a strobe signal 3 times a second
 
-  strobe_gen
-  # (.clk_mhz (clk_mhz), .strobe_hz (3))
-  i_strobe_gen
-  (
-    .clk    ( clk    ),
-    .rst    ( rst    ),
-    .strobe ( enable )
-  );
+    strobe_gen
+    # (.clk_mhz (clk_mhz), .strobe_hz (3))
+    i_strobe_gen
+    (
+        .clk    ( clk    ),
+        .rst    ( rst    ),
+        .strobe ( enable )
+    );
 
-     arbiter_1_dumb_big_blob
-  // arbiter_2_rotate_priority_rotate_verbose
-  // arbiter_3_rotate_priority_case_rotate
-  // arbiter_4_rotate_priority_3_assigns_rotate
-  // arbiter_5_rotate_priority_rotate_brief
-  arb1
-  (
-    .clk ( clk    ),
-    .rst ( rst    ),
-    .ena ( enable ),
-    .req ( req    ),
-    .gnt ( gnt1   )
-  );
+       arbiter_1_dumb_big_blob
+    // arbiter_2_rotate_priority_rotate_verbose
+    // arbiter_3_rotate_priority_case_rotate
+    // arbiter_4_rotate_priority_3_assigns_rotate
+    // arbiter_5_rotate_priority_rotate_brief
+    arb1
+    (
+        .clk ( clk    ),
+        .rst ( rst    ),
+        .ena ( enable ),
+        .req ( req    ),
+        .gnt ( gnt1   )
+    );
 
-  // arbiter_1_dumb_big_blob
-     arbiter_2_rotate_priority_rotate_verbose
-  // arbiter_3_rotate_priority_case_rotate
-  // arbiter_4_rotate_priority_3_assigns_rotate
-  // arbiter_5_rotate_priority_rotate_brief
-  arb2
-  (
-    .clk ( clk    ),
-    .rst ( rst    ),
-    .ena ( enable ),
-    .req ( req    ),
-    .gnt ( gnt2   )
-  );
+    // arbiter_1_dumb_big_blob
+       arbiter_2_rotate_priority_rotate_verbose
+    // arbiter_3_rotate_priority_case_rotate
+    // arbiter_4_rotate_priority_3_assigns_rotate
+    // arbiter_5_rotate_priority_rotate_brief
+    arb2
+    (
+        .clk ( clk    ),
+        .rst ( rst    ),
+        .ena ( enable ),
+        .req ( req    ),
+        .gnt ( gnt2   )
+    );
 
-  `endif
+    `endif
 
-  //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-  `ifdef IMPLEMENTATION_2
+    `ifdef IMPLEMENTATION_2
 
-  // New shorter System Verilog syntax
+    // New shorter System Verilog syntax
 
-  strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
-  i_strobe_gen (.strobe (enable), .*);
+    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
+    i_strobe_gen (.strobe (enable), .*);
 
-  strobe_gen # (.width (24)) enable_src (.strobe (enable), .*);
+    strobe_gen # (.width (24)) enable_src (.strobe (enable), .*);
 
-  arbiter_3_rotate_priority_case_rotate arb1
-    (.ena (enable), .gnt (gnt1), .*);
+    arbiter_3_rotate_priority_case_rotate arb1
+        (.ena (enable), .gnt (gnt1), .*);
 
-  arbiter_4_rotate_priority_3_assigns_rotate arb2
-    (.ena (enable), .gnt (gnt2), .*);
+    arbiter_4_rotate_priority_3_assigns_rotate arb2
+        (.ena (enable), .gnt (gnt2), .*);
 
-  `endif
+    `endif
 
-  //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-  `ifdef IMPLEMENTATION_3
+    `ifdef IMPLEMENTATION_3
 
-  // Passing signals by position - not recommended.
-  // Can lead to difficult to debug bugs
-  // in industrial code with many signals.
+    // Passing signals by position - not recommended.
+    // Can lead to difficult to debug bugs
+    // in industrial code with many signals.
 
-  strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
-  i_strobe_gen (clk, rst, enable);
+    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
+    i_strobe_gen (clk, rst, enable);
 
-  arbiter_1_dumb_big_blob
-  arb1 (clk, rst, enable, req, gnt1);
+    arbiter_1_dumb_big_blob
+    arb1 (clk, rst, enable, req, gnt1);
 
-  arbiter_5_rotate_priority_rotate_brief
-  arb2 (clk, rst, enable, req, gnt2);
+    arbiter_5_rotate_priority_rotate_brief
+    arb2 (clk, rst, enable, req, gnt2);
 
-  `endif
+    `endif
 
 endmodule
