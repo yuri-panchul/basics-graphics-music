@@ -64,9 +64,31 @@ module top
         else
             cnt <= cnt + 1'd1;
 
-    assign led      = cnt [ $left (cnt) -: w_led   ];
-    assign abcdefgh = cnt [ $left (cnt) -: 8       ];
-    assign digit    = cnt [ $left (cnt) -: w_digit ];
+    assign led = cnt [$left (cnt) -: w_led];
+
+    //------------------------------------------------------------------------
+
+    // 4 bits per hexadecimal digit
+    localparam w_display_number = w_digit * 4;
+
+    logic [w_digit * 4 - 1:0] disp_cnt;
+
+    always_comb
+        if ($bits (disp_cnt) >= $bits (cnt))
+            disp_cnt = w_display_number' (cnt);
+        else
+            disp_cnt = cnt [$left (cnt) -: $bits (disp_cnt)];
+
+    seven_segment_display # (w_digit)
+    i_7segment
+    (
+        .clk      ( clk      ),
+        .rst      ( rst      ),
+        .number   ( disp_cnt ),
+        .dots     ( '0       ),
+        .abcdefgh ( abcdefgh ),
+        .digit    ( digit    )
+    );
 
     // Exercise 2: Key-controlled counter.
     // Comment out the code above.
