@@ -42,8 +42,8 @@ module top
     //------------------------------------------------------------------------
 
     // assign led      = '0;
-    // assign abcdefgh = '0;
-    // assign digit    = '0;
+       assign abcdefgh = '0;
+       assign digit    = '0;
        assign vsync    = '0;
        assign hsync    = '0;
        assign red      = '0;
@@ -156,8 +156,6 @@ module top
 
     //------------------------------------------------------------------------
 
-    assign led      = w_led'   ({ enc0, enc1, enc2, enc3 });
-    assign abcdefgh =           { enc0, enc1, enc2, enc3 };
-    assign digit    = w_digit' ({ enc0, enc1, enc2, enc3 });
+    assign led = w_led' ({ enc0, enc1, enc2, enc3 });
 
 endmodule

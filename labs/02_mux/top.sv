@@ -42,8 +42,8 @@ module top
     //------------------------------------------------------------------------
 
     // assign led      = '0;
-    // assign abcdefgh = '0;
-    // assign digit    = '0;
+       assign abcdefgh = '0;
+       assign digit    = '0;
        assign vsync    = '0;
        assign hsync    = '0;
        assign red      = '0;
@@ -99,8 +99,6 @@ module top
 
     // Use concatenation operation for 5 signals:
 
-    assign led      = w_led'   ({ mux0, mux1, mux2, mux3, mux4 });
-    assign abcdefgh = { 3'b0,     mux0, mux1, mux2, mux3, mux4 };
-    assign digit    = w_digit' ({ mux0, mux1, mux2, mux3, mux4 });
+    assign led = w_led' ({ mux0, mux1, mux2, mux3, mux4 });
 
 endmodule
