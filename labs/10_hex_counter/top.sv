@@ -52,14 +52,26 @@ module top
 
     //------------------------------------------------------------------------
 
-    // Exercise 1: Free running counter.
-    // How do you change the speed of LED blinking?
-    // Try different bit slices to display.
+    // Synthesize the counter controlled by two keys.
+    // When one key is in pressed position - the frequency increases,
+    // when another key is in pressed position - the frequency decreases.
+
+    logic [31:0] period;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+            period <= 32'h12345678;
+        else if (key [0])
+            period <= period + 1'd1;
+        else if (key [1])
+            period <= period - 1'd1;
 
     logic [31:0] cnt;
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
+            cnt <= '0;
+        else if (cnt == period - 1'b1)
             cnt <= '0;
         else
             cnt <= cnt + 1'd1;
@@ -79,8 +91,7 @@ module top
         else
             disp_cnt = cnt [$left (cnt) -: $bits (disp_cnt)];
 
-    seven_segment_display # (w_digit)
-    i_7segment
+    seven_segment_display # (w_digit) i_7segment
     (
         .clk      ( clk      ),
         .rst      ( rst      ),
@@ -92,42 +103,9 @@ module top
 
     //------------------------------------------------------------------------
 
-    // Exercise 2: Key-controlled counter.
-    // Comment out the code above.
-    // Uncomment and synthesize the code below.
-    // Press the key to see the counter incrementing.
+    // Exercise: Change the example above to:
     //
-    // Change the design, for example:
-    //
-    // 1. One key is used to increment, another to decrement.
-    //
-    // 2. Two counters controlled by different keys
-    // displayed in different groups of LEDs.
-
-    /*
-
-    wire any_key = | key;
-
-    logic any_key_r;
-
-    always_ff @ (posedge clk or posedge rst)
-        if (rst)
-            any_key_r <= '0;
-        else
-            any_key_r <= any_key;
-
-    wire any_key_pressed = ~ any_key & any_key_r;
-
-    logic [w_led - 1:0] cnt;
-
-    always_ff @ (posedge clk or posedge rst)
-        if (rst)
-            cnt <= '0;
-        else if (any_key_pressed)
-            cnt <= cnt + 1'd1;
-
-    assign led = w_led' (cnt);
-
-    */
+    // 1. Double the frequency when one key is pressed and released.
+    // 2. Halve the frequency when another key is pressed and released.
 
 endmodule
