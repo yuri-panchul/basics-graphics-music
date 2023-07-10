@@ -52,31 +52,40 @@ module top
 
     //------------------------------------------------------------------------
 
-    // Synthesize the counter controlled by two keys.
+    // Exercise 1. Synthesize the counter controlled by two keys.
     // When one key is in pressed position - the frequency increases,
     // when another key is in pressed position - the frequency decreases.
+    // Change the period increment / decrement and see what happens.
 
     logic [31:0] period;
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            period <= 32'h12345678;
+            period <= 32'h1000000;
         else if (key [0])
-            period <= period + 1'd1;
+            period <= period + 32'h1;
         else if (key [1])
-            period <= period - 1'd1;
+            period <= period - 32'h1;
 
-    logic [31:0] cnt;
+    logic [31:0] cnt_1;
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            cnt <= '0;
-        else if (cnt == period - 1'b1)
-            cnt <= '0;
+            cnt_1 <= '0;
+        else if (cnt_1 == '0)
+            cnt_1 <= period - 1'b1;
         else
-            cnt <= cnt + 1'd1;
+            cnt_1 <= cnt_1 - 1'd1;
 
-    assign led = cnt [$left (cnt) -: w_led];
+    logic [31:0] cnt_2;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+            cnt_2 <= '0;
+        else if (cnt_1 == '0)
+            cnt_2 <= cnt_2 + 1'd1;
+
+    assign led = cnt_2;
 
     //------------------------------------------------------------------------
 
@@ -86,24 +95,24 @@ module top
     logic [w_digit * 4 - 1:0] disp_cnt;
 
     always_comb
-        if ($bits (disp_cnt) >= $bits (cnt))
-            disp_cnt = w_display_number' (cnt);
+        if ($bits (disp_cnt) >= $bits (cnt_2))
+            disp_cnt = w_display_number' (cnt_2);
         else
-            disp_cnt = cnt [$left (cnt) -: $bits (disp_cnt)];
+            disp_cnt = cnt_2 [$left (cnt_2) -: $bits (disp_cnt)];
 
     seven_segment_display # (w_digit) i_7segment
     (
-        .clk      ( clk      ),
-        .rst      ( rst      ),
-        .number   ( disp_cnt ),
-        .dots     ( '0       ),
-        .abcdefgh ( abcdefgh ),
-        .digit    ( digit    )
+        .clk      ( clk          ),
+        .rst      ( rst          ),
+        .number   ( disp_cnt     ),
+        .dots     ( w_digit' (0) ),
+        .abcdefgh ( abcdefgh     ),
+        .digit    ( digit        )
     );
 
     //------------------------------------------------------------------------
 
-    // Exercise: Change the example above to:
+    // Exercise 2: Change the example above to:
     //
     // 1. Double the frequency when one key is pressed and released.
     // 2. Halve the frequency when another key is pressed and released.
