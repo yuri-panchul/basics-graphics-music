@@ -59,12 +59,15 @@ module top
 
     logic [31:0] period;
 
+    localparam min_period = clk_mhz * 1000 * 1000 / 30,
+               max_period = clk_mhz * 1000 * 1000 *  3;
+
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            period <= 32'h1000000;
-        else if (key [0])
+            period <= 32' ((min_period + max_period) / 2);
+        else if (key [0] & period != max_period)
             period <= period + 32'h1;
-        else if (key [1])
+        else if (key [1] & period != min_period)
             period <= period - 32'h1;
 
     logic [31:0] cnt_1;
@@ -92,22 +95,14 @@ module top
     // 4 bits per hexadecimal digit
     localparam w_display_number = w_digit * 4;
 
-    logic [w_digit * 4 - 1:0] disp_cnt;
-
-    always_comb
-        if ($bits (disp_cnt) >= $bits (cnt_2))
-            disp_cnt = w_display_number' (cnt_2);
-        else
-            disp_cnt = cnt_2 [$left (cnt_2) -: $bits (disp_cnt)];
-
     seven_segment_display # (w_digit) i_7segment
     (
-        .clk      ( clk          ),
-        .rst      ( rst          ),
-        .number   ( disp_cnt     ),
-        .dots     ( w_digit' (0) ),
-        .abcdefgh ( abcdefgh     ),
-        .digit    ( digit        )
+        .clk      ( clk                       ),
+        .rst      ( rst                       ),
+        .number   ( w_display_number' (cnt_2) ),
+        .dots     ( w_digit' (0)              ),
+        .abcdefgh ( abcdefgh                  ),
+        .digit    ( digit                     )
     );
 
     //------------------------------------------------------------------------
