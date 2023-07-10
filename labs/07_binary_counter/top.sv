@@ -56,7 +56,9 @@ module top
     // How do you change the speed of LED blinking?
     // Try different bit slices to display.
 
-    logic [31:0] cnt;
+    localparam w_cnt = $clog2 (clk_mhz * 1000 * 1000);
+
+    logic [w_cnt - 1:0] cnt;
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
