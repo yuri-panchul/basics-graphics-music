@@ -71,7 +71,7 @@ module top
     i_vga
     (
         .clk        ( clk        ),
-        .reset      ( rst        ),
+        .rst        ( rst        ),
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
         .display_on ( display_on ),
@@ -82,8 +82,9 @@ module top
     //------------------------------------------------------------------------
     // Pattern 1
 
+    /*
+
     wire [w_x * 2 - 1:0] x_2 = x ** 2;
-    wire [w_y * 2 - 1:0] y_2 = y ** 2;
 
     always_comb
     begin
@@ -94,30 +95,32 @@ module top
         if (~ display_on)
         begin
         end
+        else if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
+        begin
+            red   = x [w_x - 2 -: 4];
+            green = '1;
+            blue  = y [w_y - 2 -: 4];
+        end
+        else if ((x - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
+        begin
+            red   = '1;
+            green = x [w_x - 2 -: 4];
+            blue  = y [w_y - 2 -: 4];
+        end
         else if (x_2 [9 +: w_y] < y)  // Parabola
         begin
             red   = x [w_x - 2 -: 4];
             green = y [w_y - 2 -: 4];
             blue  = '1;
         end
-        else if (x_2 + y_2 < 100 ** 2)  // Circle
-        begin
-            red   = '1;
-            green = x [w_x - 2 -: 4];
-            blue  = y [w_y - 2 -: 4];
-        end
-        else if (x > 200 & y > 200 & x < 300 & y < 400)  // Rectangle
-        begin
-            red   = x [w_x - 2 -: 4];
-            green = '1;
-            blue  = y [w_y - 2 -: 4];
-        end
     end
+
+    */
 
     //------------------------------------------------------------------------
     // Pattern 3 - dynamic
 
-    /*
+    /**/
 
     wire enable;
 
@@ -127,6 +130,19 @@ module top
     # (.clk_mhz (clk_mhz), .strobe_hz (10))
     i_strobe_gen
     (.strobe (enable), .*);
+
+    //------------------------------------------------------------------------
+
+    wire key2;
+
+    generate
+        if (w_key > 2)
+            assign key2 = key [2];
+        else if (w_sw > 0)
+            assign key2 = sw [0];
+        else
+            assign key2 = 1'b0;
+    endgenerate
 
     //------------------------------------------------------------------------
 
@@ -140,8 +156,8 @@ module top
         end
         else if (enable)
         begin
-            dx <= dx + key [2];
-            dy <= dy + key [1];
+            dx <= dx + ~ key2;
+            dy <= dy + ~ key [1];
         end
 
     //------------------------------------------------------------------------
@@ -163,6 +179,6 @@ module top
       end
     end
 
-    */
+    /**/
 
 endmodule
