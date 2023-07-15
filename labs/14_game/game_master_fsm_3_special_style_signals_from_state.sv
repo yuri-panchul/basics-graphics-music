@@ -64,7 +64,7 @@ WON_END -> WON_END, START              LOST_END -> LOST_END, START
 module game_master_fsm_3_special_style_signals_from_state
 (
     input  clk,
-    input  reset,
+    input  rst,
 
     input  launch_key,
 
@@ -153,8 +153,8 @@ module game_master_fsm_3_special_style_signals_from_state
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             state <= STATE_START;
         else
             state <= n_state;

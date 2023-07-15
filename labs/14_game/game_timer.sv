@@ -3,7 +3,7 @@
 module game_timer # ( parameter width = 32 )
 (
     input                    clk,
-    input                    reset,
+    input                    rst,
     input      [width - 1:0] value,
     input                    start,
     output logic               running
@@ -11,8 +11,8 @@ module game_timer # ( parameter width = 32 )
 
     logic [width - 1:0] counter;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             running <= 1'b0;
         end

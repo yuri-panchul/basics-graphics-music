@@ -12,7 +12,7 @@ module game_sprite_control
 
 (
     input                    clk,
-    input                    reset,
+    input                    rst,
 
     input                    sprite_write_xy,
     input                    sprite_write_dxy,
@@ -34,7 +34,7 @@ module game_sprite_control
     game_strobe
     # (.width (strobe_to_update_xy_counter_width))
     strobe_generator
-    (clk, reset, strobe_to_update_xy);
+    (clk, rst, strobe_to_update_xy);
 
     logic [`X_WIDTH  - 1:0] x;
     logic [`Y_WIDTH  - 1:0] y;
@@ -42,8 +42,8 @@ module game_sprite_control
     logic [ DX_WIDTH - 1:0] dx;
     logic [ DY_WIDTH - 1:0] dy;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             x  <= 1'b0;
             y  <= 1'b0;
@@ -61,8 +61,8 @@ module game_sprite_control
             y <= y + { { `Y_WIDTH - DY_WIDTH { dy [DY_WIDTH - 1] } }, dy };
         end
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             dx <= 1'b0;
             dy <= 1'b0;

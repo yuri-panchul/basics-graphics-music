@@ -19,7 +19,7 @@ module game_sprite_display_pipelined
 
 (
     input                         clk,
-    input                         reset,
+    input                         rst,
 
     input      [`X_WIDTH   - 1:0] pixel_x,
     input      [`Y_WIDTH   - 1:0] pixel_y,
@@ -92,8 +92,8 @@ module game_sprite_display_pipelined
     logic                  reg_y_sprite_within_screen;
     logic [`Y_WIDTH    :0] reg_y_pixel_minus_sprite;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             reg_pixel_x                 <= 1'b0;
             reg_pixel_y                 <= 1'b0;
@@ -181,16 +181,16 @@ module game_sprite_display_pipelined
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             rgb_en <= 1'b0;
         else if (x_hit && y_hit)
             { rgb_en, rgb } <= ergb;
         else
             rgb_en <= 1'b0;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             sprite_within_screen <= 1'b0;
 

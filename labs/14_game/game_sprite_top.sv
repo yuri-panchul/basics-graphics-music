@@ -24,7 +24,7 @@ module game_sprite_top
 
 (
     input                     clk,
-    input                     reset,
+    input                     rst,
 
     input  [`X_WIDTH   - 1:0] pixel_x,
     input  [`Y_WIDTH   - 1:0] pixel_y,
@@ -65,7 +65,7 @@ module game_sprite_top
     sprite_control
     (
         .clk                   ( clk                   ),
-        .reset                 ( reset                 ),
+        .rst                   ( rst                   ),
 
         .sprite_write_xy       ( sprite_write_xy       ),
         .sprite_write_dxy      ( sprite_write_dxy      ),
@@ -99,7 +99,7 @@ module game_sprite_top
     sprite_display
     (
         .clk                   ( clk                   ),
-        .reset                 ( reset                 ),
+        .rst                   ( rst                   ),
 
         .pixel_x               ( pixel_x               ),
         .pixel_y               ( pixel_y               ),

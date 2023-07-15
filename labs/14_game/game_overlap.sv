@@ -3,7 +3,7 @@
 module game_overlap
 (
     input                       clk,
-    input                       reset,
+    input                       rst,
 
     input      [`X_WIDTH - 1:0] left_1,
     input      [`X_WIDTH - 1:0] right_1,
@@ -18,8 +18,8 @@ module game_overlap
     output logic                  overlap
 );
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             overlap <= 1'b0;
         else
             overlap <= ! (    right_1  < left_2

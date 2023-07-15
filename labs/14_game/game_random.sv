@@ -3,14 +3,14 @@
 module game_random
 (
     input             clk,
-    input             reset,
+    input             rst,
     output logic [15:0] random
 );
 
     // Uses LFSR, Linear Feedback Shift Register
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             random <= 16'b1111111111111;
         else
             random <=   { random [14:0], 1'b0 }

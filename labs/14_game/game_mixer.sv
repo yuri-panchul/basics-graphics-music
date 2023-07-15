@@ -3,7 +3,7 @@
 module game_mixer
 (
     input            clk,
-    input            reset,
+    input            rst,
 
     input            display_on,
 
@@ -20,8 +20,8 @@ module game_mixer
     output logic [2:0] rgb
 );
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             rgb <= 3'b000;
         else if (! display_on)
             rgb <= 3'b000;

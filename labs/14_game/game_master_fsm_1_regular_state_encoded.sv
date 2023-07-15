@@ -3,7 +3,7 @@
 module game_master_fsm_1_regular_state_encoded
 (
     input      clk,
-    input      reset,
+    input      rst,
 
     input      launch_key,
 
@@ -139,8 +139,8 @@ module game_master_fsm_1_regular_state_encoded
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             state                         <= STATE_START;
 

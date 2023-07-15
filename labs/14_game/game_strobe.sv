@@ -3,14 +3,14 @@
 module game_strobe # ( parameter width = 32 )
 (
     input      clk,
-    input      reset,
+    input      rst,
     output logic strobe
 );
 
     logic [width - 1:0] counter;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             counter <= { width, 1'b0 };
             strobe  <= 1'b0;

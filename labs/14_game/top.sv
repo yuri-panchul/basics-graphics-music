@@ -52,13 +52,7 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire launch_key = | key;  // Any key is pressed
-
-    // Either of two leftmost keys is pressed
-    wire left_key   = key_sw [3:2] != 2'b11;
-
-    // Either of two rightmost keys is pressed
-    wire right_key  = key_sw [1:0] != 2'b11;
+    wire [2:0] rgb;
 
     game_top
     # (
@@ -69,16 +63,19 @@ module top
     )
     i_game_top
     (
-        .clk              (   clk                   ),
-        .reset            ( rst               ),
+        .clk              (   clk                ),
+        .rst              (   rst                ),
 
         .launch_key       ( | key                ),
         .left_right_keys  ( { key [1], key [0] } ),
 
-        .hsync            (   hsync                 ),
-        .vsync            (   vsync                 ),
-        .rgb              (   rgb                   )
+        .hsync            (   hsync              ),
+        .vsync            (   vsync              ),
+        .rgb              (   rgb                )
     );
 
+    assign red   = { 4 { rgb [2] } };
+    assign green = { 4 { rgb [1] } };
+    assign blue  = { 4 { rgb [0] } };
 
 endmodule

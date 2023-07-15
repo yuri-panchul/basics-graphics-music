@@ -7,7 +7,7 @@ module game_top
 )
 (
     input        clk,
-    input        reset,
+    input        rst,
 
     input        launch_key,
     input  [1:0] left_right_keys,
@@ -35,7 +35,7 @@ module game_top
     i_vga
     (
         .clk        ( clk        ),
-        .reset      ( reset      ),
+        .rst        ( rst        ),
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
         .display_on ( display_on ),
@@ -47,7 +47,7 @@ module game_top
 
     wire [15:0] random;
 
-    game_random random_generator (clk, reset, random);
+    game_random random_generator (clk, rst, random);
 
     //------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ module game_top
     sprite_target
     (
         .clk                   ( clk                          ),
-        .reset                 ( reset                        ),
+        .rst                   ( rst                          ),
 
         .pixel_x               ( pixel_x                      ),
         .pixel_y               ( pixel_y                      ),
@@ -222,7 +222,7 @@ module game_top
     sprite_torpedo
     (
         .clk                   ( clk                           ),
-        .reset                 ( reset                         ),
+        .rst                   ( rst                           ),
 
         .pixel_x               ( pixel_x                       ),
         .pixel_y               ( pixel_y                       ),
@@ -259,7 +259,7 @@ module game_top
     game_overlap overlap
     (
         .clk       ( clk                        ),
-        .reset     ( reset                      ),
+        .rst       ( rst                        ),
 
         .left_1    ( sprite_target_out_left     ),
         .right_1   ( sprite_target_out_right    ),
@@ -282,7 +282,7 @@ module game_top
     game_timer # (.width (25)) timer
     (
         .clk     ( clk                       ),
-        .reset   ( reset                     ),
+        .rst     ( rst                       ),
         .value   ( 25'h1000000               ),
         .start   ( end_of_game_timer_start   ),
         .running ( end_of_game_timer_running )
@@ -295,7 +295,7 @@ module game_top
     game_mixer mixer
     (
         .clk                           ( clk                           ),
-        .reset                         ( reset                         ),
+        .rst                           ( rst                           ),
 
         .display_on                    ( display_on                    ),
 
@@ -317,7 +317,7 @@ module game_top
     `GAME_MASTER_FSM_MODULE master_fsm
     (
         .clk                           ( clk                           ),
-        .reset                         ( reset                         ),
+        .rst                           ( rst                           ),
 
         .launch_key                    ( launch_key                    ),
 
