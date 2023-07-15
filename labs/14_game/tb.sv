@@ -25,7 +25,9 @@ module tb;
         .w_sw    ( w_sw    ),
         .w_led   ( w_led   ),
         .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .w_gpio  ( w_gpio  ),
+
+        .strobe_to_update_xy_counter_width (1)
     )
     i_top
     (

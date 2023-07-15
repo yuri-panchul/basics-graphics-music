@@ -145,8 +145,7 @@ module game_sprite_display_pipelined
     //------------------------------------------------------------------------
 
     // Here we assume that SPRITE_WIDTH == 8 and ERGB_WIDTH == 4
-    // TODO: instantiate here a more generic mux that is handled by all
-    // synthesis tools well
+    // TODO: instantiate here a more generic mux that is handled by all synthesis tools well
 
     wire [2:0] row_index    = reg_y_pixel_minus_sprite [2:0];
     wire [2:0] column_index = reg_x_pixel_minus_sprite [2:0];

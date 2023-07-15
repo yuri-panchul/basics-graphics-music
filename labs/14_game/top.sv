@@ -7,7 +7,9 @@ module top
               w_sw    = 8,
               w_led   = 8,
               w_digit = 8,
-              w_gpio  = 20
+              w_gpio  = 20,
+
+              strobe_to_update_xy_counter_width = 20
 )
 (
     input                        clk,

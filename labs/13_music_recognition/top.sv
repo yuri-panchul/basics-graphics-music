@@ -437,7 +437,7 @@ module top
         else if (digit_enable)
         begin
             i_digit_r <= i_digit;
-            digit     <= ~ (4'b0001 << i_digit);
+            digit     <= 4'b0001 << i_digit;
         end
 
     //------------------------------------------------------------------------
