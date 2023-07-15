@@ -82,7 +82,7 @@ module top
     //------------------------------------------------------------------------
     // Pattern 1
 
-    /*
+    /**/
 
     wire [w_x * 2 - 1:0] x_2 = x ** 2;
 
@@ -115,12 +115,12 @@ module top
         end
     end
 
-    */
+    /**/
 
     //------------------------------------------------------------------------
     // Pattern 3 - dynamic
 
-    /**/
+    /*
 
     wire enable;
 
@@ -133,18 +133,8 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire key2;
-
-    generate
-        if (w_key > 2)
-            assign key2 = key [2];
-        else if (w_sw > 0)
-            assign key2 = sw [0];
-        else
-            assign key2 = 1'b0;
-    endgenerate
-
-    //------------------------------------------------------------------------
+    wire inv_key_0 = ~ key [0];
+    wire inv_key_1 = ~ key [1];
 
     logic [7:0] dx, dy;
 
@@ -156,8 +146,8 @@ module top
         end
         else if (enable)
         begin
-            dx <= dx + ~ key2;
-            dy <= dy + ~ key [1];
+            dx <= dx + inv_key_0;
+            dy <= dy + inv_key_1;
         end
 
     //------------------------------------------------------------------------
@@ -175,10 +165,10 @@ module top
       begin
         red   = xc + xc + yc + dx;
         green = xc - yc - dy;
-        blue  = { 4 { key [0] } };
+        blue  = { 4 { & key } };
       end
     end
 
-    /**/
+    */
 
 endmodule
