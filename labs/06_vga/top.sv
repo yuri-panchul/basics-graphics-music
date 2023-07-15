@@ -56,10 +56,6 @@ module top
 
     //------------------------------------------------------------------------
 
-    assign led = '1;
-
-    //------------------------------------------------------------------------
-
     wire display_on;
 
     wire [w_x - 1:0] x;
@@ -67,10 +63,10 @@ module top
 
     vga
     # (
-        .HPOS_WIDTH ( w_x    ),
-        .VPOS_WIDTH ( w_y    ),
+        .HPOS_WIDTH ( w_x     ),
+        .VPOS_WIDTH ( w_y     ),
 
-        .CLK_MHZ    ( CLK_MHZ    )
+        .CLK_MHZ    ( clk_mhz )
     )
     i_vga
     (
