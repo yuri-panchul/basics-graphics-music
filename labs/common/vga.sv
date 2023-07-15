@@ -28,7 +28,7 @@ module vga
 )
 (
     input                           clk,
-    input                           reset,
+    input                           rst,
     output logic                    hsync,
     output logic                    vsync,
     output logic                    display_on,
@@ -74,9 +74,9 @@ module vga
     logic [3:0] clk_en_cnt;
     logic clk_en;
 
-    always_ff @ (posedge clk or posedge reset)
+    always_ff @ (posedge clk or posedge rst)
     begin
-        if (reset)
+        if (rst)
         begin
             clk_en_cnt <= 3'b0;
             clk_en <= 1'b0;
@@ -98,9 +98,9 @@ module vga
 
     // Making all outputs registered
 
-    always_ff @ (posedge clk or posedge reset)
+    always_ff @ (posedge clk or posedge rst)
     begin
-        if (reset)
+        if (rst)
         begin
             hsync       <= 1'b0;
             vsync       <= 1'b0;
