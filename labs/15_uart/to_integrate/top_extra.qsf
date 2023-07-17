@@ -1,0 +1,5 @@
+set_global_assignment -name SYSTEMVERILOG_FILE hex_parser.sv
+set_global_assignment -name SYSTEMVERILOG_FILE seven_segment_4_digits.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_receiver.sv
+
+set_location_assignment PIN_115 -to rx

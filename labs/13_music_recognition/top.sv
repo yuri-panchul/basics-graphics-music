@@ -216,7 +216,7 @@ module top
         else
             d_note <= note;
 
-    logic  [17:0] t_cnt;           // Threshold counter
+    logic  [19:0] t_cnt;           // Threshold counter
     logic  [w_note - 1:0] t_note;  // Thresholded note
 
     always_ff @ (posedge clk or posedge rst)
@@ -261,8 +261,8 @@ module top
 
     // No 5. The story of love
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             states [0] <= 0;
         else
             case (states [0])
@@ -285,8 +285,8 @@ module top
 
     // No 8. Godfather
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             states [1] <= 0;
         else
             case (states [1])
@@ -309,8 +309,8 @@ module top
 
     // No 1. Gangsters Song
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             states [2] <= 0;
         else
             case (states [2])
@@ -335,8 +335,8 @@ module top
 
     // No 4. Fly away on the wings of wind
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             states [0] <= 0;
         else
             case (states [0])
@@ -359,8 +359,8 @@ module top
 
     // No 2. Winged Swing
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             states [1] <= 0;
         else
             case (states [1])
@@ -383,8 +383,8 @@ module top
 
     // No 3. Yesterday by Beatles
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             states [2] <= 0;
         else
             case (states [2])
@@ -415,8 +415,8 @@ module top
 
     logic [15:0] digit_enable_cnt;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             digit_enable_cnt <= 0;
         else
             digit_enable_cnt <= digit_enable_cnt + 1;
@@ -428,8 +428,8 @@ module top
     logic  [1:0] i_digit_r;
     wire [1:0] i_digit = i_digit_r + 2'd1;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             i_digit_r <= 2'd0;
             digit     <= 4'b0;
@@ -437,7 +437,7 @@ module top
         else if (digit_enable)
         begin
             i_digit_r <= i_digit;
-            digit     <= ~ (4'b0001 << i_digit);
+            digit     <= 4'b0001 << i_digit;
         end
 
     //------------------------------------------------------------------------
@@ -446,8 +446,8 @@ module top
     //
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
         begin
             abcdefgh <= 8'b00000000;
         end
