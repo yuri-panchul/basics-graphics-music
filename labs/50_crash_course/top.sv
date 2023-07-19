@@ -136,7 +136,6 @@ module top
 
     wire [9:0] dx = counter [27:18];
     wire [9:0] dy = counter [27:18];
-    wire [3:0] k  = counter [31:28];
 
     wire [19:0] x_2 = x ** 2;
 
@@ -161,11 +160,17 @@ module top
             green = 1;
             blue  = 0;
         end
-        else if (((x & 127) ** 2 >> (7 + k)) < (y & 127))  // Parabola
+        else if (((((x + y) & 127) ** 2) >> 8) < ((y - dy) & 127))  // Parabola
         begin
-            red   = 0;
-            green = 0;
-            blue  = 1;
+            red   = counter [31] ^ x [6];
+            green = counter [30] ^ y [7];
+            blue  = counter [29];
+        end
+        else
+        begin
+            red   = 1;
+            green = 1;
+            blue  = 0;
         end
     end
 
