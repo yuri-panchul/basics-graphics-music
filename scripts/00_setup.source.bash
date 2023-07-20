@@ -1,5 +1,5 @@
 set -Eeuo pipefail  # See the meaning in scripts/README.md
-# set -x  # Print each command
+set -x  # Print each command
 
 setup_source_bash_already_run=1
 
@@ -308,6 +308,17 @@ icarus_verilog_setup ()
 
 #-----------------------------------------------------------------------------
 #
+#   Gowin IDE setup
+#
+#-----------------------------------------------------------------------------
+
+#gowin_ide_setup ()
+#{
+
+#}
+
+#-----------------------------------------------------------------------------
+#
 #   FPGA board setup
 #
 #-----------------------------------------------------------------------------
@@ -334,6 +345,10 @@ setup_run_directory_for_fpga_synthesis()
     parent_dir=$(readlink -f "$dir/..")
 
     rm -rf "$dir"/*
+
+    case $fpga_board in 
+
+    "c5gx" | "de0_cv" | "de10_lite" | "omdazz" | "rzrd" | "zeowaa")
 
     > "$dir/fpga_project.qpf"
 
@@ -369,6 +384,16 @@ EOF
     fi
 
     cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
+
+    ;;
+
+    "tang20k") 
+    
+        echo "WIP: project creation for gowin chips"
+        
+    ;;
+
+    esac
 }
 
 #-----------------------------------------------------------------------------
