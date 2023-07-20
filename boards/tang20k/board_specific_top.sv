@@ -6,18 +6,24 @@ module board_specific_top
                 w_sw    = 5,
                 w_led   = 6,
                 w_digit = 0,
-                w_gpio  = 64         
+                w_gpio  = 32         
 )
 (
-    input                   CLK,
-    input                   RESET,
+    input                       CLK,
+    input                       RESET,
 
-    input  [w_key   - 1:0]  KEY,
-    input  [w_sw    - 1:0]  SW,
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
     
-    output [w_led   - 1:0]  LED,
+    output [w_led       - 1:1]  LED,
 
-    inout  [w_gpio  - 1:0]  GPIO
+    inout  [w_gpio / 4  - 1:0]  GPIO_0,
+    inout  [w_gpio / 4  - 1:0]  GPIO_1,
+    inout  [w_gpio / 4  - 1:0]  GPIO_2,
+    inout  [w_gpio / 4  - 1:0]  GPIO_3
 );
 
     //------------------------------------------------------------------------
@@ -36,8 +42,8 @@ module board_specific_top
         .clk      (   CLOCK        ),
         .rst      ( ~ RESET        ),
 
-        .key      ( ~ KEY          ),
-        .sw       (   SW           ),
+        .key      (   KEY          ),
+        .sw       ( ~ SW           ),
 
         .led      (   LED          ),
 
