@@ -34,7 +34,7 @@ case $fpga_board in
     "tang20k")
     
         echo "WIP: sythesys for gowin chips"
- 
+        error "Not implemented"
     ;;
 
 esac
