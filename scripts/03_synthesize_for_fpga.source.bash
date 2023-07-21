@@ -34,6 +34,9 @@ case $fpga_board in
     "tang20k")
     
         echo "WIP: sythesys for gowin chips"
+
+        # TODO: add checking gowin_sh command
+        $gowin_sh fpga_project.tcl
         error "Not implemented"
     ;;
 

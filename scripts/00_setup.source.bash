@@ -312,10 +312,19 @@ icarus_verilog_setup ()
 #
 #-----------------------------------------------------------------------------
 
-#gowin_ide_setup ()
-#{
+gowin_ide_setup ()
+{
+    echo "WIP: IDE setup for gowin chips"
 
-#}
+    gowin_ide_setup_dir=/opt/gowin
+
+    if [ ! -d $gowin_ide_setup_dir]
+    then
+        error "Gowin IDE not found in /opt/gowin"
+    fi
+    
+    gowin_sh="$gowin_ide_setup_dir/IDE/bin/gw_sh"
+}
 
 #-----------------------------------------------------------------------------
 #
@@ -391,6 +400,9 @@ EOF
     "tang20k") 
     
         echo "WIP: project creation for gowin chips"
+
+        #TODO: move gowin_ide_setup to common setup place
+        gowin_ide_setup
 
         > "$dir/fpga_project.tcl"
         cat "$board_dir/$fpga_board/board_specific.tcl" >> "$dir/fpga_project.tcl"
