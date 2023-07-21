@@ -31,7 +31,7 @@ case $fpga_board in
         fi
     ;;
 
-    "tang20k")
+    "tangprimer20k")
     
         echo "WIP: sythesys for gowin chips"
 

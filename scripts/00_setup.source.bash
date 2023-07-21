@@ -397,7 +397,7 @@ EOF
 
     ;;
 
-    "tang20k") 
+    "tangprimer20k") 
     
         echo "WIP: project creation for gowin chips"
 
