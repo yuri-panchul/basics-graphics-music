@@ -62,6 +62,10 @@ case $fpga_board in
     ;;
 
     "tangprimer20k")
-        echo "WIP"
+        echo "WIP: Gowin flash via openFPGALoader"
+
+        is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system"
+
+        openFPGALoader -b $fpga_board impl/pnr/fpga_project.fs
     ;;
 esac
