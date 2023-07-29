@@ -1,5 +1,5 @@
 set -Eeuo pipefail  # See the meaning in scripts/README.md
-# set -x  # Print each command
+#set -x  # Print each command
 
 setup_source_bash_already_run=1
 
@@ -318,6 +318,26 @@ icarus_verilog_setup ()
 
 #-----------------------------------------------------------------------------
 #
+#   Gowin IDE setup
+#
+#-----------------------------------------------------------------------------
+
+gowin_ide_setup ()
+{
+    echo "WIP: IDE setup for gowin chips"
+
+    gowin_ide_setup_dir=/opt/gowin
+
+    if [ ! -d $gowin_ide_setup_dir]
+    then
+        error "Gowin IDE not found in /opt/gowin"
+    fi
+    
+    gowin_sh="$gowin_ide_setup_dir/IDE/bin/gw_sh"
+}
+
+#-----------------------------------------------------------------------------
+#
 #   FPGA board setup
 #
 #-----------------------------------------------------------------------------
@@ -345,8 +365,6 @@ setup_run_directory_for_fpga_synthesis()
 
     rm -rf "$dir"/*
 
-    > "$dir/fpga_project.qpf"
-
     # We need relative paths here because Quartus under Windows
     # does not like /c/... full paths.
 
@@ -357,6 +375,13 @@ setup_run_directory_for_fpga_synthesis()
     rel_parent_dir=$(realpath --relative-to="$dir" "$parent_dir")
     rel_board_dir=$(realpath  --relative-to="$dir" "$board_dir")
     rel_lab_dir=$(realpath    --relative-to="$dir" "$lab_dir")
+
+  
+    case $fpga_board in 
+
+    "c5gx" | "de0_cv" | "de10_lite" | "omdazz" | "rzrd" | "zeowaa")
+
+    > "$dir/fpga_project.qpf"
 
     cat << EOF > "$dir/fpga_project.qsf"
 set_global_assignment -name NUM_PARALLEL_PROCESSORS  4
@@ -379,6 +404,38 @@ EOF
     fi
 
     cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
+
+    ;;
+
+    "tangprimer20k") 
+    
+        echo "WIP: project creation for gowin chips"
+
+        #TODO: move gowin_ide_setup to common setup place
+        gowin_ide_setup
+
+        > "$dir/fpga_project.tcl"
+        cat "$board_dir/$fpga_board/board_specific.tcl" >> "$dir/fpga_project.tcl"
+
+        find "$parent_dir" \
+            -type f -name '*.sv' -not -name tb.sv  \
+            -printf "add_file -type verilog $parent_dir/%f\n" \
+            >> "$dir/fpga_project.tcl"
+
+        find "$board_dir/$fpga_board"  \
+            -type f -name '*.sv' -not -name tb.sv  \
+            -printf "add_file -type verilog $board_dir/$fpga_board/%f\n" \
+            >> "$dir/fpga_project.tcl"
+
+        find "$lab_dir/common"  \
+            -type f -name '*.sv' -not -name tb.sv  \
+            -printf "add_file -type verilog $lab_dir/common/%f\n" \
+            >> "$dir/fpga_project.tcl"
+
+        echo "run all" >> "$dir/fpga_project.tcl"
+    ;;
+
+    esac
 }
 
 #-----------------------------------------------------------------------------
