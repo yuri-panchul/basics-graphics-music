@@ -124,9 +124,19 @@ intel_fpga_setup_quartus ()
     intelfpga_install_dir=intelFPGA_lite
     quartus_dir=quartus
 
+    if    [ -n "${QUARTUS_HOME-}" ]  \
+       && [ -d "$QUARTUS_HOME/$intelfpga_install_dir" ]
+    then
+        intelfpga_install_parent_dir="$QUARTUS_HOME"
+    fi
+
     if [ "$OSTYPE" = "linux-gnu" ]
     then
-        intelfpga_install_parent_dir="$HOME"
+        if [ -z "${intelfpga_install_parent_dir-}" ]
+        then
+            intelfpga_install_parent_dir="$HOME"
+        fi
+
         quartus_bin_dir=bin
 
         if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
@@ -138,16 +148,14 @@ intel_fpga_setup_quartus ()
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
     then
-        intelfpga_install_parent_dir=/c
+        if [ -z "${intelfpga_install_parent_dir-}" ]
+        then
+            intelfpga_install_parent_dir=/c
+        fi
+
         quartus_bin_dir=bin64
     else
         error "this script does not support your OS / platform '$OSTYPE'"
-    fi
-
-    if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
-    then
-        error "expected to find '$intelfpga_install_dir' directory"  \
-              " in '$intelfpga_install_parent_dir'"
     fi
 
     #-------------------------------------------------------------------------
@@ -157,11 +165,13 @@ intel_fpga_setup_quartus ()
         if [ -z "${intelfpga_install_parent_dir_first-}" ]
         then
             error "expected to find '$intelfpga_install_dir' directory"  \
-                  "in '$intelfpga_install_parent_dir'"
+                  "in '$intelfpga_install_parent_dir'."                  \
+                  "'$intelfpga_install_dir' location can be set by the environment variable QUARTUS_HOME"
         else
             error "expected to find '$intelfpga_install_dir' directory"  \
                   "either in '$intelfpga_install_parent_dir_first'"      \
-                  "or in '$intelfpga_install_parent_dir'"
+                  "or in '$intelfpga_install_parent_dir'."               \
+                  "'$intelfpga_install_dir' location can be set by the environment variable QUARTUS_HOME"
         fi
     fi
 
@@ -556,7 +566,7 @@ openlane_setup ()
     else
         error "Cannot find OpenLane directory for ASIC synthesis and layout editor." \
               "By default it is expected at \"$default_openlane_dir\"," \
-              "but its location can be set by the enviroment variable OPENLANE_ROOTDIR" \
+              "but its location can be set by the environment variable OPENLANE_ROOTDIR" \
               "or (second priority) OPENLANE_HOME"
     fi
 }
