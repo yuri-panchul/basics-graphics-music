@@ -154,6 +154,12 @@ intel_fpga_setup_quartus ()
         fi
 
         quartus_bin_dir=bin64
+
+        if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
+        then
+            intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
+            intelfpga_install_parent_dir=/d
+        fi
     else
         error "this script does not support your OS / platform '$OSTYPE'"
     fi
