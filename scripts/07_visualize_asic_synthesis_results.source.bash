@@ -18,5 +18,5 @@ run_dir_relative_to_open_lane_dir=$(realpath --relative-to="$openlane_dir" "$las
 
 # make -f "$script_dir/asic/run_layout_editor.mk"   run_layout_editor
 
-  make -f "$script_dir/asic/run_openroad_viewer.mk" run_openroad_viewer  \
-      RUN_DIR_RELATIVE_TO_OPEN_LANE_DIR="$run_dir_relative_to_open_lane_dir"
+  make -f "$script_dir/asic/run_openroad_viewer.mk" run_layout_viewer  \
+      LAYOUT_VIEWER=openroad RUN_DIR_RELATIVE_TO_OPEN_LANE_DIR="$run_dir_relative_to_open_lane_dir"
