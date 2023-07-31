@@ -400,7 +400,8 @@ set_global_assignment -name SEARCH_PATH $rel_lab_dir/common
 
 EOF
 
-        find "$parent_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
+        $find_to_run  \
+            "$parent_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
             -type f -name '*.sv' -not -name tb.sv  \
             -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
             >> "$dir/fpga_project.qsf"
@@ -422,17 +423,20 @@ EOF
         > "$dir/fpga_project.tcl"
         cat "$board_dir/$fpga_board/board_specific.tcl" >> "$dir/fpga_project.tcl"
 
-        find "$parent_dir" \
+        $find_to_run  \
+            "$parent_dir" \
             -type f -name '*.sv' -not -name tb.sv  \
             -printf "add_file -type verilog $parent_dir/%f\n" \
             >> "$dir/fpga_project.tcl"
 
-        find "$board_dir/$fpga_board"  \
+        $find_to_run  \
+            "$board_dir/$fpga_board"  \
             -type f -name '*.sv' -not -name tb.sv  \
             -printf "add_file -type verilog $board_dir/$fpga_board/%f\n" \
             >> "$dir/fpga_project.tcl"
 
-        find "$lab_dir/common"  \
+        $find_to_run  \
+            "$lab_dir/common"  \
             -type f -name '*.sv' -not -name tb.sv  \
             -printf "add_file -type verilog $lab_dir/common/%f\n" \
             >> "$dir/fpga_project.tcl"
@@ -610,6 +614,18 @@ run_openlane_layout_viewer ()
         || error "No RUN directory from the last ASIC synthesis run."     \
                  "You probably need to re-run the ASIC synthesis script"  \
                  "for the design \"$lab_name\"."
+
+    [ -d "$last_run_dir/results/signoff" ]  \
+        || error "No \"results/signoff\" subdirectory inside"             \
+                 "\"$last_run_dir\"."                                     \
+                 "It indicates that the last ASIC synthesis run"          \
+                 "for the design \"$lab_name\" failed."
+
+    [ -n "$(ls -A "$last_run_dir/results/signoff")" ]  \
+        || error "The \"$last_run_dir/results/signoff\" directory"        \
+                 "is empty."                                              \
+                 "It indicates that the last ASIC synthesis run"          \
+                 "for the design \"$lab_name\" failed."
 
     cd "$openlane_dir"
 

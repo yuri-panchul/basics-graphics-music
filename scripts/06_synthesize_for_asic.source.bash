@@ -11,7 +11,8 @@ if [ -f ../asic_config.tcl ] ; then
     cp ../asic_config.tcl "$design_dir"/config.tcl
 fi
 
-find .. "$lab_dir/common"  \
+$find_to_run  \
+    .. "$lab_dir/common"  \
     -type f -name '*.sv*' -not -name tb.sv  \
         | xargs -I % cp %  "$design_dir/src"
 
