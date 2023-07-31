@@ -591,16 +591,25 @@ run_openlane_layout_viewer ()
     fi
 
     design_dir="$openlane_dir/designs/$lab_name"
+
+    [ -d "$design_dir" ]  \
+        || error "The OpenLane ASIC synthesis script"        \
+                 "was not run for the design \"$lab_name\""
+
     runs_dir="$design_dir/runs"
 
-    [ -d "${runs_dir-}" ]  \
-        || error "Cannot find OpenLane runs directory"
+    [ -d "$runs_dir" ]  \
+        || error "Cannot find the OpenLane \"runs\" directory"            \
+                 "inside \"$design_dir\"."                                \
+                 "You probably need to re-run the ASIC synthesis script"  \
+                 "for the design \"$lab_name\"."
 
     last_run_dir=$(ls -d "$runs_dir"/RUN* | sort | tail -1)
 
-    ! [ -z "${last_run_dir-}" ]  \
-        || error "No RUN directory from the last run."  \
-                 "You may need to run the ASIC synthesis script first."
+    ! [ -z "$last_run_dir" ]  \
+        || error "No RUN directory from the last ASIC synthesis run."     \
+                 "You probably need to re-run the ASIC synthesis script"  \
+                 "for the design \"$lab_name\"."
 
     cd "$openlane_dir"
 
