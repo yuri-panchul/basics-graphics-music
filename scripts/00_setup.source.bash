@@ -387,9 +387,9 @@ setup_run_directory_for_fpga_synthesis()
 
     "c5gx" | "de0_cv" | "de10_lite" | "omdazz" | "rzrd" | "zeowaa")
 
-    > "$dir/fpga_project.qpf"
+        > "$dir/fpga_project.qpf"
 
-    cat << EOF > "$dir/fpga_project.qsf"
+        cat << EOF > "$dir/fpga_project.qsf"
 set_global_assignment -name NUM_PARALLEL_PROCESSORS  4
 set_global_assignment -name TOP_LEVEL_ENTITY         board_specific_top
 set_global_assignment -name SDC_FILE                 $rel_board_dir/$fpga_board/board_specific.sdc
@@ -400,17 +400,16 @@ set_global_assignment -name SEARCH_PATH $rel_lab_dir/common
 
 EOF
 
-    find "$parent_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
-      -type f -name '*.sv' -not -name tb.sv  \
-      -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
-      >> "$dir/fpga_project.qsf"
+        find "$parent_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
+            -type f -name '*.sv' -not -name tb.sv  \
+            -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
+            >> "$dir/fpga_project.qsf"
 
-    if [ -f "$parent_dir/extra_project_files.qsf" ] ; then
-        cat "$parent_dir/extra_project_files.qsf" >> "$dir/fpga_project.qsf"
-    fi
+        if [ -f "$parent_dir/extra_project_files.qsf" ] ; then
+            cat "$parent_dir/extra_project_files.qsf" >> "$dir/fpga_project.qsf"
+        fi
 
-    cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
-
+        cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
     ;;
 
     "tangprimer20k") 
@@ -554,6 +553,10 @@ fpga_board_setup ()
 }
 
 #-----------------------------------------------------------------------------
+#
+#   OpenLane setup and common routines
+#
+#-----------------------------------------------------------------------------
 
 openlane_setup ()
 {
@@ -575,6 +578,36 @@ openlane_setup ()
               "but its location can be set by the environment variable OPENLANE_ROOTDIR" \
               "or (second priority) OPENLANE_HOME"
     fi
+}
+
+#-----------------------------------------------------------------------------
+
+run_openlane_layout_viewer ()
+{
+    if [ -z "${1-}" ] ; then
+        LAYOUT_VIEWER_OPTION=
+    else
+        LAYOUT_VIEWER_OPTION="LAYOUT_VIEWER=$1"
+    fi
+
+    design_dir="$openlane_dir/designs/$lab_name"
+    runs_dir="$design_dir/runs"
+
+    [ -d "${runs_dir-}" ]  \
+        || error "Cannot find OpenLane runs directory"
+
+    last_run_dir=$(ls -d "$runs_dir"/RUN* | sort | tail -1)
+
+    ! [ -z "${last_run_dir-}" ]  \
+        || error "No RUN directory from the last run."  \
+                 "You may need to run the ASIC synthesis script first."
+
+    cd "$openlane_dir"
+
+    run_dir_relative_to_open_lane_dir=$(realpath --relative-to="$openlane_dir" "$last_run_dir")
+
+    make -f "$script_dir/asic/run_layout_viewer.mk" run_layout_viewer  \
+      $LAYOUT_VIEWER_OPTION RUN_DIR_RELATIVE_TO_OPEN_LANE_DIR="$run_dir_relative_to_open_lane_dir"
 }
 
 #-----------------------------------------------------------------------------
