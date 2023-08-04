@@ -330,15 +330,18 @@ icarus_verilog_setup ()
 
 gowin_ide_setup ()
 {
-    echo "WIP: IDE setup for gowin chips"
-
     gowin_ide_setup_dir=/opt/gowin
 
-    if [ ! -d $gowin_ide_setup_dir]
+    if ! [ -d $gowin_ide_setup_dir ]
     then
-        error "Gowin IDE not found in /opt/gowin"
+        gowin_ide_setup_dir="$HOME"
+
+        if ! [ -d $gowin_ide_setup_dir ]
+        then
+            error "Gowin IDE not found in /opt/gowin"
+        fi
     fi
-    
+
     gowin_sh="$gowin_ide_setup_dir/IDE/bin/gw_sh"
 }
 
@@ -382,10 +385,11 @@ setup_run_directory_for_fpga_synthesis()
     rel_board_dir=$(realpath  --relative-to="$dir" "$board_dir")
     rel_lab_dir=$(realpath    --relative-to="$dir" "$lab_dir")
 
-  
-    case $fpga_board in 
+    #-------------------------------------------------------------------------
 
-    "c5gx" | "de0_cv" | "de10_lite" | "omdazz" | "rzrd" | "zeowaa")
+    case $fpga_toolchain in
+
+    quartus)
 
         > "$dir/fpga_project.qpf"
 
@@ -413,33 +417,24 @@ EOF
         cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
     ;;
 
-    "tangprimer20k") 
-    
-        echo "WIP: project creation for gowin chips"
+    #-------------------------------------------------------------------------
 
-        #TODO: move gowin_ide_setup to common setup place
-        gowin_ide_setup
+    gowin)
 
         > "$dir/fpga_project.tcl"
         cat "$board_dir/$fpga_board/board_specific.tcl" >> "$dir/fpga_project.tcl"
 
-        $find_to_run  \
-            "$parent_dir" \
-            -type f -name '*.sv' -not -name tb.sv  \
-            -printf "add_file -type verilog $parent_dir/%f\n" \
-            >> "$dir/fpga_project.tcl"
-
-        $find_to_run  \
+        for verilog_src_dir in  \
+            "$parent_dir"  \
             "$board_dir/$fpga_board"  \
-            -type f -name '*.sv' -not -name tb.sv  \
-            -printf "add_file -type verilog $board_dir/$fpga_board/%f\n" \
-            >> "$dir/fpga_project.tcl"
-
-        $find_to_run  \
-            "$lab_dir/common"  \
-            -type f -name '*.sv' -not -name tb.sv  \
-            -printf "add_file -type verilog $lab_dir/common/%f\n" \
-            >> "$dir/fpga_project.tcl"
+            "$lab_dir/common"
+        do
+            $find_to_run  \
+                "$verilog_src_dir"  \
+                -type f -name '*.sv' -not -name tb.sv  \
+                -printf "add_file -type verilog $verilog_src_dir/%f\n" \
+                >> "$dir/fpga_project.tcl"
+        done
 
         echo "run all" >> "$dir/fpga_project.tcl"
     ;;
@@ -513,6 +508,8 @@ fpga_board_setup ()
         fi
     fi
 
+    #-------------------------------------------------------------------------
+
     available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\n" " ")
 
     if    ! [ -f "$select_file" ]  \
@@ -554,92 +551,33 @@ fpga_board_setup ()
         error "The selected FPGA board $fpga_board"  \
               "is not one of the available boards: $available_fpga_boards"
     fi
-}
 
-#-----------------------------------------------------------------------------
-#
-#   OpenLane setup and common routines
-#
-#-----------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
 
-openlane_setup ()
-{
-    if ! [[ $script =~ asic ]] ; then
-        return
-    fi
+    $fpga_toolchain=none
 
-    default_openlane_dir="$HOME/OpenLane"
+    case $fpga_board in
+    c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa)
+        fpga_toolchain=quartus
+    ;;
 
-    if   [ -n "${OPENLANE_ROOTDIR-}" ] && [ -d "${OPENLANE_ROOTDIR-}" ] ; then
-        openlane_dir="$OPENLANE_ROOTDIR"
-    elif [ -n "${OPENLANE_HOME-}" ] && [ -d "${OPENLANE_HOME-}" ] ; then
-        openlane_dir="$OPENLANE_HOME"
-    elif [ -d "$default_openlane_dir" ] ; then
-        openlane_dir="$default_openlane_dir"
-    else
-        error "Cannot find OpenLane directory for ASIC synthesis and layout editor." \
-              "By default it is expected at \"$default_openlane_dir\"," \
-              "but its location can be set by the environment variable OPENLANE_ROOTDIR" \
-              "or (second priority) OPENLANE_HOME"
-    fi
+    tangprimer20k)
+        fpga_toolchain=gowin
+    ;;
+    esac
 }
 
 #-----------------------------------------------------------------------------
 
-run_openlane_layout_viewer ()
-{
-    if [ -z "${1-}" ] ; then
-        LAYOUT_VIEWER_OPTION=
-    else
-        LAYOUT_VIEWER_OPTION="LAYOUT_VIEWER=$1"
-    fi
-
-    design_dir="$openlane_dir/designs/$lab_name"
-
-    [ -d "$design_dir" ]  \
-        || error "The OpenLane ASIC synthesis script"        \
-                 "was not run for the design \"$lab_name\""
-
-    runs_dir="$design_dir/runs"
-
-    [ -d "$runs_dir" ]  \
-        || error "Cannot find the OpenLane \"runs\" directory"            \
-                 "inside \"$design_dir\"."                                \
-                 "You probably need to re-run the ASIC synthesis script"  \
-                 "for the design \"$lab_name\"."
-
-    last_run_dir=$(ls -d "$runs_dir"/RUN* | sort | tail -1)
-
-    ! [ -z "$last_run_dir" ]  \
-        || error "No RUN directory from the last ASIC synthesis run."     \
-                 "You probably need to re-run the ASIC synthesis script"  \
-                 "for the design \"$lab_name\"."
-
-    [ -d "$last_run_dir/results/signoff" ]  \
-        || error "No \"results/signoff\" subdirectory inside"             \
-                 "\"$last_run_dir\"."                                     \
-                 "It indicates that the last ASIC synthesis run"          \
-                 "for the design \"$lab_name\" failed."
-
-    [ -n "$(ls -A "$last_run_dir/results/signoff")" ]  \
-        || error "The \"$last_run_dir/results/signoff\" directory"        \
-                 "is empty."                                              \
-                 "It indicates that the last ASIC synthesis run"          \
-                 "for the design \"$lab_name\" failed."
-
-    cd "$openlane_dir"
-
-    run_dir_relative_to_open_lane_dir=$(realpath --relative-to="$openlane_dir" "$last_run_dir")
-
-    make -f "$script_dir/asic/run_layout_viewer.mk" run_layout_viewer  \
-      $LAYOUT_VIEWER_OPTION RUN_DIR_RELATIVE_TO_OPEN_LANE_DIR="$run_dir_relative_to_open_lane_dir"
-}
+source "$script_dir/00_setup_open_lane.source.bash"
 
 #-----------------------------------------------------------------------------
 #
 #   Calling routines
 #
 #-----------------------------------------------------------------------------
+
+fpga_board_setup
 
 is_command_available quartus  || intel_fpga_setup_quartus
 
@@ -649,5 +587,4 @@ fi
 
 is_command_available iverilog || icarus_verilog_setup
 
-fpga_board_setup
 openlane_setup

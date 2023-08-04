@@ -37,7 +37,6 @@ case $fpga_board in
 
         # TODO: add checking gowin_sh command
         $gowin_sh fpga_project.tcl
-        
     ;;
 
 esac
