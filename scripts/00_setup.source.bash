@@ -116,6 +116,10 @@ is_command_available_or_error_and_install ()
 
 intel_fpga_setup_quartus ()
 {
+    if is_command_available quartus ; then
+        return  # Already set up
+    fi
+
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
@@ -241,6 +245,10 @@ intel_fpga_setup_quartus ()
 
 intel_fpga_setup_questa ()
 {
+    if is_command_available vsim ; then
+        return  # Already set up
+    fi
+
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
@@ -313,6 +321,10 @@ intel_fpga_setup_questa ()
 
 icarus_verilog_setup ()
 {
+    if is_command_available iverilog ; then
+        return  # Already set up
+    fi
+
     alt_icarus_install_path="$HOME/install/iverilog"
 
     if [ -d "$alt_icarus_install_path" ]
@@ -557,13 +569,13 @@ fpga_board_setup ()
     fpga_toolchain=none
 
     case $fpga_board in
-    c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa)
-        fpga_toolchain=quartus
-    ;;
+        c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa)
+            fpga_toolchain=quartus
+        ;;
 
-    tangprimer20k)
-        fpga_toolchain=gowin
-    ;;
+        tangprimer20k)
+            fpga_toolchain=gowin
+        ;;
     esac
 }
 
@@ -579,12 +591,19 @@ source "$script_dir/00_setup_open_lane.source.bash"
 
 fpga_board_setup
 
-is_command_available quartus  || intel_fpga_setup_quartus
+case $fpga_toolchain in
+    quartus)
+        intel_fpga_setup_quartus
 
-if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
-    is_command_available vsim || intel_fpga_setup_questa
+        if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
+            intel_fpga_setup_questa
+        fi
+    ;;
+
+    gowin)
+        gowin_ide_setup
+    ;;
 fi
 
-is_command_available iverilog || icarus_verilog_setup
-
+icarus_verilog_setup
 openlane_setup
