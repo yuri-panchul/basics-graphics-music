@@ -472,6 +472,8 @@ create_new_run_directories_for_fpga_synthesis()
 
 fpga_board_setup ()
 {
+    fpga_toolchain=none
+
     if ! [[ $script =~ fpga ]] ; then
         return
     fi
@@ -566,8 +568,6 @@ fpga_board_setup ()
 
     #-------------------------------------------------------------------------
 
-    fpga_toolchain=none
-
     case $fpga_board in
         c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa)
             fpga_toolchain=quartus
@@ -603,7 +603,7 @@ case $fpga_toolchain in
     gowin)
         gowin_ide_setup
     ;;
-fi
+esac
 
 icarus_verilog_setup
 openlane_setup
