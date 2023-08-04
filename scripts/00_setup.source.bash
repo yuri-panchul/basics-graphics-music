@@ -554,7 +554,7 @@ fpga_board_setup ()
 
     #-------------------------------------------------------------------------
 
-    $fpga_toolchain=none
+    fpga_toolchain=none
 
     case $fpga_board in
     c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa)
