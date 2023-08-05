@@ -29,11 +29,11 @@ gowin_ide_setup ()
 
     if ! [ -d $gowin_ide_setup_dir ]
     then
-        gowin_ide_setup_dir="$HOME"
+        gowin_ide_setup_dir="$HOME/gowin"
 
         if ! [ -d $gowin_ide_setup_dir ]
         then
-            error "Gowin IDE not found in /opt/gowin or \"$HOME\""
+            error "Gowin IDE not found in /opt/gowin or \"$HOME/gowin\""
         fi
     fi
 
