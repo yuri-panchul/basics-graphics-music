@@ -20,7 +20,7 @@ fi
 
 case $fpga_board in 
 
-    "c5gx" | "de0_cv" | "de10_lite" | "omdazz" | "rzrd" | "zeowaa")
+    c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa | piswords6)
 
         is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
 
