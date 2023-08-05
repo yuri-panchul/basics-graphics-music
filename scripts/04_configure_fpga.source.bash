@@ -3,11 +3,12 @@
 
 case $fpga_toolchain in 
     quartus)
-        configure_fpga_quartus ()
+        configure_fpga_quartus
         ;;
     gowin)
-        configure_fpga_gowin ()
+        configure_fpga_gowin
         ;;
     *)
         error "Unsupported FPGA synthesis toolchain: $fpga_toolchain"
+        ;;
 esac
