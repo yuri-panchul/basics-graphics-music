@@ -33,9 +33,34 @@ gowin_ide_setup ()
 
         if ! [ -d $gowin_ide_setup_dir ]
         then
-            error "Gowin IDE not found in /opt/gowin"
+            error "Gowin IDE not found in /opt/gowin or \"$HOME\""
         fi
     fi
 
     gowin_sh="$gowin_ide_setup_dir/IDE/bin/gw_sh"
+}
+
+#-----------------------------------------------------------------------------
+
+setup_run_directory_for_fpga_synthesis_gowin ()
+{
+    dir="$1"
+    main_src_dir="$2"
+
+    > "$dir/fpga_project.tcl"
+    cat "$board_dir/$fpga_board/board_specific.tcl" >> "$dir/fpga_project.tcl"
+
+    for verilog_src_dir in  \
+        "$main_src_dir"  \
+        "$board_dir/$fpga_board"  \
+        "$lab_dir/common"
+    do
+        $find_to_run  \
+            "$verilog_src_dir"  \
+            -type f -name '*.sv' -not -name tb.sv  \
+            -printf "add_file -type verilog %p\n" \
+            >> "$dir/fpga_project.tcl"
+    done
+
+    echo "run all" >> "$dir/fpga_project.tcl"
 }

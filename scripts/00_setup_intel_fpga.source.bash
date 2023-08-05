@@ -232,3 +232,48 @@ intel_fpga_setup_questa ()
 #
 #-----------------------------------------------------------------------------
 
+setup_run_directory_for_fpga_synthesis_quartus ()
+{
+    dir="$1"
+    main_src_dir="$2"
+
+    #-------------------------------------------------------------------------
+
+    # We need relative paths here because Quartus under Windows
+    # does not like /c/... full paths.
+
+    # We don't need quotation marks around relative paths
+    # because these particular relative paths
+    # are expected to contain only alnums, underscores and slashes.
+
+    rel_main_src_dir=$(realpath --relative-to="$dir" "$main_src_dir")
+    rel_board_dir=$(realpath    --relative-to="$dir" "$board_dir")
+    rel_lab_dir=$(realpath      --relative-to="$dir" "$lab_dir")
+
+    #-------------------------------------------------------------------------
+
+    > "$dir/fpga_project.qpf"
+
+    cat << EOF > "$dir/fpga_project.qsf"
+set_global_assignment -name NUM_PARALLEL_PROCESSORS  4
+set_global_assignment -name TOP_LEVEL_ENTITY         board_specific_top
+set_global_assignment -name SDC_FILE                 $rel_board_dir/$fpga_board/board_specific.sdc
+
+set_global_assignment -name SEARCH_PATH $rel_main_src_dir
+set_global_assignment -name SEARCH_PATH $rel_board_dir/$fpga_board
+set_global_assignment -name SEARCH_PATH $rel_lab_dir/common
+
+EOF
+
+    $find_to_run  \
+        "$main_src_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
+        -type f -name '*.sv' -not -name tb.sv  \
+        -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
+        >> "$dir/fpga_project.qsf"
+
+    if [ -f "$main_src_dir/extra_project_files.qsf" ] ; then
+        cat "$main_src_dir/extra_project_files.qsf" >> "$dir/fpga_project.qsf"
+    fi
+
+    cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
+}
