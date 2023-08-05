@@ -1,9 +1,9 @@
 [ -z "${setup_source_bash_already_run-}" ] && \
 . "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source.bash"
 
-case $fpga_board in 
+case $fpga_toolchain in 
 
-    c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa | piswords6)
+    quartus)
 
         is_command_available_or_error quartus_pgm " from Intel FPGA Quartus Prime package"
 
@@ -61,8 +61,7 @@ case $fpga_board in
         rm cable_list
     ;;
 
-    "tangprimer20k")
-        echo "WIP: Gowin flash via openFPGALoader"
+    gowin)
 
         is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system"
 

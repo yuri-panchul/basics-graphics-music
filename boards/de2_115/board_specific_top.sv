@@ -6,7 +6,7 @@ module board_specific_top
               w_led     = 18,
               w_digit   = 8,
               w_gpio    = 36,
-              vga_clock =  25   // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
+              vga_clock = 25   // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
 )
 (
     input                   CLOCK_50,
@@ -36,6 +36,9 @@ module board_specific_top
     inout  [w_gpio   - 1:0] GPIO
 );
 
+    wire clk = CLOCK_50;
+    wire rst = SW [w_sw];
+
     //------------------------------------------------------------------------
 
     wire [          7:0] abcdefgh;
@@ -49,17 +52,17 @@ module board_specific_top
 
     top
     # (
-        .clk_mhz ( clk_mhz   ),
-        .w_key   ( w_key     ),
-        .w_sw    ( w_sw      ),
+        .clk_mhz ( clk_mhz         ),
+        .w_key   ( w_key           ),
+        .w_sw    ( w_sw            ),
         .w_led   ( w_led - w_digit ), // LEDR[17:10] used like HEX dp
-        .w_digit ( w_digit   ),
-        .w_gpio  ( w_gpio    )
+        .w_digit ( w_digit         ),
+        .w_gpio  ( w_gpio          )
     )
     i_top
     (
-        .clk      (   CLOCK_50                     ),
-        .rst      (   SW [w_sw]                    ),
+        .clk      (   clk                          ),
+        .rst      (   rst                          ),
 
         .key      ( ~ KEY                          ),
         .sw       (   SW [w_sw - 1:0]              ),
@@ -85,17 +88,18 @@ module board_specific_top
     assign VGA_R = {   red_4b,4'd0 };
     assign VGA_G = { green_4b,4'd0 };
     assign VGA_B = {  blue_4b,4'd0 };
+
     assign VGA_BLANK_N = 1'b1;
-    assign VGA_SYNC_N = 0;
+    assign VGA_SYNC_N  = 0;
 
     // Enable to divide clock from 50 or 100 MHz to 25 MHz
 
     logic [3:0] clk_en_cnt;
     logic clk_en;
 
-    always_ff @ (posedge CLOCK_50 or posedge SW [w_sw])
+    always_ff @ (posedge clk or posedge rst)
     begin
-        if (SW [w_sw])
+        if (rst)
         begin
             clk_en_cnt <= 3'b0;
             clk_en <= 1'b0;
@@ -129,7 +133,9 @@ module board_specific_top
             assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
         end
     endgenerate
+
     // inverted logic
+
     assign HEX0 = digit [0] ? ~ hgfedcba [6:0] : '1;
     assign HEX1 = digit [1] ? ~ hgfedcba [6:0] : '1;
     assign HEX2 = digit [2] ? ~ hgfedcba [6:0] : '1;
@@ -138,27 +144,29 @@ module board_specific_top
     assign HEX5 = digit [5] ? ~ hgfedcba [6:0] : '1;
     assign HEX6 = digit [6] ? ~ hgfedcba [6:0] : '1;
     assign HEX7 = digit [7] ? ~ hgfedcba [6:0] : '1;
+
     // positive logic
-    assign LEDR[10] = digit [0] ? hgfedcba [7] : '0;
-    assign LEDR[11] = digit [1] ? hgfedcba [7] : '0;
-    assign LEDR[12] = digit [2] ? hgfedcba [7] : '0;
-    assign LEDR[13] = digit [3] ? hgfedcba [7] : '0;
-    assign LEDR[14] = digit [4] ? hgfedcba [7] : '0;
-    assign LEDR[15] = digit [5] ? hgfedcba [7] : '0;
-    assign LEDR[16] = digit [6] ? hgfedcba [7] : '0;
-    assign LEDR[17] = digit [7] ? hgfedcba [7] : '0;
+
+    assign LEDR [10] = digit [0] ? hgfedcba [7] : '0;
+    assign LEDR [11] = digit [1] ? hgfedcba [7] : '0;
+    assign LEDR [12] = digit [2] ? hgfedcba [7] : '0;
+    assign LEDR [13] = digit [3] ? hgfedcba [7] : '0;
+    assign LEDR [14] = digit [4] ? hgfedcba [7] : '0;
+    assign LEDR [15] = digit [5] ? hgfedcba [7] : '0;
+    assign LEDR [16] = digit [6] ? hgfedcba [7] : '0;
+    assign LEDR [17] = digit [7] ? hgfedcba [7] : '0;
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLOCK_50 ),
-        .rst   ( SW   [w_sw]   ),
-        .lr    ( GPIO [5]      ),
-        .ws    ( GPIO [3]      ),
-        .sck   ( GPIO [1]      ),
-        .sd    ( GPIO [0]      ),
-        .value ( mic           )
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [3] ),
+        .sck   ( GPIO [1] ),
+        .sd    ( GPIO [0] ),
+        .value ( mic      )
     );
 
     assign GPIO [4] = 1'b0;  // GND

@@ -1,29 +1,33 @@
 set_global_assignment   -name DEVICE EP4CE115F29C7
 set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
 
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK*
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to KEY*
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to SW*
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to LEDR*
-  
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to HEX0*
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to HEX1*
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to HEX2*
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[6]
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[5]
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[4]
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[3]
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[2]
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to HEX3[1]
-  set_instance_assignment -name IO_STANDARD "2.5 V" -to HEX3[0]
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX4*
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX5*
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX6*
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX7*
-  
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to VGA_*
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO*
+#-----------------------------------------------------------------------------
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to KEY*
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to SW*
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to LEDR*
+
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to HEX0*
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to HEX1*
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to HEX2*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[2]
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to HEX3[1]
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to HEX3[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX4*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX5*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX6*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX7*
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to VGA_*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO*
+
+#-----------------------------------------------------------------------------
 
 set_location_assignment PIN_AG14 -to CLOCK2_50
 set_location_assignment PIN_AG15 -to CLOCK3_50

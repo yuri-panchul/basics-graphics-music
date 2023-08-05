@@ -281,7 +281,14 @@ fpga_board_setup ()
     #-------------------------------------------------------------------------
 
     case $fpga_board in
-        c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa | piswords6)
+        c5gx      | \
+        de0_cv    | \
+        de10_lite | \
+        de2_115   | \
+        omdazz    | \
+        piswords6 | \
+        rzrd      | \
+        zeowaa      )
             fpga_toolchain=quartus
         ;;
 

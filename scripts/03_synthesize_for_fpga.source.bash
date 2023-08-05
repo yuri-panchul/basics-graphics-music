@@ -18,9 +18,8 @@ fi
 
 #-----------------------------------------------------------------------------
 
-case $fpga_board in 
-
-    c5gx | de0_cv | de10_lite | omdazz | rzrd | zeowaa | piswords6)
+case $fpga_toolchain in 
+    quartus)
 
         is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
 
@@ -31,12 +30,10 @@ case $fpga_board in
         fi
     ;;
 
-    "tangprimer20k")
+    gowin)
     
-        echo "WIP: sythesys for gowin chips"
-
-        # TODO: add checking gowin_sh command
-        $gowin_sh fpga_project.tcl
+        is_command_available_or_error "$gowin_sh" " from GoWin IDE package"
+        "$gowin_sh" fpga_project.tcl
     ;;
 
 esac
