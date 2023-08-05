@@ -37,3 +37,55 @@ icarus_verilog_setup ()
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$alt_icarus_install_path/lib"
     fi
 }
+
+#-----------------------------------------------------------------------------
+
+run_icarus_verilog ()
+{
+    is_command_available_or_error_and_install iverilog
+
+    iverilog -g2005-sv \
+         -I ..      -I "$lab_dir/common" \
+            ../*.sv    "$lab_dir/common"/*.sv \
+        |& tee "$log"
+
+    vvp a.out |& tee "$log"
+
+    if grep -m 1 ERROR "$log" ; then
+        warning errors detected
+    fi
+
+    #-------------------------------------------------------------------------
+
+    is_command_available_or_error_and_install gtkwave
+
+    gtkwave_script=../gtkwave.tcl
+
+    gtkwave_options=
+
+    if [ -f $gtkwave_script ]; then
+        gtkwave_options="--script $gtkwave_script"
+    fi
+
+    if    [ "$OSTYPE" = "linux-gnu" ]  \
+       || [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        gtkwave=gtkwave
+    elif [ ${OSTYPE/[0-9]*/} = "darwin" ]
+    # elif [[ "$OSTYPE" = "darwin"* ]]  # Alternative way
+    then
+        # For some reason the following way of opening the application
+        # under Mac does not read the script file:
+        #
+        # open -a gtkwave dump.vcd --args --script $PWD/gtkwave.tcl
+        #
+        # This way works:
+
+        gtkwave=/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin
+    else
+        error 1 "don't know how to run GTKWave on your OS $OSTYPE"
+    fi
+
+    $gtkwave dump.vcd $gtkwave_options
+}

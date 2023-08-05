@@ -20,22 +20,13 @@ fi
 
 case $fpga_toolchain in 
     quartus)
-
-        is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
-
-        if ! quartus_sh --no_banner --flow compile fpga_project |& tee -a "$log"
-        then
-            grep -i -A 5 error "$log" 2>&1
-            error "synthesis failed"
-        fi
-    ;;
-
+        synthesize_for_fpga_quartus ()
+        ;;
     gowin)
-    
-        is_command_available_or_error "$gowin_sh" " from GoWin IDE package"
-        "$gowin_sh" fpga_project.tcl
-    ;;
-
+        synthesize_for_fpga_gowin ()
+        ;;
+    *)
+        error "Unsupported FPGA synthesis toolchain: $fpga_toolchain"
 esac
 
 . "$script_dir/04_configure_fpga.source.bash"

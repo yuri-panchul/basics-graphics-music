@@ -23,7 +23,7 @@ fi
 
 #-----------------------------------------------------------------------------
 #
-#   Intel FPGA Quartus
+#   Intel FPGA Quartus, formerly from Altera
 #
 #-----------------------------------------------------------------------------
 
@@ -152,7 +152,7 @@ intel_fpga_setup_quartus ()
 
 #-----------------------------------------------------------------------------
 #
-#   Intel FPGA Questa
+#   Intel FPGA version of Questa by Siemens EDA (former Mentor Graphics)
 #
 #-----------------------------------------------------------------------------
 
@@ -227,6 +227,49 @@ intel_fpga_setup_questa ()
 }
 
 #-----------------------------------------------------------------------------
+
+questa_script=../questa.tcl
+[ "$OSTYPE" = "linux-gnu" ] && [ "$USER" = panchul ] && questa_script=../questa2.tcl
+
+run_questa ()
+{
+    error_prefix="This example is supposed to be run with Questa simulator. However,"
+
+       [ "$OSTYPE" = "linux-gnu" ]  \
+    || [ "$OSTYPE" = "cygwin"    ]  \
+    || [ "$OSTYPE" = "msys"      ]  \
+    || error "$error_prefix this simulator does not run under OS / platform '$OSTYPE'"
+
+    if [ -z "${LM_LICENSE_FILE-}" ] && ! [ -f "$MGLS_LICENSE_FILE" ]
+    then
+        warning "$error_prefix your variable LM_LICENSE_FILE is not set"  \
+                "and the default license file '$MGLS_LICENSE_FILE'"       \
+                "does not exist."                                         \
+                "You may need to resolve the licensing issues."
+    fi
+
+    if ! is_command_available vsim
+    then
+        error "$error_prefix vsim executable is not available."  \
+              "Have you installed the simulator, either"         \
+              "together with Quartus package or separately?"
+    fi
+
+    if grep 'add wave' $questa_script ; then
+        vsim_options=-gui
+    else
+        vsim_options=-c
+    fi
+
+    vsim $vsim_options -do $questa_script 2>&1
+    cp transcript "$log"
+
+    if [ -f coverage.ucdb ] ; then
+        vcover report -details -html coverage.ucdb
+    fi
+}
+
+#-----------------------------------------------------------------------------
 #
 #   Intel FPGA boards
 #
@@ -276,4 +319,81 @@ EOF
     fi
 
     cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
+}
+
+#-----------------------------------------------------------------------------
+#
+#   Synthesis and configuration
+#
+#-----------------------------------------------------------------------------
+
+synthesize_for_fpga_quartus ()
+{
+    is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
+
+    if ! quartus_sh --no_banner --flow compile fpga_project |& tee -a "$log"
+    then
+        grep -i -A 5 error "$log" 2>&1
+        error "synthesis failed"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+configure_fpga_quartus ()
+{
+    is_command_available_or_error quartus_pgm " from Intel FPGA Quartus Prime package"
+
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        rules_dir=/etc/udev/rules.d
+        rules_file="$script_dir/90-intel-fpga.rules"
+
+        if ! grep -q USB-Blaster $rules_dir/*
+        then
+            error "No rules for USB Blaster detected in $rules_dir."  \
+                "Please put it there and reboot: sudo cp $rules_file $rules_dir"
+        fi
+
+        killall jtagd 2>/dev/null || true
+    fi
+
+    quartus_pgm -l &> cable_list
+
+    cable_name_1=$(set +o pipefail; grep "1) " cable_list | sed 's/.*1) //')
+    cable_name_2=$(set +o pipefail; grep "2) " cable_list | sed 's/.*2) //')
+
+    if [ -n "${cable_name_1-}" ]
+    then
+        if [ -n "${cable_name_2-}" ]
+        then
+            warning "more than one cable is connected:" \
+                    "$cable_name_1 and $cable_name_2"
+        fi
+
+        info "using cable $cable_name_1"
+
+        config_file_1=fpga_project.sof
+        config_file_2=fpga_project.pof
+
+        config_file=$config_file_1
+
+        if ! [ -f $config_file ]
+        then
+            config_file=$config_file_2
+
+            if ! [ -f $config_file ]
+            then
+                error "Neither $config_file_1 nor $config_file_2" \
+                    "config file is available"
+            fi
+        fi
+
+        quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
+    else
+        error "cannot detect a USB-Blaster cable connected" \
+            "for $fpga_board FPGA board"
+    fi
+
+    rm cable_list
 }

@@ -158,7 +158,7 @@ setup_run_directory_for_fpga_synthesis()
         setup_run_directory_for_fpga_synthesis_quartus "$dir" "$parent_dir"
         ;;
     gowin)
-        setup_run_directory_for_fpga_synthesis_gowin "$dir" "$parent_dir"
+        setup_run_directory_for_fpga_synthesis_gowin   "$dir" "$parent_dir"
         ;;
     *)
         error "Unsupported FPGA synthesis toolchain: $fpga_toolchain"

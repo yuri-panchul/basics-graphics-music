@@ -64,3 +64,19 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 
     echo "run all" >> "$dir/fpga_project.tcl"
 }
+
+#-----------------------------------------------------------------------------
+
+synthesize_for_fpga_gowin ()
+{
+    is_command_available_or_error "$gowin_sh" " from GoWin IDE package"
+    "$gowin_sh" fpga_project.tcl
+}
+
+#-----------------------------------------------------------------------------
+
+configure_fpga_gowin ()
+{
+    is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system"
+    openFPGALoader -b $fpga_board impl/pnr/fpga_project.fs
+}
