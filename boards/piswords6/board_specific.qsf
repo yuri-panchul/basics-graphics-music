@@ -1,0 +1,96 @@
+  set_global_assignment -name DEVICE EP4CE6E22C8
+# set_global_assignment -name DEVICE EP4CE10E22C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+
+# For some reason this setting is necessary even for Cyclone IV.
+# It does not route the design without it on omdazz / rzrd.net board.
+
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+
+
+set_location_assignment PIN_23   -to CLK
+
+set_location_assignment PIN_3    -to KEY[0]
+set_location_assignment PIN_7    -to KEY[1]
+set_location_assignment PIN_10   -to KEY[2]
+set_location_assignment PIN_11   -to KEY[3]
+
+set_location_assignment PIN_34   -to SW[0]
+set_location_assignment PIN_33   -to SW[1]
+set_location_assignment PIN_32   -to SW[2]
+set_location_assignment PIN_31   -to SW[3]
+
+set_location_assignment PIN_50   -to LED[0]
+set_location_assignment PIN_49   -to LED[1]
+set_location_assignment PIN_46   -to LED[2]
+set_location_assignment PIN_44   -to LED[3]
+set_location_assignment PIN_43   -to LED[4]
+set_location_assignment PIN_42   -to LED[5]
+set_location_assignment PIN_39   -to LED[6]
+set_location_assignment PIN_38   -to LED[7]
+
+
+
+set_location_assignment PIN_80   -to ABCDEFGH[0]
+set_location_assignment PIN_72   -to ABCDEFGH[1]
+set_location_assignment PIN_71   -to ABCDEFGH[2]
+set_location_assignment PIN_70   -to ABCDEFGH[3]
+set_location_assignment PIN_101  -to ABCDEFGH[4]
+set_location_assignment PIN_100  -to ABCDEFGH[5]
+set_location_assignment PIN_99   -to ABCDEFGH[6]
+set_location_assignment PIN_98   -to ABCDEFGH[7]
+
+set_location_assignment PIN_86   -to DIGIT[0]
+set_location_assignment PIN_85   -to DIGIT[1]
+set_location_assignment PIN_84   -to DIGIT[2]
+set_location_assignment PIN_83   -to DIGIT[3]
+set_location_assignment PIN_120  -to DIGIT[4]
+set_location_assignment PIN_119  -to DIGIT[5]
+set_location_assignment PIN_115  -to DIGIT[6]
+set_location_assignment PIN_114  -to DIGIT[7]
+
+set_location_assignment PIN_55   -to VGA_HSYNC
+set_location_assignment PIN_1    -to VGA_VSYNC
+set_location_assignment PIN_52   -to VGA_RGB[0]
+set_location_assignment PIN_53   -to VGA_RGB[1]
+set_location_assignment PIN_54   -to VGA_RGB[2]
+
+#set_location_assignment PIN_2    -to BUZZER
+
+# These EEPROM pins conflict with VGA and buzzer
+
+#set_location_assignment PIN_68   -to UART_TXD
+set_location_assignment PIN_69   -to UART_RXD
+
+#set_location_assignment PIN_1    -to SCL
+#set_location_assignment PIN_2    -to SDA
+
+set_location_assignment PIN_144  -to GPIO[0]
+set_location_assignment PIN_143  -to GPIO[1]
+set_location_assignment PIN_142  -to GPIO[2]
+set_location_assignment PIN_141  -to GPIO[3]
+set_location_assignment PIN_138  -to GPIO[4]
+set_location_assignment PIN_137  -to GPIO[5]
+set_location_assignment PIN_136  -to GPIO[6]
+set_location_assignment PIN_135  -to GPIO[7]
+set_location_assignment PIN_133  -to GPIO[8]
+set_location_assignment PIN_132  -to GPIO[9]
+set_location_assignment PIN_129  -to GPIO[10]
+set_location_assignment PIN_128  -to GPIO[11]
+set_location_assignment PIN_127  -to GPIO[12]
+set_location_assignment PIN_126  -to GPIO[13]
+set_location_assignment PIN_125  -to GPIO[14]
+set_location_assignment PIN_124  -to GPIO[15]
+
+# These pins conflict with digit pins
+
+#set_location_assignment PIN_121 -to GPIO[16]
+#set_location_assignment PIN_120 -to GPIO[17]
+#set_location_assignment PIN_119 -to GPIO[18]
+#set_location_assignment PIN_115 -to GPIO[19]
+#set_location_assignment PIN_114 -to GPIO[20]
+#set_location_assignment PIN_113 -to GPIO[21]
