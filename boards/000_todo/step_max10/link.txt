@@ -1,0 +1,2 @@
+https://github.com/stepfpga/STEP-MAX10/tree/master/docs
+https://w.electrodragon.com/w/images/c/cb/STEP-MAX10-Hardware-Manual-1.0.pdf

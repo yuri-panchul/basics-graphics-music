@@ -1,0 +1,141 @@
+set_global_assignment -name FAMILY "Cyclone IV E"
+set_global_assignment -name DEVICE EP4CE6F17C8
+set_global_assignment -name TOP_LEVEL_ENTITY top
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 256
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 8
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name STRATIXV_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+set_location_assignment PIN_E1 -to clk
+set_location_assignment PIN_N13 -to rst_n
+set_location_assignment PIN_F15 -to sdram_addr[12]
+set_location_assignment PIN_D16 -to sdram_addr[11]
+set_location_assignment PIN_F14 -to sdram_addr[10]
+set_location_assignment PIN_D15 -to sdram_addr[9]
+set_location_assignment PIN_C16 -to sdram_addr[8]
+set_location_assignment PIN_C15 -to sdram_addr[7]
+set_location_assignment PIN_B16 -to sdram_addr[6]
+set_location_assignment PIN_A15 -to sdram_addr[5]
+set_location_assignment PIN_A14 -to sdram_addr[4]
+set_location_assignment PIN_C14 -to sdram_addr[3]
+set_location_assignment PIN_D14 -to sdram_addr[2]
+set_location_assignment PIN_E11 -to sdram_addr[1]
+set_location_assignment PIN_F11 -to sdram_addr[0]
+set_location_assignment PIN_F13 -to sdram_ba[1]
+set_location_assignment PIN_G11 -to sdram_ba[0]
+set_location_assignment PIN_J12 -to sdram_cas_n
+set_location_assignment PIN_F16 -to sdram_cke
+set_location_assignment PIN_B14 -to sdram_clk
+set_location_assignment PIN_K10 -to sdram_cs_n
+set_location_assignment PIN_L15 -to sdram_dq[15]
+set_location_assignment PIN_L16 -to sdram_dq[14]
+set_location_assignment PIN_K15 -to sdram_dq[13]
+set_location_assignment PIN_K16 -to sdram_dq[12]
+set_location_assignment PIN_J15 -to sdram_dq[11]
+set_location_assignment PIN_J16 -to sdram_dq[10]
+set_location_assignment PIN_J11 -to sdram_dq[9]
+set_location_assignment PIN_G16 -to sdram_dq[8]
+set_location_assignment PIN_K12 -to sdram_dq[7]
+set_location_assignment PIN_L11 -to sdram_dq[6]
+set_location_assignment PIN_L14 -to sdram_dq[5]
+set_location_assignment PIN_L13 -to sdram_dq[4]
+set_location_assignment PIN_L12 -to sdram_dq[3]
+set_location_assignment PIN_N14 -to sdram_dq[2]
+set_location_assignment PIN_M12 -to sdram_dq[1]
+set_location_assignment PIN_P14 -to sdram_dq[0]
+set_location_assignment PIN_G15 -to sdram_dqm[1]
+set_location_assignment PIN_J14 -to sdram_dqm[0]
+set_location_assignment PIN_K11 -to sdram_ras_n
+set_location_assignment PIN_J13 -to sdram_we_n
+set_location_assignment PIN_J2 -to cmos_db[7]
+set_location_assignment PIN_J1 -to cmos_db[6]
+set_location_assignment PIN_N5 -to cmos_db[5]
+set_location_assignment PIN_L1 -to cmos_db[4]
+set_location_assignment PIN_M1 -to cmos_db[3]
+set_location_assignment PIN_G2 -to cmos_db[2]
+set_location_assignment PIN_M6 -to cmos_db[1]
+set_location_assignment PIN_L2 -to cmos_db[0]
+set_location_assignment PIN_K1 -to cmos_href
+set_location_assignment PIN_G1 -to cmos_pclk
+set_location_assignment PIN_F1 -to cmos_scl
+set_location_assignment PIN_F3 -to cmos_sda
+set_location_assignment PIN_F2 -to cmos_vsync
+set_location_assignment PIN_K2 -to cmos_xclk
+set_location_assignment PIN_N6 -to cmos_rst_n
+set_location_assignment PIN_M7 -to cmos_pwdn
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_A5 -to lcd_b[7]
+set_location_assignment PIN_B6 -to lcd_b[6]
+set_location_assignment PIN_A6 -to lcd_b[5]
+set_location_assignment PIN_B7 -to lcd_b[4]
+set_location_assignment PIN_A7 -to lcd_b[3]
+set_location_assignment PIN_B8 -to lcd_b[2]
+set_location_assignment PIN_A8 -to lcd_b[1]
+set_location_assignment PIN_B9 -to lcd_b[0]
+set_location_assignment PIN_A9 -to lcd_g[7]
+set_location_assignment PIN_B10 -to lcd_g[6]
+set_location_assignment PIN_A10 -to lcd_g[5]
+set_location_assignment PIN_B11 -to lcd_g[4]
+set_location_assignment PIN_A11 -to lcd_g[3]
+set_location_assignment PIN_B12 -to lcd_g[2]
+set_location_assignment PIN_A12 -to lcd_g[1]
+set_location_assignment PIN_B13 -to lcd_g[0]
+set_location_assignment PIN_A13 -to lcd_r[7]
+set_location_assignment PIN_D5 -to lcd_r[6]
+set_location_assignment PIN_D6 -to lcd_r[5]
+set_location_assignment PIN_C6 -to lcd_r[4]
+set_location_assignment PIN_E7 -to lcd_r[3]
+set_location_assignment PIN_F8 -to lcd_r[2]
+set_location_assignment PIN_C8 -to lcd_r[1]
+set_location_assignment PIN_D8 -to lcd_r[0]
+set_location_assignment PIN_B5 -to lcd_dclk
+set_location_assignment PIN_A4 -to lcd_de
+set_location_assignment PIN_B4 -to lcd_hs
+set_location_assignment PIN_C2 -to lcd_pwm
+set_location_assignment PIN_A3 -to lcd_vs
+set_global_assignment -name ENABLE_SIGNALTAP ON
+set_global_assignment -name USE_SIGNALTAP_FILE output_files/stp1.stp
+set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
+set_global_assignment -name VERILOG_FILE src/i2c_master/i2c_com.v
+set_global_assignment -name VERILOG_FILE src/power_on_delay.v
+set_global_assignment -name VERILOG_FILE src/i2c_master/lut_ov5640_rgb565_800_480.v
+set_global_assignment -name VERILOG_FILE src/ip_core/afifo_16_512.v
+set_global_assignment -name VERILOG_FILE src/ax_pwm.v
+set_global_assignment -name VERILOG_FILE src/video_define.v
+set_global_assignment -name VERILOG_FILE src/frame_read_write.v
+set_global_assignment -name VERILOG_FILE src/ip_core/afifo_16_256.v
+set_global_assignment -name VERILOG_FILE src/ip_core/video_pll.v
+set_global_assignment -name VERILOG_FILE src/ip_core/sys_pll.v
+set_global_assignment -name VERILOG_FILE src/video_timing_data.v
+set_global_assignment -name VERILOG_FILE src/top.v
+set_global_assignment -name VERILOG_FILE src/frame_fifo_write.v
+set_global_assignment -name VERILOG_FILE src/frame_fifo_read.v
+set_global_assignment -name VERILOG_FILE src/color_bar.v
+set_global_assignment -name VERILOG_FILE src/cmos_write_req_gen.v
+set_global_assignment -name VERILOG_FILE src/cmos_8_16bit.v
+set_global_assignment -name VERILOG_FILE src/sdram/sdram_core.v
+set_global_assignment -name VERILOG_FILE src/i2c_master/timescale.v
+set_global_assignment -name VERILOG_FILE src/i2c_master/i2c_config.v
+set_global_assignment -name SDC_FILE top.sdc
+set_global_assignment -name SIGNALTAP_FILE output_files/stp1.stp
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

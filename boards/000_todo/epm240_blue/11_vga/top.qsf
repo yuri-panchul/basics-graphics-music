@@ -1,0 +1,58 @@
+set_global_assignment -name DEVICE                    EPM240T100I5
+
+set_global_assignment -name NUM_PARALLEL_PROCESSORS   4
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY  .
+
+set_global_assignment -name TOP_LEVEL_ENTITY          top
+set_global_assignment -name SEARCH_PATH               ..
+set_global_assignment -name SYSTEMVERILOG_FILE        top.sv
+set_global_assignment -name SDC_FILE                  ../top.sdc
+
+set_global_assignment -name SYSTEMVERILOG_FILE        top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE        vga.sv
+
+set_location_assignment PIN_12 -to clk
+set_location_assignment PIN_52 -to rst_n
+
+set_location_assignment PIN_53 -to key[2]
+set_location_assignment PIN_50 -to key[1]
+set_location_assignment PIN_51 -to key[0]
+
+set_location_assignment PIN_54 -to vcc_for_keys
+
+set_location_assignment PIN_38 -to led[7]
+set_location_assignment PIN_39 -to led[6]
+set_location_assignment PIN_36 -to led[5]
+set_location_assignment PIN_37 -to led[4]
+set_location_assignment PIN_34 -to led[3]
+set_location_assignment PIN_35 -to led[2]
+set_location_assignment PIN_30 -to led[1]
+set_location_assignment PIN_33 -to led[0]
+
+set_location_assignment PIN_76 -to hsync
+set_location_assignment PIN_74 -to vsync
+
+set_location_assignment PIN_89 -to red[0]
+set_location_assignment PIN_87 -to red[1]
+set_location_assignment PIN_85 -to red[2]
+set_location_assignment PIN_83 -to red[3]
+
+set_location_assignment PIN_75 -to green[0]
+set_location_assignment PIN_73 -to green[1]
+set_location_assignment PIN_71 -to green[2]
+set_location_assignment PIN_69 -to green[3]
+
+set_location_assignment PIN_90 -to blue[0]
+set_location_assignment PIN_88 -to blue[1]
+set_location_assignment PIN_86 -to blue[2]
+set_location_assignment PIN_84 -to blue[3]
+
+set_location_assignment PIN_78 -to vcc_for_vga[0]
+set_location_assignment PIN_77 -to vcc_for_vga[1]
+set_location_assignment PIN_66 -to vcc_for_vga[2]
+set_location_assignment PIN_61 -to vcc_for_vga[3]
+
+set_location_assignment PIN_82 -to gnd_for_vga[0]
+set_location_assignment PIN_81 -to gnd_for_vga[1]
+set_location_assignment PIN_68 -to gnd_for_vga[2]
+set_location_assignment PIN_67 -to gnd_for_vga[3]

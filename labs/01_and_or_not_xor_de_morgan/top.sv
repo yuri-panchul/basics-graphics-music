@@ -63,12 +63,16 @@ module top
 
     //------------------------------------------------------------------------
 
+    `ifndef VERILATOR
+
     generate
         if (w_led > 2)
         begin : unused_led
             assign led [w_led - 1:2] = '0;
         end
     endgenerate
+
+    `endif
 
     //------------------------------------------------------------------------
 

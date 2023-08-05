@@ -1,0 +1,120 @@
+set_global_assignment -name DEVICE                    EPM240T100I5
+
+set_global_assignment -name NUM_PARALLEL_PROCESSORS   4
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY  .
+
+set_global_assignment -name TOP_LEVEL_ENTITY          top
+set_global_assignment -name SEARCH_PATH               ..
+set_global_assignment -name SYSTEMVERILOG_FILE        top.sv
+set_global_assignment -name SDC_FILE                  ../top.sdc
+
+set_location_assignment PIN_1   -to pin_1
+set_location_assignment PIN_2   -to pin_2
+set_location_assignment PIN_3   -to pin_3
+set_location_assignment PIN_4   -to pin_4
+set_location_assignment PIN_5   -to pin_5
+set_location_assignment PIN_6   -to pin_6
+set_location_assignment PIN_7   -to pin_7
+set_location_assignment PIN_8   -to pin_8
+                      # PIN_9       VCC
+
+                      # PIN_10      GND
+                      # PIN_11      GND
+set_location_assignment PIN_12  -to clk_12
+                      # PIN_13      VCC
+set_location_assignment PIN_14  -to clk_14
+set_location_assignment PIN_15  -to pin_15
+set_location_assignment PIN_16  -to pin_16
+set_location_assignment PIN_17  -to pin_17
+set_location_assignment PIN_18  -to pin_18
+set_location_assignment PIN_19  -to pin_19
+
+set_location_assignment PIN_20  -to pin_20
+set_location_assignment PIN_21  -to pin_21
+                      # PIN_22      TMS
+                      # PIN_23      TDI
+                      # PIN_24      TCK
+                      # PIN_25      TDO
+set_location_assignment PIN_26  -to pin_26
+set_location_assignment PIN_27  -to pin_27
+set_location_assignment PIN_28  -to pin_28
+set_location_assignment PIN_29  -to pin_29
+
+set_location_assignment PIN_30  -to pin_30
+                      # PIN_31      VCC
+                      # PIN_32      GND
+set_location_assignment PIN_33  -to pin_33
+set_location_assignment PIN_34  -to pin_34
+set_location_assignment PIN_35  -to pin_35
+set_location_assignment PIN_36  -to pin_36
+set_location_assignment PIN_37  -to pin_37
+set_location_assignment PIN_38  -to pin_38
+set_location_assignment PIN_39  -to pin_39
+
+set_location_assignment PIN_40  -to pin_40
+set_location_assignment PIN_41  -to pin_41
+set_location_assignment PIN_42  -to pin_42
+set_location_assignment PIN_43  -to pin_43
+set_location_assignment PIN_44  -to pin_44
+                      # PIN_45      VCC
+                      # PIN_46      GND
+set_location_assignment PIN_47  -to pin_47
+set_location_assignment PIN_48  -to pin_48
+set_location_assignment PIN_49  -to pin_49
+
+set_location_assignment PIN_50  -to pin_50
+set_location_assignment PIN_51  -to pin_51
+set_location_assignment PIN_52  -to pin_52
+set_location_assignment PIN_53  -to pin_53
+set_location_assignment PIN_54  -to pin_54
+set_location_assignment PIN_55  -to pin_55
+set_location_assignment PIN_56  -to pin_56
+set_location_assignment PIN_57  -to pin_57
+set_location_assignment PIN_58  -to pin_58
+                      # PIN_59      VCC
+
+                      # PIN_60      GND
+set_location_assignment PIN_61  -to pin_61
+set_location_assignment PIN_62  -to clk_62
+                      # PIN_63      VCC
+set_location_assignment PIN_64  -to clk_64
+                      # PIN_65      GND
+set_location_assignment PIN_66  -to pin_66
+set_location_assignment PIN_67  -to pin_67
+set_location_assignment PIN_68  -to pin_68
+set_location_assignment PIN_69  -to pin_69
+
+set_location_assignment PIN_70  -to pin_70
+set_location_assignment PIN_71  -to pin_71
+set_location_assignment PIN_72  -to pin_72
+set_location_assignment PIN_73  -to pin_73
+set_location_assignment PIN_74  -to pin_74
+set_location_assignment PIN_75  -to pin_75
+set_location_assignment PIN_76  -to pin_76
+set_location_assignment PIN_77  -to pin_77
+set_location_assignment PIN_78  -to pin_78
+                      # PIN_79      GND
+
+                      # PIN_80      VCC
+set_location_assignment PIN_81  -to pin_81
+set_location_assignment PIN_82  -to pin_82
+set_location_assignment PIN_83  -to pin_83
+set_location_assignment PIN_84  -to pin_84
+set_location_assignment PIN_85  -to pin_85
+set_location_assignment PIN_86  -to pin_86
+set_location_assignment PIN_87  -to pin_87
+set_location_assignment PIN_88  -to pin_88
+set_location_assignment PIN_89  -to pin_89
+
+set_location_assignment PIN_90  -to pin_90
+set_location_assignment PIN_91  -to pin_91
+set_location_assignment PIN_92  -to pin_92
+                      # PIN_93      GND
+                      # PIN_94      VCC
+set_location_assignment PIN_95  -to pin_95
+set_location_assignment PIN_96  -to pin_96
+set_location_assignment PIN_97  -to pin_97
+set_location_assignment PIN_98  -to pin_98
+set_location_assignment PIN_99  -to pin_99
+
+set_location_assignment PIN_100 -to pin_100
