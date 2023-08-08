@@ -288,7 +288,8 @@ fpga_board_setup ()
         omdazz    | \
         piswords6 | \
         rzrd      | \
-        zeowaa      )
+        zeowaa    | \
+        saylinx )
             fpga_toolchain=quartus
         ;;
 
