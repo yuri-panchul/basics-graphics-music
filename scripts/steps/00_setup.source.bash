@@ -9,7 +9,7 @@ setup_source_bash_already_run=1
 #
 #-----------------------------------------------------------------------------
 
-package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
+package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/../..")
 board_dir="$package_dir/boards"
 lab_dir="$package_dir/labs"
 script_dir="$package_dir/scripts"
@@ -119,10 +119,10 @@ is_command_available_or_error_and_install ()
 #
 #-----------------------------------------------------------------------------
 
-source "$script_dir/00_setup_intel_fpga.source.bash"
-source "$script_dir/00_setup_gowin.source.bash"
-source "$script_dir/00_setup_open_lane.source.bash"
-source "$script_dir/00_setup_icarus.source.bash"
+source "$script_dir/steps/00_setup_intel_fpga.source.bash"
+source "$script_dir/steps/00_setup_gowin.source.bash"
+source "$script_dir/steps/00_setup_open_lane.source.bash"
+source "$script_dir/steps/00_setup_icarus.source.bash"
 
 #-----------------------------------------------------------------------------
 #

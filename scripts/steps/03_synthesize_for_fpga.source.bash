@@ -30,4 +30,4 @@ case $fpga_toolchain in
         ;;
 esac
 
-. "$script_dir/04_configure_fpga.source.bash"
+. "$script_dir/steps/04_configure_fpga.source.bash"

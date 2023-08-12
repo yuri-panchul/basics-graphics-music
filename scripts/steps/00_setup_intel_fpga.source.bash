@@ -347,7 +347,7 @@ configure_fpga_quartus ()
     if [ "$OSTYPE" = "linux-gnu" ]
     then
         rules_dir=/etc/udev/rules.d
-        rules_file="$script_dir/90-intel-fpga.rules"
+        rules_file="$script_dir/fpga/90-intel-fpga.rules"
 
         if ! grep -q USB-Blaster $rules_dir/*
         then
