@@ -39,7 +39,7 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLOCK        ),
+        .clk      (   CLK        ),
         .rst      ( ~ RESET        ),
 
         .key      (   KEY          ),
