@@ -146,7 +146,7 @@ fi
 $find_to_run "$pkg_src_root" \
     -not -wholename "./.git" \
     -name '[0-9][0-9]_*.bash' \
-    -not -name '[0-9][0-9]_*source..bash' \
+    -not -name '[0-9][0-9]_*source.bash' \
         | while read bash_script
 do
     local_redirect="$pkg_src_root/scripts/steps/local_redirect.bash.template"
