@@ -18,28 +18,16 @@ fi
 
 #-----------------------------------------------------------------------------
 
-case $fpga_board in 
-
-    "c5gx" | "de0_cv" | "de10_lite" | "omdazz" | "rzrd" | "zeowaa")
-
-        is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
-
-        if ! quartus_sh --no_banner --flow compile fpga_project |& tee -a "$log"
-        then
-            grep -i -A 5 error "$log" 2>&1
-            error "synthesis failed"
-        fi
-    ;;
-
-    "tangprimer20k")
-    
-        echo "WIP: sythesys for gowin chips"
-
-        # TODO: add checking gowin_sh command
-        $gowin_sh fpga_project.tcl
-        
-    ;;
-
+case $fpga_toolchain in 
+    quartus)
+        synthesize_for_fpga_quartus
+        ;;
+    gowin)
+        synthesize_for_fpga_gowin
+        ;;
+    *)
+        error "Unsupported FPGA synthesis toolchain: $fpga_toolchain"
+        ;;
 esac
 
 . "$script_dir/04_configure_fpga.source.bash"
