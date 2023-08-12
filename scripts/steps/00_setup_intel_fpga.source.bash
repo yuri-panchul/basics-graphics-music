@@ -344,6 +344,8 @@ configure_fpga_quartus ()
 {
     is_command_available_or_error quartus_pgm " from Intel FPGA Quartus Prime package"
 
+    #-------------------------------------------------------------------------
+
     if [ "$OSTYPE" = "linux-gnu" ]
     then
         rules_dir=/etc/udev/rules.d
@@ -352,11 +354,13 @@ configure_fpga_quartus ()
         if ! grep -q USB-Blaster $rules_dir/*
         then
             error "No rules for USB Blaster detected in $rules_dir."  \
-                "Please put it there and reboot: sudo cp $rules_file $rules_dir"
+                  "Please put it there and reboot: sudo cp $rules_file $rules_dir"
         fi
 
         killall jtagd 2>/dev/null || true
     fi
+
+    #-------------------------------------------------------------------------
 
     quartus_pgm -l &> cable_list
 

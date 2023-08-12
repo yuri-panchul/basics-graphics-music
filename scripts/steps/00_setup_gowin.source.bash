@@ -78,5 +78,24 @@ synthesize_for_fpga_gowin ()
 configure_fpga_gowin ()
 {
     is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system"
+
+    #-------------------------------------------------------------------------
+
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        rules_dir=/etc/udev/rules.d
+        rules_file="$script_dir/fpga/91-sipeed.rules"
+
+        if ! grep -q 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010"' $rules_dir/*
+        then
+            error "No rules for Sipeed FPGA loader detected in $rules_dir."  \
+                  "Please put it there and reboot: sudo cp $rules_file $rules_dir"
+        fi
+
+        killall jtagd 2>/dev/null || true
+    fi
+
+    #-------------------------------------------------------------------------
+
     openFPGALoader -b $fpga_board impl/pnr/fpga_project.fs
 }
