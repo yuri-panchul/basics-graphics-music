@@ -25,9 +25,9 @@
 # Notes:
 #
 # 1) The default values for assignments are stored in the file:
-#		vga_char_assignment_defaults.qdf
+#        vga_char_assignment_defaults.qdf
 #    If this file doesn't exist, see file:
-#		assignment_defaults.qdf
+#        assignment_defaults.qdf
 #
 # 2) Altera recommends that you do not modify this file. This
 #    file is updated automatically by the Quartus II software
