@@ -149,11 +149,13 @@ $find_to_run "$pkg_src_root" \
     -not -name '[0-9][0-9]_*source..bash' \
         | while read bash_script
 do
-    cmp --silent -- "$bash_script" steps/local_redirect.bash.template \
-      || error "$bash_script is not the same as local_redirect.bash.template"
+    local_redirect="$pkg_src_root/steps/steps/local_redirect.bash.template"
+
+    cmp --silent -- "$bash_script" "$local_redirect" \
+        || error "\"$bash_script\" is not the same as \"$local_redirect\""
 
     [ -x "$bash_script" ] \
-      || error "$bash_script is not executable. Run: chmod +x $bash_script"
+        || error "\"$bash_script\" is not executable. Run: chmod +x \"$bash_script\""
 done
 
 #-----------------------------------------------------------------------------
