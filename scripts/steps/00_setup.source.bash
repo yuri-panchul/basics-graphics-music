@@ -182,6 +182,33 @@ create_new_run_directories_for_fpga_synthesis()
 
 #-----------------------------------------------------------------------------
 
+update_fpga_toolchain_var ()
+{
+    case $fpga_board in
+        c5gx      | \
+        de0_cv    | \
+        de10_lite | \
+        de2_115   | \
+        omdazz    | \
+        piswords6 | \
+        rzrd      | \
+        zeowaa    | \
+        saylinx )
+            fpga_toolchain=quartus
+        ;;
+
+        tangprimer20k)
+            fpga_toolchain=gowin
+        ;;
+        
+        *)
+            fpga_toolchain=none
+        ;;
+    esac
+}
+
+#-----------------------------------------------------------------------------
+
 fpga_board_setup ()
 {
     fpga_toolchain=none
@@ -267,6 +294,8 @@ fpga_board_setup ()
 
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
             printf "\n"
+
+            update_fpga_toolchain_var
             create_new_run_directories_for_fpga_synthesis
         fi
     fi
@@ -280,23 +309,7 @@ fpga_board_setup ()
 
     #-------------------------------------------------------------------------
 
-    case $fpga_board in
-        c5gx      | \
-        de0_cv    | \
-        de10_lite | \
-        de2_115   | \
-        omdazz    | \
-        piswords6 | \
-        rzrd      | \
-        zeowaa    | \
-        saylinx )
-            fpga_toolchain=quartus
-        ;;
-
-        tangprimer20k)
-            fpga_toolchain=gowin
-        ;;
-    esac
+    update_fpga_toolchain_var
 }
 
 #-----------------------------------------------------------------------------
