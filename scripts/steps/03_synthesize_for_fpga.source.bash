@@ -18,7 +18,7 @@ fi
 
 #-----------------------------------------------------------------------------
 
-case $fpga_toolchain in 
+case $fpga_toolchain in
     quartus)
         synthesize_for_fpga_quartus
         ;;

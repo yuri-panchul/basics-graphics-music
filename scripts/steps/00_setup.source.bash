@@ -200,7 +200,7 @@ update_fpga_toolchain_var ()
         tangprimer20k)
             fpga_toolchain=gowin
         ;;
-        
+
         *)
             fpga_toolchain=none
         ;;
