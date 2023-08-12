@@ -146,7 +146,7 @@ fi
 $find_to_run .. -name '[0-9][0-9]_*.bash' -not -path '../scripts/*' \
     | while read bash_script
 do
-    cmp --silent -- "$bash_script" local_redirect.bash.template \
+    cmp --silent -- "$bash_script" steps/local_redirect.bash.template \
       || error "$bash_script is not the same as local_redirect.bash.template"
 
     [ -x "$bash_script" ] \
