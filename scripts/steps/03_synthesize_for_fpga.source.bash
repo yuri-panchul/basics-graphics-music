@@ -18,7 +18,7 @@ fi
 
 #-----------------------------------------------------------------------------
 
-case $fpga_toolchain in 
+case $fpga_toolchain in
     quartus)
         synthesize_for_fpga_quartus
         ;;
@@ -30,4 +30,4 @@ case $fpga_toolchain in
         ;;
 esac
 
-. "$script_dir/04_configure_fpga.source.bash"
+. "$script_dir/steps/04_configure_fpga.source.bash"

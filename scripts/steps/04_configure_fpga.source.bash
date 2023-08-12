@@ -1,7 +1,7 @@
 [ -z "${setup_source_bash_already_run-}" ] && \
 . "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source.bash"
 
-case $fpga_toolchain in 
+case $fpga_toolchain in
     quartus)
         configure_fpga_quartus
         ;;
