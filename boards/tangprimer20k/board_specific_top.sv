@@ -6,7 +6,7 @@ module board_specific_top
                 w_sw    = 5,
                 w_led   = 6,
                 w_digit = 0,
-                w_gpio  = 32         
+                w_gpio  = 32
 )
 (
     input                       CLK,
@@ -17,7 +17,7 @@ module board_specific_top
 
     input                       UART_RX,
     output                      UART_TX,
-    
+
     output [w_led       - 1:1]  LED,
 
     inout  [w_gpio / 4  - 1:0]  GPIO_0,
