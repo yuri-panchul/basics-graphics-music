@@ -12,7 +12,7 @@ script_dir=$(dirname "$script_path")
 run_dir="$PWD"
 cd "$script_dir"
 
-pkg_src_root=$(readlink -e ..)
+pkg_src_root=$(readlink -e ../..)
 pkg_src_root_name=$(basename "$pkg_src_root")
 
 #-----------------------------------------------------------------------------
@@ -25,7 +25,7 @@ error ()
 
 #-----------------------------------------------------------------------------
 
-f=$(git diff --name-status --diff-filter=R HEAD ..)
+f=$(git diff --name-status --diff-filter=R HEAD "$pkg_src_root")
 
 if [ -n "${f-}" ]
 then
@@ -34,7 +34,7 @@ then
           "\nSpecifically:\n\n$f"
 fi
 
-f=$(git ls-files --others --exclude-standard ..)
+f=$(git ls-files --others --exclude-standard "$pkg_src_root")
 
 if [ -n "${f-}" ]
 then
@@ -51,7 +51,7 @@ then
           "does not see the files from the .gitignore list."
 fi
 
-f=$(git ls-files --others ..)
+f=$(git ls-files --others "$pkg_src_root")
 
 if [ -n "${f-}" ]
 then
@@ -67,7 +67,7 @@ then
           "\n    (cd \"$pkg_src_root\" ; git clean -d -x -f)"
 fi
 
-f=$(git ls-files --modified ..)
+f=$(git ls-files --modified "$pkg_src_root")
 
 if [ -n "${f-}" ]
 then
@@ -87,9 +87,9 @@ fi
 # -U     - don't strip CR from text file by default
 # $'...' - string literal in Bash with C semantics ('\r', '\t')
 
-if [ "$OSTYPE" = linux-gnu ] && grep -rqIU $'\r$' ../*
+if [ "$OSTYPE" = linux-gnu ] && grep -rqIU $'\r$' "$pkg_src_root"/*
 then
-    grep -rlIU $'\r$' ../*
+    grep -rlIU $'\r$' "$pkg_src_root"/*
 
     error "there are text files with DOS/Windows CR-LF line endings." \
           "You can fix them by doing:" \
@@ -101,9 +101,9 @@ fi
 exclude_urg="--exclude-dir=urgReport"
 exclude_urg_and_mk="$exclude_urg --exclude=*.mk"
 
-if grep -rqI $exclude_urg_and_mk $'\t' ../*
+if grep -rqI $exclude_urg_and_mk $'\t' "$pkg_src_root"/*
 then
-    grep -rlI $exclude_urg_and_mk $'\t' ../*
+    grep -rlI $exclude_urg_and_mk $'\t' "$pkg_src_root"/*
 
     error "there are text files with tabulation characters." \
           "\nTabs should not be used." \
@@ -119,9 +119,9 @@ then
           "| xargs sed -i 's/\\\\t/    /g'"
 fi
 
-if grep -rqI $exclude_urg '[[:space:]]\+$' ../*
+if grep -rqI $exclude_urg '[[:space:]]\+$' "$pkg_src_root"/*
 then
-    grep -rlI $exclude_urg '[[:space:]]\+$' ../*
+    grep -rlI $exclude_urg '[[:space:]]\+$' "$pkg_src_root"/*
 
     error "there are spaces at the end of line, please remove them." \
           "\nYou can fix them by doing:" \
@@ -143,14 +143,19 @@ fi
 
 #-----------------------------------------------------------------------------
 
-$find_to_run .. -name '[0-9][0-9]_*.bash' -not -path '../scripts/*' \
-    | while read bash_script
+$find_to_run "$pkg_src_root" \
+    -not -wholename "./.git" \
+    -name '[0-9][0-9]_*.bash' \
+    -not -name '[0-9][0-9]_*source.bash' \
+        | while read bash_script
 do
-    cmp --silent -- "$bash_script" local_redirect.bash.template \
-      || error "$bash_script is not the same as local_redirect.bash.template"
+    local_redirect="$pkg_src_root/scripts/steps/local_redirect.bash.template"
+
+    cmp --silent -- "$bash_script" "$local_redirect" \
+        || error "\"$bash_script\" is not the same as \"$local_redirect\""
 
     [ -x "$bash_script" ] \
-      || error "$bash_script is not executable. Run: chmod +x $bash_script"
+        || error "\"$bash_script\" is not executable. Run: chmod +x \"$bash_script\""
 done
 
 #-----------------------------------------------------------------------------
@@ -160,7 +165,7 @@ package=${pkg_src_root_name}_$(date '+%Y%m%d')
 package_path="$tgt_pkg_dir/$package"
 
 mkdir "$package_path"
-cp -r ../* ../.gitignore "$package_path"
+cp -r "$pkg_src_root"/* "$pkg_src_root"/.gitignore "$package_path"
 
 $find_to_run "$package_path" -name '*.sv'  \
     | xargs -n 1 sed -i '/START_SOLUTION/,/END_SOLUTION/d'
