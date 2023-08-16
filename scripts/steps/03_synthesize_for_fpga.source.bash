@@ -19,15 +19,9 @@ fi
 #-----------------------------------------------------------------------------
 
 case $fpga_toolchain in
-    quartus)
-        synthesize_for_fpga_quartus
-        ;;
-    gowin)
-        synthesize_for_fpga_gowin
-        ;;
-    *)
-        error "Unsupported FPGA synthesis toolchain: $fpga_toolchain"
-        ;;
+    quartus ) synthesize_for_fpga_quartus ;;
+    gowin   ) synthesize_for_fpga_gowin   ;;
+    *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain" ;;
 esac
 
 . "$script_dir/steps/04_configure_fpga.source.bash"

@@ -25,10 +25,6 @@ script=$(basename "$script_path")
 
 #-----------------------------------------------------------------------------
 
-drive_image=230610_slinux.img
-
-#-----------------------------------------------------------------------------
-
 info ()
 {
     printf "\n$script: $*\n" 1>&2
@@ -62,7 +58,15 @@ is_command_available_or_error partprobe
 
 #-----------------------------------------------------------------------------
 
-[ -f "$drive_image" ] || error "Expecting file \"$drive_image\" in the current directory"
+drive_image=$(find -maxdepth 1 -name '*.img' -type f -printf '%f\n')
+
+[ -n "$drive_image" ] \
+    || error "No files with .img extension in the current directory"
+
+[ $(wc -l <<< "$drive_image") = 1 ]  \
+    || error "Multiple files with .img extension in the current directory: $drive_image"
+
+info "Using file \"$drive_image\" in the current directory as SSD image"
 
 #-----------------------------------------------------------------------------
 
