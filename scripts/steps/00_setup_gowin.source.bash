@@ -33,7 +33,7 @@ gowin_ide_setup ()
 
         if ! [ -d $gowin_ide_setup_dir ]
         then
-            error "Gowin IDE not found in /opt/gowin or \"$HOME/gowin\""
+            error "Gowin IDE not found in /opt/gowin or \"$HOME/gowin\" \n You can download Gowin EDA here: https://www.gowinsemi.com/en/support/download_eda/"
         fi
     fi
 
@@ -79,7 +79,7 @@ synthesize_for_fpga_gowin ()
 
 configure_fpga_gowin ()
 {
-    is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system"
+    is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
 
     #-------------------------------------------------------------------------
 
