@@ -18,7 +18,7 @@ module board_specific_top
     input                       UART_RX,
     output                      UART_TX,
 
-    output [w_led       - 1:1]  LED,
+    output [w_led       - 1:0]  LED,
 
     inout  [w_gpio / 4  - 1:0]  GPIO_0,
     inout  [w_gpio / 4  - 1:0]  GPIO_1,
@@ -39,7 +39,7 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLOCK        ),
+        .clk      (   CLK        ),
         .rst      ( ~ RESET        ),
 
         .key      (   KEY          ),
