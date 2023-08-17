@@ -62,6 +62,8 @@ setup_run_directory_for_fpga_synthesis_gowin ()
             >> "$dir/fpga_project.tcl"
     done
 
+    echo "add_file -type cst $board_dir/$fpga_board/board_specific.cst" >> "$dir/fpga_project.tcl"
+    echo "add_file -type sdc $board_dir/$fpga_board/board_specific.sdc" >> "$dir/fpga_project.tcl"
     echo "run all" >> "$dir/fpga_project.tcl"
 }
 
