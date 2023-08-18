@@ -64,7 +64,7 @@ module board_specific_top
         .key      ( key        ),
         .sw       ( key        ),
 
-        .led      ( led        ),
+        .led      ( LED        ),
 
         .abcdefgh ( abcdefgh   ),
         .digit    ( digit      ),
@@ -84,8 +84,6 @@ module board_specific_top
     );
 
     //------------------------------------------------------------------------
-
-    assign LED       = ~ led;
 
     assign SEG_DATA  = ~ abcdefgh;
     assign SEG_SEL   = ~ digit;
