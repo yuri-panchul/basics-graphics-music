@@ -3,25 +3,27 @@ module board_specific_top
 # (
     parameter clk_mhz = 50,
               w_key   = 3,
-              w_sw    = 4,
+              w_sw    = 3,
               w_led   = 4,
               w_digit = 8,
-              w_gpio  = 16
+              w_gpio  = 2
 )
 (
     input                  CLK,
 
-
-    input  [w_key  +1 - 1:0] KEY,
+    input RST_N,
+    input  [w_key   - 1:0] KEY,
     output [w_led   - 1:0] LED,
 
-    output [          7:0] ABCDEFGH,
-    output [w_digit - 1:0] DIGIT,
+    output [          7:0] SEG_DATA,
+    output [w_digit - 1:0] SEG_SEL,
 
-    output                 VGA_HSYNC,
-    output                 VGA_VSYNC,
+    output                 VGA_OUT_HS,
+    output                 VGA_OUT_VS,
+    output [          4:0] VGA_OUT_R,
+    output [          5:0] VGA_OUT_G,
+    output [          4:0] VGA_OUT_B,
     output [          2:0] VGA_RGB,
-
     input                  UART_RXD,
 
 
@@ -52,18 +54,18 @@ module board_specific_top
     i_top
     (
         .clk      (   CLK       ),
-        .rst      ( ~ KEY [3]     ),
+        .rst      ( ~ RST_N    ),
 
         .key      ( ~ KEY  [2:0]     ),
         .sw       ( ~ KEY       ),
 
         .led      (   led       ),
 
-        .abcdefgh (   abcdefgh  ),
-        .digit    (   digit     ),
+        .abcdefgh (   SEG_DATA  ),
+        .digit    (   SEG_SEL     ),
 
-        .vsync    (   VGA_VSYNC ),
-        .hsync    (   VGA_HSYNC ),
+        .vsync    (   VGA_OUT_VS ),
+        .hsync    (   VGA_OUT_HS ),
 
         .red      (   red       ),
         .green    (   green     ),
