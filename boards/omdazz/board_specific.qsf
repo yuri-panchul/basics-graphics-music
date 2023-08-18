@@ -39,9 +39,9 @@ set_location_assignment PIN_137 -to DIG[3]
 
 set_location_assignment PIN_101 -to VGA_HSYNC
 set_location_assignment PIN_103 -to VGA_VSYNC
-set_location_assignment PIN_104 -to VGA_B
-set_location_assignment PIN_105 -to VGA_G
 set_location_assignment PIN_106 -to VGA_R
+set_location_assignment PIN_105 -to VGA_G
+set_location_assignment PIN_104 -to VGA_B
 
 # set_location_assignment PIN_114 -to UART_TXD
 set_location_assignment PIN_115 -to UART_RXD
