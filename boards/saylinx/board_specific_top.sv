@@ -11,7 +11,10 @@ module board_specific_top
     input                  CLK,
     input                  RST_N,
 
-    input  [w_key   - 1:0] KEY,
+    input                  KEY2,
+    input                  KEY3,
+    input                  KEY4,
+
     output [w_led   - 1:0] LED,
 
     output [          7:0] SEG_DATA,
