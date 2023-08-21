@@ -188,6 +188,7 @@ update_fpga_toolchain_var ()
         c5gx      | \
         de0_cv    | \
         de10_lite | \
+        de10_nano | \
         de2_115   | \
         omdazz    | \
         piswords6 | \
