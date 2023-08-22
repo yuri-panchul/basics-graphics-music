@@ -393,7 +393,26 @@ configure_fpga_quartus ()
             fi
         fi
 
-        quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
+        # Cyclone V SE/SX/ST is a SOC with an ARM processor. ARM is the first at the jtag. FPGA is the second. Need for special quartus_pgm call.
+        # get device name from qsf
+        device_str=$(/usr/bin/grep DEVICE $board_dir/$fpga_board/board_specific.qsf)
+        device_name="none"
+        for word in $device_str
+        do
+            if [[ $word =~ 5C ]]
+            then
+                device_name=${word:0:4}
+                break
+            fi
+        done
+
+        # check  device name
+        if [[ $device_name == 5CSE ]] || [[ $device_name == 5CSX ]] || [[ $device_name == 5CST ]]
+        then
+            quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file@2"
+        else
+            quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
+        fi
     else
         error "cannot detect a USB-Blaster cable connected" \
             "for $fpga_board FPGA board"

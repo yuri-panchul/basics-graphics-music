@@ -11,10 +11,10 @@ set_location_assignment PIN_M15 -to KEY2
 set_location_assignment PIN_M16 -to KEY3
 set_location_assignment PIN_E16 -to KEY4
 
-set_location_assignment PIN_E10 -to LED[0]
-set_location_assignment PIN_F9  -to LED[1]
-set_location_assignment PIN_C9  -to LED[2]
-set_location_assignment PIN_D9  -to LED[3]
+set_location_assignment PIN_E10 -to LED[3]
+set_location_assignment PIN_F9  -to LED[2]
+set_location_assignment PIN_C9  -to LED[1]
+set_location_assignment PIN_D9  -to LED[0]
 
 set_location_assignment PIN_R16 -to SEG_DATA[7]
 set_location_assignment PIN_N15 -to SEG_DATA[6]
