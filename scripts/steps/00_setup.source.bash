@@ -185,16 +185,17 @@ create_new_run_directories_for_fpga_synthesis()
 update_fpga_toolchain_var ()
 {
     case $fpga_board in
-        c5gx      | \
-        de0_cv    | \
-        de10_lite | \
-        de10_nano | \
-        de2_115   | \
-        omdazz    | \
-        piswords6 | \
-        rzrd      | \
-        zeowaa    | \
-        saylinx )
+        c5gx             | \
+        de0_cv           | \
+        de10_lite        | \
+        de10_lite_tm1638 | \
+        de10_nano        | \
+        de2_115          | \
+        omdazz           | \
+        piswords6        | \
+        rzrd             | \
+        zeowaa           | \
+        saylinx          )
             fpga_toolchain=quartus
         ;;
 
