@@ -180,15 +180,15 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk      ( clk         ),
-        .rst      ( rst         ),
-        .hgfedcba ( hgfedcba    ),
-        .digit    ( tm_digit    ),
-        .ledr     ( tm_led      ),
-        .keys     ( tm_key      ),
-        .sio_clk  ( GPIO_0 [31] ),
-        .sio_stb  ( GPIO_0 [33] ),
-        .sio_data ( GPIO_0 [35] )
+        .clk      ( clk       ),
+        .rst      ( rst       ),
+        .hgfedcba ( hgfedcba  ),
+        .digit    ( tm_digit  ),
+        .ledr     ( tm_led    ),
+        .keys     ( tm_key    ),
+        .sio_clk  ( GPIO [32] ),
+        .sio_stb  ( GPIO [30] ),
+        .sio_data ( GPIO [34] )
     );
 
     //------------------------------------------------------------------------
