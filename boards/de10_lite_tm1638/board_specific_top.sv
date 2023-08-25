@@ -1,3 +1,4 @@
+
 // `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
 `define CONCAT_REGULAR_SIGNALS_AND_TM
@@ -92,7 +93,7 @@ module board_specific_top
         assign { tm_led   , LEDR  } = top_led;
         assign { tm_digit , digit } = top_digit;
 
-    `elif CONCAT_REGULAR_SIGNALS_AND_TM
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
 
         assign top_key = { ~ KEY, tm_key };
 
