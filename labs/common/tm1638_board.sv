@@ -230,7 +230,7 @@ module tm1638_board_controller
     output logic                      sio_stb,
     inout                             sio_data
 );
-    localparam 
+    localparam
         HIGH    = 1'b1,
         LOW     = 1'b0;
 
@@ -239,14 +239,14 @@ module tm1638_board_controller
         C_WRITE_DISP  = 8'b01000000,
         C_SET_ADDR_0  = 8'b11000000,
         C_DISPLAY_ON  = 8'b10001111;
-        
+
     localparam CLK_DIV = 19; // speed of FSM scanner
 
     logic  [CLK_DIV:0] counter;
 
     logic  [      5:0] instruction_step;
     logic  [      7:0] led_on;
-    
+
     logic              tm_rw;
     wire               dio_in, dio_out;
 
@@ -264,7 +264,7 @@ module tm1638_board_controller
     wire               tm_latch, busy;
     logic  [      7:0] tm_in;
     wire   [      7:0] tm_out;
-    
+
     ///////////// RESET synhronizer ////////////
     logic              reset_syn1;
     logic              reset_syn2 = 0;
@@ -273,10 +273,10 @@ module tm1638_board_controller
         reset_syn2  <= reset_syn1;
     end
     ////////////////////////////////////////////
-    
+
     assign sio_data = tm_rw ? dio_out : 'Z;
     assign dio_in   = sio_data;
-    
+
     tm1638_sio tm1638_sio
     (
         .clk        ( clk               ), // 50 MHz max
@@ -416,7 +416,7 @@ module tm1638_board_controller
                 endcase
 
                 instruction_step <= instruction_step + 1;
-                
+
                 led_on           <= ledr;
 
             end else if (busy) begin
@@ -429,7 +429,7 @@ module tm1638_board_controller
         end
     end
 
-endmodule 
+endmodule
 
 
 ///////////////////////////////////////////////////////////////////////////////////

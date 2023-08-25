@@ -5,7 +5,7 @@ set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEY*
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW*
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED*
-  
+
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO*
   set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON  -to GPIO[35] # LED&KEY board (tm1638) dio bus
 

@@ -38,7 +38,7 @@ module board_specific_top
     wire [w_led   - 1:0] top_led;
     wire vga_vs, vga_hs;
     wire [          3:0] vga_r, vga_g, vga_b;
-    
+
     top
     # (
         .clk_mhz ( clk_mhz ),
