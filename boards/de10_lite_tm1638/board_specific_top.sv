@@ -1,6 +1,6 @@
-`define DUPLICATE_TM_SIGNALS_WITH_REGULAR
+// `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
-// `define CONCAT_REGULAR_SIGNALS_AND_TM
+`define CONCAT_REGULAR_SIGNALS_AND_TM
 
 `ifndef DUPLICATE_TM_SIGNALS_WITH_REGULAR
     `define ADD_REGULAR_AND_TM_SIGNAL_WIDTH
@@ -62,14 +62,14 @@ module board_specific_top
 
     `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
 
-        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key,
-                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led,
-                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit;
+        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
+                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
     `else  // Concatenate the signals
 
-        localparam w_top_key   = w_tm_key   + w_key   ;
-                   w_top_led   = w_tm_led   + w_led   ;
+        localparam w_top_key   = w_tm_key   + w_key   ,
+                   w_top_led   = w_tm_led   + w_led   ,
                    w_top_digit = w_tm_digit + w_digit ;
     `endif
 
