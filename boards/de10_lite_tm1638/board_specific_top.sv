@@ -130,26 +130,26 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( clk       ),
-        .rst      ( rst       ),
+        .clk      ( clk        ),
+        .rst      ( rst        ),
 
-        .key      ( top_key   ),
-        .sw       ( sw        ),
+        .key      ( top_key    ),
+        .sw       ( sw         ),
 
-        .led      ( top_led   ),
+        .led      ( top_led    ),
 
-        .abcdefgh ( abcdefgh  ),
-        .digit    ( top_digit ),
+        .abcdefgh ( abcdefgh   ),
+        .digit    ( top_digit  ),
 
-        .vsync    ( VGA_VS    ),
-        .hsync    ( VGA_HS    ),
+        .vsync    ( VGA_VS     ),
+        .hsync    ( VGA_HS     ),
 
-        .red      ( VGA_R     ),
-        .green    ( VGA_G     ),
-        .blue     ( VGA_B     ),
+        .red      ( VGA_R      ),
+        .green    ( VGA_G      ),
+        .blue     ( VGA_B      ),
 
-        .mic      ( mic       ),
-        .gpio     ( GPIO      )
+        .mic      ( mic        ),
+        .gpio     ( GPIO       )
     );
 
     //------------------------------------------------------------------------
@@ -178,17 +178,17 @@ module board_specific_top
     # (
         .w_digit ( w_digit )
     )
-    i_ledkey
+    i_tm1638
     (
-        .clk      (    clk                  ), // 50 MHz
-        .rst      (    tm1638_rst           ), // Don't make reset tm1638_board_controller by tm1638_key
-        .hgfedcba (    hgfedcba             ),
-        .digit    (    digit                ),
-        .ledr     (    led [w_tm_led - 1:0] ),
-        .keys     (    tm_key               ), // S8 key reserved for reset
-        .sio_clk  (    GPIO_0 [31]          ),
-        .sio_stb  (    GPIO_0 [33]          ),
-        .sio_data (    GPIO_0 [35]          )
+        .clk      ( clk         ),
+        .rst      ( rst         ),
+        .hgfedcba ( hgfedcba    ),
+        .digit    ( tm_digit    ),
+        .ledr     ( tm_led      ),
+        .keys     ( tm_key      ),
+        .sio_clk  ( GPIO_0 [31] ),
+        .sio_stb  ( GPIO_0 [33] ),
+        .sio_data ( GPIO_0 [35] )
     );
 
     //------------------------------------------------------------------------
