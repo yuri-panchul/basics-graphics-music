@@ -216,7 +216,7 @@ Copyright 2017 Alan Garfield
 ///////////////////////////////////////////////////////////////////////////////////
 module tm1638_board_controller
 # (
-              w_digit = 8,
+    parameter w_digit = 8,
               w_seg   = 8
 )
 (
@@ -261,7 +261,8 @@ module tm1638_board_controller
     //   dio_in     for reading from display
     //   dio_out    for sending to display
     //
-    wire               tm_latch, busy;
+    logic              tm_latch;
+    wire               busy;
     logic  [      7:0] tm_in;
     wire   [      7:0] tm_out;
 
