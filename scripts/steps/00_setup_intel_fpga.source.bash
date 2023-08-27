@@ -38,7 +38,12 @@ intel_fpga_setup_quartus ()
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    intelfpga_install_dir=intelFPGA_lite
+    if [ $fpga_board = de0 ] ; then
+        intelfpga_install_dir=altera
+    else
+        intelfpga_install_dir=intelFPGA_lite
+    fi
+
     quartus_dir=quartus
 
     if    [ -n "${QUARTUS_HOME-}" ]  \
@@ -70,7 +75,11 @@ intel_fpga_setup_quartus ()
             intelfpga_install_parent_dir=/c
         fi
 
-        quartus_bin_dir=bin64
+        if [ $fpga_board = de0 ] ; then
+            quartus_bin_dir=bin
+        else
+            quartus_bin_dir=bin64
+        fi
 
         if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
         then
