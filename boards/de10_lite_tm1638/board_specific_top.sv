@@ -172,7 +172,7 @@ module board_specific_top
     always_ff @ (posedge clk or posedge rst)
         if (rst)
         begin
-            { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 } <= '0;
+            { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 } <= '1;
         end
         else
         begin
