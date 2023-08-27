@@ -266,12 +266,6 @@ module tm1638_board_controller
     logic  [      7:0] tm_in;
     wire   [      7:0] tm_out;
 
-    // Comment from Yuri Panchul:
-    // The reset synchronizer should be on top level.
-    // The instance of this module is not on the top level.
-
-    `ifdef UNDEFINED
-
     ///////////// RESET synhronizer ////////////
     logic              reset_syn1;
     logic              reset_syn2 = 0;
@@ -280,8 +274,6 @@ module tm1638_board_controller
         reset_syn2  <= reset_syn1;
     end
     ////////////////////////////////////////////
-
-    `endif
 
     wire reset_syn2 = rst;
 
