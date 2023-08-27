@@ -42,8 +42,8 @@ module top
     //------------------------------------------------------------------------
 
     // assign led      = '0;
-    // assign abcdefgh = '0;
-    // assign digit    = '0;
+       assign abcdefgh = '0;
+       assign digit    = '0;
        assign vsync    = '0;
        assign hsync    = '0;
        assign red      = '0;
@@ -74,9 +74,7 @@ module top
         else if (enable)
             shift_reg <= { button_on, shift_reg [w_led - 1:1] };
 
-    assign led      =           shift_reg  ;
-    assign abcdefgh = 8'       (shift_reg) ;
-    assign digit    = w_digit' (shift_reg) ;
+    assign led = shift_reg;
 
     // Exercise 1: Make the light move in the opposite direction.
 
