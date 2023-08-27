@@ -11,7 +11,7 @@ module board_specific_top
 # (
     parameter clk_mhz = 50,
               w_key   = 2,
-              w_sw    = 9,  // One sw is used as a reset
+              w_sw    = 10,
               w_led   = 10,
               w_digit = 6,
               w_gpio  = 36
@@ -19,32 +19,34 @@ module board_specific_top
 (
     input                   MAX10_CLK1_50,
 
-    input  [w_key    - 1:0] KEY,
-    input  [w_sw + 1 - 1:0] SW,  // One sw is used as a reset
-    output [w_led    - 1:0] LEDR,
+    input  [w_key  - 1:0] KEY,
+    input  [w_sw   - 1:0] SW,
+    output [w_led  - 1:0] LEDR,
 
-    output [           7:0] HEX0,
-    output [           7:0] HEX1,
-    output [           7:0] HEX2,
-    output [           7:0] HEX3,
-    output [           7:0] HEX4,
-    output [           7:0] HEX5,
+    output [         7:0] HEX0,
+    output [         7:0] HEX1,
+    output [         7:0] HEX2,
+    output [         7:0] HEX3,
+    output [         7:0] HEX4,
+    output [         7:0] HEX5,
 
-    output                  VGA_HS,
-    output                  VGA_VS,
-    output [           3:0] VGA_R,
-    output [           3:0] VGA_G,
-    output [           3:0] VGA_B,
+    output                VGA_HS,
+    output                VGA_VS,
+    output [         3:0] VGA_R,
+    output [         3:0] VGA_G,
+    output [         3:0] VGA_B,
 
-    inout  [w_gpio   - 1:0] GPIO
+    inout  [w_gpio - 1:0] GPIO
 );
 
     //------------------------------------------------------------------------
 
     wire              clk = MAX10_CLK1_50;
 
-    wire              rst = SW [w_sw];
-    wire [w_sw - 1:0] sw  = SW [w_sw - 1:0];
+    localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
+
+    wire                  rst = SW [w_sw - 1];
+    wire [w_top_sw - 1:0] sw  = SW [w_top_sw - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -124,7 +126,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     ),
         .w_key   ( w_top_key   ),
-        .w_sw    ( w_sw        ),
+        .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
         .w_gpio  ( w_gpio      )
@@ -135,7 +137,7 @@ module board_specific_top
         .rst      ( rst        ),
 
         .key      ( top_key    ),
-        .sw       ( sw         ),
+        .sw       ( top_sw     ),
 
         .led      ( top_led    ),
 
