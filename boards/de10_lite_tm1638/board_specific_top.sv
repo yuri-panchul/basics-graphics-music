@@ -169,15 +169,20 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk)
-    begin
-        if (digit [0]) HEX0 <= ~ hgfedcba;
-        if (digit [1]) HEX1 <= ~ hgfedcba;
-        if (digit [2]) HEX2 <= ~ hgfedcba;
-        if (digit [3]) HEX3 <= ~ hgfedcba;
-        if (digit [4]) HEX4 <= ~ hgfedcba;
-        if (digit [5]) HEX5 <= ~ hgfedcba;
-    end
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 } <= '0;
+        end
+        else
+        begin
+            if (digit [0]) HEX0 <= ~ hgfedcba;
+            if (digit [1]) HEX1 <= ~ hgfedcba;
+            if (digit [2]) HEX2 <= ~ hgfedcba;
+            if (digit [3]) HEX3 <= ~ hgfedcba;
+            if (digit [4]) HEX4 <= ~ hgfedcba;
+            if (digit [5]) HEX5 <= ~ hgfedcba;
+        end
 
    //------------------------------------------------------------------------
 

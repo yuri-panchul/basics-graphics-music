@@ -275,8 +275,6 @@ module tm1638_board_controller
     end
     ////////////////////////////////////////////
 
-    wire reset_syn2 = rst;
-
     assign sio_data = tm_rw ? dio_out : 'Z;
     assign dio_in   = sio_data;
 
