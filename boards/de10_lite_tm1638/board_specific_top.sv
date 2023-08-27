@@ -1,7 +1,6 @@
-
-`define DUPLICATE_TM_SIGNALS_WITH_REGULAR
+// `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
+   `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
-// `define CONCAT_REGULAR_SIGNALS_AND_TM
 
 `ifndef DUPLICATE_TM_SIGNALS_WITH_REGULAR
     `define ADD_REGULAR_AND_TM_SIGNAL_WIDTH
@@ -23,12 +22,12 @@ module board_specific_top
     input  [w_sw   - 1:0] SW,
     output [w_led  - 1:0] LEDR,
 
-    output [         7:0] HEX0,
-    output [         7:0] HEX1,
-    output [         7:0] HEX2,
-    output [         7:0] HEX3,
-    output [         7:0] HEX4,
-    output [         7:0] HEX5,
+    output logic    [7:0] HEX0,
+    output logic    [7:0] HEX1,
+    output logic    [7:0] HEX2,
+    output logic    [7:0] HEX3,
+    output logic    [7:0] HEX4,
+    output logic    [7:0] HEX5,
 
     output                VGA_HS,
     output                VGA_VS,
@@ -168,12 +167,17 @@ module board_specific_top
         end
     endgenerate
 
-    assign HEX0 = digit [0] ? ~ hgfedcba : '1;
-    assign HEX1 = digit [1] ? ~ hgfedcba : '1;
-    assign HEX2 = digit [2] ? ~ hgfedcba : '1;
-    assign HEX3 = digit [3] ? ~ hgfedcba : '1;
-    assign HEX4 = digit [4] ? ~ hgfedcba : '1;
-    assign HEX5 = digit [5] ? ~ hgfedcba : '1;
+    //------------------------------------------------------------------------
+
+    always_ff @ (posedge clk)
+    begin
+        if (digit [0]) HEX0 <= ~ hgfedcba;
+        if (digit [1]) HEX1 <= ~ hgfedcba;
+        if (digit [2]) HEX2 <= ~ hgfedcba;
+        if (digit [3]) HEX3 <= ~ hgfedcba;
+        if (digit [4]) HEX4 <= ~ hgfedcba;
+        if (digit [5]) HEX5 <= ~ hgfedcba;
+    end
 
    //------------------------------------------------------------------------
 
