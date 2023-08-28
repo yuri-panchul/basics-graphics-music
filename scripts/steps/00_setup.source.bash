@@ -5,6 +5,24 @@ setup_source_bash_already_run=1
 
 #-----------------------------------------------------------------------------
 #
+#   Protection against incorrect use
+#
+#-----------------------------------------------------------------------------
+
+if [ "$(basename "$0")" == bash ]
+then
+    printf "script \"$BASH_SOURCE\" should be sourced from another script, not from the terminal\n" 1>&2
+    return 1
+fi
+
+if [ "$0" == "$BASH_SOURCE" ]
+then
+    printf "script \"$0\" should be sourced from another script, not used alone\n" 1>&2
+    exit 1
+fi
+
+#-----------------------------------------------------------------------------
+#
 #   Directory setup
 #
 #-----------------------------------------------------------------------------
