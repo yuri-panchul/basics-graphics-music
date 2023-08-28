@@ -42,8 +42,6 @@ module board_specific_top
     wire                  rst     = SW [w_top_sw];
     wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
 
-    assign            LEDR[17:10] = dp; // LEDR[17:10] used like a HEX dp
-
     //------------------------------------------------------------------------
 
     wire [          7:0] abcdefgh;
@@ -72,7 +70,7 @@ module board_specific_top
         .key      ( ~ KEY                          ),
         .sw       (   top_sw                       ),
 
-        .led      (   LEDR [w_led - w_digit - 1:0] ),
+        .led      (   LEDR [w_led - w_digit - 1:0] ),  // LEDR [17:10] used like a HEX dp
 
         .abcdefgh (   abcdefgh                     ),
         .digit    (   digit                        ),
@@ -170,6 +168,8 @@ module board_specific_top
             if (digit [7]) dp[7] <=  hgfedcba [7];
         end
     end
+
+    assign LEDR [17:10] = dp;  // LEDR [17:10] used like a HEX dp
 
     //------------------------------------------------------------------------
 

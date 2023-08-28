@@ -2,10 +2,8 @@ module board_specific_top
 # (
     parameter clk_mhz  = 50,
               w_key    = 2,
-              w_tm_key = 8,
               w_sw     = 4,
               w_led    = 8,
-              w_digit  = 8,
               w_gpio   = 36
 )
 (
@@ -21,23 +19,26 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    localparam w_tm_key    = 8,
+               w_tm_digit  = 8;
+
     localparam  w_top_sw = w_sw - 1;       // One onboard sw is used as a reset
     localparam w_ext_key = w_tm_key - 1;   // One tm1638 board key is used as a reset
 
-    wire                  clk    = FPGA_CLK1_50;
-    wire                  rst;
+    wire                     clk    = FPGA_CLK1_50;
+    wire                     rst;
 
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire [w_top_sw - 1:0]    top_sw = SW [w_top_sw - 1:0];
 
-    wire [          7:0]  abcdefgh;
-    wire [w_digit - 1:0]  digit;
+    wire [             7:0]  abcdefgh;
+    wire [w_tm_digit - 1:0]  digit;
 
-    wire [         23:0]  mic;
+    wire [            23:0]  mic;
 
-    wire                  tm1638_rst;
-    wire [  w_ext_key:0]  tm1638_key;
+    wire                     tm1638_rst;
+    wire [     w_ext_key:0]  tm1638_key;
 
-    assign tm1638_rst = SW [w_top_sw] | ~ GPIO_1 [14]; // GPIO_1[14] is BTN_RESET key on MiSTer I/O board
+    assign tm1638_rst = SW [w_top_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] is BTN_RESET key on MiSTer I/O board
     assign rst = tm1638_key [w_ext_key] | tm1638_rst;
 
     //------------------------------------------------------------------------
@@ -52,7 +53,7 @@ module board_specific_top
         .w_key   ( w_ext_key   ),
         .w_sw    ( w_sw        ),
         .w_led   ( w_led       ),
-        .w_digit ( w_digit     ),
+        .w_digit ( w_tm_digit     ),
         .w_gpio  ( w_gpio      )
     )
     i_top
@@ -80,7 +81,7 @@ module board_specific_top
     );
 
     // Use onboard and tm1638 keys
-    assign top_key = {tm1638_key [w_ext_key - 1:w_key], tm1638_key [w_key - 1:0] | ~ KEY };
+    assign top_key = { tm1638_key [w_ext_key - 1:w_key], tm1638_key [w_key - 1:0] | ~ KEY };
 
     // VGA out at GPIO_1 (MiSTer I/O board compatible, 4 bit color used)
     assign GPIO_1[16] = vga_vs;       // JP1 pin 19
@@ -127,7 +128,7 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .w_digit ( w_digit )
+        .w_digit ( w_tm_digit )
     )
     i_ledkey
     (
