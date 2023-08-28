@@ -12,7 +12,7 @@ setup_source_bash_already_run=1
 if [ "$(basename "$0")" == bash ]
 then
     printf "script \"$BASH_SOURCE\" should be sourced from another script, not from the terminal\n" 1>&2
-    return 1
+    exit 1
 fi
 
 if [ "$0" == "$BASH_SOURCE" ]
