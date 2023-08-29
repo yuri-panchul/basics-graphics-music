@@ -2,7 +2,7 @@ module board_specific_top
 # (
     parameter clk_mhz = 50,
               w_key   = 3,
-              w_sw    = 9, // One sw is used as a reset
+              w_sw    = 10, // One sw is used as a reset
               w_led   = 10,
               w_digit = 4,
               w_gpio  = 31
@@ -11,7 +11,7 @@ module board_specific_top
     input                CLOCK_50,
     
     input  [w_key - 1:0] BUTTON,
-    input  [w_sw + 1 - 1:0] SW,
+    input  [w_sw  - 1:0] SW,
     output [w_led - 1:0] LEDG,
 
     output [        6:0] HEX0_D,
@@ -31,30 +31,40 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire              clk = CLOCK_50;
+
+    localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
+
+    wire                  rst = SW [w_sw - 1];
+    wire [w_top_sw - 1:0] sw  = SW [w_top_sw - 1:0];
+
+    //------------------------------------------------------------------------
+    
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
     wire [         23:0] mic;
 
-    wire rst = SW [w_sw];
     //------------------------------------------------------------------------
+
+
 
     top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz ( clk_mhz  ),
+        .w_key   ( w_key    ),
+        .w_sw    ( w_top_sw ),
+        .w_led   ( w_led    ),
+        .w_digit ( w_digit  ),
+        .w_gpio  ( w_gpio   )
     )
     i_top
     (
-        .clk      (   CLOCK_50           ),
+        .clk      (   clk                ),
         .rst      (   rst                ),
 
         .key      ( ~ BUTTON             ),
-        .sw       (   SW [w_sw - 1:0]    ),
+        .sw       (   sw [w_top_sw - 1:0]    ),
 
         .led      (   LEDG               ),
 
