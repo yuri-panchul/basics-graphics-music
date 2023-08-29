@@ -1,3 +1,5 @@
+# The synthesis options
+
 set_device GW2A-LV18PG256C8/I7
 set_option -synthesis_tool gowinsynthesis
 set_option -output_base_name fpga_project

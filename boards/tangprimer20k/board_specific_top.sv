@@ -1,8 +1,7 @@
-
 module board_specific_top
 # (
     parameter   clk_mhz = 27,
-                w_key   = 5,
+                w_key   = 5,  // The last key is used for a reset
                 w_sw    = 5,
                 w_led   = 6,
                 w_digit = 0,
@@ -10,7 +9,6 @@ module board_specific_top
 )
 (
     input                       CLK,
-    input                       RESET,
 
     input  [w_key       - 1:0]  KEY,
     input  [w_sw        - 1:0]  SW,
@@ -26,39 +24,53 @@ module board_specific_top
     inout  [w_gpio / 4  - 1:0]  GPIO_3
 );
 
+    localparam w_top_key = w_key - 1;
+
+    wire                   rst     = ~ KEY [w_key - 1];
+    wire [w_top_key - 1:0] top_key = ~ KEY [w_top_key - 1:0];
+
+    //------------------------------------------------------------------------
+
+    wire [w_led  - 1:0] led;
+    wire [w_gpio - 1:0] gpio;  // Need to change .cst file
+
     //------------------------------------------------------------------------
 
     top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz ( clk_mhz   ),
+        .w_key   ( w_top_key ),  // The last key is used for a reset
+        .w_sw    ( w_sw      ),
+        .w_led   ( w_led     ),
+        .w_digit ( w_digit   ),
+        .w_gpio  ( w_gpio    )
     )
     i_top
     (
-        .clk      (   CLK        ),
-        .rst      ( ~ RESET        ),
+        .clk      (   CLK     ),
+        .rst      (   rst     ),
 
-        .key      (   KEY          ),
-        .sw       ( ~ SW           ),
+        .key      (   top_key ),
+        .sw       ( ~ SW      ),
 
-        .led      (   LED          ),
+        .led      (   led     ),
 
-        .abcdefgh (                ),
-        .digit    (                ),
+        .abcdefgh (           ),
+        .digit    (           ),
 
-        .vsync    (                ),
-        .hsync    (                ),
+        .vsync    (           ),
+        .hsync    (           ),
 
-        .red      (                ),
-        .green    (                ),
-        .blue     (                ),
+        .red      (           ),
+        .green    (           ),
+        .blue     (           ),
 
-        .mic      (                ),
-        .gpio     (   GPIO         )
+        .mic      (           ),
+        .gpio     (   gpio    )
     );
+
+    //------------------------------------------------------------------------
+
+    assign LED = ~ led;
 
 endmodule
