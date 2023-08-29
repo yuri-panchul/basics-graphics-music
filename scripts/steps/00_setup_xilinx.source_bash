@@ -23,27 +23,31 @@ fi
 
 #-----------------------------------------------------------------------------
 
-gowin_setup_ide ()
+xilinx_setup_vivado ()
 {
-    gowin_ide_setup_dir=/opt/gowin
+    return
 
-    if ! [ -d $gowin_ide_setup_dir ]
+    xilinx_vivado_setup_dir=/opt/xilinx
+
+    if ! [ -d $xilinx_vivado_setup_dir ]
     then
-        gowin_ide_setup_dir="$HOME/gowin"
+        xilinx_vivado_setup_dir="$HOME/xilinx"
 
-        if ! [ -d $gowin_ide_setup_dir ]
+        if ! [ -d $xilinx_vivado_setup_dir ]
         then
-            error "Gowin IDE not found in /opt/gowin or \"$HOME/gowin\" \n You can download Gowin EDA here: https://www.gowinsemi.com/en/support/download_eda/"
+            error "Gowin IDE not found in /opt/xilinx or \"$HOME/xilinx\" \n You can download Gowin EDA here: https://www.xilinxsemi.com/en/support/download_eda/"
         fi
     fi
 
-    gowin_sh="$gowin_ide_setup_dir/IDE/bin/gw_sh"
+    xilinx_sh="$xilinx_vivado_setup_dir/IDE/bin/gw_sh"
 }
 
 #-----------------------------------------------------------------------------
 
-setup_run_directory_for_fpga_synthesis_gowin ()
+setup_run_directory_for_fpga_synthesis_xilinx ()
 {
+    return
+
     dir="$1"
     main_src_dir="$2"
 
@@ -69,16 +73,20 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 
 #-----------------------------------------------------------------------------
 
-synthesize_for_fpga_gowin ()
+synthesize_for_fpga_xilinx ()
 {
-    is_command_available_or_error "$gowin_sh" " from GoWin IDE package"
-    "$gowin_sh" fpga_project.tcl
+    return
+
+    is_command_available_or_error "$xilinx_sh" " from GoWin IDE package"
+    "$xilinx_sh" fpga_project.tcl
 }
 
 #-----------------------------------------------------------------------------
 
-configure_fpga_gowin ()
+configure_fpga_xilinx ()
 {
+    return
+
     is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
 
     #-------------------------------------------------------------------------

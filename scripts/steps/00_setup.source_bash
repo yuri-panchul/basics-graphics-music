@@ -139,6 +139,7 @@ is_command_available_or_error_and_install ()
 
 source "$script_dir/steps/00_setup_intel_fpga.source_bash"
 source "$script_dir/steps/00_setup_gowin.source_bash"
+source "$script_dir/steps/00_setup_xilinx.source_bash"
 source "$script_dir/steps/00_setup_open_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
 
@@ -178,6 +179,9 @@ setup_run_directory_for_fpga_synthesis()
     gowin)
         setup_run_directory_for_fpga_synthesis_gowin   "$dir" "$parent_dir"
         ;;
+    xilinx)
+        setup_run_directory_for_fpga_synthesis_xilinx  "$dir" "$parent_dir"
+        ;;
     *)
         error "Unsupported FPGA synthesis toolchain: $fpga_toolchain"
         ;;
@@ -204,6 +208,7 @@ update_fpga_toolchain_var ()
 {
     case $fpga_board in
         de0              )
+
             fpga_toolchain=quartus
             use_old_version_of_quartus=1
         ;;
@@ -219,12 +224,23 @@ update_fpga_toolchain_var ()
         rzrd             | \
         zeowaa           | \
         saylinx          )
+
             fpga_toolchain=quartus
             use_old_version_of_quartus=0
         ;;
 
-        tangprimer20k)
+        tangprimer20k    )
+
             fpga_toolchain=gowin
+        ;;
+
+        arty_a7          | \
+        basys3           | \
+        cmod_a7          | \
+        cmod_s7          | \
+        nexys_a7         | )
+
+            fpga_toolchain=xilinx
         ;;
 
         *)
@@ -347,7 +363,7 @@ fpga_board_setup ()
 fpga_board_setup
 
 case $fpga_toolchain in
-    quartus)
+    quartus )
         intel_fpga_setup_quartus
 
         if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
@@ -355,9 +371,8 @@ case $fpga_toolchain in
         fi
     ;;
 
-    gowin)
-        gowin_ide_setup
-    ;;
+    gowin   ) gowin_setup_ide     ;;
+    xilinx  ) xilinx_setup_vivado ;;
 esac
 
 openlane_setup
