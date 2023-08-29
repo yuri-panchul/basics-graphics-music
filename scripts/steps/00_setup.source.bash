@@ -203,6 +203,11 @@ create_new_run_directories_for_fpga_synthesis()
 update_fpga_toolchain_var ()
 {
     case $fpga_board in
+        de0              )
+            fpga_toolchain=quartus
+            use_old_version_of_quartus=1
+        ;;
+
         c5gx             | \
         de0_cv           | \
         de10_lite        | \
@@ -215,6 +220,7 @@ update_fpga_toolchain_var ()
         zeowaa           | \
         saylinx          )
             fpga_toolchain=quartus
+            use_old_version_of_quartus=0
         ;;
 
         tangprimer20k)
