@@ -149,7 +149,7 @@ $find_to_run "$pkg_src_root" \
     -not -name '[0-9][0-9]_*source_bash' \
         | while read bash_script
 do
-    local_redirect="$pkg_src_root/scripts/steps/local_redirect.bash_template"
+    local_redirect="$pkg_src_root/scripts/steps/local_redirect.template_bash"
 
     cmp --silent -- "$bash_script" "$local_redirect" \
         || error "\"$bash_script\" is not the same as \"$local_redirect\""
