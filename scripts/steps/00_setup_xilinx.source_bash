@@ -27,19 +27,23 @@ xilinx_setup_vivado ()
 {
     return
 
-    xilinx_vivado_setup_dir=/opt/xilinx
+    /tools/Xilinx/Vivado/2023.1/bin
+
+    return
+
+    xilinx_vivado_setup_dir=/tools/Xilinx
 
     if ! [ -d $xilinx_vivado_setup_dir ]
     then
-        xilinx_vivado_setup_dir="$HOME/xilinx"
+        xilinx_vivado_setup_dir="$HOME/Xilinx"
 
         if ! [ -d $xilinx_vivado_setup_dir ]
         then
-            error "Gowin IDE not found in /opt/xilinx or \"$HOME/xilinx\" \n You can download Gowin EDA here: https://www.xilinxsemi.com/en/support/download_eda/"
+            error "Xilinx Vivado is not found in /tools/Xilinx or \"$HOME/Xilinx\" \n You can download Vivado ML Edition here: https://www.xilinx.com/support/download.html"
         fi
     fi
 
-    xilinx_sh="$xilinx_vivado_setup_dir/IDE/bin/gw_sh"
+    vivado="$xilinx_vivado_setup_dir/IDE/bin/gw_sh"
 }
 
 #-----------------------------------------------------------------------------
