@@ -1,4 +1,4 @@
-. "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source.bash"
+. "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source_bash"
 
 setup_run_directory_for_fpga_synthesis
 
@@ -24,4 +24,4 @@ case $fpga_toolchain in
     *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain" ;;
 esac
 
-. "$script_dir/steps/04_configure_fpga.source.bash"
+. "$script_dir/steps/04_configure_fpga.source_bash"

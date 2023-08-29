@@ -1,4 +1,4 @@
-expected_source_script=00_setup.source.bash
+expected_source_script=00_setup.source_bash
 
 if [ -z "$BASH_SOURCE" ]
 then

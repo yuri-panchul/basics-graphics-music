@@ -3,7 +3,7 @@
 set -Eeuo pipefail  # See the meaning in scripts/README.md
 
 script=$(basename "$0")
-source_script=${script/\.bash/.source.bash}
+source_script=${script/\.bash/.source_bash}
 dir_source_script=../scripts/steps/$source_script
 
 for i in {1..3}

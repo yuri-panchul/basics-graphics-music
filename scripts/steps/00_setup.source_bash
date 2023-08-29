@@ -137,10 +137,10 @@ is_command_available_or_error_and_install ()
 #
 #-----------------------------------------------------------------------------
 
-source "$script_dir/steps/00_setup_intel_fpga.source.bash"
-source "$script_dir/steps/00_setup_gowin.source.bash"
-source "$script_dir/steps/00_setup_open_lane.source.bash"
-source "$script_dir/steps/00_setup_icarus.source.bash"
+source "$script_dir/steps/00_setup_intel_fpga.source_bash"
+source "$script_dir/steps/00_setup_gowin.source_bash"
+source "$script_dir/steps/00_setup_open_lane.source_bash"
+source "$script_dir/steps/00_setup_icarus.source_bash"
 
 #-----------------------------------------------------------------------------
 #
