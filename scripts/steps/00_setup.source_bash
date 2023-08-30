@@ -229,7 +229,8 @@ update_fpga_toolchain_var ()
             use_old_version_of_quartus=0
         ;;
 
-        tangprimer20k    )
+        tangprimer20k    | \
+        tangnano9k       )
 
             fpga_toolchain=gowin
         ;;
