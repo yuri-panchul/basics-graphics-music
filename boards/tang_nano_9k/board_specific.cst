@@ -1,7 +1,7 @@
 // The physical constraints and pin assignments
 //
 
-// CLK 
+// CLK
 IO_LOC "CLK" 52;
 IO_PORT "CLK" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 

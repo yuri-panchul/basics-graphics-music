@@ -9,7 +9,7 @@ module board_specific_top
 )
 (
     input                CLOCK_50,
-    
+
     input  [w_key - 1:0] BUTTON,
     input  [w_sw  - 1:0] SW,
     output [w_led - 1:0] LEDG,
@@ -39,7 +39,7 @@ module board_specific_top
     wire [w_top_sw - 1:0] sw  = SW [w_top_sw - 1:0];
 
     //------------------------------------------------------------------------
-    
+
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
