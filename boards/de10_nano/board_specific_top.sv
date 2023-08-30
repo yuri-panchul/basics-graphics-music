@@ -1,9 +1,14 @@
+   `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
+// `define CONCAT_REGULAR_SIGNALS_AND_TM
+// `define CONCAT_TM_SIGNALS_AND_REGULAR
+
 module board_specific_top
 # (
     parameter clk_mhz  = 50,
               w_key    = 2,
               w_sw     = 4,
               w_led    = 8,
+              w_digit  = 0,
               w_gpio   = 36
 )
 (
@@ -11,7 +16,7 @@ module board_specific_top
 
     input  [w_key     - 1:0] KEY,
     input  [w_sw      - 1:0] SW,
-    output [w_led     - 1:0] LED,
+    output [w_led     - 1:0] LED,             // LEDG onboard
 
     inout  [w_gpio    - 1:0] GPIO_0,
     inout  [w_gpio    - 1:0] GPIO_1
@@ -19,41 +24,104 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_tm_key    = 8,
-               w_tm_digit  = 8;
+    localparam w_top_sw   = w_sw - 1;        // One onboard sw is used as a reset
 
-    localparam  w_top_sw = w_sw - 1;       // One onboard sw is used as a reset
-    localparam w_ext_key = w_tm_key - 1;   // One tm1638 board key is used as a reset
+    wire                  clk    = FPGA_CLK1_50;
+    wire                  rst;
 
-    wire                     clk    = FPGA_CLK1_50;
-    wire                     rst;
+    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
 
-    wire [w_top_sw - 1:0]    top_sw = SW [w_top_sw - 1:0];
-
-    wire [             7:0]  abcdefgh;
-    wire [w_tm_digit - 1:0]  digit;
-
-    wire [            23:0]  mic;
-
-    wire                     tm1638_rst;
-    wire [     w_ext_key:0]  tm1638_key;
-
-    assign tm1638_rst = SW [w_top_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] is BTN_RESET key on MiSTer I/O board
-    assign rst = tm1638_key [w_ext_key] | tm1638_rst;
+    assign rst = tm_key [w_tm_key_usr] | tm1638_rst;
 
     //------------------------------------------------------------------------
-    wire [w_ext_key   - 1:0] top_key;
-    wire [w_led       - 1:0] top_led;
+
+    wire [           7:0] abcdefgh;
+
+    wire [          23:0] mic;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key     = 8,
+               w_tm_key_usr = w_tm_key - 1,    // One tm1638 board key is used as a reset
+               w_tm_led     = 8,
+               w_tm_digit   = 8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+
+        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key_usr : w_key   ,
+                   w_top_led   = w_tm_led   > w_led   ? w_tm_led     : w_led   ,
+                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit   : w_digit ;
+
+    `else  // Concatenate the signals
+
+        localparam w_top_key   = w_tm_key_usr + w_key   ,
+                   w_top_led   = w_tm_led     + w_led   ,
+                   w_top_digit = w_tm_digit   + w_digit ;
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    //------------------------------------------------------------------------
+
+    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+
+        assign top_key = { tm_key, ~ KEY };
+
+        assign { tm_led   , LED   } = top_led;
+        assign             tm_digit = top_digit;
+
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+
+        assign top_key = { ~ KEY, tm_key };
+
+        assign { LED   , tm_led   } = top_led;
+        assign             tm_digit = top_digit;
+
+    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+
+        always_comb
+        begin
+            top_key = '0;
+
+            top_key [w_key    - 1:0] |= ~ KEY;
+            top_key [w_tm_key_usr - 1:0] |= tm_key;
+        end
+
+        assign LED      = top_led   [w_led      - 1:0];
+        assign tm_led   = top_led   [w_tm_led   - 1:0];
+
+        assign tm_digit = top_digit [w_tm_digit - 1:0];
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire                    tm1638_rst;
+
+    assign tm1638_rst = SW [w_top_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] is BTN_RESET key on MiSTer I/O board
+
+    //------------------------------------------------------------------------
+
     wire                     vga_vs, vga_hs;
     wire [              3:0] vga_r, vga_g, vga_b;
 
     top
     # (
         .clk_mhz ( clk_mhz     ),
-        .w_key   ( w_ext_key   ),
-        .w_sw    ( w_sw        ),
-        .w_led   ( w_led       ),
-        .w_digit ( w_tm_digit     ),
+        .w_key   ( w_top_key   ),
+        .w_sw    ( w_top_sw    ),
+        .w_led   ( w_top_led   ),
+        .w_digit ( w_top_digit ),
         .w_gpio  ( w_gpio      )
     )
     i_top
@@ -67,7 +135,7 @@ module board_specific_top
         .led      ( top_led     ),
 
         .abcdefgh ( abcdefgh    ),
-        .digit    ( digit       ),
+        .digit    ( top_digit   ),
 
         .vsync    ( vga_vs      ),
         .hsync    ( vga_hs      ),
@@ -79,9 +147,6 @@ module board_specific_top
         .mic      ( mic         ),
         .gpio     ( GPIO_0      )
     );
-
-    // Use onboard and tm1638 keys
-    assign top_key = { tm1638_key [w_ext_key - 1:w_key], tm1638_key [w_key - 1:0] | ~ KEY };
 
     // VGA out at GPIO_1 (MiSTer I/O board compatible, 4 bit color used)
     assign GPIO_1[16] = vga_vs;       // JP1 pin 19
@@ -105,11 +170,8 @@ module board_specific_top
     assign GPIO_1[21] = 1'b1;         // JP1 pin 24
     assign GPIO_1[23] = vga_b[0];     // JP1 pin 26
     assign GPIO_1[22] = vga_b[1];     // JP1 pin 25
-    assign GPIO_1[20] = vga_g[2];     // JP1 pin 23
-    assign GPIO_1[18] = vga_g[3];     // JP1 pin 21
-
-    // LEDG onboard
-    assign LED = top_led;
+    assign GPIO_1[20] = vga_b[2];     // JP1 pin 23
+    assign GPIO_1[18] = vga_b[3];     // JP1 pin 21
 
     //------------------------------------------------------------------------
 
@@ -133,11 +195,11 @@ module board_specific_top
     i_ledkey
     (
         .clk      ( clk            ), // 50 MHz
-        .rst      ( tm1638_rst     ), // Don't make reset tm1638_board_controller by tm1638_key
+        .rst      ( tm1638_rst     ), // Don't make reset tm1638_board_controller by tm_key
         .hgfedcba ( hgfedcba       ),
-        .digit    ( digit          ),
-        .ledr     ( top_led        ),
-        .keys     ( tm1638_key     ), // S8 key reserved for reset
+        .digit    ( tm_digit       ),
+        .ledr     ( tm_led         ),
+        .keys     ( tm_key         ), // S8 key reserved for reset
         .sio_clk  ( GPIO_0 [31]    ), // JP1 pin 36
         .sio_stb  ( GPIO_0 [33]    ), // JP1 pin 38
         .sio_data ( GPIO_0 [35]    )  // JP1 pin 40
