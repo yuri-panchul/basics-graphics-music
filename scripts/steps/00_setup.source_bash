@@ -118,20 +118,21 @@ is_command_available_or_error_and_install ()
 
 if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
 then
-    error "you are running not under true Linux,"                     \
-          "but under Windows Subsystem for Linux (WSL)."              \
-          "This mode of running is not supported at the moment."      \
-          "You can run either under Linux,"                           \
-          "or under Windows with bash from Git for Windows package."  \
-          "If you choose to use Windows,"                             \
-          "download Git from https://gitforwindows.org,"              \
-          "then install it with an option"                            \
-          "to include other Linux utilities"                          \
-          "that override Windows programs."                           \
-          "Make sure that bash from Git is in the Windows path."      \
-          "Create Git bash association with .bash file extension."    \
-          "Under this setup, all simulation and synthesis programs"   \
-          "are already tested"                                        \
+    error "you are running not under true Linux,"                               \
+          "but under Windows Subsystem for Linux (WSL)."                        \
+          "This mode of running is not supported at the moment."                \
+          "You can run either under Linux,"                                     \
+          "or under Windows with bash from Git for Windows package."            \
+          "If you choose to use Windows,"                                       \
+          "download Git from https://gitforwindows.org,"                        \
+          "then install it with an option"                                      \
+          "to include other Linux utilities"                                    \
+          "that override Windows programs."                                     \
+          "Make sure that bash from Git is in the Windows path."                \
+          "Its location is \"C:\\\\Program Files\\\\Git\\\\bin\\\\bash.exe\"."  \
+          "Create Git bash association with .bash file extension."              \
+          "Under this setup, all simulation and synthesis programs"             \
+          "are already tested"                                                  \
           "so you are going to have less troubleshooting."
 fi
 
