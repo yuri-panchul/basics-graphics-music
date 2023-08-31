@@ -11,13 +11,13 @@ setup_source_bash_already_run=1
 
 if [ "$(basename "$0")" == bash ]
 then
-    printf "script \"$BASH_SOURCE\" should be sourced from another script, not from the terminal\n" 1>&2
+    printf "error: script \"$BASH_SOURCE\" should be sourced from another script, not from the terminal\n" 1>&2
     exit 1
 fi
 
 if [ "$0" == "$BASH_SOURCE" ]
 then
-    printf "script \"$0\" should be sourced from another script, not used alone\n" 1>&2
+    printf "error: script \"$0\" should be sourced from another script, not used alone\n" 1>&2
     exit 1
 fi
 
@@ -49,22 +49,6 @@ else
 fi
 
 lab_name=$(basename "$(readlink -f ..)")
-
-#-----------------------------------------------------------------------------
-#
-#   Platform-specific workarounds
-#
-#-----------------------------------------------------------------------------
-
-# A workaround for a find problem when running bash under Microsoft Windows
-
-find_to_run=find
-true_find=/usr/bin/find
-
-if [ -x "$true_find" ]
-then
-    find_to_run="$true_find"
-fi
 
 #-----------------------------------------------------------------------------
 #
@@ -125,6 +109,47 @@ is_command_available_or_error_and_install ()
 
     is_command_available_or_error $1 "" "$how_to_install"
 }
+
+#-----------------------------------------------------------------------------
+#
+#   Protection against running under WSL
+#
+#-----------------------------------------------------------------------------
+
+if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
+then
+    error "you are running not under true Linux,"                     \
+          "but under Windows Subsystem for Linux (WSL)."              \
+          "This mode of running is not supported at the moment."      \
+          "You can run either under Linux,"                           \
+          "or under Windows with bash from Git for Windows package."  \
+          "If you choose to use Windows,"                             \
+          "download Git from https://gitforwindows.org,"              \
+          "then install it with an option"                            \
+          "to include other Linux utilities"                          \
+          "that override Windows programs."                           \
+          "Make sure that bash from Git is in the Windows path."      \
+          "Create Git bash association with .bash file extension."    \
+          "Under this setup, all simulation and synthesis programs"   \
+          "are already tested"                                        \
+          "so you are going to have less troubleshooting."
+fi
+
+#-----------------------------------------------------------------------------
+#
+#   Platform-specific workarounds
+#
+#-----------------------------------------------------------------------------
+
+# A workaround for a find problem when running bash under Microsoft Windows
+
+find_to_run=find
+true_find=/usr/bin/find
+
+if [ -x "$true_find" ]
+then
+    find_to_run="$true_find"
+fi
 
 #-----------------------------------------------------------------------------
 #
