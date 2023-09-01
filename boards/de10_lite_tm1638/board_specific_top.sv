@@ -7,10 +7,6 @@
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
 
-`ifndef DUPLICATE_TM_SIGNALS_WITH_REGULAR
-    `define ADD_REGULAR_AND_TM_SIGNAL_WIDTH
-`endif
-
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -21,7 +17,7 @@ module board_specific_top
               w_gpio  = 36
 )
 (
-    input                   MAX10_CLK1_50,
+    input                 MAX10_CLK1_50,
 
     input  [w_key  - 1:0] KEY,
     input  [w_sw   - 1:0] SW,
@@ -45,7 +41,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire              clk = MAX10_CLK1_50;
+    wire clk = MAX10_CLK1_50;
 
     localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
 
