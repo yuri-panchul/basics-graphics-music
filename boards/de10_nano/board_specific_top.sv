@@ -1,3 +1,6 @@
+// Note that TM1638 display is not compatible with the labs/*_7segment_word
+// that demonstrates the idea of a dynamic 7-segment display.
+
 module board_specific_top
 # (
     parameter clk_mhz  = 50,
@@ -42,6 +45,7 @@ module board_specific_top
     assign rst = tm1638_key [w_ext_key] | tm1638_rst;
 
     //------------------------------------------------------------------------
+
     wire [w_ext_key   - 1:0] top_key;
     wire [w_led       - 1:0] top_led;
     wire                     vga_vs, vga_hs;

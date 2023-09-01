@@ -1,5 +1,8 @@
 // `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 
+// Note that TM1638 display is not compatible with the labs/*_7segment_word
+// that demonstrates the idea of a dynamic 7-segment display.
+
    `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR

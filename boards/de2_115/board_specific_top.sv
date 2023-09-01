@@ -1,3 +1,5 @@
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
 module board_specific_top
 # (
     parameter clk_mhz   = 50,
