@@ -33,7 +33,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire              clk = CLOCK_50;
+    wire clk = CLOCK_50;
 
     localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
 

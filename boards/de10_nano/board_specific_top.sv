@@ -22,11 +22,11 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_tm_key    = 8,
-               w_tm_digit  = 8;
+    localparam w_tm_key   = 8,
+               w_tm_digit = 8;
 
-    localparam  w_top_sw = w_sw - 1;       // One onboard sw is used as a reset
-    localparam w_ext_key = w_tm_key - 1;   // One tm1638 board key is used as a reset
+    localparam w_top_sw   = w_sw     - 1;  // One onboard sw is used as a reset
+    localparam w_ext_key  = w_tm_key - 1;  // One tm1638 board key is used as a reset
 
     wire                     clk    = FPGA_CLK1_50;
     wire                     rst;
@@ -136,31 +136,31 @@ module board_specific_top
     )
     i_ledkey
     (
-        .clk      ( clk            ), // 50 MHz
-        .rst      ( tm1638_rst     ), // Don't make reset tm1638_board_controller by tm1638_key
-        .hgfedcba ( hgfedcba       ),
-        .digit    ( digit          ),
-        .ledr     ( top_led        ),
-        .keys     ( tm1638_key     ), // S8 key reserved for reset
-        .sio_clk  ( GPIO_0 [31]    ), // JP1 pin 36
-        .sio_stb  ( GPIO_0 [33]    ), // JP1 pin 38
-        .sio_data ( GPIO_0 [35]    )  // JP1 pin 40
+        .clk      ( clk         ), // 50 MHz
+        .rst      ( tm1638_rst  ), // Don't make reset tm1638_board_controller by tm1638_key
+        .hgfedcba ( hgfedcba    ),
+        .digit    ( digit       ),
+        .ledr     ( top_led     ),
+        .keys     ( tm1638_key  ), // S8 key reserved for reset
+        .sio_clk  ( GPIO_0 [31] ), // JP1 pin 36
+        .sio_stb  ( GPIO_0 [33] ), // JP1 pin 38
+        .sio_data ( GPIO_0 [35] )  // JP1 pin 40
     );
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk           ),
-        .rst   ( rst           ),
-        .lr    ( GPIO_0 [5]    ),  // JP1 pin 6
-        .ws    ( GPIO_0 [3]    ),  // JP1 pin 4
-        .sck   ( GPIO_0 [1]    ),  // JP1 pin 2
-        .sd    ( GPIO_0 [0]    ),  // JP1 pin 1
-        .value ( mic           )
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [5] ),  // JP1 pin 6
+        .ws    ( GPIO_0 [3] ),  // JP1 pin 4
+        .sck   ( GPIO_0 [1] ),  // JP1 pin 2
+        .sd    ( GPIO_0 [0] ),  // JP1 pin 1
+        .value ( mic        )
     );
 
-    assign GPIO_0 [4] = 1'b0;      // GND - JP1 pin 5
-    assign GPIO_0 [2] = 1'b1;      // VCC - JP1 pin 3
+    assign GPIO_0 [4] = 1'b0;   // GND - JP1 pin 5
+    assign GPIO_0 [2] = 1'b1;   // VCC - JP1 pin 3
 
 endmodule
