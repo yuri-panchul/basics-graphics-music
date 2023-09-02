@@ -16,10 +16,10 @@ module board_specific_top
     input  [w_sw  - 1:0] SW,
     output [w_led - 1:0] LEDG,
 
-    output [        6:0] HEX0_D,
-    output [        6:0] HEX1_D,
-    output [        6:0] HEX2_D,
-    output [        6:0] HEX3_D,
+    output logic [  6:0] HEX0_D,
+    output logic [  6:0] HEX1_D,
+    output logic [  6:0] HEX2_D,
+    output logic [  6:0] HEX3_D,
 
     output               VGA_HS,
     output               VGA_VS,
@@ -48,8 +48,6 @@ module board_specific_top
     wire [         23:0] mic;
 
     //------------------------------------------------------------------------
-
-
 
     top
     # (
@@ -97,10 +95,40 @@ module board_specific_top
         end
     endgenerate
 
-    assign HEX0_D = digit [0] ? ~ hgfedcba [$left (HEX0_D):0] : '1;
-    assign HEX1_D = digit [1] ? ~ hgfedcba [$left (HEX1_D):0] : '1;
-    assign HEX2_D = digit [2] ? ~ hgfedcba [$left (HEX2_D):0] : '1;
-    assign HEX3_D = digit [3] ? ~ hgfedcba [$left (HEX3_D):0] : '1;
+    //------------------------------------------------------------------------
+
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Pro: This implementation is necessary for the lab 7segment_word
+        // to properly demonstrate the idea of dynamic 7-segment display
+        // on a static 7-segment display.
+        //
+
+        // Con: This implementation makes the 7-segment LEDs dim
+        // on most boards with the static 7-sigment display.
+        // It also does not work well with TM1638 peripheral display.
+
+        assign HEX0_D = digit [0] ? ~ hgfedcba [$left (HEX0_D):0] : '1;
+        assign HEX1_D = digit [1] ? ~ hgfedcba [$left (HEX1_D):0] : '1;
+        assign HEX2_D = digit [2] ? ~ hgfedcba [$left (HEX2_D):0] : '1;
+        assign HEX3_D = digit [3] ? ~ hgfedcba [$left (HEX3_D):0] : '1;
+
+    `else
+
+        always_ff @ (posedge clk or posedge rst)
+            if (rst)
+            begin
+                { HEX0_D, HEX1_D, HEX2_D, HEX3_D } <= '1;
+            end
+            else
+            begin
+                if (digit [0]) HEX0_D <= ~ hgfedcba [$left (HEX0_D):0];
+                if (digit [1]) HEX1_D <= ~ hgfedcba [$left (HEX1_D):0];
+                if (digit [2]) HEX2_D <= ~ hgfedcba [$left (HEX2_D):0];
+                if (digit [3]) HEX3_D <= ~ hgfedcba [$left (HEX3_D):0];
+            end
+
+    `endif
 
     //------------------------------------------------------------------------
 
