@@ -28,6 +28,9 @@ module board_specific_top
     inout  [w_gpio - 1:0] GPIO
 );
 
+    wire clk =   CLOCK_50_B8A;
+    wire rst = ~ CPU_RESET_n;
+
     //------------------------------------------------------------------------
 
     wire [w_led   - 1:0] led;
@@ -52,26 +55,26 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLOCK_50_B8A ),
-        .rst      ( ~ CPU_RESET_n  ),
+        .clk      (   clk      ),
+        .rst      (   rst      ),
 
-        .key      ( ~ KEY          ),
-        .sw       (   SW           ),
+        .key      ( ~ KEY      ),
+        .sw       (   SW       ),
 
-        .led      (   led          ),
+        .led      (   led      ),
 
-        .abcdefgh (   abcdefgh     ),
-        .digit    (   digit        ),
+        .abcdefgh (   abcdefgh ),
+        .digit    (   digit    ),
 
-        .vsync    (                ),
-        .hsync    (                ),
+        .vsync    (            ),
+        .hsync    (            ),
 
-        .red      (                ),
-        .green    (                ),
-        .blue     (                ),
+        .red      (            ),
+        .green    (            ),
+        .blue     (            ),
 
-        .mic      (   mic          ),
-        .gpio     (   GPIO         )
+        .mic      (   mic      ),
+        .gpio     (   GPIO     )
     );
 
     //------------------------------------------------------------------------
@@ -126,13 +129,13 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   (   CLOCK_50_B8A ),
-        .rst   ( ~ CPU_RESET_n  ),
-        .lr    (   GPIO [5]     ),
-        .ws    (   GPIO [3]     ),
-        .sck   (   GPIO [1]     ),
-        .sd    (   GPIO [0]     ),
-        .value (   mic          )
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [3] ),
+        .sck   ( GPIO [1] ),
+        .sd    ( GPIO [0] ),
+        .value ( mic      )
     );
 
     assign GPIO [4] = 1'b0;  // GND

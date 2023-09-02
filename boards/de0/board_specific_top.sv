@@ -134,13 +134,13 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   (   CLOCK_50   ),
-        .rst   (   rst        ),
+        .clk   (   clk         ),
+        .rst   (   rst         ),
         .lr    (   GPIO0_D [5] ),
         .ws    (   GPIO0_D [3] ),
         .sck   (   GPIO0_D [1] ),
         .sd    (   GPIO0_D [0] ),
-        .value (   mic        )
+        .value (   mic         )
     );
 
     assign GPIO0_D [4] = 1'b0;  // GND
