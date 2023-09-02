@@ -92,6 +92,8 @@ module board_specific_top
         end
     endgenerate
 
+    //------------------------------------------------------------------------
+
     `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 
         // Pro: This implementation is necessary for the lab 7segment_word

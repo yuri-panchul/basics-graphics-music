@@ -37,8 +37,8 @@ module board_specific_top
 
     localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
 
-    wire                  rst = SW [w_sw - 1];
-    wire [w_top_sw - 1:0] sw  = SW [w_top_sw - 1:0];
+    wire                  rst    = SW [w_sw - 1];
+    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -60,25 +60,25 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   clk                ),
-        .rst      (   rst                ),
+        .clk      (   clk                  ),
+        .rst      (   rst                  ),
 
-        .key      ( ~ BUTTON             ),
-        .sw       (   sw [w_top_sw - 1:0]    ),
+        .key      ( ~ BUTTON               ),
+        .sw       (   top_sw               ),
 
-        .led      (   LEDG               ),
+        .led      (   LEDG                 ),
 
-        .abcdefgh (   abcdefgh           ),
-        .digit    (   digit              ),
+        .abcdefgh (   abcdefgh             ),
+        .digit    (   digit                ),
 
-        .vsync    (   VGA_VS             ),
-        .hsync    (   VGA_HS             ),
+        .vsync    (   VGA_VS               ),
+        .hsync    (   VGA_HS               ),
 
-        .red      (   VGA_R              ),
-        .green    (   VGA_G              ),
-        .blue     (   VGA_B              ),
+        .red      (   VGA_R                ),
+        .green    (   VGA_G                ),
+        .blue     (   VGA_B                ),
 
-        .mic      (   mic                ),
+        .mic      (   mic                  ),
         .gpio     (   { GPIO1_D, GPIO0_D } )
     );
 

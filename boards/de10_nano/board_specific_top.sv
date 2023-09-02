@@ -53,35 +53,35 @@ module board_specific_top
 
     top
     # (
-        .clk_mhz ( clk_mhz     ),
-        .w_key   ( w_ext_key   ),
-        .w_sw    ( w_sw        ),
-        .w_led   ( w_led       ),
-        .w_digit ( w_tm_digit     ),
-        .w_gpio  ( w_gpio      )
+        .clk_mhz ( clk_mhz    ),
+        .w_key   ( w_ext_key  ),
+        .w_sw    ( w_sw       ),
+        .w_led   ( w_led      ),
+        .w_digit ( w_tm_digit ),
+        .w_gpio  ( w_gpio     )
     )
     i_top
     (
-        .clk      ( clk         ),
-        .rst      ( rst         ),
+        .clk      ( clk       ),
+        .rst      ( rst       ),
 
-        .key      ( top_key     ),
-        .sw       ( top_sw      ),
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
 
-        .led      ( top_led     ),
+        .led      ( top_led   ),
 
-        .abcdefgh ( abcdefgh    ),
-        .digit    ( digit       ),
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( digit     ),
 
-        .vsync    ( vga_vs      ),
-        .hsync    ( vga_hs      ),
+        .vsync    ( vga_vs    ),
+        .hsync    ( vga_hs    ),
 
-        .red      ( vga_r       ),
-        .green    ( vga_g       ),
-        .blue     ( vga_b       ),
+        .red      ( vga_r     ),
+        .green    ( vga_g     ),
+        .blue     ( vga_b     ),
 
-        .mic      ( mic         ),
-        .gpio     ( GPIO_0      )
+        .mic      ( mic       ),
+        .gpio     ( GPIO_0    )
     );
 
     // Use onboard and tm1638 keys
