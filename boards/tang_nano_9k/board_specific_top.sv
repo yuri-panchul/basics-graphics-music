@@ -7,7 +7,7 @@ module board_specific_top
                 w_sw    = 0,
                 w_led   = 6,
                 w_digit = 0,
-                w_gpio  = 0
+                w_gpio  = 3
 )
 (
     input                       CLK,
@@ -25,11 +25,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [          7:0] abcdefgh;
-    wire [         23:0] mic;
-
-    //------------------------------------------------------------------------
-
     localparam w_tm_key    = 8,
                w_tm_led    = 8,
                w_tm_digit  = 8;
@@ -40,12 +35,14 @@ module board_specific_top
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 
         localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
                    w_top_led   = w_tm_led,
                    w_top_digit = w_tm_digit;
 
     `else                   // TM1638 module is not connected
 
         localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
                    w_top_led   = w_led,
                    w_top_digit = w_digit;
 
@@ -61,33 +58,28 @@ module board_specific_top
     wire  [w_top_led   - 1:0] top_led;
     wire  [w_top_digit - 1:0] top_digit;
 
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+ё
     //------------------------------------------------------------------------
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 
-        assign top_key = tm_key;
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
 
-        assign top_led = tm_led;
-        assign top_digit = tm_digit;
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
 
     `else                   // TM1638 module is not connected
 
-        assign top_key = KEY;
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
 
-        assign top_led = LED;
-        assign top_digit = '1;
+        assign LED      = ~ top_led;
 
     `endif
-
-    //------------------------------------------------------------------------
-
-    wire                   rst     = ~ KEY [w_key - 1];
-    wire [w_top_key - 1:0] top_key = ~ KEY [w_top_key - 1:0];
-
-    //------------------------------------------------------------------------
-
-    wire [w_led   - 1:0] led;
-    wire [w_gpio  - 1:0] gpio;
 
     //------------------------------------------------------------------------
 
@@ -95,9 +87,9 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz   ),
         .w_key   ( w_top_key ),  // The last key is used for a reset
-        .w_sw    ( w_sw      ),
-        .w_led   ( w_led     ),
-        .w_digit ( w_digit   ),
+        .w_sw    ( w_top_sw      ),
+        .w_led   ( w_top_led     ),
+        .w_digit ( w_top_digit   ),
         .w_gpio  ( w_gpio    )
     )
     i_top
@@ -105,7 +97,7 @@ module board_specific_top
         .clk      ( CLK       ),
         .rst      ( rst       ),
 
-        .key      ( top_key  ),
+        .key      ( top_key   ),
         .sw       (           ),
 
         .led      ( top_led   ),
@@ -120,8 +112,8 @@ module board_specific_top
         .green    (           ),
         .blue     (           ),
 
-        .mic      (           ),
-        .gpio     ( gpio      )
+        .mic      ( mic       ),
+        .gpio     (           )
     );
 
     //------------------------------------------------------------------------
@@ -141,7 +133,7 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .w_digit ( w_digit )
+        .w_digit ( w_tm_digit )
     )
     i_tm1638
     (
@@ -151,13 +143,10 @@ module board_specific_top
         .digit    ( tm_digit  ),
         .ledr     ( tm_led    ),
         .keys     ( tm_key    ),
-        .sio_clk  (  ),
-        .sio_stb  (  ),
-        .sio_data (  )
+        .sio_clk  ( GPIO[0]   ),
+        .sio_stb  ( GPIO[1]   ),
+        .sio_data ( GPIO[2]   )
     );
 
-    //------------------------------------------------------------------------
-
-    assign LED = ~ led;
 
 endmodule
