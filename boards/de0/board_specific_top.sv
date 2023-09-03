@@ -1,3 +1,5 @@
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -14,10 +16,10 @@ module board_specific_top
     input  [w_sw  - 1:0] SW,
     output [w_led - 1:0] LEDG,
 
-    output [        6:0] HEX0_D,
-    output [        6:0] HEX1_D,
-    output [        6:0] HEX2_D,
-    output [        6:0] HEX3_D,
+    output logic [  6:0] HEX0_D,
+    output logic [  6:0] HEX1_D,
+    output logic [  6:0] HEX2_D,
+    output logic [  6:0] HEX3_D,
 
     output               VGA_HS,
     output               VGA_VS,
@@ -31,12 +33,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire              clk = CLOCK_50;
+    wire clk = CLOCK_50;
 
     localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
 
-    wire                  rst = SW [w_sw - 1];
-    wire [w_top_sw - 1:0] sw  = SW [w_top_sw - 1:0];
+    wire                  rst    = SW [w_sw - 1];
+    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -46,8 +48,6 @@ module board_specific_top
     wire [         23:0] mic;
 
     //------------------------------------------------------------------------
-
-
 
     top
     # (
@@ -60,25 +60,25 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   clk                ),
-        .rst      (   rst                ),
+        .clk      (   clk                  ),
+        .rst      (   rst                  ),
 
-        .key      ( ~ BUTTON             ),
-        .sw       (   sw [w_top_sw - 1:0]    ),
+        .key      ( ~ BUTTON               ),
+        .sw       (   top_sw               ),
 
-        .led      (   LEDG               ),
+        .led      (   LEDG                 ),
 
-        .abcdefgh (   abcdefgh           ),
-        .digit    (   digit              ),
+        .abcdefgh (   abcdefgh             ),
+        .digit    (   digit                ),
 
-        .vsync    (   VGA_VS             ),
-        .hsync    (   VGA_HS             ),
+        .vsync    (   VGA_VS               ),
+        .hsync    (   VGA_HS               ),
 
-        .red      (   VGA_R              ),
-        .green    (   VGA_G              ),
-        .blue     (   VGA_B              ),
+        .red      (   VGA_R                ),
+        .green    (   VGA_G                ),
+        .blue     (   VGA_B                ),
 
-        .mic      (   mic                ),
+        .mic      (   mic                  ),
         .gpio     (   { GPIO1_D, GPIO0_D } )
     );
 
@@ -95,22 +95,52 @@ module board_specific_top
         end
     endgenerate
 
-    assign HEX0_D = digit [0] ? ~ hgfedcba [$left (HEX0_D):0] : '1;
-    assign HEX1_D = digit [1] ? ~ hgfedcba [$left (HEX1_D):0] : '1;
-    assign HEX2_D = digit [2] ? ~ hgfedcba [$left (HEX2_D):0] : '1;
-    assign HEX3_D = digit [3] ? ~ hgfedcba [$left (HEX3_D):0] : '1;
+    //------------------------------------------------------------------------
+
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Pro: This implementation is necessary for the lab 7segment_word
+        // to properly demonstrate the idea of dynamic 7-segment display
+        // on a static 7-segment display.
+        //
+
+        // Con: This implementation makes the 7-segment LEDs dim
+        // on most boards with the static 7-sigment display.
+        // It also does not work well with TM1638 peripheral display.
+
+        assign HEX0_D = digit [0] ? ~ hgfedcba [$left (HEX0_D):0] : '1;
+        assign HEX1_D = digit [1] ? ~ hgfedcba [$left (HEX1_D):0] : '1;
+        assign HEX2_D = digit [2] ? ~ hgfedcba [$left (HEX2_D):0] : '1;
+        assign HEX3_D = digit [3] ? ~ hgfedcba [$left (HEX3_D):0] : '1;
+
+    `else
+
+        always_ff @ (posedge clk or posedge rst)
+            if (rst)
+            begin
+                { HEX0_D, HEX1_D, HEX2_D, HEX3_D } <= '1;
+            end
+            else
+            begin
+                if (digit [0]) HEX0_D <= ~ hgfedcba [$left (HEX0_D):0];
+                if (digit [1]) HEX1_D <= ~ hgfedcba [$left (HEX1_D):0];
+                if (digit [2]) HEX2_D <= ~ hgfedcba [$left (HEX2_D):0];
+                if (digit [3]) HEX3_D <= ~ hgfedcba [$left (HEX3_D):0];
+            end
+
+    `endif
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   (   CLOCK_50   ),
-        .rst   (   rst        ),
+        .clk   (   clk         ),
+        .rst   (   rst         ),
         .lr    (   GPIO0_D [5] ),
         .ws    (   GPIO0_D [3] ),
         .sck   (   GPIO0_D [1] ),
         .sd    (   GPIO0_D [0] ),
-        .value (   mic        )
+        .value (   mic         )
     );
 
     assign GPIO0_D [4] = 1'b0;  // GND

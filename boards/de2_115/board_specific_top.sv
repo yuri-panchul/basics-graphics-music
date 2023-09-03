@@ -1,3 +1,5 @@
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
 module board_specific_top
 # (
     parameter clk_mhz   = 50,
@@ -138,38 +140,77 @@ module board_specific_top
         end
     endgenerate
 
-    always_ff @ (posedge clk or posedge rst)
-    begin
-        if (rst)
-        begin
-            { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 } <= '1;
-            dp <= '0;
-        end
-        else
-        begin
-            // inverted logic
-            if (digit [0]) HEX0 <= ~ hgfedcba [6:0];
-            if (digit [1]) HEX1 <= ~ hgfedcba [6:0];
-            if (digit [2]) HEX2 <= ~ hgfedcba [6:0];
-            if (digit [3]) HEX3 <= ~ hgfedcba [6:0];
-            if (digit [4]) HEX4 <= ~ hgfedcba [6:0];
-            if (digit [5]) HEX5 <= ~ hgfedcba [6:0];
-            if (digit [6]) HEX6 <= ~ hgfedcba [6:0];
-            if (digit [7]) HEX7 <= ~ hgfedcba [6:0];
+    //------------------------------------------------------------------------
 
-            // positive logic
-            if (digit [0]) dp[0] <=  hgfedcba [7];
-            if (digit [1]) dp[1] <=  hgfedcba [7];
-            if (digit [2]) dp[2] <=  hgfedcba [7];
-            if (digit [3]) dp[3] <=  hgfedcba [7];
-            if (digit [4]) dp[4] <=  hgfedcba [7];
-            if (digit [5]) dp[5] <=  hgfedcba [7];
-            if (digit [6]) dp[6] <=  hgfedcba [7];
-            if (digit [7]) dp[7] <=  hgfedcba [7];
-        end
-    end
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 
-    assign LEDR [17:10] = dp;  // LEDR [17:10] used like a HEX dp
+        // Pro: This implementation is necessary for the lab 7segment_word
+        // to properly demonstrate the idea of dynamic 7-segment display
+        // on a static 7-segment display.
+        //
+
+        // Con: This implementation makes the 7-segment LEDs dim
+        // on most boards with the static 7-sigment display.
+        // It also does not work well with TM1638 peripheral display.
+
+        // inverted logic
+
+        assign HEX0 = digit [0] ? ~ hgfedcba [6:0] : '1;
+        assign HEX1 = digit [1] ? ~ hgfedcba [6:0] : '1;
+        assign HEX2 = digit [2] ? ~ hgfedcba [6:0] : '1;
+        assign HEX3 = digit [3] ? ~ hgfedcba [6:0] : '1;
+        assign HEX4 = digit [4] ? ~ hgfedcba [6:0] : '1;
+        assign HEX5 = digit [5] ? ~ hgfedcba [6:0] : '1;
+        assign HEX6 = digit [6] ? ~ hgfedcba [6:0] : '1;
+        assign HEX7 = digit [7] ? ~ hgfedcba [6:0] : '1;
+
+        // positive logic
+
+        assign LEDR [10] = digit [0] ? hgfedcba [7] : '0;
+        assign LEDR [11] = digit [1] ? hgfedcba [7] : '0;
+        assign LEDR [12] = digit [2] ? hgfedcba [7] : '0;
+        assign LEDR [13] = digit [3] ? hgfedcba [7] : '0;
+        assign LEDR [14] = digit [4] ? hgfedcba [7] : '0;
+        assign LEDR [15] = digit [5] ? hgfedcba [7] : '0;
+        assign LEDR [16] = digit [6] ? hgfedcba [7] : '0;
+        assign LEDR [17] = digit [7] ? hgfedcba [7] : '0;
+
+    `else
+
+        always_ff @ (posedge clk or posedge rst)
+        begin
+            if (rst)
+            begin
+                { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 } <= '1;
+                dp <= '0;
+            end
+            else
+            begin
+                // inverted logic
+                if (digit [0]) HEX0 <= ~ hgfedcba [6:0];
+                if (digit [1]) HEX1 <= ~ hgfedcba [6:0];
+                if (digit [2]) HEX2 <= ~ hgfedcba [6:0];
+                if (digit [3]) HEX3 <= ~ hgfedcba [6:0];
+                if (digit [4]) HEX4 <= ~ hgfedcba [6:0];
+                if (digit [5]) HEX5 <= ~ hgfedcba [6:0];
+                if (digit [6]) HEX6 <= ~ hgfedcba [6:0];
+                if (digit [7]) HEX7 <= ~ hgfedcba [6:0];
+
+                // positive logic
+                if (digit [0]) dp[0] <=  hgfedcba [7];
+                if (digit [1]) dp[1] <=  hgfedcba [7];
+                if (digit [2]) dp[2] <=  hgfedcba [7];
+                if (digit [3]) dp[3] <=  hgfedcba [7];
+                if (digit [4]) dp[4] <=  hgfedcba [7];
+                if (digit [5]) dp[5] <=  hgfedcba [7];
+                if (digit [6]) dp[6] <=  hgfedcba [7];
+                if (digit [7]) dp[7] <=  hgfedcba [7];
+            end
+        end
+
+        assign LEDR [17:10] = dp;  // LEDR [17:10] used like a HEX dp
+
+    `endif
 
     //------------------------------------------------------------------------
 

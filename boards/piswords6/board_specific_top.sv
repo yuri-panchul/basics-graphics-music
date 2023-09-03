@@ -1,4 +1,3 @@
-
 module board_specific_top
 # (
     parameter clk_mhz = 50,

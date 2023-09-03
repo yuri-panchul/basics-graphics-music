@@ -1,10 +1,11 @@
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+// Note that TM1638 display is not compatible with the labs/*_7segment_word
+// that demonstrates the idea of a dynamic 7-segment display.
+
    `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
-
-`ifndef DUPLICATE_TM_SIGNALS_WITH_REGULAR
-    `define ADD_REGULAR_AND_TM_SIGNAL_WIDTH
-`endif
 
 module board_specific_top
 # (
@@ -16,7 +17,7 @@ module board_specific_top
               w_gpio  = 36
 )
 (
-    input                   MAX10_CLK1_50,
+    input                 MAX10_CLK1_50,
 
     input  [w_key  - 1:0] KEY,
     input  [w_sw   - 1:0] SW,
@@ -40,7 +41,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire              clk = MAX10_CLK1_50;
+    wire clk = MAX10_CLK1_50;
 
     localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
 
@@ -169,22 +170,44 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge rst)
-        if (rst)
-        begin
-            { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 } <= '1;
-        end
-        else
-        begin
-            if (digit [0]) HEX0 <= ~ hgfedcba;
-            if (digit [1]) HEX1 <= ~ hgfedcba;
-            if (digit [2]) HEX2 <= ~ hgfedcba;
-            if (digit [3]) HEX3 <= ~ hgfedcba;
-            if (digit [4]) HEX4 <= ~ hgfedcba;
-            if (digit [5]) HEX5 <= ~ hgfedcba;
-        end
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 
-   //------------------------------------------------------------------------
+        // Pro: This implementation is necessary for the lab 7segment_word
+        // to properly demonstrate the idea of dynamic 7-segment display
+        // on a static 7-segment display.
+        //
+
+        // Con: This implementation makes the 7-segment LEDs dim
+        // on most boards with the static 7-sigment display.
+        // It also does not work well with TM1638 peripheral display.
+
+        assign HEX0 = digit [0] ? ~ hgfedcba : '1;
+        assign HEX1 = digit [1] ? ~ hgfedcba : '1;
+        assign HEX2 = digit [2] ? ~ hgfedcba : '1;
+        assign HEX3 = digit [3] ? ~ hgfedcba : '1;
+        assign HEX4 = digit [4] ? ~ hgfedcba : '1;
+        assign HEX5 = digit [5] ? ~ hgfedcba : '1;
+
+    `else
+
+        always_ff @ (posedge clk or posedge rst)
+            if (rst)
+            begin
+                { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 } <= '1;
+            end
+            else
+            begin
+                if (digit [0]) HEX0 <= ~ hgfedcba;
+                if (digit [1]) HEX1 <= ~ hgfedcba;
+                if (digit [2]) HEX2 <= ~ hgfedcba;
+                if (digit [3]) HEX3 <= ~ hgfedcba;
+                if (digit [4]) HEX4 <= ~ hgfedcba;
+                if (digit [5]) HEX5 <= ~ hgfedcba;
+            end
+
+    `endif
+
+    //------------------------------------------------------------------------
 
     tm1638_board_controller
     # (

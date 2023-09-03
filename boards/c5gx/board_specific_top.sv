@@ -1,3 +1,5 @@
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -16,15 +18,18 @@ module board_specific_top
     output [         9:0] LEDR,
     output [         7:0] LEDG,
 
-    output [         6:0] HEX0,
-    output [         6:0] HEX1,
-    output [         6:0] HEX2,
-    output [         6:0] HEX3,
+    output logic [   6:0] HEX0,
+    output logic [   6:0] HEX1,
+    output logic [   6:0] HEX2,
+    output logic [   6:0] HEX3,
 
     input                 UART_RX,
 
     inout  [w_gpio - 1:0] GPIO
 );
+
+    wire clk =   CLOCK_50_B8A;
+    wire rst = ~ CPU_RESET_n;
 
     //------------------------------------------------------------------------
 
@@ -50,26 +55,26 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLOCK_50_B8A ),
-        .rst      ( ~ CPU_RESET_n  ),
+        .clk      (   clk      ),
+        .rst      (   rst      ),
 
-        .key      ( ~ KEY          ),
-        .sw       (   SW           ),
+        .key      ( ~ KEY      ),
+        .sw       (   SW       ),
 
-        .led      (   led          ),
+        .led      (   led      ),
 
-        .abcdefgh (   abcdefgh     ),
-        .digit    (   digit        ),
+        .abcdefgh (   abcdefgh ),
+        .digit    (   digit    ),
 
-        .vsync    (                ),
-        .hsync    (                ),
+        .vsync    (            ),
+        .hsync    (            ),
 
-        .red      (                ),
-        .green    (                ),
-        .blue     (                ),
+        .red      (            ),
+        .green    (            ),
+        .blue     (            ),
 
-        .mic      (   mic          ),
-        .gpio     (   GPIO         )
+        .mic      (   mic      ),
+        .gpio     (   GPIO     )
     );
 
     //------------------------------------------------------------------------
@@ -85,22 +90,52 @@ module board_specific_top
         end
     endgenerate
 
-    assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
-    assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
-    assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
-    assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
+    //------------------------------------------------------------------------
+
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Pro: This implementation is necessary for the lab 7segment_word
+        // to properly demonstrate the idea of dynamic 7-segment display
+        // on a static 7-segment display.
+        //
+
+        // Con: This implementation makes the 7-segment LEDs dim
+        // on most boards with the static 7-sigment display.
+        // It also does not work well with TM1638 peripheral display.
+
+        assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
+        assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
+        assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
+        assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
+
+    `else
+
+        always_ff @ (posedge clk or posedge rst)
+            if (rst)
+            begin
+                { HEX0, HEX1, HEX2, HEX3 } <= '1;
+            end
+            else
+            begin
+                if (digit [0]) HEX0 <= ~ hgfedcba [$left (HEX0):0];
+                if (digit [1]) HEX1 <= ~ hgfedcba [$left (HEX1):0];
+                if (digit [2]) HEX2 <= ~ hgfedcba [$left (HEX2):0];
+                if (digit [3]) HEX3 <= ~ hgfedcba [$left (HEX3):0];
+            end
+
+    `endif
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   (   CLOCK_50_B8A ),
-        .rst   ( ~ CPU_RESET_n  ),
-        .lr    (   GPIO [5]     ),
-        .ws    (   GPIO [3]     ),
-        .sck   (   GPIO [1]     ),
-        .sd    (   GPIO [0]     ),
-        .value (   mic          )
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [3] ),
+        .sck   ( GPIO [1] ),
+        .sd    ( GPIO [0] ),
+        .value ( mic      )
     );
 
     assign GPIO [4] = 1'b0;  // GND
