@@ -61,7 +61,7 @@ module board_specific_top
     wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
-ё
+
     //------------------------------------------------------------------------
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
