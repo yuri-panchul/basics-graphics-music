@@ -2,6 +2,9 @@
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
 
+// Note that TM1638 display is not compatible with the labs/*_7segment_word
+// that demonstrates the idea of a dynamic 7-segment display.
+
 module board_specific_top
 # (
     parameter clk_mhz  = 50,
@@ -126,26 +129,26 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( clk         ),
-        .rst      ( rst         ),
+        .clk      ( clk       ),
+        .rst      ( rst       ),
 
-        .key      ( top_key     ),
-        .sw       ( top_sw      ),
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
 
-        .led      ( top_led     ),
+        .led      ( top_led   ),
 
         .abcdefgh ( abcdefgh    ),
         .digit    ( top_digit   ),
 
-        .vsync    ( vga_vs      ),
-        .hsync    ( vga_hs      ),
+        .vsync    ( vga_vs    ),
+        .hsync    ( vga_hs    ),
 
-        .red      ( vga_r       ),
-        .green    ( vga_g       ),
-        .blue     ( vga_b       ),
+        .red      ( vga_r     ),
+        .green    ( vga_g     ),
+        .blue     ( vga_b     ),
 
-        .mic      ( mic         ),
-        .gpio     ( GPIO_0      )
+        .mic      ( mic       ),
+        .gpio     ( GPIO_0    )
     );
 
     // VGA out at GPIO_1 (MiSTer I/O board compatible, 4 bit color used)
@@ -209,16 +212,16 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk           ),
-        .rst   ( rst           ),
-        .lr    ( GPIO_0 [5]    ),  // JP1 pin 6
-        .ws    ( GPIO_0 [3]    ),  // JP1 pin 4
-        .sck   ( GPIO_0 [1]    ),  // JP1 pin 2
-        .sd    ( GPIO_0 [0]    ),  // JP1 pin 1
-        .value ( mic           )
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [5] ),  // JP1 pin 6
+        .ws    ( GPIO_0 [3] ),  // JP1 pin 4
+        .sck   ( GPIO_0 [1] ),  // JP1 pin 2
+        .sd    ( GPIO_0 [0] ),  // JP1 pin 1
+        .value ( mic        )
     );
 
-    assign GPIO_0 [4] = 1'b0;      // GND - JP1 pin 5
-    assign GPIO_0 [2] = 1'b1;      // VCC - JP1 pin 3
+    assign GPIO_0 [4] = 1'b0;   // GND - JP1 pin 5
+    assign GPIO_0 [2] = 1'b1;   // VCC - JP1 pin 3
 
 endmodule

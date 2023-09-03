@@ -1,3 +1,5 @@
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -15,12 +17,12 @@ module board_specific_top
     input  [w_sw  - 1:0] SW,
     output [w_led - 1:0] LEDR,
 
-    output [        6:0] HEX0,
-    output [        6:0] HEX1,
-    output [        6:0] HEX2,
-    output [        6:0] HEX3,
-    output [        6:0] HEX4,
-    output [        6:0] HEX5,
+    output logic [  6:0] HEX0,
+    output logic [  6:0] HEX1,
+    output logic [  6:0] HEX2,
+    output logic [  6:0] HEX3,
+    output logic [  6:0] HEX4,
+    output logic [  6:0] HEX5,
 
     output               VGA_HS,
     output               VGA_VS,
@@ -31,6 +33,9 @@ module board_specific_top
     inout  [       35:0] GPIO_0,
     inout  [       35:0] GPIO_1
 );
+
+    wire clk =    CLOCK_50;
+    wire rst =  ~ RESET_N;
 
     //------------------------------------------------------------------------
 
@@ -52,8 +57,8 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLOCK_50           ),
-        .rst      ( ~ RESET_N            ),
+        .clk      (   clk                ),
+        .rst      (   rst                ),
 
         .key      ( ~ KEY                ),
         .sw       (   SW                 ),
@@ -87,24 +92,56 @@ module board_specific_top
         end
     endgenerate
 
-    assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
-    assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
-    assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
-    assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
-    assign HEX4 = digit [4] ? ~ hgfedcba [$left (HEX4):0] : '1;
-    assign HEX5 = digit [5] ? ~ hgfedcba [$left (HEX5):0] : '1;
+    //------------------------------------------------------------------------
+
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Pro: This implementation is necessary for the lab 7segment_word
+        // to properly demonstrate the idea of dynamic 7-segment display
+        // on a static 7-segment display.
+        //
+
+        // Con: This implementation makes the 7-segment LEDs dim
+        // on most boards with the static 7-sigment display.
+        // It also does not work well with TM1638 peripheral display.
+
+        assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
+        assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
+        assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
+        assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
+        assign HEX4 = digit [4] ? ~ hgfedcba [$left (HEX4):0] : '1;
+        assign HEX5 = digit [5] ? ~ hgfedcba [$left (HEX5):0] : '1;
+
+    `else
+
+        always_ff @ (posedge clk or posedge rst)
+            if (rst)
+            begin
+                { HEX0, HEX1, HEX2, HEX3 } <= '1;
+            end
+            else
+            begin
+                if (digit [0]) HEX0 <= ~ hgfedcba [$left (HEX0):0];
+                if (digit [1]) HEX1 <= ~ hgfedcba [$left (HEX1):0];
+                if (digit [2]) HEX2 <= ~ hgfedcba [$left (HEX2):0];
+                if (digit [3]) HEX3 <= ~ hgfedcba [$left (HEX3):0];
+                if (digit [4]) HEX4 <= ~ hgfedcba [$left (HEX4):0];
+                if (digit [5]) HEX5 <= ~ hgfedcba [$left (HEX5):0];
+            end
+
+    `endif
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   (   CLOCK_50   ),
-        .rst   ( ~ RESET_N    ),
-        .lr    (   GPIO_0 [5] ),
-        .ws    (   GPIO_0 [3] ),
-        .sck   (   GPIO_0 [1] ),
-        .sd    (   GPIO_0 [0] ),
-        .value (   mic        )
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [5] ),
+        .ws    ( GPIO_0 [3] ),
+        .sck   ( GPIO_0 [1] ),
+        .sd    ( GPIO_0 [0] ),
+        .value ( mic        )
     );
 
     assign GPIO_0 [4] = 1'b0;  // GND

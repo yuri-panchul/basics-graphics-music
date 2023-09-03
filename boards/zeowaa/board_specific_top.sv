@@ -28,6 +28,8 @@ module board_specific_top
     inout  [w_gpio    - 1:0] GPIO
 );
 
+    wire rst = ~ KEY_N [3];
+
     //------------------------------------------------------------------------
 
     wire [w_led   - 1:0] led;
@@ -54,7 +56,7 @@ module board_specific_top
     i_top
     (
         .clk      (   CLK         ),
-        .rst      ( ~ KEY_N [3]   ),
+        .rst      (   rst         ),
 
         .key      ( ~ KEY_N [2:0] ),
         .sw       ( ~ SW_N        ),
@@ -88,13 +90,13 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   (   CLK       ),
-        .rst   ( ~ KEY_N [3] ),
-        .lr    (   GPIO [5]  ),
-        .ws    (   GPIO [3]  ),
-        .sck   (   GPIO [1]  ),
-        .sd    (   GPIO [0]  ),
-        .value (   mic       )
+        .clk   ( CLK      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [3] ),
+        .sck   ( GPIO [1] ),
+        .sd    ( GPIO [0] ),
+        .value ( mic      )
     );
 
     assign GPIO [4] = 1'b0;  // GND
