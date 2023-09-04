@@ -151,6 +151,6 @@ module board_specific_top
         .sio_clk  ( GPIO_0[2] ),
         .sio_stb  ( GPIO_0[3] ),
         .sio_data ( GPIO_0[1] )
-    ); 
+    );
 
 endmodule
