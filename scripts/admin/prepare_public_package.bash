@@ -98,7 +98,8 @@ fi
 
 # For some reason "--exclude=\*.mk" does not work here
 
-exclude_tabs_ok="--exclude-dir=urgReport --exclude=*.mk --exclude=*.xdc"
+exclude_urg="--exclude-dir=urgReport"
+exclude_tabs_ok="$exclude_urg --exclude=*.mk --exclude=*.xdc"
 
 if grep -rqI $exclude_tabs_ok $'\t' "$pkg_src_root"/*
 then
