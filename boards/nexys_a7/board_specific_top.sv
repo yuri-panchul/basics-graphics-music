@@ -1,69 +1,90 @@
-// Asynchronous reset here is needed for some FPGA boards we use
-
-// `define USE_OBSOLETE_DIGILENT_MIC
-// `define USE_INMP_441_MIC_ON_OLD_POSITION
-
-`ifdef USE_OBSOLETE_DIGILENT_MIC
-    `define USE_SDRAM_PINS_AS_GPIO
-`elsif USE_INMP_441_MIC_ON_OLD_POSITION
-    `define USE_SDRAM_PINS_AS_GPIO
-`else
-    `define USE_LCD_AS_GPIO
-`endif
-
-//----------------------------------------------------------------------------
-
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 4,
-              w_led   = 4,
-              w_digit = 4,
-
-              `ifdef USE_SDRAM_PINS_AS_GPIO
-              w_gpio  = 14
-              `elif USE_LCD_AS_GPIO
-              w_gpio  = 11
-              `else
-              w_gpio  = 1
-              `endif
+    parameter clk_mhz = 100,
+              w_key   = 5,
+              w_sw    = 16,
+              w_led   = 16,
+              w_digit = 8,
+              w_gpio  = 32
 )
 (
-    input                  CLK,
-    input                  RESET,
+    input         CLK100MHZ,
+    input         CPU_RESETN,
 
-    input  [w_key   - 1:0] KEY,
-    output [w_led   - 1:0] LED,
+    input         BTNC,
+    input         BTNU,
+    input         BTNL,
+    input         BTNR,
+    input         BTND,
 
-    output [          7:0] SEG,
-    output [w_digit - 1:0] DIG,
+    input  [15:0] SW,
+    output [15:0] LED,
 
-    output                 VGA_HSYNC,
-    output                 VGA_VSYNC,
-    output                 VGA_R,
-    output                 VGA_G,
-    output                 VGA_B,
+    output        LED16_B,
+    output        LED16_G,
+    output        LED16_R,
 
-    input                  UART_RXD,
+    output        LED17_B,
+    output        LED17_G,
+    output        LED17_R,
 
-    inout  [w_gpio  - 1:0] PSEUDO_GPIO_USING_SDRAM_PINS,
+    output        CA,
+    output        CB,
+    output        CC,
+    output        CD,
+    output        CE,
+    output        CF,
+    output        CG,
 
-    inout                  LCD_RS,
-    inout                  LCD_RW,
-    inout                  LCD_E,
-    inout  [          7:0] LCD_D
+    output        DP,
+
+    output [ 7:0] AN,
+
+    output [ 3:0] VGA_R,
+    output [ 3:0] VGA_G,
+    output [ 3:0] VGA_B,
+
+    output        VGA_HS,
+    output        VGA_VS,
+
+    input         UART_TXD_IN,
+
+    inout  [12:1] JA,
+    inout  [12:1] JB,
+    inout  [12:1] JC,
+    inout  [12:1] JD,
+
+    output        M_CLK,
+    input         M_DATA,
+    output        M_LRSEL,
+
+    output        AUD_PWM,
+    output        AUD_SD
 );
 
     //------------------------------------------------------------------------
 
-    wire [w_led   - 1:0] led;
+    wire clk =   CLK100MHZ;
+    wire rst = ~ CPU_RESETN;
 
-    wire [          7:0] abcdefgh;
-    wire [w_digit - 1:0] digit;
+    //------------------------------------------------------------------------
 
-    wire [          3:0] red, green, blue;
-    wire [         23:0] mic;
+    assign LED16_B = 1'b0;
+    assign LED16_G = 1'b0;
+    assign LED16_R = 1'b0;
+    assign LED17_B = 1'b0;
+    assign LED17_G = 1'b0;
+    assign LED17_R = 1'b0;
+
+    assign M_CLK   = 1'b0;
+    assign M_LRSEL = 1'b0;
+
+    assign AUD_PWM = 1'b0;
+    assign AUD_SD  = 1'b0;
+
+    //------------------------------------------------------------------------
+
+    wire [23:0] mic = '0;
 
     //------------------------------------------------------------------------
 
@@ -78,101 +99,27 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLK       ),
-        .rst      ( ~ RESET     ),
+        .clk      ( clk    ),
+        .rst      ( rst    ),
 
-        .key      ( ~ KEY       ),
-        .sw       ( ~ KEY       ),
+        .key      ( { BTNU, BTND, BTNL, BTNC, BTNR } ),
+        .sw       ( SW     ),
 
-        .led      (   led       ),
+        .led      ( LED    ),
 
-        .abcdefgh (   abcdefgh  ),
-        .digit    (   digit     ),
+        .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
 
-        .vsync    (   VGA_VSYNC ),
-        .hsync    (   VGA_HSYNC ),
+        .digit    ( AN     ),
 
-        .red      (   red       ),
-        .green    (   green     ),
-        .blue     (   blue      ),
+        .vsync    ( VGA_VS ),
+        .hsync    ( VGA_HS ),
 
-        .mic      (   mic       ),
+        .red      ( VGA_R  ),
+        .green    ( VGA_G  ),
+        .blue     ( VGA_B  ),
 
-        `ifdef USE_SDRAM_PINS_AS_GPIO
-            .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
-        `elif USE_LCD_AS_GPIO
-            .gpio ({ LCD_RS, LCD_RW, LCD_E, LCD_D })
-        `endif
+        .mic      ( mic    ),
+        .gpio     (        )
     );
-
-    //------------------------------------------------------------------------
-
-    assign LED   = ~ led;
-
-    assign SEG   = ~ abcdefgh;
-    assign DIG   = ~ digit;
-
-    assign VGA_R = | red;
-    assign VGA_G = | green;
-    assign VGA_B = | blue;
-
-    //------------------------------------------------------------------------
-
-    `ifdef USE_OBSOLETE_DIGILENT_MIC
-
-    wire [15:0] mic_16;
-
-    digilent_pmod_mic3_spi_receiver i_microphone
-    (
-        .clk   ( CLK                               ),
-        .rst   ( ~ RESET                           ),
-        .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
-        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
-        .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
-        .value ( mic_16                            )
-    );
-
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [ 8] = 1'b0;  // GND
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [10] = 1'b1;  // VCC
-
-    assign mic = { mic_16, 8'b0 };
-
-    //------------------------------------------------------------------------
-
-    `elsif USE_INMP_441_MIC_ON_OLD_POSITION
-
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( CLK                               ),
-        .rst   ( ~ RESET                           ),
-        .lr    ( PSEUDO_GPIO_USING_SDRAM_PINS  [5] ),
-        .ws    ( PSEUDO_GPIO_USING_SDRAM_PINS  [3] ),
-        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [1] ),
-        .sd    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
-        .value ( mic                               )
-    );
-
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [4] = 1'b0;  // GND
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [2] = 1'b1;  // VCC
-
-    //------------------------------------------------------------------------
-
-    `else  // USE_INMP_441_MIC
-
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( CLK       ),
-        .rst   ( ~ RESET   ),
-        .lr    ( LCD_D [1] ),
-        .ws    ( LCD_D [2] ),
-        .sck   ( LCD_D [3] ),
-        .sd    ( LCD_D [6] ),
-        .value ( mic       )
-    );
-
-    assign LCD_D [4] = 1'b0;  // GND
-    assign LCD_D [5] = 1'b1;  // VCC
-
-    `endif
 
 endmodule
