@@ -98,8 +98,8 @@ fi
 
 # For some reason "--exclude=\*.mk" does not work here
 
-exclude_urg="--exclude-dir=urgReport"
-exclude_tabs_ok="$exclude_urg --exclude=*.mk --exclude=*.xdc"
+exclude_space_ok="--exclude-dir=urgReport --exclude=*.xdc"
+exclude_tabs_ok="$exclude_space_ok --exclude=*.mk"
 
 if grep -rqI $exclude_tabs_ok $'\t' "$pkg_src_root"/*
 then
@@ -119,13 +119,13 @@ then
           "| xargs sed -i 's/\\\\t/    /g'"
 fi
 
-if grep -rqI $exclude_urg '[[:space:]]\+$' "$pkg_src_root"/*
+if grep -rqI $exclude_space_ok '[[:space:]]\+$' "$pkg_src_root"/*
 then
-    grep -rlI $exclude_urg '[[:space:]]\+$' "$pkg_src_root"/*
+    grep -rlI $exclude_space_ok '[[:space:]]\+$' "$pkg_src_root"/*
 
     error "there are spaces at the end of line, please remove them." \
           "\nYou can fix them by doing:" \
-          "\ngrep -rlI $exclude_urg '[[:space:]]\\\\+\$' \"$pkg_src_root\"/*" \
+          "\ngrep -rlI $exclude_space_ok '[[:space:]]\\\\+\$' \"$pkg_src_root\"/*" \
           "| xargs sed -i 's/[[:space:]]\\\\+\$//g'"
 fi
 
