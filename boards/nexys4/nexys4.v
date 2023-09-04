@@ -79,11 +79,11 @@ module nexys4
         .anodes         ( an        )
     );
 
-    assign RGB1_Red   = 1'b0; 
-    assign RGB1_Green = 1'b0; 
-    assign RGB1_Blue  = 1'b0; 
-    assign RGB2_Red   = 1'b0; 
-    assign RGB2_Green = 1'b0; 
+    assign RGB1_Red   = 1'b0;
+    assign RGB1_Green = 1'b0;
+    assign RGB1_Blue  = 1'b0;
+    assign RGB2_Red   = 1'b0;
+    assign RGB2_Green = 1'b0;
     assign RGB2_Blue  = 1'b0;
 
 endmodule

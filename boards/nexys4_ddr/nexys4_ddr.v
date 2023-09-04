@@ -10,7 +10,7 @@ module nexys4_ddr
     input         BTNR,
     input         BTND,
 
-    input  [15:0] SW, 
+    input  [15:0] SW,
 
     output [15:0] LED,
 
