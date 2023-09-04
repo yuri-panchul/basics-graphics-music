@@ -148,66 +148,32 @@ xilinx_setup_vivado ()
 
 setup_run_directory_for_fpga_synthesis_xilinx ()
 {
-    return
-
     dir="$1"
     main_src_dir="$2"
 
-    > "$dir/fpga_project.tcl"
-    cat "$board_dir/$fpga_board/board_specific.tcl" >> "$dir/fpga_project.tcl"
+    > "$dir/fpga_project_synthesize.tcl"
 
-    for verilog_src_dir in  \
-        "$main_src_dir"  \
-        "$board_dir/$fpga_board"  \
-        "$lab_dir/common"
-    do
-        $find_to_run  \
-            "$verilog_src_dir"  \
-            -type f -name '*.sv' -not -name tb.sv  \
-            -printf "add_file -type verilog %p\n" \
-            >> "$dir/fpga_project.tcl"
-    done
+    cat "$board_dir/$fpga_board/board_specific.tcl"  \
+      >> "$dir/fpga_project_synthesize.tcl"
 
-    echo "add_file -type cst $board_dir/$fpga_board/board_specific.cst" >> "$dir/fpga_project.tcl"
-    echo "add_file -type sdc $board_dir/$fpga_board/board_specific.sdc" >> "$dir/fpga_project.tcl"
-    echo "run all" >> "$dir/fpga_project.tcl"
+    > "$dir/fpga_project_configure.tcl"
+
+    cat "$board_dir/$fpga_board/board_specific.tcl"  \
+      >> "$dir/fpga_project_configure.tcl"
 }
 
 #-----------------------------------------------------------------------------
 
 synthesize_for_fpga_xilinx ()
 {
-    return
-
-    is_command_available_or_error "$xilinx_sh" " from GoWin IDE package"
-    "$xilinx_sh" fpga_project.tcl
+    is_command_available_or_error vivado " from Xilinx package"
+    vivado -source fpga_project_synthesize.tcl
 }
 
 #-----------------------------------------------------------------------------
 
 configure_fpga_xilinx ()
 {
-    return
-
-    is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
-
-    #-------------------------------------------------------------------------
-
-    if [ "$OSTYPE" = "linux-gnu" ]
-    then
-        rules_dir=/etc/udev/rules.d
-        rules_file="$script_dir/fpga/91-sipeed.rules"
-
-        if ! grep -q 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010"' $rules_dir/*
-        then
-            error "No rules for Sipeed FPGA loader detected in $rules_dir."  \
-                  "Please put it there and reboot: sudo cp $rules_file $rules_dir"
-        fi
-
-        killall jtagd 2>/dev/null || true
-    fi
-
-    #-------------------------------------------------------------------------
-
-    openFPGALoader -b $fpga_board impl/pnr/fpga_project.fs
+    is_command_available_or_error vivado " from Xilinx package"
+    vivado -source fpga_project_configure.tcl
 }
