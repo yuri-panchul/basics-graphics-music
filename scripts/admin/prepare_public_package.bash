@@ -98,12 +98,11 @@ fi
 
 # For some reason "--exclude=\*.mk" does not work here
 
-exclude_urg="--exclude-dir=urgReport"
-exclude_urg_and_mk="$exclude_urg --exclude=*.mk"
+exclude_tabs_ok="--exclude-dir=urgReport --exclude=*.mk --exclude=*.xdc"
 
-if grep -rqI $exclude_urg_and_mk $'\t' "$pkg_src_root"/*
+if grep -rqI $exclude_tabs_ok $'\t' "$pkg_src_root"/*
 then
-    grep -rlI $exclude_urg_and_mk $'\t' "$pkg_src_root"/*
+    grep -rlI $exclude_tabs_ok $'\t' "$pkg_src_root"/*
 
     error "there are text files with tabulation characters." \
           "\nTabs should not be used." \
@@ -112,10 +111,10 @@ then
           "\nPlease replace the tabs with spaces" \
           "before checking in or creating a package." \
           "\nYou can find them by doing:" \
-          "\ngrep -rlI $exclude_urg_and_mk \$'\\\\t' \"$pkg_src_root\"/*" \
+          "\ngrep -rlI $exclude_tabs_ok \$'\\\\t' \"$pkg_src_root\"/*" \
           "\nYou can fix them by doing the following," \
           "but make sure to review the fixes:" \
-          "\ngrep -rlI $exclude_urg_and_mk \$'\\\\t' \"$pkg_src_root\"/*" \
+          "\ngrep -rlI $exclude_tabs_ok \$'\\\\t' \"$pkg_src_root\"/*" \
           "| xargs sed -i 's/\\\\t/    /g'"
 fi
 
