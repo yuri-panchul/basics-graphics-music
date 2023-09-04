@@ -59,6 +59,12 @@ xilinx_setup_vivado ()
             vivado_install_parent_dir=/opt
         fi
 
+        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
+        then
+            vivado_install_parent_dir_second="$vivado_install_parent_dir"
+            vivado_install_parent_dir=/tools
+        fi
+
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
     then
@@ -71,6 +77,12 @@ xilinx_setup_vivado ()
         then
             vivado_install_parent_dir_first="$vivado_install_parent_dir"
             vivado_install_parent_dir=/d
+        fi
+
+        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
+        then
+            vivado_install_parent_dir_second="$vivado_install_parent_dir"
+            vivado_install_parent_dir=/e
         fi
     else
         error "this script does not support your OS / platform '$OSTYPE'"
@@ -85,9 +97,17 @@ xilinx_setup_vivado ()
             error "expected to find '$vivado_install_dir' directory"  \
                   "in '$vivado_install_parent_dir'."                  \
                   "'$vivado_install_dir' location can be set by the environment variable XILINX_HOME"
+
+        elif [ -z "${vivado_install_parent_dir_second-}" ]
+        then
+            error "expected to find '$vivado_install_dir' directory"  \
+                  "either in '$vivado_install_parent_dir_first'"      \
+                  "or in '$vivado_install_parent_dir'."               \
+                  "'$vivado_install_dir' location can be set by the environment variable XILINX_HOME"
         else
             error "expected to find '$vivado_install_dir' directory"  \
                   "either in '$vivado_install_parent_dir_first'"      \
+                  "or in '$vivado_install_parent_dir_second'"         \
                   "or in '$vivado_install_parent_dir'."               \
                   "'$vivado_install_dir' location can be set by the environment variable XILINX_HOME"
         fi

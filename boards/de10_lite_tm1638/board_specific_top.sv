@@ -243,3 +243,5 @@ module board_specific_top
     assign GPIO [2] = 1'b1;  // VCC
 
 endmodule
+
+// TODO Review the order of tm_key
