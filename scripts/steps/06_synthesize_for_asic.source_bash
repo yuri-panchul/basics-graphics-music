@@ -26,11 +26,11 @@ popd
 
 runs_dir="$design_dir/runs"
 
-[ -d "${runs_dir-}" ] || error "Cannot find OpenLane runs directory"
+[ -d "$runs_dir" ] || error "Cannot find OpenLane runs directory"
 
 last_run_dir=$(ls -d "$runs_dir"/RUN* | sort | tail -1)
 
-! [ -z "${last_run_dir-}" ] || error "No RUN directory"
+! [ -z "$last_run_dir" ] || error "No RUN directory"
 
 cp "$log" 01_main.log
 

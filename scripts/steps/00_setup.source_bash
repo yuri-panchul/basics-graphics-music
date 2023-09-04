@@ -302,13 +302,13 @@ fpga_board_setup ()
         fpga_board=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
         select_file_contents=$(cat "$select_file")
 
-        if [ -z "${fpga_board-}" ] ; then
+        if [ -z "$fpga_board" ] ; then
             offer_to_create_a_new_fpga_board_select_file=1
         fi
 
         if [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
         then
-            if [ -n "${fpga_board-}" ] ; then
+            if [ -n "$fpga_board" ] ; then
                info "The current contents of \"$select_file:\""  \
                     "\n\n$select_file_contents"  \
                     "\n\nThe currently selected FPGA board: $fpga_board"
@@ -351,7 +351,7 @@ fpga_board_setup ()
 
         select fpga_board in $available_fpga_boards exit
         do
-            if [ -z "${fpga_board-}" ] ; then
+            if [ -z "$fpga_board" ] ; then
                 info "Invalid FPGA board choice, please choose one of the listed numbers again"
                 continue
             fi

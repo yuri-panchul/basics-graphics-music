@@ -31,9 +31,9 @@ openlane_setup ()
 
     default_openlane_dir="$HOME/OpenLane"
 
-    if   [ -n "${OPENLANE_ROOTDIR-}" ] && [ -d "${OPENLANE_ROOTDIR-}" ] ; then
+    if   [ -n "${OPENLANE_ROOTDIR-}" ] && [ -d "$OPENLANE_ROOTDIR" ] ; then
         openlane_dir="$OPENLANE_ROOTDIR"
-    elif [ -n "${OPENLANE_HOME-}" ] && [ -d "${OPENLANE_HOME-}" ] ; then
+    elif [ -n "${OPENLANE_HOME-}" ] && [ -d "$OPENLANE_HOME" ] ; then
         openlane_dir="$OPENLANE_HOME"
     elif [ -d "$default_openlane_dir" ] ; then
         openlane_dir="$default_openlane_dir"

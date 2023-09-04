@@ -130,7 +130,7 @@ intel_fpga_setup_quartus ()
     find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
     first_version_dir=$($find_command -quit)
 
-    if [ -z "${first_version_dir-}" ]
+    if [ -z "$first_version_dir" ]
     then
         error "cannot find any version of Intel FPGA installed in "  \
               "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
@@ -151,9 +151,9 @@ intel_fpga_setup_quartus ()
                 "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
                 "'$all_version_dirs'"
 
-        info "QUARTUS_ROOTDIR=${QUARTUS_ROOTDIR-}"
-        info "PATH=${PATH-}"
-        info "LD_LIBRARY_PATH=${LD_LIBRARY_PATH-}"
+        info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+        info "PATH=$PATH"
+        info "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
     fi
 
     #-------------------------------------------------------------------------
@@ -394,9 +394,9 @@ configure_fpga_quartus ()
     cable_name_1=$(set +o pipefail; grep "1) " cable_list | sed 's/.*1) //')
     cable_name_2=$(set +o pipefail; grep "2) " cable_list | sed 's/.*2) //')
 
-    if [ -n "${cable_name_1-}" ]
+    if [ -n "$cable_name_1" ]
     then
-        if [ -n "${cable_name_2-}" ]
+        if [ -n "$cable_name_2" ]
         then
             warning "more than one cable is connected:" \
                     "$cable_name_1 and $cable_name_2"

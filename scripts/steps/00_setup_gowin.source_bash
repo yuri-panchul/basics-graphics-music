@@ -89,7 +89,7 @@ gowin_setup_ide ()
     find_command="$find_to_run $gowinfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
     first_version_dir=$($find_command -quit)
 
-    if [ -z "${first_version_dir-}" ]
+    if [ -z "$first_version_dir" ]
     then
         error "cannot find any version of Gowin EDA installed in "  \
               "'$gowinfpga_install_dir'"
@@ -112,8 +112,8 @@ gowin_setup_ide ()
                 "'$gowinfpga_install_dir':"  \
                 "'$all_version_dirs'"
 
-        info "GOWIN_HOME=${GOWIN_HOME-}"
-        info "PATH=${PATH-}"
+        info "GOWIN_HOME=$GOWIN_HOME"
+        info "PATH=$PATH"
     fi
 
     #-------------------------------------------------------------------------
