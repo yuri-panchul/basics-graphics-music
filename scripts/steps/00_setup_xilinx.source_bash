@@ -25,25 +25,101 @@ fi
 
 xilinx_setup_vivado ()
 {
-    return
+    if is_command_available vivado ; then
+        return  # Already set up
+    fi
 
-    /tools/Xilinx/Vivado/2023.1/bin
+       [ "$OSTYPE" = "linux-gnu" ]  \
+    || [ "$OSTYPE" = "cygwin"    ]  \
+    || [ "$OSTYPE" = "msys"      ]  \
+    || return
 
-    return
+    vivado_install_dir=Xilinx/Vivado
 
-    xilinx_vivado_setup_dir=/tools/Xilinx
+    #-------------------------------------------------------------------------
 
-    if ! [ -d $xilinx_vivado_setup_dir ]
+    if    [ -n "${XILINX_HOME-}" ]  \
+       && [ -d "$XILINX_HOME/$vivado_install_dir" ]
     then
-        xilinx_vivado_setup_dir="$HOME/Xilinx"
+        vivado_install_parent_dir="$XILINX_HOME"
+    fi
 
-        if ! [ -d $xilinx_vivado_setup_dir ]
+    #-------------------------------------------------------------------------
+
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        if [ -z "${vivado_install_parent_dir-}" ]
         then
-            error "Xilinx Vivado is not found in /tools/Xilinx or \"$HOME/Xilinx\" \n You can download Vivado ML Edition here: https://www.xilinx.com/support/download.html"
+            vivado_install_parent_dir="$HOME"
+        fi
+
+        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
+        then
+            vivado_install_parent_dir_first="$vivado_install_parent_dir"
+            vivado_install_parent_dir=/opt
+        fi
+
+    elif  [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        if [ -z "${vivado_install_parent_dir-}" ]
+        then
+            vivado_install_parent_dir=/c
+        fi
+
+        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
+        then
+            vivado_install_parent_dir_first="$vivado_install_parent_dir"
+            vivado_install_parent_dir=/d
+        fi
+    else
+        error "this script does not support your OS / platform '$OSTYPE'"
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
+    then
+        if [ -z "${vivado_install_parent_dir_first-}" ]
+        then
+            error "expected to find '$vivado_install_dir' directory"  \
+                  "in '$vivado_install_parent_dir'."                  \
+                  "'$vivado_install_dir' location can be set by the environment variable XILINX_HOME"
+        else
+            error "expected to find '$vivado_install_dir' directory"  \
+                  "either in '$vivado_install_parent_dir_first'"      \
+                  "or in '$vivado_install_parent_dir'."               \
+                  "'$vivado_install_dir' location can be set by the environment variable XILINX_HOME"
         fi
     fi
 
-    vivado="$xilinx_vivado_setup_dir/IDE/bin/gw_sh"
+    #-------------------------------------------------------------------------
+
+    find_command="$find_to_run $vivado_install_parent_dir/$vivado_install_dir -mindepth 1 -maxdepth 1 -type d -print"
+    first_version_dir=$($find_command -quit)
+
+    if [ -z "${first_version_dir-}" ]
+    then
+        error "cannot find any version of Intel FPGA installed in "  \
+              "'$vivado_install_parent_dir/$vivado_install_dir'"
+    fi
+
+    #-------------------------------------------------------------------------
+
+    export PATH="${PATH:+$PATH:}$first_version_dir/$vivado_dir/bin"
+
+    #-------------------------------------------------------------------------
+
+    all_version_dirs=$($find_command | xargs echo)
+
+    if [ "$first_version_dir" != "$all_version_dirs" ]
+    then
+        warning 1 "multiple Intel FPGA versions installed in"  \
+                "'$vivado_install_parent_dir/$vivado_install_dir':"  \
+                "'$all_version_dirs'"
+
+        info "PATH=${PATH-}"
+    fi
 }
 
 #-----------------------------------------------------------------------------

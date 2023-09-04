@@ -39,6 +39,8 @@ gowin_setup_ide ()
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
+    # Consider changing priorities of /opt and $HOME
+
     if [ "$OSTYPE" = "linux-gnu" ]
     then
         gowin_ide_setup_dir=/opt/gowin
@@ -47,7 +49,7 @@ gowin_setup_ide ()
         then
             gowin_ide_setup_dir="$HOME/gowin"
 
-            if ! [ -d $gowin_ide_setup_dir ]
+            if ! [ -d "$gowin_ide_setup_dir" ]
             then
                 error "Gowin IDE not found in /opt/gowin or \"$HOME/gowin\" \n You can download Gowin EDA here: https://www.gowinsemi.com/en/support/download_eda/"
             fi
