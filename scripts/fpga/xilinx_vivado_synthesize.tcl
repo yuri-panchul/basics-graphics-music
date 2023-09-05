@@ -4,23 +4,37 @@ set project_path [pwd]
 set script_path [file dirname [file normalize [info script]]]
 
 # global settings
-set project_name    "system"
+# YURI REMOVE set project_name    "system"
+set project_name    "fpga_project"
 set project_part    "xc7a100tcsg324-1"
-set testbench_top   "testbench"
+# YURI TO REMOVE set testbench_top   "testbench"
 
 # source files path
-set rtl_path $project_path/../rtl
-set tb_path  $project_path/../tb
+#YURI REPLACE set rtl_path $project_path/../rtl
+# YURI TO REMOVE set tb_path  $project_path/../tb
 
-# load project local settings
-source $project_path/../run/script_vivado.tcl
+# YURI TO REMOVE # load project local settings
+# YURI TO REMOVE source $project_path/../run/script_vivado.tcl
 
 # create project
 create_project $project_name $project_path -part $project_part -force
 
 # fill 'sources_1' fileset
+
+set sources_1 [list \
+[file normalize ../../common/config.svh ]  \
+[file normalize ../top.sv]  \
+[file normalize ../../../boards/nexys_a7/board_specific_top.sv]  \
+]
+
+set_property top "board_specific_top" [get_filesets sources_1]
+
 if {[info exists source_files]} {
     add_files -norecurse -fileset [get_filesets sources_1] $source_files
+}
+
+set constrs_1 {
+../../../boards/nexys_a7/board_specific.xdc
 }
 
 # fill 'constrs_1' fileset
@@ -40,10 +54,15 @@ set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-verilog_defin
 
 puts "INFO: Project created:$project_name"
 
-set project_name  "system"
+# YURI NEW LINE
+close_project
+
+# YURI REMOVE set project_name  "system"
 set synth_task    "synth_1"
 set impl_task     "impl_1"
 set timing_report "timing_1"
+
+#-----------------------------------------------------------------------------
 
 open_project "$project_name.xpr"
 
