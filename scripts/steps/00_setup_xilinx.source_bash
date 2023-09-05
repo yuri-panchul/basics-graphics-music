@@ -154,12 +154,12 @@ setup_run_directory_for_fpga_synthesis_xilinx ()
     > "$dir/fpga_project_synthesize.tcl"
 
     cat "$board_dir/$fpga_board/board_specific.tcl"  \
-      >> "$dir/fpga_project_synthesize.tcl"
+        >> "$dir/fpga_project_synthesize.tcl"
 
     > "$dir/fpga_project_configure.tcl"
 
     cat "$board_dir/$fpga_board/board_specific.tcl"  \
-      >> "$dir/fpga_project_configure.tcl"
+        >> "$dir/fpga_project_configure.tcl"
 }
 
 #-----------------------------------------------------------------------------
@@ -167,7 +167,12 @@ setup_run_directory_for_fpga_synthesis_xilinx ()
 synthesize_for_fpga_xilinx ()
 {
     is_command_available_or_error vivado " from Xilinx package"
-    vivado -source fpga_project_synthesize.tcl
+
+    if ! vivado -mode batch -source fpga_project_synthesize.tcl |& tee -a "$log"
+    then
+        grep -i -A 5 error "$log" 2>&1
+        error "synthesis failed"
+    fi
 }
 
 #-----------------------------------------------------------------------------
@@ -175,5 +180,13 @@ synthesize_for_fpga_xilinx ()
 configure_fpga_xilinx ()
 {
     is_command_available_or_error vivado " from Xilinx package"
-    vivado -source fpga_project_configure.tcl
+
+    [ -f fpga_project_configure.tcl ] \
+        || error "cannot find a configuration script, most likely synthesis step was not run"
+
+    if ! vivado -mode batch -source fpga_project_configure.tcl |& tee -a "$log"
+    then
+        grep -i -A 5 error "$log" 2>&1
+        error "configuration failed"
+    fi
 }
