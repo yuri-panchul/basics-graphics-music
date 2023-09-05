@@ -2,6 +2,8 @@
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
 
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
 module board_specific_top
 # (
     parameter clk_mhz  = 50,
@@ -9,7 +11,7 @@ module board_specific_top
               w_sw     = 4,
               w_led    = 8,
               w_digit  = 0,
-              w_gpio   = 36
+              w_gpio   = 36                   // GPIO_0 [33], [34], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
 )
 (
     input                    FPGA_CLK1_50,
@@ -106,9 +108,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire                    tm1638_rst;
-
-    assign tm1638_rst = SW [w_top_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] is BTN_RESET key on MiSTer I/O board
+    wire tm1638_rst = SW [w_top_sw];
 
     //------------------------------------------------------------------------
 
@@ -122,7 +122,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio      )
+        .w_gpio  ( w_gpio - 3  )      // GPIO_0 [33], [34], [35] reserved for tm1638
     )
     i_top
     (
@@ -149,29 +149,29 @@ module board_specific_top
     );
 
     // VGA out at GPIO_1 (MiSTer I/O board compatible, 4 bit color used)
-    assign GPIO_1[16] = vga_vs;       // JP1 pin 19
-    assign GPIO_1[17] = vga_hs;       // JP1 pin 20
+    assign GPIO_1 [16] = vga_vs;        // JP1 pin 19
+    assign GPIO_1 [17] = vga_hs;        // JP1 pin 20
     // R
-    assign GPIO_1[35] = 1'b1;         // JP1 pin 40
-    assign GPIO_1[33] = 1'b1;         // JP1 pin 38
-    assign GPIO_1[31] = vga_r[0];     // JP1 pin 36
-    assign GPIO_1[29] = vga_r[1];     // JP1 pin 34
-    assign GPIO_1[27] = vga_r[2];     // JP1 pin 32
-    assign GPIO_1[25] = vga_r[3];     // JP1 pin 28
+    assign GPIO_1 [35] = 1'b1;          // JP1 pin 40
+    assign GPIO_1 [33] = 1'b1;          // JP1 pin 38
+    assign GPIO_1 [31] = vga_r [0];     // JP1 pin 36
+    assign GPIO_1 [29] = vga_r [1];     // JP1 pin 34
+    assign GPIO_1 [27] = vga_r [2];     // JP1 pin 32
+    assign GPIO_1 [25] = vga_r [3];     // JP1 pin 28
     // G
-    assign GPIO_1[34] = 1'b1;         // JP1 pin 39
-    assign GPIO_1[32] = 1'b1;         // JP1 pin 37
-    assign GPIO_1[30] = vga_g[0];     // JP1 pin 35
-    assign GPIO_1[28] = vga_g[1];     // JP1 pin 33
-    assign GPIO_1[26] = vga_g[2];     // JP1 pin 31
-    assign GPIO_1[24] = vga_g[3];     // JP1 pin 27
+    assign GPIO_1 [34] = 1'b1;          // JP1 pin 39
+    assign GPIO_1 [32] = 1'b1;          // JP1 pin 37
+    assign GPIO_1 [30] = vga_g [0];     // JP1 pin 35
+    assign GPIO_1 [28] = vga_g [1];     // JP1 pin 33
+    assign GPIO_1 [26] = vga_g [2];     // JP1 pin 31
+    assign GPIO_1 [24] = vga_g [3];     // JP1 pin 27
     // B
-    assign GPIO_1[19] = 1'b1;         // JP1 pin 22
-    assign GPIO_1[21] = 1'b1;         // JP1 pin 24
-    assign GPIO_1[23] = vga_b[0];     // JP1 pin 26
-    assign GPIO_1[22] = vga_b[1];     // JP1 pin 25
-    assign GPIO_1[20] = vga_b[2];     // JP1 pin 23
-    assign GPIO_1[18] = vga_b[3];     // JP1 pin 21
+    assign GPIO_1 [19] = 1'b1;          // JP1 pin 22
+    assign GPIO_1 [21] = 1'b1;          // JP1 pin 24
+    assign GPIO_1 [23] = vga_b [0];     // JP1 pin 26
+    assign GPIO_1 [22] = vga_b [1];     // JP1 pin 25
+    assign GPIO_1 [20] = vga_b [2];     // JP1 pin 23
+    assign GPIO_1 [18] = vga_b [3];     // JP1 pin 21
 
     //------------------------------------------------------------------------
 
@@ -188,37 +188,46 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+        wire tm_static_hex;
+        assign tm_static_hex = 'b0;
+    `else
+        wire tm_static_hex;
+        assign tm_static_hex = 'b1;
+    `endif
+
     tm1638_board_controller
     # (
-        .w_digit ( w_tm_digit )
+        .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
     )
     i_ledkey
     (
-        .clk      ( clk            ), // 50 MHz
-        .rst      ( tm1638_rst     ), // Don't make reset tm1638_board_controller by tm_key
-        .hgfedcba ( hgfedcba       ),
-        .digit    ( tm_digit       ),
-        .ledr     ( tm_led         ),
-        .keys     ( tm_key         ), // S8 key reserved for reset
-        .sio_clk  ( GPIO_0 [31]    ), // JP1 pin 36
-        .sio_stb  ( GPIO_0 [33]    ), // JP1 pin 38
-        .sio_data ( GPIO_0 [35]    )  // JP1 pin 40
+        .clk        ( clk           ), // 50 MHz
+        .rst        ( tm1638_rst    ), // Don't make reset tm1638_board_controller by tm_key
+        .static_hex ( tm_static_hex ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ), // S8 key reserved for reset
+        .sio_clk    ( GPIO_0 [33]   ), // JP1 pin 38
+        .sio_stb    ( GPIO_0 [34]   ), // JP1 pin 39
+        .sio_data   ( GPIO_0 [35]   )  // JP1 pin 40
     );
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk           ),
-        .rst   ( rst           ),
-        .lr    ( GPIO_0 [5]    ),  // JP1 pin 6
-        .ws    ( GPIO_0 [3]    ),  // JP1 pin 4
-        .sck   ( GPIO_0 [1]    ),  // JP1 pin 2
-        .sd    ( GPIO_0 [0]    ),  // JP1 pin 1
-        .value ( mic           )
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [5] ),  // JP1 pin 6
+        .ws    ( GPIO_0 [3] ),  // JP1 pin 4
+        .sck   ( GPIO_0 [1] ),  // JP1 pin 2
+        .sd    ( GPIO_0 [0] ),  // JP1 pin 1
+        .value ( mic        )
     );
 
-    assign GPIO_0 [4] = 1'b0;      // GND - JP1 pin 5
-    assign GPIO_0 [2] = 1'b1;      // VCC - JP1 pin 3
+    assign GPIO_0 [4] = 1'b0;   // GND - JP1 pin 5
+    assign GPIO_0 [2] = 1'b1;   // VCC - JP1 pin 3
 
 endmodule
