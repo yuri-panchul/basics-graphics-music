@@ -1,79 +1,31 @@
+# The variables fpga_board and part are defined
 
-# path where project will be created
-set project_path [pwd]
-set script_path [file dirname [file normalize [info script]]]
+read_verilog -sv [glob ../../common/*.sv]
+read_verilog -sv [glob ../*.sv]
+read_verilog -sv [glob "../../boards/$fpga_board/*.sv"]
+read_xdc "../../boards/$fpga_board/board_specific.xdc"
 
-# global settings
-# YURI REMOVE set project_name    "system"
-set project_name    "fpga_project"
-set project_part    "xc7a100tcsg324-1"
-# YURI TO REMOVE set testbench_top   "testbench"
+synth_design -top board_specific_top -part $part
 
-# source files path
-#YURI REPLACE set rtl_path $project_path/../rtl
-# YURI TO REMOVE set tb_path  $project_path/../tb
+report_timing_summary -file post_synth_timing_summary.rpt
+report_power          -file post_synth_power.rpt
 
-# YURI TO REMOVE # load project local settings
-# YURI TO REMOVE source $project_path/../run/script_vivado.tcl
+opt_design
+place_design
+phys_opt_design
 
-# create project
-create_project $project_name $project_path -part $project_part -force
+report_timing_summary -file post_place_timing_summary.rpt
 
-# fill 'sources_1' fileset
+route_design
 
-set sources_1 [list \
-[file normalize ../../common/config.svh ]  \
-[file normalize ../top.sv]  \
-[file normalize ../../../boards/nexys_a7/board_specific_top.sv]  \
-]
+report_timing_summary    -file post_route_timing_summary.rpt
+report_timing            -sort_by group -max_paths 100 -path_type summary -file post_route_timing.rpt
+report_clock_utilization -file clock_util.rpt
+report_utilization       -file post_route_util.rpt
+report_power             -file post_route_power.rpt
+report_drc               -file post_imp_drc.rpt
 
-set_property top "board_specific_top" [get_filesets sources_1]
+write_verilog                -force bft_impl_netlist.v
+write_xdc     -no_fixed_only -force bft_impl.xdc
 
-if {[info exists source_files]} {
-    add_files -norecurse -fileset [get_filesets sources_1] $source_files
-}
-
-set constrs_1 {
-../../../boards/nexys_a7/board_specific.xdc
-}
-
-# fill 'constrs_1' fileset
-if {[info exists constr_files]} {
-    add_files -norecurse -fileset [get_filesets constrs_1] $constr_files
-}
-
-# fill 'sim_1' fileset
-if {[info exists sim_files]} {
-    set obj [get_filesets sim_1]
-    add_files -norecurse -fileset $obj $sim_files
-    set_property top $testbench_top $obj
-}
-
-# define macros VIVADO_SYNTHESIS
-set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-verilog_define VIVADO_SYNTHESIS} -objects [get_runs synth_1]
-
-puts "INFO: Project created:$project_name"
-
-# YURI NEW LINE
-close_project
-
-# YURI REMOVE set project_name  "system"
-set synth_task    "synth_1"
-set impl_task     "impl_1"
-set timing_report "timing_1"
-
-#-----------------------------------------------------------------------------
-
-open_project "$project_name.xpr"
-
-# run synthesis
-launch_runs $synth_task
-wait_on_run -verbose $synth_task
-
-# run implementation
-launch_runs $impl_task
-wait_on_run -verbose $impl_task
-
-# write bitstream
-open_run $impl_task -name $impl_task
-write_bitstream "$project_name.bit"
+write_bitstream -force fpga_project.bit
