@@ -151,15 +151,13 @@ setup_run_directory_for_fpga_synthesis_xilinx ()
     dir="$1"
     main_src_dir="$2"
 
-    > "$dir/fpga_project_synthesize.tcl"
+    cat "$board_dir/$fpga_board/board_specific.tcl"      \
+        "$script_dir/fpga/xilinx_vivado_synthesize.tcl"  \
+        > "$dir/fpga_project_synthesize.tcl"
 
-    cat "$board_dir/$fpga_board/board_specific.tcl"  \
-        >> "$dir/fpga_project_synthesize.tcl"
-
-    > "$dir/fpga_project_configure.tcl"
-
-    cat "$board_dir/$fpga_board/board_specific.tcl"  \
-        >> "$dir/fpga_project_configure.tcl"
+    cat "$board_dir/$fpga_board/board_specific.tcl"      \
+        "$script_dir/fpga/xilinx_vivado_configure.tcl"  \
+        > "$dir/fpga_project_configure.tcl"
 }
 
 #-----------------------------------------------------------------------------
