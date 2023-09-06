@@ -1,4 +1,4 @@
-# The variables fpga_board and part are defined
+# The variables fpga_board and part_name are defined
 
 read_verilog -sv [glob ../../common/*.sv]
 read_verilog -sv [glob ../top.sv]
@@ -6,7 +6,7 @@ read_verilog -sv [glob "../../../boards/$fpga_board/*.sv"]
 
 read_xdc "../../../boards/$fpga_board/board_specific.xdc"
 
-synth_design -include_dirs ../../common -part $part -top board_specific_top
+synth_design -include_dirs ../../common -part $part_name -top board_specific_top
 
 write_checkpoint          -force post_synth
 report_timing_summary     -file  post_synth_timing_summary.rpt
