@@ -1,4 +1,7 @@
-# The variable $hw_device is defined
+
+if {! [info exists hw_device]} {
+    error "The variable 'hw_device' is expected to be set"
+}
 
 open_hw
 connect_hw_server

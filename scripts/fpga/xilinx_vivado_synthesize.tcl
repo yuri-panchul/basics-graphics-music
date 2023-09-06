@@ -1,4 +1,11 @@
-# The variables fpga_board and part_name are defined
+
+if {! [info exists fpga_board]} {
+    error "The variable 'fpga_board' is expected to be set"
+}
+
+if {! [info exists part_name]} {
+    error "The variable 'part_name' is expected to be set"
+}
 
 read_verilog -sv [glob ../../common/*.sv]
 read_verilog -sv [glob ../top.sv]
