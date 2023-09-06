@@ -45,8 +45,8 @@ module board_specific_top
 
     localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
 
-    wire                  rst = SW [w_sw - 1];
-    wire [w_top_sw - 1:0] sw  = SW [w_top_sw - 1:0];
+    wire                  rst     = SW [w_sw - 1];
+    wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -211,7 +211,7 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .w_digit ( w_digit )
+        .w_digit ( w_tm_digit )
     )
     i_tm1638
     (
