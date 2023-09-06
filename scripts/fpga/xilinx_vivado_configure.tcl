@@ -1,11 +1,13 @@
-# The variable $part is defined
+# The variable $hw_device is defined
 
 open_hw_manager
+#open_hw
 connect_hw_server
 open_hw_target
-set_property PROGRAM.FILE fpga_project.bit [get_hw_devices $part]
-program_hw_devices                         [get_hw_devices $part]
-refresh_hw_device                  [lindex [get_hw_devices $part] 0]
+set_property PROGRAM.FILE fpga_project.bit [get_hw_devices $hw_device]
+program_hw_devices                         [get_hw_devices $hw_device]
+#consider removing
+refresh_hw_device                  [lindex [get_hw_devices $hw_device] 0]
 close_hw_target
 close_hw_manager
 
