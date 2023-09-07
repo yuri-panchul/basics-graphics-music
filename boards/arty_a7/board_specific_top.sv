@@ -1,11 +1,11 @@
 module board_specific_top
 # (
     parameter clk_mhz = 100,
-              w_key   = 5,
-              w_sw    = 16,
-              w_led   = 16,
+              w_key   = 4,
+              w_sw    = 4,
+              w_led   = 4,
               w_digit = 8,
-              w_gpio  = 32
+              w_gpio  = 41
 )
 (
     input         CLK100MHZ,
@@ -17,16 +17,28 @@ module board_specific_top
     input         BTNR,
     input         BTND,
 
-    input  [15:0] SW,
-    output [15:0] LED,
+    input  [w_sw-1:0] SW,
+    output [w_led-1:0] LED,
 
-    output        LED16_B,
-    output        LED16_G,
-    output        LED16_R,
+    output        LED0_B,
+    output        LED0_G,
+    output        LED0_R,
 
-    output        LED17_B,
-    output        LED17_G,
-    output        LED17_R,
+    output        LED1_B,
+    output        LED1_G,
+    output        LED1_R,
+	
+	output        LED2_B,
+    output        LED2_G,
+    output        LED2_R,
+	
+	output        LED3_B,
+    output        LED3_G,
+    output        LED3_R,
+	
+	output        LED4_B,
+    output        LED4_G,
+    output        LED4_R,
 
     output        CA,
     output        CB,
@@ -40,26 +52,26 @@ module board_specific_top
 
     output [ 7:0] AN,
 
-    output [ 3:0] VGA_R,
-    output [ 3:0] VGA_G,
-    output [ 3:0] VGA_B,
+  //output [ 3:0] VGA_R,
+  //output [ 3:0] VGA_G,
+  //output [ 3:0] VGA_B,
 
-    output        VGA_HS,
-    output        VGA_VS,
+  //output        VGA_HS,
+  //output        VGA_VS,
 
-    input         UART_TXD_IN,
+  //input         UART_TXD_IN,
 
     inout  [12:1] JA,
     inout  [12:1] JB,
     inout  [12:1] JC,
     inout  [12:1] JD,
 
-    output        M_CLK,
-    input         M_DATA,
-    output        M_LRSEL,
+  //output        M_CLK,
+  //input         M_DATA,
+  //output        M_LRSEL,
 
-    output        AUD_PWM,
-    output        AUD_SD
+  //output        AUD_PWM,
+  //output        AUD_SD
 );
 
     //------------------------------------------------------------------------
@@ -69,22 +81,28 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign LED16_B = 1'b0;
-    assign LED16_G = 1'b0;
-    assign LED16_R = 1'b0;
-    assign LED17_B = 1'b0;
-    assign LED17_G = 1'b0;
-    assign LED17_R = 1'b0;
+    assign LED0_B = 1'b0;
+    assign LED0_G = 1'b0;
+    assign LED0_R = 1'b0;
+    assign LED1_B = 1'b0;
+    assign LED1_G = 1'b0;
+    assign LED1_R = 1'b0;
+	assign LED2_B = 1'b0;
+    assign LED2_G = 1'b0;
+    assign LED2_R = 1'b0;
+    assign LED3_B = 1'b0;
+    assign LED3_G = 1'b0;
+    assign LED3_R = 1'b0;
+	
+  //assign M_CLK   = 1'b0;
+  //assign M_LRSEL = 1'b0;
 
-    assign M_CLK   = 1'b0;
-    assign M_LRSEL = 1'b0;
-
-    assign AUD_PWM = 1'b0;
-    assign AUD_SD  = 1'b0;
+  //assign AUD_PWM = 1'b0;
+  //assign AUD_SD  = 1'b0;
 
     //------------------------------------------------------------------------
 
-    wire [23:0] mic = '0;
+  //wire [23:0] mic = '0;
 
     //------------------------------------------------------------------------
 
