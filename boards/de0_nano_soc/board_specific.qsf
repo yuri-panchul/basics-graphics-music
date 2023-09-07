@@ -7,7 +7,7 @@ set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED*
 
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO*
-  set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON  -to GPIO[35] # LED&KEY board (tm1638) dio bus
+  set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON  -to GPIO_0[35] # LED&KEY board (tm1638) dio bus
 
 set_location_assignment PIN_V11 -to FPGA_CLK1_50
 set_location_assignment PIN_Y13 -to FPGA_CLK2_50

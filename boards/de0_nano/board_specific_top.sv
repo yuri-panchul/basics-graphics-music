@@ -11,24 +11,24 @@ module board_specific_top
               w_sw     = 4,
               w_led    = 8,
               w_digit  = 0,
-              w_gpio   = 36                   // GPIO_0 [33], [34], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
+              w_gpio   = 34                   // GPIO_0 31, 32, 33 reserved for tm1638, GPIO_0[5:0] reserved for mic, no GPIO_x_IN because it's input only
 )
 (
-    input                    FPGA_CLK1_50,
+    input                     CLOCK_50,
 
-    input  [w_key     - 1:0] KEY,
-    input  [w_sw      - 1:0] SW,
-    output [w_led     - 1:0] LED,             // LEDG onboard
+    input  [w_key      - 1:0] KEY,
+    input  [w_sw       - 1:0] SW,
+    output [w_led      - 1:0] LED,            // LEDG onboard
 
-    inout  [w_gpio    - 1:0] GPIO_0,
-    inout  [w_gpio    - 1:0] GPIO_1
+    inout  [w_gpio     - 1:0] GPIO_0,
+    inout  [w_gpio     - 1:0] GPIO_1
 );
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw   = w_sw - 1;        // One onboard sw is used as a reset
+    localparam w_top_sw   = w_sw - 1;         // One onboard sw is used as a reset
 
-    wire                  clk    = FPGA_CLK1_50;
+    wire                  clk    = CLOCK_50;
     wire                  rst;
 
     wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
@@ -108,7 +108,9 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire tm1638_rst = SW [w_top_sw];
+    wire                    tm1638_rst;
+
+    assign tm1638_rst = SW [w_top_sw];
 
     //------------------------------------------------------------------------
 
@@ -122,56 +124,50 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio - 3  )      // GPIO_0 [33], [34], [35] reserved for tm1638
+        .w_gpio  ( w_gpio - 3  )      // GPIO_0 31, 32, 33 reserved for tm1638
     )
     i_top
     (
-        .clk      ( clk         ),
-        .rst      ( rst         ),
+        .clk      ( clk        ),
+        .rst      ( rst        ),
 
-        .key      ( top_key     ),
-        .sw       ( top_sw      ),
+        .key      ( top_key    ),
+        .sw       ( top_sw     ),
 
-        .led      ( top_led     ),
+        .led      ( top_led    ),
 
-        .abcdefgh ( abcdefgh    ),
-        .digit    ( top_digit   ),
+        .abcdefgh ( abcdefgh   ),
+        .digit    ( top_digit  ),
 
-        .vsync    ( vga_vs      ),
-        .hsync    ( vga_hs      ),
+        .vsync    ( vga_vs     ),
+        .hsync    ( vga_hs     ),
 
-        .red      ( vga_r       ),
-        .green    ( vga_g       ),
-        .blue     ( vga_b       ),
+        .red      ( vga_r      ),
+        .green    ( vga_g      ),
+        .blue     ( vga_b      ),
 
-        .mic      ( mic         ),
-        .gpio     ( GPIO_0      )
+        .mic      ( mic        ),
+        .gpio     ( GPIO_0     )
     );
 
-    // VGA out at GPIO_1 (MiSTer I/O board compatible, 4 bit color used)
-    assign GPIO_1 [16] = vga_vs;        // JP1 pin 19
-    assign GPIO_1 [17] = vga_hs;        // JP1 pin 20
+    // VGA out at GPIO_1
+    assign GPIO_1 [14] = vga_vs;        // JP1 pin 19
+    assign GPIO_1 [15] = vga_hs;        // JP1 pin 20
     // R
-    assign GPIO_1 [35] = 1'b1;          // JP1 pin 40
-    assign GPIO_1 [33] = 1'b1;          // JP1 pin 38
-    assign GPIO_1 [31] = vga_r [0];     // JP1 pin 36
-    assign GPIO_1 [29] = vga_r [1];     // JP1 pin 34
-    assign GPIO_1 [27] = vga_r [2];     // JP1 pin 32
-    assign GPIO_1 [25] = vga_r [3];     // JP1 pin 28
+    assign GPIO_1 [29] = vga_r [0];     // JP1 pin 36
+    assign GPIO_1 [27] = vga_r [1];     // JP1 pin 34
+    assign GPIO_1 [25] = vga_r [2];     // JP1 pin 32
+    assign GPIO_1 [23] = vga_r [3];     // JP1 pin 28
     // G
-    assign GPIO_1 [34] = 1'b1;          // JP1 pin 39
-    assign GPIO_1 [32] = 1'b1;          // JP1 pin 37
-    assign GPIO_1 [30] = vga_g [0];     // JP1 pin 35
-    assign GPIO_1 [28] = vga_g [1];     // JP1 pin 33
-    assign GPIO_1 [26] = vga_g [2];     // JP1 pin 31
-    assign GPIO_1 [24] = vga_g [3];     // JP1 pin 27
+    assign GPIO_1 [28] = vga_g [0];     // JP1 pin 35
+    assign GPIO_1 [26] = vga_g [1];     // JP1 pin 33
+    assign GPIO_1 [24] = vga_g [2];     // JP1 pin 31
+    assign GPIO_1 [22] = vga_g [3];     // JP1 pin 27
     // B
-    assign GPIO_1 [19] = 1'b1;          // JP1 pin 22
-    assign GPIO_1 [21] = 1'b1;          // JP1 pin 24
-    assign GPIO_1 [23] = vga_b [0];     // JP1 pin 26
-    assign GPIO_1 [22] = vga_b [1];     // JP1 pin 25
-    assign GPIO_1 [20] = vga_b [2];     // JP1 pin 23
-    assign GPIO_1 [18] = vga_b [3];     // JP1 pin 21
+    assign GPIO_1 [21] = vga_b [0];     // JP1 pin 26
+    assign GPIO_1 [20] = vga_b [1];     // JP1 pin 25
+    assign GPIO_1 [18] = vga_b [2];     // JP1 pin 23
+    assign GPIO_1 [16] = vga_b [3];     // JP1 pin 21
 
     //------------------------------------------------------------------------
 
@@ -209,9 +205,9 @@ module board_specific_top
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ), // S8 key reserved for reset
-        .sio_clk    ( GPIO_0 [33]   ), // JP1 pin 38
-        .sio_stb    ( GPIO_0 [34]   ), // JP1 pin 39
-        .sio_data   ( GPIO_0 [35]   )  // JP1 pin 40
+        .sio_clk    ( GPIO_0 [31]   ), // JP1 pin 38
+        .sio_stb    ( GPIO_0 [32]   ), // JP1 pin 39
+        .sio_data   ( GPIO_0 [33]   )  // JP1 pin 40
     );
 
     //------------------------------------------------------------------------
@@ -220,14 +216,14 @@ module board_specific_top
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
-        .lr    ( GPIO_0 [5] ),  // JP1 pin 6
-        .ws    ( GPIO_0 [3] ),  // JP1 pin 4
-        .sck   ( GPIO_0 [1] ),  // JP1 pin 2
-        .sd    ( GPIO_0 [0] ),  // JP1 pin 1
+        .lr    ( GPIO_0 [5] ),  // JP1 pin 8
+        .ws    ( GPIO_0 [3] ),  // JP1 pin 6
+        .sck   ( GPIO_0 [1] ),  // JP1 pin 4
+        .sd    ( GPIO_0 [0] ),  // JP1 pin 2
         .value ( mic        )
     );
 
-    assign GPIO_0 [4] = 1'b0;   // GND - JP1 pin 5
-    assign GPIO_0 [2] = 1'b1;   // VCC - JP1 pin 3
+    assign GPIO_0 [4] = 1'b0;   // GND - JP1 pin 7
+    assign GPIO_0 [2] = 1'b1;   // VCC - JP1 pin 5
 
 endmodule

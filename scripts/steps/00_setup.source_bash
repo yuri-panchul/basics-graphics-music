@@ -241,11 +241,12 @@ update_fpga_toolchain_var ()
 
         c5gx                 | \
         de0_cv               | \
+        de0_nano             | \
         de0_nano_soc         | \
+        de2_115              | \
         de10_lite            | \
         de10_lite_tm1638     | \
         de10_nano            | \
-        de2_115              | \
         omdazz               | \
         piswords6            | \
         rzrd                 | \

@@ -1,4 +1,13 @@
 /*============================================================================
+LED&KEY TM1638 board controller
+
+Copyright 2023 Alexander Kirichenko
+
+Based on https://github.com/alangarf/tm1638-verilog
+Copyright 2017 Alan Garfield
+==============================================================================*/
+
+/*============================================================================
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -202,15 +211,6 @@
    limitations under the License.
 ==============================================================================*/
 
-/*============================================================================
-LED&KEY TM1638 board controller
-
-Copyright 2023 Alexander Kirichenko
-
-Based on https://github.com/alangarf/tm1638-verilog
-Copyright 2017 Alan Garfield
-==============================================================================*/
-
 ///////////////////////////////////////////////////////////////////////////////////
 //                              Top module
 ///////////////////////////////////////////////////////////////////////////////////
@@ -222,6 +222,7 @@ module tm1638_board_controller
 (
     input                             clk, // 50 MHz
     input                             rst,
+    input                             static_hex,
     input        [               7:0] hgfedcba,
     input        [     w_digit - 1:0] digit,
     input        [               7:0] ledr,
@@ -273,8 +274,8 @@ module tm1638_board_controller
         reset_syn1  <= rst;
         reset_syn2  <= reset_syn1;
     end
-    ////////////////////////////////////////////
 
+    ////////////// TM1563 dio //////////////////
     assign sio_data = tm_rw ? dio_out : 'Z;
     assign dio_in   = sio_data;
 
@@ -295,34 +296,61 @@ module tm1638_board_controller
         .dio_out    ( dio_out           )
     );
 
-    logic [w_seg - 1:0] hex0,hex1,hex2,hex3,hex4,hex5,hex6,hex7;
+    ////////////// TM1563 data /////////////////
+
+    // HEX registered
+    logic [w_seg - 1:0] r_hex0,r_hex1,r_hex2,r_hex3,r_hex4,r_hex5,r_hex6,r_hex7;
 
     always @( posedge clk or posedge reset_syn2)
     begin
         if (reset_syn2) begin
-            hex0 = 'b0;
-            hex1 = 'b0;
-            hex2 = 'b0;
-            hex3 = 'b0;
-            hex4 = 'b0;
-            hex5 = 'b0;
-            hex6 = 'b0;
-            hex7 = 'b0;
+            r_hex0 <= 'b0;
+            r_hex1 <= 'b0;
+            r_hex2 <= 'b0;
+            r_hex3 <= 'b0;
+            r_hex4 <= 'b0;
+            r_hex5 <= 'b0;
+            r_hex6 <= 'b0;
+            r_hex7 <= 'b0;
         end
         else
         begin
             case (digit)
-                'b00000001: hex0 = hgfedcba;
-                'b00000010: hex1 = hgfedcba;
-                'b00000100: hex2 = hgfedcba;
-                'b00001000: hex3 = hgfedcba;
-                'b00010000: hex4 = hgfedcba;
-                'b00100000: hex5 = hgfedcba;
-                'b01000000: hex6 = hgfedcba;
-                'b10000000: hex7 = hgfedcba;
+                'b00000001: r_hex0 <= hgfedcba;
+                'b00000010: r_hex1 <= hgfedcba;
+                'b00000100: r_hex2 <= hgfedcba;
+                'b00001000: r_hex3 <= hgfedcba;
+                'b00010000: r_hex4 <= hgfedcba;
+                'b00100000: r_hex5 <= hgfedcba;
+                'b01000000: r_hex6 <= hgfedcba;
+                'b10000000: r_hex7 <= hgfedcba;
             endcase
         end
     end
+
+    // HEX combinational
+    wire [w_seg - 1:0] c_hex0,c_hex1,c_hex2,c_hex3,c_hex4,c_hex5,c_hex6,c_hex7;
+
+    assign c_hex0 = digit [0] ? hgfedcba : '0;
+    assign c_hex1 = digit [1] ? hgfedcba : '0;
+    assign c_hex2 = digit [2] ? hgfedcba : '0;
+    assign c_hex3 = digit [3] ? hgfedcba : '0;
+    assign c_hex4 = digit [4] ? hgfedcba : '0;
+    assign c_hex5 = digit [5] ? hgfedcba : '0;
+    assign c_hex6 = digit [6] ? hgfedcba : '0;
+    assign c_hex7 = digit [7] ? hgfedcba : '0;
+
+    // Select combinational or registered HEX (blink or not)
+    wire [w_seg - 1:0] hex0,hex1,hex2,hex3,hex4,hex5,hex6,hex7;
+
+    assign hex0 = static_hex ? r_hex0 : c_hex0;
+    assign hex1 = static_hex ? r_hex1 : c_hex1;
+    assign hex2 = static_hex ? r_hex2 : c_hex2;
+    assign hex3 = static_hex ? r_hex3 : c_hex3;
+    assign hex4 = static_hex ? r_hex4 : c_hex4;
+    assign hex5 = static_hex ? r_hex5 : c_hex5;
+    assign hex6 = static_hex ? r_hex6 : c_hex6;
+    assign hex7 = static_hex ? r_hex7 : c_hex7;
 
     // handles displaying 1-8 on a hex display
     task display_digit
