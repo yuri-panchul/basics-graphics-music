@@ -5,9 +5,7 @@ set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
 
-# For some reason this setting is necessary even for Cyclone IV.
-# It does not route the design without it on omdazz / rzrd.net board.
-
+# This is necessary to use PIN_101
 set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 
 set_location_assignment PIN_23   -to CLK
@@ -49,8 +47,8 @@ set_location_assignment PIN_119  -to DIGIT[5]
 set_location_assignment PIN_115  -to DIGIT[6]
 set_location_assignment PIN_114  -to DIGIT[7]
 
-set_location_assignment PIN_55   -to VGA_HSYNC
-set_location_assignment PIN_1    -to VGA_VSYNC
+set_location_assignment PIN_1    -to VGA_HSYNC
+set_location_assignment PIN_55   -to VGA_VSYNC
 set_location_assignment PIN_52   -to VGA_RGB[0]
 set_location_assignment PIN_53   -to VGA_RGB[1]
 set_location_assignment PIN_54   -to VGA_RGB[2]
