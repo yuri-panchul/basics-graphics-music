@@ -36,6 +36,7 @@ set_property -dict { PACKAGE_PIN T9    IOSTANDARD LVCMOS33 } [get_ports { LED[2]
 set_property -dict { PACKAGE_PIN T10   IOSTANDARD LVCMOS33 } [get_ports { LED[3] }]; #IO_L24N_T3_A00_D16_14 Sch=led[7]
 
 ## Buttons
+set_property -dict { PACKAGE_PIN C2    IOSTANDARD LVCMOS33 } [get_ports { RST }];  
 set_property -dict { PACKAGE_PIN D9    IOSTANDARD LVCMOS33 } [get_ports { BTN_0 }]; #IO_L6N_T0_VREF_16 Sch=btn[0]
 set_property -dict { PACKAGE_PIN C9    IOSTANDARD LVCMOS33 } [get_ports { BTN_1 }]; #IO_L11P_T1_SRCC_16 Sch=btn[1]
 set_property -dict { PACKAGE_PIN B9    IOSTANDARD LVCMOS33 } [get_ports { BTN_2 }]; #IO_L11N_T1_SRCC_16 Sch=btn[2]
