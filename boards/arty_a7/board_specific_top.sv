@@ -4,18 +4,18 @@ module board_specific_top
               w_key   = 4,
               w_sw    = 4,
               w_led   = 4,
-              w_digit = 8,
+              w_digit = 0,
               w_gpio  = 41
 )
 (
     input         CLK100MHZ,
     input         CPU_RESETN,
 
-    input         BTNC,
-    input         BTNU,
-    input         BTNL,
-    input         BTNR,
-    input         BTND,
+    input         BTN_0,
+    input         BTN_1,
+    input         BTN_2,
+    input         BTN_3,
+
 
     input  [w_sw-1:0] SW,
     output [w_led-1:0] LED,
@@ -28,19 +28,15 @@ module board_specific_top
     output        LED1_G,
     output        LED1_R,
 	
-	output        LED2_B,
+	  output        LED2_B,
     output        LED2_G,
     output        LED2_R,
 	
-	output        LED3_B,
+	  output        LED3_B,
     output        LED3_G,
     output        LED3_R,
 	
-	output        LED4_B,
-    output        LED4_G,
-    output        LED4_R,
-
-    output        CA,
+  /*output        CA,
     output        CB,
     output        CC,
     output        CD,
@@ -50,7 +46,7 @@ module board_specific_top
 
     output        DP,
 
-    output [ 7:0] AN,
+    output [ 7:0] AN,*/
 
   //output [ 3:0] VGA_R,
   //output [ 3:0] VGA_G,
@@ -64,7 +60,7 @@ module board_specific_top
     inout  [12:1] JA,
     inout  [12:1] JB,
     inout  [12:1] JC,
-    inout  [12:1] JD,
+    inout  [12:1] JD
 
   //output        M_CLK,
   //input         M_DATA,
@@ -84,12 +80,15 @@ module board_specific_top
     assign LED0_B = 1'b0;
     assign LED0_G = 1'b0;
     assign LED0_R = 1'b0;
+    
     assign LED1_B = 1'b0;
     assign LED1_G = 1'b0;
     assign LED1_R = 1'b0;
-	assign LED2_B = 1'b0;
+	  
+    assign LED2_B = 1'b0;
     assign LED2_G = 1'b0;
     assign LED2_R = 1'b0;
+    
     assign LED3_B = 1'b0;
     assign LED3_G = 1'b0;
     assign LED3_R = 1'b0;
@@ -120,12 +119,12 @@ module board_specific_top
         .clk      ( clk    ),
         .rst      ( rst    ),
 
-        .key      ( { BTNU, BTND, BTNL, BTNC, BTNR } ),
+        .key      ( { BTN_0, BTN_1, BTN_2, BTN_3 } ),
         .sw       ( SW     ),
 
-        .led      ( LED    ),
+        .led      ( LED    )
 
-        .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
+      /*  .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
 
         .digit    ( AN     ),
 
@@ -137,7 +136,7 @@ module board_specific_top
         .blue     ( VGA_B  ),
 
         .mic      ( mic    ),
-        .gpio     (        )
+        .gpio     (        )*/
     );
 
 endmodule
