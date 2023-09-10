@@ -136,6 +136,13 @@ module top
 
     //------------------------------------------------------------------------
 
+    `ifdef __ICARUS__
+
+    // The syntax below does not work with Icarus Verilog
+    wire mux8 = 1'bx;
+    
+    `else
+    
     wire [0:1][0:1][0:1] table8 =
     {
         1'b0, // a = 0, b = 0, sel = 0
@@ -148,14 +155,19 @@ module top
         1'b1  // a = 1, b = 1, sel = 1
     };
 
-    // wire [0:1][0:1] table8_a  = table8   [a];
-    // wire [0:1]      table8_ab = table8_a [b];
-    // wire mux8 = table8_ab [sel];
-
     wire mux8 = table8 [a][b][sel];
+
+    `endif
 
     //------------------------------------------------------------------------
 
+    `ifdef __ICARUS__
+
+    // The syntax below does not work with Icarus Verilog
+    wire mux9 = 1'bx;
+    
+    `else
+    
     wire [1:0][1:0][1:0] table9 =
     {
         1'b1, // a = 1, b = 1, sel = 1
@@ -168,15 +180,16 @@ module top
         1'b0  // a = 0, b = 0, sel = 0
     };
 
-    // wire [1:0][1:0] table9_a  = table9   [a];
-    // wire [1:0]      table9_ab = table9_a [b];
-    // wire mux9 = table9_ab [sel];
-
     wire mux9 = table9 [a][b][sel];
+    
+    `endif
 
     //------------------------------------------------------------------------
 
-    /*
+    `ifdef VCS
+
+    // The syntax below probably works only with Synopsys, Cadence and Mentor
+    
     wire [0:1][0:1][0:1] table10 =
     '{
         '{
@@ -190,18 +203,20 @@ module top
         }
     };
 
-    wire [0:1][0:1] table10_a  = table10   [a];
-    wire [0:1]      table10_ab = table10_a [b];
-
-    // wire mux10 = table10 [a][b][sel];
-    wire mux10 = table10_ab [sel];
-    */
+    wire mux10 = table10 [a][b][sel];
+    
+    `else
 
     wire mux10 = 1'b0;
 
+    `endif
+
     //------------------------------------------------------------------------
 
-    /*
+    `ifdef VCS
+
+    // The syntax below probably works only with Synopsys, Cadence and Mentor
+    
     logic table11 [0:1][0:1][0:1] =
     '{
         '{
@@ -215,14 +230,13 @@ module top
         }
     };
 
-    // wire [0:1][0:1] table11_a  = table11   [a];
-    // wire [0:1]      table11_ab = table11_a [b];
-    // wire mux11 = table11_ab [sel];
-
     wire mux11 = table11 [a][b][sel];
-    */
+    
+    `else
 
     wire mux11 = 1'b0;
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -236,9 +250,11 @@ module top
 
     // assign led = w_led' ({ mux3  , mux2  , mux1 , mux0 });
     // assign led = w_led' ({ mux6  , mux5  , mux4 , mux0 });
-       assign led = w_led' ({ mux9  , mux8  , mux7 , mux0 });
-    // assign led = w_led' ({ mux11 , mux10 , mux4 , mux0 });
-/*
+    // assign led = w_led' ({ mux9  , mux8  , mux7 , mux0 });
+       assign led = w_led' ({ mux11 , mux10 , mux4 , mux0 });
+
+    `ifdef VCS
+    
     initial
     begin
         # 1
@@ -275,5 +291,7 @@ module top
 
         $display;
     end
-*/
+    
+    `endif
+
 endmodule
