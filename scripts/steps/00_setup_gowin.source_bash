@@ -87,7 +87,7 @@ gowin_setup_ide ()
     #-------------------------------------------------------------------------
 
     find_command="$find_to_run $gowinfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    first_version_dir=$($find_command -quit)
+    first_version_dir=$($find_command | sort | tail -1)
 
     if [ -z "$first_version_dir" ]
     then
