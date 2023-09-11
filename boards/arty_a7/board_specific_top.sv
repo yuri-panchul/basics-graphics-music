@@ -28,13 +28,13 @@ module board_specific_top
     output        LED1_G,
     output        LED1_R,
 	
-	  output        LED2_B,
+	output        LED2_B,
     output        LED2_G,
     output        LED2_R,
 	
-	  output        LED3_B,
+	output        LED3_B,
     output        LED3_G,
-    output        LED3_R,
+    output        LED3_R
 	
   /*output        CA,
     output        CB,
@@ -57,10 +57,10 @@ module board_specific_top
 
   //input         UART_TXD_IN,
 
-    inout  [12:1] JA,
+   /* inout  [12:1] JA,
     inout  [12:1] JB,
     inout  [12:1] JC,
-    inout  [12:1] JD
+    inout  [12:1] JD*/
 
   //output        M_CLK,
   //input         M_DATA,
@@ -119,7 +119,7 @@ module board_specific_top
         .clk      ( clk    ),
         .rst      ( rst    ),
 
-        .key      ( { BTN_0, BTN_1, BTN_2, BTN_3 } ),
+        .key      ( { BTN_3, BTN_2, BTN_1, BTN_0 } ),
         .sw       ( SW     ),
 
         .led      ( LED    )
