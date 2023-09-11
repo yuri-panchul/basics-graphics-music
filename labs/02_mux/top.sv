@@ -97,8 +97,162 @@ module top
 
     //------------------------------------------------------------------------
 
-    // Use concatenation operation for 5 signals:
+    // Use table 1
 
-    assign led = w_led' ({ mux0, mux1, mux2, mux3, mux4 });
+    wire [0:7] table1 =
+    {
+        1'b0, // a = 0, b = 0, sel = 0 
+        1'b0, // a = 0, b = 0, sel = 1 
+        1'b1, // a = 0, b = 1, sel = 0 
+        1'b0, // a = 0, b = 1, sel = 1 
+        1'b0, // a = 1, b = 0, sel = 0 
+        1'b1, // a = 1, b = 0, sel = 1 
+        1'b1, // a = 1, b = 1, sel = 0 
+        1'b1  // a = 1, b = 1, sel = 1 
+    };
+    
+    wire mux5 = table1 [{ a, b, sel }];
+
+    //------------------------------------------------------------------------
+
+    // Use table 2
+
+    wire [7:0] table2 =
+    {
+        1'b1, // a = 1, b = 1, sel = 1 
+        1'b1, // a = 1, b = 1, sel = 0 
+        1'b1, // a = 1, b = 0, sel = 1 
+        1'b0, // a = 1, b = 0, sel = 0 
+        1'b0, // a = 0, b = 1, sel = 1 
+        1'b1, // a = 0, b = 1, sel = 0 
+        1'b0, // a = 0, b = 0, sel = 1 
+        1'b0  // a = 0, b = 0, sel = 0 
+    };
+    
+    wire mux6 = table2 [{ a, b, sel }];
+
+    //------------------------------------------------------------------------
+
+    // Use table 3
+
+    wire [0:1][0:1][0:1] table3 =
+    {
+        1'b0, // a = 0, b = 0, sel = 0 
+        1'b0, // a = 0, b = 0, sel = 1 
+        1'b1, // a = 0, b = 1, sel = 0 
+        1'b0, // a = 0, b = 1, sel = 1 
+        1'b0, // a = 1, b = 0, sel = 0 
+        1'b1, // a = 1, b = 0, sel = 1 
+        1'b1, // a = 1, b = 1, sel = 0 
+        1'b1  // a = 1, b = 1, sel = 1 
+    };
+    
+    wire mux7 = table3 [a][b][sel];
+
+    //------------------------------------------------------------------------
+
+    // Use table 4
+
+    wire [1:0][1:0][1:0] table4 =
+    {
+        1'b1, // a = 1, b = 1, sel = 1 
+        1'b1, // a = 1, b = 1, sel = 0 
+        1'b1, // a = 1, b = 0, sel = 1 
+        1'b0, // a = 1, b = 0, sel = 0 
+        1'b0, // a = 0, b = 1, sel = 1 
+        1'b1, // a = 0, b = 1, sel = 0 
+        1'b0, // a = 0, b = 0, sel = 1 
+        1'b0  // a = 0, b = 0, sel = 0 
+    };
+    
+    wire mux8 = table4 [a][b][sel];
+
+    //------------------------------------------------------------------------
+
+    // Use table 5
+
+    wire [0:1][0:1][0:1] table5 =
+    '{
+        '{
+            '{ 1'b0, 1'b0 },  // a = 0, b = 0, sel = 0/1
+            '{ 1'b1, 1'b0 }   // a = 0, b = 1, sel = 0/1
+        },
+        
+        '{
+            '{ 1'b1, 1'b0 },  // a = 1, b = 0, sel = 0/1
+            '{ 1'b1, 1'b1 }   // a = 1, b = 1, sel = 0/1
+        }
+    };
+    
+    wire mux9 = table5 [a][b][sel];
+
+    //------------------------------------------------------------------------
+
+    // Use table 6
+
+    wire table6 [0:1][0:1][0:1] =
+    '{
+        '{
+            '{ 1'b0, 1'b0 },  // a = 0, b = 0, sel = 0/1
+            '{ 1'b1, 1'b0 }   // a = 0, b = 1, sel = 0/1
+        },
+        
+        '{
+            '{ 1'b1, 1'b0 },  // a = 1, b = 0, sel = 0/1
+            '{ 1'b1, 1'b1 }   // a = 1, b = 1, sel = 0/1
+        }
+    };
+
+    wire mux10 = table6 [a][b][sel];
+
+    //------------------------------------------------------------------------
+
+    // Use concatenation operation for all signals:
+
+    // assign led = w_led' ({ mux10 , mux9 , mux8 ,
+    //                        mux7  , mux6 , mux5 , mux4,
+    //                        mux3  , mux2 , mux1 , mux0 });
+    
+    // Use concatenation operation for the boards with 4 LEDs:
+    
+    // assign led = w_led' ({ mux3  , mux2 , mux1 , mux0 });
+    // assign led = w_led' ({ mux6  , mux5 , mux4 , mux0 });
+       assign led = w_led' ({ mux9  , mux8 , mux7 , mux0 });
+    // assign led = w_led' ({ mux10 , mux4 , mux1 , mux0 });
+
+    /*
+    initial
+    begin
+        # 1
+        
+        for (int i = 0; i <= 1; i ++)
+        for (int j = 0; j <= 1; j ++)
+        for (int k = 0; k <= 1; k ++)
+            $write (" %b", table3 [i][j][k]);
+
+        $display;
+        
+        for (int i = 0; i <= 1; i ++)
+        for (int j = 0; j <= 1; j ++)
+        for (int k = 0; k <= 1; k ++)
+            $write (" %b", table4 [i][j][k]);
+
+        $display;
+        
+        for (int i = 0; i <= 1; i ++)
+        for (int j = 0; j <= 1; j ++)
+        for (int k = 0; k <= 1; k ++)
+            $write (" %b", table5 [i][j][k]);
+
+        $display;
+        
+        for (int i = 0; i <= 1; i ++)
+        for (int j = 0; j <= 1; j ++)
+        for (int k = 0; k <= 1; k ++)
+            $write (" %b", table6 [i][j][k]);
+
+        $display;
+    end
+    */
 
 endmodule
