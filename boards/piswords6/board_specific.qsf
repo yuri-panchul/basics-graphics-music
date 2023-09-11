@@ -5,12 +5,8 @@ set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
 
-# For some reason this setting is necessary even for Cyclone IV.
-# It does not route the design without it on omdazz / rzrd.net board.
-
+# This is necessary to use PIN_101
 set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
-
-
 
 set_location_assignment PIN_23   -to CLK
 
@@ -33,8 +29,6 @@ set_location_assignment PIN_42   -to LED[5]
 set_location_assignment PIN_39   -to LED[6]
 set_location_assignment PIN_38   -to LED[7]
 
-
-
 set_location_assignment PIN_80   -to ABCDEFGH[0]
 set_location_assignment PIN_72   -to ABCDEFGH[1]
 set_location_assignment PIN_71   -to ABCDEFGH[2]
@@ -53,21 +47,21 @@ set_location_assignment PIN_119  -to DIGIT[5]
 set_location_assignment PIN_115  -to DIGIT[6]
 set_location_assignment PIN_114  -to DIGIT[7]
 
-set_location_assignment PIN_55   -to VGA_HSYNC
-set_location_assignment PIN_1    -to VGA_VSYNC
+set_location_assignment PIN_1    -to VGA_HSYNC
+set_location_assignment PIN_55   -to VGA_VSYNC
 set_location_assignment PIN_52   -to VGA_RGB[0]
 set_location_assignment PIN_53   -to VGA_RGB[1]
 set_location_assignment PIN_54   -to VGA_RGB[2]
 
-#set_location_assignment PIN_2    -to BUZZER
+# set_location_assignment PIN_2    -to BUZZER
 
 # These EEPROM pins conflict with VGA and buzzer
 
-#set_location_assignment PIN_68   -to UART_TXD
-set_location_assignment PIN_69   -to UART_RXD
+# set_location_assignment PIN_68   -to UART_TXD
+  set_location_assignment PIN_69   -to UART_RXD
 
-#set_location_assignment PIN_1    -to SCL
-#set_location_assignment PIN_2    -to SDA
+# set_location_assignment PIN_1    -to SCL
+# set_location_assignment PIN_2    -to SDA
 
 set_location_assignment PIN_144  -to GPIO[0]
 set_location_assignment PIN_143  -to GPIO[1]
@@ -88,9 +82,9 @@ set_location_assignment PIN_124  -to GPIO[15]
 
 # These pins conflict with digit pins
 
-#set_location_assignment PIN_121 -to GPIO[16]
-#set_location_assignment PIN_120 -to GPIO[17]
-#set_location_assignment PIN_119 -to GPIO[18]
-#set_location_assignment PIN_115 -to GPIO[19]
-#set_location_assignment PIN_114 -to GPIO[20]
-#set_location_assignment PIN_113 -to GPIO[21]
+# set_location_assignment PIN_121  -to GPIO[16]
+# set_location_assignment PIN_120  -to GPIO[17]
+# set_location_assignment PIN_119  -to GPIO[18]
+# set_location_assignment PIN_115  -to GPIO[19]
+# set_location_assignment PIN_114  -to GPIO[20]
+# set_location_assignment PIN_113  -to GPIO[21]

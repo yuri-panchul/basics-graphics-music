@@ -1,7 +1,7 @@
 module board_specific_top
 # (
     parameter clk_mhz = 50,
-              w_key   = 3,
+              w_key   = 4,
               w_sw    = 4,
               w_led   = 8,
               w_digit = 8,
@@ -10,8 +10,8 @@ module board_specific_top
 (
     input                  CLK,
 
-
-    input  [w_key  +1 - 1:0] KEY,
+    input  [w_key   - 1:0] KEY,
+    input  [w_sw    - 1:0] SW,
     output [w_led   - 1:0] LED,
 
     output [          7:0] ABCDEFGH,
@@ -23,9 +23,18 @@ module board_specific_top
 
     input                  UART_RXD,
 
-
     inout  [w_gpio  - 1:0] GPIO
 );
+
+    //------------------------------------------------------------------------
+
+    wire clk = CLK;
+
+    localparam w_top_key = w_key - 1;  // One key is used as a reset
+
+    wire                  rst     = ~ key [w_key     - 1];
+    wire [w_top_sw - 1:0] top_key = ~ key [w_top_key - 1:0];
+
 
     //------------------------------------------------------------------------
 
@@ -41,55 +50,53 @@ module board_specific_top
 
     top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz ( clk_mhz   ),
+        .w_key   ( w_top_key ),
+        .w_sw    ( w_sw      ),
+        .w_led   ( w_led     ),
+        .w_digit ( w_digit   ),
+        .w_gpio  ( w_gpio    )
     )
     i_top
     (
-        .clk      (   CLK       ),
-        .rst      ( ~ KEY [3]     ),
+        .clk      ( clk       ),
+        .rst      ( rst       ),
 
-        .key      ( ~ KEY  [2:0]     ),
-        .sw       ( ~ KEY       ),
+        .key      ( top_key   ),
+        .sw       ( SW        ),
 
-        .led      (   led       ),
+        .led      ( led       ),
 
-        .abcdefgh (   abcdefgh  ),
-        .digit    (   digit     ),
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( digit     ),
 
-        .vsync    (   VGA_VSYNC ),
-        .hsync    (   VGA_HSYNC ),
+        .vsync    ( VGA_VSYNC ),
+        .hsync    ( VGA_HSYNC ),
 
-        .red      (   red       ),
-        .green    (   green     ),
-        .blue     (   blue      ),
+        .red      ( red       ),
+        .green    ( green     ),
+        .blue     ( blue      ),
 
-        .mic      (   mic       ),
+        .mic      ( mic       ),
 
-
-        .gpio ( GPIO )
+        .gpio     ( GPIO      )
 
     );
 
     //------------------------------------------------------------------------
 
-    assign LED   = ~ led;
+    assign LED      = ~ led;
 
-    assign ABCDEFGH   = ~ abcdefgh;
-    assign DIGIT   = ~ digit;
-
+    assign ABCDEFGH = ~ abcdefgh;
+    assign DIGIT    = ~ digit;
 
     assign VGA_RGB = { | red, | green, | blue};
 
-/*
+    /*
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK       ),
-        .rst   ( ~ RESET   ),
+        .clk   ( clk       ),
+        .rst   ( rst       ),
         .lr    ( LCD_D [1] ),
         .ws    ( LCD_D [2] ),
         .sck   ( LCD_D [3] ),
@@ -99,7 +106,6 @@ module board_specific_top
 
     assign LCD_D [4] = 1'b0;  // GND
     assign LCD_D [5] = 1'b1;  // VCC
-*/
-
+    */
 
 endmodule

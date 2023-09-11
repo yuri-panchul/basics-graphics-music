@@ -85,7 +85,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign SEG_DATA  = ~ abcdefgh;
+    assign SEG_DATA  =   abcdefgh;
     assign SEG_SEL   = ~ digit;
 
     assign VGA_OUT_R = {            red   [3], red   };
