@@ -453,3 +453,9 @@ configure_fpga_quartus ()
 
     rm cable_list
 }
+
+#-----------------------------------------------------------------------------
+
+run_fpga_synthesis_gui_quartus ()
+{
+}

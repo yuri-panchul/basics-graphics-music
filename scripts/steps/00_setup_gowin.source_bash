@@ -167,6 +167,7 @@ synthesize_for_fpga_gowin ()
 }
 
 #-----------------------------------------------------------------------------
+
 configure_fpga_gowin ()
 {
     if [ "$OSTYPE" = "msys" ] ||
@@ -177,6 +178,8 @@ configure_fpga_gowin ()
         configure_fpga_gowin_all
     fi
 }
+
+#-----------------------------------------------------------------------------
 
 configure_fpga_gowin_msys ()
 {
@@ -219,6 +222,8 @@ configure_fpga_gowin_msys ()
     $gowin_pr -d $fpga_board_for_programmer $flash_method --fsFile ${prj_parent_dir/\/[[:alpha:]]\//${prj_parent_dir:1:1}:\/}/impl/pnr/fpga_project.fs
 }
 
+#-----------------------------------------------------------------------------
+
 configure_fpga_gowin_all ()
 {
     is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
@@ -259,4 +264,10 @@ configure_fpga_gowin_all ()
     #-------------------------------------------------------------------------
 
     openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs
+}
+
+#-----------------------------------------------------------------------------
+
+run_fpga_synthesis_gui_gowin ()
+{
 }

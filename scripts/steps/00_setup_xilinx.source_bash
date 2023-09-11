@@ -188,3 +188,9 @@ configure_fpga_xilinx ()
         error "configuration failed"
     fi
 }
+
+#-----------------------------------------------------------------------------
+
+run_fpga_synthesis_gui_xilinx ()
+{
+}
