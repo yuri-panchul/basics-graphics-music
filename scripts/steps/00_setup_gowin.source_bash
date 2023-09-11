@@ -270,4 +270,5 @@ configure_fpga_gowin_all ()
 
 run_fpga_synthesis_gui_gowin ()
 {
+    echo
 }

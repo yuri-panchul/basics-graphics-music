@@ -451,11 +451,18 @@ configure_fpga_quartus ()
               "for $fpga_board FPGA board"
     fi
 
-    rm cable_list
+    rm -f cable_list
 }
 
 #-----------------------------------------------------------------------------
 
 run_fpga_synthesis_gui_quartus ()
 {
+    is_command_available_or_error quartus " from Intel FPGA Quartus Prime package"
+
+    if [ -f fpga_project.qpf ] ; then
+        quartus fpga_project.qpf &
+    else
+        quartus &
+    fi
 }

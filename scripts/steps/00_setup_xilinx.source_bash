@@ -193,4 +193,15 @@ configure_fpga_xilinx ()
 
 run_fpga_synthesis_gui_xilinx ()
 {
+    is_command_available_or_error vivado " from Xilinx package"
+
+    if   [    -f post_route.dcp ] ; then
+          vivado post_route.dcp &
+    elif [    -f post_place.dcp ] ; then
+          vivado post_place.dcp &
+    elif [    -f post_synth.dcp ] ; then
+          vivado post_synth.dcp &
+    else
+          vivado &
+    fi
 }
