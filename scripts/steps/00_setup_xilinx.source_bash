@@ -116,7 +116,7 @@ xilinx_setup_vivado ()
     #-------------------------------------------------------------------------
 
     find_command="$find_to_run $vivado_install_parent_dir/$vivado_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    first_version_dir=$($find_command -quit)
+    first_version_dir=$($find_command | sort | tail -1)
 
     if [ -z "$first_version_dir" ]
     then
@@ -186,5 +186,23 @@ configure_fpga_xilinx ()
     then
         grep -i -A 5 error "$log" 2>&1
         error "configuration failed"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+run_fpga_synthesis_gui_xilinx ()
+{
+    is_command_available_or_error vivado " from Xilinx package"
+
+    if   [    -f post_route.dcp ] ; then
+          vivado post_route.dcp &
+    elif [    -f post_place.dcp ] ; then
+          vivado post_place.dcp &
+    elif [    -f post_synth.dcp ] ; then
+          vivado post_synth.dcp &
+    else
+          setup_run_directory_for_fpga_synthesis
+          vivado &
     fi
 }

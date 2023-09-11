@@ -46,6 +46,8 @@ else
     cd $(dirname "$0")
     mkdir -p run
     cd run
+
+    inside_run_dir=1
 fi
 
 lab_name=$(basename "$(readlink -f ..)")
