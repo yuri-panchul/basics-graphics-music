@@ -460,10 +460,7 @@ run_fpga_synthesis_gui_quartus ()
 {
     is_command_available_or_error quartus " from Intel FPGA Quartus Prime package"
 
-    if [ -f fpga_project.qpf ] ; then
-        quartus fpga_project.qpf &
-    else
-        setup_run_directory_for_fpga_synthesis
-        quartus &
-    fi
+    [ -f fpga_project.qpf ] || setup_run_directory_for_fpga_synthesis
+
+    quartus fpga_project.qpf &
 }
