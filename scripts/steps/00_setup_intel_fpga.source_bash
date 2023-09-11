@@ -128,7 +128,7 @@ intel_fpga_setup_quartus ()
     #-------------------------------------------------------------------------
 
     find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    first_version_dir=$($find_command -quit)
+    first_version_dir=$($find_command | sort | tail -1)
 
     if [ -z "$first_version_dir" ]
     then
@@ -153,7 +153,6 @@ intel_fpga_setup_quartus ()
 
         info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
         info "PATH=$PATH"
-        info "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
     fi
 
     #-------------------------------------------------------------------------
