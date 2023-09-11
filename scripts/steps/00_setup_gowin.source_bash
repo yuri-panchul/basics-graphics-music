@@ -30,7 +30,9 @@ gowin_setup_ide ()
          is_command_available programmer_cli && ( [ "$OSTYPE" = "cygwin"    ] ||
                                                   [ "$OSTYPE" = "msys"      ] ) ) ; then
         gowin_sh="gw_sh"
+        gowin_ide="gw_ide"
         gowin_pr="programmer_cli"
+
         return  # Already set up
     fi
 
@@ -56,6 +58,8 @@ gowin_setup_ide ()
         fi
 
         gowin_sh="$gowin_ide_setup_dir/IDE/bin/gw_sh"
+        gowin_ide="$gowin_ide_setup_dir/IDE/bin/gw_ide"
+
         return
 
     elif  [ "$OSTYPE" = "cygwin"    ]  \
@@ -66,7 +70,9 @@ gowin_setup_ide ()
            && [ -d "$GOWIN_HOME/Programmer" ]
         then
             gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh"
+            gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide"
             gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli"
+
             return
         fi
 
@@ -100,6 +106,7 @@ gowin_setup_ide ()
     export GOWIN_HOME="$first_version_dir"
     export PATH="${PATH:+$PATH:}$GOWIN_HOME/IDE/bin:$GOWIN_HOME/Programmer/bin"
     gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh"
+    gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide"
     gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli"
 
     #-------------------------------------------------------------------------
@@ -270,5 +277,9 @@ configure_fpga_gowin_all ()
 
 run_fpga_synthesis_gui_gowin ()
 {
-    echo
+    is_command_available_or_error "$gowin_ide" " from GoWin IDE package"
+
+    # TODO: Is it possible to load the project after a preceding synthesis run?
+
+    "$gowin_ide"
 }
