@@ -1,5 +1,7 @@
 include Makefile
 
+DOCKER_OPTIONS +=--privileged
+
 ifeq ($(LAYOUT_VIEWER),)
   LAYOUT_VIEWER_OPTION =
 else ifeq ($(LAYOUT_VIEWER),openroad)
