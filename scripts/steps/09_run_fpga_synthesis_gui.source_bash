@@ -1,0 +1,10 @@
+. "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source_bash"
+
+setup_run_directory_for_fpga_synthesis
+
+case $fpga_toolchain in
+    quartus ) run_fpga_synthesis_gui_quartus ;;
+    gowin   ) run_fpga_synthesis_gui_gowin   ;;
+    xilinx  ) run_fpga_synthesis_gui_xilinx  ;;
+    *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain" ;;
+esac

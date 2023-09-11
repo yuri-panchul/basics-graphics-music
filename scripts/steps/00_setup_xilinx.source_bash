@@ -202,6 +202,7 @@ run_fpga_synthesis_gui_xilinx ()
     elif [    -f post_synth.dcp ] ; then
           vivado post_synth.dcp &
     else
+          setup_run_directory_for_fpga_synthesis
           vivado &
     fi
 }
