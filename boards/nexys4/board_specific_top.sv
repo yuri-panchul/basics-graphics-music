@@ -8,79 +8,71 @@ module board_specific_top
               w_gpio  = 32
 )
 (
-    input         CLK100MHZ,
-    input         CPU_RESETN,
+    input         clk,
+    input         btnCpuReset,
 
-    input         BTNC,
-    input         BTNU,
-    input         BTNL,
-    input         BTNR,
-    input         BTND,
+    input         btnC,
+    input         btnU,
+    input         btnL,
+    input         btnR,
+    input         btnD,
 
-    input  [15:0] SW,
-    output [15:0] LED,
+    input  [15:0] sw,
+    output [15:0] led,
 
-    output        LED16_B,
-    output        LED16_G,
-    output        LED16_R,
+    input         RGB1_Red,
+    input         RGB1_Green,
+    input         RGB1_Blue,
 
-    output        LED17_B,
-    output        LED17_G,
-    output        LED17_R,
+    input         RGB2_Red,
+    input         RGB2_Green,
+    input         RGB2_Blue,
 
-    output        CA,
-    output        CB,
-    output        CC,
-    output        CD,
-    output        CE,
-    output        CF,
-    output        CG,
+    output [ 6:0] seg,
+    output        dp,
+    output [ 7:0] an,
 
-    output        DP,
+    output        Hsync,
+    output        Vsync,
 
-    output [ 7:0] AN,
+    output [ 3:0] vgaRed,
+    output [ 3:0] vgaBlue,
+    output [ 3:0] vgaGreen,
 
-    output [ 3:0] VGA_R,
-    output [ 3:0] VGA_G,
-    output [ 3:0] VGA_B,
+    input         RsRx,
 
-    output        VGA_HS,
-    output        VGA_VS,
+    inout  [ 7:0] JA,
+    inout  [ 7:0] JB,
+    inout  [ 7:0] JC,
+    inout  [ 7:0] JD,
 
-    input         UART_TXD_IN,
+    output        micClk,
+    input         micData,
+    output        micLRSel,
 
-    inout  [12:1] JA,
-    inout  [12:1] JB,
-    inout  [12:1] JC,
-    inout  [12:1] JD,
-
-    output        M_CLK,
-    input         M_DATA,
-    output        M_LRSEL,
-
-    output        AUD_PWM,
-    output        AUD_SD
+    output        ampPWM,
+    output        ampSD
 );
 
     //------------------------------------------------------------------------
 
-    wire clk =   CLK100MHZ;
-    wire rst = ~ CPU_RESETN;
+    wire rst = ~ btnCpuReset;
 
     //------------------------------------------------------------------------
 
-    assign LED16_B = 1'b0;
-    assign LED16_G = 1'b0;
-    assign LED16_R = 1'b0;
-    assign LED17_B = 1'b0;
-    assign LED17_G = 1'b0;
-    assign LED17_R = 1'b0;
+    assign RGB1_Red   = 1'b0;
+    assign RGB1_Green = 1'b0;
+    assign RGB1_Blue  = 1'b0;
 
-    assign M_CLK   = 1'b0;
-    assign M_LRSEL = 1'b0;
+    assign RGB2_Red   = 1'b0;
+    assign RGB2_Green = 1'b0;
+    assign RGB2_Blue  = 1'b0;
 
-    assign AUD_PWM = 1'b0;
-    assign AUD_SD  = 1'b0;
+    assign micClk     = 1'b0;
+    assign micLRSel   = 1'b0;
+
+    assign ampPWM     = 1'b0;
+    assign ampSD      = 1'b0;
 
     //------------------------------------------------------------------------
 
@@ -99,27 +91,27 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( clk    ),
-        .rst      ( rst    ),
+        .clk      ( clk         ),
+        .rst      ( rst         ),
 
-        .key      ( { BTNU, BTND, BTNL, BTNC, BTNR } ),
-        .sw       ( SW     ),
+        .key      ( { btnU, btnD, btnL, btnC, btnR } ),
+        .sw       ( sw          ),
 
-        .led      ( LED    ),
+        .led      ( led         ),
 
-        .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
+        .abcdefgh ( { seg, dp } ),
 
-        .digit    ( AN     ),
+        .digit    ( an          ),
 
-        .vsync    ( VGA_VS ),
-        .hsync    ( VGA_HS ),
+        .vsync    ( Vsync       ),
+        .hsync    ( Hsync       ),
 
-        .red      ( VGA_R  ),
-        .green    ( VGA_G  ),
-        .blue     ( VGA_B  ),
+        .red      ( vgaRed      ),
+        .green    ( vgaBlue     ),
+        .blue     ( vgaGreen    ),
 
-        .mic      ( mic    ),
-        .gpio     (        )
+        .mic      ( mic         ),
+        .gpio     (             )
     );
 
 endmodule
