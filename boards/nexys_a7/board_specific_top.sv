@@ -84,6 +84,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire [ 7:0] abcdefgh;
+    wire [ 7:0] digit;
+
+    assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
+    assign AN = ~ digit;
+
     wire [23:0] mic = '0;
 
     //------------------------------------------------------------------------
@@ -99,27 +105,27 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( clk    ),
-        .rst      ( rst    ),
+        .clk      ( clk      ),
+        .rst      ( rst      ),
 
         .key      ( { BTNU, BTND, BTNL, BTNC, BTNR } ),
-        .sw       ( SW     ),
+        .sw       ( SW       ),
 
-        .led      ( LED    ),
+        .led      ( LED      ),
 
-        .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
+        .abcdefgh ( abcdefgh ),
 
-        .digit    ( AN     ),
+        .digit    ( digit    ),
 
-        .vsync    ( VGA_VS ),
-        .hsync    ( VGA_HS ),
+        .vsync    ( VGA_VS   ),
+        .hsync    ( VGA_HS   ),
 
-        .red      ( VGA_R  ),
-        .green    ( VGA_G  ),
-        .blue     ( VGA_B  ),
+        .red      ( VGA_R    ),
+        .green    ( VGA_G    ),
+        .blue     ( VGA_B    ),
 
-        .mic      ( mic    ),
-        .gpio     (        )
+        .mic      ( mic      ),
+        .gpio     (          )
     );
 
 endmodule

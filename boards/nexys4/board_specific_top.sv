@@ -76,6 +76,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire [ 7:0] abcdefgh;
+    wire [ 7:0] digit;
+
+    assign { seg, dp } = ~ abcdefgh;
+    assign an          = ~ digit;
+
     wire [23:0] mic = '0;
 
     //------------------------------------------------------------------------
@@ -99,9 +105,9 @@ module board_specific_top
 
         .led      ( led         ),
 
-        .abcdefgh ( { seg, dp } ),
+        .abcdefgh ( abcdefgh    ),
 
-        .digit    ( an          ),
+        .digit    ( digit       ),
 
         .vsync    ( Vsync       ),
         .hsync    ( Hsync       ),
