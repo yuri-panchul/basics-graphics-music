@@ -8,7 +8,13 @@ if {! [info exists part_name]} {
 }
 
 read_verilog -sv [glob ../../common/*.sv]
-read_verilog -sv [glob ../top.sv]
+
+foreach file [glob "../*.sv"] {
+    if {$file ne "../tb.sv"} {
+        read_verilog -sv $file
+    }
+}
+
 read_verilog -sv [glob "../../../boards/$fpga_board/*.sv"]
 
 read_xdc "../../../boards/$fpga_board/board_specific.xdc"

@@ -20,13 +20,13 @@ module board_specific_top
     input  [15:0] sw,
     output [15:0] led,
 
-    input         RGB1_Red,
-    input         RGB1_Green,
-    input         RGB1_Blue,
+    output        RGB1_Red,
+    output        RGB1_Green,
+    output        RGB1_Blue,
 
-    input         RGB2_Red,
-    input         RGB2_Green,
-    input         RGB2_Blue,
+    output        RGB2_Red,
+    output        RGB2_Green,
+    output        RGB2_Blue,
 
     output [ 6:0] seg,
     output        dp,

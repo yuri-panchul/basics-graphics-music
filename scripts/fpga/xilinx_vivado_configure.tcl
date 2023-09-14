@@ -3,7 +3,7 @@ if {! [info exists hw_device]} {
     error "The variable 'hw_device' is expected to be set"
 }
 
-open_hw
+open_hw_manager
 connect_hw_server
 open_hw_target
 set_property PROGRAM.FILE fpga_project.bit [get_hw_devices $hw_device]
