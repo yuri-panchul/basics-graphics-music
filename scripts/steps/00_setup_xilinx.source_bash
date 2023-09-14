@@ -116,9 +116,9 @@ xilinx_setup_vivado ()
     #-------------------------------------------------------------------------
 
     find_command="$find_to_run $vivado_install_parent_dir/$vivado_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    first_version_dir=$($find_command | sort | tail -1)
+    latest_version_dir=$($find_command | sort | tail -1)
 
-    if [ -z "$first_version_dir" ]
+    if [ -z "$latest_version_dir" ]
     then
         error "cannot find any version of Intel FPGA installed in "  \
               "'$vivado_install_parent_dir/$vivado_install_dir'"
@@ -126,14 +126,14 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    export XILINX_VIVADO="$first_version_dir"
+    export XILINX_VIVADO="$latest_version_dir"
     export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
 
     #-------------------------------------------------------------------------
 
     all_version_dirs=$($find_command | xargs echo)
 
-    if [ "$first_version_dir" != "$all_version_dirs" ]
+    if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
         warning 1 "multiple Intel FPGA versions installed in"  \
                 "'$vivado_install_parent_dir/$vivado_install_dir':"  \
