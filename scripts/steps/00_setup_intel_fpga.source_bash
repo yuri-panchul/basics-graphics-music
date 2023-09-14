@@ -44,8 +44,6 @@ intel_fpga_setup_quartus ()
         intelfpga_install_dir=intelFPGA_lite
     fi
 
-    quartus_dir=quartus
-
     #-------------------------------------------------------------------------
 
     if    [ -n "${INTEL_FPGA_HOME-}" ]  \
@@ -138,7 +136,7 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
-    export QUARTUS_ROOTDIR="$first_version_dir/$quartus_dir"
+    export QUARTUS_ROOTDIR="$first_version_dir/quartus"
     export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
 
     #-------------------------------------------------------------------------
