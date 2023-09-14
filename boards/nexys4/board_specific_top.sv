@@ -100,7 +100,7 @@ module board_specific_top
         .clk      ( clk         ),
         .rst      ( rst         ),
 
-        .key      ( { btnU, btnD, btnL, btnC, btnR } ),
+        .key      ( { btnD, btnU, btnL, btnC, btnR } ),
         .sw       ( sw          ),
 
         .led      ( led         ),

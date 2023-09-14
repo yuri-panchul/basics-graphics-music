@@ -108,7 +108,7 @@ module board_specific_top
         .clk      ( clk      ),
         .rst      ( rst      ),
 
-        .key      ( { BTNU, BTND, BTNL, BTNC, BTNR } ),
+        .key      ( { BTND, BTNU, BTNL, BTNC, BTNR } ),
         .sw       ( SW       ),
 
         .led      ( LED      ),
