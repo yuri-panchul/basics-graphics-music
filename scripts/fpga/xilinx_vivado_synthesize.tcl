@@ -7,6 +7,8 @@ if {! [info exists part_name]} {
     error "The variable 'part_name' is expected to be set"
 }
 
+set extra_dot_dot ""
+
 if {[file isdirectory ../../../../labs]} {
     set extra_dot_dot ../
 }
