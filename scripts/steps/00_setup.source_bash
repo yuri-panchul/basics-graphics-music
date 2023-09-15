@@ -281,7 +281,6 @@ update_fpga_toolchain_var ()
         nexys_a7             | \
         zybo_z7              )
 
-
             fpga_toolchain=xilinx
         ;;
 
