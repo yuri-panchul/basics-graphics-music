@@ -34,7 +34,7 @@ xilinx_setup_vivado ()
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    vivado_install_dir=Vivado/
+    vivado_install_dir=Xilinx/Vivado
 
     #-------------------------------------------------------------------------
 
