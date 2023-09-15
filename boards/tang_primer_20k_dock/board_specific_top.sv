@@ -153,4 +153,17 @@ module board_specific_top
         .sio_data ( GPIO_0[1] )
     );
 
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO_1 [1] ),
+        .ws    ( GPIO_1 [2] ),
+        .sck   ( GPIO_1 [3] ),
+        .sd    ( GPIO_1 [0] ),
+        .value ( mic      )
+    );
+
 endmodule
