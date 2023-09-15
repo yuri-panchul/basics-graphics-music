@@ -28,13 +28,13 @@ module board_specific_top
     output        LED1_G,
     output        LED1_R,
 	
-	output        LED2_B,
+	 output        LED2_B,
     output        LED2_G,
     output        LED2_R,
 	
-	output        LED3_B,
+	 output        LED3_B,
     output        LED3_G,
-    output        LED3_R
+    output        LED3_R,
 	
   /*output        CA,
     output        CB,
@@ -48,19 +48,19 @@ module board_specific_top
 
     output [ 7:0] AN,*/
 
-  //output [ 3:0] VGA_R,
-  //output [ 3:0] VGA_G,
-  //output [ 3:0] VGA_B,
+  output [ 3:0] VGA_R,
+  output [ 3:0] VGA_G,
+  output [ 3:0] VGA_B,
 
-  //output        VGA_HS,
-  //output        VGA_VS,
+  output        VGA_HS,
+  output        VGA_VS
 
   //input         UART_TXD_IN,
 
-   /* inout  [12:1] JA,
-    inout  [12:1] JB,
-    inout  [12:1] JC,
-    inout  [12:1] JD*/
+    //inout  [12:1] JA,
+   // inout  [12:1] JB,
+   // inout  [12:1] JC
+   //inout  [12:1] JD
 
   //output        M_CLK,
   //input         M_DATA,
@@ -122,21 +122,21 @@ module board_specific_top
         .key      ( { BTN_3, BTN_2, BTN_1, BTN_0 } ),
         .sw       ( SW     ),
 
-        .led      ( LED    )
+        .led      ( LED    ),
 
-      /*  .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
+      //  .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
 
-        .digit    ( AN     ),
+      //  .digit    ( AN     ),
 
         .vsync    ( VGA_VS ),
         .hsync    ( VGA_HS ),
 
         .red      ( VGA_R  ),
         .green    ( VGA_G  ),
-        .blue     ( VGA_B  ),
+        .blue     ( VGA_B  )
 
-        .mic      ( mic    ),
-        .gpio     (        )*/
+      //  .mic      ( mic    ),
+       // .gpio     (        )
     );
 
 endmodule
