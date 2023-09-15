@@ -1,0 +1,248 @@
+set_global_assignment -name DEVICE EP4CE15F23C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+
+
+#added:
+set_location_assignment PIN_T2  -to CLK
+set_location_assignment PIN_J4 -to RST_N
+
+
+#set_location_assignment PIN_K5 -to KEY2
+
+
+# mapped to reset
+# set_location_assignment PIN_W13 -to KEY3
+
+set_location_assignment PIN_E3  -to LED[0]
+
+
+  set_location_assignment PIN_Y21  -to UART_RX
+# set_location_assignment PIN_Y22  -to UART_TX
+
+
+
+set_location_assignment PIN_W19 -to SEG_DATA[7]
+set_location_assignment PIN_U19 -to SEG_DATA[6]
+set_location_assignment PIN_W17 -to SEG_DATA[5]
+set_location_assignment PIN_W15 -to SEG_DATA[4]
+set_location_assignment PIN_Y17 -to SEG_DATA[3]
+set_location_assignment PIN_W20 -to SEG_DATA[2]
+set_location_assignment PIN_U20 -to SEG_DATA[1]
+set_location_assignment PIN_V15 -to SEG_DATA[0]
+
+set_location_assignment PIN_Y13 -to SEG_SEL[2]
+set_location_assignment PIN_W13 -to SEG_SEL[1]
+set_location_assignment PIN_V13 -to SEG_SEL[0]
+
+
+
+
+# set_location_assignment PIN_AA15 -to SD_DCLK
+# set_location_assignment PIN_AB15 -to SD_MISO
+# set_location_assignment PIN_AB14 -to SD_MOSI
+# set_location_assignment PIN_AA16 -to SD_NCS
+
+
+
+
+set_location_assignment PIN_AB19 -to VGA_OUT_R[4]
+set_location_assignment PIN_AA19 -to VGA_OUT_R[3]
+set_location_assignment PIN_AB20 -to VGA_OUT_R[2]
+set_location_assignment PIN_AA20 -to VGA_OUT_R[1]
+set_location_assignment PIN_AA21 -to VGA_OUT_R[0]
+
+
+set_location_assignment PIN_AB16 -to VGA_OUT_G[5]
+set_location_assignment PIN_AA16 -to VGA_OUT_G[4]
+set_location_assignment PIN_AB17 -to VGA_OUT_G[3]
+set_location_assignment PIN_AA17 -to VGA_OUT_G[2]
+set_location_assignment PIN_AA18 -to VGA_OUT_G[1]
+set_location_assignment PIN_AB18 -to VGA_OUT_G[0]
+
+set_location_assignment PIN_AA14 -to VGA_OUT_B[4]
+set_location_assignment PIN_AB13 -to VGA_OUT_B[3]
+set_location_assignment PIN_AA15 -to VGA_OUT_B[2]
+set_location_assignment PIN_AB14 -to VGA_OUT_B[1]
+set_location_assignment PIN_AB15 -to VGA_OUT_B[0]
+
+set_location_assignment PIN_AA13 -to VGA_OUT_HS
+set_location_assignment PIN_AB10 -to VGA_OUT_VS
+
+
+
+
+
+###############
+
+
+
+
+# does not exist:
+
+
+#set_location_assignment PIN_E16 -to KEY4
+
+#set_location_assignment PIN_E10 -to LED[3]
+#set_location_assignment PIN_F9  -to LED[2]
+#set_location_assignment PIN_C9  -to LED[1]
+
+
+
+#set_location_assignment PIN_P11 -to SEG_SEL[3]
+#set_location_assignment PIN_N11 -to SEG_SEL[4]
+#set_location_assignment PIN_M10 -to SEG_SEL[5]
+#set_location_assignment PIN_P9  -to SEG_SEL[6]
+#set_location_assignment PIN_N9  -to SEG_SEL[7]
+
+#####################
+
+
+
+
+
+# set_location_assignment PIN_C11 -to BUZZER
+
+#set_location_assignment PIN_J16  -to GPIO[0]
+#set_location_assignment PIN_B1   -to GPIO[1]
+#set_location_assignment PIN_A2   -to GPIO[2]
+#set_location_assignment PIN_B3   -to GPIO[3]
+#set_location_assignment PIN_A3   -to GPIO[4]
+#set_location_assignment PIN_B4   -to GPIO[5]
+#set_location_assignment PIN_A4   -to GPIO[6]
+#set_location_assignment PIN_B5   -to GPIO[7]
+#set_location_assignment PIN_A5   -to GPIO[8]
+#set_location_assignment PIN_B5   -to GPIO[9]
+#set_location_assignment PIN_A6   -to GPIO[11]
+#set_location_assignment PIN_B7   -to GPIO[12]
+#set_location_assignment PIN_A7   -to GPIO[13]
+#set_location_assignment PIN_B8   -to GPIO[14]
+#set_location_assignment PIN_A8   -to GPIO[14]
+#set_location_assignment PIN_B9   -to GPIO[15]
+#set_location_assignment PIN_A9   -to GPIO[16]
+#set_location_assignment PIN_B10  -to GPIO[17]
+#set_location_assignment PIN_A10  -to GPIO[18]
+#set_location_assignment PIN_B11  -to GPIO[19]
+#set_location_assignment PIN_A11  -to GPIO[20]
+#set_location_assignment PIN_B12  -to GPIO[21]
+#set_location_assignment PIN_A12  -to GPIO[22]
+#set_location_assignment PIN_B13  -to GPIO[23]
+#set_location_assignment PIN_A13  -to GPIO[24]
+#set_location_assignment PIN_D5   -to GPIO[25]
+#set_location_assignment PIN_D6   -to GPIO[26]
+#set_location_assignment PIN_C6   -to GPIO[27]
+#set_location_assignment PIN_E7   -to GPIO[28]
+#set_location_assignment PIN_F8   -to GPIO[29]
+#set_location_assignment PIN_C8   -to GPIO[30]
+#set_location_assignment PIN_D8   -to GPIO[31]
+#set_location_assignment PIN_E8   -to GPIO[32]
+#set_location_assignment PIN_E9   -to GPIO[33]
+
+#set_location_assignment PIN_P1   -to GPIO[34]
+#set_location_assignment PIN_N2   -to GPIO[35]
+#set_location_assignment PIN_R1   -to GPIO[36]
+#set_location_assignment PIN_P2   -to GPIO[37]
+#set_location_assignment PIN_K9   -to GPIO[38]
+#set_location_assignment PIN_P8   -to GPIO[39]
+#set_location_assignment PIN_L10  -to GPIO[40]
+#set_location_assignment PIN_L9   -to GPIO[41]
+#set_location_assignment PIN_T2   -to GPIO[42]
+#set_location_assignment PIN_M9   -to GPIO[43]
+#set_location_assignment PIN_T3   -to GPIO[44]
+#set_location_assignment PIN_P3   -to GPIO[45]
+#set_location_assignment PIN_T4   -to GPIO[46]
+#set_location_assignment PIN_R3   -to GPIO[47]
+#set_location_assignment PIN_T5   -to GPIO[48]
+#set_location_assignment PIN_R4   -to GPIO[49]
+#set_location_assignment PIN_T6   -to GPIO[50]
+#set_location_assignment PIN_R5   -to GPIO[51]
+#set_location_assignment PIN_T7   -to GPIO[52]
+#set_location_assignment PIN_R6   -to GPIO[53]
+#set_location_assignment PIN_T8   -to GPIO[54]
+#set_location_assignment PIN_R7   -to GPIO[55]
+#set_location_assignment PIN_T9   -to GPIO[56]
+#set_location_assignment PIN_R8   -to GPIO[57]
+#set_location_assignment PIN_T10  -to GPIO[58]
+#set_location_assignment PIN_R9   -to GPIO[59]
+#set_location_assignment PIN_T11  -to GPIO[60]
+#set_location_assignment PIN_R10  -to GPIO[61]
+#set_location_assignment PIN_T12  -to GPIO[62]
+#set_location_assignment PIN_R11  -to GPIO[63]
+#set_location_assignment PIN_T13  -to GPIO[64]
+#set_location_assignment PIN_R12  -to GPIO[65]
+#set_location_assignment PIN_T14  -to GPIO[66]
+#set_location_assignment PIN_R13  -to GPIO[67]
+
+# Real time clock
+
+# set_location_assignment PIN_P6  -to RTC_SCLK
+# set_location_assignment PIN_M8  -to RTC_DATA
+# set_location_assignment PIN_N8  -to RTC_CE
+
+# These I2C pins conflict with SEG_SEL[7] and SEG_SEL[6]
+
+# set_location_assignment PIN_D1  -to I2C_SCL
+# set_location_assignment PIN_E6  -to I2C_SDA
+
+# Camera
+
+# set_location_assignment PIN_N6  -to CMOS_RST_N
+# set_location_assignment PIN_M7  -to CMOS_PWDN
+# set_location_assignment PIN_J2  -to CMOS_DB[7]
+# set_location_assignment PIN_J1  -to CMOS_DB[6]
+# set_location_assignment PIN_N5  -to CMOS_DB[5]
+# set_location_assignment PIN_L1  -to CMOS_DB[4]
+# set_location_assignment PIN_M1  -to CMOS_DB[3]
+# set_location_assignment PIN_G2  -to CMOS_DB[2]
+# set_location_assignment PIN_M6  -to CMOS_DB[1]
+# set_location_assignment PIN_L2  -to CMOS_DB[0]
+# set_location_assignment PIN_G1  -to CMOS_PCLK
+# set_location_assignment PIN_F1  -to CMOS_SCL
+# set_location_assignment PIN_F3  -to CMOS_SDA
+# set_location_assignment PIN_F2  -to CMOS_VSYNC
+# set_location_assignment PIN_K2  -to CMOS_XCLK
+# set_location_assignment PIN_K1  -to CMOS_HREF
+
+
+# set_location_assignment PIN_F15 -to SDRAM_ADDR[12]
+# set_location_assignment PIN_D16 -to SDRAM_ADDR[11]
+# set_location_assignment PIN_F14 -to SDRAM_ADDR[10]
+# set_location_assignment PIN_D15 -to SDRAM_ADDR[9]
+# set_location_assignment PIN_C16 -to SDRAM_ADDR[8]
+# set_location_assignment PIN_C15 -to SDRAM_ADDR[7]
+# set_location_assignment PIN_B16 -to SDRAM_ADDR[6]
+# set_location_assignment PIN_A15 -to SDRAM_ADDR[5]
+# set_location_assignment PIN_A14 -to SDRAM_ADDR[4]
+# set_location_assignment PIN_C14 -to SDRAM_ADDR[3]
+# set_location_assignment PIN_D14 -to SDRAM_ADDR[2]
+# set_location_assignment PIN_E11 -to SDRAM_ADDR[1]
+# set_location_assignment PIN_F11 -to SDRAM_ADDR[0]
+# set_location_assignment PIN_F13 -to SDRAM_BA[1]
+# set_location_assignment PIN_G11 -to SDRAM_BA[0]
+# set_location_assignment PIN_J12 -to SDRAM_CAS_N
+# set_location_assignment PIN_F16 -to SDRAM_CKE
+# set_location_assignment PIN_B14 -to SDRAM_CLK
+# set_location_assignment PIN_K10 -to SDRAM_CS_N
+# set_location_assignment PIN_L15 -to SDRAM_DQ[15]
+# set_location_assignment PIN_L16 -to SDRAM_DQ[14]
+# set_location_assignment PIN_K15 -to SDRAM_DQ[13]
+# set_location_assignment PIN_K16 -to SDRAM_DQ[12]
+# set_location_assignment PIN_J15 -to SDRAM_DQ[11]
+# set_location_assignment PIN_J16 -to SDRAM_DQ[10]
+# set_location_assignment PIN_J11 -to SDRAM_DQ[9]
+# set_location_assignment PIN_G16 -to SDRAM_DQ[8]
+# set_location_assignment PIN_K12 -to SDRAM_DQ[7]
+# set_location_assignment PIN_L11 -to SDRAM_DQ[6]
+# set_location_assignment PIN_L14 -to SDRAM_DQ[5]
+# set_location_assignment PIN_L13 -to SDRAM_DQ[4]
+# set_location_assignment PIN_L12 -to SDRAM_DQ[3]
+# set_location_assignment PIN_N14 -to SDRAM_DQ[2]
+# set_location_assignment PIN_M12 -to SDRAM_DQ[1]
+# set_location_assignment PIN_P14 -to SDRAM_DQ[0]
+# set_location_assignment PIN_G15 -to SDRAM_DQM[1]
+# set_location_assignment PIN_J14 -to SDRAM_DQM[0]
+# set_location_assignment PIN_K11 -to SDRAM_RAS_N
+# set_location_assignment PIN_J13 -to SDRAM_WE_N
