@@ -143,10 +143,25 @@ module board_specific_top
         .digit    ( tm_digit  ),
         .ledr     ( tm_led    ),
         .keys     ( tm_key    ),
-        .sio_clk  ( GPIO[0]   ),
-        .sio_stb  ( GPIO[1]   ),
-        .sio_data ( GPIO[2]   )
+        .sio_clk  ( GPIO [0]  ),
+        .sio_stb  ( GPIO [1]  ),
+        .sio_data ( GPIO [2]  )
     );
 
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [4] ),
+        .sck   ( GPIO [3] ),
+        .sd    ( GPIO [6] ),
+        .value ( mic      )
+    );
+
+    assign GPIO [8] = 1'b0;  // GND
+    assign GPIO [7] = 1'b1;  // VCC
 
 endmodule
