@@ -395,13 +395,13 @@ module tm1638_board_controller
                     3:  {tm_latch, tm_rw}  <= {HIGH, LOW};
 
                     //  read back keys S1 - S8
-                    4:  {keys[0], keys[4]} <= {tm_out[0], tm_out[4]};
+                    4:  {keys[7], keys[3]} <= {tm_out[0], tm_out[4]};
                     5:  {tm_latch}         <= {HIGH};
-                    6:  {keys[1], keys[5]} <= {tm_out[0], tm_out[4]};
+                    6:  {keys[6], keys[2]} <= {tm_out[0], tm_out[4]};
                     7:  {tm_latch}         <= {HIGH};
-                    8:  {keys[2], keys[6]} <= {tm_out[0], tm_out[4]};
+                    8:  {keys[5], keys[1]} <= {tm_out[0], tm_out[4]};
                     9:  {tm_latch}         <= {HIGH};
-                    10: {keys[3], keys[7]} <= {tm_out[0], tm_out[4]};
+                    10: {keys[4], keys[0]} <= {tm_out[0], tm_out[4]};
                     11: {sio_stb}            <= {HIGH};
 
                     // *** DISPLAY ***
