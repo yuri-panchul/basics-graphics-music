@@ -67,10 +67,10 @@ module board_specific_top
 
     wire                      VGA_HS;
     wire                      VGA_VS;
-    
+
     wire  [              3:0] VGA_R;
     wire  [              3:0] VGA_G;
-    wire  [              3:0] VGA_B; 
+    wire  [              3:0] VGA_B;
 
     //------------------------------------------------------------------------
 
