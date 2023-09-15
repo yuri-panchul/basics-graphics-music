@@ -61,10 +61,27 @@ module top
     slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
     i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
 
-    // "global" is Intel FPGA-specific primitive to route
-    // a signal coming from data into clock tree
+    `ifdef ALTERA_RESERVED_QIS
 
-    global i_global (.in (slow_clk_raw), .out (slow_clk));
+        // "global" is Intel FPGA-specific primitive to route
+        // a signal coming from data into clock tree
+
+        global i_global (.in (slow_clk_raw), .out (slow_clk));
+
+    `elsif XILINX_VIVADO
+
+        // "BUFG" is Xilinx-specific primitive to route
+        // a signal coming from data into clock tree
+
+        BUFG   i_BUFG   (.I  (slow_clk_raw), .O   (slow_clk));
+
+    `elsif SIMULATION
+
+        assign slow_clk = slow_clk_raw;
+
+    `else
+        `error_Unsupported_synthesis_tool
+    `endif
 
     //------------------------------------------------------------------------
 
