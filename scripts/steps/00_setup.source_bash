@@ -253,6 +253,7 @@ update_fpga_toolchain_var ()
         piswords6            | \
         rzrd                 | \
         zeowaa               | \
+        qmtech_c4_starter               | \
         saylinx              )
 
             fpga_toolchain=quartus
@@ -277,8 +278,7 @@ update_fpga_toolchain_var ()
         cmod_s7              | \
         nexys4               | \
         nexys4_ddr           | \
-        nexys_a7             | \
-        zybo_z7              )
+        nexys_a7             )
 
             fpga_toolchain=xilinx
         ;;
