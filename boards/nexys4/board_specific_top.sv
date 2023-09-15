@@ -76,11 +76,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [ 7:0] abcdefgh;
-    wire [ 7:0] digit;
+    wire [7:0] abcdefgh;
+    wire [7:0] digit;
 
-    assign { seg, dp } = ~ abcdefgh;
-    assign an          = ~ digit;
+    assign { seg [0], seg [1], seg [2], seg [3],
+             seg [4], seg [5], seg [6], dp       } = ~ abcdefgh;
+
+    assign an = ~ digit;
 
     wire [23:0] mic = '0;
 
