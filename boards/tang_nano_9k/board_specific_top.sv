@@ -20,6 +20,12 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
+    output                      VGA_HS,
+    output                      VGA_VS,
+    output [              3:0]  VGA_R,
+    output [              3:0]  VGA_G,
+    output [              3:0]  VGA_B,
+
     inout  [w_gpio      - 1:0]  GPIO
 );
 
@@ -62,14 +68,7 @@ module board_specific_top
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
 
-    wire                      VGA_HS;
-    wire                      VGA_VS;
-    
-    wire  [              3:0] VGA_R;
-    wire  [              3:0] VGA_G;
-    wire  [              3:0] VGA_B; 
-
-    //------------------------------------------------------------------------
+   //------------------------------------------------------------------------
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 

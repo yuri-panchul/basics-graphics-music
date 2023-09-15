@@ -173,4 +173,9 @@ module board_specific_top
         .value ( mic        )
     );
 
+    //------------------------------------------------------------------------
+
+    assign GPIO_3 = {VGA_B, VGA_R};
+    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
+
 endmodule
