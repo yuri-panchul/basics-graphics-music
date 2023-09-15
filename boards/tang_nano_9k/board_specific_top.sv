@@ -20,6 +20,12 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
+    output                      VGA_HS,
+    output                      VGA_VS,
+    output [              3:0]  VGA_R,
+    output [              3:0]  VGA_G,
+    output [              3:0]  VGA_B,
+
     inout  [w_gpio      - 1:0]  GPIO
 );
 
@@ -62,7 +68,7 @@ module board_specific_top
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
 
-    //------------------------------------------------------------------------
+   //------------------------------------------------------------------------
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 
@@ -105,12 +111,12 @@ module board_specific_top
         .abcdefgh ( abcdefgh  ),
         .digit    ( top_digit ),
 
-        .vsync    (           ),
-        .hsync    (           ),
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
 
-        .red      (           ),
-        .green    (           ),
-        .blue     (           ),
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
 
         .mic      ( mic       ),
         .gpio     (           )
@@ -143,10 +149,25 @@ module board_specific_top
         .digit    ( tm_digit  ),
         .ledr     ( tm_led    ),
         .keys     ( tm_key    ),
-        .sio_clk  ( GPIO[0]   ),
-        .sio_stb  ( GPIO[1]   ),
-        .sio_data ( GPIO[2]   )
+        .sio_clk  ( GPIO [0]  ),
+        .sio_stb  ( GPIO [1]  ),
+        .sio_data ( GPIO [2]  )
     );
 
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [4] ),
+        .sck   ( GPIO [3] ),
+        .sd    ( GPIO [6] ),
+        .value ( mic      )
+    );
+
+    assign GPIO [8] = 1'b0;  // GND
+    assign GPIO [7] = 1'b1;  // VCC
 
 endmodule
