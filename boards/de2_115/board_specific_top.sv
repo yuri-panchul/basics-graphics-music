@@ -8,16 +8,16 @@ module board_specific_top
               w_led     = 18,
               w_digit   = 8,
               w_gpio    = 36,
-              vga_clock = 25   // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
+              vga_clock = 25         // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
 )
 (
     input                   CLOCK_50,
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output [w_led    - 1:0] LEDR, // LEDR[17:10] used like HEX dp
+    output [w_led    - 1:0] LEDR,    // The last 8 LEDR are used like a 7SEG dp
 
-    output logic [     6:0] HEX0, // HEX[7] aka dp doesn't connected to FPGA at DE2-115
+    output logic [     6:0] HEX0,    // HEX[7] aka dp doesn't connected to FPGA at DE2-115
     output logic [     6:0] HEX1,
     output logic [     6:0] HEX2,
     output logic [     6:0] HEX3,
@@ -38,20 +38,25 @@ module board_specific_top
     inout  [w_gpio   - 1:0] GPIO
 );
 
-    localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
+    //------------------------------------------------------------------------
+
+    localparam w_top_sw = w_sw - 1;                // One sw is used as a reset
 
     wire                  clk     = CLOCK_50;
     wire                  rst     = SW [w_top_sw];
     wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
+    wire [w_key    - 1:0] top_key = ~ KEY;
 
     //------------------------------------------------------------------------
 
-    wire [          7:0] abcdefgh;
-    wire [w_digit - 1:0] digit;
+    wire  [w_led - w_digit - 1:0] top_led;
 
-    wire [         23:0] mic;
+    wire  [                  7:0] abcdefgh;
+    wire  [        w_digit - 1:0] digit;
 
-    wire [          3:0] red_4b,green_4b,blue_4b;
+    wire  [                  3:0] vga_red_4b,vga_green_4b,vga_blue_4b;
+
+    wire  [                 23:0] mic;
 
     //------------------------------------------------------------------------
 
@@ -60,44 +65,46 @@ module board_specific_top
         .clk_mhz ( clk_mhz         ),
         .w_key   ( w_key           ),
         .w_sw    ( w_top_sw        ),
-        .w_led   ( w_led - w_digit ), // LEDR[17:10] used like HEX dp
+        .w_led   ( w_led - w_digit ),              // The last 8 LEDR are used like a 7SEG dp
         .w_digit ( w_digit         ),
         .w_gpio  ( w_gpio          )
     )
     i_top
     (
-        .clk      (   clk                          ),
-        .rst      (   rst                          ),
+        .clk      (   clk          ),
+        .rst      (   rst          ),
 
-        .key      ( ~ KEY                          ),
-        .sw       (   top_sw                       ),
+        .key      (   top_key      ),
+        .sw       (   top_sw       ),
 
-        .led      (   LEDR [w_led - w_digit - 1:0] ),  // LEDR [17:10] used like a HEX dp
+        .led      (   top_led      ),
 
-        .abcdefgh (   abcdefgh                     ),
-        .digit    (   digit                        ),
+        .abcdefgh (   abcdefgh     ),
+        .digit    (   digit        ),
 
-        .vsync    (   VGA_VS                       ),
-        .hsync    (   VGA_HS                       ),
+        .vsync    (   VGA_VS       ),
+        .hsync    (   VGA_HS       ),
 
-        .red      (   red_4b                       ),
-        .green    (   green_4b                     ),
-        .blue     (   blue_4b                      ),
+        .red      (   vga_red_4b   ),
+        .green    (   vga_green_4b ),
+        .blue     (   vga_blue_4b  ),
 
-        .mic      (   mic                          ),
-        .gpio     (   GPIO                         )
+        .mic      (   mic          ),
+        .gpio     (   GPIO         )
     );
 
     //------------------------------------------------------------------------
 
-    assign VGA_R = {   red_4b,4'd0 };
-    assign VGA_G = { green_4b,4'd0 };
-    assign VGA_B = {  blue_4b,4'd0 };
+    assign LEDR [w_led - w_digit - 1:0] = top_led; // The last 8 LEDR are used like a 7SEG dp
+
+    assign VGA_R   = { vga_red_4b,   4'd0 };
+    assign VGA_G   = { vga_green_4b, 4'd0 };
+    assign VGA_B   = { vga_blue_4b,  4'd0 };
 
     assign VGA_BLANK_N = 1'b1;
     assign VGA_SYNC_N  = 0;
 
-    // Enable to divide clock from 50 or 100 MHz to 25 MHz
+    // Divide VGA DAC clock from 50 or 100 MHz to 25 MHz
 
     logic [3:0] clk_en_cnt;
     logic clk_en;
@@ -151,29 +158,28 @@ module board_specific_top
 
         // Con: This implementation makes the 7-segment LEDs dim
         // on most boards with the static 7-sigment display.
-        // It also does not work well with TM1638 peripheral display.
 
         // inverted logic
 
-        assign HEX0 = digit [0] ? ~ hgfedcba [6:0] : '1;
-        assign HEX1 = digit [1] ? ~ hgfedcba [6:0] : '1;
-        assign HEX2 = digit [2] ? ~ hgfedcba [6:0] : '1;
-        assign HEX3 = digit [3] ? ~ hgfedcba [6:0] : '1;
-        assign HEX4 = digit [4] ? ~ hgfedcba [6:0] : '1;
-        assign HEX5 = digit [5] ? ~ hgfedcba [6:0] : '1;
-        assign HEX6 = digit [6] ? ~ hgfedcba [6:0] : '1;
-        assign HEX7 = digit [7] ? ~ hgfedcba [6:0] : '1;
+        assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
+        assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
+        assign HEX2 = digit [2] ? ~ hgfedcba [$left (HEX2):0] : '1;
+        assign HEX3 = digit [3] ? ~ hgfedcba [$left (HEX3):0] : '1;
+        assign HEX4 = digit [4] ? ~ hgfedcba [$left (HEX4):0] : '1;
+        assign HEX5 = digit [5] ? ~ hgfedcba [$left (HEX5):0] : '1;
+        assign HEX6 = digit [6] ? ~ hgfedcba [$left (HEX6):0] : '1;
+        assign HEX7 = digit [7] ? ~ hgfedcba [$left (HEX7):0] : '1;
 
         // positive logic
 
-        assign LEDR [10] = digit [0] ? hgfedcba [7] : '0;
-        assign LEDR [11] = digit [1] ? hgfedcba [7] : '0;
-        assign LEDR [12] = digit [2] ? hgfedcba [7] : '0;
-        assign LEDR [13] = digit [3] ? hgfedcba [7] : '0;
-        assign LEDR [14] = digit [4] ? hgfedcba [7] : '0;
-        assign LEDR [15] = digit [5] ? hgfedcba [7] : '0;
-        assign LEDR [16] = digit [6] ? hgfedcba [7] : '0;
-        assign LEDR [17] = digit [7] ? hgfedcba [7] : '0;
+        assign LEDR [    w_led - w_digit] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
+        assign LEDR [w_led - w_digit + 1] = digit [1] ? hgfedcba [$left (HEX1) + 1] : '0;
+        assign LEDR [w_led - w_digit + 2] = digit [2] ? hgfedcba [$left (HEX2) + 1] : '0;
+        assign LEDR [w_led - w_digit + 3] = digit [3] ? hgfedcba [$left (HEX3) + 1] : '0;
+        assign LEDR [w_led - w_digit + 4] = digit [4] ? hgfedcba [$left (HEX4) + 1] : '0;
+        assign LEDR [w_led - w_digit + 5] = digit [5] ? hgfedcba [$left (HEX5) + 1] : '0;
+        assign LEDR [w_led - w_digit + 6] = digit [6] ? hgfedcba [$left (HEX6) + 1] : '0;
+        assign LEDR [w_led - w_digit + 7] = digit [7] ? hgfedcba [$left (HEX7) + 1] : '0;
 
     `else
 
@@ -186,29 +192,27 @@ module board_specific_top
             end
             else
             begin
-                // inverted logic
-                if (digit [0]) HEX0 <= ~ hgfedcba [6:0];
-                if (digit [1]) HEX1 <= ~ hgfedcba [6:0];
-                if (digit [2]) HEX2 <= ~ hgfedcba [6:0];
-                if (digit [3]) HEX3 <= ~ hgfedcba [6:0];
-                if (digit [4]) HEX4 <= ~ hgfedcba [6:0];
-                if (digit [5]) HEX5 <= ~ hgfedcba [6:0];
-                if (digit [6]) HEX6 <= ~ hgfedcba [6:0];
-                if (digit [7]) HEX7 <= ~ hgfedcba [6:0];
+                if (digit [0]) HEX0 <= ~ hgfedcba [$left (HEX0):0];
+                if (digit [1]) HEX1 <= ~ hgfedcba [$left (HEX1):0];
+                if (digit [2]) HEX2 <= ~ hgfedcba [$left (HEX2):0];
+                if (digit [3]) HEX3 <= ~ hgfedcba [$left (HEX3):0];
+                if (digit [4]) HEX4 <= ~ hgfedcba [$left (HEX4):0];
+                if (digit [5]) HEX5 <= ~ hgfedcba [$left (HEX5):0];
+                if (digit [6]) HEX6 <= ~ hgfedcba [$left (HEX6):0];
+                if (digit [7]) HEX7 <= ~ hgfedcba [$left (HEX7):0];
 
-                // positive logic
-                if (digit [0]) dp[0] <=  hgfedcba [7];
-                if (digit [1]) dp[1] <=  hgfedcba [7];
-                if (digit [2]) dp[2] <=  hgfedcba [7];
-                if (digit [3]) dp[3] <=  hgfedcba [7];
-                if (digit [4]) dp[4] <=  hgfedcba [7];
-                if (digit [5]) dp[5] <=  hgfedcba [7];
-                if (digit [6]) dp[6] <=  hgfedcba [7];
-                if (digit [7]) dp[7] <=  hgfedcba [7];
+                if (digit [0]) dp[0] <=  hgfedcba [$left (HEX0) + 1];
+                if (digit [1]) dp[1] <=  hgfedcba [$left (HEX1) + 1];
+                if (digit [2]) dp[2] <=  hgfedcba [$left (HEX2) + 1];
+                if (digit [3]) dp[3] <=  hgfedcba [$left (HEX3) + 1];
+                if (digit [4]) dp[4] <=  hgfedcba [$left (HEX4) + 1];
+                if (digit [5]) dp[5] <=  hgfedcba [$left (HEX5) + 1];
+                if (digit [6]) dp[6] <=  hgfedcba [$left (HEX6) + 1];
+                if (digit [7]) dp[7] <=  hgfedcba [$left (HEX7) + 1];
             end
         end
 
-        assign LEDR [17:10] = dp;  // LEDR [17:10] used like a HEX dp
+        assign LEDR [w_led - 1:w_led - w_digit] = dp;  // The last 8 LEDR are used like a 7SEG dp
 
     `endif
 
@@ -218,14 +222,14 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [3] ),
-        .sck   ( GPIO [1] ),
-        .sd    ( GPIO [0] ),
+        .lr    ( GPIO [5] ), // JP5 pin 6
+        .ws    ( GPIO [3] ), // JP5 pin 4
+        .sck   ( GPIO [1] ), // JP5 pin 2
+        .sd    ( GPIO [0] ), // JP5 pin 1
         .value ( mic      )
     );
 
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
+    assign GPIO [4] = 1'b0;  // GND - JP5 pin 5
+    assign GPIO [2] = 1'b1;  // VCC - JP5 pin 3
 
 endmodule

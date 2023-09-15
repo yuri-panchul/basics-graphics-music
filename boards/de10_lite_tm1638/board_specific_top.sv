@@ -1,8 +1,5 @@
 // `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 
-// Note that TM1638 display is not compatible with the labs/*_7segment_word
-// that demonstrates the idea of a dynamic 7-segment display.
-
    `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
@@ -14,7 +11,7 @@ module board_specific_top
               w_sw    = 10,
               w_led   = 10,
               w_digit = 6,
-              w_gpio  = 36
+              w_gpio  = 36                   // GPIO [33], [34], [35] reserved for tm1638, GPIO[5:0] reserved for mic
 )
 (
     input                 MAX10_CLK1_50,
@@ -41,11 +38,11 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire clk = MAX10_CLK1_50;
+    localparam w_top_sw   = w_sw - 1;  // One onboard SW is used as a reset
 
-    localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
+    wire                  clk     = MAX10_CLK1_50;
 
-    wire                  rst     = SW [w_sw - 1];
+    wire                  rst     = SW [w_top_sw];
     wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
 
     //------------------------------------------------------------------------
@@ -129,7 +126,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio      )
+        .w_gpio  ( w_gpio - 3  )      // GPIO_0 [33], [34], [35] reserved for tm1638
     )
     i_top
     (
@@ -179,7 +176,6 @@ module board_specific_top
 
         // Con: This implementation makes the 7-segment LEDs dim
         // on most boards with the static 7-sigment display.
-        // It also does not work well with TM1638 peripheral display.
 
         assign HEX0 = digit [0] ? ~ hgfedcba : '1;
         assign HEX1 = digit [1] ? ~ hgfedcba : '1;
@@ -187,6 +183,11 @@ module board_specific_top
         assign HEX3 = digit [3] ? ~ hgfedcba : '1;
         assign HEX4 = digit [4] ? ~ hgfedcba : '1;
         assign HEX5 = digit [5] ? ~ hgfedcba : '1;
+
+        // Con: This makes blink the 7-segment LEDs of TM1638
+
+        wire tm_static_hex;
+        assign tm_static_hex = 'b0;
 
     `else
 
@@ -205,25 +206,29 @@ module board_specific_top
                 if (digit [5]) HEX5 <= ~ hgfedcba;
             end
 
+        wire tm_static_hex;
+        assign tm_static_hex = 'b1;
+
     `endif
 
     //------------------------------------------------------------------------
 
     tm1638_board_controller
     # (
-        .w_digit ( w_tm_digit )
+        .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
     )
-    i_tm1638
+    i_ledkey
     (
-        .clk      ( clk       ),
-        .rst      ( rst       ),
-        .hgfedcba ( hgfedcba  ),
-        .digit    ( tm_digit  ),
-        .ledr     ( tm_led    ),
-        .keys     ( tm_key    ),
-        .sio_clk  ( GPIO [32] ),
-        .sio_stb  ( GPIO [30] ),
-        .sio_data ( GPIO [34] )
+        .clk        ( clk           ), // 50 MHz
+        .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
+        .static_hex ( tm_static_hex ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO [33]     ), // JP1 pin 38
+        .sio_stb    ( GPIO [34]     ), // JP1 pin 39
+        .sio_data   ( GPIO [35]     )  // JP1 pin 40
     );
 
     //------------------------------------------------------------------------
@@ -232,15 +237,15 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [3] ),
-        .sck   ( GPIO [1] ),
-        .sd    ( GPIO [0] ),
+        .lr    ( GPIO [5] ), // JP1 pin 6
+        .ws    ( GPIO [3] ), // JP1 pin 4
+        .sck   ( GPIO [1] ), // JP1 pin 2
+        .sd    ( GPIO [0] ), // JP1 pin 1
         .value ( mic      )
     );
 
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
+    assign GPIO [4] = 1'b0;  // GND - JP1 pin 5
+    assign GPIO [2] = 1'b1;  // VCC - JP1 pin 3
 
 endmodule
 
