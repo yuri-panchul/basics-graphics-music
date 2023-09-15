@@ -2,6 +2,7 @@ create_clock -period "50.0 MHz" [get_ports CLK]
 
 derive_clock_uncertainty
 
+set_false_path -from RESET                                         -to [all_clocks]
 set_false_path -from [get_ports {KEY[*]}]                          -to [all_clocks]
 set_false_path -from UART_RXD                                      -to [all_clocks]
 set_false_path -from [get_ports {PSEUDO_GPIO_USING_SDRAM_PINS[*]}] -to [all_clocks]

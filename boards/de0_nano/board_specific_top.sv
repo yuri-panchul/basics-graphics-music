@@ -1,8 +1,8 @@
+   `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
    `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
-
-// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 
 module board_specific_top
 # (
@@ -11,7 +11,7 @@ module board_specific_top
               w_sw     = 4,
               w_led    = 8,
               w_digit  = 0,
-              w_gpio   = 34                   // GPIO_0 31, 32, 33 reserved for tm1638, GPIO_0[5:0] reserved for mic, no GPIO_x_IN because it's input only
+              w_gpio   = 34                   // GPIO_0 [31], [32], [33] reserved for tm1638, GPIO_0[5:0] reserved for mic, no GPIO_x_IN because it's input only
 )
 (
     input                     CLOCK_50,
@@ -26,25 +26,25 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw   = w_sw - 1;         // One onboard sw is used as a reset
+    localparam w_top_sw   = w_sw - 1;         // One onboard SW is used as a reset
 
     wire                  clk    = CLOCK_50;
-    wire                  rst;
 
+    wire                  rst    = SW [w_top_sw];
     wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
-
-    assign rst = tm_key [w_tm_key_usr] | tm1638_rst;
 
     //------------------------------------------------------------------------
 
     wire [           7:0] abcdefgh;
+
+    wire                  vga_vs, vga_hs;
+    wire [           3:0] vga_r, vga_g, vga_b;
 
     wire [          23:0] mic;
 
     //------------------------------------------------------------------------
 
     localparam w_tm_key     = 8,
-               w_tm_key_usr = w_tm_key - 1,    // One tm1638 board key is used as a reset
                w_tm_led     = 8,
                w_tm_digit   = 8;
 
@@ -52,15 +52,15 @@ module board_specific_top
 
     `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
 
-        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key_usr : w_key   ,
-                   w_top_led   = w_tm_led   > w_led   ? w_tm_led     : w_led   ,
-                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit   : w_digit ;
+        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
+                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
     `else  // Concatenate the signals
 
-        localparam w_top_key   = w_tm_key_usr + w_key   ,
-                   w_top_led   = w_tm_led     + w_led   ,
-                   w_top_digit = w_tm_digit   + w_digit ;
+        localparam w_top_key   = w_tm_key   + w_key   ,
+                   w_top_led   = w_tm_led   + w_led   ,
+                   w_top_digit = w_tm_digit + w_digit ;
     `endif
 
     //------------------------------------------------------------------------
@@ -96,7 +96,7 @@ module board_specific_top
             top_key = '0;
 
             top_key [w_key    - 1:0] |= ~ KEY;
-            top_key [w_tm_key_usr - 1:0] |= tm_key;
+            top_key [w_tm_key - 1:0] |= tm_key;
         end
 
         assign LED      = top_led   [w_led      - 1:0];
@@ -108,15 +108,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire                    tm1638_rst;
-
-    assign tm1638_rst = SW [w_top_sw];
-
-    //------------------------------------------------------------------------
-
-    wire                     vga_vs, vga_hs;
-    wire [              3:0] vga_r, vga_g, vga_b;
-
     top
     # (
         .clk_mhz ( clk_mhz     ),
@@ -124,7 +115,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio - 3  )      // GPIO_0 31, 32, 33 reserved for tm1638
+        .w_gpio  ( w_gpio - 3  )      // GPIO_0 [31], [32], [33] reserved for tm1638
     )
     i_top
     (
@@ -150,24 +141,26 @@ module board_specific_top
         .gpio     ( GPIO_0     )
     );
 
+    //------------------------------------------------------------------------
+
     // VGA out at GPIO_1
-    assign GPIO_1 [14] = vga_vs;        // JP1 pin 19
-    assign GPIO_1 [15] = vga_hs;        // JP1 pin 20
+    assign GPIO_1 [14] = vga_vs;        // JP2 pin 19
+    assign GPIO_1 [15] = vga_hs;        // JP2 pin 20
     // R
-    assign GPIO_1 [29] = vga_r [0];     // JP1 pin 36
-    assign GPIO_1 [27] = vga_r [1];     // JP1 pin 34
-    assign GPIO_1 [25] = vga_r [2];     // JP1 pin 32
-    assign GPIO_1 [23] = vga_r [3];     // JP1 pin 28
+    assign GPIO_1 [29] = vga_r [0];     // JP2 pin 36
+    assign GPIO_1 [27] = vga_r [1];     // JP2 pin 34
+    assign GPIO_1 [25] = vga_r [2];     // JP2 pin 32
+    assign GPIO_1 [23] = vga_r [3];     // JP2 pin 28
     // G
-    assign GPIO_1 [28] = vga_g [0];     // JP1 pin 35
-    assign GPIO_1 [26] = vga_g [1];     // JP1 pin 33
-    assign GPIO_1 [24] = vga_g [2];     // JP1 pin 31
-    assign GPIO_1 [22] = vga_g [3];     // JP1 pin 27
+    assign GPIO_1 [28] = vga_g [0];     // JP2 pin 35
+    assign GPIO_1 [26] = vga_g [1];     // JP2 pin 33
+    assign GPIO_1 [24] = vga_g [2];     // JP2 pin 31
+    assign GPIO_1 [22] = vga_g [3];     // JP2 pin 27
     // B
-    assign GPIO_1 [21] = vga_b [0];     // JP1 pin 26
-    assign GPIO_1 [20] = vga_b [1];     // JP1 pin 25
-    assign GPIO_1 [18] = vga_b [2];     // JP1 pin 23
-    assign GPIO_1 [16] = vga_b [3];     // JP1 pin 21
+    assign GPIO_1 [21] = vga_b [0];     // JP2 pin 26
+    assign GPIO_1 [20] = vga_b [1];     // JP2 pin 25
+    assign GPIO_1 [18] = vga_b [2];     // JP2 pin 23
+    assign GPIO_1 [16] = vga_b [3];     // JP2 pin 21
 
     //------------------------------------------------------------------------
 
@@ -185,12 +178,17 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Con: This makes blink the 7-segment LEDs of TM1638
+
         wire tm_static_hex;
         assign tm_static_hex = 'b0;
     `else
         wire tm_static_hex;
         assign tm_static_hex = 'b1;
     `endif
+
+    //------------------------------------------------------------------------
 
     tm1638_board_controller
     # (
@@ -199,12 +197,12 @@ module board_specific_top
     i_ledkey
     (
         .clk        ( clk           ), // 50 MHz
-        .rst        ( tm1638_rst    ), // Don't make reset tm1638_board_controller by tm_key
+        .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
         .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
-        .keys       ( tm_key        ), // S8 key reserved for reset
+        .keys       ( tm_key        ),
         .sio_clk    ( GPIO_0 [31]   ), // JP1 pin 38
         .sio_stb    ( GPIO_0 [32]   ), // JP1 pin 39
         .sio_data   ( GPIO_0 [33]   )  // JP1 pin 40

@@ -57,13 +57,22 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [w_led   - 1:0] led;
+    wire                 clk     = CLK;
+    wire                 rst     = ~ RESET;
+    wire   [w_sw -  1:0] top_sw  = ~ KEY [w_sw - 1:0];
+    wire [w_key   - 1:0] top_key = ~ KEY;
 
-    wire [          7:0] abcdefgh;
-    wire [w_digit - 1:0] digit;
+    //------------------------------------------------------------------------
 
-    wire [          3:0] red, green, blue;
-    wire [         23:0] mic;
+    wire  [w_led   - 1:0] top_led;
+
+    wire  [          7:0] abcdefgh;
+    wire  [w_digit - 1:0] digit;
+
+    wire                  vga_vs, vga_hs;
+    wire  [          3:0] red, green, blue;
+
+    wire  [         23:0] mic;
 
     //------------------------------------------------------------------------
 
@@ -78,25 +87,25 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLK       ),
-        .rst      ( ~ RESET     ),
+        .clk      (   clk          ),
+        .rst      (   rst          ),
 
-        .key      ( ~ KEY       ),
-        .sw       ( ~ KEY       ),
+        .key      (   top_key      ),
+        .sw       (   top_sw       ),
 
-        .led      (   led       ),
+        .led      (   top_led      ),
 
-        .abcdefgh (   abcdefgh  ),
-        .digit    (   digit     ),
+        .abcdefgh (   abcdefgh     ),
+        .digit    (   digit        ),
 
-        .vsync    (   VGA_VSYNC ),
-        .hsync    (   VGA_HSYNC ),
+        .vsync    (   VGA_VSYNC    ),
+        .hsync    (   VGA_HSYNC    ),
 
-        .red      (   red       ),
-        .green    (   green     ),
-        .blue     (   blue      ),
+        .red      (   red          ),
+        .green    (   green        ),
+        .blue     (   blue         ),
 
-        .mic      (   mic       ),
+        .mic      (   mic          ),
 
         `ifdef USE_SDRAM_PINS_AS_GPIO
             .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
@@ -107,14 +116,14 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign LED   = ~ led;
+    assign LED       = ~ top_led;
 
-    assign SEG   = ~ abcdefgh;
-    assign DIG   = ~ digit;
+    assign SEG       = ~ abcdefgh;
+    assign DIG       = ~ digit;
 
-    assign VGA_R = | red;
-    assign VGA_G = | green;
-    assign VGA_B = | blue;
+    assign VGA_R     = | red;
+    assign VGA_G     = | green;
+    assign VGA_B     = | blue;
 
     //------------------------------------------------------------------------
 
@@ -124,8 +133,8 @@ module board_specific_top
 
     digilent_pmod_mic3_spi_receiver i_microphone
     (
-        .clk   ( CLK                               ),
-        .rst   ( ~ RESET                           ),
+        .clk   ( clk                               ),
+        .rst   ( rst                               ),
         .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
         .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
         .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
@@ -143,8 +152,8 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK                               ),
-        .rst   ( ~ RESET                           ),
+        .clk   ( clk                               ),
+        .rst   ( rst                               ),
         .lr    ( PSEUDO_GPIO_USING_SDRAM_PINS  [5] ),
         .ws    ( PSEUDO_GPIO_USING_SDRAM_PINS  [3] ),
         .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [1] ),
@@ -161,8 +170,8 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK       ),
-        .rst   ( ~ RESET   ),
+        .clk   ( clk       ),
+        .rst   ( rst       ),
         .lr    ( LCD_D [1] ),
         .ws    ( LCD_D [2] ),
         .sck   ( LCD_D [3] ),
