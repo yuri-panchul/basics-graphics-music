@@ -753,8 +753,8 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HPS_USB_DATA[7]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HPS_USB_DIR
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HPS_USB_NXT
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HPS_USB_STP
-set_instance_assignment -name io_standard "3.3-V LVTTL" -to HPS_GPIO[0]
-set_instance_assignment -name io_standard "3.3-V LVTTL" -to HPS_GPIO[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HPS_GPIO[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HPS_GPIO[1]
 
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to HPS_DDR3_ADDR[0]
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to HPS_DDR3_ADDR[10]
