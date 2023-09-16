@@ -50,6 +50,8 @@ git diff
 ### 2.6. Make sure not to check in any text with tabs
 
 Different editors treats tabs in different ways and many users do not like it.
+Developers should not need to configure the tab width
+of their text editors in order to be able to read the source code.
 There are some exceptions, most notably Makefiles.
 To find the tabs in your text files, you can use the following command:
 
