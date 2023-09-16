@@ -109,21 +109,21 @@ module top
         end
         else if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
         begin
-            red   = 1;
-            green = 0;
-            blue  = 0;
+            red   = '1;
+            green = '0;
+            blue  = '0;
         end
         else if ((x - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
         begin
-            red   = 0;
-            green = 1;
-            blue  = 0;
+            red   = '0;
+            green = '1;
+            blue  = '0;
         end
         else if ((x_2 >> 9) < y)  // Parabola
         begin
-            red   = 0;
-            green = 0;
-            blue  = 1;
+            red   = '0;
+            green = '0;
+            blue  = '1;
         end
     end
 
@@ -150,27 +150,27 @@ module top
         end
         else if (x > 100 & (y - dy) > 100 & x < 150 & y < 400)  // Rectangle
         begin
-            red   = 1;
-            green = 0;
-            blue  = 0;
+            red   = '1;
+            green = '0;
+            blue  = '0;
         end
         else if ((x + dx - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
         begin
-            red   = 0;
-            green = 1;
-            blue  = 0;
+            red   = '0;
+            green = '1;
+            blue  = '0;
         end
         else if (((((x + y) & 127) ** 2) >> 8) < ((y - dy) & 127))  // Parabola
         begin
-            red   = counter [31] ^ x [6];
-            green = counter [30] ^ y [7];
-            blue  = counter [29];
+            red   = { 4 { counter [31] ^ x [6] } };
+            green = { 4 { counter [30] ^ y [7] } };
+            blue  = { 4 { counter [29]         } };
         end
         else
         begin
-            red   = 1;
-            green = 1;
-            blue  = 0;
+            red   = '1;
+            green = '1;
+            blue  = '0;
         end
     end
 
