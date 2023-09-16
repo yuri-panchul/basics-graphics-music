@@ -145,7 +145,7 @@ intel_fpga_setup_quartus ()
 
     if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
-        warning 1 "multiple Intel FPGA versions installed in"  \
+        warning "multiple Intel FPGA versions installed in"  \
                 "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
                 "'$all_version_dirs'"
 
