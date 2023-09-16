@@ -308,38 +308,8 @@ fpga_board_setup ()
 
         if [ -z "$fpga_board" ] ; then
             offer_to_create_a_new_fpga_board_select_file=1
-        fi
-
-        if [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
-        then
-            if [ -n "$fpga_board" ] ; then
-               info "The current contents of \"$select_file:\""  \
-                    "\n\n$select_file_contents"  \
-                    "\n\nThe currently selected FPGA board: $fpga_board"
-            else
-               info "Currently no FPGA board is selected in \"$select_file:\""  \
-                    "\n\n$select_file_contents\n"
-            fi
-
-            # read:
-            #
-            # -n nchars return after reading NCHARS characters rather than waiting
-            #           for a newline, but honor a delimiter if fewer than
-            #           NCHARS characters are read before the delimiter
-            #
-            # -p prompt output the string PROMPT without a trailing newline before
-            #           attempting to read
-            #
-            # -r        do not allow backslashes to escape any characters
-            # -s        do not echo input coming from a terminal
-
-            read -n 1 -r -p "Would you like to choose a new board and overwrite FPGA board selection file at \"$select_file\"? [y/n] "
-            printf "\n"
-
-            if ! [[ "$REPLY" =~ ^[Yy]$ ]] ; then
-                info Exiting
-                exit 0
-            fi
+        elif [ $offer_to_create_a_new_fpga_board_select_file = 1 ] ; then
+            info "The currently selected FPGA board: $fpga_board"
         fi
     fi
 
