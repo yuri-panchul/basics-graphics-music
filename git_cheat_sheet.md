@@ -6,8 +6,8 @@ Yuri Panchul
 ### 1.2. Config your name and email
 
 ```bash
-git config --global user.name  "Your Name"  
-git config --global user.email your@email.com  
+git config --global user.name  "Your Name"
+git config --global user.email your@email.com
 ```
 
 ### 1.3. Clone a git repository from github
@@ -65,7 +65,7 @@ The meaning of the grep options:
 * -l - file list
 * -I - Ignore binary files
 
-You can fix the tabs by doing the following, but make sure to review the fixes: 
+You can fix the tabs by doing the following, but make sure to review the fixes:
 
 ```bash
 grep -rlI --exclude-dir=.git --exclude=*.mk $'\t' . | xargs sed -i 's/\t/    /g'
@@ -91,7 +91,7 @@ Note that -a option automatically stages all modifications and file deletions, b
 You need to use 'git add' to add files or directories explicitly.
 
 **Important Note 1: Please run "git status" and "git diff" before any commit.
-Undoing committed and especially pushed changes is more difficult than undoing uncommitted changes.**  
+Undoing committed and especially pushed changes is more difficult than undoing uncommitted changes.**
 
 **Important Note 2: Please put a meaningful comment for each commit.**
 
@@ -124,7 +124,7 @@ git clean -d -n
 
 This command works from the current directory all the way down.
 
-After reviewing (be careful!), you can remove the files by running: 
+After reviewing (be careful!), you can remove the files by running:
 
 ```bash
 git clean -d -f
@@ -134,13 +134,13 @@ git clean -d -f
 
 To keep things clean, periodically remove files in the tree,
 ignored by git based on .gitignore list.
-You definitely need to remove them before preparing a release package. 
+You definitely need to remove them before preparing a release package.
 
 ```bash
 git clean -d -x -n
 ```
 
-After reviewing (be careful!), you can remove the files by running: 
+After reviewing (be careful!), you can remove the files by running:
 
 ```bash
 git clean -d -x -f
