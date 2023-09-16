@@ -1,7 +1,7 @@
 # A Minimalistic Git Cheat Sheet
 Yuri Panchul
 
-## 1. At the beginning.
+## 1. At the beginning
 
 ### 1.2. Config your name and email
 
@@ -16,7 +16,7 @@ git config --global user.email your@email.com
 git clone https://github.com/yuri-panchul/basics-graphics-music
 ```
 
-## 2. The development cycle.
+## 2. The development cycle
 
 ### 2.1. Update your copy of repository files with the changes made by other people
 
@@ -32,7 +32,7 @@ git add file_or_directory_name
 
 ### 2.3. Edit the files
 
-### 2.4. Check the status before you check in.
+### 2.4. Check the status before you check in
 
 Note changed, added, deleted files.
 Note the files you intended to add but forgot to do it.
@@ -41,12 +41,15 @@ Note the files you intended to add but forgot to do it.
 git status
 ```
 
-### 2.5. Check the differenced against the repository to review your changes in the code.
-
-Make sure not to check in any text with tabs - different editors treats tabs in different ways and many users do not like it.
+### 2.5. Check the differenced against the repository to review your changes in the code
 
 ```bash
 git diff
+```
+Make sure not to check in any text with tabs - different editors treats tabs in different ways and many users do not like it.
+To remove tabs from your text files, you can use the following command:
+
+```bash
 ```
 
 ### 2.6. If you want to undo uncommitted changes to a file or a directory, use this command:
@@ -63,7 +66,7 @@ git checkout .
 
 ### 2.8. If you want to undo any commited changes or even pushed changes, ask some power git user or read the git documentation carefully, making sure you understand everything.
 
-### 2.9. After you finish editing, commit.
+### 2.9. After you finish editing, commit
 
 Note that -a option automatically stages all modifications and file deletions, but not the additions.
 You need to use 'git add' to add files or directories explicitly.
@@ -84,17 +87,47 @@ Now everybody can see your changes.
 git push
 ```
 
-## 3. Other practices.
+## 3. Other practices
 
-### 3.1. You can browse the repository history on http://github.com itself using web browser interface.
+### 3.1. You can browse the repository history on http://github.com itself using web browser interface
 
-### 3.2. If you need Git to ignore some files, put them in .gitignore.
+### 3.2. If you need Git to ignore some files, put them in .gitignore
 
 Such files may include automatically generated binaries, temporaries,
 or unrelated files you don't want to checkin or to appear in git status.
 Please read about .gitignore in Git documentation before doing it.
 
-### 3.3. If you need to do anything non-trivial (merging, undoing committed or pushed changes), please carefully consult Git documentation.
+### 3.3. If you want to see the files in your tree untracked by Git, use:
+
+```bash
+git clean -d -n
+```
+
+This command works from the current directory all the way down.
+
+After reviewing (be careful!), you can remove the files by running: 
+
+```bash
+git clean -d -f
+```
+
+### 3.4. If you want to see the files in your tree ignored by Git
+
+To keep things clean, periodically remove files in the tree,
+ignored by git based on .gitignore list.
+You definitely need to remove them before preparing a release package. 
+
+```bash
+git clean -d -x -n
+```
+
+After reviewing (be careful!), you can remove the files by running: 
+
+```bash
+git clean -d -x -f
+```
+
+### 3.5. If you need to do anything non-trivial (merging, undoing committed or pushed changes), please carefully consult Git documentation.
 
 Otherwise you may introduce mess, bugs, or checkin some large binary files polluting the repository.
 
