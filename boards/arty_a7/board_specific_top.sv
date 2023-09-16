@@ -1,11 +1,11 @@
 module board_specific_top
 # (
-    parameter clk_mhz = 100,
+    parameter clk_mhz = 50,
               w_key   = 4,
               w_sw    = 4,
               w_led   = 4,
               w_digit = 0,
-              w_gpio  = 41
+              w_gpio  = 42
 )
 (
     input         CLK100MHZ,
@@ -35,39 +35,21 @@ module board_specific_top
 	 output        LED3_B,
     output        LED3_G,
     output        LED3_R,
-	
-  /*output        CA,
-    output        CB,
-    output        CC,
-    output        CD,
-    output        CE,
-    output        CF,
-    output        CG,
 
-    output        DP,
-
-    output [ 7:0] AN,*/
-
-  output [ 3:0] VGA_R,
-  output [ 3:0] VGA_G,
-  output [ 3:0] VGA_B,
+    output [ 3:0] VGA_R,
+    output [ 3:0] VGA_G,
+    output [ 3:0] VGA_B,
 
   output        VGA_HS,
-  output        VGA_VS
+  output        VGA_VS,
 
-  //input         UART_TXD_IN,
+  input         UART_TXD_IN,
 
-    //inout  [12:1] JA,
-   // inout  [12:1] JB,
-   // inout  [12:1] JC
-   //inout  [12:1] JD
-
-  //output        M_CLK,
-  //input         M_DATA,
-  //output        M_LRSEL,
-
-  //output        AUD_PWM,
-  //output        AUD_SD
+    //inout  [7:0] JA,
+   // inout  [7:0] JB,
+   // inout  [7:0] JC
+   //inout  [7:0] JD
+   inout [w_gpio -1 :0] GPIO
 );
 
     //------------------------------------------------------------------------
@@ -100,10 +82,41 @@ module board_specific_top
   //assign AUD_SD  = 1'b0;
 
     //------------------------------------------------------------------------
-
-  //wire [23:0] mic = '0;
-
+  wire [3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
+  wire [          23:0] mic = '0;
+  wire [           7:0] abcdefgh;
     //------------------------------------------------------------------------
+wire [w_sw - 1:0] top_sw = SW [w_sw - 1:0];
+
+localparam  w_tm_key     = 8,    
+            w_tm_led     = 8,
+            w_tm_digit   = 8;
+
+ localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key : w_key   ,
+                   w_top_led   = w_tm_led   > w_led   ? w_tm_led     : w_led   ,
+                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit   : w_digit ;
+
+wire  [w_tm_key    - 1:0] tm_key;
+wire  [w_tm_led    - 1:0] tm_led;
+wire  [w_tm_digit  - 1:0] tm_digit;
+
+logic [w_top_key   - 1:0] top_key;
+wire  [w_top_led   - 1:0] top_led;
+wire  [w_top_digit - 1:0] top_digit;
+ 
+ // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+  always_comb
+        begin
+            top_key = '0;
+
+            top_key [w_key    - 1:0] |= KEY;
+            top_key [w_tm_key - 1:0] |= tm_key;
+        end
+
+        assign LED      = top_led   [w_led      - 1:0];
+        assign tm_led   = top_led   [w_tm_led   - 1:0];
+
+        assign tm_digit = top_digit [w_tm_digit - 1:0];
 
     top
     # (
@@ -119,24 +132,55 @@ module board_specific_top
         .clk      ( clk    ),
         .rst      ( rst    ),
 
-        .key      ( { BTN_3, BTN_2, BTN_1, BTN_0 } ),
-        .sw       ( SW     ),
+        .key      ( top_key ),
+        .sw       ( top_sw     ),
 
-        .led      ( LED    ),
+        .led      ( top_led    ),
 
-      //  .abcdefgh ( { CA, CB, CC, CD, CE, CF, CG, DP } ),
-
-      //  .digit    ( AN     ),
+        .abcdefgh ( abcdefgh   ),
+        .digit    ( top_digit  ),
 
         .vsync    ( VGA_VS ),
         .hsync    ( VGA_HS ),
 
         .red      ( VGA_R  ),
         .green    ( VGA_G  ),
-        .blue     ( VGA_B  )
+        .blue     ( VGA_B  ),
 
-      //  .mic      ( mic    ),
-       // .gpio     (        )
+        .mic      ( mic    ),
+        .gpio     ( GPIO   )
+    );
+
+ wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+ wire tm_static_hex;
+ assign tm_static_hex = 'b0;
+
+tm1638_board_controller
+    # (
+        .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
+    )
+    i_ledkey
+    (
+        .clk        ( clk           ), 
+        .rst        ( rst           ), 
+        .static_hex ( tm_static_hex ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ), 
+        .sio_clk    ( GPIO[40]      ), // JP1 pin 38
+        .sio_stb    ( GPIO[41]      ), // JP1 pin 39
+        .sio_data   ( GPIO[39]      )  // JP1 pin 40
     );
 
 endmodule
