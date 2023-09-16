@@ -302,6 +302,8 @@ fpga_board_setup ()
 
     select_file="$package_dir/fpga_board_selection"
 
+    current_board_message=
+
     if [ -f "$select_file" ]
     then
         fpga_board=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
@@ -310,7 +312,7 @@ fpga_board_setup ()
         if [ -z "$fpga_board" ] ; then
             offer_to_create_a_new_fpga_board_select_file=1
         elif [ $offer_to_create_a_new_fpga_board_select_file = 1 ] ; then
-            info "The currently selected FPGA board: $fpga_board"
+            current_board_message="The currently selected FPGA board: $fpga_board. "
         fi
     fi
 
@@ -321,7 +323,7 @@ fpga_board_setup ()
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
     then
-        info "Please select an FPGA board amoung the following supported:"
+        info "${current_board_message}Please select an FPGA board amoung the following supported:"
         PS3="Your choice (a number): "
 
         select fpga_board in $available_fpga_boards exit
