@@ -46,27 +46,44 @@ git status
 ```bash
 git diff
 ```
-Make sure not to check in any text with tabs - different editors treats tabs in different ways and many users do not like it.
-To remove tabs from your text files, you can use the following command:
+
+### 2.6. Make sure not to check in any text with tabs
+
+Different editors treats tabs in different ways and many users do not like it.
+There are some exceptions, most notably Makefiles.
+To find the tabs in your text files, you can use the following command:
 
 ```bash
+grep -rlI --exclude-dir=.git --exclude=*.mk $'\t' .
 ```
 
-### 2.6. If you want to undo uncommitted changes to a file or a directory, use this command:
+The meaning of the grep options:
+
+* -r - recursive
+* -l - file list
+* -I - Ignore binary files
+
+You can fix the tabs by doing the following, but make sure to review the fixes: 
+
+```bash
+grep -rlI --exclude-dir=.git --exclude=*.mk $'\t' . | xargs sed -i 's/\t/    /g'
+```
+
+### 2.7. If you want to undo uncommitted changes to a file or a directory, use this command:
 
 ```bash
 git checkout file_or_directory_name
 ```
 
-### 2.7. If you want to undo uncommitted changes for all files in the current directory, including uncommitted deletions, use this command:
+### 2.8. If you want to undo uncommitted changes for all files in the current directory, including uncommitted deletions, use this command:
 
 ```bash
 git checkout .
 ```
 
-### 2.8. If you want to undo any commited changes or even pushed changes, ask some power git user or read the git documentation carefully, making sure you understand everything.
+### 2.9. If you want to undo any commited changes or even pushed changes, ask some power git user or read the git documentation carefully, making sure you understand everything.
 
-### 2.9. After you finish editing, commit
+### 2.10. After you finish editing, commit
 
 Note that -a option automatically stages all modifications and file deletions, but not the additions.
 You need to use 'git add' to add files or directories explicitly.
@@ -80,7 +97,7 @@ Undoing committed and especially pushed changes is more difficult than undoing u
 git commit -a -m "A meaningful comment"
 ```
 
-### 2.10. Officially publish all your committed changes in git repository (such as GitHub).
+### 2.11. Officially publish all your committed changes in git repository (such as GitHub).
 Now everybody can see your changes.
 
 ```bash
