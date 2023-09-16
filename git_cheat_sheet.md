@@ -41,8 +41,7 @@ Note the files you intended to add but forgot to do it.
 git status
 ```
 
-### 2.5. Check the differenced against the repository
-to review your changes in the code.
+### 2.5. Check the differenced against the repository to review your changes in the code.
 
 Make sure not to check in any text with tabs - different editors treats tabs in different ways and many users do not like it.
 
