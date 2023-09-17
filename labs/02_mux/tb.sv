@@ -39,9 +39,9 @@ module tb;
 
     //------------------------------------------------------------------------
 
-    logic sel, a, b, result, expected;
+    task check (input sel, a, b);
 
-    task check ();
+        logic result, expected;
 
         // Back-box testing - checking the output
 
@@ -69,6 +69,8 @@ module tb;
 
     // The stimulus generation
 
+    logic sel, a, b;
+
     initial
     begin
         `ifdef __ICARUS__
@@ -90,7 +92,7 @@ module tb;
 
              # 10
 
-             check ();
+             check (sel, a, b);
         end
 
         // Another way of doing it
@@ -106,7 +108,7 @@ module tb;
              a   = key [1];
              b   = key [0];
 
-             check ();
+             check (sel, a, b);
         end
 
         // Randomized testing
@@ -122,7 +124,7 @@ module tb;
              a   = key [1];
              b   = key [0];
 
-             check ();
+             check (sel, a, b);
         end
 
         $finish;
