@@ -1,3 +1,5 @@
+`define DUPLICATE_TM_SIGNALS_WITH_REGULAR
+
 module board_specific_top
 # (
     parameter clk_mhz = 125,        // Main clk frequency
@@ -8,74 +10,139 @@ module board_specific_top
               w_gpio  = 8           // Standard Pmod JE
 )
 (
-    input         CLK125MHZ,
     /* Reset - PROGB (see datasheet) */
-
-    /* 4 Buttons */
-    input  [3:0]  BTN,
-
-    /* 4 Switches */
-    input  [3:0]  SW,
-
-    /* 4 LEDs */
-    output [3:0]  LED,
-
-    /* RGB LED_5 */
-    output        LED5_R,
-    output        LED5_G,
-    output        LED5_B,
-    /* RGB LED_6 */
-    output        LED6_R,
-    output        LED6_G,
-    output        LED6_B
+    input                      clk_125,
+    input  [w_key       - 1:0] key,
+    input  [w_sw        - 1:0] sw,
+    output [w_led       - 1:0] led,
+    inout  [w_gpio      - 1:0] gpio_JE
 );
 
-    //--------------------------------------------------------------------------
+    logic [              7:0] abcdefgh;
+    wire  [w_digit     - 1:0] digit;
 
-    wire clk =   CLK125MHZ;
+    localparam w_sw_top = w_sw - 1;  // One sw is used as a reset
 
-    //--------------------------------------------------------------------------
+    wire rst = sw[w_sw - 1];         // Last switch is used as a reset
+    wire [w_sw_top - 1:0] sw_top  = sw[w_sw_top - 1:0];
 
-    assign LED5_R = 1'b0;
-    assign LED5_G = 1'b0;
-    assign LED5_B = 1'b0;
-    assign LED6_R = 1'b0;
-    assign LED6_G = 1'b0;
-    assign LED6_B = 1'b0;
 
-    //--------------------------------------------------------------------------
+    localparam w_key_tm   = 8,
+               w_led_tm   = 8,
+               w_digit_tm = 8;
+
+`ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    localparam w_key_top   = w_key_tm   > w_key   ? w_key_tm   : w_key,
+               w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
+               w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
+`else
+    localparam w_key_top   = w_key_tm   + w_key,
+               w_led_top   = w_led_tm   + w_led,
+               w_digit_top = w_digit_tm + w_digit;
+`endif
+
+
+//------------------------------------------------------------------------------
+
+    wire  [w_key_tm    - 1:0] key_tm;
+    wire  [w_led_tm    - 1:0] led_tm;
+    wire  [w_digit_tm  - 1:0] digit_tm;
+
+    logic [w_key_top   - 1:0] key_top;
+    wire  [w_led_top   - 1:0] led_top;
+    wire  [w_digit_top - 1:0] digit_top;
+
+//------------------------------------------------------------------------------
+
+`ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+    assign key_top = {key_tm, key};
+    assign {led_tm, led} = led_top;
+    assign {digit_tm, digit} = digit_top;
+
+`elsif CONCAT_REGULAR_SIGNALS_AND_TM
+    assign key_top = {key, key_tm};
+    assign {led, led_tm} = led_top;
+    assign {digit, digit_tm} = digit_top;
+
+`else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    always_comb
+    begin
+        key_top = '0;
+        key_top[w_key - 1:0] |= key;
+        key_top[w_key_tm - 1:0] |= key_tm;
+    end
+
+    assign led = led_top[w_led - 1:0];
+    assign led_tm = led_top[w_led_tm - 1:0];
+    assign digit = digit_top[0:0];
+    assign digit_tm = digit_top[w_digit_tm - 1:0];
+`endif
+
+//------------------------------------------------------------------------------
 
     top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz  (clk_mhz),
+        .w_key    (w_key_top),
+        .w_sw     (w_sw_top),
+        .w_led    (w_led_top),
+        .w_digit  (w_digit_top),
+        .w_gpio   (w_gpio)
     )
     i_top
     (
-        .clk      ( clk    ),
-        .rst      (        ),
-        .key      ( BTN    ),
-        .sw       ( SW     ),
+        .clk      (clk_125),
+        .rst      (rst),
 
-        .led      ( LED    ),
+        .key      (key_top),
+        .sw       (sw_top),
+        .led      (led_top),
+        .abcdefgh (abcdefgh),
+        .digit    (digit_top),
 
-        .abcdefgh (        ),
+        .vsync    ( ),
+        .hsync    ( ),
+        .red      ( ),
+        .green    ( ),
+        .blue     ( ),
 
-        .digit    (        ),
-
-        .vsync    (        ),
-        .hsync    (        ),
-
-        .red      (        ),
-        .green    (        ),
-        .blue     (        ),
-
-        .mic      (        ),
-        .gpio     (        )
+        .mic      ( ),
+        .gpio     ( )
     );
 
-endmodule
+
+    /***************************************************************************
+     *                             module TM1638
+     **************************************************************************/
+    logic  [$left(abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits(abcdefgh); i++) begin
+            assign hgfedcba[i] = abcdefgh [$left(abcdefgh) - i];
+        end
+    endgenerate
+
+
+//------------------------------------------------------------------------------
+
+    tm1638_board_controller
+    # (
+        .clk_mhz  (clk_mhz),
+        .w_digit  (w_digit_tm)
+    )
+    i_tm1638
+    (
+        .clk      (clk_125),
+        .rst      (rst),
+        .hgfedcba (hgfedcba),
+        .digit    (digit_tm),
+        .ledr     (led_tm),
+        .keys     (key_tm),
+        .sio_clk  (gpio_JE[1]),
+        .sio_stb  (gpio_JE[0]),
+        .sio_data (gpio_JE[2])
+    );
+
+endmodule: board_specific_top
