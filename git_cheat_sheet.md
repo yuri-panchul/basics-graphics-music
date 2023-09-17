@@ -3,12 +3,23 @@ Yuri Panchul
 
 ## 1. At the beginning
 
-### 1.2. Config your name and email
+### 1.1. Config your name and email
 
 ```bash
 git config --global user.name  "Your Name"
 git config --global user.email your@email.com
 ```
+
+### 1.2. Set caching your password
+
+```bash
+git config credential.helper 'cache --timeout=3600'
+```
+
+If you don't set it, you have to enter your username and password every time
+you do "git push". The timeout is set in seconds. After the timeout git will
+ask your username and password again. The command above sets the timeout for
+10 hours.
 
 ### 1.3. Clone a git repository from github
 
