@@ -235,13 +235,13 @@ create_new_run_directories_for_fpga_synthesis()
 update_fpga_toolchain_var ()
 {
     case $fpga_board in
-        de0              )
+        c3dev                | \
+        de0                  )
 
             fpga_toolchain=quartus
             use_old_version_of_quartus=1
         ;;
 
-        c3dev                | \
         c5gx                 | \
         de0_cv               | \
         de0_nano             | \
