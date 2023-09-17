@@ -2,8 +2,6 @@
 
 set all_signals [list]
 
-lappend all_signals tb.clk
-lappend all_signals tb.rst
 lappend all_signals tb.sel
 lappend all_signals tb.a
 lappend all_signals tb.b
