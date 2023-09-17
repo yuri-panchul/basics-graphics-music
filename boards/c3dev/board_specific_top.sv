@@ -46,6 +46,9 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire [w_led - 1:0] led;
+    assign user_led = ~ led;
+
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
@@ -60,9 +63,9 @@ module board_specific_top
         seven_seg_g,
         seven_seg_dp
     }
-    = ~ abcdefgh;
+    = abcdefgh;
 
-    assign seven_seg_sel = ~ digit;
+    assign seven_seg_sel = digit;
 
     //------------------------------------------------------------------------
 
@@ -83,7 +86,7 @@ module board_specific_top
         .key      ( ~ user_pb     ),
         .sw       (   user_dipsw  ),
 
-        .led      (   user_led    ),
+        .led      (   led         ),
 
         .abcdefgh (   abcdefgh    ),
         .digit    (   digit       ),
