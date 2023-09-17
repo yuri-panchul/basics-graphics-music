@@ -42,6 +42,7 @@ module tb;
     task check (input sel, a, b);
 
         logic result, expected;
+        int n_muxes_to_check;
 
         // Back-box testing - checking the output
 
@@ -52,6 +53,24 @@ module tb;
             $display ("Mismatch: %b ? %b : %b. expected: %b actual: %b",
                 sel, a, b, expected, result);
 
+        //--------------------------------------------------------------------
+        // Checking multiple bits
+
+        if ($bits (i_top.all_muxes) < $bits (led))
+            n_muxes_to_check = $bits (i_top.all_muxes);
+        else
+            n_muxes_to_check = $bits (led);
+
+        for (int i = 0; i < n_muxes_to_check; i ++)
+        begin
+            result = led [i];
+
+            if (result != expected)
+                $display ("Mismatch in led bit %0d: %b ? %b : %b. expected: %b actual: %b",
+                    i, sel, a, b, expected, result);
+        end
+
+        //--------------------------------------------------------------------
         // White-box testing - checking XMR (external module reference)
 
         for (int i = 0; i < $bits (i_top.all_muxes); i ++)
