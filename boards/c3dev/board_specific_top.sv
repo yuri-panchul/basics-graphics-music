@@ -37,7 +37,7 @@ module board_specific_top
 );
 
     assign seven_seg_minus = '0;
-    aasign speaker_out     = '0;
+    assign speaker_out     = '0;
 
     //------------------------------------------------------------------------
 
