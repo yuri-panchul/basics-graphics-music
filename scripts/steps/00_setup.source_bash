@@ -46,6 +46,8 @@ else
     cd $(dirname "$0")
     mkdir -p run
     cd run
+
+    inside_run_dir=1
 fi
 
 lab_name=$(basename "$(readlink -f ..)")
@@ -58,7 +60,7 @@ lab_name=$(basename "$(readlink -f ..)")
 
 error ()
 {
-    printf "$script: error: $*\n" 1>&2
+    printf "$script: error: %s\n" "$*" 1>&2
     exit 1
 }
 
@@ -66,14 +68,14 @@ error ()
 
 warning ()
 {
-    printf "$script: warning: $*\n" 1>&2
+    printf "$script: warning: %s\n" "$*" 1>&2
 }
 
 #-----------------------------------------------------------------------------
 
 info ()
 {
-    printf "$script: $*\n" 1>&2
+    printf "$script: %s\n" "$*" 1>&2
 }
 
 #-----------------------------------------------------------------------------
@@ -147,9 +149,9 @@ fi
 find_to_run=find
 true_find=/usr/bin/find
 
-if [ -x "$true_find" ]
+if [ -x $true_find ]
 then
-    find_to_run="$true_find"
+    find_to_run=$true_find
 fi
 
 #-----------------------------------------------------------------------------
@@ -233,7 +235,8 @@ create_new_run_directories_for_fpga_synthesis()
 update_fpga_toolchain_var ()
 {
     case $fpga_board in
-        de0              )
+        dk_dev_3c120n        | \
+        de0                  )
 
             fpga_toolchain=quartus
             use_old_version_of_quartus=1
@@ -241,11 +244,13 @@ update_fpga_toolchain_var ()
 
         c5gx                 | \
         de0_cv               | \
+        de0_nano             | \
         de0_nano_soc         | \
+        de1_soc              | \
+        de2_115              | \
         de10_lite            | \
         de10_lite_tm1638     | \
         de10_nano            | \
-        de2_115              | \
         omdazz               | \
         piswords6            | \
         rzrd                 | \
@@ -268,11 +273,15 @@ update_fpga_toolchain_var ()
             fpga_toolchain=gowin
         ;;
 
-        arty_a7          | \
-        basys3           | \
-        cmod_a7          | \
-        cmod_s7          | \
-        nexys_a7         )
+        arty_a7              | \
+        arty_s7              | \
+        basys3               | \
+        cmod_a7              | \
+        cmod_s7              | \
+        nexys4               | \
+        nexys4_ddr           | \
+        nexys_a7             | \
+        zybo_z7              )
 
             fpga_toolchain=xilinx
         ;;
@@ -295,45 +304,17 @@ fpga_board_setup ()
 
     select_file="$package_dir/fpga_board_selection"
 
+    current_board_message=
+
     if [ -f "$select_file" ]
     then
         fpga_board=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
         select_file_contents=$(cat "$select_file")
 
-        if [ -z "${fpga_board-}" ] ; then
+        if [ -z "$fpga_board" ] ; then
             offer_to_create_a_new_fpga_board_select_file=1
-        fi
-
-        if [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
-        then
-            if [ -n "${fpga_board-}" ] ; then
-               info "The current contents of \"$select_file:\""  \
-                    "\n\n$select_file_contents"  \
-                    "\n\nThe currently selected FPGA board: $fpga_board"
-            else
-               info "Currently no FPGA board is selected in \"$select_file:\""  \
-                    "\n\n$select_file_contents\n"
-            fi
-
-            # read:
-            #
-            # -n nchars return after reading NCHARS characters rather than waiting
-            #           for a newline, but honor a delimiter if fewer than
-            #           NCHARS characters are read before the delimiter
-            #
-            # -p prompt output the string PROMPT without a trailing newline before
-            #           attempting to read
-            #
-            # -r        do not allow backslashes to escape any characters
-            # -s        do not echo input coming from a terminal
-
-            read -n 1 -r -p "Would you like to choose a new board and overwrite FPGA board selection file at \"$select_file\"? [y/n] "
-            printf "\n"
-
-            if ! [[ "$REPLY" =~ ^[Yy]$ ]] ; then
-                info Exiting
-                exit 0
-            fi
+        elif [ $offer_to_create_a_new_fpga_board_select_file = 1 ] ; then
+            current_board_message="The currently selected FPGA board: $fpga_board. "
         fi
     fi
 
@@ -344,12 +325,12 @@ fpga_board_setup ()
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
     then
-        info "Please select an FPGA board amoung the following supported:"
+        info "${current_board_message}Please select an FPGA board amoung the following supported:"
         PS3="Your choice (a number): "
 
         select fpga_board in $available_fpga_boards exit
         do
-            if [ -z "${fpga_board-}" ] ; then
+            if [ -z "$fpga_board" ] ; then
                 info "Invalid FPGA board choice, please choose one of the listed numbers again"
                 continue
             fi
