@@ -1,5 +1,5 @@
 #
-# Assignments: DSP_Kit replaces HSMA   
+# Assignments: DSP_Kit replaces HSMA
 #
 set_global_assignment -name IGNORE_CLOCK_SETTINGS ON
 set_global_assignment -name FMAX_REQUIREMENT "120 MHz"

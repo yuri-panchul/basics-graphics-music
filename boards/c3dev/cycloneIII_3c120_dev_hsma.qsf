@@ -1,5 +1,5 @@
 #
-# HSMA standard pinouts per schematic 
+# HSMA standard pinouts per schematic
 #
 set_instance_assignment -name IO_STANDARD "1.8 V" -to hsma_clk_in0
 set_instance_assignment -name IO_STANDARD LVDS -to hsma_clk_in_p[1]

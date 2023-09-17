@@ -1,5 +1,5 @@
 #
-# Assignments: HSMB  
+# Assignments: HSMB
 #
 set_location_assignment PIN_A15 -to hsmb_clk_in0
 set_instance_assignment -name IO_STANDARD "1.8 V" -to hsmb_clk_in0
