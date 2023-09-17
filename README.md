@@ -9,6 +9,3 @@ Introductory examples for the classes on ASIC and FPGA design and verification. 
 [LaLambda 23](https://lalambda.school)
 
 ![LaLambda 23 Ad](https://github.com/yuri-panchul/2023-lalambda-asic-fpga/blob/main/misc/lalambda_23_asic_fpga_ad_2.jpg)
-
-test
-
