@@ -63,9 +63,9 @@ module board_specific_top
         seven_seg_g,
         seven_seg_dp
     }
-    = abcdefgh;
+    = ~ abcdefgh;
 
-    assign seven_seg_sel = digit;
+    assign seven_seg_sel = { digit [0], digit [1], digit [2], digit [3] };
 
     //------------------------------------------------------------------------
 
