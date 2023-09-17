@@ -37,17 +37,76 @@ module tb;
 
     //------------------------------------------------------------------------
 
+    logic sel, a, b, result, expected;
+
+    task check ()
+
+        // Back-box testing - checking the output
+
+        if (led
+
+        // White-box testing - checking XMR (external module reference)
+
+    endtask
+
+    //------------------------------------------------------------------------
+
+    // The stimulus generation
+
     initial
     begin
         `ifdef __ICARUS__
             $dumpvars;
         `endif
 
+        // Exhaustive direct testing aka brute force testing
+
+        for (int isel = 0; isel <= 1; isel ++)
+        for (int ia   = 0; ia   <= 1; ia   ++)
+        for (int ib   = 0; ib   <= 1; ib   ++)
+        begin
+             sel = 1'b ( isel );
+             a   = 1'b ( ia   );
+             b   = 1'b ( ib   );
+
+             key <= w_key' ({ sel, a, b });
+             sw  <= $urandom ();
+
+             # 10
+
+             check ();
+        end
+
+        // Another way of doing it
+
+        for (int i = 0; i < 8; i ++)
+        begin
+             key <= w_key'   (i);
+             sw  <= $urandom ();
+
+             # 10
+
+             sel = key [2];
+             a   = key [1];
+             b   = key [0];
+
+             check ();
+        end
+
+        // Randomized testing
+
         repeat (8)
         begin
-             # 10
              key <= $urandom ();
              sw  <= $urandom ();
+
+             # 10
+
+             sel = key [2];
+             a   = key [1];
+             b   = key [0];
+
+             check ();
         end
 
         $finish;

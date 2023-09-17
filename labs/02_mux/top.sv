@@ -52,9 +52,22 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire a   = key [0];
-    wire b   = key [1];
-    wire sel = key [2];
+    wire sel, a, b;
+
+    generate
+        if (w_key >= 3)
+        begin : use_keys
+            assign sel = key [2];
+            assign a   = key [1];
+            assign b   = key [0];
+        end
+        else
+        begin : use_switches
+            assign sel = sw  [2];
+            assign a   = sw  [1];
+            assign b   = sw  [0];
+        end
+    endgenerate
 
     //------------------------------------------------------------------------
 
@@ -101,61 +114,61 @@ module top
 
     wire [0:7] table5 =
     {
-        1'b0, // a = 0, b = 0, sel = 0
-        1'b0, // a = 0, b = 0, sel = 1
-        1'b1, // a = 0, b = 1, sel = 0
-        1'b0, // a = 0, b = 1, sel = 1
-        1'b0, // a = 1, b = 0, sel = 0
-        1'b1, // a = 1, b = 0, sel = 1
-        1'b1, // a = 1, b = 1, sel = 0
-        1'b1  // a = 1, b = 1, sel = 1
+        1'b0, // sel = 0, a = 0, b = 0
+        1'b1, // sel = 0, a = 0, b = 1
+        1'b0, // sel = 0, a = 1, b = 0
+        1'b1, // sel = 0, a = 1, b = 1
+        1'b0, // sel = 1, a = 0, b = 0
+        1'b0, // sel = 1, a = 0, b = 1
+        1'b1, // sel = 1, a = 1, b = 0
+        1'b1  // sel = 1, a = 1, b = 1
     };
 
-    wire mux5 = table5 [{ a, b, sel }];
+    wire mux5 = table5 [{ sel, a, b }];
 
     //------------------------------------------------------------------------
 
     wire [7:0] table6 =
     {
-        1'b1, // a = 1, b = 1, sel = 1
-        1'b1, // a = 1, b = 1, sel = 0
-        1'b1, // a = 1, b = 0, sel = 1
-        1'b0, // a = 1, b = 0, sel = 0
-        1'b0, // a = 0, b = 1, sel = 1
-        1'b1, // a = 0, b = 1, sel = 0
-        1'b0, // a = 0, b = 0, sel = 1
-        1'b0  // a = 0, b = 0, sel = 0
+        1'b1, // sel = 1, a = 1, b = 1
+        1'b1, // sel = 1, a = 1, b = 0
+        1'b0, // sel = 1, a = 0, b = 1
+        1'b0, // sel = 1, a = 0, b = 0
+        1'b1, // sel = 0, a = 1, b = 1
+        1'b0, // sel = 0, a = 1, b = 0
+        1'b1, // sel = 0, a = 0, b = 1
+        1'b0  // sel = 0, a = 0, b = 0
     };
 
-    wire mux6 = table6 [{ a, b, sel }];
+    wire mux6 = table6 [{ sel, a, b }];
 
     //------------------------------------------------------------------------
 
-    wire [7:0] table7 = 8'b1110_0100;
-    wire mux7 = table7 [{ a, b, sel }];
+    wire [7:0] table7 = 8'b1100_1010;
+    wire mux7 = table7 [{ sel, a, b }];
 
     //------------------------------------------------------------------------
 
     `ifdef __ICARUS__
 
     // The syntax below does not work with Icarus Verilog
-    wire mux8 = 1'bx;
+    wire mux8 = mux0;
 
     `else
 
     wire [0:1][0:1][0:1] table8 =
     {
-        1'b0, // a = 0, b = 0, sel = 0
-        1'b0, // a = 0, b = 0, sel = 1
-        1'b1, // a = 0, b = 1, sel = 0
-        1'b0, // a = 0, b = 1, sel = 1
-        1'b0, // a = 1, b = 0, sel = 0
-        1'b1, // a = 1, b = 0, sel = 1
-        1'b1, // a = 1, b = 1, sel = 0
-        1'b1  // a = 1, b = 1, sel = 1
+        1'b0, // sel = 0, a = 0, b = 0
+        1'b1, // sel = 0, a = 0, b = 1
+        1'b0, // sel = 0, a = 1, b = 0
+        1'b1, // sel = 0, a = 1, b = 1
+        1'b0, // sel = 1, a = 0, b = 0
+        1'b0, // sel = 1, a = 0, b = 1
+        1'b1, // sel = 1, a = 1, b = 0
+        1'b1  // sel = 1, a = 1, b = 1
     };
 
-    wire mux8 = table8 [a][b][sel];
+    wire mux8 = table8 [sel][a][b];
 
     `endif
 
@@ -164,31 +177,32 @@ module top
     `ifdef __ICARUS__
 
     // The syntax below does not work with Icarus Verilog
-    wire mux9 = 1'bx;
+    wire mux9 = mux0;
 
     `else
 
     wire [1:0][1:0][1:0] table9 =
     {
-        1'b1, // a = 1, b = 1, sel = 1
-        1'b1, // a = 1, b = 1, sel = 0
-        1'b1, // a = 1, b = 0, sel = 1
-        1'b0, // a = 1, b = 0, sel = 0
-        1'b0, // a = 0, b = 1, sel = 1
-        1'b1, // a = 0, b = 1, sel = 0
-        1'b0, // a = 0, b = 0, sel = 1
-        1'b0  // a = 0, b = 0, sel = 0
+        1'b1, // sel = 1, a = 1, b = 1
+        1'b1, // sel = 1, a = 1, b = 0
+        1'b0, // sel = 1, a = 0, b = 1
+        1'b0, // sel = 1, a = 0, b = 0
+        1'b1, // sel = 0, a = 1, b = 1
+        1'b0, // sel = 0, a = 1, b = 0
+        1'b1, // sel = 0, a = 0, b = 1
+        1'b0  // sel = 0, a = 0, b = 0
     };
 
-    wire mux9 = table9 [a][b][sel];
+    wire mux9 = table9 [sel][a][b];
 
     `endif
 
     //------------------------------------------------------------------------
 
-    `ifdef VCS
+    `ifdef SYNOPSYS_CADENCE_MENTOR
 
-    // The syntax below probably works only with Synopsys, Cadence and Mentor
+    // This syntax probably works only with Synopsys VCS, Cadence Xselium
+    // and QuestaSim from Siemens EDA (former Mentor Graphics)
 
     wire [0:1][0:1][0:1] table10 =
     '{
@@ -207,15 +221,16 @@ module top
 
     `else
 
-    wire mux10 = 1'b0;
+    wire mux10 = mux0;
 
     `endif
 
     //------------------------------------------------------------------------
 
-    `ifdef VCS
+    `ifdef SYNOPSYS_CADENCE_MENTOR
 
-    // The syntax below probably works only with Synopsys, Cadence and Mentor
+    // This syntax probably works only with Synopsys VCS, Cadence Xselium
+    // and QuestaSim from Siemens EDA (former Mentor Graphics)
 
     logic table11 [0:1][0:1][0:1] =
     '{
@@ -234,7 +249,7 @@ module top
 
     `else
 
-    wire mux11 = 1'b0;
+    wire mux11 = mux0;
 
     `endif
 
@@ -242,56 +257,18 @@ module top
 
     // Use concatenation operation for all signals:
 
-    // assign led = w_led' ({ mux11 , mux10 , mux9 , mux8 ,
-    //                        mux7  , mux6  , mux5 , mux4 ,
-    //                        mux3  , mux2  , mux1 , mux0 });
+    wire [11:0] all_muxes
+        = { mux11 , mux10 , mux9 , mux8 ,
+            mux7  , mux6  , mux5 , mux4 ,
+            mux3  , mux2  , mux1 , mux0 };
+
+    assign led = w_led' (all_muxes);
 
     // Use concatenation operation for the boards with 4 LEDs:
 
     // assign led = w_led' ({ mux3  , mux2  , mux1 , mux0 });
     // assign led = w_led' ({ mux6  , mux5  , mux4 , mux0 });
     // assign led = w_led' ({ mux9  , mux8  , mux7 , mux0 });
-       assign led = w_led' ({ mux11 , mux10 , mux4 , mux0 });
-
-    `ifdef VCS
-
-    initial
-    begin
-        # 1
-
-        for (int i = 0; i <= 1; i ++)
-        for (int j = 0; j <= 1; j ++)
-        for (int k = 0; k <= 1; k ++)
-            $write (" %b ? %b : %b = %b = %b",
-                k, i, j, k ? i : j, table8 [i][j][k]);
-
-        $display;
-
-        for (int i = 0; i <= 1; i ++)
-        for (int j = 0; j <= 1; j ++)
-        for (int k = 0; k <= 1; k ++)
-            $write (" %b ? %b : %b = %b = %b",
-                k, i, j, k ? i : j, table8 [i][j][k]);
-
-        $display;
-
-        for (int i = 0; i <= 1; i ++)
-        for (int j = 0; j <= 1; j ++)
-        for (int k = 0; k <= 1; k ++)
-            $write (" %b ? %b : %b = %b = %b",
-                k, i, j, k ? i : j, table8 [i][j][k]);
-
-        $display;
-
-        for (int i = 0; i <= 1; i ++)
-        for (int j = 0; j <= 1; j ++)
-        for (int k = 0; k <= 1; k ++)
-            $write (" %b ? %b : %b = %b = %b",
-                k, i, j, k ? i : j, table8 [i][j][k]);
-
-        $display;
-    end
-
-    `endif
+    // assign led = w_led' ({ mux11 , mux10 , mux4 , mux0 });
 
 endmodule
