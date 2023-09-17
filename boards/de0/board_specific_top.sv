@@ -149,14 +149,14 @@ module board_specific_top
     (
         .clk   (   clk         ),
         .rst   (   rst         ),
-        .lr    (   GPIO0_D [5] ), // JP4 pin 8
-        .ws    (   GPIO0_D [3] ), // JP4 pin 6
-        .sck   (   GPIO0_D [1] ), // JP4 pin 4
-        .sd    (   GPIO0_D [0] ), // JP4 pin 2
+        .lr    (   GPIO0_D [7] ), // JP4 pin 10
+        .ws    (   GPIO0_D [5] ), // JP4 pin 8
+        .sck   (   GPIO0_D [3] ), // JP4 pin 6
+        .sd    (   GPIO0_D [2] ), // JP4 pin 5
         .value (   mic         )
     );
 
-    assign GPIO0_D [4] = 1'b0;    // GND - JP4 pin 7
-    assign GPIO0_D [2] = 1'b1;    // VCC - JP4 pin 5
+    assign GPIO0_D [6] = 1'b0;    // GND - JP4 pin 9
+    assign GPIO0_D [4] = 1'b1;    // VCC - JP4 pin 7
 
 endmodule

@@ -149,9 +149,9 @@ fi
 find_to_run=find
 true_find=/usr/bin/find
 
-if [ -x "$true_find" ]
+if [ -x $true_find ]
 then
-    find_to_run="$true_find"
+    find_to_run=$true_find
 fi
 
 #-----------------------------------------------------------------------------
@@ -235,7 +235,8 @@ create_new_run_directories_for_fpga_synthesis()
 update_fpga_toolchain_var ()
 {
     case $fpga_board in
-        de0              )
+        dk_dev_3c120n        | \
+        de0                  )
 
             fpga_toolchain=quartus
             use_old_version_of_quartus=1

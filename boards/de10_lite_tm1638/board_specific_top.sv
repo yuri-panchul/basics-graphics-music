@@ -226,10 +226,13 @@ module board_specific_top
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ),
-        .sio_clk    ( GPIO [33]     ), // JP1 pin 38
-        .sio_stb    ( GPIO [34]     ), // JP1 pin 39
-        .sio_data   ( GPIO [35]     )  // JP1 pin 40
+        .sio_clk    ( GPIO [32]     ), // JP1 pin 37
+        .sio_stb    ( GPIO [30]     ), // JP1 pin 35
+        .sio_data   ( GPIO [34]     )  // JP1 pin 39
     );
+
+    assign GPIO [28] = 1'b0;  // GND - JP1 pin 33
+    assign GPIO [26] = 1'b1;  // VCC - JP1 pin 31
 
     //------------------------------------------------------------------------
 
@@ -237,15 +240,15 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [5] ), // JP1 pin 6
-        .ws    ( GPIO [3] ), // JP1 pin 4
-        .sck   ( GPIO [1] ), // JP1 pin 2
-        .sd    ( GPIO [0] ), // JP1 pin 1
+        .lr    ( GPIO [9] ), // JP1 pin 10
+        .ws    ( GPIO [7] ), // JP1 pin 8
+        .sck   ( GPIO [5] ), // JP1 pin 6
+        .sd    ( GPIO [4] ), // JP1 pin 5
         .value ( mic      )
     );
 
-    assign GPIO [4] = 1'b0;  // GND - JP1 pin 5
-    assign GPIO [2] = 1'b1;  // VCC - JP1 pin 3
+    assign GPIO [8] = 1'b0;  // GND - JP1 pin 9
+    assign GPIO [6] = 1'b1;  // VCC - JP1 pin 7
 
 endmodule
 

@@ -115,7 +115,7 @@ gowin_setup_ide ()
 
     if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
-        warning 1 "multiple Gowin EDA versions installed in"  \
+        warning "multiple Gowin EDA versions installed in"  \
                 "'$gowinfpga_install_dir':"  \
                 "'$all_version_dirs'"
 

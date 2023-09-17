@@ -1,0 +1,99 @@
+#
+# Assignments: HSMB
+#
+set_location_assignment PIN_A15 -to hsmb_clk_in0
+set_instance_assignment -name IO_STANDARD "1.8 V" -to hsmb_clk_in0
+set_instance_assignment -name IO_STANDARD LVDS -to hsmb_clk_in_p
+set_location_assignment PIN_J22 -to hsmb_clk_out0
+set_instance_assignment -name IO_STANDARD LVDS -to hsmb_clk_out_p
+set_location_assignment EDGE_RIGHT -to hsmb_d
+set_instance_assignment -name OUTPUT_TERMINATION "SERIES 50 OHM WITH CALIBRATION" -to hsmb_d
+set_location_assignment PIN_F26 -to hsmb_rx_led
+set_instance_assignment -name IO_STANDARD LVDS -to hsmb_rx_d_p
+set_location_assignment PIN_H25 -to hsmb_scl
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to hsmb_scl
+set_location_assignment PIN_H26 -to hsmb_sda
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to hsmb_sda
+set_location_assignment PIN_D28 -to hsmb_tx_led
+set_instance_assignment -name IO_STANDARD LVDS -to hsmb_tx_d_p
+set_location_assignment PIN_J28 -to hsmb_clk_in_n[1]
+set_location_assignment PIN_Y28 -to hsmb_clk_in_n[2]
+set_location_assignment PIN_J27 -to hsmb_clk_in_p[1]
+set_location_assignment PIN_Y27 -to hsmb_clk_in_p[2]
+set_location_assignment PIN_AD26 -to hsmb_clk_out_n[1]
+set_location_assignment PIN_AD28 -to hsmb_clk_out_n[2]
+set_location_assignment PIN_AC26 -to hsmb_clk_out_p[1]
+set_location_assignment PIN_AD27 -to hsmb_clk_out_p[2]
+set_location_assignment PIN_G24 -to hsmb_d[0]
+set_location_assignment PIN_H23 -to hsmb_d[1]
+set_location_assignment PIN_G25 -to hsmb_d[2]
+set_location_assignment PIN_H24 -to hsmb_d[3]
+set_location_assignment PIN_F28 -to hsmb_rx_d_n[0]
+set_location_assignment PIN_G28 -to hsmb_rx_d_n[1]
+set_location_assignment PIN_K26 -to hsmb_rx_d_n[2]
+set_location_assignment PIN_K28 -to hsmb_rx_d_n[3]
+set_location_assignment PIN_L28 -to hsmb_rx_d_n[4]
+set_location_assignment PIN_M28 -to hsmb_rx_d_n[5]
+set_location_assignment PIN_P26 -to hsmb_rx_d_n[6]
+set_location_assignment PIN_P28 -to hsmb_rx_d_n[7]
+set_location_assignment PIN_R21 -to hsmb_rx_d_n[8]
+set_location_assignment PIN_R23 -to hsmb_rx_d_n[9]
+set_location_assignment PIN_T26 -to hsmb_rx_d_n[10]
+set_location_assignment PIN_U28 -to hsmb_rx_d_n[11]
+set_location_assignment PIN_V22 -to hsmb_rx_d_n[12]
+set_location_assignment PIN_W27 -to hsmb_rx_d_n[13]
+set_location_assignment PIN_V24 -to hsmb_rx_d_n[14]
+set_location_assignment PIN_AB28 -to hsmb_rx_d_n[15]
+set_location_assignment PIN_AC28 -to hsmb_rx_d_n[16]
+set_location_assignment PIN_F27 -to hsmb_rx_d_p[0]
+set_location_assignment PIN_G27 -to hsmb_rx_d_p[1]
+set_location_assignment PIN_K25 -to hsmb_rx_d_p[2]
+set_location_assignment PIN_K27 -to hsmb_rx_d_p[3]
+set_location_assignment PIN_L27 -to hsmb_rx_d_p[4]
+set_location_assignment PIN_M27 -to hsmb_rx_d_p[5]
+set_location_assignment PIN_P25 -to hsmb_rx_d_p[6]
+set_location_assignment PIN_P27 -to hsmb_rx_d_p[7]
+set_location_assignment PIN_P21 -to hsmb_rx_d_p[8]
+set_location_assignment PIN_R22 -to hsmb_rx_d_p[9]
+set_location_assignment PIN_T25 -to hsmb_rx_d_p[10]
+set_location_assignment PIN_U27 -to hsmb_rx_d_p[11]
+set_location_assignment PIN_U22 -to hsmb_rx_d_p[12]
+set_location_assignment PIN_W28 -to hsmb_rx_d_p[13]
+set_location_assignment PIN_V23 -to hsmb_rx_d_p[14]
+set_location_assignment PIN_AB27 -to hsmb_rx_d_p[15]
+set_location_assignment PIN_AC27 -to hsmb_rx_d_p[16]
+set_location_assignment PIN_J26 -to hsmb_tx_d_n[0]
+set_location_assignment PIN_L24 -to hsmb_tx_d_n[1]
+set_location_assignment PIN_M26 -to hsmb_tx_d_n[2]
+set_location_assignment PIN_N26 -to hsmb_tx_d_n[3]
+set_location_assignment PIN_R28 -to hsmb_tx_d_n[4]
+set_location_assignment PIN_R26 -to hsmb_tx_d_n[5]
+set_location_assignment PIN_U26 -to hsmb_tx_d_n[6]
+set_location_assignment PIN_V28 -to hsmb_tx_d_n[7]
+set_location_assignment PIN_V26 -to hsmb_tx_d_n[8]
+set_location_assignment PIN_W26 -to hsmb_tx_d_n[9]
+set_location_assignment PIN_Y26 -to hsmb_tx_d_n[10]
+set_location_assignment PIN_AA26 -to hsmb_tx_d_n[11]
+set_location_assignment PIN_AB26 -to hsmb_tx_d_n[12]
+set_location_assignment PIN_Y24 -to hsmb_tx_d_n[13]
+set_location_assignment PIN_AE28 -to hsmb_tx_d_n[14]
+set_location_assignment PIN_Y22 -to hsmb_tx_d_n[15]
+set_location_assignment PIN_W21 -to hsmb_tx_d_n[16]
+set_location_assignment PIN_J25 -to hsmb_tx_d_p[0]
+set_location_assignment PIN_L23 -to hsmb_tx_d_p[1]
+set_location_assignment PIN_M25 -to hsmb_tx_d_p[2]
+set_location_assignment PIN_N25 -to hsmb_tx_d_p[3]
+set_location_assignment PIN_R27 -to hsmb_tx_d_p[4]
+set_location_assignment PIN_R25 -to hsmb_tx_d_p[5]
+set_location_assignment PIN_U25 -to hsmb_tx_d_p[6]
+set_location_assignment PIN_V27 -to hsmb_tx_d_p[7]
+set_location_assignment PIN_V25 -to hsmb_tx_d_p[8]
+set_location_assignment PIN_W25 -to hsmb_tx_d_p[9]
+set_location_assignment PIN_Y25 -to hsmb_tx_d_p[10]
+set_location_assignment PIN_AA25 -to hsmb_tx_d_p[11]
+set_location_assignment PIN_AB25 -to hsmb_tx_d_p[12]
+set_location_assignment PIN_Y23 -to hsmb_tx_d_p[13]
+set_location_assignment PIN_AE27 -to hsmb_tx_d_p[14]
+set_location_assignment PIN_W22 -to hsmb_tx_d_p[15]
+set_location_assignment PIN_V21 -to hsmb_tx_d_p[16]
+

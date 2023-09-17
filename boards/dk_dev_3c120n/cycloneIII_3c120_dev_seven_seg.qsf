@@ -1,0 +1,28 @@
+#
+# Quad seven segment LEDs
+#
+
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_a
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_b
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_c
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_d
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_e
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_f
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_g
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_dp
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_sel
+set_instance_assignment -name IO_STANDARD "1.8 V" -to seven_seg_minus
+set_location_assignment PIN_AD5 -to seven_seg_a
+set_location_assignment PIN_A3 -to seven_seg_b
+set_location_assignment PIN_C4 -to seven_seg_c
+set_location_assignment PIN_D4 -to seven_seg_d
+set_location_assignment PIN_E5 -to seven_seg_e
+set_location_assignment PIN_D5 -to seven_seg_f
+set_location_assignment PIN_AE6 -to seven_seg_g
+set_location_assignment PIN_AD4 -to seven_seg_dp
+set_location_assignment PIN_G19 -to seven_seg_minus
+set_location_assignment PIN_B3 -to seven_seg_sel[1]
+set_location_assignment PIN_C5 -to seven_seg_sel[2]
+set_location_assignment PIN_E4 -to seven_seg_sel[3]
+set_location_assignment PIN_C3 -to seven_seg_sel[4]
+

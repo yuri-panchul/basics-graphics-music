@@ -145,7 +145,7 @@ intel_fpga_setup_quartus ()
 
     if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
-        warning 1 "multiple Intel FPGA versions installed in"  \
+        warning "multiple Intel FPGA versions installed in"  \
                 "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
                 "'$all_version_dirs'"
 
@@ -344,6 +344,11 @@ EOF
     fi
 
     cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
+
+    $find_to_run "$board_dir/$fpga_board"  \
+                 -name '*.qsf'             \
+               ! -name board_specific.qsf  \
+                 -exec cp {} "$dir"        \;
 }
 
 #-----------------------------------------------------------------------------
