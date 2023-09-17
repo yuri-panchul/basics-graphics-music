@@ -1,0 +1,25 @@
+#
+# Ethernet connections enet
+#
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to enet_mdc
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to enet_mdio
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to enet_resetn
+set_instance_assignment -name IO_STANDARD "1.8 V" -to enet_rx_clk
+set_instance_assignment -name IO_STANDARD "2.5 V" -to enet_led_link1000
+set_location_assignment PIN_N8 -to enet_mdc
+set_location_assignment PIN_L5 -to enet_mdio
+set_location_assignment PIN_B14 -to enet_rx_clk
+set_location_assignment PIN_AA7 -to enet_tx_en
+set_location_assignment PIN_T8 -to enet_gtx_clk
+set_location_assignment PIN_W8 -to enet_rxd[0]
+set_location_assignment PIN_AA6 -to enet_rxd[1]
+set_location_assignment PIN_W7 -to enet_rxd[2]
+set_location_assignment PIN_Y6 -to enet_rxd[3]
+set_location_assignment PIN_W4 -to enet_txd[0]
+set_location_assignment PIN_AA5 -to enet_txd[1]
+set_location_assignment PIN_Y5 -to enet_txd[2]
+set_location_assignment PIN_W3 -to enet_txd[3]
+set_location_assignment PIN_AB4 -to enet_rx_dv
+set_location_assignment PIN_AD2 -to enet_resetn
+set_location_assignment PIN_AC25 -to enet_led_link1000
+

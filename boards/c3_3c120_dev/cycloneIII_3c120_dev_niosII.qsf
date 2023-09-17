@@ -1,0 +1,6 @@
+# input for NIOS reset
+#
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to cpu_resetn
+set_location_assignment PIN_T21 -to cpu_resetn
+#
+

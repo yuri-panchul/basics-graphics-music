@@ -1,0 +1,12 @@
+# user LEDs 0-7
+set_instance_assignment -name IO_STANDARD "1.8 V" -to user_led
+set_location_assignment IOBANK_4 -to user_led
+set_location_assignment PIN_AD15 -to user_led[0]
+set_location_assignment PIN_AE20 -to user_led[1]
+set_location_assignment PIN_AF18 -to user_led[2]
+set_location_assignment PIN_AD19 -to user_led[3]
+set_location_assignment PIN_AE15 -to user_led[4]
+set_location_assignment PIN_AC17 -to user_led[5]
+set_location_assignment PIN_AG19 -to user_led[6]
+set_location_assignment PIN_AF19 -to user_led[7]
+

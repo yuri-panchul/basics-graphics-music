@@ -1,0 +1,12 @@
+#
+# Assignments:  MAX
+#
+set_instance_assignment -name IO_STANDARD "1.8 V" -to max_oen
+set_instance_assignment -name IO_STANDARD "1.8 V" -to max_wen
+set_instance_assignment -name IO_STANDARD "1.8 V" -to max_csn
+set_instance_assignment -name IO_STANDARD "1.8 V" -to max2_clk
+set_location_assignment PIN_D23 -to max_csn
+set_location_assignment PIN_E25 -to max_oen
+set_location_assignment PIN_C15 -to max_wen
+set_location_assignment PIN_D14 -to max2_clk
+
