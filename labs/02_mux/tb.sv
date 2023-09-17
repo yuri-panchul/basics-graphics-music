@@ -43,7 +43,12 @@ module tb;
 
         // Back-box testing - checking the output
 
-        if (led
+        result   = led [0];
+        expected = sel ? a : b;
+
+        if (resuly != expected)
+            $display ("Mismatch: %b ? %b : %b. expected: %b actual: %b",
+                sel, a, b, expected, result);
 
         // White-box testing - checking XMR (external module reference)
 
