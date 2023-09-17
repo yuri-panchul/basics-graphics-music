@@ -84,5 +84,5 @@ set_location_assignment PIN_AB23 -to termination_blk3~_rdn_pad
 # source cycloneIII_3c120_dev_dsp.qsf
 #
 
-source cycloneIII_3c120_dev_user_dipsw.qsf
-source cycloneIII_3c120_dev_user_pb.qsf
+# source cycloneIII_3c120_dev_user_dipsw.qsf
+# source cycloneIII_3c120_dev_user_pb.qsf
