@@ -1,6 +1,6 @@
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
+    parameter clk_mhz = 100,
               w_key   = 4,
               w_sw    = 4,
               w_led   = 4,
@@ -104,6 +104,7 @@ logic [w_top_key   - 1:0] top_key;
 wire  [w_top_led   - 1:0] top_led;
 wire  [w_top_digit - 1:0] top_digit;
  
+ 
  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
   always_comb
         begin
@@ -121,10 +122,10 @@ wire  [w_top_digit - 1:0] top_digit;
     top
     # (
         .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
+        .w_key   ( w_top_key   ),
         .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
+        .w_led   ( w_top_led   ),
+        .w_digit ( w_top_digit ),
         .w_gpio  ( w_gpio  )
     )
     i_top
@@ -163,7 +164,7 @@ wire  [w_top_digit - 1:0] top_digit;
     endgenerate
 
  wire tm_static_hex;
- assign tm_static_hex = 'b0;
+ assign tm_static_hex = 'b1;
 
 tm1638_board_controller
     # (
@@ -178,9 +179,9 @@ tm1638_board_controller
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ), 
-        .sio_clk    ( GPIO[40]      ), // JP1 pin 38
-        .sio_stb    ( GPIO[41]      ), // JP1 pin 39
-        .sio_data   ( GPIO[39]      )  // JP1 pin 40
+        .sio_clk    ( GPIO[40]      ), 
+        .sio_stb    ( GPIO[41]      ), 
+        .sio_data   ( GPIO[39]      )  
     );
 
 endmodule
