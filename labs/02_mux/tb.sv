@@ -15,6 +15,7 @@ module tb;
     logic       rst;
     logic [3:0] key;
     logic [7:0] sw;
+    wire  [w_led - 1:0] led;
 
     //------------------------------------------------------------------------
 
@@ -29,24 +30,25 @@ module tb;
     )
     i_top
     (
-        .clk ( clk ),
-        .rst ( rst ),
-        .key ( key ),
-        .sw  ( sw  )
+        .clk  ( clk ),
+        .rst  ( rst ),
+        .key  ( key ),
+        .sw   ( sw  ),
+        .led  ( led )
     );
 
     //------------------------------------------------------------------------
 
     logic sel, a, b, result, expected;
 
-    task check ()
+    task check ();
 
         // Back-box testing - checking the output
 
         result   = led [0];
         expected = sel ? a : b;
 
-        if (resuly != expected)
+        if (result != expected)
             $display ("Mismatch: %b ? %b : %b. expected: %b actual: %b",
                 sel, a, b, expected, result);
 
@@ -70,9 +72,9 @@ module tb;
         for (int ia   = 0; ia   <= 1; ia   ++)
         for (int ib   = 0; ib   <= 1; ib   ++)
         begin
-             sel = 1'b ( isel );
-             a   = 1'b ( ia   );
-             b   = 1'b ( ib   );
+             sel = 1' ( isel );
+             a   = 1' ( ia   );
+             b   = 1' ( ib   );
 
              key <= w_key' ({ sel, a, b });
              sw  <= $urandom ();
