@@ -60,7 +60,7 @@ module tb;
 
             if (result != expected)
                 $display ("Mismatch in mux %0d: %b ? %b : %b. expected: %b actual: %b",
-                    sel, a, b, expected, result);
+                    i, sel, a, b, expected, result);
         end
 
     endtask
