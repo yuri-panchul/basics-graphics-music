@@ -11,10 +11,10 @@ module tb;
 
     //------------------------------------------------------------------------
 
-    logic       clk;
-    logic       rst;
-    logic [3:0] key;
-    logic [7:0] sw;
+    logic               clk;
+    logic               rst;
+    logic [w_key - 1:0] key;
+    logic [w_sw  - 1:0] sw;
     wire  [w_led - 1:0] led;
 
     //------------------------------------------------------------------------
@@ -54,6 +54,15 @@ module tb;
 
         // White-box testing - checking XMR (external module reference)
 
+        for (int i = 0; i < $bits (i_top.all_muxes); i ++)
+        begin
+            result = i_top.all_muxes [i];
+
+            if (result != expected)
+                $display ("Mismatch in mux %0d: %b ? %b : %b. expected: %b actual: %b",
+                    sel, a, b, expected, result);
+        end
+
     endtask
 
     //------------------------------------------------------------------------
@@ -77,7 +86,7 @@ module tb;
              b   = 1' ( ib   );
 
              key <= w_key' ({ sel, a, b });
-             sw  <= $urandom ();
+             sw  <= $urandom ();  // The result should not depend on sw
 
              # 10
 
