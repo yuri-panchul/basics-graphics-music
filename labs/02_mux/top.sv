@@ -102,7 +102,7 @@ module top
 
     //------------------------------------------------------------------------
 
-    // Exercise: Implement mux
+    // Exercise 1: Implement mux
     // without using "?" operation, "if", "case" or a bit selection.
     // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
@@ -125,6 +125,9 @@ module top
     };
 
     wire mux5 = table5 [{ sel, a, b }];
+
+    // Exercise 2: Change the table to get the correct result by doing
+    // wire mux5_2 = table5_2 [{ a, b, sel }];
 
     //------------------------------------------------------------------------
 
@@ -246,6 +249,9 @@ module top
     };
 
     wire mux11 = table11 [a][b][sel];
+
+    // Exercise 3: Change the table to get the correct result by doing
+    // wire mux11_2 = table11_2 [sel][b][a];
 
     `else
 
