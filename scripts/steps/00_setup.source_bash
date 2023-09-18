@@ -253,10 +253,11 @@ update_fpga_toolchain_var ()
         de10_nano            | \
         omdazz               | \
         piswords6            | \
+        qmtech_c4_starter    | \
         rzrd                 | \
+        saylinx              | \
         zeowaa               | \
-        zeowaa_7_digit       | \
-        saylinx              )
+        zeowaa_7_digit       )
 
             fpga_toolchain=quartus
             use_old_version_of_quartus=0
