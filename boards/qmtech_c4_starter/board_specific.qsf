@@ -1,7 +1,7 @@
 set_global_assignment -name DEVICE EP4CE15F23C8
 
 set_location_assignment PIN_T2  -to CLK
-set_location_assignment PIN_J4  -to RST_N
+set_location_assignment PIN_J4  -to KEY
 
 set_location_assignment PIN_W19 -to ABCDEFGH_N[7]
 set_location_assignment PIN_U19 -to ABCDEFGH_N[6]
