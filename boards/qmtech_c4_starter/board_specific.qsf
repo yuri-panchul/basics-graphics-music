@@ -1,4 +1,14 @@
-set_global_assignment -name DEVICE EP4CE15F23C8
+set_global_assignment   -name DEVICE EP4CE15F23C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+set_global_assignment   -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+
+# For some reason this setting is necessary even for Cyclone IV.
+# It does not route the design without it on omdazz / rzrd.net board.
+
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 
 set_location_assignment PIN_T2  -to CLK
 set_location_assignment PIN_J4  -to KEY

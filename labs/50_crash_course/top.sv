@@ -64,9 +64,22 @@ module top
         else
             counter <= counter + 1;
 
-    assign led = w_led'        (counter [25:22]);
-    assign abcdefgh = 8'       (counter [31:23]);
-    assign digit    = w_digit' (counter [31:24]);
+    assign led = w_led' (counter [25:22]);
+
+    //------------------------------------------------------------------------
+
+    // 4 bits per hexadecimal digit
+    localparam w_display_number = w_digit * 4;
+
+    seven_segment_display # (w_digit) i_7segment
+    (
+        .clk      ( clk                                 ),
+        .rst      ( rst                                 ),
+        .number   ( w_display_number' (counter [31:20]) ),
+        .dots     ( w_digit' (0)                        ),
+        .abcdefgh ( abcdefgh                            ),
+        .digit    ( digit                               )
+    );
 
     //------------------------------------------------------------------------
 

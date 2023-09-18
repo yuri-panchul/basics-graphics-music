@@ -337,7 +337,7 @@ fpga_board_setup ()
             fi
 
             if [ $fpga_board == "exit" ] ; then
-                info "FPGA board is not selected, please run the script again"
+                info "a new FPGA board is not selected, please run the script again"
                 exit 0
             fi
 
