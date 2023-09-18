@@ -216,11 +216,12 @@ Copyright 2017 Alan Garfield
 ///////////////////////////////////////////////////////////////////////////////////
 module tm1638_board_controller
 # (
-    parameter w_digit = 8,
+    parameter clk_mhz = 50,
+              w_digit = 8,
               w_seg   = 8
 )
 (
-    input                             clk, // 50 MHz
+    input                             clk,
     input                             rst,
     input                             static_hex,
     input        [               7:0] hgfedcba,
@@ -279,9 +280,13 @@ module tm1638_board_controller
     assign sio_data = tm_rw ? dio_out : 'Z;
     assign dio_in   = sio_data;
 
-    tm1638_sio tm1638_sio
+    tm1638_sio
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    tm1638_sio
     (
-        .clk        ( clk               ), // 50 MHz max
+        .clk        ( clk               ),
         .rst        ( reset_syn2        ),
 
         .data_latch ( tm_latch          ),
@@ -464,7 +469,11 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////////
 //           TM1638 SIO driver for tm1638_board_controller top module
 ///////////////////////////////////////////////////////////////////////////////////
-module tm1638_sio(
+module tm1638_sio
+# (
+    parameter clk_mhz = 50
+)
+(
     input          clk,
     input          rst,
 
@@ -478,9 +487,9 @@ module tm1638_sio(
     output         sclk,
     input          dio_in,
     output logic   dio_out
-    );
+);
 
-    localparam CLK_DIV = 6; // 700kHz at clk 50MHz (50/63)
+    localparam CLK_DIV = $clog2 (clk_mhz*1000/700); // 700 kHz is recommended SIO clock
     localparam CLK_DIV1 = CLK_DIV - 1;
     localparam [1:0]
         S_IDLE      = 2'h0,
