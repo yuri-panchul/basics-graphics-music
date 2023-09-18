@@ -23,6 +23,8 @@
     // Xilinx Vivado Simulator
 `elsif Veritak
     // Veritak http://www.sugawara-systems.com
+`elsif _VCP
+    // Aldec
 `else
     `define NO_SIMULATION
 `endif
