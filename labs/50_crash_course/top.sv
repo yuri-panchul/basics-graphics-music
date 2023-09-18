@@ -42,8 +42,8 @@ module top
     //------------------------------------------------------------------------
 
     // assign led      = '0;
-       assign abcdefgh = '0;
-       assign digit    = '0;
+    // assign abcdefgh = '0;
+    // assign digit    = '0;
     // assign vsync    = '0;
     // assign hsync    = '0;
     // assign red      = '0;
@@ -64,7 +64,9 @@ module top
         else
             counter <= counter + 1;
 
-    assign led = counter [25:22];
+    assign led = w_led'        (counter [25:22]);
+    assign abcdefgh = 8'       (counter [31:23]);
+    assign digit    = w_digit' (counter [31:24]);
 
     //------------------------------------------------------------------------
 

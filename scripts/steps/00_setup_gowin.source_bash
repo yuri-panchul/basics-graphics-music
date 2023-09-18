@@ -187,7 +187,7 @@ setup_run_directory_for_fpga_synthesis_gowin ()
     fi
 
     if [ -e "$board_dir/$fpga_board/project_process_config_01.json" ] && \
-         -e "$board_dir/$fpga_board/project_process_config_02.json" ]
+       [ -e "$board_dir/$fpga_board/project_process_config_02.json" ]
     then
         if ! [ -d $dir/impl ]
         then
