@@ -3,32 +3,35 @@
 module board_specific_top
 # (
     parameter clk_mhz = 50,
-              w_key   = 3,
+              w_key   = 4,
               w_sw    = 8,
               w_led   = 12,
               w_digit = 8,
               w_gpio  = 19
 )
 (
-    input                    CLK,
+    input                  CLK,
 
-    input  [w_key + 1 - 1:0] KEY_N,  // One key is used as a reset
-    input  [w_sw      - 1:0] SW_N,
-    output [w_led     - 1:0] LED_N,
+    input  [w_key   - 1:0] KEY_N,  // One key is used as a reset
+    input  [w_sw    - 1:0] SW_N,
+    output [w_led   - 1:0] LED_N,
 
-    output [            7:0] ABCDEFGH_N,
-    output [w_digit   - 1:0] DIGIT_N,
+    output [          7:0] ABCDEFGH_N,
+    output [w_digit - 1:0] DIGIT_N,
 
-    output                   VGA_HSYNC,
-    output                   VGA_VSYNC,
-    output [            2:0] VGA_RGB,
+    output                 VGA_HSYNC,
+    output                 VGA_VSYNC,
+    output [          2:0] VGA_RGB,
 
-    input                    UART_RX,
+    input                  UART_RX,
 
-    inout  [w_gpio    - 1:0] GPIO
+    inout  [w_gpio  - 1:0] GPIO
 );
 
-    wire rst = ~ KEY_N [3];
+    localparam w_top_key = w_key - 1;  // One onboard key is used as a reset
+
+    wire                   rst     = ~ KEY_N [w_key     - 1];
+    wire [w_top_key - 1:0] top_key = ~ KEY_N [w_top_key - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -46,19 +49,19 @@ module board_specific_top
 
     top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz ( clk_mhz   ),
+        .w_key   ( w_top_key ),
+        .w_sw    ( w_sw      ),
+        .w_led   ( w_led     ),
+        .w_digit ( w_digit   ),
+        .w_gpio  ( w_gpio    )
     )
     i_top
     (
         .clk      (   CLK         ),
         .rst      (   rst         ),
 
-        .key      ( ~ KEY_N [2:0] ),
+        .key      (   top_key     ),
         .sw       ( ~ SW_N        ),
 
         .led      (   led         ),
