@@ -15,9 +15,9 @@ module board_specific_top
 
     input  [w_key - 1:0] KEY,
     input  [w_sw  - 1:0] SW,
-    output [w_led - 1:0] LEDR,
+    output [w_led - 1:0] LEDR, // The last 6 LEDR are used like a 7SEG dp
 
-    output logic [  6:0] HEX0,
+    output logic [  6:0] HEX0, // HEX[7] aka dp doesn't connected to FPGA at DE0-CV
     output logic [  6:0] HEX1,
     output logic [  6:0] HEX2,
     output logic [  6:0] HEX3,
@@ -34,36 +34,42 @@ module board_specific_top
     inout  [       35:0] GPIO_1
 );
 
+    //------------------------------------------------------------------------
+
     wire clk =    CLOCK_50;
     wire rst =  ~ RESET_N;
 
+    wire [w_key   - 1:0] top_key = ~ KEY;
+
     //------------------------------------------------------------------------
 
-    wire [          7:0] abcdefgh;
-    wire [w_digit - 1:0] digit;
+    wire [w_led - w_digit - 1:0] top_led;
 
-    wire [         23:0] mic;
+    wire [                  7:0] abcdefgh;
+    wire [        w_digit - 1:0] digit;
+
+    wire [                 23:0] mic;
 
     //------------------------------------------------------------------------
 
     top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz ( clk_mhz         ),
+        .w_key   ( w_key           ),
+        .w_sw    ( w_sw            ),
+        .w_led   ( w_led - w_digit ),              // The last 6 LEDR are used like a 7SEG dp
+        .w_digit ( w_digit         ),
+        .w_gpio  ( w_gpio          )
     )
     i_top
     (
         .clk      (   clk                ),
         .rst      (   rst                ),
 
-        .key      ( ~ KEY                ),
+        .key      (   top_key            ),
         .sw       (   SW                 ),
 
-        .led      (   LEDR               ),
+        .led      (   top_led            ),
 
         .abcdefgh (   abcdefgh           ),
         .digit    (   digit              ),
@@ -76,12 +82,17 @@ module board_specific_top
         .blue     (   VGA_B              ),
 
         .mic      (   mic                ),
-        .gpio     (   { GPIO_1, GPIO_0 } )
+        .gpio     (   { GPIO_0, GPIO_1 } )
     );
 
     //------------------------------------------------------------------------
 
-    wire [$left (abcdefgh):0] hgfedcba;
+    assign LEDR [w_led - w_digit - 1:0] = top_led; // The last 6 LEDR are used like a 7SEG dp
+
+    //------------------------------------------------------------------------
+
+    wire  [$left (abcdefgh):0] hgfedcba;
+    logic [$left    (digit):0] dp;
 
     generate
         genvar i;
@@ -103,7 +114,8 @@ module board_specific_top
 
         // Con: This implementation makes the 7-segment LEDs dim
         // on most boards with the static 7-sigment display.
-        // It also does not work well with TM1638 peripheral display.
+
+        // inverted logic
 
         assign HEX0 = digit [0] ? ~ hgfedcba [$left (HEX0):0] : '1;
         assign HEX1 = digit [1] ? ~ hgfedcba [$left (HEX1):0] : '1;
@@ -112,12 +124,22 @@ module board_specific_top
         assign HEX4 = digit [4] ? ~ hgfedcba [$left (HEX4):0] : '1;
         assign HEX5 = digit [5] ? ~ hgfedcba [$left (HEX5):0] : '1;
 
+        // positive logic
+
+        assign LEDR [    w_led - w_digit] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
+        assign LEDR [w_led - w_digit + 1] = digit [1] ? hgfedcba [$left (HEX1) + 1] : '0;
+        assign LEDR [w_led - w_digit + 2] = digit [2] ? hgfedcba [$left (HEX2) + 1] : '0;
+        assign LEDR [w_led - w_digit + 3] = digit [3] ? hgfedcba [$left (HEX3) + 1] : '0;
+        assign LEDR [w_led - w_digit + 4] = digit [4] ? hgfedcba [$left (HEX4) + 1] : '0;
+        assign LEDR [w_led - w_digit + 5] = digit [5] ? hgfedcba [$left (HEX5) + 1] : '0;
+
     `else
 
         always_ff @ (posedge clk or posedge rst)
             if (rst)
             begin
-                { HEX0, HEX1, HEX2, HEX3 } <= '1;
+                { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 } <= '1;
+                dp <= '0;
             end
             else
             begin
@@ -127,7 +149,16 @@ module board_specific_top
                 if (digit [3]) HEX3 <= ~ hgfedcba [$left (HEX3):0];
                 if (digit [4]) HEX4 <= ~ hgfedcba [$left (HEX4):0];
                 if (digit [5]) HEX5 <= ~ hgfedcba [$left (HEX5):0];
+
+                if (digit [0]) dp[0] <=  hgfedcba [$left (HEX0) + 1];
+                if (digit [1]) dp[1] <=  hgfedcba [$left (HEX1) + 1];
+                if (digit [2]) dp[2] <=  hgfedcba [$left (HEX2) + 1];
+                if (digit [3]) dp[3] <=  hgfedcba [$left (HEX3) + 1];
+                if (digit [4]) dp[4] <=  hgfedcba [$left (HEX4) + 1];
+                if (digit [5]) dp[5] <=  hgfedcba [$left (HEX5) + 1];
             end
+
+        assign LEDR [w_led - 1:w_led - w_digit] = dp;  // The last 6 LEDR are used like a 7SEG dp
 
     `endif
 
@@ -137,14 +168,14 @@ module board_specific_top
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
-        .lr    ( GPIO_0 [5] ),
-        .ws    ( GPIO_0 [3] ),
-        .sck   ( GPIO_0 [1] ),
-        .sd    ( GPIO_0 [0] ),
+        .lr    ( GPIO_0 [5] ), // JP1 pin 6
+        .ws    ( GPIO_0 [3] ), // JP1 pin 4
+        .sck   ( GPIO_0 [1] ), // JP1 pin 2
+        .sd    ( GPIO_0 [0] ), // JP1 pin 1
         .value ( mic        )
     );
 
-    assign GPIO_0 [4] = 1'b0;  // GND
-    assign GPIO_0 [2] = 1'b1;  // VCC
+    assign GPIO_0 [4] = 1'b0;  // GND - JP1 pin 5
+    assign GPIO_0 [2] = 1'b1;  // VCC - JP1 pin 3
 
 endmodule

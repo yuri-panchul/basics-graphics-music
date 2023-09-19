@@ -34,38 +34,39 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    localparam w_top_sw   = w_sw - 1;  // One onboard SW is used as a reset
+
     wire clk = MAX10_CLK1_50;
 
-    localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
-
-    wire                  rst = SW [w_sw - 1];
-    wire [w_top_sw - 1:0] sw  = SW [w_top_sw - 1:0];
+    wire                  rst    = SW [w_sw - 1];
+    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire [w_key    - 1:0] top_key = ~ KEY;
 
     //------------------------------------------------------------------------
 
-    wire [          7:0] abcdefgh;
-    wire [w_digit - 1:0] digit;
+    wire  [          7:0] abcdefgh;
+    wire  [w_digit - 1:0] digit;
 
-    wire [         23:0] mic;
+    wire  [         23:0] mic;
 
     //------------------------------------------------------------------------
 
     top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz ( clk_mhz  ),
+        .w_key   ( w_key    ),
+        .w_sw    ( w_top_sw ),
+        .w_led   ( w_led    ),
+        .w_digit ( w_digit  ),
+        .w_gpio  ( w_gpio   )
     )
     i_top
     (
         .clk      (   clk      ),
         .rst      (   rst      ),
 
-        .key      ( ~ KEY      ),
-        .sw       (   sw       ),
+        .key      (   top_key  ),
+        .sw       (   top_sw   ),
 
         .led      (   LEDR     ),
 
@@ -107,7 +108,6 @@ module board_specific_top
 
         // Con: This implementation makes the 7-segment LEDs dim
         // on most boards with the static 7-sigment display.
-        // It also does not work well with TM1638 peripheral display.
 
         assign HEX0 = digit [0] ? ~ hgfedcba : '1;
         assign HEX1 = digit [1] ? ~ hgfedcba : '1;
@@ -141,14 +141,14 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [3] ),
-        .sck   ( GPIO [1] ),
-        .sd    ( GPIO [0] ),
+        .lr    ( GPIO [5] ), // JP1 pin 6
+        .ws    ( GPIO [3] ), // JP1 pin 4
+        .sck   ( GPIO [1] ), // JP1 pin 2
+        .sd    ( GPIO [0] ), // JP1 pin 1
         .value ( mic      )
     );
 
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
+    assign GPIO [4] = 1'b0;  // GND - JP1 pin 5
+    assign GPIO [2] = 1'b1;  // VCC - JP1 pin 3
 
 endmodule

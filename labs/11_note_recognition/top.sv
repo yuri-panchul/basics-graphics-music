@@ -36,7 +36,7 @@ module top
 
     // General-purpose Input/Output
 
-    inout  logic [w_gpio  - 1:0] gpio
+    inout        [w_gpio  - 1:0] gpio
 );
 
     //------------------------------------------------------------------------
@@ -168,13 +168,13 @@ module top
     //------------------------------------------------------------------------
 
     function [19:0] high_distance (input [18:0] freq_100);
-       high_distance = clk_mhz * 1000 * 1000 / freq_100 * 104;
+       high_distance = clk_mhz * 1000 * 1000 / freq_100 * 103;
     endfunction
 
     //------------------------------------------------------------------------
 
     function [19:0] low_distance (input [18:0] freq_100);
-       low_distance = clk_mhz * 1000 * 1000 / freq_100 * 96;
+       low_distance = clk_mhz * 1000 * 1000 / freq_100 * 97;
     endfunction
 
     //------------------------------------------------------------------------

@@ -1,0 +1,114 @@
+#
+# Flash and SSRAM shared bus assignments
+#
+
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+
+#
+# Pin assignments
+#
+set_location_assignment PIN_Y17 -to flash_oen
+set_location_assignment PIN_AA21 -to flash_wen
+set_location_assignment PIN_AF20 -to sram_ben[0]
+set_location_assignment PIN_AH26 -to sram_ben[1]
+set_location_assignment PIN_AE22 -to sram_ben[2]
+set_location_assignment PIN_AB21 -to sram_ben[3]
+set_location_assignment PIN_AD22 -to sram_clk
+set_location_assignment PIN_AB19 -to sram_csn
+set_location_assignment PIN_AD25 -to sram_oen
+set_location_assignment PIN_AE25 -to sram_wen
+set_location_assignment PIN_AG15 -to sram_wait[0]
+set_location_assignment PIN_AH25 -to sram_wait[1]
+set_location_assignment PIN_Y16 -to flash_cen
+set_location_assignment PIN_AG25 -to flash_rdybsyn
+set_location_assignment PIN_AB20 -to flash_resetn
+set_location_assignment PIN_B4 -to sram_psn
+set_location_assignment PIN_AC11 -to fsa[0]
+set_location_assignment PIN_AH10 -to fsa[1]
+set_location_assignment PIN_AA13 -to fsa[2]
+set_location_assignment PIN_AC10 -to fsa[3]
+set_location_assignment PIN_Y15 -to fsa[4]
+set_location_assignment PIN_AF22 -to fsa[5]
+set_location_assignment PIN_AF26 -to fsa[6]
+set_location_assignment PIN_AF4 -to fsa[7]
+set_location_assignment PIN_AD8 -to fsa[8]
+set_location_assignment PIN_AG26 -to fsa[9]
+set_location_assignment PIN_AH6 -to fsa[10]
+set_location_assignment PIN_AD24 -to fsa[11]
+set_location_assignment PIN_AF9 -to fsa[12]
+set_location_assignment PIN_AA8 -to fsa[13]
+set_location_assignment PIN_AC22 -to fsa[14]
+set_location_assignment PIN_AE8 -to fsa[15]
+set_location_assignment PIN_AF13 -to fsa[16]
+set_location_assignment PIN_AB14 -to fsa[17]
+set_location_assignment PIN_AF23 -to fsa[18]
+set_location_assignment PIN_AG12 -to fsa[19]
+set_location_assignment PIN_AB18 -to fsa[20]
+set_location_assignment PIN_Y19 -to fsa[21]
+set_location_assignment PIN_AG3 -to fsa[22]
+set_location_assignment PIN_AE16 -to fsa[23]
+set_location_assignment PIN_AB7 -to fsa[24]
+set_location_assignment PIN_J14 -to fsd[0]
+set_location_assignment PIN_D6 -to fsd[1]
+set_location_assignment PIN_J17 -to fsd[2]
+set_location_assignment PIN_G7 -to fsd[3]
+set_location_assignment PIN_F18 -to fsd[4]
+set_location_assignment PIN_C6 -to fsd[5]
+set_location_assignment PIN_H17 -to fsd[6]
+set_location_assignment PIN_C18 -to fsd[7]
+set_location_assignment PIN_D18 -to fsd[8]
+set_location_assignment PIN_G16 -to fsd[9]
+set_location_assignment PIN_G22 -to fsd[10]
+set_location_assignment PIN_F12 -to fsd[11]
+set_location_assignment PIN_D11 -to fsd[12]
+set_location_assignment PIN_E24 -to fsd[13]
+set_location_assignment PIN_H21 -to fsd[14]
+set_location_assignment PIN_G9 -to fsd[15]
+set_location_assignment PIN_A4 -to fsd[16]
+set_location_assignment PIN_G13 -to fsd[17]
+set_location_assignment PIN_H14 -to fsd[18]
+set_location_assignment PIN_B8 -to fsd[19]
+set_location_assignment PIN_C8 -to fsd[20]
+set_location_assignment PIN_F7 -to fsd[21]
+set_location_assignment PIN_B11 -to fsd[22]
+set_location_assignment PIN_B22 -to fsd[23]
+set_location_assignment PIN_A18 -to fsd[24]
+set_location_assignment PIN_G8 -to fsd[25]
+set_location_assignment PIN_J12 -to fsd[26]
+set_location_assignment PIN_D9 -to fsd[27]
+set_location_assignment PIN_C9 -to fsd[28]
+set_location_assignment PIN_E7 -to fsd[29]
+set_location_assignment PIN_H10 -to fsd[30]
+set_location_assignment PIN_J10 -to fsd[31]
+set_location_assignment PIN_AA19 -to sram_advn
+
+#
+# IO Standards
+#
+set_instance_assignment -name IO_STANDARD "1.8 V" -to flash_oen
+set_instance_assignment -name IO_STANDARD "1.8 V" -to flash_wen
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_ben
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_clk
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_oen
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_csn
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_wait
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_wen
+set_instance_assignment -name IO_STANDARD "1.8 V" -to flash_cen
+set_instance_assignment -name IO_STANDARD "1.8 V" -to flash_rdybsyn
+set_instance_assignment -name IO_STANDARD "1.8 V" -to flash_resetn
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_advn
+set_instance_assignment -name IO_STANDARD "1.8 V" -to fsa
+set_instance_assignment -name IO_STANDARD "1.8 V" -to fsd
+set_instance_assignment -name IO_STANDARD "1.8 V" -to sram_psn
+
+#
+# Other assignments
+#
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to flash_resetn
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to sram_psn
+set_instance_assignment -name OUTPUT_ENABLE_GROUP 2 -to fsd
+set_location_assignment EDGE_TOP -to fsd
+set_location_assignment EDGE_BOTTOM -to fsa
+

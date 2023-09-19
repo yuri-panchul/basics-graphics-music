@@ -23,6 +23,8 @@
     // Xilinx Vivado Simulator
 `elsif Veritak
     // Veritak http://www.sugawara-systems.com
+`elsif _VCP
+    // Aldec
 `else
     `define NO_SIMULATION
 `endif
@@ -31,6 +33,17 @@
     `define SYNTHESIS
 `else
     `define SIMULATION
+`endif
+
+// This define is useful for using some SV features,
+// like complex array initialization, not supported by Icarus
+
+`ifdef VCS
+    `define SYNOPSYS_CADENCE_MENTOR
+`elsif INCA
+    `define SYNOPSYS_CADENCE_MENTOR
+`elsif MODEL_TECH
+    `define SYNOPSYS_CADENCE_MENTOR
 `endif
 
 `endif  // ifndef CONFIG_SVH

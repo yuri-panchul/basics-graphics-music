@@ -1,0 +1,6 @@
+#
+# Speaker output line
+#
+set_instance_assignment -name IO_STANDARD "2.5 V" -to speaker_out
+set_location_assignment PIN_H22 -to speaker_out
+

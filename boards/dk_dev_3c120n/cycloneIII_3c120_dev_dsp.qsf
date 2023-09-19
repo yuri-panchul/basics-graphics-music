@@ -1,0 +1,101 @@
+#
+# Assignments: DSP_Kit replaces HSMA
+#
+set_global_assignment -name IGNORE_CLOCK_SETTINGS ON
+set_global_assignment -name FMAX_REQUIREMENT "120 MHz"
+set_location_assignment PIN_R1 -to analog_scl
+set_location_assignment PIN_M1 -to analog_sda
+
+# clocks
+set_instance_assignment -name IO_STANDARD "SSTL-2 CLASS II" -to pclk0p
+set_instance_assignment -name IO_STANDARD "SSTL-2 CLASS II" -to pclk0n
+set_instance_assignment -name IO_STANDARD "SSTL-2 CLASS II" -to pclk1p
+set_instance_assignment -name IO_STANDARD "SSTL-2 CLASS II" -to pclk1n
+set_location_assignment PIN_G6 -to pclk0p
+set_location_assignment PIN_G5 -to pclk0n
+set_location_assignment PIN_D2 -to pclk1p
+set_location_assignment PIN_D1 -to pclk1n
+
+# Analog to Digital Converter A
+set_location_assignment PIN_AB6 -to ada_d[13]
+set_location_assignment PIN_AE3 -to ada_d[12]
+set_location_assignment PIN_R7 -to ada_d[11]
+set_location_assignment PIN_R6 -to ada_d[10]
+set_location_assignment PIN_V4 -to ada_d[9]
+set_location_assignment PIN_V3 -to ada_d[8]
+set_location_assignment PIN_T4 -to ada_d[7]
+set_location_assignment PIN_T3 -to ada_d[6]
+set_location_assignment PIN_R3 -to ada_d[5]
+set_location_assignment PIN_R4 -to ada_d[4]
+set_location_assignment PIN_M8 -to ada_d[3]
+set_location_assignment PIN_M7 -to ada_d[2]
+set_location_assignment PIN_P2 -to ada_d[1]
+set_location_assignment PIN_P1 -to ada_d[0]
+set_location_assignment PIN_M3 -to ada_oe
+set_location_assignment PIN_J2 -to ada_dco
+set_location_assignment PIN_M4 -to ada_or
+set_location_assignment PIN_M2 -to ada_cs
+# Analog to Digital Converter B
+set_location_assignment PIN_AF2 -to adb_d[13]
+set_location_assignment PIN_AF5 -to adb_d[12]
+set_location_assignment PIN_AB2 -to adb_d[11]
+set_location_assignment PIN_AB1 -to adb_d[10]
+set_location_assignment PIN_Y4 -to adb_d[9]
+set_location_assignment PIN_Y3 -to adb_d[8]
+set_location_assignment PIN_U3 -to adb_d[7]
+set_location_assignment PIN_U4 -to adb_d[6]
+set_location_assignment PIN_W2 -to adb_d[5]
+set_location_assignment PIN_W1 -to adb_d[4]
+set_location_assignment PIN_V2 -to adb_d[3]
+set_location_assignment PIN_V1 -to adb_d[2]
+set_location_assignment PIN_U2 -to adb_d[1]
+set_location_assignment PIN_U1 -to adb_d[0]
+set_location_assignment PIN_U5 -to adb_oe
+set_location_assignment PIN_J1 -to adb_dco
+set_location_assignment PIN_U6 -to adb_or
+set_location_assignment PIN_R2 -to adb_cs
+
+# Digital to Analog Converter side A
+set_location_assignment PIN_L7 -to da[13]
+set_location_assignment PIN_L6 -to da[12]
+set_location_assignment PIN_K8 -to da[11]
+set_location_assignment PIN_L8 -to da[10]
+set_location_assignment PIN_K4 -to da[9]
+set_location_assignment PIN_K3 -to da[8]
+set_location_assignment PIN_J4 -to da[7]
+set_location_assignment PIN_J3 -to da[6]
+set_location_assignment PIN_J7 -to da[5]
+set_location_assignment PIN_K7 -to da[4]
+set_location_assignment PIN_G2 -to da[3]
+set_location_assignment PIN_G1 -to da[2]
+set_location_assignment PIN_F5 -to da[1]
+set_location_assignment PIN_F4 -to da[0]
+
+# Digital to Analog Converter side B
+set_location_assignment PIN_N4 -to db[13]
+set_location_assignment PIN_N3 -to db[12]
+set_location_assignment PIN_L4 -to db[11]
+set_location_assignment PIN_L3 -to db[10]
+set_location_assignment PIN_L2 -to db[9]
+set_location_assignment PIN_L1 -to db[8]
+set_location_assignment PIN_K2 -to db[7]
+set_location_assignment PIN_K1 -to db[6]
+set_location_assignment PIN_J6 -to db[5]
+set_location_assignment PIN_J5 -to db[4]
+set_location_assignment PIN_H4 -to db[3]
+set_location_assignment PIN_H3 -to db[2]
+set_location_assignment PIN_G4 -to db[1]
+set_location_assignment PIN_G3 -to db[0]
+#
+set_global_assignment -name TOP_LEVEL_ENTITY cycloneIII_3c120_dev_dsp_factory_design_loopback_top
+#
+set_global_assignment -name USE_GENERATED_PHYSICAL_CONSTRAINTS OFF -section_id eda_palace
+
+set_global_assignment -name BDF_FILE cycloneIII_3c120_dev_dsp_factory_design_loopback_top.bdf
+set_global_assignment -name DSP_BLOCK_BALANCING "LOGIC ELEMENTS" -entity fir_3mhz_st
+
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_COLOR 2147039 -section_id Top
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_instance_assignment -name PARTITION_HIERARCHY no_file_for_top_partition -to | -section_id Top
