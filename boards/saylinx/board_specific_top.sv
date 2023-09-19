@@ -8,28 +8,29 @@ module board_specific_top
               w_gpio  = 2
 )
 (
-    input                  CLK,
-    input                  RST_N,
+    input                     CLK,
+    input                     RST_N,
 
-    input                  KEY2,
-    input                  KEY3,
-    input                  KEY4,
+    input                     KEY2,
+    input                     KEY3,
+    input                     KEY4,
 
-    output [w_led   - 1:0] LED,
+    output [w_led      - 1:0] LED,
 
-    output [          7:0] SEG_DATA,
-    output [w_digit - 1:0] SEG_SEL,
+    output [             7:0] SEG_DATA,
+    output [w_digit    - 1:0] SEG_SEL,
 
-    output                 VGA_OUT_HS,
-    output                 VGA_OUT_VS,
+    output                    VGA_OUT_HS,
+    output                    VGA_OUT_VS,
 
-    output [          4:0] VGA_OUT_R,
-    output [          5:0] VGA_OUT_G,
-    output [          4:0] VGA_OUT_B,
+    output [             4:0] VGA_OUT_R,
+    output [             5:0] VGA_OUT_G,
+    output [             4:0] VGA_OUT_B,
 
-    input                  UART_RXD,
+    input                     UART_RXD,
 
-    inout  [w_gpio  - 1:0] GPIO
+    inout  [w_gpio / 2 - 1:0] GPIO_0,
+    inout  [w_gpio / 2 - 1:0] GPIO_1
 );
 
     //------------------------------------------------------------------------
@@ -88,9 +89,9 @@ module board_specific_top
     assign SEG_DATA  = ~ abcdefgh;
     assign SEG_SEL   = ~ digit;
 
-    assign VGA_OUT_R = {            red   [3], red   };
-    assign VGA_OUT_G = { green [3], green [3], green };
-    assign VGA_OUT_B = {            blue  [3], blue  };
+    assign VGA_OUT_R = { red   , 1'b0 };
+    assign VGA_OUT_G = { green , 2'b0 };
+    assign VGA_OUT_B = { blue  , 1'b0 };
 
     /*
     inmp441_mic_i2s_receiver i_microphone

@@ -1,0 +1,20 @@
+#
+# USB assignments
+#
+set_instance_assignment -name OUTPUT_ENABLE_GROUP 5 -to usb_fd
+set_instance_assignment -name IO_STANDARD "1.8 V" -to usb_ifclk
+set_location_assignment PIN_B15 -to usb_ifclk
+set_location_assignment PIN_C27 -to usb_cmd_data
+set_location_assignment PIN_G23 -to usb_ren
+set_location_assignment PIN_E26 -to usb_wen
+set_location_assignment PIN_F25 -to usb_empty
+set_location_assignment PIN_F24 -to usb_full
+set_location_assignment PIN_L21 -to usb_fd[0]
+set_location_assignment PIN_K22 -to usb_fd[1]
+set_location_assignment PIN_L22 -to usb_fd[2]
+set_location_assignment PIN_K21 -to usb_fd[3]
+set_location_assignment PIN_J24 -to usb_fd[4]
+set_location_assignment PIN_G26 -to usb_fd[5]
+set_location_assignment PIN_J23 -to usb_fd[6]
+set_location_assignment PIN_D26 -to usb_fd[7]
+

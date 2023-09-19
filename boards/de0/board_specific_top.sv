@@ -4,10 +4,10 @@ module board_specific_top
 # (
     parameter clk_mhz = 50,
               w_key   = 3,
-              w_sw    = 10, // One sw is used as a reset
+              w_sw    = 10,          // One onboard SW is used as a reset
               w_led   = 10,
               w_digit = 4,
-              w_gpio  = 31
+              w_gpio  = 64
 )
 (
     input                CLOCK_50,
@@ -16,9 +16,13 @@ module board_specific_top
     input  [w_sw  - 1:0] SW,
     output [w_led - 1:0] LEDG,
 
+    output logic         HEX0_DP,
     output logic [  6:0] HEX0_D,
+    output logic         HEX1_DP,
     output logic [  6:0] HEX1_D,
+    output logic         HEX2_DP,
     output logic [  6:0] HEX2_D,
+    output logic         HEX3_DP,
     output logic [  6:0] HEX3_D,
 
     output               VGA_HS,
@@ -27,18 +31,19 @@ module board_specific_top
     output [        3:0] VGA_G,
     output [        3:0] VGA_B,
 
-    inout  [       35:0] GPIO0_D,
-    inout  [       35:0] GPIO1_D
+    inout  [       31:0] GPIO0_D,
+    inout  [       31:0] GPIO1_D
 );
 
     //------------------------------------------------------------------------
 
-    wire clk = CLOCK_50;
+    localparam w_top_sw = w_sw - 1;  // One onboard SW is used as a reset
 
-    localparam w_top_sw = w_sw - 1;  // One sw is used as a reset
+    wire                     clk = CLOCK_50;
 
-    wire                  rst    = SW [w_sw - 1];
+    wire                  rst    = SW [w_top_sw];
     wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire [w_key    - 1:0] top_key = ~ BUTTON;
 
     //------------------------------------------------------------------------
 
@@ -63,7 +68,7 @@ module board_specific_top
         .clk      (   clk                  ),
         .rst      (   rst                  ),
 
-        .key      ( ~ BUTTON               ),
+        .key      (   top_key              ),
         .sw       (   top_sw               ),
 
         .led      (   LEDG                 ),
@@ -79,7 +84,7 @@ module board_specific_top
         .blue     (   VGA_B                ),
 
         .mic      (   mic                  ),
-        .gpio     (   { GPIO1_D, GPIO0_D } )
+        .gpio     (   { GPIO0_D, GPIO1_D } )
     );
 
     //------------------------------------------------------------------------
@@ -106,26 +111,34 @@ module board_specific_top
 
         // Con: This implementation makes the 7-segment LEDs dim
         // on most boards with the static 7-sigment display.
-        // It also does not work well with TM1638 peripheral display.
 
-        assign HEX0_D = digit [0] ? ~ hgfedcba [$left (HEX0_D):0] : '1;
-        assign HEX1_D = digit [1] ? ~ hgfedcba [$left (HEX1_D):0] : '1;
-        assign HEX2_D = digit [2] ? ~ hgfedcba [$left (HEX2_D):0] : '1;
-        assign HEX3_D = digit [3] ? ~ hgfedcba [$left (HEX3_D):0] : '1;
+        assign HEX0_D  = digit [0] ? ~ hgfedcba [$left (HEX0_D):0]   : '1;
+        assign HEX0_DP = digit [0] ? ~ hgfedcba [$left (HEX0_D) + 1] : '1;
+        assign HEX1_D  = digit [1] ? ~ hgfedcba [$left (HEX1_D):0]   : '1;
+        assign HEX1_DP = digit [1] ? ~ hgfedcba [$left (HEX1_D) + 1] : '1;
+        assign HEX2_D  = digit [2] ? ~ hgfedcba [$left (HEX2_D):0]   : '1;
+        assign HEX2_DP = digit [2] ? ~ hgfedcba [$left (HEX2_D) + 1] : '1;
+        assign HEX3_D  = digit [3] ? ~ hgfedcba [$left (HEX3_D):0]   : '1;
+        assign HEX3_DP = digit [3] ? ~ hgfedcba [$left (HEX3_D) + 1] : '1;
 
     `else
 
         always_ff @ (posedge clk or posedge rst)
             if (rst)
             begin
-                { HEX0_D, HEX1_D, HEX2_D, HEX3_D } <= '1;
+                { HEX0_D, HEX0_DP, HEX1_D, HEX1_DP, HEX2_D, HEX2_DP, HEX3_D, HEX3_DP } <= '1;
             end
             else
             begin
-                if (digit [0]) HEX0_D <= ~ hgfedcba [$left (HEX0_D):0];
-                if (digit [1]) HEX1_D <= ~ hgfedcba [$left (HEX1_D):0];
-                if (digit [2]) HEX2_D <= ~ hgfedcba [$left (HEX2_D):0];
-                if (digit [3]) HEX3_D <= ~ hgfedcba [$left (HEX3_D):0];
+                if (digit [0]) HEX0_D  <= ~ hgfedcba [$left (HEX0_D):0];
+                if (digit [1]) HEX1_D  <= ~ hgfedcba [$left (HEX1_D):0];
+                if (digit [2]) HEX2_D  <= ~ hgfedcba [$left (HEX2_D):0];
+                if (digit [3]) HEX3_D  <= ~ hgfedcba [$left (HEX3_D):0];
+
+                if (digit [0]) HEX0_DP <= ~ hgfedcba [$left (HEX0_D) + 1];
+                if (digit [1]) HEX1_DP <= ~ hgfedcba [$left (HEX1_D) + 1];
+                if (digit [2]) HEX2_DP <= ~ hgfedcba [$left (HEX2_D) + 1];
+                if (digit [3]) HEX3_DP <= ~ hgfedcba [$left (HEX3_D) + 1];
             end
 
     `endif
@@ -136,14 +149,14 @@ module board_specific_top
     (
         .clk   (   clk         ),
         .rst   (   rst         ),
-        .lr    (   GPIO0_D [5] ),
-        .ws    (   GPIO0_D [3] ),
-        .sck   (   GPIO0_D [1] ),
-        .sd    (   GPIO0_D [0] ),
+        .lr    (   GPIO0_D [7] ), // JP4 pin 10
+        .ws    (   GPIO0_D [5] ), // JP4 pin 8
+        .sck   (   GPIO0_D [3] ), // JP4 pin 6
+        .sd    (   GPIO0_D [2] ), // JP4 pin 5
         .value (   mic         )
     );
 
-    assign GPIO0_D [4] = 1'b0;  // GND
-    assign GPIO0_D [2] = 1'b1;  // VCC
+    assign GPIO0_D [6] = 1'b0;    // GND - JP4 pin 9
+    assign GPIO0_D [4] = 1'b1;    // VCC - JP4 pin 7
 
 endmodule

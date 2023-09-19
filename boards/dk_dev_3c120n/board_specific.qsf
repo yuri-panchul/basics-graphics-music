@@ -1,0 +1,88 @@
+set_global_assignment -name FAMILY "Cyclone III"
+set_global_assignment -name DEVICE EP3C120F780C6
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 780
+set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
+set_global_assignment -name CYCLONEIII_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_global_assignment -name GENERATE_TTF_FILE OFF
+set_global_assignment -name ON_CHIP_BITSTREAM_DECOMPRESSION OFF
+set_global_assignment -name ENABLE_ADVANCED_IO_TIMING ON
+set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
+set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL ON
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name FORCE_CONFIGURATION_VCCIO ON
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+#
+# Unchanging assignments: clocks
+#
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clkin_50
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clkin_125
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clkin_sma
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clkout_sma
+set_location_assignment PIN_AH15 -to clkin_50
+set_location_assignment PIN_A14 -to clkin_125
+set_location_assignment PIN_AH14 -to clkin_sma
+set_location_assignment PIN_AE23 -to clkout_sma
+#
+# Unchanging assignments:  Termination and misc.
+#
+set_location_assignment PIN_P3 -to ~ALTERA_DCLK~
+set_location_assignment PIN_N7 -to ~ALTERA_DATA0~
+set_location_assignment PIN_AA17 -to termination_blk0~_rup_pad
+set_location_assignment PIN_AB17 -to termination_blk0~_rdn_pad
+set_location_assignment PIN_F19 -to termination_blk1~_rup_pad
+set_location_assignment PIN_E19 -to termination_blk1~_rdn_pad
+set_location_assignment PIN_U7 -to termination_blk2~_rup_pad
+set_location_assignment PIN_U8 -to termination_blk2~_rdn_pad
+set_location_assignment PIN_AA22 -to termination_blk3~_rup_pad
+set_location_assignment PIN_AB23 -to termination_blk3~_rdn_pad
+#
+# input for NIOS reset: uncomment the next line for pin assignment
+  source cycloneIII_3c120_dev_niosII.qsf
+#
+# on board flash and sram: uncomment the next line for pin assignment
+# source cycloneIII_3c120_dev_flash_sram.qsf
+#
+# switches, dip switch and pushbuttons: uncomment the next line for pin assignment
+  source cycloneIII_3c120_dev_switches.qsf
+#
+# User discrete LEDs 0-7: uncomment the next line for pin assignment
+  source cycloneIII_3c120_dev_led.qsf
+#
+# Quad Seven Segment display: uncomment the next line for pin assignment
+  source cycloneIII_3c120_dev_seven_seg.qsf
+#
+# Speaker output: uncomment the next line for pin assignment
+  source cycloneIII_3c120_dev_speaker.qsf
+#
+#
+# DDR2 lines, both sets:  uncomment the next line for pin assignment
+# source cycloneIII_3c120_dev_ddr.qsf
+#
+# Ethernet connections enet:  uncomment the next line for pin assignment
+# source cycloneIII_3c120_dev_ethernet.qsf
+#
+# USB: uncomment the next line for pin assignment
+# source cycloneIII_3c120_dev_usb.qsf
+#
+# Signals interfacing to the MAX: uncomment the next line for pin assignment
+# source cycloneIII_3c120_dev_max.qsf
+#
+# LCD interface: uncomment the next line for the assignments
+# source cycloneIII_3c120_dev_lcd.qsf
+#
+# HSMA replace with DSP_Kit, below if you are using it.
+# uncomment the following line for the standard HSMA pinout
+# source cycloneIII_3c120_dev_hsma.qsf
+#
+# HSMB just like the schematic, to use it uncomment the next line
+# source cycloneIII_3c120_dev_hsmb.qsf
+#
+# DSP_Kit replaces HSMA if you use it.  Uncomment the next line to include it.
+# source cycloneIII_3c120_dev_dsp.qsf
+#
+
+# source cycloneIII_3c120_dev_user_dipsw.qsf
+# source cycloneIII_3c120_dev_user_pb.qsf

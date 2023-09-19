@@ -69,9 +69,9 @@ gowin_setup_ide ()
            && [ -d "$GOWIN_HOME/IDE" ] \
            && [ -d "$GOWIN_HOME/Programmer" ]
         then
-            gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh"
-            gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide"
-            gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli"
+            gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh.exe"
+            gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide.exe"
+            gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli.exe"
 
             return
         fi
@@ -93,9 +93,9 @@ gowin_setup_ide ()
     #-------------------------------------------------------------------------
 
     find_command="$find_to_run $gowinfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    first_version_dir=$($find_command | sort | tail -1)
+    latest_version_dir=$($find_command | sort | tail -1)
 
-    if [ -z "$first_version_dir" ]
+    if [ -z "$latest_version_dir" ]
     then
         error "cannot find any version of Gowin EDA installed in "  \
               "'$gowinfpga_install_dir'"
@@ -103,7 +103,7 @@ gowin_setup_ide ()
 
     #-------------------------------------------------------------------------
 
-    export GOWIN_HOME="$first_version_dir"
+    export GOWIN_HOME="$latest_version_dir"
     export PATH="${PATH:+$PATH:}$GOWIN_HOME/IDE/bin:$GOWIN_HOME/Programmer/bin"
     gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh"
     gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide"
@@ -113,9 +113,9 @@ gowin_setup_ide ()
 
     all_version_dirs=$($find_command | xargs echo)
 
-    if [ "$first_version_dir" != "$all_version_dirs" ]
+    if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
-        warning 1 "multiple Gowin EDA versions installed in"  \
+        warning "multiple Gowin EDA versions installed in"  \
                 "'$gowinfpga_install_dir':"  \
                 "'$all_version_dirs'"
 
@@ -163,6 +163,43 @@ setup_run_directory_for_fpga_synthesis_gowin ()
     echo "add_file -type cst ${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.cst" >> "$dir/fpga_project.tcl"
     echo "add_file -type sdc ${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.sdc" >> "$dir/fpga_project.tcl"
     echo "run all" >> "$dir/fpga_project.tcl"
+
+
+
+    if [ -e "$board_dir/$fpga_board/fpga_project_01.gprj" ] && \
+       [ -e "$board_dir/$fpga_board/fpga_project_02.gprj" ]
+    then
+        cat "$board_dir/$fpga_board/fpga_project_01.gprj" > "$dir/fpga_project.gprj"
+        for verilog_src_dir in  \
+            "$main_src_dir"  \
+            "$board_dir/$fpga_board"  \
+            "$lab_dir/common"
+        do
+            $find_to_run  \
+                "${verilog_src_dir/\/[[:alpha:]]\//${verilog_src_dir:1:1}:\/}"  \
+                -type f -name '*.sv' -not -name tb.sv  \
+                -printf "<File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n" \
+                >> "$dir/fpga_project.gprj"
+        done
+        echo "<File path=\"${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.cst\" type=\"file.cst\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
+        echo "<File path=\"${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.sdc\" type=\"file.sdc\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
+        cat "$board_dir/$fpga_board/fpga_project_02.gprj" >> "$dir/fpga_project.gprj"
+    fi
+
+    if [ -e "$board_dir/$fpga_board/project_process_config_01.json" ] && \
+       [ -e "$board_dir/$fpga_board/project_process_config_02.json" ]
+    then
+        if ! [ -d $dir/impl ]
+        then
+            mkdir $dir/impl
+        fi
+        cat "$board_dir/$fpga_board/project_process_config_01.json" > "$dir/impl/project_process_config.json"
+        printf '   \"%s\",\n' "${lab_dir/\/[[:alpha:]]\//${lab_dir:1:1}:\/}/common" >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\",\n' "${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board" >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\"\n' "${main_src_dir/\/[[:alpha:]]\//${main_src_dir:1:1}:\/}" >> "$dir/impl/project_process_config.json"
+        cat "$board_dir/$fpga_board/project_process_config_02.json" >> "$dir/impl/project_process_config.json"
+    fi
+
 }
 
 #-----------------------------------------------------------------------------
@@ -281,5 +318,5 @@ run_fpga_synthesis_gui_gowin ()
 
     # TODO: Is it possible to load the project after a preceding synthesis run?
 
-    "$gowin_ide"
+    "$gowin_ide" -prj fpga_project.gprj
 }

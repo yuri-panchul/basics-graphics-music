@@ -1,0 +1,176 @@
+Keys
+----
+Key_In[0]         J14 KEY0
+Key_In[1]         J16 KEY1
+Key_In[2]         J15 KEY2
+Key_In[3]         K16 KEY3
+Key_In[4]         K15 KEY4
+Key_In[5]         L15 KEY5
+Key_In[6]         L16 KEY6
+Key_In[7]         J13 KEY7
+
+Switches
+--------
+SW_In[0]          R16 SW0
+SW_In[1]          P15 SW1
+SW_In[2]          P16 SW2
+SW_In[3]          N15 SW3
+SW_In[4]          N16 SW4
+SW_In[5]          M12 SW5
+SW_In[6]          N14 SW6
+SW_In[7]          N13 SW7
+
+LED indicator
+-------------
+LED_Out[0]        A5  LED0
+LED_Out[1]        B5  LED1
+LED_Out[2]        A4  LED2
+LED_Out[3]        B4  LED3
+LED_Out[4]        A3  LED4
+LED_Out[5]        B3  LED5
+LED_Out[6]        A2  LED6
+LED_Out[7]        C3  LED7
+LED_Out[8]        D15 LED8
+LED_Out[9]        D16 LED9
+LED_Out[10]       F15 LED10
+LED_Out[11]       F16 LED11
+LED_Out[12]       G15 LED12
+LED_Out[13]       G16 LED13
+LED_Out[14]       L13 LED14
+LED_Out[15]       L14 LED15
+
+8-segment digit indicator
+-------------------------
+Digitron_Out[0]   D9  A
+Digitron_Out[1]   E10 B
+Digitron_Out[2]   E8  C
+Digitron_Out[3]   D11 D
+Digitron_Out[4]   C8  E
+Digitron_Out[5]   D8  F
+Digitron_Out[6]   E9  G
+Digitron_Out[7]   C9  DP
+DigitronCS_Out[0] C14 Chip select signal DigCS6
+DigitronCS_Out[1] D14 Chip select signal DigCS5
+DigitronCS_Out[2] G11 Chip select signal DigCS4
+DigitronCS_Out[3] F11 Chip select signal DigCS3
+DigitronCS_Out[4] C11 Chip select signal DigCS2
+DigitronCS_Out[5] D12 Chip select signal DigCS1
+
+Buzzer
+------
+Buzzer_Out        L3  buzzer
+
+Clock
+-----
+CLK               E1  50 Mhz clock input
+
+J7 expansion port module
+------------------------
+40 D3.3V
+38 D5
+36 D4
+34 B1
+32 F2
+30 G2
+28 J1
+26 K1
+24 L1
+22 N1
+20 P1
+18 R1
+16 R3
+14 R4
+12 R5
+10 R6
+ 8 R7
+ 6 N3
+ 4 N5
+ 2 Vbus
+
+39 GND
+37 E5
+35 D3
+33 C2
+31 F1
+29 G1
+27 J2
+25 K2
+23 L2
+21 N2
+19 P2
+17 T2
+15 T3
+13 T4
+11 T5
+ 9 T6
+ 7 T7
+ 5 P3
+ 3 M1
+ 1 GND
+
+P1 I/O interface module
+-----------------------
+1  D3.3V
+2  C6
+3  B6
+4  A6
+5  B7
+6  A7
+7  B8
+8  A8
+9  A9
+10 B9
+11 A11
+12 B11
+13 A12
+14 B12
+15 A13
+16 B13
+17 A14
+18 B14
+19 A15
+20 B16
+21 C15
+22 C16
+23 Vbus
+24 GND
+
+P2 I/O interface module
+-----------------------
+1  D3.3V
+2  N6
+3  R8
+4  T8
+5  T9
+6  R9
+7  T10
+8  R10
+9  T11
+10 M11
+11 N12
+12 P8
+13 N8
+14 M8
+15 M9
+16 N9
+17 P9
+18 M10
+19 R11
+20 T13
+21 R13
+22 T14
+23 Vbus
+24 GND
+
+Serial Flash
+------------
+
+EEPROM
+------
+R14 SCL
+T15 SDA
+
+UART communication module
+-------------------------
+RX_In  F14 FPGA receives external data
+TX_Out F13 FPGA sends data to the outside

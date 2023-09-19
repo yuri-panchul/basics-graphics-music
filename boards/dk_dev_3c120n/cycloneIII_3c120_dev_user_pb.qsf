@@ -1,0 +1,10 @@
+# Dip Switch, Push Buttons
+#
+
+set_instance_assignment -name IO_STANDARD "1.8 V" -to user_pb
+set_location_assignment PIN_AD7 -to user_pb[0]
+set_location_assignment PIN_AC12 -to user_pb[1]
+set_location_assignment PIN_AH3 -to user_pb[2]
+set_location_assignment PIN_AA12 -to user_pb[3]
+#
+

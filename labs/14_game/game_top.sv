@@ -51,29 +51,29 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                    sprite_target_write_xy;
-    wire                    sprite_target_write_dxy;
+    wire                     sprite_target_write_xy;
+    wire                     sprite_target_write_dxy;
 
-    logic  [`X_WIDTH   - 1:0] sprite_target_write_x;
-    wire [`Y_WIDTH   - 1:0] sprite_target_write_y;
+    logic [`X_WIDTH   - 1:0] sprite_target_write_x;
+    wire  [`Y_WIDTH   - 1:0] sprite_target_write_y;
 
-    logic  [             1:0] sprite_target_write_dx;
-    wire                    sprite_target_write_dy;
+    logic [             1:0] sprite_target_write_dx;
+    wire                     sprite_target_write_dy;
 
-    wire                    sprite_target_enable_update;
+    wire                     sprite_target_enable_update;
 
-    wire [`X_WIDTH   - 1:0] sprite_target_x;
-    wire [`Y_WIDTH   - 1:0] sprite_target_y;
+    wire  [`X_WIDTH   - 1:0] sprite_target_x;
+    wire  [`Y_WIDTH   - 1:0] sprite_target_y;
 
-    wire                    sprite_target_within_screen;
+    wire                     sprite_target_within_screen;
 
-    wire [`X_WIDTH   - 1:0] sprite_target_out_left;
-    wire [`X_WIDTH   - 1:0] sprite_target_out_right;
-    wire [`Y_WIDTH   - 1:0] sprite_target_out_top;
-    wire [`Y_WIDTH   - 1:0] sprite_target_out_bottom;
+    wire  [`X_WIDTH   - 1:0] sprite_target_out_left;
+    wire  [`X_WIDTH   - 1:0] sprite_target_out_right;
+    wire  [`Y_WIDTH   - 1:0] sprite_target_out_top;
+    wire  [`Y_WIDTH   - 1:0] sprite_target_out_bottom;
 
-    wire                    sprite_target_rgb_en;
-    wire [             2:0] sprite_target_rgb;
+    wire                     sprite_target_rgb_en;
+    wire  [             2:0] sprite_target_rgb;
 
     //------------------------------------------------------------------------
 

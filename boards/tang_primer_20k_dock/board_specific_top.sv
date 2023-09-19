@@ -1,4 +1,6 @@
-    `define ENABLE_TM1638
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+   `define ENABLE_TM1638
 
 module board_specific_top
 # (
@@ -65,6 +67,13 @@ module board_specific_top
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
 
+    wire                      VGA_HS;
+    wire                      VGA_VS;
+
+    wire  [              3:0] VGA_R;
+    wire  [              3:0] VGA_G;
+    wire  [              3:0] VGA_B;
+
     //------------------------------------------------------------------------
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
@@ -99,26 +108,26 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (  CLK        ),
-        .rst      (  rst        ),
+        .clk      ( CLK       ),
+        .rst      ( rst       ),
 
-        .key      (  top_key    ),
-        .sw       (  top_sw     ),
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
 
-        .led      (  top_led    ),
+        .led      ( top_led   ),
 
-        .abcdefgh (  abcdefgh   ),
-        .digit    (  top_digit  ),
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
 
-        .vsync    (             ),
-        .hsync    (             ),
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
 
-        .red      (             ),
-        .green    (             ),
-        .blue     (             ),
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
 
-        .mic      (  mic        ),
-        .gpio     (             )
+        .mic      ( mic       ),
+        .gpio     (           )
     );
 
     //------------------------------------------------------------------------
@@ -136,21 +145,53 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Con: This makes blink the 7-segment LEDs of TM1638
+
+        wire tm_static_hex;
+        assign tm_static_hex = 'b0;
+    `else
+        wire tm_static_hex;
+        assign tm_static_hex = 'b1;
+    `endif
+
+    //------------------------------------------------------------------------
+
     tm1638_board_controller
     # (
         .w_digit ( w_tm_digit )
     )
     i_tm1638
     (
-        .clk      ( CLK       ),
-        .rst      ( rst       ),
-        .hgfedcba ( hgfedcba  ),
-        .digit    ( tm_digit  ),
-        .ledr     ( tm_led    ),
-        .keys     ( tm_key    ),
-        .sio_clk  ( GPIO_0[2] ),
-        .sio_stb  ( GPIO_0[3] ),
-        .sio_data ( GPIO_0[1] )
+        .clk        ( CLK           ),
+        .rst        ( rst           ),
+        .static_hex ( tm_static_hex ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO_0[2]     ),
+        .sio_stb    ( GPIO_0[3]     ),
+        .sio_data   ( GPIO_0[1]     )
     );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_1 [1] ),
+        .ws    ( GPIO_1 [2] ),
+        .sck   ( GPIO_1 [3] ),
+        .sd    ( GPIO_1 [0] ),
+        .value ( mic        )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign GPIO_3 = {VGA_B, VGA_R};
+    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
 
 endmodule

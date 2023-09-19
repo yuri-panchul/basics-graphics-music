@@ -6,6 +6,8 @@ set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-
   set_instance_assignment -name IO_STANDARD "3.3 V Schmitt Trigger" -to KEY[1]
 # set_instance_assignment -name IO_STANDARD "3.3 V Schmitt Trigger" -to ARDUINO_RESET_N
 
+  set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON  -to GPIO_0[35] # LED&KEY board (tm1638) dio bus
+
 # set_location_assignment PIN_N5   -to ADC_CLK_10
   set_location_assignment PIN_P11  -to MAX10_CLK1_50
 # set_location_assignment PIN_N14  -to MAX10_CLK2_50

@@ -1,0 +1,89 @@
+set_global_assignment   -name DEVICE EP4CE15F23C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+set_global_assignment   -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+
+# For some reason this setting is necessary even for Cyclone IV.
+# It does not route the design without it on omdazz / rzrd.net board.
+
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+set_location_assignment PIN_T2  -to CLK
+set_location_assignment PIN_J4  -to KEY
+
+set_location_assignment PIN_W19 -to ABCDEFGH_N[7]
+set_location_assignment PIN_U19 -to ABCDEFGH_N[6]
+set_location_assignment PIN_W17 -to ABCDEFGH_N[5]
+set_location_assignment PIN_W15 -to ABCDEFGH_N[4]
+set_location_assignment PIN_Y17 -to ABCDEFGH_N[3]
+set_location_assignment PIN_W20 -to ABCDEFGH_N[2]
+set_location_assignment PIN_U20 -to ABCDEFGH_N[1]
+set_location_assignment PIN_V15 -to ABCDEFGH_N[0]
+
+set_location_assignment PIN_Y13 -to DIGIT_N[2]
+set_location_assignment PIN_W13 -to DIGIT_N[1]
+set_location_assignment PIN_V13 -to DIGIT_N[0]
+
+  set_location_assignment PIN_Y21 -to UART_RX
+# set_location_assignment PIN_Y22 -to UART_TX
+
+set_location_assignment PIN_AA13 -to VGA_HSYNC
+set_location_assignment PIN_AB10 -to VGA_VSYNC
+
+set_location_assignment PIN_AB19 -to VGA_RED[4]
+set_location_assignment PIN_AA19 -to VGA_RED[3]
+set_location_assignment PIN_AB20 -to VGA_RED[2]
+set_location_assignment PIN_AA20 -to VGA_RED[1]
+set_location_assignment PIN_AA21 -to VGA_RED[0]
+set_location_assignment PIN_AB16 -to VGA_GREEN[5]
+set_location_assignment PIN_AA16 -to VGA_GREEN[4]
+set_location_assignment PIN_AB17 -to VGA_GREEN[3]
+set_location_assignment PIN_AA17 -to VGA_GREEN[2]
+set_location_assignment PIN_AA18 -to VGA_GREEN[1]
+set_location_assignment PIN_AB18 -to VGA_GREEN[0]
+set_location_assignment PIN_AA14 -to VGA_BLUE[4]
+set_location_assignment PIN_AB13 -to VGA_BLUE[3]
+set_location_assignment PIN_AA15 -to VGA_BLUE[2]
+set_location_assignment PIN_AB14 -to VGA_BLUE[1]
+set_location_assignment PIN_AB15 -to VGA_BLUE[0]
+
+set_location_assignment PIN_C22  -to GPIO_J12[3]
+set_location_assignment PIN_C21  -to GPIO_J12[4]
+set_location_assignment PIN_B22  -to GPIO_J12[5]
+set_location_assignment PIN_B21  -to GPIO_J12[6]
+set_location_assignment PIN_H20  -to GPIO_J12[7]
+set_location_assignment PIN_H19  -to GPIO_J12[8]
+set_location_assignment PIN_F20  -to GPIO_J12[9]
+set_location_assignment PIN_F19  -to GPIO_J12[10]
+set_location_assignment PIN_C20  -to GPIO_J12[11]
+set_location_assignment PIN_D20  -to GPIO_J12[12]
+set_location_assignment PIN_C19  -to GPIO_J12[13]
+set_location_assignment PIN_D19  -to GPIO_J12[14]
+set_location_assignment PIN_C17  -to GPIO_J12[15]
+set_location_assignment PIN_D17  -to GPIO_J12[16]
+set_location_assignment PIN_A20  -to GPIO_J12[17]
+set_location_assignment PIN_B20  -to GPIO_J12[18]
+set_location_assignment PIN_A19  -to GPIO_J12[19]
+set_location_assignment PIN_B19  -to GPIO_J12[20]
+set_location_assignment PIN_A18  -to GPIO_J12[21]
+set_location_assignment PIN_B18  -to GPIO_J12[22]
+set_location_assignment PIN_A17  -to GPIO_J12[23]
+set_location_assignment PIN_B17  -to GPIO_J12[24]
+set_location_assignment PIN_A16  -to GPIO_J12[25]
+set_location_assignment PIN_B16  -to GPIO_J12[26]
+set_location_assignment PIN_A15  -to GPIO_J12[27]
+set_location_assignment PIN_B15  -to GPIO_J12[28]
+set_location_assignment PIN_A14  -to GPIO_J12[29]
+set_location_assignment PIN_B14  -to GPIO_J12[30]
+set_location_assignment PIN_A13  -to GPIO_J12[31]
+set_location_assignment PIN_B13  -to GPIO_J12[32]
+set_location_assignment PIN_A10  -to GPIO_J12[33]
+set_location_assignment PIN_B10  -to GPIO_J12[34]
+set_location_assignment PIN_A9   -to GPIO_J12[35]
+set_location_assignment PIN_B9   -to GPIO_J12[36]
+
+# Useful information
+#
+# http://land-boards.com/blwiki/index.php?title=QMTECH_EP4CE15_FPGA_Starter_Kit

@@ -1,0 +1,20 @@
+#
+# assignments:  LCD interface
+#
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to lcd_rstn
+set_instance_assignment -name OUTPUT_ENABLE_GROUP 3 -to lcd_data
+set_location_assignment PIN_H7 -to lcd_rstn
+set_location_assignment PIN_AC4 -to lcd_wen
+set_location_assignment PIN_V7 -to lcd_e_rdn
+set_location_assignment PIN_AA4 -to lcd_data[0]
+set_location_assignment PIN_AD1 -to lcd_data[1]
+set_location_assignment PIN_V8 -to lcd_data[2]
+set_location_assignment PIN_AB5 -to lcd_data[3]
+set_location_assignment PIN_AE2 -to lcd_data[4]
+set_location_assignment PIN_V5 -to lcd_data[5]
+set_location_assignment PIN_V6 -to lcd_data[6]
+set_location_assignment PIN_AB3 -to lcd_data[7]
+set_location_assignment PIN_AC24 -to lcd_en
+set_location_assignment PIN_AB24 -to lcd_csn
+set_location_assignment PIN_D27 -to lcd_d_cn
+

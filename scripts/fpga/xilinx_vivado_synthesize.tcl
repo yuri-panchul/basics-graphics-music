@@ -7,13 +7,28 @@ if {! [info exists part_name]} {
     error "The variable 'part_name' is expected to be set"
 }
 
-read_verilog -sv [glob ../../common/*.sv]
-read_verilog -sv [glob ../top.sv]
-read_verilog -sv [glob "../../../boards/$fpga_board/*.sv"]
+set extra_dot_dot ""
 
-read_xdc "../../../boards/$fpga_board/board_specific.xdc"
+if {[file isdirectory ../../../../labs]} {
+    set extra_dot_dot ../
+}
 
-synth_design -include_dirs ../../common -part $part_name -top board_specific_top
+read_verilog -sv [glob $extra_dot_dot../../common/*.sv]
+
+foreach file [glob ../*.sv] {
+    if {$file ne "../tb.sv"} {
+        read_verilog -sv $file
+    }
+}
+
+read_verilog -sv [glob $extra_dot_dot../../../boards/$fpga_board/*.sv]
+
+read_xdc $extra_dot_dot../../../boards/$fpga_board/board_specific.xdc
+
+synth_design -verilog_define XILINX_VIVADO             \
+             -include_dirs $extra_dot_dot../../common  \
+             -part $part_name                          \
+             -top board_specific_top
 
 write_checkpoint          -force post_synth
 report_timing_summary     -file  post_synth_timing_summary.rpt
