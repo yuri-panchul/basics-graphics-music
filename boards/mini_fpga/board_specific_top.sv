@@ -11,7 +11,6 @@ module board_specific_top
 )
 (
     input                    CLK,
-    input                    RST_N,
 
     input  [w_key     - 1:0] KEY_N,
     input  [w_sw      - 1:0] SW_N,
@@ -24,23 +23,19 @@ module board_specific_top
     input                    UART_RX,
     output                   UART_TX,
 
-    inout  [w_gpio_j7 - 1:0] GPIO_J7,
-    inout  [w_gpio_p1 - 1:0] GPIO_P1,
-    inout  [w_gpio_p2 - 1:0] GPIO_P2
+    inout  [w_gpio_j7 + 3 - 1:3] GPIO_J7,
+    inout  [w_gpio_p1 + 2 - 1:2] GPIO_P1,
+    inout  [w_gpio_p2 + 2 - 1:2] GPIO_P2
 );
 
     //------------------------------------------------------------------------
 
-    wire                 rst = ~ RST_N;
-    wire [w_key   - 1:0] key = ~ { KEY2, KEY3, KEY4 };
-
+    wire [w_key   - 1:0] key;
+    wire [w_sw    - 1:0] sw;
     wire [w_led   - 1:0] led;
 
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
-
-    wire [          3:0] red, green, blue;
-    wire [         23:0] mic;
 
     //------------------------------------------------------------------------
 
@@ -66,17 +61,7 @@ module board_specific_top
         .abcdefgh ( abcdefgh   ),
         .digit    ( digit      ),
 
-        .vsync    ( VGA_OUT_VS ),
-        .hsync    ( VGA_OUT_HS ),
-
-        .red      ( red       ),
-        .green    ( green     ),
-        .blue     ( blue      ),
-
-        .mic      ( mic       ),
-
-
-        .gpio ( GPIO )
+        .gpio     ( GPIO       )
 
     );
 
@@ -84,25 +69,5 @@ module board_specific_top
 
     assign SEG_DATA  = ~ abcdefgh;
     assign SEG_SEL   = ~ digit;
-
-    assign VGA_OUT_R = {            red   [3], red   };
-    assign VGA_OUT_G = { green [3], green [3], green };
-    assign VGA_OUT_B = {            blue  [3], blue  };
-
-    /*
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( CLK      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [3] ),
-        .sck   ( GPIO [1] ),
-        .sd    ( GPIO [0] ),
-        .value ( mic      )
-    );
-
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
-    */
 
 endmodule
