@@ -1,3 +1,9 @@
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+   `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
+// `define CONCAT_REGULAR_SIGNALS_AND_TM
+// `define CONCAT_TM_SIGNALS_AND_REGULAR
+
 module board_specific_top
 # (
     parameter clk_mhz = 100,
@@ -37,7 +43,7 @@ module board_specific_top
     output        LED3_R,
 
 
-  input         UART_TXD_IN,
+    input         UART_TXD_IN,
 
     inout  [7:0] JA,
     inout  [7:0] JB,        //VGA_B and VGA_R
@@ -70,43 +76,69 @@ module board_specific_top
     assign LED3_R = 1'b0;
 	
     assign mic = { mic_16, 8'b0 };
-  //assign M_CLK   = 1'b0;
-  //assign M_LRSEL = 1'b0;
 
-  //assign AUD_PWM = 1'b0;
-  //assign AUD_SD  = 1'b0;
 
     //------------------------------------------------------------------------
-  wire [           3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
-  wire [          15:0] mic_16;
-  wire [          23:0] mic;
-  wire [           7:0] abcdefgh;
+  
+    wire [          15:0] mic_16;
+    wire [          23:0] mic;
+    wire [           7:0] abcdefgh;
+
     //------------------------------------------------------------------------
-wire [w_sw - 1:0] top_sw = SW [w_sw - 1:0];
+    
+    wire [           3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
+    wire [w_sw - 1:0] top_sw = SW [w_sw - 1:0];
 
 localparam  w_tm_key     = 8,    
             w_tm_led     = 8,
             w_tm_digit   = 8;
 
- localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key : w_key   ,
-                   w_top_led   = w_tm_led   > w_led   ? w_tm_led     : w_led   ,
-                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit   : w_digit ;
+ `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
 
-wire  [w_tm_key    - 1:0] tm_key;
-wire  [w_tm_led    - 1:0] tm_led;
-wire  [w_tm_digit  - 1:0] tm_digit;
+        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
+                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
-logic [w_top_key   - 1:0] top_key;
-wire  [w_top_led   - 1:0] top_led;
-wire  [w_top_digit - 1:0] top_digit;
+    `else  // Concatenate the signals
+
+        localparam w_top_key   = w_tm_key   + w_key   ,
+                   w_top_led   = w_tm_led   + w_led   ,
+                   w_top_digit = w_tm_digit + w_digit ;
+    `endif
+
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+    
  
- 
- // DUPLICATE_TM_SIGNALS_WITH_REGULAR
-  always_comb
+  //------------------------------------------------------------------------
+
+    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+
+        assign top_key = { tm_key,  KEY };
+
+        assign { tm_led   , LED   } = top_led;
+        assign             tm_digit = top_digit;
+
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+
+        assign top_key = {  KEY, tm_key };
+
+        assign { LED   , tm_led   } = top_led;
+        assign             tm_digit = top_digit;
+
+    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+
+        always_comb
         begin
             top_key = '0;
 
-            top_key [w_key    - 1:0] |= KEY;
+            top_key [w_key    - 1:0] |=  KEY;
             top_key [w_tm_key - 1:0] |= tm_key;
         end
 
@@ -114,6 +146,10 @@ wire  [w_top_digit - 1:0] top_digit;
         assign tm_led   = top_led   [w_tm_led   - 1:0];
 
         assign tm_digit = top_digit [w_tm_digit - 1:0];
+
+    `endif
+
+    //------------------------------------------------------------------------
 
     top
     # (
@@ -159,8 +195,16 @@ wire  [w_top_digit - 1:0] top_digit;
         end
     endgenerate
 
- //wire tm_static_hex;
- //assign tm_static_hex = 'b0;
+`ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Con: This makes blink the 7-segment LEDs of TM1638
+
+        wire tm_static_hex;
+        assign tm_static_hex = 'b0;
+    `else
+        wire tm_static_hex;
+        assign tm_static_hex = 'b1;
+    `endif
 
 tm1638_board_controller
     # (
@@ -171,8 +215,7 @@ tm1638_board_controller
     (
         .clk        ( clk           ), 
         .rst        ( rst           ),
-         .static_hex ( 1'b1), 
-      //  .static_hex ( tm_static_hex ),
+        .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
