@@ -1,4 +1,6 @@
-    `define ENABLE_TM1638
+// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+   `define ENABLE_TM1638
 
 module board_specific_top
 # (
@@ -106,16 +108,16 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (  CLK        ),
-        .rst      (  rst        ),
+        .clk      ( CLK       ),
+        .rst      ( rst       ),
 
-        .key      (  top_key    ),
-        .sw       (  top_sw     ),
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
 
-        .led      (  top_led    ),
+        .led      ( top_led   ),
 
-        .abcdefgh (  abcdefgh   ),
-        .digit    (  top_digit  ),
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
 
         .vsync    ( VGA_VS    ),
         .hsync    ( VGA_HS    ),
@@ -143,21 +145,35 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+
+        // Con: This makes blink the 7-segment LEDs of TM1638
+
+        wire tm_static_hex;
+        assign tm_static_hex = 'b0;
+    `else
+        wire tm_static_hex;
+        assign tm_static_hex = 'b1;
+    `endif
+
+    //------------------------------------------------------------------------
+
     tm1638_board_controller
     # (
         .w_digit ( w_tm_digit )
     )
     i_tm1638
     (
-        .clk      ( CLK       ),
-        .rst      ( rst       ),
-        .hgfedcba ( hgfedcba  ),
-        .digit    ( tm_digit  ),
-        .ledr     ( tm_led    ),
-        .keys     ( tm_key    ),
-        .sio_clk  ( GPIO_0[2] ),
-        .sio_stb  ( GPIO_0[3] ),
-        .sio_data ( GPIO_0[1] )
+        .clk        ( CLK           ),
+        .rst        ( rst           ),
+        .static_hex ( tm_static_hex ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO_0[2]     ),
+        .sio_stb    ( GPIO_0[3]     ),
+        .sio_data   ( GPIO_0[1]     )
     );
 
     //------------------------------------------------------------------------
