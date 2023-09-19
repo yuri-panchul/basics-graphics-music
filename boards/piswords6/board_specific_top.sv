@@ -32,8 +32,8 @@ module board_specific_top
 
     localparam w_top_key = w_key - 1;  // One key is used as a reset
 
-    wire                  rst     = ~ KEY [w_key     - 1];
-    wire [w_top_sw - 1:0] top_key = ~ KEY [w_top_key - 1:0];
+    wire                   rst     = ~ KEY [w_key     - 1];
+    wire [w_top_key - 1:0] top_key = ~ KEY [w_top_key - 1:0];
 
     //------------------------------------------------------------------------
 

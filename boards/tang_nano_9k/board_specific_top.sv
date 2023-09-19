@@ -7,7 +7,7 @@ module board_specific_top
                 w_sw    = 0,
                 w_led   = 6,
                 w_digit = 0,
-                w_gpio  = 3
+                w_gpio  = 9
 )
 (
     input                       CLK,
