@@ -34,11 +34,11 @@ module board_specific_top
     output        LED1_G,
     output        LED1_R,
 	
-	output        LED2_B,
+    output        LED2_B,
     output        LED2_G,
     output        LED2_R,
 	
-	output        LED3_B,
+    output        LED3_B,
     output        LED3_G,
     output        LED3_R,
 
@@ -87,7 +87,7 @@ module board_specific_top
     //------------------------------------------------------------------------
     
     wire [           3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
-    wire [w_sw - 1:0] top_sw = SW [w_sw - 1:0];
+    wire [ w_sw - 1:0 ] top_sw = SW [w_sw - 1:0];
 
 localparam  w_tm_key     = 8,    
             w_tm_led     = 8,
