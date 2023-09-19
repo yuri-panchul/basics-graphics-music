@@ -89,9 +89,9 @@ module board_specific_top
     assign SEG_DATA  = ~ abcdefgh;
     assign SEG_SEL   = ~ digit;
 
-    assign VGA_OUT_R = {            red   [3], red   };
-    assign VGA_OUT_G = { green [3], green [3], green };
-    assign VGA_OUT_B = {            blue  [3], blue  };
+    assign VGA_OUT_R = { red   , 1'b0 };
+    assign VGA_OUT_G = { green , 2'b0 };
+    assign VGA_OUT_B = { blue  , 1'b0 };
 
     /*
     inmp441_mic_i2s_receiver i_microphone
