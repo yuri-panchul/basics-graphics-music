@@ -28,28 +28,22 @@ module board_specific_top
     output        LED1_G,
     output        LED1_R,
 	
-	 output        LED2_B,
+	output        LED2_B,
     output        LED2_G,
     output        LED2_R,
 	
-	 output        LED3_B,
+	output        LED3_B,
     output        LED3_G,
     output        LED3_R,
 
-    output [ 3:0] VGA_R,
-    output [ 3:0] VGA_G,
-    output [ 3:0] VGA_B,
-
-  output        VGA_HS,
-  output        VGA_VS,
 
   input         UART_TXD_IN,
 
-    //inout  [7:0] JA,
-   // inout  [7:0] JB,
-   // inout  [7:0] JC
-   //inout  [7:0] JD
-   inout [w_gpio -1 :0] GPIO
+    inout  [7:0] JA,
+    inout  [7:0] JB,        //VGA_B and VGA_R
+    inout  [7:0] JC,        //VGA_G and VGA_HS, VGA,VS
+    inout  [7:0] JD,
+    inout [w_gpio -1 :0] GPIO
 );
 
     //------------------------------------------------------------------------
@@ -75,6 +69,7 @@ module board_specific_top
     assign LED3_G = 1'b0;
     assign LED3_R = 1'b0;
 	
+    assign mic = { mic_16, 8'b0 };
   //assign M_CLK   = 1'b0;
   //assign M_LRSEL = 1'b0;
 
@@ -82,8 +77,9 @@ module board_specific_top
   //assign AUD_SD  = 1'b0;
 
     //------------------------------------------------------------------------
-  wire [3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
-  wire [          23:0] mic = '0;
+  wire [           3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
+  wire [          15:0] mic_16;
+  wire [          23:0] mic;
   wire [           7:0] abcdefgh;
     //------------------------------------------------------------------------
 wire [w_sw - 1:0] top_sw = SW [w_sw - 1:0];
@@ -141,14 +137,14 @@ wire  [w_top_digit - 1:0] top_digit;
         .abcdefgh ( abcdefgh   ),
         .digit    ( top_digit  ),
 
-        .vsync    ( VGA_VS ),
-        .hsync    ( VGA_HS ),
+        .vsync    ( JC[1] ),
+        .hsync    ( JC[0] ),
 
-        .red      ( VGA_R  ),
-        .green    ( VGA_G  ),
-        .blue     ( VGA_B  ),
+        .red      ( JB[7:4]  ),
+        .green    ( JC[7:4]  ),
+        .blue     ( JB[3:0]  ),
 
-        .mic      ( mic    ),
+        .mic      ( mic      ),
         .gpio     ( GPIO   )
     );
 
@@ -163,18 +159,20 @@ wire  [w_top_digit - 1:0] top_digit;
         end
     endgenerate
 
- wire tm_static_hex;
- assign tm_static_hex = 'b1;
+ //wire tm_static_hex;
+ //assign tm_static_hex = 'b0;
 
 tm1638_board_controller
     # (
-        .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
+        .w_digit ( w_tm_digit ),        // fake parameter, digit count is hardcode in tm1638_board_controller
+        .clk_mhz ( clk_mhz    )
     )
     i_ledkey
     (
         .clk        ( clk           ), 
-        .rst        ( rst           ), 
-        .static_hex ( tm_static_hex ),
+        .rst        ( rst           ),
+         .static_hex ( 1'b1), 
+      //  .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
@@ -182,6 +180,16 @@ tm1638_board_controller
         .sio_clk    ( GPIO[40]      ), 
         .sio_stb    ( GPIO[41]      ), 
         .sio_data   ( GPIO[39]      )  
+    );
+
+digilent_pmod_mic3_spi_receiver i_mic
+    (
+        .clk        (clk            ),
+        .rst        (rst            ),
+        .cs         (JD[4]          ),
+        .sck        (JD[7]          ),
+        .sdo        (JD[6]          ),
+        .value      (mic_16         )
     );
 
 endmodule
