@@ -1,9 +1,9 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
-// `define USE_OBSOLETE_DIGILENT_MIC
+// `define USE_DIGILENT_PMOD_MIC3
 // `define USE_INMP_441_MIC_ON_OLD_POSITION
 
-`ifdef USE_OBSOLETE_DIGILENT_MIC
+`ifdef USE_DIGILENT_PMOD_MIC3
     `define USE_SDRAM_PINS_AS_GPIO
 `elsif USE_INMP_441_MIC_ON_OLD_POSITION
     `define USE_SDRAM_PINS_AS_GPIO
@@ -127,7 +127,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef USE_OBSOLETE_DIGILENT_MIC
+    `ifdef USE_DIGILENT_PMOD_MIC3
 
     wire [15:0] mic_16;
 
