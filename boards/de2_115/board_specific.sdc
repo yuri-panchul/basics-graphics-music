@@ -18,12 +18,6 @@ set_false_path -from * -to [get_ports {LEDR[*]}]
 
 set_false_path -from * -to [get_ports {HEX*}]
 
-set_false_path -from * -to [get_ports {VGA_HS}]
-set_false_path -from * -to [get_ports {VGA_VS}]
-set_false_path -from * -to [get_ports {VGA_R[*]}]
-set_false_path -from * -to [get_ports {VGA_G[*]}]
-set_false_path -from * -to [get_ports {VGA_B[*]}]
-set_false_path -from * -to [get_ports {VGA_BLANK_N}]
-set_false_path -from * -to [get_ports {VGA_SYNC_N}]
+set_false_path -from * -to [get_ports {VGA_*}]
 
 set_false_path -from * -to [get_ports {GPIO[*]}]

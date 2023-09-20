@@ -104,29 +104,30 @@ module board_specific_top
     assign VGA_BLANK_N = 1'b1;
     assign VGA_SYNC_N  = 0;
 
-    // Divide VGA DAC clock from 50 or 100 MHz to 25 MHz
+    // Divide VGA DAC clock from clk_mhz to vga_clock
+    localparam CLK_DIV = $clog2 (clk_mhz / vga_clock) - 1;
 
-    logic [3:0] clk_en_cnt;
+    logic [CLK_DIV:0] clk_en_cnt;
     logic clk_en;
 
     always_ff @ (posedge clk or posedge rst)
     begin
         if (rst)
         begin
-            clk_en_cnt <= 3'b0;
-            clk_en     <= 1'b0;
+            clk_en_cnt <= 'b0;
+            clk_en     <= 'b0;
         end
         else
         begin
             if (clk_en_cnt == (clk_mhz / vga_clock) - 1)
             begin
-                clk_en_cnt <= 3'b0;
-                clk_en     <= 1'b1;
+                clk_en_cnt <= 'b0;
+                clk_en     <= 'b1;
             end
             else
             begin
                 clk_en_cnt <= clk_en_cnt + 1;
-                clk_en     <= 1'b0;
+                clk_en     <= 'b0;
             end
         end
     end
