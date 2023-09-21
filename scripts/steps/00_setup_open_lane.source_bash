@@ -2,7 +2,9 @@ expected_source_script=00_setup.source_bash
 
 if [ -z "$BASH_SOURCE" ]
 then
-    printf "script \"$0\" should be sourced from $expected_source_script\n" 1>&2
+    printf "script \"%s\" should be sourced from \"%s\"\n"  \
+        "$0" "$expected_source_script" 1>&2
+
     exit 1
 fi
 
@@ -11,13 +13,17 @@ source_script=$(basename "${BASH_SOURCE[1]}")
 
 if [ -z "$source_script" ]
 then
-    printf "script \"$this_script\" should be sourced from $expected_source_script\n" 1>&2
+    printf "script \"%s\" should be sourced from  \"%s\"\n"  \
+        "$this_script" "$expected_source_script" 1>&2
+
     return 1
 fi
 
 if [ "$source_script" != $expected_source_script ]
 then
-    printf "script \"$this_script\" should be sourced from \"$expected_source_script\", not \"$source_script\"\n" 1>&2
+    printf "script \"%s\" should be sourced from  \"%s\", not \"%s\"\n"  \
+        "$this_script" "$expected_source_script" "$source_script" 1>&2
+
     exit 1
 fi
 

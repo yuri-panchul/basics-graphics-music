@@ -11,13 +11,17 @@ setup_source_bash_already_run=1
 
 if [ "$(basename "$0")" == bash ]
 then
-    printf "error: script \"$BASH_SOURCE\" should be sourced from another script, not from the terminal\n" 1>&2
+    printf "error: script \"%s\" should be sourced from another script, not from the terminal\n"  \
+        "$BASH_SOURCE" 1>&2
+
     exit 1
 fi
 
 if [ "$0" == "$BASH_SOURCE" ]
 then
-    printf "error: script \"$0\" should be sourced from another script, not used alone\n" 1>&2
+    printf "error: script \"%s\" should be sourced from another script, not used alone\n"  \
+        "$0" 1>&2
+
     exit 1
 fi
 
