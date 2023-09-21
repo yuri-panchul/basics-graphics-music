@@ -260,13 +260,12 @@ configure_fpga_gowin_msys ()
 
     #-------------------------------------------------------------------------
 
-#    read -n 1 -r -p "Would you like to choose a flash method ? S-SRAM E-Embedded Flash [s/E] "
-#    printf "\n"
+    # read -n 1 -r -p "Would you like to choose a flash method ? S-SRAM E-Embedded Flash [s/E] "
+    # printf "\n"
 
-#    if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
-        flash_method="-r 2"
-#    fi
-
+    # if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
+          flash_method="-r 2"
+    # fi
 
     prj_parent_dir=`pwd`
     $gowin_pr -d $fpga_board_for_programmer $flash_method --fsFile ${prj_parent_dir/\/[[:alpha:]]\//${prj_parent_dir:1:1}:\/}/impl/pnr/fpga_project.fs

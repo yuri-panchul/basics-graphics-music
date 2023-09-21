@@ -34,9 +34,9 @@ info ()
     # It prints "\n" for "\n" instead of a newline.
 
     if [[ "$*" == *"%"* ]] ; then
-        printf "\n$script: %s\n" "$*" 1>&2
+        printf "\n%s: %s\n" "$script" "$*" 1>&2
     else
-        printf "\n$script: $*\n"      1>&2
+        printf "\n%s: $*\n" "$script"      1>&2
     fi
 }
 

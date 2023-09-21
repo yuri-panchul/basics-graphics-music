@@ -26,9 +26,9 @@ error ()
     # It prints "\n" for "\n" instead of a newline.
 
     if [[ "$*" == *"%"* ]] ; then
-        printf "\n$script: ERROR: %s\n" "$*" 1>&2
+        printf "\n%s: ERROR: %s\n" "$script" "$*" 1>&2
     else
-        printf "\n$script: ERROR: $*\n"      1>&2
+        printf "\n%s: ERROR: $*\n" "$script"      1>&2
     fi
 
     exit 1

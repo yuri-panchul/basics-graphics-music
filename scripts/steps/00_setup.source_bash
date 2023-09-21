@@ -71,9 +71,9 @@ info ()
     # It prints "\n" for "\n" instead of a newline.
 
     if [[ "$*" == *"%"* ]] ; then
-        printf "\n$script: %s\n" "$*" 1>&2
+        printf "\n%s: %s\n" "$script" "$*" 1>&2
     else
-        printf "\n$script: $*\n"      1>&2
+        printf "\n%s: $*\n" "$script"      1>&2
     fi
 }
 
@@ -199,7 +199,7 @@ create_fpga_board_select_file()
     do
         comment="# "
         [ $i_fpga_board == $fpga_board ] && comment=""
-        printf "$comment$i_fpga_board\n" >> "$select_file"
+        printf "$comment%s\n" "$i_fpga_board" >> "$select_file"
     done
 
     info "Created an FPGA board selection file: \"$select_file\""
