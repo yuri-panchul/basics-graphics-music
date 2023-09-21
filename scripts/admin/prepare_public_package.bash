@@ -19,11 +19,11 @@ pkg_src_root_name=$(basename "$pkg_src_root")
 
 error ()
 {
-    // The "if" below is a protection against % in arguments
-    // which is interpreted as a format by printf.
-    //
-    // However this method has disadvantage:
-    // It prints "\n" for "\n" instead of a newline.
+    # The "if" below is a protection against % in arguments
+    # which is interpreted as a format by printf.
+    #
+    # However this method has disadvantage:
+    # It prints "\n" for "\n" instead of a newline.
 
     if [[ "$*" == *"%"* ]] ; then
         printf "\n$script: ERROR: %s\n" "$*" 1>&2
