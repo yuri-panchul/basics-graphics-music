@@ -27,7 +27,17 @@ script=$(basename "$script_path")
 
 info ()
 {
-    printf "\n$script: $*\n" 1>&2
+    // The "if" below is a protection against % in arguments
+    // which is interpreted as a format by printf.
+    //
+    // However this method has disadvantage:
+    // It prints "\n" for "\n" instead of a newline.
+
+    if [[ "$*" == *"%"* ]] ; then
+        printf "\n$script: %s\n" "$*" 1>&2
+    else
+        printf "\n$script: $*\n"      1>&2
+    fi
 }
 
 error ()
