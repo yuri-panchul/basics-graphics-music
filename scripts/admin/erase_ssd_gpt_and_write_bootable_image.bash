@@ -70,6 +70,23 @@ info "Using file \"$drive_image\" in the current directory as SSD image"
 
 #-----------------------------------------------------------------------------
 
+minimum_expected_size_in_gb=40
+
+drive_image_size=$(stat -c %s "$drive_image")
+drive_image_size_in_gb=$((drive_image_size / 1024 / 1024 / 1024))
+
+if [ $drive_image_size_in_gb -lt $minimum_expected_size_in_gb ]
+then
+    error "The size of \"$drive_image\" is $drive_image_size_in_gb" GB  \
+           "($drive_image_size bytes)."                                 \
+           "\nIt is less than the minimum expected size"                \
+           "of $minimum_expected_size_in_gb GB."                        \
+           "\nDid you forget to unpack the file using xz"               \
+           "and simple renamed it to .img?"
+fi
+
+#-----------------------------------------------------------------------------
+
 avail_drives=$(ls /dev/sd[a-z])
 
 info "Please select an SSD you want to ovewrite"
