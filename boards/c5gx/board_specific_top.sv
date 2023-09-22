@@ -7,7 +7,7 @@ module board_specific_top
               w_sw    = 10,
               w_led   = 18,
               w_digit = 4,
-              w_gpio  = 22
+              w_gpio  = 22          // GPIO[5:0] reserved for mic
 )
 (
     input                 CLOCK_50_B8A,
@@ -15,10 +15,10 @@ module board_specific_top
 
     input  [w_key  - 1:0] KEY,
     input  [w_sw   - 1:0] SW,
-    output [         9:0] LEDR, // The last 4 LEDR are used like a 7SEG dp
+    output [         9:0] LEDR,     // The last 4 LEDR are used like a 7SEG dp
     output [         7:0] LEDG,
 
-    output logic [   6:0] HEX0, // HEX[7] aka dp doesn't connected to FPGA at "Cyclone V GX Starter Kit"
+    output logic [   6:0] HEX0,     // HEX[7] aka dp doesn't connected to FPGA at "Cyclone V GX Starter Kit"
     output logic [   6:0] HEX1,
     output logic [   6:0] HEX2,
     output logic [   6:0] HEX3,
@@ -28,7 +28,7 @@ module board_specific_top
     inout  [w_gpio - 1:0] GPIO
 );
 
-    localparam w_top_sw = w_sw - 1;                // One sw is used as a reset
+    localparam w_top_sw = w_sw - 1; // One sw is used as a reset
 
     wire                  clk     = CLOCK_50_B8A;
     wire                  rst     = ~ CPU_RESET_n;
@@ -55,9 +55,9 @@ module board_specific_top
         .clk_mhz ( clk_mhz         ),
         .w_key   ( w_key           ),
         .w_sw    ( w_top_sw        ),
-        .w_led   ( w_led - w_digit ),                          // The last 4 LEDR are used like a 7SEG dp
+        .w_led   ( w_led - w_digit ), // The last 4 LEDR are used like a 7SEG dp
         .w_digit ( w_digit         ),
-        .w_gpio  ( w_gpio          )
+        .w_gpio  ( w_gpio          )  // GPIO[5:0] reserved for mic
     )
     i_top
     (
@@ -177,14 +177,14 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [5] ), // JP9 pin 6
-        .ws    ( GPIO [3] ), // JP9 pin 4
-        .sck   ( GPIO [1] ), // JP9 pin 2
-        .sd    ( GPIO [0] ), // JP9 pin 1
+        .lr    ( GPIO [0] ), // JP1 pin 1
+        .ws    ( GPIO [2] ), // JP1 pin 3
+        .sck   ( GPIO [4] ), // JP1 pin 5
+        .sd    ( GPIO [5] ), // JP1 pin 6
         .value ( mic      )
     );
 
-    assign GPIO [4] = 1'b0;  // GND - JP9 pin 5
-    assign GPIO [2] = 1'b1;  // VCC - JP9 pin 3
+    assign GPIO [1] = 1'b0;  // GND - JP1 pin 2
+    assign GPIO [3] = 1'b1;  // VCC - JP1 pin 4
 
 endmodule

@@ -7,7 +7,7 @@ module board_specific_top
               w_sw      = 10,
               w_led     = 10,
               w_digit   = 6,
-              w_gpio    = 72,
+              w_gpio    = 72,        // GPIO_0[5:0] reserved for mic
               vga_clock = 25         // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
 )
 (
@@ -66,7 +66,7 @@ module board_specific_top
         .w_sw    ( w_top_sw              ),
         .w_led   ( w_led - w_digit       ),        // The last 6 LEDR are used like a 7SEG dp
         .w_digit ( w_digit               ),
-        .w_gpio  ( w_gpio                )
+        .w_gpio  ( w_gpio                )         // GPIO_0[5:0] reserved for mic
     )
     i_top
     (
@@ -211,14 +211,14 @@ module board_specific_top
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
-        .lr    ( GPIO_0 [5] ), // JP1 pin 6
-        .ws    ( GPIO_0 [3] ), // JP1 pin 4
-        .sck   ( GPIO_0 [1] ), // JP1 pin 2
-        .sd    ( GPIO_0 [0] ), // JP1 pin 1
+        .lr    ( GPIO_0 [0] ), // JP1 pin 1
+        .ws    ( GPIO_0 [2] ), // JP1 pin 3
+        .sck   ( GPIO_0 [4] ), // JP1 pin 5
+        .sd    ( GPIO_0 [5] ), // JP1 pin 6
         .value ( mic        )
     );
 
-    assign GPIO_0 [4] = 1'b0;  // GND - JP1 pin 5
-    assign GPIO_0 [2] = 1'b1;  // VCC - JP1 pin 3
+    assign GPIO_0 [1] = 1'b0;  // GND - JP1 pin 2
+    assign GPIO_0 [3] = 1'b1;  // VCC - JP1 pin 4
 
 endmodule

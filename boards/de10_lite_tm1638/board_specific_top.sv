@@ -11,7 +11,7 @@ module board_specific_top
               w_sw    = 10,
               w_led   = 10,
               w_digit = 6,
-              w_gpio  = 36                   // GPIO [33], [34], [35] reserved for tm1638, GPIO[5:0] reserved for mic
+              w_gpio  = 36                   // GPIO [31], [33], [35] reserved for tm1638, GPIO[5:0] reserved for mic
 )
 (
     input                 MAX10_CLK1_50,
@@ -126,7 +126,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio - 3  )      // GPIO_0 [33], [34], [35] reserved for tm1638
+        .w_gpio  ( w_gpio      )      // GPIO [31], [33], [35] reserved for tm1638, GPIO[5:0] reserved for mic
     )
     i_top
     (
@@ -219,20 +219,17 @@ module board_specific_top
     )
     i_ledkey
     (
-        .clk        ( clk           ), // 50 MHz
+        .clk        ( clk           ),
         .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
         .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ),
-        .sio_clk    ( GPIO [32]     ), // JP1 pin 37
-        .sio_stb    ( GPIO [30]     ), // JP1 pin 35
-        .sio_data   ( GPIO [34]     )  // JP1 pin 39
-    );
-
-    assign GPIO [28] = 1'b0;  // GND - JP1 pin 33
-    assign GPIO [26] = 1'b1;  // VCC - JP1 pin 31
+        .sio_stb    ( GPIO [31]     ), // JP1 pin 36
+        .sio_clk    ( GPIO [33]     ), // JP1 pin 38
+        .sio_data   ( GPIO [35]     )  // JP1 pin 40
+    );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
     //------------------------------------------------------------------------
 
@@ -240,16 +237,14 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [9] ), // JP1 pin 10
-        .ws    ( GPIO [7] ), // JP1 pin 8
-        .sck   ( GPIO [5] ), // JP1 pin 6
-        .sd    ( GPIO [4] ), // JP1 pin 5
+        .lr    ( GPIO [0] ), // JP1 pin 1
+        .ws    ( GPIO [2] ), // JP1 pin 3
+        .sck   ( GPIO [4] ), // JP1 pin 5
+        .sd    ( GPIO [5] ), // JP1 pin 6
         .value ( mic      )
     );
 
-    assign GPIO [8] = 1'b0;  // GND - JP1 pin 9
-    assign GPIO [6] = 1'b1;  // VCC - JP1 pin 7
+    assign GPIO [1] = 1'b0;  // GND - JP1 pin 2
+    assign GPIO [3] = 1'b1;  // VCC - JP1 pin 4
 
 endmodule
-
-// TODO Review the order of tm_key

@@ -115,7 +115,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio - 3  )      // GPIO_0 [31], [32], [33] reserved for tm1638
+        .w_gpio  ( w_gpio      )      // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] for mic
     )
     i_top
     (
@@ -196,17 +196,17 @@ module board_specific_top
     )
     i_ledkey
     (
-        .clk        ( clk           ), // 50 MHz
+        .clk        ( clk           ),
         .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
         .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ),
+        .sio_stb    ( GPIO_0 [29]   ), // JP1 pin 36
         .sio_clk    ( GPIO_0 [31]   ), // JP1 pin 38
-        .sio_stb    ( GPIO_0 [32]   ), // JP1 pin 39
         .sio_data   ( GPIO_0 [33]   )  // JP1 pin 40
-    );
+    );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
     //------------------------------------------------------------------------
 
@@ -214,14 +214,14 @@ module board_specific_top
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
-        .lr    ( GPIO_0 [5] ),  // JP1 pin 8
-        .ws    ( GPIO_0 [3] ),  // JP1 pin 6
-        .sck   ( GPIO_0 [1] ),  // JP1 pin 4
-        .sd    ( GPIO_0 [0] ),  // JP1 pin 2
+        .lr    ( GPIO_0 [2] ),  // JP1 pin 5
+        .ws    ( GPIO_0 [4] ),  // JP1 pin 7
+        .sck   ( GPIO_0 [6] ),  // JP1 pin 9
+        .sd    ( GPIO_0 [7] ),  // JP1 pin 10
         .value ( mic        )
     );
 
-    assign GPIO_0 [4] = 1'b0;   // GND - JP1 pin 7
-    assign GPIO_0 [2] = 1'b1;   // VCC - JP1 pin 5
+    assign GPIO_0 [3] = 1'b0;   // GND - JP1 pin 6
+    assign GPIO_0 [5] = 1'b1;   // VCC - JP1 pin 8
 
 endmodule

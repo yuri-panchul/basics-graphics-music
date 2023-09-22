@@ -11,7 +11,7 @@ module board_specific_top
               w_sw     = 4,
               w_led    = 8,
               w_digit  = 0,
-              w_gpio   = 36                   // GPIO_0 [33], [34], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
+              w_gpio   = 36                   // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
 )
 (
     input                    FPGA_CLK1_50,
@@ -115,7 +115,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio      )      // GPIO_0 [33], [34], [35] reserved for tm1638
+        .w_gpio  ( w_gpio      )      // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
     )
     i_top
     (
@@ -209,10 +209,10 @@ module board_specific_top
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ),
-        .sio_clk    ( GPIO_0 [33]   ), // JP1 pin 38
         .sio_stb    ( GPIO_0 [31]   ), // JP1 pin 36
+        .sio_clk    ( GPIO_0 [33]   ), // JP1 pin 38
         .sio_data   ( GPIO_0 [35]   )  // JP1 pin 40
-    );
+    );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
     //------------------------------------------------------------------------
 

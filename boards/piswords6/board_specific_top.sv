@@ -32,7 +32,7 @@ module board_specific_top
 
     localparam w_top_key = w_key - 1;  // One key is used as a reset
 
-    wire                   rst     = ~ KEY [w_key     - 1];
+    wire                   rst     = ~ KEY [w_top_key];
     wire [w_top_key - 1:0] top_key = ~ KEY [w_top_key - 1:0];
 
     //------------------------------------------------------------------------
@@ -91,20 +91,20 @@ module board_specific_top
 
     assign VGA_RGB = { | red, | green, | blue};
 
-    /*
+    //------------------------------------------------------------------------
+
     inmp441_mic_i2s_receiver i_microphone
     (
         .clk   ( clk       ),
         .rst   ( rst       ),
-        .lr    ( LCD_D [1] ),
-        .ws    ( LCD_D [2] ),
-        .sck   ( LCD_D [3] ),
-        .sd    ( LCD_D [6] ),
+        .lr    ( GPIO [11] ),  // P1 pin 18
+        .ws    ( GPIO [13] ),  // P1 pin 20
+        .sck   ( GPIO [15] ),  // P1 pin 22
+        .sd    ( GPIO [14] ),  // P1 pin 21
         .value ( mic       )
     );
 
-    assign LCD_D [4] = 1'b0;  // GND
-    assign LCD_D [5] = 1'b1;  // VCC
-    */
+    assign GPIO [10] = 1'b0;   // GND - P1 pin 17
+    assign GPIO [12] = 1'b1;   // VCC - P1 pin 19
 
 endmodule
