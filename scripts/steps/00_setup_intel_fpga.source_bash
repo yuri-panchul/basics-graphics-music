@@ -35,135 +35,183 @@ fi
 
 intel_fpga_setup_quartus ()
 {
+    echo $LINENO > mei_detailed_dump_setup
     if is_command_available quartus ; then
+        echo $LINENO >> mei_detailed_dump_setup
         return  # Already set up
     fi
+    echo $LINENO >> mei_detailed_dump_setup
 
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
+    echo $LINENO >> mei_detailed_dump_setup
 
     if [ $use_old_version_of_quartus = 1 ] ; then
+        echo $LINENO >> mei_detailed_dump_setup
         intelfpga_install_dir=altera
     else
+        echo $LINENO >> mei_detailed_dump_setup
         intelfpga_install_dir=intelFPGA_lite
     fi
+    echo $LINENO >> mei_detailed_dump_setup
 
     #-------------------------------------------------------------------------
 
     if    [ -n "${INTEL_FPGA_HOME-}" ]  \
        && [ -d "$INTEL_FPGA_HOME/$intelfpga_install_dir" ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         intelfpga_install_parent_dir="$INTEL_FPGA_HOME"
     fi
 
+    echo $LINENO >> mei_detailed_dump_setup
     if    [ -n "${ALTERA_HOME-}" ]  \
        && [ -d "$ALTERA_HOME/$intelfpga_install_dir" ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         intelfpga_install_parent_dir="$ALTERA_HOME"
     fi
 
+    echo $LINENO >> mei_detailed_dump_setup
     # Consider removing this
 
     if    [ -n "${QUARTUS_HOME-}" ]  \
        && [ -d "$QUARTUS_HOME/$intelfpga_install_dir" ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         intelfpga_install_parent_dir="$QUARTUS_HOME"
     fi
+    echo $LINENO >> mei_detailed_dump_setup
 
     #-------------------------------------------------------------------------
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         if [ -z "${intelfpga_install_parent_dir-}" ]
         then
+            echo $LINENO >> mei_detailed_dump_setup
             intelfpga_install_parent_dir="$HOME"
         fi
+        echo $LINENO >> mei_detailed_dump_setup
 
         quartus_bin_dir=bin
 
         if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
         then
+            echo $LINENO >> mei_detailed_dump_setup
             intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
             intelfpga_install_parent_dir=/opt
         fi
+        echo $LINENO >> mei_detailed_dump_setup
 
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         if [ -z "${intelfpga_install_parent_dir-}" ]
         then
+            echo $LINENO >> mei_detailed_dump_setup
             intelfpga_install_parent_dir=/c
         fi
+        echo $LINENO >> mei_detailed_dump_setup
 
         if [ $use_old_version_of_quartus = 1 ] ; then
+            echo $LINENO >> mei_detailed_dump_setup
             quartus_bin_dir=bin
         else
+            echo $LINENO >> mei_detailed_dump_setup
             quartus_bin_dir=bin64
         fi
+        echo $LINENO >> mei_detailed_dump_setup
 
         if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
         then
+            echo $LINENO >> mei_detailed_dump_setup
             intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
             intelfpga_install_parent_dir=/d
         fi
+        echo $LINENO >> mei_detailed_dump_setup
     else
+        echo $LINENO >> mei_detailed_dump_setup
         error "this script does not support your OS / platform '$OSTYPE'"
     fi
+    echo $LINENO >> mei_detailed_dump_setup
 
     #-------------------------------------------------------------------------
 
     if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         if [ -z "${intelfpga_install_parent_dir_first-}" ]
         then
+            echo $LINENO >> mei_detailed_dump_setup
             error "expected to find '$intelfpga_install_dir' directory"  \
                   "in '$intelfpga_install_parent_dir'."                  \
                   "'$intelfpga_install_dir' location can be set by the environment variable INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME"
         else
+            echo $LINENO >> mei_detailed_dump_setup
             error "expected to find '$intelfpga_install_dir' directory"  \
                   "either in '$intelfpga_install_parent_dir_first'"      \
                   "or in '$intelfpga_install_parent_dir'."               \
                   "'$intelfpga_install_dir' location can be set by the environment variable INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME"
+            echo $LINENO >> mei_detailed_dump_setup
         fi
+        echo $LINENO >> mei_detailed_dump_setup
     fi
 
     #-------------------------------------------------------------------------
 
+    echo $LINENO >> mei_detailed_dump_setup
     find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
+    echo $LINENO >> mei_detailed_dump_setup
     latest_version_dir=$($find_command | sort | tail -1)
+    echo $LINENO >> mei_detailed_dump_setup
 
     if [ -z "$latest_version_dir" ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         error "cannot find any version of Intel FPGA installed in "  \
               "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
+        echo $LINENO >> mei_detailed_dump_setup
     fi
 
     #-------------------------------------------------------------------------
 
+    echo $LINENO >> mei_detailed_dump_setup
     export QUARTUS_ROOTDIR="$latest_version_dir/quartus"
+    echo $LINENO >> mei_detailed_dump_setup
     export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
+    echo $LINENO >> mei_detailed_dump_setup
 
     #-------------------------------------------------------------------------
 
     all_version_dirs=$($find_command | xargs echo)
+    echo $LINENO >> mei_detailed_dump_setup
 
     if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         warning "multiple Intel FPGA versions installed in"  \
                 "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
                 "'$all_version_dirs'"
 
+        echo $LINENO >> mei_detailed_dump_setup
         info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+        echo $LINENO >> mei_detailed_dump_setup
         info "PATH=$PATH"
+        echo $LINENO >> mei_detailed_dump_setup
     fi
 
     #-------------------------------------------------------------------------
 
+    echo $LINENO >> mei_detailed_dump_setup
                    [ -d "$QUARTUS_ROOTDIR" ]  \
     || error "directory '$QUARTUS_ROOTDIR' expected"
 
+    echo $LINENO >> mei_detailed_dump_setup
                    [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  \
     || error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
 
@@ -172,13 +220,18 @@ intel_fpga_setup_quartus ()
     # Workarounds for Quartus library problems
     # that are uncovered under RED OS from https://www.red-soft.ru
 
+    echo $LINENO >> mei_detailed_dump_setup
     if      [ "${inside_run_dir-}" = 1    ]  \
        && ! [ -f /usr/lib64/libcrypt.so.1 ]  \
        &&   [ -f /usr/lib64/libcrypt.so   ]
     then
+        echo $LINENO >> mei_detailed_dump_setup
         ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
+        echo $LINENO >> mei_detailed_dump_setup
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD"
+        echo $LINENO >> mei_detailed_dump_setup
     fi
+    echo $LINENO >> mei_detailed_dump_setup
 }
 
 #-----------------------------------------------------------------------------
@@ -308,6 +361,7 @@ run_questa ()
 
 setup_run_directory_for_fpga_synthesis_quartus ()
 {
+    echo $LINENO > mei_detailed_dump_setup_dir
     dir="$1"
     main_src_dir="$2"
 
@@ -320,13 +374,18 @@ setup_run_directory_for_fpga_synthesis_quartus ()
     # because these particular relative paths
     # are expected to contain only alnums, underscores and slashes.
 
+    echo $LINENO >> mei_detailed_dump_setup_dir
     rel_main_src_dir=$(realpath --relative-to="$dir" "$main_src_dir")
+    echo $LINENO >> mei_detailed_dump_setup_dir
     rel_board_dir=$(realpath    --relative-to="$dir" "$board_dir")
+    echo $LINENO >> mei_detailed_dump_setup_dir
     rel_lab_dir=$(realpath      --relative-to="$dir" "$lab_dir")
+    echo $LINENO >> mei_detailed_dump_setup_dir
 
     #-------------------------------------------------------------------------
 
     > "$dir/fpga_project.qpf"
+    echo $LINENO >> mei_detailed_dump_setup_dir
 
     cat << EOF > "$dir/fpga_project.qsf"
 set_global_assignment -name NUM_PARALLEL_PROCESSORS  4
@@ -339,22 +398,29 @@ set_global_assignment -name SEARCH_PATH $rel_lab_dir/common
 
 EOF
 
+    echo $LINENO >> mei_detailed_dump_setup_dir
     $find_to_run  \
         "$main_src_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
         -type f -name '*.sv' -not -name tb.sv  \
         -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
         >> "$dir/fpga_project.qsf"
+    echo $LINENO >> mei_detailed_dump_setup_dir
 
     if [ -f "$main_src_dir/extra_project_files.qsf" ] ; then
+        echo $LINENO >> mei_detailed_dump_setup_dir
         cat "$main_src_dir/extra_project_files.qsf" >> "$dir/fpga_project.qsf"
+        echo $LINENO >> mei_detailed_dump_setup_dir
     fi
 
+    echo $LINENO >> mei_detailed_dump_setup_dir
     cat "$board_dir/$fpga_board/board_specific.qsf" >> "$dir/fpga_project.qsf"
+    echo $LINENO >> mei_detailed_dump_setup_dir
 
     $find_to_run "$board_dir/$fpga_board"  \
                  -name '*.qsf'             \
                ! -name board_specific.qsf  \
                  -exec cp {} "$dir"        \;
+    echo $LINENO >> mei_detailed_dump_setup_dir
 }
 
 #-----------------------------------------------------------------------------
@@ -365,25 +431,36 @@ EOF
 
 synthesize_for_fpga_quartus ()
 {
+    echo $LINENO > mei_detailed_dump_syn
     is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
+    echo $LINENO >> mei_detailed_dump_syn
 
     if ! quartus_sh --no_banner --flow compile fpga_project |& tee -a "$log"
     then
+        echo $LINENO >> mei_detailed_dump_syn
         grep -i -A 5 error "$log" 2>&1
+        echo $LINENO >> mei_detailed_dump_syn
         error "synthesis failed"
+        echo $LINENO >> mei_detailed_dump_syn
     fi
+    echo $LINENO >> mei_detailed_dump_syn
 }
 
 #-----------------------------------------------------------------------------
 
+# Need to put detailed dump to debug MEI situation
+
 configure_fpga_quartus ()
 {
+    echo $LINENO > mei_detailed_dump_conf
     is_command_available_or_error quartus_pgm " from Intel FPGA Quartus Prime package"
+    echo $LINENO >> mei_detailed_dump_conf
 
     #-------------------------------------------------------------------------
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
+    echo $LINENO >> mei_detailed_dump_conf
         rules_dir=/etc/udev/rules.d
         rules_file="$script_dir/fpga/90-intel-fpga.rules"
 
@@ -395,23 +472,32 @@ configure_fpga_quartus ()
 
         killall jtagd 2>/dev/null || true
     fi
+    echo $LINENO >> mei_detailed_dump_conf
 
     #-------------------------------------------------------------------------
 
     quartus_pgm -l &> cable_list
+    echo $LINENO >> mei_detailed_dump_conf
 
     cable_name_1=$(set +o pipefail; grep "1) " cable_list | sed 's/.*1) //')
+    echo $LINENO "$cable_name_1" >> mei_detailed_dump_conf
     cable_name_2=$(set +o pipefail; grep "2) " cable_list | sed 's/.*2) //')
+    echo $LINENO "$cable_name_2" >> mei_detailed_dump_conf
 
     if [ -n "$cable_name_1" ]
     then
+        echo $LINENO >> mei_detailed_dump_conf
         if [ -n "$cable_name_2" ]
         then
+            echo $LINENO >> mei_detailed_dump_conf
             warning "more than one cable is connected:" \
                     "$cable_name_1 and $cable_name_2"
+            echo $LINENO >> mei_detailed_dump_conf
         fi
+            echo $LINENO >> mei_detailed_dump_conf
 
         info "using cable $cable_name_1"
+        echo $LINENO >> mei_detailed_dump_conf
 
         config_file_1=fpga_project.sof
         config_file_2=fpga_project.pof
@@ -420,14 +506,18 @@ configure_fpga_quartus ()
 
         if ! [ -f $config_file ]
         then
+            echo $LINENO >> mei_detailed_dump_conf
             config_file=$config_file_2
 
             if ! [ -f $config_file ]
             then
+                echo $LINENO >> mei_detailed_dump_conf
                 error "Neither $config_file_1 nor $config_file_2" \
                     "config file is available"
+                echo $LINENO >> mei_detailed_dump_conf
             fi
         fi
+        echo $LINENO >> mei_detailed_dump_conf
 
         # Cyclone V SE/SX/ST is an SOC with an ARM processor.
         # ARM is the first at the jtag and FPGA is the second.
@@ -436,31 +526,44 @@ configure_fpga_quartus ()
         # Get the device name from qsf file
 
         device_str=$(grep DEVICE "$board_dir/$fpga_board/board_specific.qsf")
+        echo $LINENO >> mei_detailed_dump_conf
         device_name=none
 
         for word in $device_str
         do
+            echo $LINENO >> mei_detailed_dump_conf
             if [[ $word =~ 5C ]]
             then
+                echo $LINENO >> mei_detailed_dump_conf
                 device_name=${word:0:4}
                 break
             fi
+            echo $LINENO >> mei_detailed_dump_conf
         done
+        echo $LINENO >> mei_detailed_dump_conf
 
         # Check the device name
 
         if [ $device_name = 5CSE ] || [ $device_name = 5CSX ] || [ $device_name = 5CST ]
         then
+            echo $LINENO >> mei_detailed_dump_conf
             quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file@2"
+            echo $LINENO >> mei_detailed_dump_conf
         else
+            echo $LINENO >> mei_detailed_dump_conf
             quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
+            echo $LINENO >> mei_detailed_dump_conf
         fi
     else
+        echo $LINENO >> mei_detailed_dump_conf
         error "cannot detect a USB-Blaster cable connected" \
               "for $fpga_board FPGA board"
+        echo $LINENO >> mei_detailed_dump_conf
     fi
 
+    echo $LINENO >> mei_detailed_dump_conf
     rm -f cable_list
+    echo $LINENO >> mei_detailed_dump_conf
 }
 
 #-----------------------------------------------------------------------------
