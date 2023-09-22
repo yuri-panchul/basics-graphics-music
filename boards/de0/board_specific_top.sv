@@ -7,7 +7,7 @@ module board_specific_top
               w_sw    = 10,          // One onboard SW is used as a reset
               w_led   = 10,
               w_digit = 4,
-              w_gpio  = 64
+              w_gpio  = 64           // GPIO_0[7:2] reserved for mic
 )
 (
     input                CLOCK_50,
@@ -61,7 +61,7 @@ module board_specific_top
         .w_sw    ( w_top_sw ),
         .w_led   ( w_led    ),
         .w_digit ( w_digit  ),
-        .w_gpio  ( w_gpio   )
+        .w_gpio  ( w_gpio   )        // GPIO_0[7:2] reserved for mic
     )
     i_top
     (
@@ -149,14 +149,14 @@ module board_specific_top
     (
         .clk   (   clk         ),
         .rst   (   rst         ),
-        .lr    (   GPIO0_D [7] ), // JP4 pin 10
-        .ws    (   GPIO0_D [5] ), // JP4 pin 8
-        .sck   (   GPIO0_D [3] ), // JP4 pin 6
-        .sd    (   GPIO0_D [2] ), // JP4 pin 5
+        .lr    (   GPIO0_D [2] ), // JP4 pin 5
+        .ws    (   GPIO0_D [4] ), // JP4 pin 7
+        .sck   (   GPIO0_D [6] ), // JP4 pin 9
+        .sd    (   GPIO0_D [7] ), // JP4 pin 10
         .value (   mic         )
     );
 
-    assign GPIO0_D [6] = 1'b0;    // GND - JP4 pin 9
-    assign GPIO0_D [4] = 1'b1;    // VCC - JP4 pin 7
+    assign GPIO0_D [3] = 1'b0;    // GND - JP4 pin 6
+    assign GPIO0_D [5] = 1'b1;    // VCC - JP4 pin 8
 
 endmodule
