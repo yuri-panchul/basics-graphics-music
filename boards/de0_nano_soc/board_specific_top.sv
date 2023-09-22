@@ -116,7 +116,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio - 3  )        // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
+        .w_gpio  ( w_gpio      )        // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
     )
     i_top
     (
