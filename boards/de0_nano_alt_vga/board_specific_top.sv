@@ -144,23 +144,23 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     // VGA out at GPIO_1
-    assign GPIO_1 [14] = vga_vs;        // JP2 pin 19
-    assign GPIO_1 [15] = vga_hs;        // JP2 pin 20
+    assign GPIO_1 [ 6] = vga_vs;        // JP2 pin  9
+    assign GPIO_1 [ 4] = vga_hs;        // JP2 pin  7
     // R
-    assign GPIO_1 [29] = vga_r [0];     // JP2 pin 36
-    assign GPIO_1 [27] = vga_r [1];     // JP2 pin 34
-    assign GPIO_1 [25] = vga_r [2];     // JP2 pin 32
-    assign GPIO_1 [23] = vga_r [3];     // JP2 pin 28
+    assign GPIO_1 [32] = vga_r [0];     // JP2 pin 39
+    assign GPIO_1 [30] = vga_r [1];     // JP2 pin 37
+    assign GPIO_1 [28] = vga_r [2];     // JP2 pin 35
+    assign GPIO_1 [26] = vga_r [3];     // JP2 pin 33
     // G
-    assign GPIO_1 [28] = vga_g [0];     // JP2 pin 35
-    assign GPIO_1 [26] = vga_g [1];     // JP2 pin 33
-    assign GPIO_1 [24] = vga_g [2];     // JP2 pin 31
-    assign GPIO_1 [22] = vga_g [3];     // JP2 pin 27
+    assign GPIO_1 [22] = vga_g [0];     // JP2 pin 27
+    assign GPIO_1 [20] = vga_g [1];     // JP2 pin 25
+    assign GPIO_1 [18] = vga_g [2];     // JP2 pin 23
+    assign GPIO_1 [16] = vga_g [3];     // JP2 pin 21
     // B
-    assign GPIO_1 [21] = vga_b [0];     // JP2 pin 26
-    assign GPIO_1 [20] = vga_b [1];     // JP2 pin 25
-    assign GPIO_1 [18] = vga_b [2];     // JP2 pin 23
-    assign GPIO_1 [16] = vga_b [3];     // JP2 pin 21
+    assign GPIO_1 [14] = vga_b [0];     // JP2 pin 19
+    assign GPIO_1 [12] = vga_b [1];     // JP2 pin 17
+    assign GPIO_1 [10] = vga_b [2];     // JP2 pin 15
+    assign GPIO_1 [ 8] = vga_b [3];     // JP2 pin 13
 
     //------------------------------------------------------------------------
 
