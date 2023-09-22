@@ -226,13 +226,10 @@ module board_specific_top
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ),
-        .sio_stb    ( GPIO [31]     ), // JP1 pin 36
-        .sio_clk    ( GPIO [33]     ), // JP1 pin 38
-        .sio_data   ( GPIO [35]     )  // JP1 pin 40
+        .sio_stb    ( GPIO [27]     ), // JP1 pin 32
+        .sio_clk    ( GPIO [29]     ), // JP1 pin 34
+        .sio_data   ( GPIO [31]     )  // JP1 pin 36
     );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
-
-    assign GPIO [27] = 1'b1; // JP1 pin 32
-    assign GPIO [29] = 1'b0; // JP1 pin 34
 
     //------------------------------------------------------------------------
 
