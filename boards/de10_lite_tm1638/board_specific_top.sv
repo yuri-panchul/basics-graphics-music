@@ -231,6 +231,9 @@ module board_specific_top
         .sio_data   ( GPIO [35]     )  // JP1 pin 40
     );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
+    assign GPIO [27] = 1'b1; // JP1 pin 32
+    assign GPIO [29] = 1'b0; // JP1 pin 34
+
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
