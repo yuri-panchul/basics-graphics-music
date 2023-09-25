@@ -242,7 +242,9 @@ intel_fpga_setup_quartus ()
 
 intel_fpga_setup_questa ()
 {
-    if is_command_available vsim ; then
+    if is_command_available quartus ||
+       is_command_available vsim
+    then
         return  # Already set up
     fi
 
