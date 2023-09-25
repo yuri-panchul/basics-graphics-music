@@ -82,6 +82,15 @@ info ()
 error ()
 {
     info error: $*
+
+    if    [ "$OSTYPE"         = "linux-gnu" ]  \
+       || [ "$OSTYPE"         = "cygwin"    ]  \
+       || [ "$OSTYPE"         = "msys"      ]  \
+       || [ ${OSTYPE/[0-9]*/} = "darwin"    ]
+    then
+        read -p "Press any key "
+    fi
+
     exit 1
 }
 
