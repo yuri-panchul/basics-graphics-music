@@ -67,7 +67,7 @@ module board_specific_top
         .led      ( LED        ),
 
         .abcdefgh ( ABCDEFGH   ),
-        .digit    ( ~ DIGIT_N  ),
+        .digit    ( DIGIT_N    ),
 
         .gpio     (            )
     );
