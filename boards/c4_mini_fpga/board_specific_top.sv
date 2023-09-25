@@ -21,7 +21,7 @@ module board_specific_top
     // declare output signals - LEDs, 8-segment indicator...
     output [w_led     - 1:0] LED,
 
-    output [            7:0] ABCDEFGH,
+    output logic [            7:0] ABCDEFGH,
     output [w_digit   - 1:0] DIGIT_N,
 
     // declare both UART lines, input and output
@@ -42,6 +42,10 @@ module board_specific_top
     // for convenience, declare set of wires "top_sw"
     wire                  rst    = SW [w_sw - 1];
     wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+
+    // need explicit wire to be able to invert
+    wire  [          7:0] abcdefgh;
+    wire  [w_digit - 1:0] digit;
 
     //------------------------------------------------------------------------
 
@@ -66,10 +70,13 @@ module board_specific_top
 
         .led      ( LED        ),
 
-        .abcdefgh ( ABCDEFGH   ),
-        .digit    ( DIGIT_N    ),
+        .abcdefgh ( abcdefgh   ),
+        .digit    ( digit      ),
 
         .gpio     (            )
     );
+
+    assign ABCDEFGH = abcdefgh;
+    assign DIGIT_N  = ~ digit;
 
 endmodule
