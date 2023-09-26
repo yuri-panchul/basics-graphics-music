@@ -47,6 +47,10 @@ module board_specific_top
     wire  [          7:0] abcdefgh;
     wire  [w_digit - 1:0] digit;
 
+    // VGA wires
+    wire                           vga_vs, vga_hs;
+    wire [                    3:0] vga_red,vga_green,vga_blue;
+
     //------------------------------------------------------------------------
 
     // calling "top" module and passing numeric parameters
@@ -73,10 +77,36 @@ module board_specific_top
         .abcdefgh ( abcdefgh   ),
         .digit    ( digit      ),
 
+        .vsync    (   vga_vs    ),
+        .hsync    (   vga_hs    ),
+
+        .red      (   vga_red   ),
+        .green    (   vga_green ),
+        .blue     (   vga_blue  ),
+
         .gpio     (            )
     );
 
     assign ABCDEFGH = abcdefgh;
     assign DIGIT_N  = ~ digit;
+
+    // VGA out at GPIO
+    assign GPIO_P1 [3]  = vga_vs;        // PIN_B6
+    assign GPIO_P1 [4]  = vga_hs;        // PIN_A6
+    // R
+    assign GPIO_P1 [6] = vga_red [3];    // PIN_A7
+    assign GPIO_P1 [7] = vga_red [2];    // PIN_B8
+    assign GPIO_P1 [8] = vga_red [1];    // PIN_A8
+    assign GPIO_P1 [9] = vga_red [0];    // PIN_A9
+    // G
+    assign GPIO_P1 [11] = vga_green [3]; // PIN_A11
+    assign GPIO_P1 [12] = vga_green [2]; // PIN_B11
+    assign GPIO_P1 [13] = vga_green [1]; // PIN_A12
+    assign GPIO_P1 [14] = vga_green [0]; // PIN_B12
+    // B
+    assign GPIO_P1 [16] = vga_blue [3];  // PIN_B13
+    assign GPIO_P1 [17] = vga_blue [2];  // PIN_A14
+    assign GPIO_P1 [18] = vga_blue [1];  // PIN_B14
+    assign GPIO_P1 [19] = vga_blue [0];  // PIN_A15
 
 endmodule
