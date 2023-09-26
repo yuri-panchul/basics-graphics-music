@@ -1,0 +1,154 @@
+set_global_assignment   -name DEVICE EP4CE6F17C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+
+# For some reason this setting is necessary even for Cyclone IV.
+# It does not route the design without it on omdazz / rzrd.net board.
+
+set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+# _N postfix means the signal is "negative" in a sense
+
+set_location_assignment PIN_E1  -to CLK
+
+set_location_assignment PIN_L3  -to BUZZER
+
+set_location_assignment PIN_F14 -to UART_RX
+set_location_assignment PIN_F13 -to UART_TX
+
+set_location_assignment PIN_R14 -to EEPROM_SCL
+set_location_assignment PIN_T15 -to EEPROM_SDA
+
+set_location_assignment PIN_J14 -to KEY_N[0]
+set_location_assignment PIN_J16 -to KEY_N[1]
+set_location_assignment PIN_J15 -to KEY_N[2]
+set_location_assignment PIN_K16 -to KEY_N[3]
+set_location_assignment PIN_K15 -to KEY_N[4]
+set_location_assignment PIN_L15 -to KEY_N[5]
+set_location_assignment PIN_L16 -to KEY_N[6]
+set_location_assignment PIN_J13 -to KEY_N[7]
+
+set_location_assignment PIN_R16 -to SW[0]
+set_location_assignment PIN_P15 -to SW[1]
+set_location_assignment PIN_P16 -to SW[2]
+set_location_assignment PIN_N15 -to SW[3]
+set_location_assignment PIN_N16 -to SW[4]
+set_location_assignment PIN_M12 -to SW[5]
+set_location_assignment PIN_N14 -to SW[6]
+set_location_assignment PIN_N13 -to SW[7]
+
+set_location_assignment PIN_A5  -to LED[0]
+set_location_assignment PIN_B5  -to LED[1]
+set_location_assignment PIN_A4  -to LED[2]
+set_location_assignment PIN_B4  -to LED[3]
+set_location_assignment PIN_A3  -to LED[4]
+set_location_assignment PIN_B3  -to LED[5]
+set_location_assignment PIN_A2  -to LED[6]
+set_location_assignment PIN_C3  -to LED[7]
+set_location_assignment PIN_D15 -to LED[8]
+set_location_assignment PIN_D16 -to LED[9]
+set_location_assignment PIN_F15 -to LED[10]
+set_location_assignment PIN_F16 -to LED[11]
+set_location_assignment PIN_G15 -to LED[12]
+set_location_assignment PIN_G16 -to LED[13]
+set_location_assignment PIN_L13 -to LED[14]
+set_location_assignment PIN_L14 -to LED[15]
+
+set_location_assignment PIN_D9  -to ABCDEFGH[7]
+set_location_assignment PIN_E10 -to ABCDEFGH[6]
+set_location_assignment PIN_E8  -to ABCDEFGH[5]
+set_location_assignment PIN_D11 -to ABCDEFGH[4]
+set_location_assignment PIN_C8  -to ABCDEFGH[3]
+set_location_assignment PIN_D8  -to ABCDEFGH[2]
+set_location_assignment PIN_E9  -to ABCDEFGH[1]
+set_location_assignment PIN_C9  -to ABCDEFGH[0]
+
+set_location_assignment PIN_C14 -to DIGIT_N[0]
+set_location_assignment PIN_D14 -to DIGIT_N[1]
+set_location_assignment PIN_G11 -to DIGIT_N[2]
+set_location_assignment PIN_F11 -to DIGIT_N[3]
+set_location_assignment PIN_C11 -to DIGIT_N[4]
+set_location_assignment PIN_D12 -to DIGIT_N[5]
+
+# set_location_assignment PIN_D5  -to GPIO_J7[38]
+# set_location_assignment PIN_D4  -to GPIO_J7[36]
+# set_location_assignment PIN_B1  -to GPIO_J7[34]
+# set_location_assignment PIN_F2  -to GPIO_J7[32]
+# set_location_assignment PIN_G2  -to GPIO_J7[30]
+# set_location_assignment PIN_J1  -to GPIO_J7[28]
+# set_location_assignment PIN_K1  -to GPIO_J7[26]
+# set_location_assignment PIN_L1  -to GPIO_J7[24]
+# set_location_assignment PIN_N1  -to GPIO_J7[22]
+# set_location_assignment PIN_P1  -to GPIO_J7[20]
+# set_location_assignment PIN_R1  -to GPIO_J7[18]
+# set_location_assignment PIN_R3  -to GPIO_J7[16]
+# set_location_assignment PIN_R4  -to GPIO_J7[14]
+# set_location_assignment PIN_R5  -to GPIO_J7[12]
+# set_location_assignment PIN_R6  -to GPIO_J7[10]
+# set_location_assignment PIN_R7  -to GPIO_J7[8]
+# set_location_assignment PIN_N3  -to GPIO_J7[6]
+# set_location_assignment PIN_N5  -to GPIO_J7[4]
+
+# set_location_assignment PIN_E5  -to GPIO_J7[37]
+# set_location_assignment PIN_D3  -to GPIO_J7[35]
+# set_location_assignment PIN_C2  -to GPIO_J7[33]
+# set_location_assignment PIN_F1  -to GPIO_J7[31]
+# set_location_assignment PIN_G1  -to GPIO_J7[27]
+# set_location_assignment PIN_J2  -to GPIO_J7[25]
+# set_location_assignment PIN_L2  -to GPIO_J7[23]
+# set_location_assignment PIN_N2  -to GPIO_J7[21]
+# set_location_assignment PIN_P2  -to GPIO_J7[19]
+# set_location_assignment PIN_T2  -to GPIO_J7[17]
+# set_location_assignment PIN_T3  -to GPIO_J7[15]
+# set_location_assignment PIN_T4  -to GPIO_J7[13]
+# set_location_assignment PIN_T5  -to GPIO_J7[11]
+# set_location_assignment PIN_T6  -to GPIO_J7[9]
+# set_location_assignment PIN_T7  -to GPIO_J7[7]
+# set_location_assignment PIN_P3  -to GPIO_J7[5]
+# this pin is connected to a clock
+# set_location_assignment PIN_M1  -to GPIO_J7[3]
+
+set_location_assignment PIN_C6  -to GPIO_P1[2]
+set_location_assignment PIN_B6  -to GPIO_P1[3]
+set_location_assignment PIN_A6  -to GPIO_P1[4]
+set_location_assignment PIN_B7  -to GPIO_P1[5]
+set_location_assignment PIN_A7  -to GPIO_P1[6]
+set_location_assignment PIN_B8  -to GPIO_P1[7]
+set_location_assignment PIN_A8  -to GPIO_P1[8]
+set_location_assignment PIN_A9  -to GPIO_P1[9]
+set_location_assignment PIN_B9  -to GPIO_P1[10]
+set_location_assignment PIN_A11 -to GPIO_P1[11]
+set_location_assignment PIN_B11 -to GPIO_P1[12]
+set_location_assignment PIN_A12 -to GPIO_P1[13]
+set_location_assignment PIN_B12 -to GPIO_P1[14]
+set_location_assignment PIN_A13 -to GPIO_P1[15]
+set_location_assignment PIN_B13 -to GPIO_P1[16]
+set_location_assignment PIN_A14 -to GPIO_P1[17]
+set_location_assignment PIN_B14 -to GPIO_P1[18]
+set_location_assignment PIN_A15 -to GPIO_P1[19]
+set_location_assignment PIN_B16 -to GPIO_P1[20]
+set_location_assignment PIN_C15 -to GPIO_P1[21]
+set_location_assignment PIN_C16 -to GPIO_P1[22]
+
+set_location_assignment PIN_N6  -to GPIO_P2[2]
+set_location_assignment PIN_R8  -to GPIO_P2[3]
+set_location_assignment PIN_T8  -to GPIO_P2[4]
+set_location_assignment PIN_T9  -to GPIO_P2[5]
+set_location_assignment PIN_R9  -to GPIO_P2[6]
+set_location_assignment PIN_T10 -to GPIO_P2[7]
+set_location_assignment PIN_R10 -to GPIO_P2[8]
+set_location_assignment PIN_T11 -to GPIO_P2[9]
+set_location_assignment PIN_M11 -to GPIO_P2[10]
+set_location_assignment PIN_N12 -to GPIO_P2[11]
+set_location_assignment PIN_P8  -to GPIO_P2[12]
+set_location_assignment PIN_N8  -to GPIO_P2[13]
+set_location_assignment PIN_M8  -to GPIO_P2[14]
+set_location_assignment PIN_M9  -to GPIO_P2[15]
+set_location_assignment PIN_N9  -to GPIO_P2[16]
+set_location_assignment PIN_P9  -to GPIO_P2[17]
+set_location_assignment PIN_M10 -to GPIO_P2[18]
+set_location_assignment PIN_R11 -to GPIO_P2[19]
+set_location_assignment PIN_T13 -to GPIO_P2[20]
+set_location_assignment PIN_R13 -to GPIO_P2[21]
+set_location_assignment PIN_T14 -to GPIO_P2[22]
