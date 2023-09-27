@@ -1,4 +1,4 @@
-set_io CLK100MHZ J3
+set_io CLK J3 ### 100MHz crystal oscillator
 
 set_io KEY[0] K11
 set_io KEY[1] P13
