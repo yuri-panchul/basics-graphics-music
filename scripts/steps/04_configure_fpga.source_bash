@@ -5,5 +5,7 @@ case $fpga_toolchain in
     quartus ) configure_fpga_quartus ;;
     gowin   ) configure_fpga_gowin   ;;
     xilinx  ) configure_fpga_xilinx  ;;
-    *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain" ;;
+    yosys   ) configure_fpga_yosys  ;;
+    *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain." \
+                    " Currently supported: quartus, xilinx, gowin, yosys." ;;
 esac
