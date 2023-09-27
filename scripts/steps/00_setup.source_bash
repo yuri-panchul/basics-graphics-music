@@ -82,6 +82,15 @@ info ()
 error ()
 {
     info error: $*
+
+    if    [ "$OSTYPE"         = "linux-gnu" ]  \
+       || [ "$OSTYPE"         = "cygwin"    ]  \
+       || [ "$OSTYPE"         = "msys"      ]  \
+       || [ ${OSTYPE/[0-9]*/} = "darwin"    ]
+    then
+        read -p "Press any key "
+    fi
+
     exit 1
 }
 
@@ -261,6 +270,7 @@ update_fpga_toolchain_var ()
             use_old_version_of_quartus=1
         ;;
 
+        c4_mini_fpga         | \
         c5gx                 | \
         de0_cv               | \
         de0_nano             | \
