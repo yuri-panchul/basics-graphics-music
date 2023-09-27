@@ -84,7 +84,7 @@ module top
 
     /**/
 
-    wire [w_x * 2 - 1:0] x_2 = x ** 2;
+    wire [w_x * 2 - 1:0] x_2 = x * x;
 
     always_comb
     begin
@@ -101,7 +101,7 @@ module top
             green = '1;
             blue  = y [w_y - 2 -: 4];
         end
-        else if ((x - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
+        else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
         begin
             red   = '1;
             green = x [w_x - 2 -: 4];
