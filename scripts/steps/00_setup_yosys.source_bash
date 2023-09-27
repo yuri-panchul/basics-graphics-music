@@ -1,0 +1,166 @@
+expected_source_script=00_setup.source_bash
+
+if [ -z "$BASH_SOURCE" ]
+then
+    printf "script \"%s\" should be sourced from \"%s\"\n"  \
+        "$0" "$expected_source_script" 1>&2
+
+    exit 1
+fi
+
+this_script=$(basename "${BASH_SOURCE[0]}")
+source_script=$(basename "${BASH_SOURCE[1]}")
+
+if [ -z "$source_script" ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\"\n"  \
+        "$this_script" "$expected_source_script" 1>&2
+
+    return 1
+fi
+
+if [ "$source_script" != $expected_source_script ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\", not \"%s\"\n"  \
+        "$this_script" "$expected_source_script" "$source_script" 1>&2
+
+    exit 1
+fi
+
+#-----------------------------------------------------------------------------
+
+setup_yosys ()
+{
+    is_command_available_or_error "yosys" "" "\n\nEither install it using 'apt-get install yosys' or get it installed manually from repository: https://github.com/YosysHQ/yosys.git"
+
+    if [[ "$fpga_board" =~ "ice40" ]]
+    then
+        echo "Configuring for Lattice iCE40..."
+
+        is_command_available_or_error "nextpnr-ice40" "" "\n\nEither install it using 'apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Lattice iCE40 chips which is not enabled by default!"
+
+        is_command_available_or_error "icepack" "" "\n\nEither install it using 'apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
+
+        is_command_available_or_error "icebram" "" "\n\nEither install it using 'apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
+
+        is_command_available_or_error "iceprog" "" "\n\nEither install it using 'apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
+
+        echo "OK"
+    fi
+
+    if [[ "$fpga_board" =~ "ecp5" ]]
+    then
+    echo "Configuring for Lattice ECP5..."
+
+        is_command_available_or_error "nextpnr-ecp5" "" "Either install it using 'apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Lattice ECP5 chips which is not enabled by default!"
+
+        is_command_available_or_error "ecppack" "" "\n\nProject Trellis is not installed in the system. Either install it using 'apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
+
+        is_command_available_or_error "ecpbram" "" "\n\nProject Trellis is not installed in the system. Either install it using 'apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
+
+        echo "OK"
+    fi
+
+    if [[ "$fpga_board" =~ "gowin" ]]
+    then
+    echo "Configuring for Gowin chips..."
+
+        is_command_available_or_error "nextpnr-gowin" "" "\n\nEither install it using 'apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Gowin chips which is not enabled by default!"
+
+        is_command_available_or_error "gowin_pack" "" "\n\nProject Apycula is not installed. Either install it using 'apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
+
+        is_command_available_or_error "gowin_bba" "" "\n\nProject Apycula is not installed. Either install it using 'apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
+
+        echo "OK"
+    fi
+
+    is_command_available_or_error netlistsvg "" "\n\nEither install it using 'npm install -g netlistsv' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
+
+    is_command_available_or_error "make" "" "\n\nGNU make is not installed in the system. Either install it using 'apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
+
+    is_command_available_or_error "xdot" "" "Either install it using 'apt-get install xdot' or get it installed manually from repository: https://github.com/jbohren/xdot.git. Note: depends on Python!"
+
+    is_command_available_or_error "firefox" "" "\n\nFirefox is not installed in the system. It is used to display SVG graphics. Either install it using 'apt-get install firefox' or get it installed manually from web site: https://www.mozilla.org/en-US/firefox/download/thanks/. Note: you may fake it by creating empty bash script with name 'firefox' in /usr/bin. ;-)"
+}
+
+#-------------------------------------------------------------------------
+
+setup_run_directory_for_fpga_synthesis_yosys ()
+{
+    dir="$1"
+    main_src_dir="$2"
+
+    > "$dir/Makefile"
+    echo "NAME = `basename $main_src_dir`" >> "$dir/Makefile"
+    echo "INC = $lab_dir/common" >> "$dir/Makefile"
+    echo "BOARD = $fpga_board" >> "$dir/Makefile"
+
+    for verilog_src_dir in  \
+        "$main_src_dir"  \
+        "$board_dir/$fpga_board"  \
+        "$lab_dir/common"
+    do
+        $find_to_run  \
+            "${verilog_src_dir/\/[[:alpha:]]\//${verilog_src_dir:1:1}:\/}"  \
+            -type f -name '*.sv' -not -name tb.sv  \
+            -printf "READ_VERILOG += -p \"read_verilog -sv %p\"\n" \
+            -printf "DEPS += %p\n" \
+            >> "$dir/Makefile"
+    done
+
+    cat "$board_dir/$fpga_board/Makefile" >> "$dir/Makefile"
+
+    # Copy pin config file for Lattice boards
+    if [ -f "$board_dir/$fpga_board/board_specific.pcf" ]
+    then
+        cat "$board_dir/$fpga_board/board_specific.pcf" > "$dir/board_specific.pcf"
+    fi
+
+    # Copy pin config file for Gowin boards
+    if [ -f "$board_dir/$fpga_board/board_specific.cst" ]
+    then
+        cat "$board_dir/$fpga_board/board_specific.cst" > "$dir/board_specific.cst"
+    fi
+
+
+}
+
+#-----------------------------------------------------------------------------
+
+synthesize_for_fpga_yosys ()
+{
+    make 
+}
+
+#-----------------------------------------------------------------------------
+
+configure_fpga_yosys ()
+{
+    configure_fpga_yosys_all
+}
+
+#-----------------------------------------------------------------------------
+
+configure_fpga_yosys_all ()
+{
+    read -n 1 -r -p "\nWould you like to choose a flash method ? SRAM or Flash [s/f] "
+    printf "\n"
+
+    if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
+        flash_method="sram"
+    else
+        flash_method="flash"
+    fi 
+
+    prj_parent_dir=`pwd`
+
+    echo "FLASH_METHOD = $flash_method" >> Makefile
+}
+
+#-----------------------------------------------------------------------------
+
+
+run_fpga_synthesis_gui_yosys ()
+{
+    make gui
+}

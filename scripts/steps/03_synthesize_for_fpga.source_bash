@@ -22,7 +22,9 @@ case $fpga_toolchain in
     quartus ) synthesize_for_fpga_quartus ;;
     gowin   ) synthesize_for_fpga_gowin   ;;
     xilinx  ) synthesize_for_fpga_xilinx  ;;
-    *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain" ;;
+    yosys   ) synthesize_for_fpga_yosys  ;;
+    *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain." \
+                    " Currently supported: quartus, xilinx, gowin, yosys." ;;
 esac
 
 . "$script_dir/steps/04_configure_fpga.source_bash"
