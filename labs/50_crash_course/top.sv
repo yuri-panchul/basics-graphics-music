@@ -111,7 +111,7 @@ module top
 
     /*
 
-    wire [19:0] x_2 = x ** 2;
+    wire [19:0] x_2 = x * x;
 
     always_comb
     begin
@@ -128,7 +128,7 @@ module top
             green = '0;
             blue  = '0;
         end
-        else if ((x - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
+        else if ((x - 400) * (x - 400) + 2 * (y - 300) * (y - 300) < (100 * 100))  // Ellipse
         begin
             red   = '0;
             green = '1;
@@ -152,7 +152,7 @@ module top
     wire [9:0] dx = counter [27:18];
     wire [9:0] dy = counter [27:18];
 
-    wire [19:0] x_2 = x ** 2;
+    wire [19:0] x_2 = x * x;
 
     always_comb
     begin
@@ -169,13 +169,13 @@ module top
             green = '0;
             blue  = '0;
         end
-        else if ((x + dx - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
+        else if ((x + dx - 400) * (x + dx - 400) + 2 * (y - 300) * (y - 300) < 100 * 100)  // Ellipse
         begin
             red   = '0;
             green = '1;
             blue  = '0;
         end
-        else if (((((x + y) & 127) ** 2) >> 8) < ((y - dy) & 127))  // Parabola
+        else if (((((x + y) & 127) * ((x + y) & 127)) >> 8) < ((y - dy) & 127))  // Parabola
         begin
             red   = { 4 { counter [31] ^ x [6] } };
             green = { 4 { counter [30] ^ y [7] } };
