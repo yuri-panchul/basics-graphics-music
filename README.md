@@ -8,8 +8,9 @@ Introductory examples for the classes on ASIC and FPGA design and verification. 
 
 [LaLambda 2023 in Tbilisi, Georgia](https://lalambda.school)
 
-![LaLambda 2023 in Tbilisi, Georgia](https://github.com/yuri-panchul/2023-lalambda-asic-fpga/blob/main/misc/lalambda_23_asic_fpga_ad_2.jpg)
+![LaLambda 2023 in Tbilisi, Georgia](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/lalambda_23_asic_fpga_ad_2.jpg)
 
 [AUCA & Siemens EDA seminar in Bishkek, Kyrgyzstan](https://ddvca.com)
 
-![AUCA & Siemens EDA seminar in Bishkek, Kyrgyzstan](https://github.com/yuri-panchul/2023-lalambda-asic-fpga/blob/main/misc/2022_auca_bishkek.jpg)
+![AUCA & Siemens EDA seminar in Bishkek, Kyrgyzstan](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2022_auca_bishkek.jpg
+
