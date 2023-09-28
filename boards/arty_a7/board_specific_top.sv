@@ -1,8 +1,5 @@
-// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
-
-   `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
-// `define CONCAT_REGULAR_SIGNALS_AND_TM
-// `define CONCAT_TM_SIGNALS_AND_REGULAR
+`include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (
