@@ -1,3 +1,6 @@
+`include "config.svh"
+`include "lab_specific_config.svh"
+
    `define ENABLE_TM1638
 
 // 
