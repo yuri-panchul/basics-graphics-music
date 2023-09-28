@@ -3,7 +3,7 @@
 // 
 module board_specific_top
 # (
-    parameter   clk_mhz = 25, // CLK is derived from CLK100MHZ / 4 = 25MHz
+    parameter   clk_mhz = 100,
                 w_key   = 3, // w_ket[2] is used for RST and is wired to JTAG_TMS.
                 w_sw    = 2,
                 w_led   = 2,
@@ -11,7 +11,7 @@ module board_specific_top
                 w_gpio  = 12 
 )
 (
-    input                       CLK100MHZ,
+    input                       CLK,
 
     input  [w_key       - 1:0]  KEY,
     input  [w_sw        - 1:0]  SW,
@@ -68,8 +68,6 @@ module board_specific_top
     wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
-
-    reg   [              1:0] clk_div;
 
    //------------------------------------------------------------------------
 
@@ -172,11 +170,5 @@ module board_specific_top
 
     assign GPIO [8] = 1'b0;  // GND
     assign GPIO [7] = 1'b1;  // VCC
-
-    always @ (posedge CLK100MHZ) begin //on each positive edge of 100Mhz clock increment clk_div
-        clk_div <= clk_div + 2'b1;
-    end
-
-    assign CLK = clk_div[1]; // CLK = CLK100MHZ / 4 = 25Mhz 
 
 endmodule
