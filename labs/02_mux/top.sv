@@ -181,8 +181,8 @@ module top
 
     //------------------------------------------------------------------------
 
-    `ifdef __ICARUS__ |
-
+    `ifdef __ICARUS__ 
+    
     // The syntax below does not work with Icarus Verilog
     wire mux9 = mux0;
     
