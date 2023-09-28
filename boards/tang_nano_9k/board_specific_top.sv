@@ -1,4 +1,4 @@
-//   `define ENABLE_TM1638
+`include "config.svh"
 
 module board_specific_top
 # (
@@ -31,6 +31,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    localparam w_top_sw   = w_sw - 1;  // One onboard SW is used as a reset
+
+    wire                  rst     = SW [w_top_sw];
+    wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
+
+    //------------------------------------------------------------------------
+
     localparam w_tm_key    = 8,
                w_tm_led    = 8,
                w_tm_digit  = 8;
@@ -38,20 +45,17 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
 
-        localparam w_top_key   = w_tm_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_tm_led,
-                   w_top_digit = w_tm_digit;
+        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
+                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
-    `else                   // TM1638 module is not connected
+    `else  // Concatenate the signals
 
-        localparam w_top_key   = w_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_led,
-                   w_top_digit = w_digit;
-
+        localparam w_top_key   = w_tm_key   + w_key   ,
+                   w_top_led   = w_tm_led   + w_led   ,
+                   w_top_digit = w_tm_digit + w_digit ;
     `endif
 
     //------------------------------------------------------------------------
@@ -64,26 +68,40 @@ module board_specific_top
     wire  [w_top_led   - 1:0] top_led;
     wire  [w_top_digit - 1:0] top_digit;
 
-    wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
 
-   //------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
 
-        assign rst      = tm_key [w_tm_key - 1];
-        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign top_key = { tm_key, ~ KEY };
 
-        assign tm_led   = top_led;
-        assign tm_digit = top_digit;
+        assign { tm_led   , LED   } = { top_led[w_tm_led - 1:w_led], ~ top_led[w_led    - 1:0] };
+        assign { tm_digit , digit } = top_digit;
 
-    `else                   // TM1638 module is not connected
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
 
-        assign rst      = ~ KEY [w_key - 1];
-        assign top_key  = ~ KEY [w_key - 1:0];
+        assign top_key = { ~ KEY, tm_key };
 
-        assign LED      = ~ top_led;
+        assign { LED   , tm_led   } = { ~ top_led[w_led    - 1:w_tm_led], top_led[w_tm_led - 1:0] };
+        assign { digit , tm_digit } = top_digit;
+
+    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+
+        always_comb
+        begin
+            top_key = '0;
+
+            top_key [w_key    - 1:0] |= ~ KEY;
+            top_key [w_tm_key - 1:0] |= tm_key;
+        end
+
+        assign LED      = ~ top_led   [w_led      - 1:0];
+        assign tm_led   =   top_led   [w_tm_led   - 1:0];
+
+        assign digit    = top_digit [w_digit    - 1:0];
+        assign tm_digit = top_digit [w_tm_digit - 1:0];
 
     `endif
 
@@ -144,7 +162,7 @@ module board_specific_top
     i_tm1638
     (
         .clk      ( CLK       ),
-        .rst      ( rst       ),
+        .rst      ( rst       ), // Don't make reset tm1638_board_controller by it's tm_key
         .hgfedcba ( hgfedcba  ),
         .digit    ( tm_digit  ),
         .ledr     ( tm_led    ),
