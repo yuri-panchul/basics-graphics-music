@@ -8,6 +8,21 @@ all: $(NAME).bin
 
 .PHONY: upload
 upload: $(NAME).bin
+	@echo "---------------------------------------------------"
+	@echo " MPSSE / FTDI definitions"
+	@echo "---------------------------------------------------"
+	@echo " FTDI bank pinout typically used for iCE dev boards"
+	@echo " BUS IO | Signal | Control"
+	@echo " -------+--------+--------"
+	@echo " xDBUS0 |    SCK | MPSSE  "
+	@echo " xDBUS1 |   MOSI | MPSSE  "
+	@echo " xDBUS2 |   MISO | MPSSE  "
+	@echo " xDBUS3 |     nc |        "
+	@echo " xDBUS4 |     CS | GPIO   "
+	@echo " xDBUS5 |     nc |        "
+	@echo " xDBUS6 |  CDONE | GPIO   "
+	@echo " xDBUS7 | CRESET | GPIO   "
+	@echo 
 	iceprog $(PROG_PARAM) $(NAME).bin
 
 fw: $(NAME).bin
