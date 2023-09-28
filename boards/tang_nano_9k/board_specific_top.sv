@@ -1,8 +1,6 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-//   `define ENABLE_TM1638
-
 module board_specific_top
 # (
     parameter   clk_mhz = 27,
