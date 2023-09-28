@@ -128,7 +128,11 @@ module top
             green = '0;
             blue  = '0;
         end
+        `ifdef YOSYS
         else if ((x - 400) * (x - 400) + 2 * (y - 300) * (y - 300) < (100 * 100))  // Ellipse
+	`else
+        else if ((x - 400) ** 2  + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
+        `endif
         begin
             red   = '0;
             green = '1;
@@ -169,13 +173,21 @@ module top
             green = '0;
             blue  = '0;
         end
+        `ifdef YOSYS
         else if ((x + dx - 400) * (x + dx - 400) + 2 * (y - 300) * (y - 300) < 100 * 100)  // Ellipse
+        `else
+        else if ((x + dx - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
+        `endif
         begin
             red   = '0;
             green = '1;
             blue  = '0;
         end
+        `ifdef YOSYS
         else if (((((x + y) & 127) * ((x + y) & 127)) >> 8) < ((y - dy) & 127))  // Parabola
+        `else
+        else if (((((x + y) & 127) ** 2) >> 8) < ((y - dy) & 127))  // Parabola
+        `endif
         begin
             red   = { 4 { counter [31] ^ x [6] } };
             green = { 4 { counter [30] ^ y [7] } };
