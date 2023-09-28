@@ -1,0 +1,22 @@
+name: Generate Packages
+
+on:
+  push:
+    tags: 
+      - "release/**/*"
+
+jobs:
+  generate-zip-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/raetro/quartus:21.1.1
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate packages
+        run: |
+          export PACKAGE_REPO_TAG=${{ github.ref_name }}
+          bash ./scripts/admin/generate_all_backages.bash

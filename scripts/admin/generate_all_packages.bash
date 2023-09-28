@@ -67,11 +67,21 @@ update_fpga_toolchain_var ()
     esac
 }
 
-TEMPLATE_REPO=basics-graphics-music-template
-TARGET_REPO=basics-graphics-music
+if [ -z "$GITHUB_TOKEN" ]; then
+    echo ">> \$GITHUB_TOKEN env var is missing"
+    exit 1
+fi
+
+TARGET_ORG_NAME="chipdesignschool"
+TARGET_REPO_NAME="basics-graphics-music"
+TARGET_REPO_FULLNAME="${TARGET_ORG_NAME}/${TARGET_REPO_NAME}"
+TEMPLATE_REPO="${TARGET_REPO_NAME}-template"
+
+TEMP_DIR_PATH=$(mktemp -d)
+cd "$TEMP_DIR_PATH"
 
 if [ ! -d "$TEMPLATE_REPO" ]; then
-    git clone https://github.com/chipdesignschool/basics-graphics-music.git "$TEMPLATE_REPO"
+    git clone https://github.com/${TARGET_REPO_FULLNAME}.git "$TEMPLATE_REPO"
 fi
 
 available_fpga_boards=$(find "$TEMPLATE_REPO/boards" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\n" " ")
@@ -88,10 +98,11 @@ do
     fi
     echo ">> Generating zip for $fpga_board"
 
-    cp -r $TEMPLATE_REPO $TARGET_REPO
-    cd $TARGET_REPO
+    cp -r $TEMPLATE_REPO $TARGET_REPO_NAME
+    cd $TARGET_REPO_NAME
     echo -e "$fpga_board_id\ny\n" | bash check_setup_and_choose_fpga_board.bash
     cd ..
-    zip -r "./$TARGET_REPO-$fpga_board.zip" "$TARGET_REPO"
-    rm -rf $TARGET_REPO
+    zip -r "./$TARGET_REPO_NAME-$fpga_board.zip" "$TARGET_REPO_NAME"
+    rm -rf $TARGET_REPO_NAME
+    exit 0
 done
