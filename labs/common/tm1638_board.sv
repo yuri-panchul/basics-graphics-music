@@ -214,6 +214,9 @@ Copyright 2017 Alan Garfield
 ///////////////////////////////////////////////////////////////////////////////////
 //                              Top module
 ///////////////////////////////////////////////////////////////////////////////////
+
+`include "config.svh"
+
 module tm1638_board_controller
 # (
     parameter clk_mhz = 50,
@@ -223,7 +226,6 @@ module tm1638_board_controller
 (
     input                             clk,
     input                             rst,
-    input                             static_hex,
     input        [               7:0] hgfedcba,
     input        [     w_digit - 1:0] digit,
     input        [               7:0] ledr,
@@ -232,6 +234,13 @@ module tm1638_board_controller
     output logic                      sio_stb,
     inout                             sio_data
 );
+
+    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+        localparam static_hex = 1'b0;
+    `else
+        localparam static_hex = 1'b1;
+    `endif
+
     localparam
         HIGH    = 1'b1,
         LOW     = 1'b0;

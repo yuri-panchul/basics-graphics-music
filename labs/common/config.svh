@@ -46,4 +46,6 @@
     `define SYNOPSYS_CADENCE_MENTOR
 `endif
 
+`include "lab_specific_config.svh"
+
 `endif  // ifndef CONFIG_SVH

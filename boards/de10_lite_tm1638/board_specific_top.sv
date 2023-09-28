@@ -181,11 +181,6 @@ module board_specific_top
         assign HEX4 = digit [4] ? ~ hgfedcba : '1;
         assign HEX5 = digit [5] ? ~ hgfedcba : '1;
 
-        // Con: This makes blink the 7-segment LEDs of TM1638
-
-        wire tm_static_hex;
-        assign tm_static_hex = 'b0;
-
     `else
 
         always_ff @ (posedge clk or posedge rst)
@@ -202,10 +197,6 @@ module board_specific_top
                 if (digit [4]) HEX4 <= ~ hgfedcba;
                 if (digit [5]) HEX5 <= ~ hgfedcba;
             end
-
-        wire tm_static_hex;
-        assign tm_static_hex = 'b1;
-
     `endif
 
     //------------------------------------------------------------------------
@@ -218,7 +209,6 @@ module board_specific_top
     (
         .clk        ( clk           ),
         .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
-        .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
