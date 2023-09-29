@@ -68,22 +68,25 @@ update_fpga_toolchain_var ()
 }
 
 if [ -z "$GITHUB_TOKEN" ]; then
-    echo ">> \$GITHUB_TOKEN env var is missing"
+    echo ">> \$GITHUB_TOKEN variable is missing"
     exit 1
 fi
 if ! command -v zip &> /dev/null
 then
     echo ">> zip command not found, installing..."
 fi
+if [ -z "$TARGET_ORG_NAME" ]; then
+    echo ">> \$TARGET_ORG_NAME variable is missing"
+    exit 1
+fi
 
-TARGET_ORG_NAME="unaimillan"
 TARGET_REPO_NAME="basics-graphics-music"
 TARGET_REPO_FULLNAME="${TARGET_ORG_NAME}/${TARGET_REPO_NAME}"
 TEMPLATE_REPO="${TARGET_REPO_NAME}-template"
 export USER=${USER:-root}
 
 TEMP_DIR_PATH=$(mktemp -d)
-echo "TEMP_DIR_PATH=$TEMP_DIR_PATH" >> $GITHUB_ENV
+echo "TEMP_DIR_PATH=$TEMP_DIR_PATH" >> ${GITHUB_ENV:-/dev/null}
 cd "$TEMP_DIR_PATH"
 mkdir "dist"
 

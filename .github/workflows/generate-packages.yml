@@ -25,8 +25,9 @@ jobs:
       - name: Generate packages
         run: |
           export PACKAGE_RELEASE_TAG=${{ github.ref_name }}
+          export TARGET_ORG_NAME=${{ github.repository_owner }}
           bash ./scripts/admin/generate_all_packages.bash
       
       - name: Upload release packages
         run: |
-          gh release upload --repo ${{ github.repository }} --generate-notes --verify-tag ${{ github.ref_name }} "$TEMP_DIR_PATH/dist/*.zip"
+          gh release create --repo ${{ github.repository }} --generate-notes ${{ github.ref_name }} "$TEMP_DIR_PATH"/dist/*.zip
