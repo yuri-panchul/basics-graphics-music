@@ -88,7 +88,7 @@ error ()
        || [ "$OSTYPE"         = "msys"      ]  \
        || [ ${OSTYPE/[0-9]*/} = "darwin"    ]
     then
-        read -p "Press any key "
+        read -n 1 -p "Press any key "
     fi
 
     exit 1

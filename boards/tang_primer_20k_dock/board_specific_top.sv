@@ -27,6 +27,8 @@ module board_specific_top
     inout  [w_gpio / 4  - 1:0]  GPIO_3
 );
 
+    wire clk = CLK;
+
     //------------------------------------------------------------------------
 
     localparam w_tm_key    = 8,
@@ -107,7 +109,7 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -150,7 +152,7 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk        ( CLK           ),
+        .clk        ( clk           ),
         .rst        ( rst           ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
@@ -176,7 +178,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign GPIO_3 = {VGA_B, VGA_R};
-    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
+    assign GPIO_3 = { VGA_B, VGA_R };
+    assign GPIO_2 = { VGA_HS, VGA_VS, 2'bz, VGA_G };
 
 endmodule
