@@ -317,7 +317,8 @@ update_fpga_toolchain_var ()
             fpga_toolchain=xilinx
         ;;
 
-        ice40hx8k_evb_yosys  )
+        ice40hx8k_evb_yosys  | \
+        orangecrab_ecp5_yosys)
             fpga_toolchain=yosys
         ;;
 
