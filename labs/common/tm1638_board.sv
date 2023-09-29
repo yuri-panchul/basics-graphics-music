@@ -216,6 +216,7 @@ Copyright 2017 Alan Garfield
 ///////////////////////////////////////////////////////////////////////////////////
 
 `include "config.svh"
+`include "lab_specific_config.svh"
 
 module tm1638_board_controller
 # (
