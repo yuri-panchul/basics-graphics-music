@@ -56,7 +56,7 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire [7:0] req = 8' ({ sw, key });
+    wire [7:0] req = 8' (key); // 8' ({ sw, key });
     wire [7:0] gnt1, gnt2;
 
     assign led      = w_led' (gnt1);
