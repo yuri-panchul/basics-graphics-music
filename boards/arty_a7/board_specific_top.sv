@@ -30,11 +30,11 @@ module board_specific_top
     output        LED1_B,
     output        LED1_G,
     output        LED1_R,
-	
+    
     output        LED2_B,
     output        LED2_G,
     output        LED2_R,
-	
+    
     output        LED3_B,
     output        LED3_G,
     output        LED3_R,
@@ -63,7 +63,7 @@ module board_specific_top
     assign LED1_B = 1'b0;
     assign LED1_G = 1'b0;
     assign LED1_R = 1'b0;
-	  
+      
     assign LED2_B = 1'b0;
     assign LED2_G = 1'b0;
     assign LED2_R = 1'b0;
@@ -71,7 +71,7 @@ module board_specific_top
     assign LED3_B = 1'b0;
     assign LED3_G = 1'b0;
     assign LED3_R = 1'b0;
-	
+    
     assign mic = { mic_16, 8'b0 };
 
 
