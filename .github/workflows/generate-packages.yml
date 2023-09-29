@@ -3,7 +3,7 @@ name: Generate Packages
 on:
   push:
     tags: 
-      - "release/**"
+      - "stable/**"
 
 jobs:
   generate-zip-packages:
