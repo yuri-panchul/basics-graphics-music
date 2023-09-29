@@ -4,8 +4,12 @@ Introductory examples for the classes on ASIC and FPGA design and verification. 
 
 [Школа синтеза цифровых схем / The School of Synthesis of the Digital Circuits](https://engineer.yadro.com/chip-design-school)
 
-![Школа синтеза цифровых схем / The School of Synthesis of the Digital Circuits](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/synthesis_school.png)
+![Школа синтеза цифровых схем / The School of Synthesis of the Digital Circuits](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2023_synthesis_school_russia_belarus.png)
 
-[LaLambda 23](https://lalambda.school)
+[LaLambda 2023 in Tbilisi, Georgia](https://lalambda.school)
 
-![LaLambda 23 Ad](https://github.com/yuri-panchul/2023-lalambda-asic-fpga/blob/main/misc/lalambda_23_asic_fpga_ad_2.jpg)
+![LaLambda 2023 in Tbilisi, Georgia](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2023_lalambda_tbilisi.jpg)
+
+[AUCA & Siemens EDA seminar in Bishkek, Kyrgyzstan](https://ddvca.com)
+
+![AUCA & Siemens EDA seminar in Bishkek, Kyrgyzstan](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2022_auca_bishkek.jpg)

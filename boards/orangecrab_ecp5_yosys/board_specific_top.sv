@@ -3,12 +3,12 @@
 
 module board_specific_top
 # (
-    parameter   clk_mhz = 27,
-                w_key   = 5,  // The last key is used for a reset
-                w_sw    = 5,
-                w_led   = 6,
+    parameter   clk_mhz = 48,
+                w_key   = 2, // w_ket[2] is used for RST
+                w_sw    = 2,
+                w_led   = 3,
                 w_digit = 0,
-                w_gpio  = 32
+                w_gpio  = 8 // gpio[6] and gpio[7] are on SD card slot
 )
 (
     input                       CLK,
@@ -21,10 +21,13 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
-    inout  [w_gpio / 4  - 1:0]  GPIO_0,
-    inout  [w_gpio / 4  - 1:0]  GPIO_1,
-    inout  [w_gpio / 4  - 1:0]  GPIO_2,
-    inout  [w_gpio / 4  - 1:0]  GPIO_3
+    output                      VGA_HS,
+    output                      VGA_VS,
+    output [              3:0]  VGA_R,
+    output [              3:0]  VGA_G,
+    output [              3:0]  VGA_B,
+
+    inout  [w_gpio      - 1:0]  GPIO
 );
 
     //------------------------------------------------------------------------
@@ -32,6 +35,7 @@ module board_specific_top
     localparam w_tm_key    = 8,
                w_tm_led    = 8,
                w_tm_digit  = 8;
+
 
     //------------------------------------------------------------------------
 
@@ -58,7 +62,6 @@ module board_specific_top
     wire  [w_tm_digit  - 1:0] tm_digit;
 
     logic [w_top_key   - 1:0] top_key;
-    logic [w_top_sw    - 1:0] top_sw;
     wire  [w_top_led   - 1:0] top_led;
     wire  [w_top_digit - 1:0] top_digit;
 
@@ -66,20 +69,12 @@ module board_specific_top
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
 
-    wire                      VGA_HS;
-    wire                      VGA_VS;
-
-    wire  [              3:0] VGA_R;
-    wire  [              3:0] VGA_G;
-    wire  [              3:0] VGA_B;
-
-    //------------------------------------------------------------------------
+   //------------------------------------------------------------------------
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 
         assign rst      = tm_key [w_tm_key - 1];
         assign top_key  = tm_key [w_tm_key - 1:0];
-        assign top_sw   = ~ SW;
 
         assign tm_led   = top_led;
         assign tm_digit = top_digit;
@@ -88,7 +83,6 @@ module board_specific_top
 
         assign rst      = ~ KEY [w_key - 1];
         assign top_key  = ~ KEY [w_key - 1:0];
-        assign top_sw   = ~ SW;
 
         assign LED      = ~ top_led;
 
@@ -98,12 +92,12 @@ module board_specific_top
 
     top
     # (
-        .clk_mhz ( clk_mhz      ),
-        .w_key   ( w_top_key    ),  // The last key is used for a reset
-        .w_sw    ( w_top_sw     ),
-        .w_led   ( w_top_led    ),
-        .w_digit ( w_top_digit  ),
-        .w_gpio  ( w_gpio       )
+        .clk_mhz ( clk_mhz   ),
+        .w_key   ( w_top_key ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw      ),
+        .w_led   ( w_top_led     ),
+        .w_digit ( w_top_digit   ),
+        .w_gpio  ( w_gpio    )
     )
     i_top
     (
@@ -111,7 +105,7 @@ module board_specific_top
         .rst      ( rst       ),
 
         .key      ( top_key   ),
-        .sw       ( top_sw    ),
+        .sw       (           ),
 
         .led      ( top_led   ),
 
@@ -150,33 +144,31 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk        ( CLK           ),
-        .rst        ( rst           ),
-        .hgfedcba   ( hgfedcba      ),
-        .digit      ( tm_digit      ),
-        .ledr       ( tm_led        ),
-        .keys       ( tm_key        ),
-        .sio_clk    ( GPIO_0[2]     ),
-        .sio_stb    ( GPIO_0[3]     ),
-        .sio_data   ( GPIO_0[1]     )
+        .clk      ( CLK       ),
+        .rst      ( rst       ),
+        .hgfedcba ( hgfedcba  ),
+        .digit    ( tm_digit  ),
+        .ledr     ( tm_led    ),
+        .keys     ( tm_key    ),
+        .sio_clk  ( GPIO [0]  ),
+        .sio_stb  ( GPIO [1]  ),
+        .sio_data ( GPIO [2]  )
     );
 
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO_0 [5] ),
-        .ws    ( GPIO_0 [6] ),
-        .sck   ( GPIO_0 [7] ),
-        .sd    ( GPIO_0 [4] ),
-        .value ( mic        )
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [4] ),
+        .sck   ( GPIO [3] ),
+        .sd    ( GPIO [6] ),
+        .value ( mic      )
     );
 
-    //------------------------------------------------------------------------
-
-    assign GPIO_3 = {VGA_B, VGA_R};
-    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
+    assign GPIO [8] = 1'b0;  // GND
+    assign GPIO [7] = 1'b1;  // VCC
 
 endmodule

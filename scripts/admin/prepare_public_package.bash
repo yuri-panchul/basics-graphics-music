@@ -110,7 +110,7 @@ fi
 # For some reason "--exclude=\*.mk" does not work here
 
 exclude_space_ok="--exclude-dir=urgReport --exclude=*.xdc"
-exclude_tabs_ok="$exclude_space_ok --exclude=*.mk"
+exclude_tabs_ok="$exclude_space_ok --exclude=Makefile --exclude=*.mk"
 
 if grep -rqI $exclude_tabs_ok $'\t' "$pkg_src_root"/*
 then

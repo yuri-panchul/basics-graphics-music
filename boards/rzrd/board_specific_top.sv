@@ -1,5 +1,8 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
+`include "config.svh"
+`include "lab_specific_config.svh"
+
 // `define USE_OBSOLETE_DIGILENT_MIC
 // `define USE_INMP_441_MIC_ON_OLD_POSITION
 

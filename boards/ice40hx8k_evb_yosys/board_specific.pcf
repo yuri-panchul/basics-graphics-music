@@ -2,10 +2,10 @@ set_io CLK J3 ### 100MHz crystal oscillator
 
 set_io KEY[0] K11
 set_io KEY[1] P13
-set_io KEY[2] R15 ### Connected to PIO01_01 - JTAG_TMS is used as RST 
+set_io KEY[2] R15 ### Connected to PIO01_01 - JTAG_TMS is used as RST
 
 set_io LED[0] M12
-set_io LED[1] R16 
+set_io LED[1] R16
 
 set_io SW[0] R1 ### Connected to PIO3_50
 set_io SW[1] N4 ### Connected to PIO3_51
@@ -23,7 +23,7 @@ set_io GPIO[9] D1 ### Connected to PIO3_09
 set_io GPIO[10] G4 ### Connected to PIO3_10
 set_io GPIO[11] E3 ### Connected to PIO3_11
 
-set_io UART_RX H1 ### Connected to PIO3_27 
+set_io UART_RX H1 ### Connected to PIO3_27
 set_io UART_TX J2 ### Connected to PIO3_28
 
 set_io VGA_HS G1 ### Connected to PIO3_25
