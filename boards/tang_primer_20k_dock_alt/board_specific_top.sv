@@ -1,8 +1,6 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-//   `define ENABLE_VGA16
-
 module board_specific_top
 # (
     parameter   clk_mhz = 27,
@@ -31,101 +29,73 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw   = w_sw - 1;  // One onboard SW is used as a reset
-
-    wire                  rst     = SW [w_top_sw];
-    wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
-
-    //------------------------------------------------------------------------
-
     localparam w_tm_key    = 8,
                w_tm_led    = 8,
                w_tm_digit  = 8;
 
     //------------------------------------------------------------------------
 
-    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
 
-        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
-                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
-                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
 
-    `else  // Concatenate the signals
+    `else                   // TM1638 module is not connected
 
-        localparam w_top_key   = w_tm_key   + w_key   ,
-                   w_top_led   = w_tm_led   + w_led   ,
-                   w_top_digit = w_tm_digit + w_digit ;
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
     `endif
 
     //------------------------------------------------------------------------
-   `ifdef ENABLE_VGA16
-
-      localparam w_top_vgar = 5,
-                 w_top_vgag = 6,
-                 w_top_vgab = 5;
-
-   `else
-
-      localparam w_top_vgar = 4,
-                 w_top_vgag = 4,
-                 w_top_vgab = 4;
-
-   `endif
-   //------------------------------------------------------------------------
 
     wire  [w_tm_key    - 1:0] tm_key;
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
     logic [w_top_key   - 1:0] top_key;
+    logic [w_top_sw    - 1:0] top_sw;
     wire  [w_top_led   - 1:0] top_led;
     wire  [w_top_digit - 1:0] top_digit;
 
+    wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
 
     wire                      VGA_HS;
     wire                      VGA_VS;
 
-    wire  [ w_top_vgar - 1:0] VGA_R;
-    wire  [ w_top_vgag - 1:0] VGA_G;
-    wire  [ w_top_vgab - 1:0] VGA_B;
+    wire  [              3:0] VGA_R;
+    wire  [              3:0] VGA_G;
+    wire  [              3:0] VGA_B;
 
     //------------------------------------------------------------------------
 
-    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
 
-        assign top_key = { tm_key, ~ KEY };
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign top_sw   = ~ SW;
 
-        assign { tm_led   , LED   } = { top_led[w_tm_led - 1:w_led], ~ top_led[w_led    - 1:0] };
-        assign { tm_digit , digit } = top_digit;
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
 
-    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+    `else                   // TM1638 module is not connected
 
-        assign top_key = { ~ KEY, tm_key };
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+        assign top_sw   = ~ SW;
 
-        assign { LED   , tm_led   } = { ~ top_led[w_led    - 1:w_tm_led], top_led[w_tm_led - 1:0] };
-        assign { digit , tm_digit } = top_digit;
-
-    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
-
-        always_comb
-        begin
-            top_key = '0;
-
-            top_key [w_key    - 1:0] |= ~ KEY;
-            top_key [w_tm_key - 1:0] |= tm_key;
-        end
-
-        assign LED      = ~ top_led   [w_led      - 1:0];
-        assign tm_led   =   top_led   [w_tm_led   - 1:0];
-
-        assign digit    = top_digit [w_digit    - 1:0];
-        assign tm_digit = top_digit [w_tm_digit - 1:0];
+        assign LED      = ~ top_led;
 
     `endif
 
     //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz ( clk_mhz      ),
@@ -134,12 +104,6 @@ module board_specific_top
         .w_led   ( w_top_led    ),
         .w_digit ( w_top_digit  ),
         .w_gpio  ( w_gpio       )
-`ifdef ENABLE_VGA16
-      , .w_vgar  ( w_top_vgar   )
-      , .w_vgag  ( w_top_vgag )
-      , .w_vgab  ( w_top_vgab )
-`endif
-
     )
     i_top
     (
@@ -187,11 +151,7 @@ module board_specific_top
     i_tm1638
     (
         .clk        ( CLK           ),
-<<<<<<< HEAD
-        .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
-=======
         .rst        ( rst           ),
->>>>>>> main
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
@@ -216,17 +176,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-   `ifdef ENABLE_VGA16
-
-      assign GPIO_3 = {2'bz, VGA_R[3], VGA_R[1], 2'bz, VGA_R[4], VGA_R[2]};
-      assign GPIO_2 = {VGA_G[5], VGA_G[3], VGA_G[1], VGA_B[4], VGA_R[0], VGA_G[4], VGA_G[2], VGA_G[0]};
-      assign GPIO_1 = {VGA_B[2], VGA_B[0], VGA_HS, 1'bz, VGA_B[3], VGA_B[1], VGA_VS, 1'bz};
-
-   `else
-
-      assign GPIO_3 = {VGA_B, VGA_R};
-      assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
-
-   `endif
+    assign GPIO_3 = {VGA_B, VGA_R};
+    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
 
 endmodule
