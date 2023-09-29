@@ -1,4 +1,5 @@
 `include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (
@@ -29,11 +30,11 @@ module board_specific_top
     output        LED1_B,
     output        LED1_G,
     output        LED1_R,
-	
+
     output        LED2_B,
     output        LED2_G,
     output        LED2_R,
-	
+
     output        LED3_B,
     output        LED3_G,
     output        LED3_R,
@@ -58,34 +59,34 @@ module board_specific_top
     assign LED0_B = 1'b0;
     assign LED0_G = 1'b0;
     assign LED0_R = 1'b0;
-    
+
     assign LED1_B = 1'b0;
     assign LED1_G = 1'b0;
     assign LED1_R = 1'b0;
-	  
+
     assign LED2_B = 1'b0;
     assign LED2_G = 1'b0;
     assign LED2_R = 1'b0;
-    
+
     assign LED3_B = 1'b0;
     assign LED3_G = 1'b0;
     assign LED3_R = 1'b0;
-	
+
     assign mic = { mic_16, 8'b0 };
 
 
     //------------------------------------------------------------------------
-  
+
     wire [          15:0] mic_16;
     wire [          23:0] mic;
     wire [           7:0] abcdefgh;
 
     //------------------------------------------------------------------------
-    
+
     wire [           3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
     wire [ w_sw - 1:0 ] top_sw = SW [w_sw - 1:0];
 
-localparam  w_tm_key     = 8,    
+localparam  w_tm_key     = 8,
             w_tm_led     = 8,
             w_tm_digit   = 8;
 
@@ -110,8 +111,8 @@ localparam  w_tm_key     = 8,
     logic [w_top_key   - 1:0] top_key;
     wire  [w_top_led   - 1:0] top_led;
     wire  [w_top_digit - 1:0] top_digit;
-    
- 
+
+
   //------------------------------------------------------------------------
 
     `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
@@ -198,15 +199,15 @@ tm1638_board_controller
     )
     i_ledkey
     (
-        .clk        ( clk           ), 
+        .clk        ( clk           ),
         .rst        ( rst           ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
-        .keys       ( tm_key        ), 
-        .sio_clk    ( GPIO[40]      ), 
-        .sio_stb    ( GPIO[41]      ), 
-        .sio_data   ( GPIO[39]      )  
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO[40]      ),
+        .sio_stb    ( GPIO[41]      ),
+        .sio_data   ( GPIO[39]      )
     );
 
 digilent_pmod_mic3_spi_receiver i_mic

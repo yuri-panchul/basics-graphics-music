@@ -1,0 +1,44 @@
+set_io CLK J3 ### 100MHz crystal oscillator
+
+set_io KEY[0] K11
+set_io KEY[1] P13
+set_io KEY[2] R15 ### Connected to PIO01_01 - JTAG_TMS is used as RST
+
+set_io LED[0] M12
+set_io LED[1] R16
+
+set_io SW[0] R1 ### Connected to PIO3_50
+set_io SW[1] N4 ### Connected to PIO3_51
+
+set_io GPIO[0] E4 ### Connected to PIO3_00
+set_io GPIO[1] B2 ### Connected to PIO3_01
+set_io GPIO[2] F5 ### Connected to PIO3_02
+set_io GPIO[3] B1 ### Connected to PIO3_03
+set_io GPIO[4] C1 ### Connected to PIO3_04
+set_io GPIO[5] C2 ### Connected to PIO3_05
+set_io GPIO[6] F4 ### Connected to PIO3_06
+set_io GPIO[7] D2 ### Connected to PIO3_07
+set_io GPIO[8] G5 ### Connected to PIO3_08
+set_io GPIO[9] D1 ### Connected to PIO3_09
+set_io GPIO[10] G4 ### Connected to PIO3_10
+set_io GPIO[11] E3 ### Connected to PIO3_11
+
+set_io UART_RX H1 ### Connected to PIO3_27
+set_io UART_TX J2 ### Connected to PIO3_28
+
+set_io VGA_HS G1 ### Connected to PIO3_25
+set_io VGA_VS J5 ### Connected to PIO3_24
+
+set_io VGA_R[0] H2 ### Connected to PIO3_23
+set_io VGA_R[1] J4 ### Connected to PIO3_22
+set_io VGA_R[2] G2 ### Connected to PIO3_21
+set_io VGA_R[3] H4 ### Connected to PIO3_20
+set_io VGA_G[0] F1 ### Connected to PIO3_19
+set_io VGA_G[1] H6 ### Connected to PIO3_18
+set_io VGA_G[2] F2 ### Connected to PIO3_17
+set_io VGA_G[3] H3 ### Connected to PIO3_16
+set_io VGA_B[0] F3 ### Connected to PIO3_15
+set_io VGA_B[1] G3 ### Connected to PIO3_14
+set_io VGA_B[2] E2 ### Connected to PIO3_13
+set_io VGA_B[3] H5 ### Connected to PIO3_12
+

@@ -130,29 +130,31 @@ module top
 
     // Implementation 4: Using "for" loop
 
-    `ifdef __ICARUS__
+    always_comb
+    begin
+        enc3 = '0;
 
-        // Icarus does not support break statement
-
-        assign enc3 = enc2;
-
-    `else
-
-        always_comb
+        for (int i = 0; i < $bits (in); i ++)
         begin
-            enc3 = '0;
-
-            for (int i = 0; i < $bits (in); i ++)
+            if (in [i])
             begin
-                if (in [i])
-                begin
-                    enc3 = 2' (i);
-                    break;
-                end
+                enc3 = 2' (i);
+
+                // Since both Icarus and Yosys do not support break statement
+                // we simply imitate it by setting i to final value
+
+                `ifdef __ICARUS__
+                     i = $bits (in);
+                `else
+                    `ifdef YOSYS
+                         i = $bits (in);
+                    `else
+                        break;
+                    `endif
+                `endif
             end
         end
-
-    `endif
+    end
 
     //------------------------------------------------------------------------
 

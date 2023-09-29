@@ -1,8 +1,9 @@
 `include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (
-    parameter   clk_mhz = 27,  
+    parameter   clk_mhz = 27,
                 w_key   = 2,  // The last key is used for a reset
                 w_sw    = 0,
                 w_led   = 6,

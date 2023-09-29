@@ -7,7 +7,10 @@ module top
               w_sw    = 8,
               w_led   = 8,
               w_digit = 8,
-              w_gpio  = 20
+              w_gpio  = 20,
+              w_vgar  = 4,
+              w_vgag  = 4,
+              w_vgab  = 4
 )
 (
     input                        clk,
@@ -28,9 +31,9 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [          3:0] red,
-    output logic [          3:0] green,
-    output logic [          3:0] blue,
+    output logic [ w_vgar - 1:0] red,
+    output logic [ w_vgag - 1:0] green,
+    output logic [ w_vgab - 1:0] blue,
 
     input        [         23:0] mic,
 
@@ -84,7 +87,7 @@ module top
 
     /**/
 
-    wire [w_x * 2 - 1:0] x_2 = x ** 2;
+    wire [w_x * 2 - 1:0] x_2 = x * x;
 
     always_comb
     begin
@@ -101,7 +104,11 @@ module top
             green = '1;
             blue  = y [w_y - 2 -: 4];
         end
-        else if ((x - 400) ** 2 + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
+        `ifdef YOSYS
+        else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
+        `else
+        else if ((((x - 400) ** 2) + 2 * (y - 300) ** 2) < 100 ** 2)  // Ellipse
+        `endif
         begin
             red   = '1;
             green = x [w_x - 2 -: 4];

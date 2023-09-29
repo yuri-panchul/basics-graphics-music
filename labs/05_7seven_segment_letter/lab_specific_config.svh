@@ -2,7 +2,7 @@
 `define LAB_SPECIFIC_CONFIG_SVH
 
 //  The following setting is needed for Gowin boards
-    `define ENABLE_TM1638
+   `define ENABLE_TM1638
 
    `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 

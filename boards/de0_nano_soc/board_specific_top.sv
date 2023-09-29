@@ -1,4 +1,5 @@
 `include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (

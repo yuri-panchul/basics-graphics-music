@@ -193,6 +193,7 @@ source "$script_dir/steps/00_setup_gowin.source_bash"
 source "$script_dir/steps/00_setup_xilinx.source_bash"
 source "$script_dir/steps/00_setup_open_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
+source "$script_dir/steps/00_setup_yosys.source_bash"
 
 #-----------------------------------------------------------------------------
 #
@@ -233,8 +234,12 @@ setup_run_directory_for_fpga_synthesis()
     xilinx)
         setup_run_directory_for_fpga_synthesis_xilinx  "$dir" "$parent_dir"
         ;;
+    yosys)
+        setup_run_directory_for_fpga_synthesis_yosys  "$dir" "$parent_dir"
+        ;;
     *)
-        error "Unsupported FPGA synthesis toolchain: $fpga_toolchain"
+        error "Unsupported FPGA synthesis toolchain: $fpga_toolchain." \
+              " Currently supported: quartus, xilinx, gowin, yosys."
         ;;
     esac
 }
@@ -265,6 +270,7 @@ update_fpga_toolchain_var ()
             use_old_version_of_quartus=1
         ;;
 
+        c4_mini_fpga         | \
         c5gx                 | \
         de0_cv               | \
         de0_nano             | \
@@ -309,6 +315,11 @@ update_fpga_toolchain_var ()
         zybo_z7              )
 
             fpga_toolchain=xilinx
+        ;;
+
+        ice40hx8k_evb_yosys  | \
+        orangecrab_ecp5_yosys)
+            fpga_toolchain=yosys
         ;;
 
         *)
@@ -411,8 +422,9 @@ case $fpga_toolchain in
         fi
     ;;
 
-    gowin   ) gowin_setup_ide     ;;
-    xilinx  ) xilinx_setup_vivado ;;
+    gowin  ) gowin_setup_ide     ;;
+    xilinx ) xilinx_setup_vivado ;;
+    yosys  ) setup_yosys ;;
 esac
 
 openlane_setup
