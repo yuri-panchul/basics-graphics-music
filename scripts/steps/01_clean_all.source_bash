@@ -13,6 +13,8 @@ do
     fi
 done <<< $($find_to_run "$lab_dir" -name '*synthesize_for_fpga.bash')
 
+rm -rf "$package_dir/run"
+
 echo
 
 if [ "$count" == 0 ]
