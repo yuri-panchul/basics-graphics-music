@@ -3,7 +3,7 @@
 count=0
 
 while read file
-do  
+do
     dir=$(readlink -f "$(dirname "$file")/run")
     if [ -d "$dir" ]
     then

@@ -55,16 +55,16 @@ module board_specific_top
 
     //------------------------------------------------------------------------
    `ifdef ENABLE_VGA16
-      
+
       localparam w_top_vgar = 5,
                  w_top_vgag = 6,
-                 w_top_vgab = 5;  
+                 w_top_vgab = 5;
 
    `else
-      
+
       localparam w_top_vgar = 4,
                  w_top_vgag = 4,
-                 w_top_vgab = 4;  
+                 w_top_vgab = 4;
 
    `endif
    //------------------------------------------------------------------------
@@ -199,8 +199,8 @@ module board_specific_top
 
    `ifdef ENABLE_VGA16
 
-      assign GPIO_3 = {2'bz, VGA_R[3], VGA_R[1], 2'bz, VGA_R[4], VGA_R[2]}; 
-      assign GPIO_2 = {VGA_G[5], VGA_G[3], VGA_G[1], VGA_B[4], VGA_R[0], VGA_G[4], VGA_G[2], VGA_G[0]}; 
+      assign GPIO_3 = {2'bz, VGA_R[3], VGA_R[1], 2'bz, VGA_R[4], VGA_R[2]};
+      assign GPIO_2 = {VGA_G[5], VGA_G[3], VGA_G[1], VGA_B[4], VGA_R[0], VGA_G[4], VGA_G[2], VGA_G[0]};
       assign GPIO_1 = {VGA_B[2], VGA_B[0], VGA_HS, 1'bz, VGA_B[3], VGA_B[1], VGA_VS, 1'bz};
 
    `else
@@ -208,6 +208,6 @@ module board_specific_top
       assign GPIO_3 = {VGA_B, VGA_R};
       assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
 
-   `endif 
+   `endif
 
 endmodule
