@@ -11,7 +11,7 @@ jobs:
     container:
       image: ghcr.io/raetro/quartus:21.1.1
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.SECRET_PAT_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
