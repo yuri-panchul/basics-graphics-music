@@ -1,5 +1,9 @@
 `include "config.svh"
 
+`ifdef YOSYS
+	`error_This_module_requires_support_for_multidimantional_arrays
+`endif
+
 module top
 # (
     parameter clk_mhz = 50,
