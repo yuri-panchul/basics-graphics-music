@@ -139,8 +139,10 @@ module top
             if (in [i])
             begin
                 enc3 = 2' (i);
-                 /* Since both Icarus and Yosys do not support break statement
-                    we simply imitate it by setting i to final value */
+
+                // Since both Icarus and Yosys do not support break statement
+                // we simply imitate it by setting i to final value
+
                 `ifdef __ICARUS__
                      i = $bits (in);
                 `else
