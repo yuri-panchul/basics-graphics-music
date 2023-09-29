@@ -30,6 +30,8 @@ module board_specific_top
     inout  [w_gpio      - 1:0]  GPIO
 );
 
+    wire clk = CLK;
+
     //------------------------------------------------------------------------
 
     localparam w_tm_key    = 8,
@@ -101,7 +103,7 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -144,7 +146,7 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
         .rst      ( rst       ),
         .hgfedcba ( hgfedcba  ),
         .digit    ( tm_digit  ),
