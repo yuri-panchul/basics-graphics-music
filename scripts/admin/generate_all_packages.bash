@@ -71,14 +71,21 @@ if [ -z "$GITHUB_TOKEN" ]; then
     echo ">> \$GITHUB_TOKEN env var is missing"
     exit 1
 fi
+if ! command -v zip &> /dev/null
+then
+    echo ">> zip command not found, installing..."
+fi
 
-TARGET_ORG_NAME="chipdesignschool"
+TARGET_ORG_NAME="unaimillan"
 TARGET_REPO_NAME="basics-graphics-music"
 TARGET_REPO_FULLNAME="${TARGET_ORG_NAME}/${TARGET_REPO_NAME}"
 TEMPLATE_REPO="${TARGET_REPO_NAME}-template"
+export USER=${USER:-root}
 
 TEMP_DIR_PATH=$(mktemp -d)
+echo "TEMP_DIR_PATH=$TEMP_DIR_PATH" >> $GITHUB_ENV
 cd "$TEMP_DIR_PATH"
+mkdir "dist"
 
 if [ ! -d "$TEMPLATE_REPO" ]; then
     git clone https://github.com/${TARGET_REPO_FULLNAME}.git "$TEMPLATE_REPO"
@@ -102,7 +109,9 @@ do
     cd $TARGET_REPO_NAME
     echo -e "$fpga_board_id\ny\n" | bash check_setup_and_choose_fpga_board.bash
     cd ..
-    zip -r "./$TARGET_REPO_NAME-$fpga_board.zip" "$TARGET_REPO_NAME"
+    zip -r "./dist/$TARGET_REPO_NAME-$fpga_board.zip" "$TARGET_REPO_NAME"
     rm -rf $TARGET_REPO_NAME
-    exit 0
 done
+
+# Create github release, moved to github workflow actions
+# gh release create --repo ${TARGET_REPO_FULLNAME} --generate-notes --verify-tag ${PACKAGE_RELEASE_TAG} ./dist/*.zip
