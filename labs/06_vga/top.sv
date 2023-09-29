@@ -7,7 +7,10 @@ module top
               w_sw    = 8,
               w_led   = 8,
               w_digit = 8,
-              w_gpio  = 20
+              w_gpio  = 20,
+              w_vgar  = 4,
+              w_vgag  = 4,
+              w_vgab  = 4
 )
 (
     input                        clk,
@@ -28,9 +31,9 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [          3:0] red,
-    output logic [          3:0] green,
-    output logic [          3:0] blue,
+    output logic [ w_vgar - 1:0] red,
+    output logic [ w_vgag - 1:0] green,
+    output logic [ w_vgab - 1:0] blue,
 
     input        [         23:0] mic,
 
