@@ -56,25 +56,18 @@ module top
 
     //------------------------------------------------------------------------
 
-    `ifdef ALTERA_RESERVED_QIS
+    wire [7:0] req;
 
-        generate
-            if (w_key >= 4)
-            begin : use_keys
-                wire [7:0] req = 8' (key);
-            end
-            else
-            begin : use_keys_and_switches
-                wire [7:0] req = 8' ({ sw, key });
-            end
-        endgenerate
-
-    `else  // This is mostly for Gowin
-           // because it has a problem with generate
-
-        wire [7:0] req = 8' (key); // 8' ({ sw, key });
-
-    `endif
+    generate
+        if (w_key >= 4)
+        begin : use_keys
+            assign req = 8' (key);
+        end
+        else
+        begin : use_keys_and_switches
+            assign req = 8' ({ sw, key });
+        end
+    endgenerate
 
     wire [7:0] gnt1, gnt2;
 
