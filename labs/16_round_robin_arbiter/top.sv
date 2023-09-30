@@ -59,7 +59,7 @@ module top
     wire [7:0] req;
 
     generate
-        if (w_key >= 4)
+        if (w_key >= 3)
         begin : use_keys
             assign req = 8' (key);
         end
