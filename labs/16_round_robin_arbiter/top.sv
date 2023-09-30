@@ -56,7 +56,7 @@ module top
 
     //------------------------------------------------------------------------
 
-    `ifdef ALTERA_RESERVED_QI
+    `ifdef ALTERA_RESERVED_QIS
 
         generate
             if (w_key >= 4)
