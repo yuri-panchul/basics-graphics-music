@@ -274,6 +274,7 @@ update_fpga_toolchain_var ()
         c5gx                 | \
         de0_cv               | \
         de0_nano             | \
+        de0_nano_alt_vga     | \
         de0_nano_soc         | \
         de1_soc              | \
         de2_115              | \
