@@ -129,7 +129,7 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 
 synthesize_for_fpga_yosys ()
 {
-    make 
+    make
 }
 
 #-----------------------------------------------------------------------------
@@ -150,9 +150,12 @@ configure_fpga_yosys_all ()
     if [[ "$REPLY" =~ ^[Yy]$ ]] ; then
        printf "\n"
     else
-        printf "\nResulting binary file is: $main_src_dir/run/"`basename $main_src_dir`".bin\n"
+        if [ -f "$lab_dir/$lab_name/run/$lab_name.bin" ]; then
+            printf "\nResulting binary file is:\n"
+            ls -al $lab_dir/$lab_name/run/$lab_name.bin
+        fi
         exit 0
-    fi 
+    fi
 
     read -n 1 -r -p "Choose upload method, SRAM or Flash ? [s/F] "
     printf "\n"
@@ -161,11 +164,11 @@ configure_fpga_yosys_all ()
         flash_method="sram"
     else
         flash_method="flash"
-    fi 
+    fi
 
     prj_parent_dir=`pwd`
 
-    echo "FLASH_METHOD = $flash_method" >> Makefile
+    echo "$flash_method" > flash_method
 
     make upload
 }

@@ -1,4 +1,5 @@
-`define DUPLICATE_TM_SIGNALS_WITH_REGULAR
+`include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (
@@ -18,67 +19,73 @@ module board_specific_top
     inout  [w_gpio      - 1:0] gpio_JE
 );
 
-    logic [              7:0] abcdefgh;
-    wire  [w_digit     - 1:0] digit;
+    //------------------------------------------------------------------------
 
     localparam w_sw_top = w_sw - 1;  // One sw is used as a reset
 
     wire rst = sw[w_sw - 1];         // Last switch is used as a reset
     wire [w_sw_top - 1:0] sw_top  = sw[w_sw_top - 1:0];
 
+    //------------------------------------------------------------------------
+
+    logic [              7:0] abcdefgh;
+    wire  [w_digit     - 1:0] digit;
+
+    //------------------------------------------------------------------------
 
     localparam w_key_tm   = 8,
                w_led_tm   = 8,
                w_digit_tm = 8;
 
-`ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
-    localparam w_key_top   = w_key_tm   > w_key   ? w_key_tm   : w_key,
-               w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
-               w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
-`else
-    localparam w_key_top   = w_key_tm   + w_key,
-               w_led_top   = w_led_tm   + w_led,
-               w_digit_top = w_digit_tm + w_digit;
-`endif
+    //------------------------------------------------------------------------
 
+    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+        localparam w_key_top   = w_key_tm   > w_key   ? w_key_tm   : w_key,
+                w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
+                w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
+    `else
+        localparam w_key_top   = w_key_tm   + w_key,
+                w_led_top   = w_led_tm   + w_led,
+                w_digit_top = w_digit_tm + w_digit;
+    `endif
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    wire  [w_key_tm    - 1:0] key_tm;
-    wire  [w_led_tm    - 1:0] led_tm;
-    wire  [w_digit_tm  - 1:0] digit_tm;
+        wire  [w_key_tm    - 1:0] key_tm;
+        wire  [w_led_tm    - 1:0] led_tm;
+        wire  [w_digit_tm  - 1:0] digit_tm;
 
-    logic [w_key_top   - 1:0] key_top;
-    wire  [w_led_top   - 1:0] led_top;
-    wire  [w_digit_top - 1:0] digit_top;
+        logic [w_key_top   - 1:0] key_top;
+        wire  [w_led_top   - 1:0] led_top;
+        wire  [w_digit_top - 1:0] digit_top;
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-`ifdef CONCAT_TM_SIGNALS_AND_REGULAR
-    assign key_top = {key_tm, key};
-    assign {led_tm, led} = led_top;
-    assign {digit_tm, digit} = digit_top;
+    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+        assign key_top = {key_tm, key};
+        assign {led_tm, led} = led_top;
+        assign {digit_tm, digit} = digit_top;
 
-`elsif CONCAT_REGULAR_SIGNALS_AND_TM
-    assign key_top = {key, key_tm};
-    assign {led, led_tm} = led_top;
-    assign {digit, digit_tm} = digit_top;
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+        assign key_top = {key, key_tm};
+        assign {led, led_tm} = led_top;
+        assign {digit, digit_tm} = digit_top;
 
-`else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
-    always_comb
-    begin
-        key_top = '0;
-        key_top[w_key - 1:0] |= key;
-        key_top[w_key_tm - 1:0] |= key_tm;
-    end
+    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+        always_comb
+        begin
+            key_top = '0;
+            key_top[w_key - 1:0] |= key;
+            key_top[w_key_tm - 1:0] |= key_tm;
+        end
 
-    assign led = led_top[w_led - 1:0];
-    assign led_tm = led_top[w_led_tm - 1:0];
-    assign digit = digit_top[0:0];
-    assign digit_tm = digit_top[w_digit_tm - 1:0];
-`endif
+        assign led = led_top[w_led - 1:0];
+        assign led_tm = led_top[w_led_tm - 1:0];
+        assign digit = digit_top[0:0];
+        assign digit_tm = digit_top[w_digit_tm - 1:0];
+    `endif
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     top
     # (
@@ -125,17 +132,17 @@ module board_specific_top
     endgenerate
 
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     tm1638_board_controller
     # (
         .clk_mhz  (clk_mhz),
-        .w_digit  (w_digit_tm)
+        .w_digit  (w_digit_tm)        // fake parameter, digit count is hardcode in tm1638_board_controller
     )
     i_tm1638
     (
         .clk      (clk_125),
-        .rst      (rst),
+        .rst      (rst),              // Don't make reset tm1638_board_controller by it's tm_key
         .hgfedcba (hgfedcba),
         .digit    (digit_tm),
         .ledr     (led_tm),

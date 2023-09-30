@@ -3,12 +3,12 @@
 
 module board_specific_top
 # (
-    parameter   clk_mhz = 27,
-                w_key   = 2,  // The last key is used for a reset
-                w_sw    = 0,
-                w_led   = 6,
+    parameter   clk_mhz = 48,
+                w_key   = 2, // w_ket[2] is used for RST
+                w_sw    = 2,
+                w_led   = 3,
                 w_digit = 0,
-                w_gpio  = 9
+                w_gpio  = 8 // gpio[6] and gpio[7] are on SD card slot
 )
 (
     input                       CLK,
@@ -29,8 +29,6 @@ module board_specific_top
 
     inout  [w_gpio      - 1:0]  GPIO
 );
-
-    wire clk = CLK;
 
     //------------------------------------------------------------------------
 
@@ -103,7 +101,7 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( clk       ),
+        .clk      ( CLK       ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -146,7 +144,7 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk      ( clk       ),
+        .clk      ( CLK       ),
         .rst      ( rst       ),
         .hgfedcba ( hgfedcba  ),
         .digit    ( tm_digit  ),

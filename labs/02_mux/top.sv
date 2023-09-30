@@ -1,5 +1,9 @@
 `include "config.svh"
 
+`ifdef YOSYS
+    `error_This_module_requires_support_for_multidimantional_arrays
+`endif
+
 module top
 # (
     parameter clk_mhz = 50,
@@ -157,6 +161,10 @@ module top
     // The syntax below does not work with Icarus Verilog
     wire mux8 = mux0;
 
+    `elsif YOSYS
+
+    wire mux8 = mux0;
+
     `else
 
     wire [0:1][0:1][0:1] table8 =
@@ -180,6 +188,10 @@ module top
     `ifdef __ICARUS__
 
     // The syntax below does not work with Icarus Verilog
+    wire mux9 = mux0;
+
+    `elsif YOSYS
+
     wire mux9 = mux0;
 
     `else

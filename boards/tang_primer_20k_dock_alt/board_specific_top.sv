@@ -1,6 +1,5 @@
-// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
-
-   `define ENABLE_TM1638
+`include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (
@@ -27,6 +26,8 @@ module board_specific_top
     inout  [w_gpio / 4  - 1:0]  GPIO_2,
     inout  [w_gpio / 4  - 1:0]  GPIO_3
 );
+
+    wire clk = CLK;
 
     //------------------------------------------------------------------------
 
@@ -108,7 +109,7 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -145,28 +146,14 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
-
-        // Con: This makes blink the 7-segment LEDs of TM1638
-
-        wire tm_static_hex;
-        assign tm_static_hex = 'b0;
-    `else
-        wire tm_static_hex;
-        assign tm_static_hex = 'b1;
-    `endif
-
-    //------------------------------------------------------------------------
-
     tm1638_board_controller
     # (
         .w_digit ( w_tm_digit )
     )
     i_tm1638
     (
-        .clk        ( CLK           ),
+        .clk        ( clk           ),
         .rst        ( rst           ),
-        .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),

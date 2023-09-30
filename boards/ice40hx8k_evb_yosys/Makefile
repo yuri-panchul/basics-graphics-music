@@ -1,10 +1,10 @@
 PCF = board_specific.pcf
 DEVICE = 8k
 PACKAGE = ct256
-PROG_PARAM =
+FLASH_METHOD := $(shell cat flash_method 2> /dev/null)
 
 .PHONY: clean
-all: $(NAME).bin 
+all: $(NAME).bin
 
 .PHONY: upload
 upload: $(NAME).bin
@@ -22,8 +22,12 @@ upload: $(NAME).bin
 	@echo " xDBUS5 |     nc |        "
 	@echo " xDBUS6 |  CDONE | GPIO   "
 	@echo " xDBUS7 | CRESET | GPIO   "
-	@echo 
+	@echo
+ifeq ("$(FLASH_METHOD)", "flash")
 	iceprog $(PROG_PARAM) $(NAME).bin
+else
+	iceprog -S $(PROG_PARAM) $(NAME).bin
+endif
 
 fw: $(NAME).bin
 
@@ -34,9 +38,9 @@ $(NAME).bin: $(PCF) $(DEPS)
 
 .PHONY: gui
 gui: $(PCF) $(DEPS)
-	yosys -p "verilog_defaults -add -I$(INC)" $(DEPS) -p "synth_ice40 -blif $(NAME).blif -top top" -p "write_json $(NAME).json" -p "hierarchy -check -top top" -p "proc" -p "show -prefix $(NAME) -notitle -colors 2 -width -format dot"
+	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ice40 -blif $(NAME).blif -top top" -p "write_json $(NAME).json" -p "hierarchy -check -top top" -p "proc" -p "show -prefix $(NAME) -notitle -colors 2 -width -format dot"
 	netlistsvg -o $(NAME).svg $(NAME).json
-	nextpnr-ice40 --hx$(DEVICE) --package $(PACKAGE) --json $(NAME).json --pcf $(PCF) --pcf-allow-unconstrained --asc $(NAME).asc --placed-svg $(NAME)-placed.svg --routed-svg $(NAME)-routed.svg 
+	nextpnr-ice40 --hx$(DEVICE) --package $(PACKAGE) --json $(NAME).json --pcf $(PCF) --pcf-allow-unconstrained --asc $(NAME).asc --placed-svg $(NAME)-placed.svg --routed-svg $(NAME)-routed.svg
 	@if [ -f "`which firefox`" ]; then \
 		firefox $(NAME).svg $(NAME)-placed.svg $(NAME)-routed.svg; \
 	else \

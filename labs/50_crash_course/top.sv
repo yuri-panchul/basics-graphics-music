@@ -130,7 +130,7 @@ module top
         end
         `ifdef YOSYS
         else if ((x - 400) * (x - 400) + 2 * (y - 300) * (y - 300) < (100 * 100))  // Ellipse
-	`else
+    `else
         else if ((x - 400) ** 2  + 2 * (y - 300) ** 2 < 100 ** 2)  // Ellipse
         `endif
         begin
