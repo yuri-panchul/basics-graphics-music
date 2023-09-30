@@ -58,6 +58,7 @@ setup_yosys ()
 
         is_command_available_or_error "ecpbram" "" "\n\nProject Trellis is not installed in the system. Either install it using 'apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
 
+        is_command_available_or_error "dfu-util" "" "\n\nDFU utils are not installed in the system. Either install them using 'apt-get install dfu-util' or get it installed manually from repository: https://dfu-util.sourceforge.net/"
         echo "OK"
     fi
 
@@ -152,12 +153,31 @@ configure_fpga_yosys_all ()
     else
         if [ -f "$lab_dir/$lab_name/run/$lab_name.bin" ]; then
             printf "\nResulting binary file is:\n"
-	    ls -al $lab_dir/$lab_name/run/$lab_name.bin
+            ls -al $lab_dir/$lab_name/run/$lab_name.bin
         fi
         exit 0
     fi 
 
-    read -n 1 -r -p "Choose upload method, SRAM or Flash ? [s/F] "
+    printf "This board supports the following upload methods:\n"
+    printf "[o] for openFPGALoader using JTAG based on FTDI FT2232\n"
+    printf "[e] for ecpprog using JTAG based on FTDI FT2232\n" 
+
+    if [[ "$fpga_board" =~ "orangecrab" ]]; then
+        printf "[d] for dfu-util over USB using bootloader\n"
+    fi
+
+    read -n 1 -r -p "Which upload method do you prefer ? "
+    printf "\n"
+
+    if [[ "$REPLY" =~ ^[Dd]$ ]] ; then
+        upload_method="dfu"
+    elif [[ "$REPLY" =~ ^[Ee]$ ]] ; then
+        upload_method="ecpprog"
+    else
+        upload_method="openloader"
+    fi
+
+    read -n 1 -r -p "Where to upload, SRAM or Flash ? [s/F] "
     printf "\n"
 
     if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
@@ -166,9 +186,10 @@ configure_fpga_yosys_all ()
         flash_method="flash"
     fi 
 
-    prj_parent_dir=`pwd`
+    printf "\n"
 
     echo "$flash_method" > flash_method 
+    echo "$upload_method" > upload_method 
 
     make upload
 }

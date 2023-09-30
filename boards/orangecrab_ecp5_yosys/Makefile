@@ -1,26 +1,60 @@
 PCF = board_specific.pcf
 DEVICE = 25k 
 PACKAGE = CSFBGA285 
+FTDI_CHANNEL = 1 ### FT2232 has two channels, select 0 for channel A or 1 for channel B
+#
 FLASH_METHOD := $(shell cat flash_method 2> /dev/null)
-FTDI_CHANNEL = 1
+UPLOAD_METHOD := $(shell cat upload_method 2> /dev/null)
 
 .PHONY: clean
 all: $(NAME).bin 
 
 .PHONY: upload
-dfu: $(NAME).dfu
+upload: $(NAME).bin
+ifeq ("$(UPLOAD_METHOD)", "dfu")
+	$(MAKE) upload_dfu
+else
+ifeq ("$(UPLOAD_METHOD)", "ecpprog")
+	$(MAKE) upload_ecpprog
+else
+ifeq ("$(UPLOAD_METHOD)", "openloader")
+	$(MAKE) upload_openloader
+else
+ifeq ("$(UPLOAD_METHOD)", "")
+	echo "Upload method has not been chosen, use 'bash 04_configure_fpga.bash'"
+else
+	echo "Unsupported upload method: $(UPLOAD_METHOD), use 'bash 04_configure_fpga.bash'"
+endif
+endif
+endif
+endif
+
+.PHONY: upload_dfu
+upload_dfu: $(NAME).dfu
 	dfu-util -D $<
 
-$(NAME).dfu : $(NAME).bin
-	$(COPY) $< $@
+.PHONY: $(NAME).dfu
+$(NAME).dfu: $(NAME).bin
+	cp $< $@
 	dfu-suffix -v 1209 -p 5af0 -a $@
 
-upload: $(NAME).bin
+.PHONY: upload_openloader
+upload_openloader:
 ifeq ("$(FLASH_METHOD)", "flash")
-	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) -f --reset $(NAME).bin 
+	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) -f --reset $(NAME).bin
 else
-	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) --reset $(NAME).bin 
+	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) --reset $(NAME).bin
 endif
+
+.PHONY: upload_ecpprog
+upload_ecpprog:
+ifeq ("$(FLASH_METHOD)", "flash")
+	ecpprog -I $(if $(filter $(FTDI_CHANNEL),0),A,B) -X $(NAME).bin
+else
+	ecpprog -I $(if $(filter $(FTDI_CHANNEL),0),A,B) -S $(NAME).bin
+endif
+
+
 
 fw: $(NAME).bin
 
