@@ -1,4 +1,4 @@
-   `define ENABLE_TM1638
+//   `define ENABLE_TM1638
 
 // 
 module board_specific_top
