@@ -1,10 +1,13 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+`undef ENABLE_TM1638
+`undef ENABLE_INMP441
+
 module board_specific_top
 # (
     parameter   clk_mhz = 48,
-                w_key   = 2, // w_ket[2] is used for RST
+                w_key   = 2, // w_key[1] is external RST input signal
                 w_sw    = 2,
                 w_led   = 3,
                 w_digit = 0,
@@ -120,7 +123,11 @@ module board_specific_top
         .blue     ( VGA_B     ),
 
         .mic      ( mic       ),
+        `ifndef ENABLE_TM1638
+        .gpio     ( GPIO      )
+        `else
         .gpio     (           )
+        `endif
     );
 
     //------------------------------------------------------------------------
@@ -138,6 +145,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+`ifdef ENABLE_TM1638
     tm1638_board_controller
     # (
         .w_digit ( w_tm_digit )
@@ -154,12 +162,14 @@ module board_specific_top
         .sio_stb  ( GPIO [1]  ),
         .sio_data ( GPIO [2]  )
     );
+`endif
 
     //------------------------------------------------------------------------
 
+`ifdef ENABLE_INMP441
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk      ),
+        .clk   ( CLK      ),
         .rst   ( rst      ),
         .lr    ( GPIO [5] ),
         .ws    ( GPIO [4] ),
@@ -167,8 +177,6 @@ module board_specific_top
         .sd    ( GPIO [6] ),
         .value ( mic      )
     );
-
-    assign GPIO [8] = 1'b0;  // GND
-    assign GPIO [7] = 1'b1;  // VCC
+`endif
 
 endmodule
