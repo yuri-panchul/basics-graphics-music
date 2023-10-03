@@ -39,15 +39,15 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [$left(LEDR) - w_digit:0] top_led;
+    wire [ w_led - w_digit - 1:0] top_led;
 
-    wire [                    7:0] abcdefgh;
-    wire [          w_digit - 1:0] digit;
+    wire [                   7:0] abcdefgh;
+    wire [         w_digit - 1:0] digit;
 
     wire                           vga_vs, vga_hs;
-    wire [                    3:0] vga_red,vga_green,vga_blue;
+    wire [                   3:0] vga_red,vga_green,vga_blue;
 
-    wire [                   23:0] mic;
+    wire [                  23:0] mic;
 
     //------------------------------------------------------------------------
 
