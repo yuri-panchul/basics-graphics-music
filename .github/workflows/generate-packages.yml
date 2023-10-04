@@ -1,0 +1,33 @@
+name: Generate Packages
+
+on:
+  push:
+    tags: 
+      - "stable/**"
+
+jobs:
+  generate-zip-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/raetro/quartus:21.1.1
+    env:
+      GITHUB_TOKEN: ${{ secrets.SECRET_PAT_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Prepare system
+        run: |
+          sudo sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install -y zip
+
+      - name: Generate packages
+        run: |
+          export PACKAGE_RELEASE_TAG=${{ github.ref_name }}
+          export TARGET_ORG_NAME=${{ github.repository_owner }}
+          bash ./scripts/admin/generate_all_packages.bash
+      
+      - name: Upload release packages
+        run: |
+          gh release create --repo ${{ github.repository }} --generate-notes ${{ github.ref_name }} "$TEMP_DIR_PATH"/dist/*.zip
