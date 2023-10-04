@@ -68,7 +68,7 @@ setup_yosys ()
 
         is_command_available_or_error "nextpnr-gowin" "" "\n\nEither install it using 'apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Gowin chips which is not enabled by default!"
 
-        is_command_available_or_error "gowin_pack" "" "\n\nProject Apycula is not installed. Either install it using 'apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
+        is_command_available_or_error "gowin_pack" "" "\n\nProject Apicula is not installed. Either install it using 'pip3 install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
 
         is_command_available_or_error "gowin_bba" "" "\n\nProject Apycula is not installed. Either install it using 'apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
 

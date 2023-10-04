@@ -43,7 +43,7 @@ upload_openloader:
 ifeq ("$(FLASH_METHOD)", "flash")
 	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) -f --reset $(NAME).bin
 else
-	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) --reset $(NAME).bin
+	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) $(NAME).bin
 endif
 
 .PHONY: upload_ecpprog
