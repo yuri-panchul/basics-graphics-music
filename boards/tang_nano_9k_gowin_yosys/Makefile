@@ -27,7 +27,7 @@ upload_openloader:
 ifeq ("$(FLASH_METHOD)", "flash")
 	openFPGALoader -v -b tangnano -f --reset --file-type fs $(NAME).bin
 else
-	openFPGALoader -v -b tangnano --reset --file-type fs $(NAME).bin
+	openFPGALoader -v -b tangnano --file-type fs $(NAME).bin
 endif
 
 fw: $(NAME).bin
