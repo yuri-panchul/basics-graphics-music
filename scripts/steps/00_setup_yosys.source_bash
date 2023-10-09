@@ -75,7 +75,7 @@ setup_yosys ()
         echo "OK"
     fi
 
-    is_command_available_or_error netlistsvg "" "\n\nEither install it using 'npm install -g netlistsv' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
+    is_command_available_or_error netlistsvg "" "\n\nEither install it using 'apt-get install npm && npm install -g netlistsvs' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
 
     is_command_available_or_error "make" "" "\n\nGNU make is not installed in the system. Either install it using 'apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
 
