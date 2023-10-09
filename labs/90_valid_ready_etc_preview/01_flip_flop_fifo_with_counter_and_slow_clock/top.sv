@@ -80,7 +80,11 @@ module top
         assign slow_clk = slow_clk_raw;
 
     `else
-        `error_Unsupported_synthesis_tool
+
+        // `error_Unsupported_synthesis_tool
+
+        assign slow_clk = slow_clk_raw;
+
     `endif
 
     //------------------------------------------------------------------------

@@ -1,7 +1,9 @@
-//   `define ENABLE_TM1638
-//   `define ENABLE_INMP441
+`include "config.svh"
+`include "lab_specific_config.svh"
 
-// 
+`undef ENABLE_TM1638
+`undef ENABLE_INMP441
+
 module board_specific_top
 # (
     parameter   clk_mhz = 48,
@@ -9,7 +11,7 @@ module board_specific_top
                 w_sw    = 2,
                 w_led   = 3,
                 w_digit = 0,
-                w_gpio  = 8 // gpio[6] and gpio[7] are on SD card slot 
+                w_gpio  = 8 // gpio[6] and gpio[7] are on SD card slot
 )
 (
     input                       CLK,

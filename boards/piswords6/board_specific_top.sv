@@ -1,3 +1,6 @@
+`include "config.svh"
+`include "lab_specific_config.svh"
+
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -58,27 +61,27 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( clk       ),
-        .rst      ( rst       ),
+        .clk      (   clk       ),
+        .rst      (   rst       ),
 
-        .key      ( top_key   ),
-        .sw       ( SW        ),
+        .key      (   top_key   ),
+        .sw       ( ~ SW        ),
 
-        .led      ( led       ),
+        .led      (   led       ),
 
-        .abcdefgh ( abcdefgh  ),
-        .digit    ( digit     ),
+        .abcdefgh (   abcdefgh  ),
+        .digit    (   digit     ),
 
-        .vsync    ( VGA_VSYNC ),
-        .hsync    ( VGA_HSYNC ),
+        .vsync    (   VGA_VSYNC ),
+        .hsync    (   VGA_HSYNC ),
 
-        .red      ( red       ),
-        .green    ( green     ),
-        .blue     ( blue      ),
+        .red      (   red       ),
+        .green    (   green     ),
+        .blue     (   blue      ),
 
-        .mic      ( mic       ),
+        .mic      (   mic       ),
 
-        .gpio     ( GPIO      )
+        .gpio     (   GPIO      )
 
     );
 

@@ -7,7 +7,7 @@ FLASH_METHOD := $(shell cat flash_method 2> /dev/null)
 UPLOAD_METHOD := $(shell cat upload_method 2> /dev/null)
 
 .PHONY: clean
-all: $(NAME).bin 
+all: $(NAME).bin
 
 .PHONY: upload
 upload: $(NAME).bin
@@ -43,7 +43,7 @@ upload_openloader:
 ifeq ("$(FLASH_METHOD)", "flash")
 	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) -f --reset $(NAME).bin
 else
-	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) --reset $(NAME).bin
+	openFPGALoader -v --ftdi-channel $(FTDI_CHANNEL) $(NAME).bin
 endif
 
 .PHONY: upload_ecpprog
@@ -61,7 +61,7 @@ fw: $(NAME).bin
 $(NAME).bin: $(PCF) $(DEPS)
 	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ecp5 -json $(NAME).json -top board_specific_top"
 	nextpnr-ecp5 --package $(PACKAGE) --$(DEVICE) --json $(NAME).json --textcfg $(NAME)_out.config --lpf $(PCF) --lpf-allow-unconstrained
-	ecppack --compress --freq 38.8 --input $(NAME)_out.config --bit $(NAME).bin 
+	ecppack --compress --freq 38.8 --input $(NAME)_out.config --bit $(NAME).bin
 
 .PHONY: gui
 gui: $(PCF) $(DEPS)

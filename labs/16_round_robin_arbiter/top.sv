@@ -56,7 +56,19 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire [7:0] req = 8' ({ sw, key });
+    wire [7:0] req;
+
+    generate
+        if (w_key >= 3)
+        begin : use_keys
+            assign req = 8' (key);
+        end
+        else
+        begin : use_keys_and_switches
+            assign req = 8' ({ sw, key });
+        end
+    endgenerate
+
     wire [7:0] gnt1, gnt2;
 
     assign led      = w_led' (gnt1);

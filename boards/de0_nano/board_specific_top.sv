@@ -1,8 +1,5 @@
-// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
-
-   `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
-// `define CONCAT_REGULAR_SIGNALS_AND_TM
-// `define CONCAT_TM_SIGNALS_AND_REGULAR
+`include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (
@@ -177,19 +174,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
-
-        // Con: This makes blink the 7-segment LEDs of TM1638
-
-        wire tm_static_hex;
-        assign tm_static_hex = 'b0;
-    `else
-        wire tm_static_hex;
-        assign tm_static_hex = 'b1;
-    `endif
-
-    //------------------------------------------------------------------------
-
     tm1638_board_controller
     # (
         .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
@@ -198,7 +182,6 @@ module board_specific_top
     (
         .clk        ( clk           ),
         .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
-        .static_hex ( tm_static_hex ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),

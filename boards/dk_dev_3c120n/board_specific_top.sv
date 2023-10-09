@@ -1,4 +1,5 @@
-// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+`include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (

@@ -1,4 +1,5 @@
-//   `define ENABLE_TM1638
+`include "config.svh"
+`include "lab_specific_config.svh"
 
 module board_specific_top
 # (
@@ -22,6 +23,8 @@ module board_specific_top
 
     inout  [w_gpio      - 1:0]  GPIO
 );
+
+    wire clk = CLK;
 
     //------------------------------------------------------------------------
 
@@ -101,7 +104,7 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -144,7 +147,7 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk      ( CLK        ),
+        .clk      ( clk        ),
         .rst      ( rst        ),
         .hgfedcba ( hgfedcba   ),
         .digit    ( tm_digit   ),
