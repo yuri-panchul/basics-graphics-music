@@ -52,19 +52,28 @@ xilinx_setup_vivado ()
            return
        fi
 
-       warning "XILINX_VIVADO variable is set to \"$XILINX_VIVADO\","  \
-               "but there is no directory \"$XILINX_VIVADO/bin\"."     \
-               "Trying to find Vivado directory elsewhere."            \
-               "You can also use XILINX_HOME to specify"               \
+       warning "XILINX_VIVADO variable is set to \"$XILINX_VIVADO\","   \
+               "but there is no directory \"$XILINX_VIVADO/bin\"."      \
+               "Trying to find Vivado directory elsewhere."             \
+               "You can also use XILINX_HOME to specify"                \
                "a parent directory for \"$vivado_install_dir\"."
     fi
 
     #-------------------------------------------------------------------------
 
-    if    [ -n "${XILINX_HOME-}" ]  \
-       && [ -d "$XILINX_HOME/$vivado_install_dir" ]
+    if [ -n "${XILINX_HOME-}" ]
     then
-        vivado_install_parent_dir="$XILINX_HOME"
+        if [ -d "$XILINX_HOME/$vivado_install_dir" ]
+        then
+            vivado_install_parent_dir="$XILINX_HOME"
+        else
+            warning "XILINX_HOME variable is set to \"$XILINX_HOME\","  \
+                    "but there is no directory"                         \
+                    "\"$XILINX_HOME/$vivado_install_dir\"."             \
+                    "Trying to find Xilinx home directory elsewhere."   \
+                    "You can also use XILINX_VIVADO to specify"         \
+                    "a directory for a specific version of Vivado."
+       fi
     fi
 
     #-------------------------------------------------------------------------
