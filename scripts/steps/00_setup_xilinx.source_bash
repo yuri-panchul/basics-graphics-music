@@ -55,13 +55,13 @@ xilinx_setup_vivado ()
        warning "XILINX_VIVADO variable is set to '$XILINX_VIVADO',"  \
                "but there is no directory '$XILINX_VIVADO/bin'."     \
                "Trying to find Vivado directory elsewhere."          \
-               "You can also use XILINX_HOME to specify"             \
+               "You can also use XILINX_HOME variable to specify"    \
                "a parent directory for '$vivado_install_dir'."
     fi
 
     #-------------------------------------------------------------------------
 
-    msg_for_XILINX_VIVADO="You can also use XILINX_VIVADO"
+    msg_for_XILINX_VIVADO="You can also use XILINX_VIVADO variable"
     msg_for_XILINX_VIVADO+=" to specify a directory"
     msg_for_XILINX_VIVADO+=" for a specific version of Vivado, such as"
     msg_for_XILINX_VIVADO+=" XILINX_VIVADO=/tools/Xilinx/Vivado/2023.1."
