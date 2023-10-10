@@ -136,20 +136,20 @@ xilinx_setup_vivado ()
         if [ -z "${vivado_install_parent_dir_first-}" ]
         then
             error "expected to find '$vivado_install_dir' directory"  \
-                  "in '$vivado_install_parent_dir'."                  \
+                  "under '$vivado_install_parent_dir'."               \
                   "$extra_msg"
 
         elif [ -z "${vivado_install_parent_dir_second-}" ]
         then
             error "expected to find '$vivado_install_dir' directory"  \
-                  "either in '$vivado_install_parent_dir_first'"      \
-                  "or in '$vivado_install_parent_dir'."               \
+                  "under either '$vivado_install_parent_dir_first'"   \
+                  "or '$vivado_install_parent_dir'."                  \
                   "$extra_msg"
         else
             error "expected to find '$vivado_install_dir' directory"  \
-                  "either in '$vivado_install_parent_dir_first'"      \
-                  "or in '$vivado_install_parent_dir_second'"         \
-                  "or in '$vivado_install_parent_dir'."               \
+                  "under either '$vivado_install_parent_dir_first'"   \
+                  "or '$vivado_install_parent_dir_second'"            \
+                  "or '$vivado_install_parent_dir'."                  \
                   "$extra_msg"
         fi
     fi
