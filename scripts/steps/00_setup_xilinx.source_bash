@@ -63,7 +63,8 @@ xilinx_setup_vivado ()
 
     msg_for_XILINX_VIVADO="You can also use XILINX_VIVADO"
     msg_for_XILINX_VIVADO+=" to specify a directory"
-    msg_for_XILINX_VIVADO+=" for a specific version of Vivado."
+    msg_for_XILINX_VIVADO+=" for a specific version of Vivado, such as"
+    msg_for_XILINX_VIVADO+=" XILINX_VIVADO=/tools/Xilinx/Vivado/2023.1."
 
     if [ -n "${XILINX_HOME-}" ]
     then
@@ -128,7 +129,7 @@ xilinx_setup_vivado ()
     if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
     then
         extra_msg="'$vivado_install_dir'"
-        extra_msg+=" location can be set"
+        extra_msg+=" location (parent directory) can be set"
         extra_msg+=" by the environment variable XILINX_HOME."
         extra_msg+=" $msg_for_XILINX_VIVADO"
 
