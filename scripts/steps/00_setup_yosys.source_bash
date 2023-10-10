@@ -162,7 +162,7 @@ configure_fpga_yosys_all ()
     if [[ "$fpga_board" =~ "orangecrab" ]]; then
         printf "This board supports the following upload methods:\n"
         printf "[o] for openFPGALoader using JTAG based on FTDI FT2232\n"
-        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n" 
+        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n"
         printf "[d] for dfu-util over USB using bootloader\n"
 
         read -n 1 -r -p "Which upload method do you prefer ? "
@@ -195,8 +195,8 @@ configure_fpga_yosys_all ()
 
     printf "\n"
 
-    echo "$flash_method" > flash_method 
-    echo "$upload_method" > upload_method 
+    echo "$flash_method" > flash_method
+    echo "$upload_method" > upload_method
 
     make upload
 }
