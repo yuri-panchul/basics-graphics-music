@@ -44,6 +44,23 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
+    if [ -n "${XILINX_VIVADO-}" ]
+    then
+       if [ -d "$XILINX_VIVADO/bin" ]
+       then
+           export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
+           return
+       fi
+
+       warning "XILINX_VIVADO variable is set to \"$XILINX_VIVADO\","  \
+               "but there is no directory \"$XILINX_VIVADO/bin\"."     \
+               "Trying to find Vivado directory elsewhere."            \
+               "You can also use XILINX_HOME to specify"               \
+               "a parent directory for \"$vivado_install_dir\"."
+    fi
+
+    #-------------------------------------------------------------------------
+
     if    [ -n "${XILINX_HOME-}" ]  \
        && [ -d "$XILINX_HOME/$vivado_install_dir" ]
     then
