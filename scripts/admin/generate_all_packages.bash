@@ -99,9 +99,9 @@ fpga_board_id=0
 
 for fpga_board in $available_fpga_boards
 do
-	((++fpga_board_id))
+    ((++fpga_board_id))
     update_fpga_toolchain_var
-    
+
     if [[ "$fpga_toolchain" != "quartus" ]] || [[ -z "$use_old_version_of_quartus" ]]; then
         echo ">> Generating is not available for $fpga_board"
         continue

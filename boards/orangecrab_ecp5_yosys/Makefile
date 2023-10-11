@@ -1,6 +1,6 @@
 PCF = board_specific.pcf
-DEVICE = 25k 
-PACKAGE = CSFBGA285 
+DEVICE = 25k
+PACKAGE = CSFBGA285
 FTDI_CHANNEL = 1 ### FT2232 has two channels, select 0 for channel A or 1 for channel B
 #
 FLASH_METHOD := $(shell cat flash_method 2> /dev/null)

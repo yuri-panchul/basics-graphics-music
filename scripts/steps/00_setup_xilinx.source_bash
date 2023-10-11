@@ -55,15 +55,16 @@ xilinx_setup_vivado ()
        warning "XILINX_VIVADO variable is set to '$XILINX_VIVADO',"  \
                "but there is no directory '$XILINX_VIVADO/bin'."     \
                "Trying to find Vivado directory elsewhere."          \
-               "You can also use XILINX_HOME to specify"             \
+               "You can also use XILINX_HOME variable to specify"    \
                "a parent directory for '$vivado_install_dir'."
     fi
 
     #-------------------------------------------------------------------------
 
-    msg_for_XILINX_VIVADO="You can also use XILINX_VIVADO"
+    msg_for_XILINX_VIVADO="You can also use XILINX_VIVADO variable"
     msg_for_XILINX_VIVADO+=" to specify a directory"
-    msg_for_XILINX_VIVADO+=" for a specific version of Vivado."
+    msg_for_XILINX_VIVADO+=" for a specific version of Vivado, such as"
+    msg_for_XILINX_VIVADO+=" XILINX_VIVADO=/tools/Xilinx/Vivado/2023.1."
 
     if [ -n "${XILINX_HOME-}" ]
     then
@@ -128,27 +129,27 @@ xilinx_setup_vivado ()
     if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
     then
         extra_msg="'$vivado_install_dir'"
-        extra_msg+=" location can be set"
+        extra_msg+=" location (parent directory) can be set"
         extra_msg+=" by the environment variable XILINX_HOME."
         extra_msg+=" $msg_for_XILINX_VIVADO"
 
         if [ -z "${vivado_install_parent_dir_first-}" ]
         then
             error "expected to find '$vivado_install_dir' directory"  \
-                  "in '$vivado_install_parent_dir'."                  \
+                  "under '$vivado_install_parent_dir'."               \
                   "$extra_msg"
 
         elif [ -z "${vivado_install_parent_dir_second-}" ]
         then
             error "expected to find '$vivado_install_dir' directory"  \
-                  "either in '$vivado_install_parent_dir_first'"      \
-                  "or in '$vivado_install_parent_dir'."               \
+                  "under either '$vivado_install_parent_dir_first'"   \
+                  "or '$vivado_install_parent_dir'."                  \
                   "$extra_msg"
         else
             error "expected to find '$vivado_install_dir' directory"  \
-                  "either in '$vivado_install_parent_dir_first'"      \
-                  "or in '$vivado_install_parent_dir_second'"         \
-                  "or in '$vivado_install_parent_dir'."               \
+                  "under either '$vivado_install_parent_dir_first'"   \
+                  "or '$vivado_install_parent_dir_second'"            \
+                  "or '$vivado_install_parent_dir'."                  \
                   "$extra_msg"
         fi
     fi
