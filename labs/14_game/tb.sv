@@ -31,10 +31,11 @@ module tb;
     )
     i_top
     (
-        .clk ( clk ),
-        .rst ( rst ),
-        .key ( key ),
-        .sw  ( sw  )
+        .clk      ( clk ),
+        .slow_clk ( clk ),
+        .rst      ( rst ),
+        .key      ( key ),
+        .sw       ( sw  )
     );
 
     //------------------------------------------------------------------------
