@@ -15,6 +15,7 @@ module top
 )
 (
     input                        clk,
+    input                        slow_clk,
     input                        rst,
 
     // Keys, switches, LEDs
@@ -53,13 +54,6 @@ module top
        assign red      = '0;
        assign green    = '0;
        assign blue     = '0;
-
-    //------------------------------------------------------------------------
-
-    wire slow_clk;
-
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
