@@ -8,9 +8,9 @@ module slow_clk_gen
               slow_clk_hz  = 3
 )
 (
-    input        clk,
-    input        rst,
-    output logic slow_clk_raw
+    input  clk,
+    input  rst,
+    output slow_clk
 );
 
     generate
@@ -18,7 +18,7 @@ module slow_clk_gen
         if (fast_clk_mhz == 1)
         begin : if1
 
-            assign slow_clk_raw = clk;
+            assign slow_clk = clk;
 
         end
         else
@@ -30,6 +30,7 @@ module slow_clk_gen
             localparam w_cnt = $clog2 (half_period);
 
             logic [w_cnt - 1:0] cnt;
+            logic               slow_clk_raw;
 
             always_ff @ (posedge clk or posedge rst)
                 if (rst)
@@ -47,9 +48,33 @@ module slow_clk_gen
                     cnt <= cnt - 1'd1;
                 end
 
-            // Note! You have to pass this clock though
-            // "global" primitive in Intel FPGA
-            // or BUFG  primitive in Xilinx Vivado
+            //----------------------------------------------------------------
+
+            `ifdef ALTERA_RESERVED_QIS
+
+                // "global" is Intel FPGA-specific primitive to route
+                // a signal coming from data into clock tree
+
+                global i_global (.in (slow_clk_raw), .out (slow_clk));
+
+            `elsif XILINX_VIVADO
+
+                // "BUFG" is Xilinx-specific primitive to route
+                // a signal coming from data into clock tree
+
+                BUFG i_BUFG (.I (slow_clk_raw), .O (slow_clk));
+
+            `elsif SIMULATION
+
+                assign slow_clk = slow_clk_raw;
+
+            `else
+
+                // `error_Unsupported_synthesis_tool
+
+                assign slow_clk = slow_clk_raw;
+
+            `endif
 
         end
     endgenerate
