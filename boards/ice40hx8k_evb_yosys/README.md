@@ -6,4 +6,4 @@ This board can be flashed using either [iceprog](https://github.com/YosysHQ/ices
 
 ## Wiring diagram
 
-[FTDI FT2232H Mini Module to Olimex iCE40HX8K wiring diagram](JTAG_wiring_FT2232H_to_iCE40HX8K-EVB.svg)
+![FTDI FT2232H Mini Module to Olimex iCE40HX8K wiring diagram](JTAG_wiring_FT2232H_to_iCE40HX8K-EVB.svg)
