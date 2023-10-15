@@ -68,20 +68,20 @@ setup_yosys ()
 
         is_command_available_or_error "nextpnr-gowin" "" "\n\nEither install it using 'apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Gowin chips which is not enabled by default!"
 
-        is_command_available_or_error "gowin_pack" "" "\n\nProject Apycula is not installed. Either install it using 'apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
+        is_command_available_or_error "gowin_pack" "" "\n\nProject Apicula is not installed. Either install it using 'pip3 install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
 
         is_command_available_or_error "gowin_bba" "" "\n\nProject Apycula is not installed. Either install it using 'apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
 
         echo "OK"
     fi
 
-    is_command_available_or_error netlistsvg "" "\n\nEither install it using 'npm install -g netlistsv' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
+    is_command_available_or_error netlistsvg "" "\n\nEither install it using 'apt-get install npm && npm install -g netlistsvs' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
 
     is_command_available_or_error "make" "" "\n\nGNU make is not installed in the system. Either install it using 'apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
 
     is_command_available_or_error "xdot" "" "Either install it using 'apt-get install xdot' or get it installed manually from repository: https://github.com/jbohren/xdot.git. Note: depends on Python!"
 
-    is_command_available_or_error "firefox" "" "\n\nFirefox is not installed in the system. It is used to display SVG graphics. Either install it using 'apt-get install firefox' or get it installed manually from web site: https://www.mozilla.org/en-US/firefox/download/thanks/. Note: you may fake it by creating empty bash script with name 'firefox' in /usr/bin. ;-)"
+###    is_command_available_or_error "firefox" "" "\n\nFirefox is not installed in the system. It is used to display SVG graphics. Either install it using 'apt-get install firefox' or get it installed manually from web site: https://www.mozilla.org/en-US/firefox/download/thanks/. Note: you may fake it by creating empty bash script with name 'firefox' in /usr/bin. ;-)"
 }
 
 #-------------------------------------------------------------------------
@@ -162,7 +162,7 @@ configure_fpga_yosys_all ()
     if [[ "$fpga_board" =~ "orangecrab" ]]; then
         printf "This board supports the following upload methods:\n"
         printf "[o] for openFPGALoader using JTAG based on FTDI FT2232\n"
-        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n" 
+        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n"
         printf "[d] for dfu-util over USB using bootloader\n"
 
         read -n 1 -r -p "Which upload method do you prefer ? "
@@ -195,8 +195,8 @@ configure_fpga_yosys_all ()
 
     printf "\n"
 
-    echo "$flash_method" > flash_method 
-    echo "$upload_method" > upload_method 
+    echo "$flash_method" > flash_method
+    echo "$upload_method" > upload_method
 
     make upload
 }

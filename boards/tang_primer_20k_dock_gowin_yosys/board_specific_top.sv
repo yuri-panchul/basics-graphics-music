@@ -1,14 +1,17 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+`undef ENABLE_TM1638
+`undef ENABLE_INMP441
+
 module board_specific_top
 # (
     parameter   clk_mhz = 27,
                 w_key   = 2,  // The last key is used for a reset
-                w_sw    = 0,
-                w_led   = 6,
+                w_sw    = 4,
+                w_led   = 0,
                 w_digit = 0,
-                w_gpio  = 23
+                w_gpio  = 32
 )
 (
     input                       CLK,
@@ -21,7 +24,10 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
-    inout  [w_gpio      - 1:0]  GPIO
+    inout  [w_gpio / 4  - 1:0]  GPIO_0,
+    inout  [w_gpio / 4  - 1:0]  GPIO_1,
+    inout  [w_gpio / 4  - 1:0]  GPIO_2,
+    inout  [w_gpio / 4  - 1:0]  GPIO_3
 );
 
     wire clk = CLK;
@@ -31,7 +37,6 @@ module board_specific_top
     localparam w_tm_key    = 8,
                w_tm_led    = 8,
                w_tm_digit  = 8;
-
 
     //------------------------------------------------------------------------
 
@@ -58,6 +63,7 @@ module board_specific_top
     wire  [w_tm_digit  - 1:0] tm_digit;
 
     logic [w_top_key   - 1:0] top_key;
+    logic [w_top_sw    - 1:0] top_sw;
     wire  [w_top_led   - 1:0] top_led;
     wire  [w_top_digit - 1:0] top_digit;
 
@@ -72,12 +78,13 @@ module board_specific_top
     wire  [              3:0] VGA_G;
     wire  [              3:0] VGA_B;
 
-   //------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 
         assign rst      = tm_key [w_tm_key - 1];
         assign top_key  = tm_key [w_tm_key - 1:0];
+        assign top_sw   = ~ SW;
 
         assign tm_led   = top_led;
         assign tm_digit = top_digit;
@@ -86,6 +93,7 @@ module board_specific_top
 
         assign rst      = ~ KEY [w_key - 1];
         assign top_key  = ~ KEY [w_key - 1:0];
+        assign top_sw   = ~ SW;
 
         assign LED      = ~ top_led;
 
@@ -123,7 +131,11 @@ module board_specific_top
         .blue     ( VGA_B     ),
 
         .mic      ( mic       ),
+        `ifndef ENABLE_TM1638
+        .gpio     ( GPIO      )
+        `else
         .gpio     (           )
+        `endif
     );
 
     //------------------------------------------------------------------------
@@ -147,15 +159,15 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk      ( clk        ),
-        .rst      ( rst        ),
-        .hgfedcba ( hgfedcba   ),
-        .digit    ( tm_digit   ),
-        .ledr     ( tm_led     ),
-        .keys     ( tm_key     ),
-        .sio_clk  ( GPIO [15]  ),
-        .sio_stb  ( GPIO [14]  ),
-        .sio_data ( GPIO [16]  )
+        .clk        ( clk           ),
+        .rst        ( rst           ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO_2 [2]    ),
+        .sio_stb    ( GPIO_2 [3]    ),
+        .sio_data   ( GPIO_2 [1]    )
     );
 
     //------------------------------------------------------------------------
@@ -164,22 +176,16 @@ module board_specific_top
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
-        .lr    ( GPIO [18]  ),
-        .ws    ( GPIO [19]  ),
-        .sck   ( GPIO [20]  ),
-        .sd    ( GPIO [17]  ),
+        .lr    ( GPIO_3 [1] ),
+        .ws    ( GPIO_3 [2] ),
+        .sck   ( GPIO_3 [3] ),
+        .sd    ( GPIO_3 [0] ),
         .value ( mic        )
     );
 
-    assign GPIO [21] = 1'b0;  // GND
-    assign GPIO [22] = 1'b1;  // VCC
-
     //------------------------------------------------------------------------
 
-    assign VGA_HS = GPIO [12];
-    assign VGA_VS = GPIO [13];
-    assign VGA_G  = GPIO [4:0];
-    assign VGA_R  = GPIO [8:4];
-    assign VGA_B  = GPIO [12:8];
+    assign GPIO_0= { VGA_B, VGA_R };
+    assign GPIO_1 = { VGA_HS, VGA_VS, 2'bz, VGA_G };
 
 endmodule
