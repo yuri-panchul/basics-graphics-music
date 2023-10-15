@@ -264,8 +264,9 @@ update_fpga_toolchain_var ()
 {
     case $fpga_board in
         dk_dev_3c120n        | \
-        de0                  )
-
+        de0                  | \
+        marsohod_mcy112      | \
+        marsohod_mcy316 )
             fpga_toolchain=quartus
             use_old_version_of_quartus=1
         ;;

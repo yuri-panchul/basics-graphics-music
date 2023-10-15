@@ -1,0 +1,260 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 1991-2010 Altera Corporation
+# Your use of Altera Corporation's design tools, logic functions
+# and other software and tools, and its AMPP partner logic
+# functions, and any output files from any of the foregoing
+# (including device programming or simulation files), and any
+# associated documentation or information are expressly subject
+# to the terms and conditions of the Altera Program License
+# Subscription Agreement, Altera MegaCore Function License
+# Agreement, or other applicable license agreement, including,
+# without limitation, that your use is for the sole purpose of
+# programming logic devices manufactured by Altera and sold by
+# Altera or its authorized distributors.  Please refer to the
+# applicable agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus II
+# Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Web Edition
+# Date created = 16:33:58  November 30, 2022
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		First12K_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus II software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+set_global_assignment -name FAMILY "Cyclone III"
+set_global_assignment -name DEVICE EP3C16Q240C8
+set_global_assignment -name TOP_LEVEL_ENTITY board_specific_top
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION "9.1 SP2"
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "16:02:32  DECEMBER 01, 2022"
+set_global_assignment -name LAST_QUARTUS_VERSION "9.1 SP2"
+set_global_assignment -name USE_GENERATED_PHYSICAL_CONSTRAINTS OFF -section_id eda_blast_fpga
+set_global_assignment -name CYCLONE_OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name DEVICE_FILTER_PACKAGE "ANY QFP"
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 240
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 8
+set_global_assignment -name PARTITION_NETLIST_TYPE POST_FIT -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name INCREMENTAL_COMPILATION OFF
+
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to gpio3
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to gpio4
+
+#assign SDRAM pins one side pins
+set_location_assignment PIN_83 -to mem_dq[23]
+set_location_assignment PIN_84 -to mem_dq[22]
+set_location_assignment PIN_85 -to mem_dq[21]
+set_location_assignment PIN_86 -to mem_dq[20]
+set_location_assignment PIN_87 -to mem_dq[19]
+set_location_assignment PIN_88 -to mem_dq[18]
+set_location_assignment PIN_93 -to mem_dq[17]
+set_location_assignment PIN_94 -to mem_dq[16]
+set_location_assignment PIN_95 -to mem_dqm[2]
+set_location_assignment PIN_98 -to mem_a[2]
+set_location_assignment PIN_99 -to mem_a[1]
+set_location_assignment PIN_100 -to mem_a[0]
+set_location_assignment PIN_101 -to mem_a[10]
+set_location_assignment PIN_102 -to mem_ba[1]
+set_location_assignment PIN_103 -to mem_ba[0]
+set_location_assignment PIN_106 -to mem_a[11]
+set_location_assignment PIN_107 -to mem_ras
+set_location_assignment PIN_108 -to mem_cas
+set_location_assignment PIN_109 -to mem_we
+set_location_assignment PIN_110 -to mem_dqm[0]
+set_location_assignment PIN_111 -to mem_dq[7]
+set_location_assignment PIN_112 -to mem_dq[6]
+set_location_assignment PIN_113 -to mem_dq[5]
+set_location_assignment PIN_114 -to mem_dq[4]
+set_location_assignment PIN_117 -to mem_dq[3]
+set_location_assignment PIN_118 -to mem_dq[2]
+set_location_assignment PIN_119 -to mem_dq[1]
+set_location_assignment PIN_120 -to mem_dq[0]
+
+#assign SDRAM pins one side pins
+set_location_assignment PIN_186 -to mem_clk
+
+set_location_assignment PIN_181 -to mem_dq[15]
+set_location_assignment PIN_182 -to mem_dq[14]
+set_location_assignment PIN_183 -to mem_dq[13]
+set_location_assignment PIN_184 -to mem_dq[12]
+set_location_assignment PIN_185 -to mem_dq[11]
+set_location_assignment PIN_187 -to mem_dq[10]
+set_location_assignment PIN_188 -to mem_dq[9]
+set_location_assignment PIN_189 -to mem_dq[8]
+set_location_assignment PIN_194 -to mem_dqm[1]
+set_location_assignment PIN_195 -to mem_a[9]
+set_location_assignment PIN_196 -to mem_a[8]
+set_location_assignment PIN_197 -to mem_a[7]
+set_location_assignment PIN_198 -to mem_a[6]
+set_location_assignment PIN_199 -to mem_a[5]
+set_location_assignment PIN_200 -to mem_a[4]
+set_location_assignment PIN_201 -to mem_a[3]
+set_location_assignment PIN_202 -to mem_dqm[3]
+set_location_assignment PIN_203 -to mem_dq[31]
+set_location_assignment PIN_207 -to mem_dq[30]
+set_location_assignment PIN_214 -to mem_dq[29]
+set_location_assignment PIN_216 -to mem_dq[28]
+set_location_assignment PIN_217 -to mem_dq[27]
+set_location_assignment PIN_218 -to mem_dq[26]
+set_location_assignment PIN_219 -to mem_dq[25]
+set_location_assignment PIN_220 -to mem_dq[24]
+
+#assign KEY/SEG7/LEDS pins
+set_location_assignment PIN_152 -to key[0]
+set_location_assignment PIN_151 -to key[1]
+
+set_location_assignment PIN_150 -to clk
+set_location_assignment PIN_149 -to serial_rx
+set_location_assignment PIN_143 -to serial_tx
+
+#assign KEY/SEG7/LEDS pins
+set_location_assignment PIN_144 -to seg_sel[0]
+set_location_assignment PIN_145 -to seg_sel[1]
+set_location_assignment PIN_146 -to seg_sel[2]
+set_location_assignment PIN_147 -to seg_sel[3]
+set_location_assignment PIN_148 -to seg_e
+set_location_assignment PIN_159 -to seg_a
+set_location_assignment PIN_160 -to seg_b
+set_location_assignment PIN_161 -to seg_p
+set_location_assignment PIN_162 -to seg_d
+set_location_assignment PIN_164 -to seg_g
+set_location_assignment PIN_166 -to seg_c
+set_location_assignment PIN_167 -to seg_f
+set_location_assignment PIN_168 -to led[0]
+set_location_assignment PIN_169 -to led[1]
+set_location_assignment PIN_171 -to led[2]
+set_location_assignment PIN_173 -to led[3]
+set_location_assignment PIN_174 -to led[4]
+set_location_assignment PIN_175 -to led[5]
+set_location_assignment PIN_176 -to led[6]
+set_location_assignment PIN_177 -to led[7]
+
+#assign sound/min/flash pins
+set_location_assignment PIN_92 -to pcm_dout
+set_location_assignment PIN_126 -to pcm_scki
+set_location_assignment PIN_127 -to pcm_lrck
+set_location_assignment PIN_128 -to pcm_bck
+set_location_assignment PIN_131 -to sound_out_r
+set_location_assignment PIN_132 -to sound_out_l
+set_location_assignment PIN_133 -to flash_csb
+set_location_assignment PIN_134 -to flash_clk
+set_location_assignment PIN_135 -to flash_io0
+set_location_assignment PIN_137 -to flash_io1
+set_location_assignment PIN_139 -to flash_io2
+set_location_assignment PIN_142 -to flash_io3
+
+#assign GPIO-A pins
+set_location_assignment PIN_221 -to gpio_a[21]
+set_location_assignment PIN_222 -to gpio_a[20]
+set_location_assignment PIN_223 -to gpio_a[16]
+set_location_assignment PIN_224 -to gpio_a[19]
+set_location_assignment PIN_226 -to gpio_a[13]
+set_location_assignment PIN_230 -to gpio_a[12]
+set_location_assignment PIN_231 -to gpio_a[6]
+set_location_assignment PIN_232 -to gpio_a[5]
+set_location_assignment PIN_233 -to gpio_a[1]
+set_location_assignment PIN_234 -to gpio_a[0]
+set_location_assignment PIN_235 -to gpio_a[7]
+set_location_assignment PIN_236 -to gpio_a[8]
+set_location_assignment PIN_237 -to gpio_a[11]
+set_location_assignment PIN_238 -to gpio_a[9]
+set_location_assignment PIN_239 -to gpio_a[10]
+set_location_assignment PIN_240 -to gpio_a[23]
+set_location_assignment PIN_4 -to gpio_a[22]
+set_location_assignment PIN_5 -to gpio_a[18]
+set_location_assignment PIN_6 -to gpio_a[17]
+set_location_assignment PIN_9 -to gpio_a[15]
+set_location_assignment PIN_13 -to gpio_a[14]
+set_location_assignment PIN_18 -to gpio_a[4]
+set_location_assignment PIN_19 -to gpio_a[3]
+set_location_assignment PIN_20 -to gpio_a[2]
+
+set_location_assignment PIN_209 -to gpio_a_i[0]
+set_location_assignment PIN_210 -to gpio_a_i[1]
+set_location_assignment PIN_211 -to gpio_a_i[2]
+set_location_assignment PIN_212 -to gpio_a_i[3]
+
+#assign RPI pins
+
+#TDI, TCK, TMS, TDO
+#set_location_assignment PIN_26 -to gpio[11]
+#set_location_assignment PIN_27 -to gpio[7]
+#set_location_assignment PIN_28 -to gpio[0]
+#set_location_assignment PIN_29 -to gpio[1]
+
+#assign RPI pins
+set_location_assignment PIN_21 -to gpio2
+set_location_assignment PIN_22 -to gpio3
+set_location_assignment PIN_37 -to gpio4
+set_location_assignment PIN_38 -to gpio14
+set_location_assignment PIN_39 -to gpio15
+set_location_assignment PIN_41 -to gpio17
+set_location_assignment PIN_43 -to gpio18
+set_location_assignment PIN_44 -to gpio22
+set_location_assignment PIN_45 -to gpio23
+set_location_assignment PIN_46 -to gpio10
+set_location_assignment PIN_49 -to gpio9
+set_location_assignment PIN_50 -to gpio8
+set_location_assignment PIN_51 -to gpio5
+set_location_assignment PIN_52 -to gpio6
+set_location_assignment PIN_55 -to gpio12
+set_location_assignment PIN_56 -to gpio13
+set_location_assignment PIN_57 -to gpio19
+set_location_assignment PIN_63 -to gpio16
+set_location_assignment PIN_64 -to gpio20
+set_location_assignment PIN_65 -to gpio21
+
+set_location_assignment PIN_31 -to gpio27_i
+set_location_assignment PIN_32 -to gpio24_i
+set_location_assignment PIN_33 -to gpio25_i
+set_location_assignment PIN_34 -to gpio26_i
+
+#assign GPIO-B pins
+set_location_assignment PIN_68 -to gpio_b[6]
+set_location_assignment PIN_69 -to gpio_b[5]
+set_location_assignment PIN_70 -to gpio_b[1]
+set_location_assignment PIN_71 -to gpio_b[0]
+set_location_assignment PIN_72 -to gpio_b[7]
+set_location_assignment PIN_73 -to gpio_b[8]
+set_location_assignment PIN_76 -to gpio_b[9]
+set_location_assignment PIN_78 -to gpio_b[10]
+set_location_assignment PIN_80 -to gpio_b[4]
+set_location_assignment PIN_81 -to gpio_b[3]
+set_location_assignment PIN_82 -to gpio_b[2]
+
+set_location_assignment PIN_89 -to gpio_b_i[0]
+set_location_assignment PIN_90 -to gpio_b_i[1]
+set_location_assignment PIN_91 -to gpio_b_i[2]
+
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
+#set_global_assignment -name RESERVE_ASDO_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "COMPILER CONFIGURED"
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "COMPILER CONFIGURED"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "COMPILER CONFIGURED"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS PROGRAMMING PIN"
+
+set_global_assignment -name CYCLONE_CONFIGURATION_DEVICE EPCS4
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name GENERATE_SVF_FILE ON
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_NO_OUTPUT_GND "AS INPUT TRI-STATED"
+set_global_assignment -name VERILOG_FILE ../../../boards/marsohod_mcy316/board_specific_top.sv
+set_global_assignment -name VERILOG_FILE ../../../boards/marsohod_mcy316/pcm1801.v
+set_global_assignment -name QIP_FILE ../../../boards/marsohod_mcy316/pll_div2.qip
