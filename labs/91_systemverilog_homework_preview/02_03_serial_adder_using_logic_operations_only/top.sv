@@ -70,7 +70,7 @@ module top
         .sum  ( sum      )
     );
 
-    assign led = w_led' ({ sum, a, b });
+    assign led = w_led' ({ sum, b, a });
 
     //------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ module top
     //------------------------------------------------------------------------
 
     localparam w_number = w_digit * 4;
-    wire [w_number - 1:0] number = w_number' ({ sum4, a4, b4 });
+    wire [w_number - 1:0] number = w_number' ({ sum4, b4, a4 });
 
     wire [7:0] abcdefgh_pre;
 
