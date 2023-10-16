@@ -53,6 +53,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz ( clk_mhz         ),
@@ -65,6 +72,7 @@ module board_specific_top
     i_top
     (
         .clk      (   clk                ),
+        .slow_clk (   slow_clk           ),
         .rst      (   rst                ),
 
         .key      (   top_key            ),

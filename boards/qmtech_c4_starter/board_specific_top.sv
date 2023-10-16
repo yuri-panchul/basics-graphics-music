@@ -32,6 +32,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire                 clk = CLK;
     wire                 rst = ~ KEY;
     wire                 led;
 
@@ -52,6 +53,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz  ( clk_mhz   ),
@@ -63,7 +71,8 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
         .key      ( '0        ),
@@ -90,7 +99,7 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK          ),
+        .clk   ( clk          ),
         .rst   ( rst          ),
         .lr    ( GPIO_J12 [8] ),
         .ws    ( GPIO_J12 [6] ),

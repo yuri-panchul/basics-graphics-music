@@ -33,6 +33,7 @@ module board_specific_top
 
     localparam w_top_key = w_key - 1;  // One onboard key is used as a reset
 
+    wire                   clk     = CLK;
     wire                   rst     = ~ KEY_N [w_key     - 1];
     wire [w_top_key - 1:0] top_key = ~ KEY_N [w_top_key - 1:0];
 
@@ -50,6 +51,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz ( clk_mhz   ),
@@ -61,7 +69,8 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLK         ),
+        .clk      (   clk         ),
+        .slow_clk (   slow_clk    ),
         .rst      (   rst         ),
 
         .key      (   top_key     ),
@@ -96,7 +105,7 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK      ),
+        .clk   ( clk      ),
         .rst   ( rst      ),
         .lr    ( GPIO [5] ),
         .ws    ( GPIO [3] ),

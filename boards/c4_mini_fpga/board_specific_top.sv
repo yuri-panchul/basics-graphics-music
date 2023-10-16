@@ -58,6 +58,14 @@ module board_specific_top
 
     // Microphone works by I2S protocol, assembling virtual 24 bits one by one
     wire [                   23:0] mic;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
     //------------------------------------------------------------------------
 
     // "top" module is a parametrized type, here are numeric parameters
@@ -74,6 +82,7 @@ module board_specific_top
     i_top
     (
         .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
         .key      ( ~ KEY_N   ), // invert keys, bringing to standard

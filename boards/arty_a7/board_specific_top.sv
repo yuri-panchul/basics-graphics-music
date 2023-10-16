@@ -148,37 +148,45 @@ localparam  w_tm_key     = 8,
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
-        .clk_mhz ( clk_mhz ),
+        .clk_mhz ( clk_mhz     ),
         .w_key   ( w_top_key   ),
-        .w_sw    ( w_sw    ),
+        .w_sw    ( w_sw        ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio  )
+        .w_gpio  ( w_gpio      )
     )
     i_top
     (
-        .clk      ( clk    ),
-        .rst      ( rst    ),
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
 
-        .key      ( top_key ),
-        .sw       ( top_sw     ),
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
 
-        .led      ( top_led    ),
+        .led      ( top_led   ),
 
-        .abcdefgh ( abcdefgh   ),
-        .digit    ( top_digit  ),
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
 
-        .vsync    ( JC[1] ),
-        .hsync    ( JC[0] ),
+        .vsync    ( JC [1]    ),
+        .hsync    ( JC [0]    ),
 
-        .red      ( JB[7:4]  ),
-        .green    ( JC[7:4]  ),
-        .blue     ( JB[3:0]  ),
+        .red      ( JB [7:4]  ),
+        .green    ( JC [7:4]  ),
+        .blue     ( JB [3:0]  ),
 
-        .mic      ( mic      ),
-        .gpio     ( GPIO   )
+        .mic      ( mic       ),
+        .gpio     ( GPIO      )
     );
 
  wire [$left (abcdefgh):0] hgfedcba;
