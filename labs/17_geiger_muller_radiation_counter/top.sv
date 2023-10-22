@@ -42,7 +42,7 @@ module top
 
     localparam shield_gpio_base = 36,
                n_bulbs          = 2,
-               w_bulbs          = $clog2 (n_bulbs);
+               w_bulbs          = $clog2 (n_bulbs + 1);
 
     wire [1:0] geiger_input_raw = gpio [shield_gpio_base + 2 +: n_bulbs];
     wire [1:0] shield_led;
