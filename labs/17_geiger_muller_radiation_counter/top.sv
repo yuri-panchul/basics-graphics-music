@@ -44,7 +44,7 @@ module top
                n_bulbs          = 2,
                w_bulbs          = $clog2 (n_bulbs);
 
-    wire [1:0] geiger_input = gpio [shield_gpio_base + 2 +: n_bulbs];
+    wire [1:0] geiger_input_raw = gpio [shield_gpio_base + 2 +: n_bulbs];
     wire [1:0] shield_led;
     wire       shield_speaker;
     wire       shield_pwm;
@@ -68,6 +68,26 @@ module top
        assign blue     = '0;
 
     //------------------------------------------------------------------------
+
+    // Sync the signal
+
+    logic [n_bulbs - 1:0] geiger_input_sync1, geiger_input;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            geiger_input_sync1 <= '0;
+            geiger_input       <= '0;
+        end
+        else
+        begin
+            geiger_input_sync1 <= geiger_input_raw;
+            geiger_input       <= geiger_input_sync1;
+        end
+
+    //------------------------------------------------------------------------
+
+    // Finding the edge
 
     logic [n_bulbs - 1:0] geiger_input_r;
 
