@@ -105,7 +105,7 @@ module top
 
     //------------------------------------------------------------------------
 
-    localparam w_particle_cnt = 2 * 4;
+    localparam w_particle_cnt = 6 * 4;
     logic [w_particle_cnt - 1:0] particle_cnt;
 
     always_ff @ (posedge clk or posedge rst)
