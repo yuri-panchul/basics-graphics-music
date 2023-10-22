@@ -7,7 +7,7 @@ module top
               w_sw    = 8,
               w_led   = 8,
               w_digit = 8,
-              w_gpio  = 20
+              w_gpio  = 100
 )
 (
     input                        clk,
