@@ -3,34 +3,38 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 2,
-              w_sw    = 10,
-              w_led   = 10,
-              w_digit = 6,
-              w_gpio  = 36                   // GPIO [31], [33], [35] reserved for tm1638, GPIO[5:0] reserved for mic
+    parameter clk_mhz   = 50,
+              w_key     = 2,
+              w_sw      = 10,
+              w_led     = 10,
+              w_digit   = 6,
+              w_gpio    = 36,  // GPIO [31], [33], [35] reserved for tm1638, GPIO[5:0] reserved for mic
+              w_arduino = 16
 )
 (
-    input                 MAX10_CLK1_50,
+    input                    MAX10_CLK1_50,
 
-    input  [w_key  - 1:0] KEY,
-    input  [w_sw   - 1:0] SW,
-    output [w_led  - 1:0] LEDR,
+    input  [w_key     - 1:0] KEY,
+    input  [w_sw      - 1:0] SW,
+    output [w_led     - 1:0] LEDR,
 
-    output logic    [7:0] HEX0,
-    output logic    [7:0] HEX1,
-    output logic    [7:0] HEX2,
-    output logic    [7:0] HEX3,
-    output logic    [7:0] HEX4,
-    output logic    [7:0] HEX5,
+    output logic       [7:0] HEX0,
+    output logic       [7:0] HEX1,
+    output logic       [7:0] HEX2,
+    output logic       [7:0] HEX3,
+    output logic       [7:0] HEX4,
+    output logic       [7:0] HEX5,
 
-    output                VGA_HS,
-    output                VGA_VS,
-    output [         3:0] VGA_R,
-    output [         3:0] VGA_G,
-    output [         3:0] VGA_B,
+    output                   VGA_HS,
+    output                   VGA_VS,
+    output [            3:0] VGA_R,
+    output [            3:0] VGA_G,
+    output [            3:0] VGA_B,
 
-    inout  [w_gpio - 1:0] GPIO
+    inout  [w_gpio    - 1:0] GPIO,
+
+    output                   ARDUINO_RESET_N,
+    input  [w_arduino - 1:0] ARDUINO_IO
 );
 
     //------------------------------------------------------------------------
@@ -41,6 +45,8 @@ module board_specific_top
 
     wire                  rst     = SW [w_top_sw];
     wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
+
+    assign ARDUINO_RESET_N = ~ rst;
 
     //------------------------------------------------------------------------
 
@@ -125,36 +131,39 @@ module board_specific_top
 
     top
     # (
-        .clk_mhz ( clk_mhz     ),
-        .w_key   ( w_top_key   ),
-        .w_sw    ( w_top_sw    ),
-        .w_led   ( w_top_led   ),
-        .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio      )      // GPIO [31], [33], [35] reserved for tm1638, GPIO[5:0] reserved for mic
+        .clk_mhz ( clk_mhz               ),
+        .w_key   ( w_top_key             ),
+        .w_sw    ( w_top_sw              ),
+        .w_led   ( w_top_led             ),
+        .w_digit ( w_top_digit           ),
+        .w_gpio  ( w_arduino + w_gpio    )
+
+        // top gpio includes both ARDUINO and GPIO pins
+        // GPIO [31], [33], [35] reserved for tm1638, GPIO[5:0] reserved for mic
     )
     i_top
     (
-        .clk      ( clk        ),
-        .slow_clk ( slow_clk   ),
-        .rst      ( rst        ),
+        .clk      ( clk                  ),
+        .slow_clk ( slow_clk             ),
+        .rst      ( rst                  ),
 
-        .key      ( top_key    ),
-        .sw       ( top_sw     ),
+        .key      ( top_key              ),
+        .sw       ( top_sw               ),
 
-        .led      ( top_led    ),
+        .led      ( top_led              ),
 
-        .abcdefgh ( abcdefgh   ),
-        .digit    ( top_digit  ),
+        .abcdefgh ( abcdefgh             ),
+        .digit    ( top_digit            ),
 
-        .vsync    ( VGA_VS     ),
-        .hsync    ( VGA_HS     ),
+        .vsync    ( VGA_VS               ),
+        .hsync    ( VGA_HS               ),
 
-        .red      ( VGA_R      ),
-        .green    ( VGA_G      ),
-        .blue     ( VGA_B      ),
+        .red      ( VGA_R                ),
+        .green    ( VGA_G                ),
+        .blue     ( VGA_B                ),
 
-        .mic      ( mic        ),
-        .gpio     ( GPIO       )
+        .mic      ( mic                  ),
+        .gpio     ( { ARDUINO_IO, GPIO } )
     );
 
     //------------------------------------------------------------------------
