@@ -1,6 +1,10 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+//--- VGA external ---
+   `define VGA666_BOARD
+// `define PMOD_VGA_BOARD
+
 module board_specific_top
 # (
     parameter clk_mhz  = 50,
@@ -8,26 +12,26 @@ module board_specific_top
               w_sw     = 4,
               w_led    = 8,
               w_digit  = 0,
-              w_gpio   = 36                   // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
+              w_gpio   = 34                   // GPIO_0 [31], [32], [33] reserved for tm1638, GPIO_0[5:0] reserved for mic, no GPIO_x_IN because it's input only
 )
 (
-    input                    FPGA_CLK1_50,
+    input                     CLOCK_50,
 
-    input  [w_key     - 1:0] KEY,
-    input  [w_sw      - 1:0] SW,
-    output [w_led     - 1:0] LED,             // LEDG onboard
+    input  [w_key      - 1:0] KEY,
+    input  [w_sw       - 1:0] SW,
+    output [w_led      - 1:0] LED,            // LEDG onboard
 
-    inout  [w_gpio    - 1:0] GPIO_0,
-    inout  [w_gpio    - 1:0] GPIO_1
+    inout  [w_gpio     - 1:0] GPIO_0,
+    inout  [w_gpio     - 1:0] GPIO_1
 );
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw   = w_sw - 1;                             // One onboard SW is used as a reset
+    localparam w_top_sw   = w_sw - 1;         // One onboard SW is used as a reset
 
-    wire                  clk    = FPGA_CLK1_50;
+    wire                  clk    = CLOCK_50;
 
-    wire                  rst    = SW [w_top_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] (JP7 pin 17) is BTN_RESET key on MiSTer I/O board, internal FGPA weak pull-up enabled;
+    wire                  rst    = SW [w_top_sw];
     wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
 
     //------------------------------------------------------------------------
@@ -119,7 +123,7 @@ module board_specific_top
         .w_sw    ( w_top_sw    ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio      )      // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
+        .w_gpio  ( w_gpio      )      // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] for mic
     )
     i_top
     (
@@ -148,30 +152,76 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    // VGA out at GPIO_1 (MiSTer I/O board compatible, 4 bit color used)
-    assign GPIO_1 [16] = vga_vs;        // JP7 pin 19
-    assign GPIO_1 [17] = vga_hs;        // JP7 pin 20
-    // R
-    assign GPIO_1 [35] = 1'b1;          // JP7 pin 40
-    assign GPIO_1 [33] = 1'b1;          // JP7 pin 38
-    assign GPIO_1 [31] = vga_r [0];     // JP7 pin 36
-    assign GPIO_1 [29] = vga_r [1];     // JP7 pin 34
-    assign GPIO_1 [27] = vga_r [2];     // JP7 pin 32
-    assign GPIO_1 [25] = vga_r [3];     // JP7 pin 28
-    // G
-    assign GPIO_1 [34] = 1'b1;          // JP7 pin 39
-    assign GPIO_1 [32] = 1'b1;          // JP7 pin 37
-    assign GPIO_1 [30] = vga_g [0];     // JP7 pin 35
-    assign GPIO_1 [28] = vga_g [1];     // JP7 pin 33
-    assign GPIO_1 [26] = vga_g [2];     // JP7 pin 31
-    assign GPIO_1 [24] = vga_g [3];     // JP7 pin 27
-    // B
-    assign GPIO_1 [19] = 1'b1;          // JP7 pin 22
-    assign GPIO_1 [21] = 1'b1;          // JP7 pin 24
-    assign GPIO_1 [23] = vga_b [0];     // JP7 pin 26
-    assign GPIO_1 [22] = vga_b [1];     // JP7 pin 25
-    assign GPIO_1 [20] = vga_b [2];     // JP7 pin 23
-    assign GPIO_1 [18] = vga_b [3];     // JP7 pin 21
+    logic [    3:0] reg_vga_r, reg_vga_g, reg_vga_b;
+    logic           reg_vga_vs, reg_vga_hs;
+
+    // Registers remove combinational logic noise
+    always_ff @( posedge clk or posedge rst)
+    begin
+        if (rst)
+        begin
+            reg_vga_r  <= '0;
+            reg_vga_g  <= '0;
+            reg_vga_b  <= '0;
+            reg_vga_vs <= '0;
+            reg_vga_hs <= '0;
+        end
+        else
+        begin
+            reg_vga_r  <= vga_r;
+            reg_vga_g  <= vga_g;
+            reg_vga_b  <= vga_b;
+            reg_vga_vs <= vga_vs;
+            reg_vga_hs <= vga_hs;
+        end
+    end
+
+    // External VGA out at GPIO_1
+    `ifdef  VGA666_BOARD
+
+        // 4 bit color used
+        assign GPIO_1 [33] = reg_vga_vs;        // vga666_pi_Vsync - JP2 pin 40
+        assign GPIO_1 [31] = reg_vga_hs;        // vga666_pi_Hsync - JP2 pin 38
+        // R
+        assign GPIO_1 [11] = reg_vga_r [0];     // vga666_red[4]   - JP2 pin 16
+        assign GPIO_1 [17] = reg_vga_r [1];     // vga666_red[5]   - JP2 pin 22
+        assign GPIO_1 [ 3] = reg_vga_r [2];     // vga666_red[6]   - JP2 pin 6
+        assign GPIO_1 [ 1] = reg_vga_r [3];     // vga666_red[7]   - JP2 pin 4
+        // G
+        assign GPIO_1 [ 5] = reg_vga_g [0];     // vga666_green[4] - JP2 pin 8
+        assign GPIO_1 [19] = reg_vga_g [1];     // vga666_green[5] - JP2 pin 24
+        assign GPIO_1 [15] = reg_vga_g [2];     // vga666_green[6] - JP2 pin 20
+        assign GPIO_1 [13] = reg_vga_g [3];     // vga666_green[7] - JP2 pin 18
+        // B
+        assign GPIO_1 [21] = reg_vga_b [0];     // vga666_blue[4]  - JP2 pin 26
+        assign GPIO_1 [ 7] = reg_vga_b [1];     // vga666_blue[5]  - JP2 pin 10
+        assign GPIO_1 [ 9] = reg_vga_b [2];     // vga666_blue[6]  - JP2 pin 14
+        assign GPIO_1 [23] = reg_vga_b [3];     // vga666_blue[7]  - JP2 pin 28
+                                                // vga666_GND      - JP2 pin 30
+
+    `elsif PMOD_VGA_BOARD
+
+        assign GPIO_1 [ 5] = reg_vga_vs;        // JP2 pin  8
+        assign GPIO_1 [ 3] = reg_vga_hs;        // JP2 pin  6
+        // R
+        assign GPIO_1 [33] = reg_vga_r [0];     // JP2 pin 40
+        assign GPIO_1 [31] = reg_vga_r [1];     // JP2 pin 38
+        assign GPIO_1 [29] = reg_vga_r [2];     // JP2 pin 36
+        assign GPIO_1 [27] = reg_vga_r [3];     // JP2 pin 34
+        // G
+        assign GPIO_1 [23] = reg_vga_g [0];     // JP2 pin 28
+        assign GPIO_1 [21] = reg_vga_g [1];     // JP2 pin 26
+        assign GPIO_1 [19] = reg_vga_g [2];     // JP2 pin 24
+        assign GPIO_1 [17] = reg_vga_g [3];     // JP2 pin 22
+        // B
+        assign GPIO_1 [15] = reg_vga_b [0];     // JP2 pin 20
+        assign GPIO_1 [13] = reg_vga_b [1];     // JP2 pin 18
+        assign GPIO_1 [11] = reg_vga_b [2];     // JP2 pin 16
+        assign GPIO_1 [ 9] = reg_vga_b [3];     // JP2 pin 14
+                                                // GND  - JP2 pin 30
+                                                // 3.3V - JP2 pin 29
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -200,9 +250,9 @@ module board_specific_top
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ),
-        .sio_stb    ( GPIO_0 [27]   ), // JP1 pin 32
-        .sio_clk    ( GPIO_0 [29]   ), // JP1 pin 34
-        .sio_data   ( GPIO_0 [31]   )  // JP1 pin 36
+        .sio_stb    ( GPIO_0 [25]   ), // JP1 pin 32
+        .sio_clk    ( GPIO_0 [27]   ), // JP1 pin 34
+        .sio_data   ( GPIO_0 [29]   )  // JP1 pin 36
     );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
     //------------------------------------------------------------------------
@@ -211,14 +261,14 @@ module board_specific_top
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
-        .lr    ( GPIO_0 [0] ),  // JP1 pin 1
-        .ws    ( GPIO_0 [2] ),  // JP1 pin 3
-        .sck   ( GPIO_0 [4] ),  // JP1 pin 5
-        .sd    ( GPIO_0 [5] ),  // JP1 pin 6
+        .lr    ( GPIO_0 [2] ),  // JP1 pin 5
+        .ws    ( GPIO_0 [4] ),  // JP1 pin 7
+        .sck   ( GPIO_0 [6] ),  // JP1 pin 9
+        .sd    ( GPIO_0 [7] ),  // JP1 pin 10
         .value ( mic        )
     );
 
-    assign GPIO_0 [1] = 1'b0;   // GND - JP1 pin 2
-    assign GPIO_0 [3] = 1'b1;   // VCC - JP1 pin 4
+    assign GPIO_0 [3] = 1'b0;   // GND - JP1 pin 6
+    assign GPIO_0 [5] = 1'b1;   // VCC - JP1 pin 8
 
 endmodule
