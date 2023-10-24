@@ -1,6 +1,10 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+//--- VGA external ---
+   `define VGA666_BOARD
+// `define PMOD_VGA_BOARD
+
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -44,8 +48,8 @@ module board_specific_top
     wire [                   7:0] abcdefgh;
     wire [         w_digit - 1:0] digit;
 
-    wire                           vga_vs, vga_hs;
-    wire [                   3:0] vga_red,vga_green,vga_blue;
+    wire                          vga_vs, vga_hs;
+    wire [                   3:0] vga_r,vga_g,vga_b;
 
     wire [                  23:0] mic;
 
@@ -84,9 +88,9 @@ module board_specific_top
         .vsync    (   vga_vs    ),
         .hsync    (   vga_hs    ),
 
-        .red      (   vga_red   ),
-        .green    (   vga_green ),
-        .blue     (   vga_blue  ),
+        .red      (   vga_r     ),
+        .green    (   vga_g     ),
+        .blue     (   vga_b     ),
 
         .mic      (   mic       ),
         .gpio     (   GPIO      )
@@ -96,24 +100,76 @@ module board_specific_top
 
     assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = top_led; // The last 4 LEDR are used like a 7SEG dp
 
-    // VGA out at GPIO
-    assign GPIO [6]  = vga_vs;        // JP9 pin 7
-    assign GPIO [7]  = vga_hs;        // JP7 pin 8
-    // R
-    assign GPIO [10] = vga_red [0];   // JP9 pin 13
-    assign GPIO [11] = vga_red [1];   // JP9 pin 14
-    assign GPIO [12] = vga_red [2];   // JP9 pin 15
-    assign GPIO [13] = vga_red [3];   // JP9 pin 16
-    // G
-    assign GPIO [14] = vga_green [0]; // JP9 pin 17
-    assign GPIO [15] = vga_green [1]; // JP9 pin 18
-    assign GPIO [16] = vga_green [2]; // JP9 pin 19
-    assign GPIO [17] = vga_green [3]; // JP9 pin 20
-    // B
-    assign GPIO [18] = vga_blue [0];  // JP9 pin 21
-    assign GPIO [19] = vga_blue [1];  // JP9 pin 22
-    assign GPIO [20] = vga_blue [2];  // JP9 pin 23
-    assign GPIO [21] = vga_blue [3];  // JP9 pin 24
+    logic [    3:0] reg_vga_r, reg_vga_g, reg_vga_b;
+    logic           reg_vga_vs, reg_vga_hs;
+
+    // Registers remove combinational logic noise
+    always_ff @( posedge clk or posedge rst)
+    begin
+        if (rst)
+        begin
+            reg_vga_r  <= '0;
+            reg_vga_g  <= '0;
+            reg_vga_b  <= '0;
+            reg_vga_vs <= '0;
+            reg_vga_hs <= '0;
+        end
+        else
+        begin
+            reg_vga_r  <= vga_r;
+            reg_vga_g  <= vga_g;
+            reg_vga_b  <= vga_b;
+            reg_vga_vs <= vga_vs;
+            reg_vga_hs <= vga_hs;
+        end
+    end
+
+    // External VGA out at GPIO
+    `ifdef  VGA666_BOARD
+
+        // 4 bit color used
+        assign GPIO [21] = reg_vga_vs;        // vga666_pi_Vsync - JP9 pin 24
+        assign GPIO [19] = reg_vga_hs;        // vga666_pi_Hsync - JP9 pin 22
+        // R
+        assign GPIO [16] = reg_vga_r [0];     // vga666_red[4]   - JP9 pin 19
+        assign GPIO [11] = reg_vga_r [1];     // vga666_red[5]   - JP9 pin 14
+        assign GPIO [ 9] = reg_vga_r [2];     // vga666_red[6]   - JP9 pin 10
+        assign GPIO [ 7] = reg_vga_r [3];     // vga666_red[7]   - JP9 pin  8
+        // G
+        assign GPIO [ 6] = reg_vga_g [0];     // vga666_green[4] - JP9 pin  7
+        assign GPIO [13] = reg_vga_g [1];     // vga666_green[5] - JP9 pin 16
+        assign GPIO [20] = reg_vga_g [2];     // vga666_green[6] - JP9 pin 23
+        assign GPIO [18] = reg_vga_g [3];     // vga666_green[7] - JP9 pin 21
+        // B
+        assign GPIO [15] = reg_vga_b [0];     // vga666_blue[4]  - JP9 pin 18
+        assign GPIO [12] = reg_vga_b [1];     // vga666_blue[5]  - JP9 pin 15
+        assign GPIO [14] = reg_vga_b [2];     // vga666_blue[6]  - JP9 pin 17
+        assign GPIO [17] = reg_vga_b [3];     // vga666_blue[7]  - JP9 pin 20
+                                              // vga666_GND      - JP9 pin 12
+
+    `elsif PMOD_VGA_BOARD
+
+        assign GPIO [19] = reg_vga_vs;        // JP9 pin 22
+        assign GPIO [21] = reg_vga_hs;        // JP9 pin 24
+        // R
+        assign GPIO [ 6] = reg_vga_r [0];     // JP9 pin  7
+        assign GPIO [ 8] = reg_vga_r [1];     // JP9 pin  9
+        assign GPIO [ 7] = reg_vga_r [2];     // JP9 pin  8
+        assign GPIO [ 9] = reg_vga_r [3];     // JP9 pin 10
+        // G
+        assign GPIO [11] = reg_vga_g [0];     // JP9 pin 14
+        assign GPIO [13] = reg_vga_g [1];     // JP9 pin 16
+        assign GPIO [15] = reg_vga_g [2];     // JP9 pin 18
+        assign GPIO [17] = reg_vga_g [3];     // JP9 pin 20
+        // B
+        assign GPIO [12] = reg_vga_b [0];     // JP9 pin 15
+        assign GPIO [14] = reg_vga_b [1];     // JP9 pin 17
+        assign GPIO [16] = reg_vga_b [2];     // JP9 pin 19
+        assign GPIO [18] = reg_vga_b [3];     // JP9 pin 21
+                                              // GND  - JP9 pin 30
+                                              // 3.3V - JP9 pin 29
+
+    `endif
 
     //------------------------------------------------------------------------
 
