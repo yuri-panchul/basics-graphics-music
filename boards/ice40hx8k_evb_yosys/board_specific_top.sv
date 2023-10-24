@@ -96,9 +96,12 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire slow_clk;
+    wire slow_clk_local;
 
     slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    i_slow_clk_gen (.slow_clk (slow_clk_local), .*);
+
+    SB_GB clk_buf (.USER_SIGNAL_TO_GLOBAL_BUFFER(slow_clk_local), .GLOBAL_BUFFER_OUTPUT(slow_clk));
 
     //------------------------------------------------------------------------
 

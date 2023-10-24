@@ -96,9 +96,12 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire slow_clk;
+    wire slow_clk_local;
 
     slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    i_slow_clk_gen (.slow_clk (slow_clk_local), .*);
+
+    DCCA slow_clk_buf (.CLKI(slow_clk_local), .CLKO(slow_clk), .CE(1));
 
     //------------------------------------------------------------------------
 
