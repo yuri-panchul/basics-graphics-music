@@ -61,49 +61,65 @@ module top
 
     logic [w_sw_actual-1:0] pow_input;
 
-    logic [(2*w_sw_actual)-1:0] mul_stage_1;
-    logic [(3*w_sw_actual)-1:0] mul_stage_2;
-    logic [(4*w_sw_actual)-1:0] mul_stage_3;
-    logic [(5*w_sw_actual)-1:0] mul_stage_4;
+    logic [(2*w_sw_actual)-1:0] pow_mul_stage_1;
+    logic [(3*w_sw_actual)-1:0] pow_mul_stage_2;
+    logic [(4*w_sw_actual)-1:0] pow_mul_stage_3;
+    logic [(5*w_sw_actual)-1:0] pow_mul_stage_4;
 
-    logic [(2*w_sw_actual)-1:0] reg_stage_1;
-    logic [(3*w_sw_actual)-1:0] reg_stage_2;
-    logic [(4*w_sw_actual)-1:0] reg_stage_3;
+    logic [(2*w_sw_actual)-1:0] pow_data_stage_1;
+    logic [(3*w_sw_actual)-1:0] pow_data_stage_2;
+    logic [(4*w_sw_actual)-1:0] pow_data_stage_3;
+
+    logic [w_sw_actual-1:0] pow_input_stage_1;
+    logic [w_sw_actual-1:0] pow_input_stage_2;
+    logic [w_sw_actual-1:0] pow_input_stage_3;
 
     logic [(5*w_sw_actual)-1:0] pow_output;
 
-    // Multiply numbers
-    assign mul_stage_1 = pow_input   * pow_input;
-    assign mul_stage_2 = reg_stage_1 * pow_input;
-    assign mul_stage_3 = reg_stage_2 * pow_input;
-    assign mul_stage_4 = reg_stage_3 * pow_input;
 
-
-    always_ff @ (posedge clk or posedge rst)
+    // Input data pipeline
+    always_ff @ (posedge slow_clk or posedge rst)
         if (rst)
             pow_input <= '0;
         else
             pow_input <= sw;
 
-
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @ (posedge slow_clk or posedge rst)
         if (rst) begin
-            reg_stage_1 <= '0;
-            reg_stage_2 <= '0;
-            reg_stage_3 <= '0;
+            pow_input_stage_1 <= '0;
+            pow_input_stage_2 <= '0;
+            pow_input_stage_3 <= '0;
         end
         else begin
-            reg_stage_1 <= mul_stage_1;
-            reg_stage_2 <= mul_stage_2;
-            reg_stage_3 <= mul_stage_3;
+            pow_input_stage_1 <= pow_input;
+            pow_input_stage_2 <= pow_input_stage_1;
+            pow_input_stage_3 <= pow_input_stage_2;
         end
 
 
-    always_ff @ (posedge clk or posedge rst)
+    // Multiply numbers
+    assign pow_mul_stage_1 = pow_input        * pow_input;
+    assign pow_mul_stage_2 = pow_data_stage_1 * pow_input_stage_1;
+    assign pow_mul_stage_3 = pow_data_stage_2 * pow_input_stage_2;
+    assign pow_mul_stage_4 = pow_data_stage_3 * pow_input_stage_3;
+
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst) begin
+            pow_data_stage_1 <= '0;
+            pow_data_stage_2 <= '0;
+            pow_data_stage_3 <= '0;
+        end
+        else begin
+            pow_data_stage_1 <= pow_mul_stage_1;
+            pow_data_stage_2 <= pow_mul_stage_2;
+            pow_data_stage_3 <= pow_mul_stage_3;
+        end
+
+    always_ff @ (posedge slow_clk or posedge rst)
         if (rst)
             pow_output <= '0;
         else
-            pow_output <= mul_stage_4;
+            pow_output <= pow_mul_stage_4;
 
 
     localparam w_display_number = w_digit * 4;
