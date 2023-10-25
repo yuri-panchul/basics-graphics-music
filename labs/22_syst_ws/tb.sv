@@ -10,6 +10,7 @@ module tb;
 
     logic [7:0] x1;
     logic [7:0] x2;
+    logic [7:0] x3;
 
     logic [7:0] y1;
     logic [7:0] y2;
@@ -23,6 +24,7 @@ module tb;
 
     .x1 (x1),
     .x2 (x2),
+    .x3 (x3),
 
     .y1 (y1),
     .y2 (y2)
@@ -60,6 +62,7 @@ module tb;
              # 10
              x1  <= $urandom ();
              x2  <= $urandom ();
+             x3  <= $urandom ();
         end
 
         $finish;
