@@ -42,7 +42,7 @@ module top
 
     //------------------------------------------------------------------------
 
-       assign led      = '0;
+       // assign led      = '0;
        // assign abcdefgh = '0;
        // assign digit    = '0;
        assign vsync    = '0;
@@ -77,24 +77,55 @@ module top
     logic [(5*w_sw_actual)-1:0] pow_output;
 
 
-    // Input data pipeline
+    logic input_valid;
+    logic data_valid_stage_1;
+    logic data_valid_stage_2;
+    logic data_valid_stage_3;
+    logic output_valid;
+
+
+    // "Valid" flags
     always_ff @ (posedge slow_clk or posedge rst)
         if (rst)
-            pow_input <= '0;
+            input_valid <= '0;
         else
-            pow_input <= sw;
+            input_valid <= key[0];
 
     always_ff @ (posedge slow_clk or posedge rst)
         if (rst) begin
-            pow_input_stage_1 <= '0;
-            pow_input_stage_2 <= '0;
-            pow_input_stage_3 <= '0;
+            data_valid_stage_1 <= '0;
+            data_valid_stage_2 <= '0;
+            data_valid_stage_3 <= '0;
         end
         else begin
-            pow_input_stage_1 <= pow_input;
-            pow_input_stage_2 <= pow_input_stage_1;
-            pow_input_stage_3 <= pow_input_stage_2;
+            data_valid_stage_1 <= input_valid;
+            data_valid_stage_2 <= data_valid_stage_1;
+            data_valid_stage_3 <= data_valid_stage_2;
         end
+
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            output_valid <= '0;
+        else
+            output_valid <= data_valid_stage_3;
+
+
+    // Input data pipeline
+    always_ff @ (posedge slow_clk)
+        if (key[0])
+            pow_input <= sw;
+
+    always_ff @ (posedge slow_clk)
+        if (input_valid)
+            pow_input_stage_1 <= pow_input;
+
+    always_ff @ (posedge slow_clk)
+        if (data_valid_stage_1)
+            pow_input_stage_2 <= pow_input_stage_1;
+
+    always_ff @ (posedge slow_clk)
+        if (data_valid_stage_2)
+            pow_input_stage_3 <= pow_input_stage_2;
 
 
     // Multiply numbers
@@ -103,22 +134,21 @@ module top
     assign pow_mul_stage_3 = pow_data_stage_2 * pow_input_stage_2;
     assign pow_mul_stage_4 = pow_data_stage_3 * pow_input_stage_3;
 
-    always_ff @ (posedge slow_clk or posedge rst)
-        if (rst) begin
-            pow_data_stage_1 <= '0;
-            pow_data_stage_2 <= '0;
-            pow_data_stage_3 <= '0;
-        end
-        else begin
-            pow_data_stage_1 <= pow_mul_stage_1;
-            pow_data_stage_2 <= pow_mul_stage_2;
-            pow_data_stage_3 <= pow_mul_stage_3;
-        end
 
-    always_ff @ (posedge slow_clk or posedge rst)
-        if (rst)
-            pow_output <= '0;
-        else
+    always_ff @ (posedge slow_clk)
+        if (input_valid)
+            pow_data_stage_1 <= pow_mul_stage_1;
+
+    always_ff @ (posedge slow_clk)
+        if (data_valid_stage_1)
+            pow_data_stage_2 <= pow_mul_stage_2;
+
+    always_ff @ (posedge slow_clk)
+        if (data_valid_stage_2)
+            pow_data_stage_3 <= pow_mul_stage_3;
+
+    always_ff @ (posedge slow_clk)
+        if (data_valid_stage_3)
             pow_output <= pow_mul_stage_4;
 
 
@@ -134,5 +164,10 @@ module top
         .digit    ( digit                          )
     );
 
+    assign led[0] = input_valid;
+    assign led[1] = data_valid_stage_1;
+    assign led[2] = data_valid_stage_2;
+    assign led[3] = data_valid_stage_3;
+    assign led[4] = output_valid;
 
 endmodule

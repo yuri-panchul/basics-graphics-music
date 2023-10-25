@@ -61,81 +61,118 @@ module top
 
     logic [w_sw_actual-1:0] pow_input;
 
-    logic [(2*w_sw_actual)-1:0] mul_stage_1;
-    logic [(3*w_sw_actual)-1:0] mul_stage_2;
-    logic [(4*w_sw_actual)-1:0] mul_stage_3;
-    logic [(5*w_sw_actual)-1:0] mul_stage_4;
+    logic [(2*w_sw_actual)-1:0] pow_mul_stage_1;
+    logic [(3*w_sw_actual)-1:0] pow_mul_stage_2;
+    logic [(4*w_sw_actual)-1:0] pow_mul_stage_3;
+    logic [(5*w_sw_actual)-1:0] pow_mul_stage_4;
 
-    logic [(2*w_sw_actual)-1:0] reg_stage_1;
-    logic [(3*w_sw_actual)-1:0] reg_stage_2;
-    logic [(4*w_sw_actual)-1:0] reg_stage_3;
+    logic [(2*w_sw_actual)-1:0] pow_data_stage_1;
+    logic [(3*w_sw_actual)-1:0] pow_data_stage_2;
+    logic [(4*w_sw_actual)-1:0] pow_data_stage_3;
+
+    logic [w_sw_actual-1:0] pow_input_stage_1;
+    logic [w_sw_actual-1:0] pow_input_stage_2;
+    logic [w_sw_actual-1:0] pow_input_stage_3;
 
     logic [(5*w_sw_actual)-1:0] pow_output;
 
 
     logic input_valid;
-    logic stage_1_valid;
-    logic stage_2_valid;
-    logic stage_3_valid;
+    logic data_valid_stage_1;
+    logic data_valid_stage_2;
+    logic data_valid_stage_3;
     logic output_valid;
 
 
-    // Multiply numbers
-    assign mul_stage_1 = pow_input   * pow_input;
-    assign mul_stage_2 = reg_stage_1 * pow_input;
-    assign mul_stage_3 = reg_stage_2 * pow_input;
-    assign mul_stage_4 = reg_stage_3 * pow_input;
+    // "Valid" flags
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            input_valid <= '0;
+        else
+            input_valid <= key[0];
 
-    // "Valid" flag
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @ (posedge slow_clk or posedge rst)
         if (rst) begin
-            input_valid   <= '0;
-            stage_1_valid <= '0;
-            stage_2_valid <= '0;
-            stage_3_valid <= '0;
-            output_valid  <= '0;
+            data_valid_stage_1 <= '0;
+            data_valid_stage_2 <= '0;
+            data_valid_stage_3 <= '0;
         end
         else begin
-            input_valid   <= key[0];
-            stage_1_valid <= input_valid;
-            stage_2_valid <= stage_1_valid;
-            stage_3_valid <= stage_2_valid;
-            output_valid  <= stage_3_valid;
+            data_valid_stage_1 <= input_valid;
+            data_valid_stage_2 <= data_valid_stage_1;
+            data_valid_stage_3 <= data_valid_stage_2;
         end
 
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            output_valid <= '0;
+        else
+            output_valid <= data_valid_stage_3;
 
-    // TODO: 1) do we actually need reset here?
-    //       2) use clock gating to reduce pipeline power consumption
 
-    always_ff @ (posedge clk or posedge rst)
+    // Input data pipeline
+
+    // Exercise: 1) remove unnecessary resets here to reduce ASIC area
+    //           2) use clock gating to reduce pipeline power consumption
+
+    always_ff @ (posedge slow_clk or posedge rst)
         if (rst)
             pow_input <= '0;
         else
             pow_input <= sw;
 
-    // TODO: 1) do we actually need reset here?
-    //       2) use clock gating to reduce pipeline power consumption
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            pow_input_stage_1 <= '0;
+        else
+            pow_input_stage_1 <= pow_input;
 
-    always_ff @ (posedge clk or posedge rst)
-        if (rst) begin
-            reg_stage_1 <= '0;
-            reg_stage_2 <= '0;
-            reg_stage_3 <= '0;
-        end
-        else begin
-            reg_stage_1 <= mul_stage_1;
-            reg_stage_2 <= mul_stage_2;
-            reg_stage_3 <= mul_stage_3;
-        end
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            pow_input_stage_2 <= '0;
+        else
+            pow_input_stage_2 <= pow_input_stage_1;
 
-    // TODO: 1) do we actually need reset here?
-    //       2) use clock gating to reduce pipeline power consumption
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            pow_input_stage_3 <= '0;
+        else
+            pow_input_stage_3 <= pow_input_stage_2;
 
-    always_ff @ (posedge clk or posedge rst)
+
+    // Multiply numbers
+    assign pow_mul_stage_1 = pow_input        * pow_input;
+    assign pow_mul_stage_2 = pow_data_stage_1 * pow_input_stage_1;
+    assign pow_mul_stage_3 = pow_data_stage_2 * pow_input_stage_2;
+    assign pow_mul_stage_4 = pow_data_stage_3 * pow_input_stage_3;
+
+
+    // Exercise: 1) remove unnecessary resets here to reduce ASIC area
+    //           2) use clock gating to reduce pipeline power consumption
+
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            pow_data_stage_1 <= '0;
+        else
+            pow_data_stage_1 <= pow_mul_stage_1;
+
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            pow_data_stage_2 <= '0;
+        else
+            pow_data_stage_2 <= pow_mul_stage_2;
+
+    always_ff @ (posedge slow_clk or posedge rst)
+        if (rst)
+            pow_data_stage_3 <= '0;
+        else
+            pow_data_stage_3 <= pow_mul_stage_3;
+
+    always_ff @ (posedge slow_clk or posedge rst)
         if (rst)
             pow_output <= '0;
         else
-            pow_output <= mul_stage_4;
+            pow_output <= pow_mul_stage_4;
 
 
     localparam w_display_number = w_digit * 4;
@@ -150,6 +187,10 @@ module top
         .digit    ( digit                          )
     );
 
-    assign led[0] = output_valid;
+    assign led[0] = input_valid;
+    assign led[1] = data_valid_stage_1;
+    assign led[2] = data_valid_stage_2;
+    assign led[3] = data_valid_stage_3;
+    assign led[4] = output_valid;
 
 endmodule
