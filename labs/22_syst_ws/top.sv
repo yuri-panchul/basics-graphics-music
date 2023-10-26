@@ -28,10 +28,10 @@ module top
     logic [7:0]  x2_pipe;
     logic [7:0]  x3_pipe;
     logic [16:0] psumm11;
-    logic [16:0] psumm12;
-    logic [17:0] psumm13;
-    logic [17:0] psumm21;
-    logic [18:0] psumm22;
+    logic [17:0] psumm12;
+    logic [18:0] psumm13;
+    logic [16:0] psumm21;
+    logic [17:0] psumm22;
     logic [18:0] psumm23;
 
     syst_node #(
