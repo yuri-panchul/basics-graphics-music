@@ -26,7 +26,7 @@ module board_specific_top
 
               `ifdef USE_SDRAM_PINS_AS_GPIO
               w_gpio  = 14
-              `elif USE_LCD_AS_GPIO
+              `elsif USE_LCD_AS_GPIO
               w_gpio  = 11
               `else
               w_gpio  = 1
@@ -120,7 +120,7 @@ module board_specific_top
 
         `ifdef USE_SDRAM_PINS_AS_GPIO
             .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
-        `elif USE_LCD_AS_GPIO
+        `elsif USE_LCD_AS_GPIO
             .gpio ({ LCD_RS, LCD_RW, LCD_E, LCD_D })
         `endif
     );
