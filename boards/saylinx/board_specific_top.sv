@@ -8,7 +8,7 @@ module board_specific_top
               w_sw    = 3,
               w_led   = 4,
               w_digit = 8,
-              w_gpio  = 2
+              w_gpio  = 34 * 2
 )
 (
     input                     CLK,
@@ -91,9 +91,7 @@ module board_specific_top
 
         .mic      ( mic       ),
 
-
-        .gpio ( GPIO )
-
+        .gpio ( { GPIO_0, GPIO_1 } )
     );
 
     //------------------------------------------------------------------------
@@ -105,20 +103,18 @@ module board_specific_top
     assign VGA_OUT_G = { green , 2'b0 };
     assign VGA_OUT_B = { blue  , 1'b0 };
 
-    /*
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [3] ),
-        .sck   ( GPIO [1] ),
-        .sd    ( GPIO [0] ),
-        .value ( mic      )
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [0] ),
+        .ws    ( GPIO_0 [2] ),
+        .sck   ( GPIO_0 [4] ),
+        .sd    ( GPIO_0 [5] ),
+        .value ( mic        )
     );
 
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
-    */
+    assign GPIO_0 [1] = 1'b0;  // GND
+    assign GPIO_0 [3] = 1'b1;  // VCC
 
 endmodule
