@@ -70,6 +70,43 @@ module top
 
     //------------------------------------------------------------------------
     //
+    //  Experiment: Check whether the value coming from the microphone
+    //  is signed (negative and positive numbers are equally distributed)
+    //
+    //------------------------------------------------------------------------
+
+    // `define EXPERIMENT
+
+    `ifdef EXPERIMENT
+
+    logic [31:0] counter_positive;
+    logic [31:0] counter_negative;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            counter_positive <= '0;
+            counter_negative <= '0;
+        end
+        else
+        begin
+            if (value [$left (value)])
+                counter_negative <= counter_negative + 1'd1;
+            else
+                counter_positive <= counter_positive + 1'd1;
+        end
+
+        seven_segment_display # (w_digit)
+
+        i_7segment (.number (w_number' ({
+            counter_positive [31:24],
+            counter_negative [31:24]
+        })), .*);
+
+    `endif
+
+    //------------------------------------------------------------------------
+    //
     //  Measuring frequency
     //
     //------------------------------------------------------------------------
@@ -96,8 +133,11 @@ module top
         begin
             prev_value <= value;
 
+            // if (  (value      [$left ( value      )] == '0)  // Compare only
+            //     & (prev_value [$left ( prev_value )] == '0)  // positive numbers
+
             if (  value      >= threshold
-                & prev_value < threshold)
+                & prev_value <  threshold)
             begin
                distance <= counter;
                counter  <= 20'h0;
@@ -275,6 +315,8 @@ module top
     //
     //------------------------------------------------------------------------
 
+    `ifndef EXPERIMENT
+
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             abcdefgh <= 8'b00000000;
@@ -297,10 +339,12 @@ module top
 
     assign digit = w_digit' (1);
 
+    `endif
+
     //------------------------------------------------------------------------
     //
     //  Exercise 4: Replace filtered note with unfiltered note.
-    //  Do you see the difference?Uncomment this instantation
+    //  Do you see the difference?
     //
     //------------------------------------------------------------------------
 
