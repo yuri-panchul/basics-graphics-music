@@ -3,12 +3,9 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-   `define USE_OBSOLETE_DIGILENT_MIC
-// `define USE_INMP_441_MIC_ON_OLD_POSITION
+`define USE_DIGILENT_PMOD_MIC3
 
-`ifdef USE_OBSOLETE_DIGILENT_MIC
-    `define USE_SDRAM_PINS_AS_GPIO
-`elsif USE_INMP_441_MIC_ON_OLD_POSITION
+`ifdef USE_DIGILENT_PMOD_MIC3
     `define USE_SDRAM_PINS_AS_GPIO
 `else
     `define USE_LCD_AS_GPIO
@@ -138,7 +135,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef USE_OBSOLETE_DIGILENT_MIC
+    `ifdef USE_DIGILENT_PMOD_MIC3
 
     wire [15:0] mic_16;
 
@@ -159,39 +156,21 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `elsif USE_INMP_441_MIC_ON_OLD_POSITION
-
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk                               ),
-        .rst   ( rst                               ),
-        .lr    ( PSEUDO_GPIO_USING_SDRAM_PINS  [5] ),
-        .ws    ( PSEUDO_GPIO_USING_SDRAM_PINS  [3] ),
-        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [1] ),
-        .sd    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
-        .value ( mic                               )
-    );
-
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [4] = 1'b0;  // GND
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [2] = 1'b1;  // VCC
-
-    //------------------------------------------------------------------------
-
     `else  // USE_INMP_441_MIC
 
     inmp441_mic_i2s_receiver i_microphone
     (
         .clk   ( clk       ),
         .rst   ( rst       ),
-        .lr    ( LCD_D [1] ),
-        .ws    ( LCD_D [2] ),
-        .sck   ( LCD_D [3] ),
-        .sd    ( LCD_D [6] ),
+        .lr    ( LCD_D [5] ),
+        .ws    ( LCD_D [3] ),
+        .sck   ( LCD_D [1] ),
+        .sd    ( LCD_D [2] ),
         .value ( mic       )
     );
 
-    assign LCD_D [4] = 1'b0;  // GND
-    assign LCD_D [5] = 1'b1;  // VCC
+    assign LCD_D [6] = 1'b0;  // GND
+    assign LCD_D [4] = 1'b1;  // VCC
 
     `endif
 
