@@ -96,6 +96,8 @@ set_location_assignment PIN_11  -to LCD_D[7]
 # TVCC
 # GND
 
+# All the pins below correspond to lower
+
 # set_location_assignment PIN_43  -to SDRAM_CLK
 # set_location_assignment PIN_58  -to SDRAM_CKE
 # set_location_assignment PIN_72  -to SDRAM_CS
