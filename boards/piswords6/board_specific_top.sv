@@ -106,16 +106,16 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk       ),
-        .rst   ( rst       ),
-        .lr    ( GPIO [11] ),  // P1 pin 18
-        .ws    ( GPIO [13] ),  // P1 pin 20
-        .sck   ( GPIO [15] ),  // P1 pin 22
-        .sd    ( GPIO [14] ),  // P1 pin 21
-        .value ( mic       )
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [0] ),
+        .ws    ( GPIO [2] ),
+        .sck   ( GPIO [4] ),
+        .sd    ( GPIO [5] ),
+        .value ( mic      )
     );
 
-    assign GPIO [10] = 1'b0;   // GND - P1 pin 17
-    assign GPIO [12] = 1'b1;   // VCC - P1 pin 19
+    assign GPIO [1] = 1'b0;
+    assign GPIO [3] = 1'b1;
 
 endmodule
