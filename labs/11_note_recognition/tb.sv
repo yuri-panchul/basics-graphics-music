@@ -1,5 +1,67 @@
 `include "config.svh"
 
+// This testbench is for microphone module only
+
+module tb;
+
+    logic       clk;
+    logic       rst;
+    wire        lr;
+    wire        ws;
+    wire        sck;
+    logic       sd;
+    wire [23:0] value;
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver dut (.*);
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
+        clk = 1'b0;
+
+        forever
+            # 5 clk = ~ clk;
+    end
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
+        rst <= 1'bx;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b1;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b0;
+    end
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
+        `ifdef __ICARUS__
+            $dumpvars;
+        `endif
+
+        @ (negedge rst);
+
+        repeat (100000)
+        begin
+            sd <= $urandom ();
+            @ (posedge clk);
+        end
+
+        $finish;
+    end
+
+endmodule
+
+//----------------------------------------------------------------------------
+
+`ifdef UNDEFINED
+
 module tb;
 
     localparam clk_mhz = 1,
@@ -82,3 +144,5 @@ module tb;
     end
 
 endmodule
+
+`endif
