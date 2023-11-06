@@ -28,7 +28,7 @@ module inmp441_mic_i2s_receiver
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             ws <= 1'b1;
-        else if (cnt == 9'd15)            // 50 MHz / 1024 = 4.9  KHz
+        else if (cnt == 9'd15)            // 50 MHz / 1024 = 48.8  KHz
             ws <= ~ ws;
 
     wire sample_bit
