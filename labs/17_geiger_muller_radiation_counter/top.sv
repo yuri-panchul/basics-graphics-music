@@ -34,6 +34,7 @@ module top
     output logic [          3:0] blue,
 
     input        [         23:0] mic,
+    output       [         15:0] sound,
 
     // General-purpose Input/Output
 
@@ -66,6 +67,7 @@ module top
        assign red      = '0;
        assign green    = '0;
        assign blue     = '0;
+       assign sound    = '0;
 
     //------------------------------------------------------------------------
 

@@ -58,6 +58,7 @@ module board_specific_top
     wire  [                  3:0] vga_red_4b,vga_green_4b,vga_blue_4b;
 
     wire  [                 23:0] mic;
+    wire  [                 15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -99,6 +100,8 @@ module board_specific_top
         .blue     (   vga_blue_4b  ),
 
         .mic      (   mic          ),
+        .sound    (   sound        ),
+
         .gpio     (   GPIO         )
     );
 
@@ -232,14 +235,31 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [0] ), // JP1 pin 1
-        .ws    ( GPIO [2] ), // JP1 pin 3
-        .sck   ( GPIO [4] ), // JP1 pin 5
-        .sd    ( GPIO [5] ), // JP1 pin 6
+        .lr    ( GPIO [0] ), // JP5 pin 1
+        .ws    ( GPIO [2] ), // JP5 pin 3
+        .sck   ( GPIO [4] ), // JP5 pin 5
+        .sd    ( GPIO [5] ), // JP5 pin 6
         .value ( mic      )
     );
 
-    assign GPIO [1] = 1'b0;  // GND - JP1 pin 2
-    assign GPIO [3] = 1'b1;  // VCC - JP1 pin 4
+    assign GPIO [1] = 1'b0;  // GND - JP5 pin 2
+    assign GPIO [3] = 1'b1;  // VCC - JP5 pin 4
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( GPIO [33] ), // JP5 pin 38
+        .bclk    ( GPIO [31] ), // JP5 pin 36
+        .lrclk   ( GPIO [27] ), // JP5 pin 32
+        .sdata   ( GPIO [29] )  // JP5 pin 34
+    );                          // JP5 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
 endmodule
