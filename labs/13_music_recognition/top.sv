@@ -159,26 +159,26 @@ module top
 
     function [19:0] check_freq (input [18:0] freq_100, input [19:0] distance);
 
-       check_freq =   check_freq_single_range (freq_100 * 4, distance)
-                    | check_freq_single_range (freq_100 * 2, distance)
-                    | check_freq_single_range (freq_100, distance);
+       check_freq =   check_freq_single_range (freq_100 * 4 , distance)
+                    | check_freq_single_range (freq_100 * 2 , distance)
+                    | check_freq_single_range (freq_100     , distance);
 
     endfunction
 
     //------------------------------------------------------------------------
 
-    wire check_C  = check_freq (freq_100_C, distance );
-    wire check_Cs = check_freq (freq_100_Cs, distance);
-    wire check_D  = check_freq (freq_100_D, distance );
-    wire check_Ds = check_freq (freq_100_Ds, distance);
-    wire check_E  = check_freq (freq_100_E, distance );
-    wire check_F  = check_freq (freq_100_F, distance );
-    wire check_Fs = check_freq (freq_100_Fs, distance);
-    wire check_G  = check_freq (freq_100_G, distance );
-    wire check_Gs = check_freq (freq_100_Gs, distance);
-    wire check_A  = check_freq (freq_100_A, distance );
-    wire check_As = check_freq (freq_100_As, distance);
-    wire check_B  = check_freq (freq_100_B, distance );
+    wire check_C  = check_freq (freq_100_C  , distance );
+    wire check_Cs = check_freq (freq_100_Cs , distance );
+    wire check_D  = check_freq (freq_100_D  , distance );
+    wire check_Ds = check_freq (freq_100_Ds , distance );
+    wire check_E  = check_freq (freq_100_E  , distance );
+    wire check_F  = check_freq (freq_100_F  , distance );
+    wire check_Fs = check_freq (freq_100_Fs , distance );
+    wire check_G  = check_freq (freq_100_G  , distance );
+    wire check_Gs = check_freq (freq_100_Gs , distance );
+    wire check_A  = check_freq (freq_100_A  , distance );
+    wire check_As = check_freq (freq_100_As , distance );
+    wire check_B  = check_freq (freq_100_B  , distance );
 
     //------------------------------------------------------------------------
 
