@@ -43,6 +43,7 @@ module board_specific_top
     wire [           3:0] vga_r, vga_g, vga_b;
 
     wire [          23:0] mic;
+    wire [          15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -148,6 +149,8 @@ module board_specific_top
         .blue     ( vga_b       ),
 
         .mic      ( mic         ),
+        .sound    ( sound       ),
+
         .gpio     ( GPIO_0      )
     );
 
@@ -271,5 +274,22 @@ module board_specific_top
 
     assign GPIO_0 [1] = 1'b0;   // GND - JP1 pin 2
     assign GPIO_0 [3] = 1'b1;   // VCC - JP1 pin 4
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk         ),
+        .reset   ( rst         ),
+        .data_in ( sound       ),
+        .mclk    ( GPIO_1 [32] ), // JP7 pin 37
+        .bclk    ( GPIO_1 [30] ), // JP7 pin 35
+        .lrclk   ( GPIO_1 [26] ), // JP7 pin 31
+        .sdata   ( GPIO_1 [28] )  // JP7 pin 33
+    );                            // JP7 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
 endmodule
