@@ -73,6 +73,7 @@ module board_specific_top
     wire  [          3:0] red, green, blue;
 
     wire  [         23:0] mic;
+    wire  [         15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -114,6 +115,7 @@ module board_specific_top
         .blue     (   blue         ),
 
         .mic      (   mic          ),
+        .sound    (   sound        ),
 
         `ifdef USE_SDRAM_PINS_AS_GPIO
             .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
@@ -173,5 +175,22 @@ module board_specific_top
     assign LCD_D [4] = 1'b1;  // VCC
 
     `endif
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( LCD_E     ), // Pin 143
+        .bclk    ( LCD_RS    ), // Pin 141
+        .lrclk   ( LCD_RW    ), // Pin 138
+        .sdata   ( LCD_D [0] )  // Pin 142
+    );                          // GND and VCC 3.3V (30-45 mA)
 
 endmodule

@@ -49,6 +49,7 @@ module board_specific_top
 
     wire [          3:0] red, green, blue;
     wire [         23:0] mic;
+    wire [         15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -85,11 +86,12 @@ module board_specific_top
         .vsync    ( VGA_OUT_VS ),
         .hsync    ( VGA_OUT_HS ),
 
-        .red      ( red       ),
-        .green    ( green     ),
-        .blue     ( blue      ),
+        .red      ( red        ),
+        .green    ( green      ),
+        .blue     ( blue       ),
 
-        .mic      ( mic       ),
+        .mic      ( mic        ),
+        .sound    ( sound      ),
 
         .gpio ( { GPIO_0, GPIO_1 } )
     );
@@ -116,5 +118,22 @@ module board_specific_top
 
     assign GPIO_0 [1] = 1'b0;  // GND
     assign GPIO_0 [3] = 1'b1;  // VCC
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk         ),
+        .reset   ( rst         ),
+        .data_in ( sound       ),
+        .mclk    ( GPIO_0 [12] ),
+        .bclk    ( GPIO_0 [10] ),
+        .lrclk   ( GPIO_0 [ 6] ),
+        .sdata   ( GPIO_0 [ 8] )
+    );
 
 endmodule
