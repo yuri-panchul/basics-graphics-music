@@ -187,10 +187,10 @@ module board_specific_top
         .clk     ( clk       ),
         .reset   ( rst       ),
         .data_in ( sound     ),
-        .mclk    ( LCD_E     ), // P1 pin 26
-        .bclk    ( LCD_RS    ), // P1 pin 24
-        .lrclk   ( LCD_RW    ), // P1 pin 23
-        .sdata   ( LCD_D [0] )  // P1 pin 25
-    );                          // P1 pin 1 - GND, pin 35 - VCC 3.3V (30-45 mA)
+        .mclk    ( LCD_E     ), // Pin 143
+        .bclk    ( LCD_RS    ), // Pin 141
+        .lrclk   ( LCD_RW    ), // Pin 138
+        .sdata   ( LCD_D [0] )  // Pin 142
+    );                          // GND and VCC 3.3V (30-45 mA)
 
 endmodule
