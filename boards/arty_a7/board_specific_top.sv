@@ -72,12 +72,8 @@ module board_specific_top
     assign LED3_G = 1'b0;
     assign LED3_R = 1'b0;
 
-    assign mic = { mic_16, 8'b0 };
-
-
     //------------------------------------------------------------------------
 
-    wire [          15:0] mic_16;
     wire [          23:0] mic;
     wire [           7:0] abcdefgh;
 
@@ -218,6 +214,8 @@ tm1638_board_controller
         .sio_data   ( GPIO[39]      )
     );
 
+    wire [11:0] mic_12;
+
 digilent_pmod_mic3_spi_receiver i_mic
     (
         .clk        (clk            ),
@@ -225,7 +223,10 @@ digilent_pmod_mic3_spi_receiver i_mic
         .cs         (JD[4]          ),
         .sck        (JD[7]          ),
         .sdo        (JD[6]          ),
-        .value      (mic_16         )
+        .value      (mic_12         )
     );
+
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
 
 endmodule
