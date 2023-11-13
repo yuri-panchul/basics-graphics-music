@@ -1,4 +1,4 @@
-// Asynchronous reset here is needed for one of FPGA boards we use
+//`define 100MHZ_CLK_BOARDS             // for board with clk_mhz = 100
 
 `include "config.svh"
 
@@ -9,32 +9,54 @@ module digilent_pmod_mic3_spi_receiver
     output              cs,
     output              sck,
     input               sdo,
-    output logic [11:0] value
+    output logic [15:0] value
 );
 
     logic [ 6:0] cnt;
-    logic [11:0] shift;
+    logic [15:0] shift;
+   
+   `ifdef 100MHZ_CLK_BOARDS
+    
+    logic en;
 
     always_ff @ (posedge clk or posedge rst)
+        begin
+            if (rst) en  <= 0;
+            else     en  <= ~en;
+        end
+    
+    always_ff @ (posedge clk or posedge rst)
+    begin
+        if (rst) begin
+            cnt <= 7'b100 ;
+        end
+        else if(en) begin
+            cnt <= cnt + 7'b1;
+        end
+
+    end
+    `else 
+        always_ff @ (posedge clk or posedge rst)
     begin
         if (rst)
             cnt <= 7'b100;
         else
             cnt <= cnt + 7'b1;
     end
+    `endif
 
     assign sck = ~ cnt [1];
     assign cs  =   cnt [6];
 
-    wire sample_bit = ( cs == 1'b0 && cnt [1:0] == 2'b11 );
-    wire value_done = ( cnt [6:0] == 7'b0 );
+    wire sample_bit = ( cs == 1'b0 && cnt [2:0] == 3'b111 );
+    wire value_done = ( cnt [6:0] == 8'b0 );
 
     always_ff @ (posedge clk or posedge rst)
     begin
         if (rst)
         begin
-            shift <= '0;
-            value <= '0;
+            shift <= 16'h0000;
+            value <= 16'h0000;
         end
         else if (sample_bit)
         begin
