@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
+//`define INMP441_MIC;
 
 module board_specific_top
 # (
@@ -216,7 +217,20 @@ tm1638_board_controller
 
     wire [11:0] mic_12;
 
-digilent_pmod_mic3_spi_receiver i_mic
+
+    `ifdef INMP441_MIC    
+        inmp441_mic_i2s_receiver i_mic
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( JD[5]      ),  
+        .ws    ( JD[4]      ),  
+        .sck   ( JD[7]      ),  
+        .sd    ( JD[6]      ),  
+        .value ( mic        )
+    );
+    `else
+    digilent_pmod_mic3_spi_receiver i_mic
     (
         .clk        (clk            ),
         .rst        (rst            ),
@@ -228,5 +242,6 @@ digilent_pmod_mic3_spi_receiver i_mic
 
     wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
     assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+    `endif 
 
 endmodule
