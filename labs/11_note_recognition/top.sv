@@ -54,10 +54,6 @@ module top
        assign sound    = '0;
 
     //------------------------------------------------------------------------
-
-    wire [15:0] value = mic [23:8];
-
-    //------------------------------------------------------------------------
     //
     //  Exercise 1: Uncomment this instantation
     //  to see the value coming from the microphone (in hexadecimal).
@@ -68,44 +64,7 @@ module top
     localparam w_number = w_digit * 4;
 
     // seven_segment_display # (w_digit)
-    // i_7segment (.number (w_number' (value)), .*);
-
-    //------------------------------------------------------------------------
-    //
-    //  Experiment: Check whether the value coming from the microphone
-    //  is signed (negative and positive numbers are equally distributed)
-    //
-    //------------------------------------------------------------------------
-
-    // `define EXPERIMENT
-
-    `ifdef EXPERIMENT
-
-    logic [31:0] counter_positive;
-    logic [31:0] counter_negative;
-
-    always_ff @ (posedge clk or posedge rst)
-        if (rst)
-        begin
-            counter_positive <= '0;
-            counter_negative <= '0;
-        end
-        else
-        begin
-            if (value [$left (value)])
-                counter_negative <= counter_negative + 1'd1;
-            else
-                counter_positive <= counter_positive + 1'd1;
-        end
-
-        seven_segment_display # (w_digit)
-
-        i_7segment (.number (w_number' ({
-            counter_positive [31:24],
-            counter_negative [31:24]
-        })), .*);
-
-    `endif
+    // i_7segment (.number (w_number' (mic)), .*);
 
     //------------------------------------------------------------------------
     //
@@ -115,31 +74,25 @@ module top
 
     // It is enough for the counter to be 20 bit. Why?
 
-    logic [15:0] prev_value;
+    logic [23:0] prev_mic;
     logic [19:0] counter;
     logic [19:0] distance;
-
-    localparam [15:0] threshold = 16'h1100;
-
-    // A way to investigate thresholds
-    // wire [15:0] threshold = { ~ key_sw, 12'b0 };
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
         begin
-            prev_value <= 16'h0;
-            counter    <= 20'h0;
-            distance   <= 20'h0;
+            prev_mic <= '0;
+            counter  <= '0;
+            distance <= '0;
         end
         else
         begin
-            prev_value <= value;
+            prev_mic <= mic;
 
-            // if (  (value      [$left ( value      )] == '0)  // Compare only
-            //     & (prev_value [$left ( prev_value )] == '0)  // positive numbers
+            // Crossing from negative to positive numbers
 
-            if (  value      >= threshold
-                & prev_value <  threshold)
+            if (  prev_mic [$left ( prev_mic )] == 1'b1
+                & mic      [$left ( mic      )] == 1'b0 )
             begin
                distance <= counter;
                counter  <= 20'h0;
@@ -317,8 +270,6 @@ module top
     //
     //------------------------------------------------------------------------
 
-    `ifndef EXPERIMENT
-
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             abcdefgh <= 8'b00000000;
@@ -340,8 +291,6 @@ module top
             endcase
 
     assign digit = w_digit' (1);
-
-    `endif
 
     //------------------------------------------------------------------------
     //

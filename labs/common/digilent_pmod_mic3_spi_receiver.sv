@@ -9,11 +9,11 @@ module digilent_pmod_mic3_spi_receiver
     output              cs,
     output              sck,
     input               sdo,
-    output logic [15:0] value
+    output logic [11:0] value
 );
 
     logic [ 6:0] cnt;
-    logic [15:0] shift;
+    logic [11:0] shift;
 
     always_ff @ (posedge clk or posedge rst)
     begin
@@ -33,8 +33,8 @@ module digilent_pmod_mic3_spi_receiver
     begin
         if (rst)
         begin
-            shift <= 16'h0000;
-            value <= 16'h0000;
+            shift <= '0;
+            value <= '0;
         end
         else if (sample_bit)
         begin

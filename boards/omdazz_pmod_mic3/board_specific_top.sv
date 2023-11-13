@@ -139,7 +139,7 @@ module board_specific_top
 
     `ifdef USE_DIGILENT_PMOD_MIC3
 
-    wire [15:0] mic_16;
+    wire [11:0] mic_12;
 
     digilent_pmod_mic3_spi_receiver i_microphone
     (
@@ -148,13 +148,14 @@ module board_specific_top
         .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
         .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
         .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
-        .value ( mic_16                            )
+        .value ( mic_12                            )
     );
 
     assign PSEUDO_GPIO_USING_SDRAM_PINS [ 8] = 1'b0;  // GND
     assign PSEUDO_GPIO_USING_SDRAM_PINS [10] = 1'b1;  // VCC
 
-    assign mic = { mic_16, 8'b0 };
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
 
     //------------------------------------------------------------------------
 

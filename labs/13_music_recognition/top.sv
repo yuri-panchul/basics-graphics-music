@@ -54,10 +54,6 @@ module top
        assign sound    = '0;
 
     //------------------------------------------------------------------------
-
-    wire [15:0] value = mic [23:8];
-
-    //------------------------------------------------------------------------
     //
     //  Measuring frequency
     //
@@ -65,28 +61,25 @@ module top
 
     // It is enough for the counter to be 20 bit. Why?
 
-    logic [15:0] prev_value;
+    logic [23:0] prev_mic;
     logic [19:0] counter;
     logic [19:0] distance;
-
-    localparam [15:0] threshold = 16'h1100;
-
-    // A way to investigate thresholds
-    // wire [15:0] threshold = { ~ key_sw, 12'b0 };
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
         begin
-            prev_value <= 16'h0;
-            counter    <= 20'h0;
-            distance   <= 20'h0;
+            prev_mic <= '0;
+            counter  <= '0;
+            distance <= '0;
         end
         else
         begin
-            prev_value <= value;
+            prev_mic <= mic;
 
-            if (  value      >= threshold
-                & prev_value < threshold)
+            // Crossing from negative to positive numbers
+
+            if (  prev_mic [$left ( prev_mic )] == 1'b1
+                & mic      [$left ( mic      )] == 1'b0 )
             begin
                distance <= counter;
                counter  <= 20'h0;
