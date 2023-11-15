@@ -57,7 +57,7 @@ module board_specific_top
 
     assign an = ~ digit;
 
-    wire [23:0] mic = '0;
+    wire [23:0] mic;
 
     //------------------------------------------------------------------------
 

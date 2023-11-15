@@ -93,7 +93,7 @@ module board_specific_top
     assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
     assign AN = ~ digit;
 
-    wire [23:0] mic = '0;
+    wire [23:0] mic;
 
     //------------------------------------------------------------------------
 
