@@ -8,6 +8,10 @@ if {! [info exists part_name]} {
 }
 
 set extra_dot_dot ""
+create_project  board_specific_top ./gui_prj           \
+               -part $part_name                        \
+               -force                                  \
+               -quiet
 
 if {[file isdirectory ../../../../labs]} {
     set extra_dot_dot ../

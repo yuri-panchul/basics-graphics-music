@@ -236,7 +236,9 @@ run_fpga_synthesis_gui_xilinx ()
 {
     is_command_available_or_error vivado " from Xilinx package"
 
-    if   [    -f post_route.dcp ] ; then
+    if   [    -f ./gui_prj/board_specific_top.xpr ] ; then
+          vivado ./gui_prj/board_specific_top.xpr &
+    elif [    -f post_route.dcp ] ; then
           vivado post_route.dcp &
     elif [    -f post_place.dcp ] ; then
           vivado post_place.dcp &
