@@ -276,6 +276,7 @@ module board_specific_top
 
     tm1638_board_controller
     # (
+        .clk_mhz ( clk_mhz    ),
         .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
     )
     i_ledkey

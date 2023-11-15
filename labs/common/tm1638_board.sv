@@ -2,6 +2,7 @@
 LED&KEY TM1638 board controller
 
 Copyright 2023 Alexander Kirichenko
+Copyright 2023 Ruslan Zalata (HCW-132 variation support)
 
 Based on https://github.com/alangarf/tm1638-verilog
 Copyright 2017 Alan Garfield
@@ -256,6 +257,12 @@ module tm1638_board_controller
 
     logic  [CLK_DIV:0] counter;
 
+    // TM1632 requires at least 1ms strobe duration
+    // we can generate this by adding delay at the end of
+    // each transfer. For that we define a flag indicating
+    // completion of 1ms delay loop.
+    wire               stb_delay_complete = (counter > clk_mhz ? 1 : 0);
+
     logic  [      5:0] instruction_step;
     logic  [      7:0] led_on;
 
@@ -402,14 +409,29 @@ module tm1638_board_controller
             led_on           <= 'b0;
 
         end else begin
-            if (counter[0] && ~ busy) begin
+
+            counter <= counter + 1;
+
+            if (counter[0] && ~busy) begin
+
+                instruction_step <= instruction_step + 1;
+
                 case (instruction_step)
                     // *** KEYS ***
                     1:  {sio_stb, tm_rw}   <= {LOW, HIGH};
-                    2:  {tm_latch, tm_in} <= {HIGH, C_READ_KEYS}; // read mode
+                    2:  {tm_latch, tm_in}  <= {HIGH, C_READ_KEYS}; // read mode
                     3:  {tm_latch, tm_rw}  <= {HIGH, LOW};
 
                     //  read back keys S1 - S8
+                    `ifdef HCW132
+                    4:  {keys[0], keys[1]} <= {tm_out[2], tm_out[6]};
+                    5:  {tm_latch}         <= {HIGH};
+                    6:  {keys[2], keys[3]} <= {tm_out[2], tm_out[6]};
+                    7:  {tm_latch}         <= {HIGH};
+                    8:  {keys[4], keys[5]} <= {tm_out[2], tm_out[6]};
+                    9:  {tm_latch}         <= {HIGH};
+                    10:  {keys[6], keys[7]} <= {tm_out[2], tm_out[6]};
+                    `else
                     4:  {keys[7], keys[3]} <= {tm_out[0], tm_out[4]};
                     5:  {tm_latch}         <= {HIGH};
                     6:  {keys[6], keys[2]} <= {tm_out[0], tm_out[4]};
@@ -417,49 +439,73 @@ module tm1638_board_controller
                     8:  {keys[5], keys[1]} <= {tm_out[0], tm_out[4]};
                     9:  {tm_latch}         <= {HIGH};
                     10: {keys[4], keys[0]} <= {tm_out[0], tm_out[4]};
-                    11: {sio_stb}            <= {HIGH};
+                    `endif
+                    11: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    12: {instruction_step} <= {stb_delay_complete ? 13 : 12}; // loop till delay complete
 
                     // *** DISPLAY ***
-                    12: {sio_stb, tm_rw}   <= {LOW, HIGH};
-                    13: {tm_latch, tm_in} <= {HIGH, C_WRITE_DISP}; // write mode
-                    14: {sio_stb}          <= {HIGH};
+                    13: {sio_stb, tm_rw}   <= {LOW, HIGH};
+                    14: {tm_latch, tm_in} <= {HIGH, C_WRITE_DISP}; // write mode
+                    15: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    16: {instruction_step} <= {stb_delay_complete ? 17 : 16}; // loop till delay complete
 
-                    15: {sio_stb, tm_rw}   <= {LOW, HIGH};
-                    16: {tm_latch, tm_in} <= {HIGH, C_SET_ADDR_0}; // set addr 0 pos
+                    17: {sio_stb, tm_rw}   <= {LOW, HIGH};
+                    18: {tm_latch, tm_in} <= {HIGH, C_SET_ADDR_0}; // set addr 0 pos
 
-                    17: display_digit(hex7); // Digit 1
-                    18: display_led(3'd7);        // LED 8
+                    `ifdef HCW132
+                    // HCW-132 has very weird display map
+                    19: display_digit({hex7[0],hex6[0],hex5[0],hex4[0],hex3[0],hex2[0],hex1[0],hex0[0]});
+                    20: display_digit(8'b00000000);
+                    21: display_digit({hex7[1],hex6[1],hex5[1],hex4[1],hex3[1],hex2[1],hex1[1],hex0[1]});
+                    22: display_digit(8'b00000000);
+                    23: display_digit({hex7[2],hex6[2],hex5[2],hex4[2],hex3[2],hex2[2],hex1[2],hex0[2]});
+                    24: display_digit(8'b00000000);
+                    25: display_digit({hex7[3],hex6[3],hex5[3],hex4[3],hex3[3],hex2[3],hex1[3],hex0[3]});
+                    26: display_digit(8'b00000000);
+                    27: display_digit({hex7[4],hex6[4],hex5[4],hex4[4],hex3[4],hex2[4],hex1[4],hex0[4]});
+                    28: display_digit(8'b00000000);
+                    29: display_digit({hex7[5],hex6[5],hex5[5],hex4[5],hex3[5],hex2[5],hex1[5],hex0[5]});
+                    30: display_digit(8'b00000000);
+                    31: display_digit({hex7[6],hex6[6],hex5[6],hex4[6],hex3[6],hex2[6],hex1[6],hex0[6]});
+                    32: display_digit(8'b00000000);
+                    33: display_digit({hex7[7],hex6[7],hex5[7],hex4[7],hex3[7],hex2[7],hex1[7],hex0[7]});
+                    34: display_digit(8'b00000000);
+                    `else
+                    19: display_digit(hex7); // Digit 1
+                    20: display_led(3'd7);        // LED 8
 
-                    19: display_digit(hex6); // Digit 2
-                    20: display_led(3'd6);        // LED 7
+                    21: display_digit(hex6); // Digit 2
+                    22: display_led(3'd6);        // LED 7
 
-                    21: display_digit(hex5); // Digit 3
-                    22: display_led(3'd5);        // LED 6
+                    23: display_digit(hex5); // Digit 3
+                    24: display_led(3'd5);        // LED 6
 
-                    23: display_digit(hex4); // Digit 4
-                    24: display_led(3'd4);        // LED 5
+                    25: display_digit(hex4); // Digit 4
+                    26: display_led(3'd4);        // LED 5
 
-                    25: display_digit(hex3); // Digit 5
-                    26: display_led(3'd3);        // LED 4
+                    27: display_digit(hex3); // Digit 5
+                    28: display_led(3'd3);        // LED 4
 
-                    27: display_digit(hex2); // Digit 6
-                    28: display_led(3'd2);        // LED 3
+                    29: display_digit(hex2); // Digit 6
+                    30: display_led(3'd2);        // LED 3
 
-                    29: display_digit(hex1); // Digit 7
-                    30: display_led(3'd1);        // LED 2
+                    31: display_digit(hex1); // Digit 7
+                    32: display_led(3'd1);        // LED 2
 
-                    31: display_digit(hex0); // Digit 8
-                    32: display_led(3'd0);        // LED 1
+                    33: display_digit(hex0); // Digit 8
+                    34: display_led(3'd0);        // LED 1
+                    `endif
 
-                    33: {sio_stb}          <= {HIGH};
+                    35: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    36: {instruction_step} <= {stb_delay_complete ? 37 : 36}; // loop till delay complete
 
-                    34: {sio_stb, tm_rw}   <= {LOW, HIGH};
-                    35: {tm_latch, tm_in} <= {HIGH, C_DISPLAY_ON}; // display on, full bright
-                    36: {sio_stb, instruction_step} <= {HIGH, 6'b0};
+                    37: {sio_stb, tm_rw}   <= {LOW, HIGH};
+                    38: {tm_latch, tm_in}  <= {HIGH, C_DISPLAY_ON}; // display on, full bright
+
+                    39: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    40: {instruction_step} <= {stb_delay_complete ? 0 : 40}; // loop till delay complete
 
                 endcase
-
-                instruction_step <= instruction_step + 1;
 
                 led_on           <= ledr;
 
@@ -468,8 +514,6 @@ module tm1638_board_controller
                 // latched
                 tm_latch <= LOW;
             end
-
-            counter <= counter + 1;
         end
     end
 
@@ -499,8 +543,7 @@ module tm1638_sio
     output logic   dio_out
 );
 
-    localparam CLK_DIV = $clog2 (clk_mhz*1000/700); // 700 kHz is recommended SIO clock
-    localparam CLK_DIV1 = CLK_DIV - 1;
+    localparam CLK_DIV1 = $clog2 (clk_mhz*1000/2/700) - 1; // 700 kHz is recommended SIO clock
     localparam [1:0]
         S_IDLE      = 2'h0,
         S_WAIT      = 2'h1,
