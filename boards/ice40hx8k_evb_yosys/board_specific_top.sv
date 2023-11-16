@@ -1,6 +1,5 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
-`undef ENABLE_INMP441
 
 module board_specific_top
 # (
