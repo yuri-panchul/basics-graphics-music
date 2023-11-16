@@ -161,6 +161,7 @@ module board_specific_top
 `ifdef ENABLE_TM1638
     tm1638_board_controller
     # (
+        .clk_mhz ( clk_mhz ),
         .w_digit ( w_tm_digit )
     )
     i_tm1638
