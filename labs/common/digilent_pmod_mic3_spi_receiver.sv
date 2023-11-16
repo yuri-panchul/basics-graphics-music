@@ -1,5 +1,3 @@
-`define 100MHZ_CLK_BOARDS             // for board with clk_mhz = 100
-
 `include "config.svh"
 
 module digilent_pmod_mic3_spi_receiver
@@ -50,7 +48,7 @@ module digilent_pmod_mic3_spi_receiver
             cnt <= cnt + 7'b1;
     end
     endgenerate
-    
+
     assign sck = ~ cnt [1];
     assign cs  =   cnt [6];
 
