@@ -1,8 +1,11 @@
-//`define 100MHZ_CLK_BOARDS             // for board with clk_mhz = 100
+`define 100MHZ_CLK_BOARDS             // for board with clk_mhz = 100
 
 `include "config.svh"
 
 module digilent_pmod_mic3_spi_receiver
+# (
+    parameter clk_mhz = 50
+)
 (
     input               clk,
     input               rst,
@@ -12,13 +15,15 @@ module digilent_pmod_mic3_spi_receiver
     output logic [15:0] value
 );
 
+
+    
     logic [ 6:0] cnt;
     logic [15:0] shift;
-   
-   `ifdef 100MHZ_CLK_BOARDS
     
-    logic en;
+    generate
 
+    logic en;
+    if (clk_mhz == 100) begin
     always_ff @ (posedge clk or posedge rst)
         begin
             if (rst) en  <= 0;
@@ -35,7 +40,8 @@ module digilent_pmod_mic3_spi_receiver
         end
 
     end
-    `else 
+    end
+    else 
         always_ff @ (posedge clk or posedge rst)
     begin
         if (rst)
@@ -43,8 +49,8 @@ module digilent_pmod_mic3_spi_receiver
         else
             cnt <= cnt + 7'b1;
     end
-    `endif
-
+    endgenerate
+    
     assign sck = ~ cnt [1];
     assign cs  =   cnt [6];
 
