@@ -257,10 +257,12 @@ module tm1638_board_controller
 
     logic  [CLK_DIV:0] counter;
 
+    localparam [CLK_DIV:0] COUNTER_0 = '0;
+
     // TM1632 requires at least 1ms strobe duration
     // we can generate this by adding delay at the end of
     // each transfer. For that we define a flag indicating
-    // completion of 1ms delay loop.
+    // completion of 1us delay loop.
     wire               stb_delay_complete = (counter > clk_mhz ? 1 : 0);
 
     logic  [      5:0] instruction_step;
@@ -440,13 +442,13 @@ module tm1638_board_controller
                     9:  {tm_latch}         <= {HIGH};
                     10: {keys[4], keys[0]} <= {tm_out[0], tm_out[4]};
                     `endif
-                    11: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    11: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
                     12: {instruction_step} <= {stb_delay_complete ? 13 : 12}; // loop till delay complete
 
                     // *** DISPLAY ***
                     13: {sio_stb, tm_rw}   <= {LOW, HIGH};
                     14: {tm_latch, tm_in} <= {HIGH, C_WRITE_DISP}; // write mode
-                    15: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    15: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
                     16: {instruction_step} <= {stb_delay_complete ? 17 : 16}; // loop till delay complete
 
                     17: {sio_stb, tm_rw}   <= {LOW, HIGH};
@@ -496,13 +498,13 @@ module tm1638_board_controller
                     34: display_led(3'd0);        // LED 1
                     `endif
 
-                    35: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    35: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
                     36: {instruction_step} <= {stb_delay_complete ? 37 : 36}; // loop till delay complete
 
                     37: {sio_stb, tm_rw}   <= {LOW, HIGH};
                     38: {tm_latch, tm_in}  <= {HIGH, C_DISPLAY_ON}; // display on, full bright
 
-                    39: {counter, sio_stb} <= {0, HIGH}; // initate 1ms delay
+                    39: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
                     40: {instruction_step} <= {stb_delay_complete ? 0 : 40}; // loop till delay complete
 
                 endcase

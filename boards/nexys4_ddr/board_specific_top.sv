@@ -93,7 +93,7 @@ module board_specific_top
     assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
     assign AN = ~ digit;
 
-    wire [23:0] mic = '0;
+    wire [23:0] mic;
 
     //------------------------------------------------------------------------
 
@@ -138,5 +138,23 @@ module board_specific_top
         .mic      ( mic      ),
         .gpio     (          )
     );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver
+    # (.clk_mhz (100))
+    i_microphone
+    (
+        .clk   ( clk    ),
+        .rst   ( rst    ),
+        .lr    ( JD [9] ),
+        .ws    ( JD [8] ),
+        .sck   ( JD [7] ),
+        .sd    ( JD [1] ),
+        .value ( mic    )
+    );
+
+    assign JD [3] = 1'b0;  // GND
+    assign JD [2] = 1'b1;  // VCC
 
 endmodule

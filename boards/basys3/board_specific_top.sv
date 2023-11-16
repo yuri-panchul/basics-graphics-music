@@ -57,7 +57,7 @@ module board_specific_top
 
     assign an = ~ digit;
 
-    wire [23:0] mic = '0;
+    wire [23:0] mic;
 
     //------------------------------------------------------------------------
 
@@ -102,5 +102,23 @@ module board_specific_top
         .mic      ( mic         ),
         .gpio     (             )
     );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver
+    # (.clk_mhz (100))
+    i_microphone
+    (
+        .clk   ( clk    ),
+        .rst   ( rst    ),
+        .lr    ( JA [6] ),
+        .ws    ( JA [5] ),
+        .sck   ( JA [4] ),
+        .sd    ( JA [0] ),
+        .value ( mic    )
+    );
+
+    assign JA [2] = 1'b0;  // GND - JA pin 3
+    assign JA [1] = 1'b1;  // VCC - JA pin 2
 
 endmodule
