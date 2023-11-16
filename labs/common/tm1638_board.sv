@@ -262,7 +262,7 @@ module tm1638_board_controller
     // TM1632 requires at least 1ms strobe duration
     // we can generate this by adding delay at the end of
     // each transfer. For that we define a flag indicating
-    // completion of 1ms delay loop.
+    // completion of 1us delay loop.
     wire               stb_delay_complete = (counter > clk_mhz ? 1 : 0);
 
     logic  [      5:0] instruction_step;
