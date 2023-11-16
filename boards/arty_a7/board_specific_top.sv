@@ -216,10 +216,15 @@ tm1638_board_controller
     );
 
     wire [11:0] mic_12;
-
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
 
     `ifdef INMP441_MIC    
-        inmp441_mic_i2s_receiver i_mic
+        inmp441_mic_i2s_receiver 
+    #(
+        .clk_mhz ( clk_mhz     )
+    )
+    i_mic
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
@@ -230,7 +235,11 @@ tm1638_board_controller
         .value ( mic        )
     );
     `else
-    digilent_pmod_mic3_spi_receiver i_mic
+    digilent_pmod_mic3_spi_receiver 
+    #(
+        .clk_mhz ( clk_mhz     )
+    )
+    i_mic
     (
         .clk        (clk            ),
         .rst        (rst            ),
@@ -240,8 +249,6 @@ tm1638_board_controller
         .value      (mic_12         )
     );
 
-    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
-    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
     `endif 
 
 endmodule
