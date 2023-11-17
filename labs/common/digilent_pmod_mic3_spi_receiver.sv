@@ -10,25 +10,30 @@ module digilent_pmod_mic3_spi_receiver
     output              cs,
     output              sck,
     input               sdo,
-    output logic [15:0] value
+    output logic [11:0] value
 );
 
 
     
     logic [ 6:0] cnt;
-    logic [15:0] shift;
-    
+    logic [11:0] shift;
+    logic en;
+
     generate
 
-    logic en;
     if (clk_mhz == 100) begin
     always_ff @ (posedge clk or posedge rst)
         begin
             if (rst) en  <= 0;
             else     en  <= ~en;
         end
-    
-    always_ff @ (posedge clk or posedge rst)
+    end
+    else
+        assign en = '1;
+
+    endgenerate
+
+        always_ff @ (posedge clk or posedge rst)
     begin
         if (rst) begin
             cnt <= 7'b100 ;
@@ -36,33 +41,24 @@ module digilent_pmod_mic3_spi_receiver
         else if(en) begin
             cnt <= cnt + 7'b1;
         end
-
     end
-    end
-    else 
-        always_ff @ (posedge clk or posedge rst)
-    begin
-        if (rst)
-            cnt <= 7'b100;
-        else
-            cnt <= cnt + 7'b1;
-    end
-    endgenerate
 
     assign sck = ~ cnt [1];
     assign cs  =   cnt [6];
 
-    wire sample_bit = ( cs == 1'b0 && cnt [2:0] == 3'b111 );
-    wire value_done = ( cnt [6:0] == 8'b0 );
+    wire sample_bit = ( cs == 1'b0 && cnt [1:0] == 2'b11 );
+    wire value_done = ( cnt [6:0] == '0 );
 
     always_ff @ (posedge clk or posedge rst)
     begin
         if (rst)
         begin
-            shift <= 16'h0000;
-            value <= 16'h0000;
+            shift <= '0;
+            value <= '0;
         end
-        else if (sample_bit)
+    else if (en)
+    begin
+        if (sample_bit)
         begin
             shift <= (shift << 1) | sdo;
         end
@@ -70,6 +66,7 @@ module digilent_pmod_mic3_spi_receiver
         begin
             value <= shift;
         end
+    end
     end
 
 endmodule
