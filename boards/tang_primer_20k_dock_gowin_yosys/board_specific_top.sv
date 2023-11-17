@@ -161,6 +161,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+`ifdef ENABLE_TM1638
     tm1638_board_controller
     # (
         .clk_mhz ( clk_mhz ),
@@ -180,8 +181,14 @@ module board_specific_top
     );
 
     //------------------------------------------------------------------------
+`endif
 
-    inmp441_mic_i2s_receiver i_microphone
+`ifdef ENABLE_INMP441
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    i_microphone
     (
         .clk   ( clk        ),
         .rst   ( rst        ),
@@ -191,6 +198,7 @@ module board_specific_top
         .sd    ( GPIO_3 [0] ),
         .value ( mic        )
     );
+`endif
 
     //------------------------------------------------------------------------
 
