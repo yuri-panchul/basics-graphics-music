@@ -128,14 +128,14 @@ module board_specific_top
     (
         .clk   ( clk         ),
         .rst   ( rst         ),
-        .cs    ( GPIO_1  [22] ),
-        .sck   ( GPIO_1  [28] ),
-        .sdo   ( GPIO_1  [26] ),
+        .cs    ( GPIO_1 [26] ),
+        .sck   ( GPIO_1 [32] ),
+        .sdo   ( GPIO_1 [30] ),
         .value ( mic_12      )
     );
 
-    assign GPIO_1 [30] = 1'b0;  // GND
-    assign GPIO_1 [32] = 1'b1;  // VCC
+    // assign GPIO_1 [30] = 1'b0;  // GND
+    // assign GPIO_1 [32] = 1'b1;  // VCC
     
     wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
     assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
