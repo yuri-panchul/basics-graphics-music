@@ -155,6 +155,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+`ifdef ENABLE_TM1638
     tm1638_board_controller
     # (
         .clk_mhz ( clk_mhz ),
@@ -172,10 +173,16 @@ module board_specific_top
         .sio_stb  ( GPIO [1]  ),
         .sio_data ( GPIO [2]  )
     );
+`endif
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+`ifdef ENABLE_INMP441
+    inmp441_mic_i2s_receiver 
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    i_microphone
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
@@ -188,5 +195,6 @@ module board_specific_top
 
     assign GPIO [8] = 1'b0;  // GND
     assign GPIO [7] = 1'b1;  // VCC
+`endif
 
 endmodule

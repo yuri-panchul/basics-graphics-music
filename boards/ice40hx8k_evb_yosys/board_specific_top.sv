@@ -178,7 +178,11 @@ module board_specific_top
     //------------------------------------------------------------------------
 
 `ifdef ENABLE_INMP441
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz    )
+    )
+    i_microphone
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
