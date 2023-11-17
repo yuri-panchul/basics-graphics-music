@@ -1,7 +1,7 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-`define INMP441_MIC
+// `define INMP441_MIC
 
 module board_specific_top
 # (

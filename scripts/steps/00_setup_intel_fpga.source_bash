@@ -33,6 +33,37 @@ fi
 #
 #-----------------------------------------------------------------------------
 
+intel_fpga_check_install_dir_exists ()
+{
+    local path="$0"
+
+    [ -z "${intelfpga_install_dir-}" ] || return
+
+    if [ $use_old_version_of_quartus = 0 ]
+    then
+        if [ -d "$path/intelFPGA_lite" ]
+        then
+            intelfpga_install_dir=intelFPGA_lite
+
+        elif [ -d "$path/intelFPGA" ]
+        then
+            intelfpga_install_dir=intelFPGA
+        fi
+    fi
+
+    if [ -z "${intelfpga_install_dir-}" ] &&
+       [ -d "$path/altera" ]
+    then
+        intelfpga_install_dir=altera
+    fi
+
+    if [ -n "${intelfpga_install_dir-}" ] ; then
+        intelfpga_install_parent_dir="$path"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
 intel_fpga_setup_quartus ()
 {
     if is_command_available quartus ; then

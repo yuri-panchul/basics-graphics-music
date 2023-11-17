@@ -43,4 +43,4 @@ module i2s_audio_out
                 shift <= shift << 1;
         end
 
-endmodule 
+endmodule
