@@ -1,6 +1,6 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
-//`define INMP441_MIC;
+`define INMP441_MIC
 
 module board_specific_top
 # (
@@ -215,9 +215,7 @@ tm1638_board_controller
         .sio_data   ( GPIO[39]      )
     );
 
-    wire [11:0] mic_12;
-    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
-    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
 
     `ifdef INMP441_MIC    
         inmp441_mic_i2s_receiver 
@@ -235,6 +233,11 @@ tm1638_board_controller
         .value ( mic        )
     );
     `else
+    
+    wire [11:0] mic_12;
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+    
     digilent_pmod_mic3_spi_receiver 
     #(
         .clk_mhz ( clk_mhz     )
