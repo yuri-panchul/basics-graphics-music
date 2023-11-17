@@ -1,6 +1,8 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
+
 `define USE_DIGILENT_PMOD_MIC3
+
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -124,7 +126,7 @@ module board_specific_top
     
     wire [11:0] mic_12;
 
-        digilent_pmod_mic3_spi_receiver i_microphone
+    digilent_pmod_mic3_spi_receiver i_microphone
     (
         .clk   ( clk         ),
         .rst   ( rst         ),
@@ -134,9 +136,6 @@ module board_specific_top
         .value ( mic_12      )
     );
 
-    // assign GPIO_1 [30] = 1'b0;  // GND
-    // assign GPIO_1 [32] = 1'b1;  // VCC
-    
     wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
     assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
 
