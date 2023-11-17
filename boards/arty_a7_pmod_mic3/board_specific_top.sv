@@ -233,13 +233,13 @@ module board_specific_top
     );
 
     `else
-    
+
     wire [11:0] mic_12;
     wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
 
     assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
-    
-    digilent_pmod_mic3_spi_receiver 
+
+    digilent_pmod_mic3_spi_receiver
     #(
         .clk_mhz   ( clk_mhz    )
     )
@@ -253,6 +253,6 @@ module board_specific_top
         .value     ( mic_12     )
     );
 
-    `endif 
+    `endif
 
 endmodule

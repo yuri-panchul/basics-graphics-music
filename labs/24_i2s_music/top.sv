@@ -19,7 +19,7 @@ module top
     input        [w_key   - 1:0] key,
     input        [w_sw    - 1:0] sw,
     output logic [w_led   - 1:0] led,
-    
+
     // A dynamic seven-segment display
 
     output logic [          7:0] abcdefgh,
@@ -34,7 +34,7 @@ module top
     output logic [          3:0] blue,
 
     // AUDIO
-    
+
     input        [         23:0] mic,
     output       [         15:0] sound,
 

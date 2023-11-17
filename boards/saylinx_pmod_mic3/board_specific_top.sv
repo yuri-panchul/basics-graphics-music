@@ -118,12 +118,12 @@ module board_specific_top
         .sd    ( GPIO_0 [5] ),
         .value ( mic        )
     );
-    
+
     assign GPIO_0 [1] = 1'b0;  // GND
     assign GPIO_0 [3] = 1'b1;  // VCC
 
     `else
-    
+
     wire [11:0] mic_12;
 
     digilent_pmod_mic3_spi_receiver i_microphone
@@ -139,7 +139,7 @@ module board_specific_top
     wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
     assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
 
-    `endif 
+    `endif
 
     //------------------------------------------------------------------------
 
