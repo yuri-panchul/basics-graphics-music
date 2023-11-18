@@ -75,10 +75,10 @@ intel_fpga_try_install_dir ()
 
 intel_fpga_info_where_quartus_is_found ()
 {
-    info "Found Quartus$1."
-    info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
-    info "PATH=$PATH"
-    info "quartus_full_real_path=$quartus_full_real_path"
+    info "Found Quartus$1:"                                  \
+         "\nQUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"                \
+         "\nPATH=$PATH"                                      \
+         "\nquartus_full_real_path=$quartus_full_real_path"
 
                 [ -d "$QUARTUS_ROOTDIR" ] ||
     error "directory '$QUARTUS_ROOTDIR' expected"
