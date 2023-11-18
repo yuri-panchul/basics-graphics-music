@@ -443,16 +443,16 @@ module tm1638_board_controller
                     10: {keys[4], keys[0]} <= {tm_out[0], tm_out[4]};
                     `endif
                     11: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
-                    12: {instruction_step} <= {stb_delay_complete ? 13 : 12}; // loop till delay complete
+                    12: {instruction_step} <= (stb_delay_complete ? 6'd13 : 6'd12); // loop till delay complete
 
                     // *** DISPLAY ***
                     13: {sio_stb, tm_rw}   <= {LOW, HIGH};
-                    14: {tm_latch, tm_in} <= {HIGH, C_WRITE_DISP}; // write mode
+                    14: {tm_latch, tm_in}  <= {HIGH, C_WRITE_DISP}; // write mode
                     15: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
-                    16: {instruction_step} <= {stb_delay_complete ? 17 : 16}; // loop till delay complete
+                    16: {instruction_step} <= (stb_delay_complete ? 6'd17 : 6'd16); // loop till delay complete
 
                     17: {sio_stb, tm_rw}   <= {LOW, HIGH};
-                    18: {tm_latch, tm_in} <= {HIGH, C_SET_ADDR_0}; // set addr 0 pos
+                    18: {tm_latch, tm_in}  <= {HIGH, C_SET_ADDR_0}; // set addr 0 pos
 
                     `ifdef HCW132
                     // HCW-132 has very weird display map
@@ -499,13 +499,13 @@ module tm1638_board_controller
                     `endif
 
                     35: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
-                    36: {instruction_step} <= {stb_delay_complete ? 37 : 36}; // loop till delay complete
+                    36: {instruction_step} <= (stb_delay_complete ? 6'd37 : 6'd36); // loop till delay complete
 
                     37: {sio_stb, tm_rw}   <= {LOW, HIGH};
                     38: {tm_latch, tm_in}  <= {HIGH, C_DISPLAY_ON}; // display on, full bright
 
                     39: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
-                    40: {instruction_step} <= {stb_delay_complete ? 0 : 40}; // loop till delay complete
+                    40: {instruction_step} <= (stb_delay_complete ? 6'd0 : 6'd40); // loop till delay complete
 
                 endcase
 
