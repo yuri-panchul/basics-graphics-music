@@ -173,7 +173,7 @@ intel_fpga_setup_quartus ()
             intel_fpga_info_where_quartus_is_found " using PATH"
             return
         else
-            warning "quartus is in the path outside the usual installation directory. $extra_msg"
+            warning "quartus is in the path outside the usual installation directory"
         fi
     fi
 
