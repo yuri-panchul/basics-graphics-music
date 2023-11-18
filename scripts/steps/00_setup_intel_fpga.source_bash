@@ -159,7 +159,7 @@ intel_fpga_setup_quartus ()
 
     if is_command_available quartus$exe
     then
-        quartus_full_real_path=$(readlink -f "$(which quartus$exe)")
+        quartus_full_real_path=$(readlink -f "$(command -v quartus$exe)")
 
         if [ "$(basename           $(dirname "$quartus_full_real_path"))"  = $quartus_bin_dir ] &&
            [ "$(basename $(dirname $(dirname "$quartus_full_real_path")))" = quartus          ]
