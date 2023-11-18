@@ -33,131 +33,130 @@ fi
 #
 #-----------------------------------------------------------------------------
 
-intel_fpga_check_install_dir_exists ()
+intel_fpga_try_install_dir ()
 {
-    local path="$0"
+    local dir="$1"
 
-    [ -z "${intelfpga_install_dir-}" ] || return
+    [ -z "${intelfpga_install_dir-}" ] && [ -n "${dir-}" ] || return 0
 
     if [ $use_old_version_of_quartus = 0 ]
     then
-        if [ -d "$path/intelFPGA_lite" ]
+        if [ -d "$dir/intelFPGA_lite" ]
         then
             intelfpga_install_dir=intelFPGA_lite
 
-        elif [ -d "$path/intelFPGA" ]
+        elif [ -d "$dir/intelFPGA" ]
         then
             intelfpga_install_dir=intelFPGA
         fi
     fi
 
     if [ -z "${intelfpga_install_dir-}" ] &&
-       [ -d "$path/altera" ]
+       [ -d "$dir/altera" ]
     then
         intelfpga_install_dir=altera
     fi
 
     if [ -n "${intelfpga_install_dir-}" ] ; then
-        intelfpga_install_parent_dir="$path"
+        intelfpga_install_parent_dir="$dir"
     fi
+
+    if [ $use_old_version_of_quartus = 1 ]
+    then
+        attempt_intelfpga_install_dirs="'altera'"
+    else
+        attempt_intelfpga_install_dirs="'intelFPGA_lite' or 'intelFPGA' or 'altera'"
+    fi
+
+    attempt_intelfpga_install_parent_dirs="${attempt_intelfpga_install_parent_dirs:+$attempt_intelfpga_install_parent_dirs or }'$dir'"
 }
 
 #-----------------------------------------------------------------------------
 
 intel_fpga_setup_quartus ()
 {
-    if is_command_available quartus ; then
-        return  # Already set up
-    fi
-
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    if [ $use_old_version_of_quartus = 1 ] ; then
-        intelfpga_install_dir=altera
-    else
-        intelfpga_install_dir=intelFPGA_lite
-    fi
-
     #-------------------------------------------------------------------------
 
-    if    [ -n "${INTEL_FPGA_HOME-}" ]  \
-       && [ -d "$INTEL_FPGA_HOME/$intelfpga_install_dir" ]
-    then
-        intelfpga_install_parent_dir="$INTEL_FPGA_HOME"
-    fi
+    # Workarounds for Quartus library problems
+    # that are uncovered under RED OS from https://www.red-soft.ru
 
-    if    [ -n "${ALTERA_HOME-}" ]  \
-       && [ -d "$ALTERA_HOME/$intelfpga_install_dir" ]
+    if      [ "${inside_run_dir-}" = 1    ]  \
+       && ! [ -f /usr/lib64/libcrypt.so.1 ]  \
+       &&   [ -f /usr/lib64/libcrypt.so   ]
     then
-        intelfpga_install_parent_dir="$ALTERA_HOME"
-    fi
-
-    # Consider removing this
-
-    if    [ -n "${QUARTUS_HOME-}" ]  \
-       && [ -d "$QUARTUS_HOME/$intelfpga_install_dir" ]
-    then
-        intelfpga_install_parent_dir="$QUARTUS_HOME"
+        ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD"
     fi
 
     #-------------------------------------------------------------------------
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
-        if [ -z "${intelfpga_install_parent_dir-}" ]
-        then
-            intelfpga_install_parent_dir="$HOME"
-        fi
-
         quartus_bin_dir=bin
-
-        if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
-        then
-            intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
-            intelfpga_install_parent_dir=/opt
-        fi
 
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
     then
-        if [ -z "${intelfpga_install_parent_dir-}" ]
-        then
-            intelfpga_install_parent_dir=/c
-        fi
-
         if [ $use_old_version_of_quartus = 1 ] ; then
             quartus_bin_dir=bin
         else
             quartus_bin_dir=bin64
         fi
-
-        if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
-        then
-            intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
-            intelfpga_install_parent_dir=/d
-        fi
-    else
-        error "this script does not support your OS / platform '$OSTYPE'"
     fi
 
     #-------------------------------------------------------------------------
 
-    if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
+    if    [ -n "${QUARTUS_ROOTDIR-}"                   ]  \
+       && [ -d "$QUARTUS_ROOTDIR"                      ]  \
+       && [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir"     ]  \
+       && [ $(basename "$QUARTUS_ROOTDIR") = "quartus" ]
     then
-        if [ -z "${intelfpga_install_parent_dir_first-}" ]
+        latest_version_dir=$(dirname "$QUARTUS_ROOTDIR")
+        export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
+        return
+    fi
+
+    #-------------------------------------------------------------------------
+
+    intel_fpga_try_install_dir "${INTEL_FPGA_HOME-}"
+    intel_fpga_try_install_dir "${ALTERA_HOME-}"
+    intel_fpga_try_install_dir "${QUARTUS_HOME-}"
+
+    #-------------------------------------------------------------------------
+
+    if    [ "$OSTYPE" = "linux-gnu" ]
+    then
+        intel_fpga_try_install_dir "$HOME"
+        intel_fpga_try_install_dir /opt
+
+    elif  [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        intel_fpga_try_install_dir /c
+        intel_fpga_try_install_dir /d
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if ! [ -z "${intelfpga_install_parent_dir-}" ]
+    then
+        if is_command_available quartus
         then
-            error "expected to find '$intelfpga_install_dir' directory"  \
-                  "in '$intelfpga_install_parent_dir'."                  \
-                  "'$intelfpga_install_dir' location can be set by the environment variable INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME"
-        else
-            error "expected to find '$intelfpga_install_dir' directory"  \
-                  "either in '$intelfpga_install_parent_dir_first'"      \
-                  "or in '$intelfpga_install_parent_dir'."               \
-                  "'$intelfpga_install_dir' location can be set by the environment variable INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME"
+            return
         fi
+
+        error "expected to find $attempt_intelfpga_install_dirs"             \
+              "in ${attempt_intelfpga_install_parent_dirs}."                 \
+              "The Quartus installation home location"                       \
+              "can be set by one of the following environment variables:"    \
+              "INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME."               \
+              "You can also use QUARTUS_ROOTDIR"                             \
+              "to specify the version subtree location."
     fi
 
     #-------------------------------------------------------------------------
@@ -197,19 +196,6 @@ intel_fpga_setup_quartus ()
 
                    [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  \
     || error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
-
-    #-------------------------------------------------------------------------
-
-    # Workarounds for Quartus library problems
-    # that are uncovered under RED OS from https://www.red-soft.ru
-
-    if      [ "${inside_run_dir-}" = 1    ]  \
-       && ! [ -f /usr/lib64/libcrypt.so.1 ]  \
-       &&   [ -f /usr/lib64/libcrypt.so   ]
-    then
-        ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD"
-    fi
 }
 
 #-----------------------------------------------------------------------------
