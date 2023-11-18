@@ -31,13 +31,6 @@ fi
 
 gowin_setup_ide ()
 {
-    if [ "$OSTYPE" = "cygwin"    ] ||
-       [ "$OSTYPE" = "msys"      ]; then
-      exe=".exe"
-    else
-      exe=
-    fi
-
     if is_command_available gw_sh$exe &&
        ( is_command_available openFPGALoader &&       [ "$OSTYPE" = "linux-gnu" ] ||
          is_command_available programmer_cli$exe && ( [ "$OSTYPE" = "cygwin"    ] ||

@@ -118,6 +118,7 @@ intel_fpga_setup_quartus ()
     then
         latest_version_dir=$(dirname "$QUARTUS_ROOTDIR")
         export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
+        quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
         return
     fi
 
@@ -145,18 +146,28 @@ intel_fpga_setup_quartus ()
 
     if ! [ -z "${intelfpga_install_parent_dir-}" ]
     then
-        if is_command_available quartus
+        extra_msg="The Quartus installation home location"
+        extra_msg+=" can be set by one of the following environment variables:"
+        extra_msg+=" INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME."
+        extra_msg+=" You can also use QUARTUS_ROOTDIR"
+        extra_msg+=" to specify the version subtree location."
+
+
+        if is_command_available quartus$exe
         then
+            quartus_full_real_path=$(readlink -f "$(which quartus$exe)")
+
+            [ "$(basename $(dirname "$quartus_full_real_path"))" = quartus ] &&
+            error "quartus is in the path outside the usual installation directory. $extra_msg"
+
+            export QUARTUS_ROOTDIR=$(dirname $(dirname "$real_quartus_path"))
+            latest_version_dir=$(dirname "$QUARTUS_ROOTDIR")
+
             return
         fi
 
-        error "expected to find $attempt_intelfpga_install_dirs"             \
-              "in ${attempt_intelfpga_install_parent_dirs}."                 \
-              "The Quartus installation home location"                       \
-              "can be set by one of the following environment variables:"    \
-              "INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME."               \
-              "You can also use QUARTUS_ROOTDIR"                             \
-              "to specify the version subtree location."
+        error "expected to find $attempt_intelfpga_install_dirs"  \
+              "in ${attempt_intelfpga_install_parent_dirs}. $extra_msg"
     fi
 
     #-------------------------------------------------------------------------
@@ -174,6 +185,8 @@ intel_fpga_setup_quartus ()
 
     export QUARTUS_ROOTDIR="$latest_version_dir/quartus"
     export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
+
+    quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
 
     #-------------------------------------------------------------------------
 

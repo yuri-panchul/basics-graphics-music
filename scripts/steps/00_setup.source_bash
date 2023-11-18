@@ -177,6 +177,12 @@ then
     find_to_run=$true_find
 fi
 
+if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ] ; then
+    exe=".exe"
+else
+    exe=
+fi
+
 #-----------------------------------------------------------------------------
 #
 #   Tool setup:
