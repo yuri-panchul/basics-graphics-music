@@ -202,7 +202,7 @@ intel_fpga_setup_quartus ()
     if [ -z "${intelfpga_install_parent_dir-}" ]
     then
         error "expected to find $attempt_intelfpga_install_dirs"             \
-              "in ${attempt_intelfpga_install_parent_dirs}.                  \
+              "in ${attempt_intelfpga_install_parent_dirs}."                 \
               "The Quartus installation home location"                       \
               " can be set by one of the following environment variables:"   \
               " INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME."              \
@@ -217,7 +217,7 @@ intel_fpga_setup_quartus ()
 
     if [ -z "$latest_version_dir" ]
     then
-        error "cannot find any version of Intel FPGA installed in "  \
+        error "cannot find any version of Intel FPGA installed in "     \
               "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
     fi
 
@@ -236,12 +236,12 @@ intel_fpga_setup_quartus ()
 
     if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
-        warning "multiple Intel FPGA versions installed in"  \
+        warning "multiple Intel FPGA versions installed in"                \
                 "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
                 "'$all_version_dirs'"
     fi
 
-    intel_fpga_info_where_quartus_is_found " in one of standard locations"
+    intel_fpga_info_where_quartus_is_found " in one of the standard locations"
 }
 
 #-----------------------------------------------------------------------------
