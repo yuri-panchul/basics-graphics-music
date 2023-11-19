@@ -16,8 +16,7 @@ module seven_segment_display
     input  [w_digit     - 1:0] dots,
 
     output logic [              7:0] abcdefgh,
-    output logic [w_digit     - 1:0] digit,
-    output test
+    output logic [w_digit     - 1:0] digit
 );
 
     function [7:0] dig_to_seg (input [3:0] dig);
