@@ -231,7 +231,11 @@ module tm1638_board_controller
     input        [               7:0] hgfedcba,
     input        [     w_digit - 1:0] digit,
     input        [               7:0] ledr,
+    `ifdef HCW132
+    output logic [              15:0] keys,
+    `else
     output logic [               7:0] keys,
+    `endif
     output                            sio_clk,
     output logic                      sio_stb,
     inout                             sio_data
@@ -424,16 +428,17 @@ module tm1638_board_controller
                     2:  {tm_latch, tm_in}  <= {HIGH, C_READ_KEYS}; // read mode
                     3:  {tm_latch, tm_rw}  <= {HIGH, LOW};
 
-                    //  read back keys S1 - S8
                     `ifdef HCW132
-                    4:  {keys[0], keys[1]} <= {tm_out[2], tm_out[6]};
+                    //  read back keys S1 - S16
+                    4:  {keys[0], keys[1], keys[8], keys[9]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
                     5:  {tm_latch}         <= {HIGH};
-                    6:  {keys[2], keys[3]} <= {tm_out[2], tm_out[6]};
+                    6:  {keys[2], keys[3], keys[10], keys[11]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
                     7:  {tm_latch}         <= {HIGH};
-                    8:  {keys[4], keys[5]} <= {tm_out[2], tm_out[6]};
+                    8:  {keys[4], keys[5], keys[12], keys[13]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
                     9:  {tm_latch}         <= {HIGH};
-                    10:  {keys[6], keys[7]} <= {tm_out[2], tm_out[6]};
+                    10:  {keys[6], keys[7], keys[14], keys[15]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
                     `else
+                    //  read back keys S1 - S8
                     4:  {keys[7], keys[3]} <= {tm_out[0], tm_out[4]};
                     5:  {tm_latch}         <= {HIGH};
                     6:  {keys[6], keys[2]} <= {tm_out[0], tm_out[4]};
@@ -442,13 +447,13 @@ module tm1638_board_controller
                     9:  {tm_latch}         <= {HIGH};
                     10: {keys[4], keys[0]} <= {tm_out[0], tm_out[4]};
                     `endif
-                    11: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
+                    11: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initiate 1us delay
                     12: {instruction_step} <= (stb_delay_complete ? 6'd13 : 6'd12); // loop till delay complete
 
                     // *** DISPLAY ***
                     13: {sio_stb, tm_rw}   <= {LOW, HIGH};
                     14: {tm_latch, tm_in}  <= {HIGH, C_WRITE_DISP}; // write mode
-                    15: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
+                    15: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initiate 1us delay
                     16: {instruction_step} <= (stb_delay_complete ? 6'd17 : 6'd16); // loop till delay complete
 
                     17: {sio_stb, tm_rw}   <= {LOW, HIGH};
@@ -498,13 +503,13 @@ module tm1638_board_controller
                     34: display_led(3'd0);        // LED 1
                     `endif
 
-                    35: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
+                    35: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initiate 1us delay
                     36: {instruction_step} <= (stb_delay_complete ? 6'd37 : 6'd36); // loop till delay complete
 
                     37: {sio_stb, tm_rw}   <= {LOW, HIGH};
                     38: {tm_latch, tm_in}  <= {HIGH, C_DISPLAY_ON}; // display on, full bright
 
-                    39: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initate 1ms delay
+                    39: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initiate 1us delay
                     40: {instruction_step} <= (stb_delay_complete ? 6'd0 : 6'd40); // loop till delay complete
 
                 endcase
