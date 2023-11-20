@@ -263,13 +263,9 @@ intel_fpga_setup_questa ()
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    if    [ -z "${intelfpga_install_dir-}"        ]  \
-       || [ -z "${intelfpga_install_parent_dir-}" ]  \
-       || [ -z "${latest_version_dir-}"            ]
-    then
+    [ -n "${latest_version_dir-}" ] ||
         error "Intel FPGA Quartus was supposed to be setup first. "  \
               "Probably internal error."
-    fi
 
     #-------------------------------------------------------------------------
 
