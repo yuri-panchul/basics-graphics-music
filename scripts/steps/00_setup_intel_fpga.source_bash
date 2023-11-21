@@ -198,6 +198,7 @@ intel_fpga_setup_quartus ()
     then
         intel_fpga_try_install_dir /c
         intel_fpga_try_install_dir /d
+        intel_fpga_try_install_dir /e
     fi
 
     #-------------------------------------------------------------------------
