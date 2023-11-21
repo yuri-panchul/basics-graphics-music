@@ -179,7 +179,10 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
-    intel_fpga_try_install_dir "${INTEL_FPGA_HOME-}"
+    if [ $use_old_version_of_quartus = 0 ] ; then
+        intel_fpga_try_install_dir "${INTEL_FPGA_HOME-}"
+    fi
+
     intel_fpga_try_install_dir "${ALTERA_HOME-}"
     intel_fpga_try_install_dir "${QUARTUS_HOME-}"
 
