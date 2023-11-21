@@ -56,15 +56,15 @@ module seven_segment_display
 
     always_ff @ (posedge clk or posedge rst)
 	if (rst) begin
-            index <= w_index'd0;
-            cnt <= w_cnt'd0;
+            index <= '0;
+            cnt   <= '0;
         end else begin
-            cnt <= cnt + w_cnt'd1;
+            cnt <= cnt + w_cnt' (1);
 	    if (cnt == cnt_top) begin
                 index <= (index == w_index' (w_digit - 1) ?
                         w_index' (0) : index + 1'd1);
                 if(index == {w_index{1'b1}})
-                    cnt <= w_cnt'd0;
+                    cnt <= '0;
                 abcdefgh <= dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
                 digit    <= w_digit' (1'b1) << index;
 	    end
