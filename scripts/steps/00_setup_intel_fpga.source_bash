@@ -144,7 +144,7 @@ intel_fpga_setup_quartus ()
        && [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir"     ]  \
        && [ $(basename "$QUARTUS_ROOTDIR") = "quartus" ]
     then
-        latest_version_dir=$(dirname "$QUARTUS_ROOTDIR")
+        choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
         export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
 
         quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
@@ -165,7 +165,7 @@ intel_fpga_setup_quartus ()
            [ "$(basename $(dirname $(dirname "$quartus_full_real_path")))" = quartus          ]
         then
             export QUARTUS_ROOTDIR=$(dirname $(dirname "$quartus_full_real_path"))
-            latest_version_dir=$(dirname "$QUARTUS_ROOTDIR")
+            choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
 
             quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
             quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
@@ -213,9 +213,9 @@ intel_fpga_setup_quartus ()
     #-------------------------------------------------------------------------
 
     find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    latest_version_dir=$($find_command | sort | tail -1)
+    choosen_version_dir=$($find_command | sort | tail -1)
 
-    if [ -z "$latest_version_dir" ]
+    if [ -z "$choosen_version_dir" ]
     then
         error "cannot find any version of Intel FPGA installed in "     \
               "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
@@ -223,7 +223,7 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
-    export QUARTUS_ROOTDIR="$latest_version_dir/quartus"
+    export QUARTUS_ROOTDIR="$choosen_version_dir/quartus"
     export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
 
     quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
@@ -234,7 +234,7 @@ intel_fpga_setup_quartus ()
 
     all_version_dirs=$($find_command | xargs echo)
 
-    if [ "$latest_version_dir" != "$all_version_dirs" ]
+    if [ "$choosen_version_dir" != "$all_version_dirs" ]
     then
         warning "multiple Intel FPGA versions installed in"                \
                 "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
@@ -252,18 +252,20 @@ intel_fpga_setup_quartus ()
 
 intel_fpga_setup_questa ()
 {
-    if is_command_available quartus$exe ||
-       is_command_available vsim$exe
-    then
-        return  # Already set up
-    fi
-
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    [ -n "${latest_version_dir-}" ] ||
+    if is_command_available vsim$exe
+    then
+        vsim_command="vsim$exe"
+        vcover_command="vcover$exe"
+
+        return  # Already set up
+    fi
+
+    [ -n "${choosen_version_dir-}" ] ||
         error "Intel FPGA Quartus was supposed to be setup first. "  \
               "Probably internal error."
 
@@ -303,19 +305,26 @@ intel_fpga_setup_questa ()
     #-------------------------------------------------------------------------
 
     # Check if Quartus is installed without Questa
-    [ -d "$latest_version_dir/$questa_dir" ] || return 0
+    [ -d "$choosen_version_dir/$questa_dir" ] || return 0
 
-    export QUESTA_ROOTDIR="$latest_version_dir/$questa_dir"
-    export PATH="${PATH:+$PATH:}$QUESTA_ROOTDIR/$questa_bin_dir"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$QUESTA_ROOTDIR/$questa_lib_dir"
+    export PATH="${PATH:+$PATH:}$choosen_version_dir/$questa_dir/$questa_bin_dir"
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$choosen_version_dir/$questa_dir/$questa_lib_dir"
+
+    vsim_command="$choosen_version_dir/$questa_dir/$questa_bin_dir/vsim$exe"
+    vcover_command="$choosen_version_dir/$questa_dir/$questa_bin_dir/vcover$exe"
 
     #-------------------------------------------------------------------------
 
-                   [ -d "$QUESTA_ROOTDIR" ]  \
-    || error "directory '$QUESTA_ROOTDIR' expected"
+                [ -d "$choosen_version_dir/$questa_dir/$questa_bin_dir" ] ||
+    error "directory '$choosen_version_dir/$questa_dir/$questa_bin_dir' expected"
 
-                   [ -d "$QUESTA_ROOTDIR/$questa_bin_dir" ]  \
-    || error "directory '$QUESTA_ROOTDIR/$questa_bin_dir' expected"
+                      [ -f "$vsim_command" ] &&
+                      [ -x "$vsim_command" ] ||
+    error "executable file '$vsim_command' expected"
+
+                      [ -f "$vcover_command" ] &&
+                      [ -x "$vcover_command" ] ||
+    error "executable file '$vcover_command' expected"
 }
 
 #-----------------------------------------------------------------------------
@@ -340,10 +349,10 @@ run_questa ()
                 "You may need to resolve the licensing issues."
     fi
 
-    if ! is_command_available vsim$exe
+    if ! is_command_available "$vsim_command"
     then
-        error "$error_prefix vsim executable is not available."  \
-              "Have you installed the simulator, either"         \
+        error "$error_prefix '$vsim_command' executable is not available."  \
+              "Have you installed the simulator, either"                    \
               "together with Quartus package or separately?"
     fi
 
@@ -353,11 +362,11 @@ run_questa ()
         vsim_options=-c
     fi
 
-    vsim $vsim_options -do $questa_script 2>&1
+    "$vsim_command" $vsim_options -do $questa_script 2>&1
     cp transcript "$log"
 
     if [ -f coverage.ucdb ] ; then
-        vcover report -details -html coverage.ucdb
+        "$vcover_command" report -details -html coverage.ucdb
     fi
 }
 
