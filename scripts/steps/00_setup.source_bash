@@ -70,7 +70,7 @@ info ()
     # However this method has disadvantage:
     # It prints "\n" for "\n" instead of a newline.
 
-    if [[ "$*" == *"%"* ]] ; then
+    if [[ "$*" == *"%"* ]] || [[ "$*" == *"\\"* ]] ; then
         printf "\n%s: %s\n" "$script" "$*" 1>&2
     else
         printf "\n%s: $*\n" "$script"      1>&2
