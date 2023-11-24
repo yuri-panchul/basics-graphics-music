@@ -327,13 +327,19 @@ intel_fpga_setup_questa ()
                 [ -d "$choosen_version_dir/$questa_dir/$questa_bin_dir" ] ||
     error "directory '$choosen_version_dir/$questa_dir/$questa_bin_dir' expected"
 
-                      [ -f "$vsim_command" ] &&
-                      [ -x "$vsim_command" ] ||
+                      [ -f "$vsim_command" ] ||
     error "executable file '$vsim_command' expected"
 
-                      [ -f "$vcover_command" ] &&
-                      [ -x "$vcover_command" ] ||
+                      [ -f "$vcover_command" ] ||
     error "executable file '$vcover_command' expected"
+
+             [ -x "$vsim_command" ] ||
+    warning "file '$vsim_command' is not executable."  \
+            "Questa is installed with incorrect permissions?"
+
+             [ -x "$vcover_command" ] ||
+    warning "file '$vcover_command' is not executable."  \
+            "Questa is installed with incorrect permissions?"
 }
 
 #-----------------------------------------------------------------------------
