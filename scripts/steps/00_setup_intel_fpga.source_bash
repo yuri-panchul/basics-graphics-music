@@ -39,14 +39,14 @@ intel_fpga_try_install_dir ()
 
     [ -z "${intelfpga_install_dir-}" ] && [ -n "${dir-}" ] || return 0
 
-    if [ -z "${intelfpga_install_dir-}" ] &&
-       [ -d "$dir/altera" ]
+    if [ $use_old_version_of_quartus = 1 ]
     then
-        intelfpga_install_dir=altera
-    fi
-
-    if [ $use_old_version_of_quartus = 0 ]
-    then
+        if [ -z "${intelfpga_install_dir-}" ] &&
+           [ -d "$dir/altera" ]
+        then
+            intelfpga_install_dir=altera
+        fi
+    else
         if [ -d "$dir/intelFPGA_lite" ]
         then
             intelfpga_install_dir=intelFPGA_lite
@@ -80,10 +80,10 @@ intel_fpga_info_where_quartus_is_found ()
     # info "PATH=$PATH"
     # info "quartus_full_real_path=$quartus_full_real_path"
 
-    printf "%s" "$script: Found Quartus$1:\n"
-    printf "%s" "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR\n"
-    printf "%s" "PATH=$PATH\n"
-    printf "%s" "quartus_full_real_path=$quartus_full_real_path\n"
+    printf "%s\n" "$script: Found Quartus$1:"
+    printf "%s\n" "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+    printf "%s\n" "PATH=$PATH"
+    printf "%s\n" "quartus_full_real_path=$quartus_full_real_path"
 
                 [ -d "$QUARTUS_ROOTDIR" ] ||
     error "directory '$QUARTUS_ROOTDIR' expected"
