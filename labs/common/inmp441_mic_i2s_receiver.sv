@@ -13,7 +13,8 @@ module inmp441_mic_i2s_receiver
     output logic        ws,
     output              sck,
     input               sd,
-    output logic [23:0] value
+    output logic [23:0] value,
+    output logic        ready
 );
 
     assign lr = 1'b0;
@@ -65,6 +66,7 @@ module inmp441_mic_i2s_receiver
 
     wire value_done = (ws == lr) & (cnt == '1);
 
+
     //------------------------------------------------------------------------
 
     logic [23:0] shift;
@@ -74,6 +76,7 @@ module inmp441_mic_i2s_receiver
         begin
             shift <= '0;
             value <= '0;
+            ready <= '0;
         end
         else if (clk_en)
         begin
@@ -84,7 +87,9 @@ module inmp441_mic_i2s_receiver
             else if (value_done)
             begin
                 value <= shift;
+                ready <= '1;
             end
-        end
+        end else
+            ready <= '0; // ready is strobing single !!!
 
 endmodule
