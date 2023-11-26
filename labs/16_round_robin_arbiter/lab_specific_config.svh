@@ -3,6 +3,7 @@
 
 // The following setting is needed for Gowin boards
    `define ENABLE_TM1638
+// `define HCW132
 
 // HCW-132 variant of LED & KEY TM1638 board controller
 // `define HCW132

@@ -33,170 +33,85 @@ fi
 #
 #-----------------------------------------------------------------------------
 
-intel_fpga_check_install_dir_exists ()
+intel_fpga_try_install_dir ()
 {
-    local path="$0"
+    local dir="$1"
 
-    [ -z "${intelfpga_install_dir-}" ] || return
+    [ -z "${intelfpga_install_dir-}" ] && [ -n "${dir-}" ] || return 0
 
-    if [ $use_old_version_of_quartus = 0 ]
+    if [ $use_old_version_of_quartus = 1 ]
     then
-        if [ -d "$path/intelFPGA_lite" ]
+        if [ -z "${intelfpga_install_dir-}" ] &&
+           [ -d "$dir/altera" ]
+        then
+            intelfpga_install_dir=altera
+        fi
+    else
+        if [ -d "$dir/intelFPGA_lite" ]
         then
             intelfpga_install_dir=intelFPGA_lite
 
-        elif [ -d "$path/intelFPGA" ]
+        elif [ -d "$dir/intelFPGA" ]
         then
             intelfpga_install_dir=intelFPGA
         fi
     fi
 
-    if [ -z "${intelfpga_install_dir-}" ] &&
-       [ -d "$path/altera" ]
-    then
-        intelfpga_install_dir=altera
+    if [ -n "${intelfpga_install_dir-}" ] ; then
+        intelfpga_install_parent_dir="$dir"
     fi
 
-    if [ -n "${intelfpga_install_dir-}" ] ; then
-        intelfpga_install_parent_dir="$path"
+    if [ $use_old_version_of_quartus = 1 ]
+    then
+        attempt_intelfpga_install_dirs="'altera'"
+    else
+        attempt_intelfpga_install_dirs="'intelFPGA_lite' or 'intelFPGA' or 'altera'"
     fi
+
+    attempt_intelfpga_install_parent_dirs="${attempt_intelfpga_install_parent_dirs:+$attempt_intelfpga_install_parent_dirs or }'$dir'"
+}
+
+#-----------------------------------------------------------------------------
+
+intel_fpga_info_where_quartus_is_found ()
+{
+    # info "Found Quartus$1:"
+    # info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+    # info "PATH=$PATH"
+    # info "quartus_full_real_path=$quartus_full_real_path"
+
+    printf "%s\n" "$script: Found Quartus$1:"
+    printf "%s\n" "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+    printf "%s\n" "PATH=$PATH"
+    printf "%s\n" "quartus_full_real_path=$quartus_full_real_path"
+
+                [ -d "$QUARTUS_ROOTDIR" ] ||
+    error "directory '$QUARTUS_ROOTDIR' expected"
+
+                [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  ||
+    error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
+
+                      [ -f "$quartus_full_real_path" ] &&
+                      [ -x "$quartus_full_real_path" ] ||
+    error "executable file '$quartus_full_real_path' expected"
+
+                      [ -f "$quartus_sh_full_real_path" ] &&
+                      [ -x "$quartus_sh_full_real_path" ] ||
+    error "executable file '$quartus_sh_full_real_path' expected"
+
+                      [ -f "$quartus_pgm_full_real_path" ] &&
+                      [ -x "$quartus_pgm_full_real_path" ] ||
+    error "executable file '$quartus_pgm_full_real_path' expected"
 }
 
 #-----------------------------------------------------------------------------
 
 intel_fpga_setup_quartus ()
 {
-    if is_command_available quartus ; then
-        return  # Already set up
-    fi
-
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
-
-    if [ $use_old_version_of_quartus = 1 ] ; then
-        intelfpga_install_dir=altera
-    else
-        intelfpga_install_dir=intelFPGA_lite
-    fi
-
-    #-------------------------------------------------------------------------
-
-    if    [ -n "${INTEL_FPGA_HOME-}" ]  \
-       && [ -d "$INTEL_FPGA_HOME/$intelfpga_install_dir" ]
-    then
-        intelfpga_install_parent_dir="$INTEL_FPGA_HOME"
-    fi
-
-    if    [ -n "${ALTERA_HOME-}" ]  \
-       && [ -d "$ALTERA_HOME/$intelfpga_install_dir" ]
-    then
-        intelfpga_install_parent_dir="$ALTERA_HOME"
-    fi
-
-    # Consider removing this
-
-    if    [ -n "${QUARTUS_HOME-}" ]  \
-       && [ -d "$QUARTUS_HOME/$intelfpga_install_dir" ]
-    then
-        intelfpga_install_parent_dir="$QUARTUS_HOME"
-    fi
-
-    #-------------------------------------------------------------------------
-
-    if [ "$OSTYPE" = "linux-gnu" ]
-    then
-        if [ -z "${intelfpga_install_parent_dir-}" ]
-        then
-            intelfpga_install_parent_dir="$HOME"
-        fi
-
-        quartus_bin_dir=bin
-
-        if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
-        then
-            intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
-            intelfpga_install_parent_dir=/opt
-        fi
-
-    elif  [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
-    then
-        if [ -z "${intelfpga_install_parent_dir-}" ]
-        then
-            intelfpga_install_parent_dir=/c
-        fi
-
-        if [ $use_old_version_of_quartus = 1 ] ; then
-            quartus_bin_dir=bin
-        else
-            quartus_bin_dir=bin64
-        fi
-
-        if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
-        then
-            intelfpga_install_parent_dir_first="$intelfpga_install_parent_dir"
-            intelfpga_install_parent_dir=/d
-        fi
-    else
-        error "this script does not support your OS / platform '$OSTYPE'"
-    fi
-
-    #-------------------------------------------------------------------------
-
-    if ! [ -d "$intelfpga_install_parent_dir/$intelfpga_install_dir" ]
-    then
-        if [ -z "${intelfpga_install_parent_dir_first-}" ]
-        then
-            error "expected to find '$intelfpga_install_dir' directory"  \
-                  "in '$intelfpga_install_parent_dir'."                  \
-                  "'$intelfpga_install_dir' location can be set by the environment variable INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME"
-        else
-            error "expected to find '$intelfpga_install_dir' directory"  \
-                  "either in '$intelfpga_install_parent_dir_first'"      \
-                  "or in '$intelfpga_install_parent_dir'."               \
-                  "'$intelfpga_install_dir' location can be set by the environment variable INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME"
-        fi
-    fi
-
-    #-------------------------------------------------------------------------
-
-    find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    latest_version_dir=$($find_command | sort | tail -1)
-
-    if [ -z "$latest_version_dir" ]
-    then
-        error "cannot find any version of Intel FPGA installed in "  \
-              "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
-    fi
-
-    #-------------------------------------------------------------------------
-
-    export QUARTUS_ROOTDIR="$latest_version_dir/quartus"
-    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
-
-    #-------------------------------------------------------------------------
-
-    all_version_dirs=$($find_command | xargs echo)
-
-    if [ "$latest_version_dir" != "$all_version_dirs" ]
-    then
-        warning "multiple Intel FPGA versions installed in"  \
-                "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
-                "'$all_version_dirs'"
-
-        info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
-        info "PATH=$PATH"
-    fi
-
-    #-------------------------------------------------------------------------
-
-                   [ -d "$QUARTUS_ROOTDIR" ]  \
-    || error "directory '$QUARTUS_ROOTDIR' expected"
-
-                   [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  \
-    || error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
 
     #-------------------------------------------------------------------------
 
@@ -210,6 +125,132 @@ intel_fpga_setup_quartus ()
         ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD"
     fi
+
+    #-------------------------------------------------------------------------
+
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        quartus_bin_dir=bin
+
+    elif  [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        if [ $use_old_version_of_quartus = 1 ] ; then
+            quartus_bin_dir=bin
+        else
+            quartus_bin_dir=bin64
+        fi
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if    [ -n "${QUARTUS_ROOTDIR-}"                   ]  \
+       && [ -d "$QUARTUS_ROOTDIR"                      ]  \
+       && [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir"     ]  \
+       && [ $(basename "$QUARTUS_ROOTDIR") = "quartus" ]
+    then
+        choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
+        export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
+
+        quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
+        quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
+        quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
+
+        intel_fpga_info_where_quartus_is_found " using QUARTUS_ROOTDIR"
+        return
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if is_command_available quartus$exe
+    then
+        quartus_full_real_path=$(readlink -f "$(command -v quartus$exe)")
+
+        if [ "$(basename           $(dirname "$quartus_full_real_path"))"  = $quartus_bin_dir ] &&
+           [ "$(basename $(dirname $(dirname "$quartus_full_real_path")))" = quartus          ]
+        then
+            export QUARTUS_ROOTDIR=$(dirname $(dirname "$quartus_full_real_path"))
+            choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
+
+            quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
+            quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
+
+            intel_fpga_info_where_quartus_is_found " using PATH"
+            return
+        else
+            warning "quartus is in the path outside the usual installation directory"
+        fi
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if [ $use_old_version_of_quartus = 0 ] ; then
+        intel_fpga_try_install_dir "${INTEL_FPGA_HOME-}"
+    fi
+
+    intel_fpga_try_install_dir "${ALTERA_HOME-}"
+    intel_fpga_try_install_dir "${QUARTUS_HOME-}"
+
+    #-------------------------------------------------------------------------
+
+    if    [ "$OSTYPE" = "linux-gnu" ]
+    then
+        intel_fpga_try_install_dir "$HOME"
+        intel_fpga_try_install_dir /opt
+
+    elif  [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        intel_fpga_try_install_dir /c
+        intel_fpga_try_install_dir /d
+        intel_fpga_try_install_dir /e
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if [ -z "${intelfpga_install_parent_dir-}" ]
+    then
+        error "expected to find $attempt_intelfpga_install_dirs"             \
+              "in ${attempt_intelfpga_install_parent_dirs}."                 \
+              "The Quartus installation home location"                       \
+              " can be set by one of the following environment variables:"   \
+              " INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME."              \
+              " You can also use QUARTUS_ROOTDIR"                            \
+              " to specify the version subtree location."
+    fi
+
+    #-------------------------------------------------------------------------
+
+    find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
+    choosen_version_dir=$($find_command | sort | tail -1)
+
+    if [ -z "$choosen_version_dir" ]
+    then
+        error "cannot find any version of Intel FPGA installed in "     \
+              "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
+    fi
+
+    #-------------------------------------------------------------------------
+
+    export QUARTUS_ROOTDIR="$choosen_version_dir/quartus"
+    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
+
+    quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
+    quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
+    quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
+
+    #-------------------------------------------------------------------------
+
+    all_version_dirs=$($find_command | xargs echo)
+
+    if [ "$choosen_version_dir" != "$all_version_dirs" ]
+    then
+        warning "multiple Intel FPGA versions installed in"                \
+                "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
+                "'$all_version_dirs'"
+    fi
+
+    intel_fpga_info_where_quartus_is_found " in one of the standard locations"
 }
 
 #-----------------------------------------------------------------------------
@@ -220,24 +261,22 @@ intel_fpga_setup_quartus ()
 
 intel_fpga_setup_questa ()
 {
-    if is_command_available quartus ||
-       is_command_available vsim
-    then
-        return  # Already set up
-    fi
-
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    if    [ -z "${intelfpga_install_dir-}"        ]  \
-       || [ -z "${intelfpga_install_parent_dir-}" ]  \
-       || [ -z "${latest_version_dir-}"            ]
+    if is_command_available vsim$exe
     then
+        vsim_command="vsim$exe"
+        vcover_command="vcover$exe"
+
+        return  # Already set up
+    fi
+
+    [ -n "${choosen_version_dir-}" ] ||
         error "Intel FPGA Quartus was supposed to be setup first. "  \
               "Probably internal error."
-    fi
 
     #-------------------------------------------------------------------------
 
@@ -275,19 +314,32 @@ intel_fpga_setup_questa ()
     #-------------------------------------------------------------------------
 
     # Check if Quartus is installed without Questa
-    [ -d "$latest_version_dir/$questa_dir" ] || return 0
+    [ -d "$choosen_version_dir/$questa_dir" ] || return 0
 
-    export QUESTA_ROOTDIR="$latest_version_dir/$questa_dir"
-    export PATH="${PATH:+$PATH:}$QUESTA_ROOTDIR/$questa_bin_dir"
-    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$QUESTA_ROOTDIR/$questa_lib_dir"
+    export PATH="${PATH:+$PATH:}$choosen_version_dir/$questa_dir/$questa_bin_dir"
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$choosen_version_dir/$questa_dir/$questa_lib_dir"
+
+    vsim_command="$choosen_version_dir/$questa_dir/$questa_bin_dir/vsim$exe"
+    vcover_command="$choosen_version_dir/$questa_dir/$questa_bin_dir/vcover$exe"
 
     #-------------------------------------------------------------------------
 
-                   [ -d "$QUESTA_ROOTDIR" ]  \
-    || error "directory '$QUESTA_ROOTDIR' expected"
+                [ -d "$choosen_version_dir/$questa_dir/$questa_bin_dir" ] ||
+    error "directory '$choosen_version_dir/$questa_dir/$questa_bin_dir' expected"
 
-                   [ -d "$QUESTA_ROOTDIR/$questa_bin_dir" ]  \
-    || error "directory '$QUESTA_ROOTDIR/$questa_bin_dir' expected"
+                      [ -f "$vsim_command" ] ||
+    error "executable file '$vsim_command' expected"
+
+                      [ -f "$vcover_command" ] ||
+    error "executable file '$vcover_command' expected"
+
+             [ -x "$vsim_command" ] ||
+    warning "file '$vsim_command' is not executable."  \
+            "Questa is installed with incorrect permissions?"
+
+             [ -x "$vcover_command" ] ||
+    warning "file '$vcover_command' is not executable."  \
+            "Questa is installed with incorrect permissions?"
 }
 
 #-----------------------------------------------------------------------------
@@ -312,10 +364,10 @@ run_questa ()
                 "You may need to resolve the licensing issues."
     fi
 
-    if ! is_command_available vsim
+    if ! is_command_available "$vsim_command"
     then
-        error "$error_prefix vsim executable is not available."  \
-              "Have you installed the simulator, either"         \
+        error "$error_prefix '$vsim_command' executable is not available."  \
+              "Have you installed the simulator, either"                    \
               "together with Quartus package or separately?"
     fi
 
@@ -325,11 +377,11 @@ run_questa ()
         vsim_options=-c
     fi
 
-    vsim $vsim_options -do $questa_script 2>&1
+    "$vsim_command" $vsim_options -do $questa_script 2>&1
     cp transcript "$log"
 
     if [ -f coverage.ucdb ] ; then
-        vcover report -details -html coverage.ucdb
+        "$vcover_command" report -details -html coverage.ucdb
     fi
 }
 
@@ -398,9 +450,9 @@ EOF
 
 synthesize_for_fpga_quartus ()
 {
-    is_command_available_or_error quartus_sh " from Intel FPGA Quartus Prime package"
+    is_command_available_or_error "$quartus_sh_full_real_path" " from Intel FPGA Quartus Prime package"
 
-    if ! quartus_sh --no_banner --flow compile fpga_project |& tee -a "$log"
+    if ! "$quartus_sh_full_real_path" --no_banner --flow compile fpga_project |& tee -a "$log"
     then
         grep -i -A 5 error "$log" 2>&1
         error "synthesis failed"
@@ -413,7 +465,7 @@ synthesize_for_fpga_quartus ()
 
 configure_fpga_quartus ()
 {
-    is_command_available_or_error quartus_pgm " from Intel FPGA Quartus Prime package"
+    is_command_available_or_error "$quartus_pgm_full_real_path" " from Intel FPGA Quartus Prime package"
 
     #-------------------------------------------------------------------------
 
@@ -433,7 +485,7 @@ configure_fpga_quartus ()
 
     #-------------------------------------------------------------------------
 
-    quartus_pgm -l &> cable_list
+    "$quartus_pgm_full_real_path" -l &> cable_list
 
     cable_name_1=$(set +o pipefail; grep "1) " cable_list | sed 's/.*1) //')
     cable_name_2=$(set +o pipefail; grep "2) " cable_list | sed 's/.*2) //')
@@ -486,12 +538,12 @@ configure_fpga_quartus ()
 
         if [ $device_name = 5CSE ] || [ $device_name = 5CSX ] || [ $device_name = 5CST ]
         then
-            quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file@2"
+            "$quartus_pgm_full_real_path" --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file@2"
         else
-            quartus_pgm --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
+            "$quartus_pgm_full_real_path" --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
         fi
     else
-        error "cannot detect a USB-Blaster cable connected" \
+        error "cannot detect a USB-Blaster cable connected"  \
               "for $fpga_board FPGA board"
     fi
 
@@ -502,9 +554,9 @@ configure_fpga_quartus ()
 
 run_fpga_synthesis_gui_quartus ()
 {
-    is_command_available_or_error quartus " from Intel FPGA Quartus Prime package"
+    is_command_available_or_error "$quartus_full_real_path" " from Intel FPGA Quartus Prime package"
 
     setup_run_directory_for_fpga_synthesis
 
-    quartus fpga_project.qpf &
+    "$quartus_full_real_path" fpga_project.qpf &
 }
