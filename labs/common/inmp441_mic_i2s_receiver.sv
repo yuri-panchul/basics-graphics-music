@@ -90,6 +90,6 @@ module inmp441_mic_i2s_receiver
                 ready <= '1;
             end
         end else
-            ready <= '0; // ready is strobing single !!!
+            ready <= '0; // ready is strobing signal !!!
 
 endmodule
