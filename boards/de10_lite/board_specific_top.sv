@@ -48,8 +48,13 @@ module board_specific_top
     wire  [          7:0] abcdefgh;
     wire  [w_digit - 1:0] digit;
 
+    wire                  mic_ready;
     wire  [         23:0] mic;
     wire  [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                  UART_TX;
+    wire                  UART_RX = '1;
 
     //------------------------------------------------------------------------
 
@@ -90,6 +95,10 @@ module board_specific_top
         .green    (   VGA_G    ),
         .blue     (   VGA_B    ),
 
+        .uart_rx  (   UART_RX  ),
+        .uart_tx  (   UART_TX  ),
+
+        .mic_ready(   mic_ready),
         .mic      (   mic      ),
         .sound    (   sound    ),
 
@@ -157,6 +166,7 @@ module board_specific_top
         .ws    ( GPIO [2] ), // JP1 pin 3
         .sck   ( GPIO [4] ), // JP1 pin 5
         .sd    ( GPIO [5] ), // JP1 pin 6
+        .ready ( mic_ready),
         .value ( mic      )
     );
 

@@ -55,6 +55,9 @@ module board_specific_top
     wire clk =   CLK100MHZ;
     wire rst = ~ CPU_RESETN;
 
+    // FIXME: Should be assigned to some GPIO!
+    wire UART_RXD_OUT;
+
     //------------------------------------------------------------------------
 
     assign LED0_B = 1'b0;
@@ -75,6 +78,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire               mic_ready;
     wire [       23:0] mic;
     wire [        7:0] abcdefgh;
 
@@ -182,7 +186,11 @@ module board_specific_top
         .green    ( JC [7:4]  ),
         .blue     ( JB [3:0]  ),
 
+        .uart_rx  (UART_TXD_IN),
+        .uart_tx  (UART_RXD_OUT),
+
         .mic      ( mic       ),
+        .mic_ready( mic_ready ),
         .gpio     ( GPIO      )
     );
 
@@ -229,6 +237,7 @@ module board_specific_top
         .ws        ( JD [4]     ),
         .sck       ( JD [7]     ),
         .sd        ( JD [6]     ),
+        .ready     ( mic_ready  ),
         .value     ( mic        )
     );
 

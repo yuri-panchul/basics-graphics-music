@@ -47,6 +47,10 @@ module board_specific_top
     wire                  rst    = sw [w_sw - 1];
     wire [w_top_sw - 1:0] top_sw = sw [w_top_sw - 1:0];
 
+    // FIXME: Should be assigned to some GPIO!
+    wire                  UART_RX = '1;
+    wire                  UART_TX;
+
     //------------------------------------------------------------------------
 
     wire [7:0] abcdefgh;
@@ -57,6 +61,7 @@ module board_specific_top
 
     assign an = ~ digit;
 
+    wire        mic_ready;
     wire [23:0] mic;
 
     //------------------------------------------------------------------------
@@ -99,7 +104,11 @@ module board_specific_top
         .green    ( vgaBlue     ),
         .blue     ( vgaGreen    ),
 
+        .uart_rx  ( UART_RX     ),
+        .uart_tx  ( UART_TX     ),
+
         .mic      ( mic         ),
+        .mic_ready( mic_ready   ),
         .gpio     (             )
     );
 
@@ -115,7 +124,8 @@ module board_specific_top
         .ws    ( JA [5] ),
         .sck   ( JA [4] ),
         .sd    ( JA [0] ),
-        .value ( mic    )
+        .ready ( mic_ready ),
+        .value ( mic       )
     );
 
     assign JA [2] = 1'b0;  // GND - JA pin 3

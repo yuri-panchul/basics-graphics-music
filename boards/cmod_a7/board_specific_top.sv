@@ -71,6 +71,8 @@ module board_specific_top
     wire clk =   CLK100MHZ;
     wire rst = ~ CPU_RESETN;
 
+    wire UART_RXD_OUT; // FIXME: Should be assigned to some GPIO
+
     //------------------------------------------------------------------------
 
     assign LED16_B = 1'b0;
@@ -95,6 +97,7 @@ module board_specific_top
     assign AN = ~ digit;
 
     wire [23:0] mic = '0;
+    wire        mic_ready = '0;
 
     //------------------------------------------------------------------------
 
@@ -136,6 +139,10 @@ module board_specific_top
         .green    ( VGA_G    ),
         .blue     ( VGA_B    ),
 
+        .uart_rx  ( UART_TXD_IN),
+        .uart_tx  ( UART_RXD_OUT),
+
+        .mic_ready( mic_ready),
         .mic      ( mic      ),
         .gpio     (          )
     );

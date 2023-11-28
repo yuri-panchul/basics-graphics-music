@@ -94,6 +94,10 @@ module board_specific_top
     assign AN = ~ digit;
 
     wire [23:0] mic;
+    wire        mic_ready;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire        UART_TX;
 
     //------------------------------------------------------------------------
 
@@ -135,6 +139,10 @@ module board_specific_top
         .green    ( VGA_G    ),
         .blue     ( VGA_B    ),
 
+        .uart_rx  ( UART_TXD_IN),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready),
         .mic      ( mic      ),
         .gpio     (          )
     );
@@ -151,6 +159,7 @@ module board_specific_top
         .ws    ( JD [8] ),
         .sck   ( JD [7] ),
         .sd    ( JD [1] ),
+        .ready ( mic_ready),
         .value ( mic    )
     );
 
