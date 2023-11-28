@@ -70,6 +70,7 @@ module board_specific_top
     wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
+    wire                      mic_ready;
 
    //------------------------------------------------------------------------
 
@@ -132,7 +133,11 @@ module board_specific_top
         .green    ( VGA_G     ),
         .blue     ( VGA_B     ),
 
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
         .mic      ( mic       ),
+        .mic_ready( mic_ready ),
         `ifndef ENABLE_TM1638
         .gpio     ( GPIO      )
         `else
@@ -178,9 +183,10 @@ module board_specific_top
     //------------------------------------------------------------------------
 
 `ifdef ENABLE_INMP441
-    inmp441_mic_i2s_receiver
+    inmp441_mic_i2s_receiver_v2
     # (
-        .clk_mhz ( clk_mhz    )
+        .clk_mhz       ( clk_mhz ),
+        .samplerate_hz ( 22000   )
     )
     i_microphone
     (
@@ -190,7 +196,8 @@ module board_specific_top
         .ws    ( GPIO [4] ),
         .sck   ( GPIO [3] ),
         .sd    ( GPIO [6] ),
-        .value ( mic      )
+        .value ( mic      ),
+        .ready ( mic_ready)
     );
 `endif
 
