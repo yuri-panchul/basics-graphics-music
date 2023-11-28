@@ -10,6 +10,7 @@ module digilent_pmod_mic3_spi_receiver
     output              cs,
     output              sck,
     input               sdo,
+    output logic        ready,
     output logic [11:0] value
 );
 
@@ -64,6 +65,7 @@ module digilent_pmod_mic3_spi_receiver
         begin
             shift <= '0;
             value <= '0;
+            ready <= '0;
         end
         else if (clk_en)
         begin
@@ -74,8 +76,10 @@ module digilent_pmod_mic3_spi_receiver
             else if (value_done)
             begin
                 value <= shift;
+                ready <= '1;
             end
-        end
+        end else
+            ready <= '0; // ready is strobing signal !!!
     end
 
 endmodule
