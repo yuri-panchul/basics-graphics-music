@@ -60,6 +60,7 @@ module top
        assign green    = '0;
        assign blue     = '0;
        assign sound    = '0;
+       assign uart_tx  = '1;
 
     //------------------------------------------------------------------------
     //
