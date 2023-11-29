@@ -53,6 +53,8 @@ module board_specific_top
     // FIXME: Should be assigned to some GPIO!
     wire                 UART_TX;
 
+    wire [         15:0] sound;
+
     //------------------------------------------------------------------------
 
     wire slow_clk;
@@ -97,6 +99,8 @@ module board_specific_top
 
         .mic_ready(   mic_ready   ),
         .mic      (   mic         ),
+        .sound    (   sound       ),
+
         .gpio     (   GPIO        )
     );
 
@@ -113,17 +117,35 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [3] ),
-        .sck   ( GPIO [1] ),
-        .sd    ( GPIO [0] ),
-        .ready ( mic_ready),
-        .value ( mic      )
+        .clk   ( clk       ),
+        .rst   ( rst       ),
+        .lr    ( GPIO [5]  ), // P33
+        .ws    ( GPIO [3]  ), // P31
+        .sck   ( GPIO [1]  ), // P28
+        .sd    ( GPIO [0]  ), // P30
+        .ready ( mic_ready ),
+        .value ( mic       )
     );
 
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
+    assign GPIO [4] = 1'b0;  // P34 - GND
+    assign GPIO [2] = 1'b1;  // P32 - VCC
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz   )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( GPIO [14] ), // P52
+        .bclk    ( GPIO [12] ), // P49
+        .lrclk   ( GPIO [8]  ), // P42
+        .sdata   ( GPIO [10] )  // P44
+    );                          // GND
+                                // J4 Pin 2 - VCC 3.3V (30-45 mA)
 
 endmodule

@@ -13,7 +13,7 @@ module board_specific_top
               w_sw     = 4,
               w_led    = 8,
               w_digit  = 0,
-              w_gpio   = 36                   // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
+              w_gpio   = 36                   // GPIO_0 [31], [33], [35] reserved for tm1638; GPIO [11], [13], [15], [17] reserved for i2s audio; GPIO_0[5:0] reserved for mic
 )
 (
     input                    FPGA_CLK1_50,
@@ -49,6 +49,7 @@ module board_specific_top
 
     wire                  mic_ready;
     wire [          23:0] mic;
+    wire [          15:0] sound;
 
     // FIXME: Should be assigned to some GPIO!
     wire                  UART_TX;
@@ -122,39 +123,42 @@ module board_specific_top
 
     top
     # (
-        .clk_mhz ( clk_mhz     ),
-        .w_key   ( w_top_key   ),
-        .w_sw    ( w_top_sw    ),
-        .w_led   ( w_top_led   ),
-        .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio      )      // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
+        .clk_mhz   ( clk_mhz     ),
+        .w_key     ( w_top_key   ),
+        .w_sw      ( w_top_sw    ),
+        .w_led     ( w_top_led   ),
+        .w_digit   ( w_top_digit ),
+        .w_gpio    ( w_gpio      )       // GPIO_0 [31], [33], [35] reserved for tm1638; GPIO [11], [13], [15], [17] reserved for i2s audio; GPIO_0[5:0] reserved for mic
     )
     i_top
     (
-        .clk      ( clk        ),
-        .rst      ( rst        ),
+        .clk       ( clk         ),
+        .slow_clk  ( slow_clk    ),
+        .rst       ( rst         ),
 
-        .key      ( top_key    ),
-        .sw       ( top_sw     ),
+        .key       ( top_key     ),
+        .sw        ( top_sw      ),
 
-        .led      ( top_led    ),
+        .led       ( top_led     ),
 
-        .abcdefgh ( abcdefgh   ),
-        .digit    ( top_digit  ),
+        .abcdefgh  ( abcdefgh    ),
+        .digit     ( top_digit   ),
 
-        .vsync    ( vga_vs     ),
-        .hsync    ( vga_hs     ),
+        .vsync     ( vga_vs      ),
+        .hsync     ( vga_hs      ),
 
-        .red      ( vga_r      ),
-        .green    ( vga_g      ),
-        .blue     ( vga_b      ),
+        .red       ( vga_r       ),
+        .green     ( vga_g       ),
+        .blue      ( vga_b       ),
 
-        .uart_rx  ( UART_RX    ),
-        .uart_tx  ( UART_TX    ),
+        .uart_rx   ( UART_RX     ),
+        .uart_tx   ( UART_TX     ),
 
-        .mic_ready( mic_ready  ),
-        .mic      ( mic        ),
-        .gpio     ( GPIO_0     )
+        .mic_ready ( mic_ready   ),
+        .mic       ( mic         ),
+        .sound     ( sound       ),
+
+        .gpio      ( GPIO_0      )
     );
 
     //------------------------------------------------------------------------
@@ -306,5 +310,22 @@ module board_specific_top
 
     assign GPIO_0 [1] = 1'b0;   // GND - JP1 pin 2
     assign GPIO_0 [3] = 1'b1;   // VCC - JP1 pin 4
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk         ),
+        .reset   ( rst         ),
+        .data_in ( sound       ),
+        .mclk    ( GPIO_0 [17] ), // JP1 pin 20
+        .bclk    ( GPIO_0 [15] ), // JP1 pin 18
+        .lrclk   ( GPIO_0 [11] ), // JP1 pin 14
+        .sdata   ( GPIO_0 [13] )  // JP1 pin 16
+    );                            // JP1 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
 endmodule
