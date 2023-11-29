@@ -33,6 +33,14 @@ module top
     output logic [          3:0] green,
     output logic [          3:0] blue,
 
+    // UART
+
+    input                        uart_rx,
+    output                       uart_tx,
+
+    // SOUND
+
+    input                        mic_ready,
     input        [         23:0] mic,
     output       [         15:0] sound,
 
@@ -52,6 +60,7 @@ module top
     // assign green    = '0;
     // assign blue     = '0;
        assign sound    = '0;
+       assign uart_tx  = '1;
 
     //------------------------------------------------------------------------
 

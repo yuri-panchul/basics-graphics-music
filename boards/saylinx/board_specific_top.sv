@@ -49,7 +49,11 @@ module board_specific_top
 
     wire [          3:0] red, green, blue;
     wire [         23:0] mic;
+    wire                 mic_ready;
     wire [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TXD;
 
     //------------------------------------------------------------------------
 
@@ -90,6 +94,10 @@ module board_specific_top
         .green    ( green      ),
         .blue     ( blue       ),
 
+        .uart_rx  ( UART_RXD   ),
+        .uart_tx  ( UART_TXD   ),
+
+        .mic_ready( mic_ready  ),
         .mic      ( mic        ),
         .sound    ( sound      ),
 
@@ -113,6 +121,7 @@ module board_specific_top
         .ws    ( GPIO_0 [2] ),
         .sck   ( GPIO_0 [4] ),
         .sd    ( GPIO_0 [5] ),
+        .ready ( mic_ready  ),
         .value ( mic        )
     );
 

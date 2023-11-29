@@ -53,6 +53,10 @@ module board_specific_top
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TX;
+    wire                 UART_RX = '1;
+
     assign
     {
         seven_seg_a,
@@ -107,6 +111,10 @@ module board_specific_top
         .green    (               ),
         .blue     (               ),
 
+        .uart_rx  (   UART_RX     ),
+        .uart_tx  (   UART_TX     ),
+
+        .mic_ready(               ),
         .mic      (               ),
         .gpio     (               )
     );
