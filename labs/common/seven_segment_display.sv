@@ -45,14 +45,16 @@ module seven_segment_display
     endfunction
 
     // Calculate display update freq divider
-    localparam cnt_top = clk_mhz * 1000000 / w_digit / update_hz;
-    localparam w_cnt = $clog2 (cnt_top);
+
+    localparam cnt_top = clk_mhz * 1000000 / w_digit / update_hz,
+               w_cnt   = $clog2 (cnt_top);
+
     logic [w_cnt - 1:0] cnt;
 
     localparam w_index = $clog2 (w_digit);
     logic [w_index - 1:0] index;
 
-    // UPdate display digit only when necessary
+    // Update display digit only when necessary
 
     always_ff @ (posedge clk or posedge rst)
         if (rst) begin
@@ -60,11 +62,15 @@ module seven_segment_display
             cnt   <= '0;
         end else begin
             cnt <= cnt + w_cnt' (1);
-            if (cnt == cnt_top) begin
+
+            if (cnt == cnt_top)
+            begin
                 index <= (index == w_index' (w_digit - 1) ?
                         w_index' (0) : index + 1'd1);
-                if(index == {w_index{1'b1}})
+
+                if (index == { w_index { 1'b1 } })
                     cnt <= '0;
+
                 abcdefgh <= dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
                 digit    <= w_digit' (1'b1) << index;
             end
