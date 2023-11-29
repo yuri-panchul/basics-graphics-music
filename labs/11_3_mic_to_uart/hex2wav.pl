@@ -37,12 +37,12 @@ $SIG{INT} = sub { $write->finish(); };
 $SIG{TERM} = sub { $write->finish(); };
 
 while(<PORT>) {
-	if(length($_) < 6) { next; }
-	$hex1 = substr($_, 0, 2);
-	$hex2 = substr($_, 2, 2);
-	$hex3 = substr($_, 4, 2);
-	$sample = hex($hex1) * 65536 + hex($hex2) * 256 + hex($hex3);
-	$write->write($sample >> $scale_factor);
+    if(length($_) < 6) { next; }
+    $hex1 = substr($_, 0, 2);
+    $hex2 = substr($_, 2, 2);
+    $hex3 = substr($_, 4, 2);
+    $sample = hex($hex1) * 65536 + hex($hex2) * 256 + hex($hex3);
+    $write->write($sample >> $scale_factor);
 }
 
 $write->finish();

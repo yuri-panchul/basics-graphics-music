@@ -54,8 +54,8 @@ module uart_transmitter
     parameter clk_mhz = 50,
               baud_rate = 115200,
               data_length = 8,
-	      need_parity = 0, // 0 - no parity, 1 - even, 2 - odd 
-	      stop_bits = 1
+              need_parity = 0, // 0 - no parity, 1 - even, 2 - odd 
+              stop_bits = 1
 )
 (
     input                        clk,
@@ -94,9 +94,9 @@ module uart_transmitter
             bclk_cnt <= w_bclk_cnt'd0;
         else begin
             bclk_cnt <= bclk_cnt + w_bclk_cnt'd1;
-	    if (bclk_cnt == bclk_top)
-		    bclk_cnt <= w_bclk_cnt'd0;
-	end
+            if (bclk_cnt == bclk_top)
+                    bclk_cnt <= w_bclk_cnt'd0;
+        end
         
     assign bclk_stb = (bclk_cnt == bclk_top) ? 'b1 : 'b0;
 
@@ -115,7 +115,7 @@ module uart_transmitter
             S_XMIT:    tx = data_buffer[bitnum];
             S_PARITY:  tx = parity ^ (need_parity - 1);
             S_STOP:    tx = UART_LOGIC_1;
-	    default:   tx = UART_LOGIC_1;
+            default:   tx = UART_LOGIC_1;
         endcase
 
     // Perform state machine transitions
