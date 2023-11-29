@@ -38,7 +38,7 @@
                 ptr <= 0;
         else
         if(valid_ready)
-        begin   
+        begin
                 ptr <= ptr + 'd1;
                 if(ptr == 'd6)
                         ptr <= 'd0;
@@ -49,12 +49,12 @@
 //------------------------------------------------------------------------
 
 
-module uart_transmitter 
+module uart_transmitter
 # (
     parameter clk_mhz = 50,
               baud_rate = 115200,
               data_length = 8,
-              need_parity = 0, // 0 - no parity, 1 - even, 2 - odd 
+              need_parity = 0, // 0 - no parity, 1 - even, 2 - odd
               stop_bits = 1
 )
 (
@@ -63,14 +63,14 @@ module uart_transmitter
     input  [data_length - 1:0]   data,
     input                        valid,
     output                       ready,
-    output                       tx    
+    output                       tx
 );
 
     localparam S_IDLE   = 3'd0,
                S_START  = 3'd1,
                S_XMIT   = 3'd2,
                S_PARITY = 3'd3,
-               S_STOP   = 3'd4; 
+               S_STOP   = 3'd4;
 
     localparam UART_LOGIC_1 = 1'b1,
                UART_LOGIC_0 = 1'b0;
@@ -88,7 +88,7 @@ module uart_transmitter
     logic parity;
 
     // Generate tx baud rate clock strobe
-    
+
     always_ff @ (posedge clk or posedge rst)
         if(rst)
             bclk_cnt <= w_bclk_cnt'd0;
@@ -97,12 +97,12 @@ module uart_transmitter
             if (bclk_cnt == bclk_top)
                     bclk_cnt <= w_bclk_cnt'd0;
         end
-        
+
     assign bclk_stb = (bclk_cnt == bclk_top) ? 'b1 : 'b0;
 
     // Generate ready signal either if FSM is idleing, or every last STOP bit
     // but only once in every bclk.
-    assign ready = (state == S_IDLE) ? 'b1 : 
+    assign ready = (state == S_IDLE) ? 'b1 :
                    ((state == S_STOP) && (bitnum == stop_bits)
                                       && (bclk_cnt == bclk_top)) ? 'b1 : 'b0;
 
@@ -119,7 +119,7 @@ module uart_transmitter
         endcase
 
     // Perform state machine transitions
-    
+
     always_ff @ (posedge clk or posedge rst)
         if(rst)
         begin

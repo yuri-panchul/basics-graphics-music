@@ -1,5 +1,5 @@
 `include "config.svh"
-`define ENABLE_TP1638 
+`define ENABLE_TP1638
 `define HCW132
 `define ENABLE_INMP441
 
@@ -136,10 +136,10 @@ module top
     begin
         if(rst)
            clk_div <= 0;
-        else 
+        else
            clk_div <= clk_div + 1;
     end
-        
+
     assign uart_valid = (uart_ready && clk_div==0) ? 'b1 : 'b0;
 
     always @ (posedge clk or posedge rst)
@@ -155,7 +155,7 @@ module top
             sample_string[5] <= "!";
             sample_string[6] <= "\r";
             sample_string[7] <= "\n";
-    end else 
+    end else
         if(uart_valid)
         begin
             sample_string_ptr <= sample_string_ptr + 'd1;

@@ -30,7 +30,7 @@ my $details = {
     'sample_rate'   => 10000,
     'channels'      => 1,
 };
- 
+
 my $write = $wav -> write('-', $details);
 
 $SIG{INT} = sub { $write->finish(); };
