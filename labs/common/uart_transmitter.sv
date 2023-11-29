@@ -91,11 +91,11 @@ module uart_transmitter
 
     always_ff @ (posedge clk or posedge rst)
         if(rst)
-            bclk_cnt <= w_bclk_cnt'd0;
+            bclk_cnt <= '0;
         else begin
-            bclk_cnt <= bclk_cnt + w_bclk_cnt'd1;
+            bclk_cnt <= bclk_cnt + '1;
             if (bclk_cnt == bclk_top)
-                    bclk_cnt <= w_bclk_cnt'd0;
+                    bclk_cnt <= '0;
         end
 
     assign bclk_stb = (bclk_cnt == bclk_top) ? 'b1 : 'b0;
