@@ -275,7 +275,7 @@ module top
 
     //------------------------------------------------------------------------
     //
-    //  Dislay current note and audio level on 7-seg display (8 digits)
+    //  Display current note and audio level on 7-seg display (8 digits)
     //
     //  The note will be shown in highest (8's) digit
     //
@@ -290,7 +290,7 @@ module top
     seven_segment_display # (w_digit, clk_mhz, 16)
     i_7segment (.number (w_number' (number)), .*);
 
-    // Since dislay module accepts only hex number we need
+    // Since display module accepts only hex number we need
     // to translate note to hex digit
 
     function [3:0] note_to_disp (input [w_note - 1:0] note);

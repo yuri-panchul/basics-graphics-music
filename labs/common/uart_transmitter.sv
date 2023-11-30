@@ -93,7 +93,7 @@ module uart_transmitter
         if(rst)
             bclk_cnt <= '0;
         else begin
-            bclk_cnt <= bclk_cnt + w_blk_cnt' (1);
+            bclk_cnt <= bclk_cnt + w_bclk_cnt' (1);
             if (bclk_cnt == bclk_top)
                     bclk_cnt <= '0;
         end
