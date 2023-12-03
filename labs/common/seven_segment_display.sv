@@ -6,7 +6,8 @@ module seven_segment_display
 # (
     parameter w_digit = 2,
     parameter clk_mhz = 50,
-    parameter update_hz = 16 // How often to update display in Hz, should not be too high
+    parameter digit_update_hz = 128, // How often to updat ea single digit, should be quite high to avoid flicker
+    parameter data_update_hz = 16 // How often to update data register, should not be too high
 )
 (
     input  clk,
@@ -46,32 +47,54 @@ module seven_segment_display
 
     // Calculate display update freq divider
 
-    localparam cnt_top = clk_mhz * 1000000 / w_digit / update_hz,
-               w_cnt   = $clog2 (cnt_top);
+    localparam display_update_cnt_max = clk_mhz * 1000000 / w_digit / digit_update_hz,
+               w_display_update_cnt   = $clog2 (display_update_cnt_max + 1);
 
-    logic [w_cnt - 1:0] cnt;
+    logic [w_display_update_cnt - 1:0] display_update_cnt;
 
-    localparam w_index = $clog2 (w_digit);
+    // Calculate data update freq divider
+    
+    localparam data_update_cnt_max = digit_update_hz / data_update_hz,
+               w_data_update_cnt   = $clog2 (data_update_cnt_max + 1);
+
+    logic [w_data_update_cnt - 1:0] data_update_cnt;
+
+    localparam w_index = $clog2 (w_digit + 1);
     logic [w_index - 1:0] index;
 
-    // Update display digit only when necessary
+    logic [w_digit * 4 - 1:0] number_r;
+
+    // Update one digit only when necessary
 
     always_ff @ (posedge clk or posedge rst)
         if (rst) begin
-            index <= '0;
-            cnt   <= '0;
+            index              <= '0;
+            display_update_cnt <= '0;
+            data_update_cnt    <= '0;
         end else begin
-            cnt <= cnt + w_cnt' (1);
+            display_update_cnt <= display_update_cnt + 'd1;
 
-            if (cnt == cnt_top)
+            if (display_update_cnt == w_display_update_cnt'(display_update_cnt_max))
             begin
+                display_update_cnt <= '0;
+
                 index <= (index == w_index' (w_digit - 1) ?
-                        w_index' (0) : index + 1'd1);
+                        '0 : index + 1'd1);
 
-                if (index == { w_index { 1'b1 } })
-                    cnt <= '0;
+                if (index == w_digit - 1)
+                begin
+                    index <= '0;
+                    data_update_cnt <= data_update_cnt + 'd1;
 
-                abcdefgh <= dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
+		    if (data_update_cnt == w_data_update_cnt'(data_update_cnt_max))
+                    begin
+                        number_r        <= number;
+                        data_update_cnt <= '0;
+                    end
+
+                end
+
+                abcdefgh <= dig_to_seg (number_r [index * 4 +: 4]) ^ dots [index];
                 digit    <= w_digit' (1'b1) << index;
             end
         end
