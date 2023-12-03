@@ -2,7 +2,7 @@
 
 `include "config.svh"
 
-module seven_segment_display
+module seven_segment_display1
 # (
     parameter w_digit   = 2,
     parameter clk_mhz   = 50,
