@@ -55,6 +55,8 @@ module seven_segment_display
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             cnt <= '0;
+        else if (cnt == cnt_max)
+            cnt <= '0;
         else
             cnt <= cnt + 1'd1;
 
