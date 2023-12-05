@@ -63,7 +63,7 @@ module uart_transmitter
     input  [data_length - 1:0]   data,
     input                        valid,
     output                       ready,
-    output                       tx
+    output logic                 tx
 );
 
     localparam S_IDLE   = 3'd0,
@@ -98,10 +98,11 @@ module uart_transmitter
                     bclk_cnt <= '0;
         end
 
-    assign bclk_stb = (bclk_cnt == bclk_top) ? 'b1 : 'b0;
+    assign bclk_stb = (bclk_cnt == bclk_top);
 
     // Generate ready signal either if FSM is idleing, or every last STOP bit
     // but only once in every bclk.
+
     assign ready = (state == S_IDLE) ? 'b1 :
                    ((state == S_STOP) && (bitnum == stop_bits)
                                       && (bclk_cnt == bclk_top)) ? 'b1 : 'b0;
