@@ -62,7 +62,7 @@ module uart_transmitter
     input                        rst,
     input  [data_length - 1:0]   data,
     input                        valid,
-    output logic                 ready,
+    output                       ready,
     output logic                 tx
 );
 
@@ -79,8 +79,8 @@ module uart_transmitter
     logic [4:0] bitnum;
     logic [data_length - 1:0] data_buffer;
 
-    localparam bclk_max = clk_mhz * 1000000 / baud_rate;
-    localparam w_bclk_cnt = $clog2(bclk_max + 1);
+    localparam bclk_top = clk_mhz * 1000000 / baud_rate;
+    localparam w_bclk_cnt = $clog2(bclk_top + 1);
 
     logic [w_bclk_cnt - 1:0] bclk_cnt;
     logic bclk_stb;
@@ -94,16 +94,17 @@ module uart_transmitter
             bclk_cnt <= '0;
         else begin
             bclk_cnt <= bclk_cnt + 'd1;
-            if (bclk_cnt == bclk_max)
+            if (bclk_cnt == bclk_top)
                     bclk_cnt <= '0;
         end
 
-    assign bclk_stb = (bclk_cnt == bclk_max);
+    assign bclk_stb = (bclk_cnt == bclk_top);
 
     // Generate ready signal either if FSM is idleing, or every last STOP bit
     // but only once in every bclk.
+
     assign ready = (state == S_IDLE) ? 'b1 :
-                   ((state == S_STOP) && (bitnum == stop_bits) && (bclk_cnt == bclk_max));
+                   ((state == S_STOP) && (bitnum == stop_bits) && (bclk_cnt == bclk_top));
 
     // Modulate output TX signal depending on state and data
 

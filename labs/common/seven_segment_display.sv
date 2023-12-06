@@ -7,7 +7,7 @@ module seven_segment_display
     parameter w_digit = 2,
     parameter clk_mhz = 50,
     parameter digit_update_hz = 128, // How often to updat ea single digit, should be quite high to avoid flicker
-    parameter data_update_hz = 16 // How often to update data register, should not be too high
+    parameter data_update_hz = 4 // How often to update data register, should not be too high
 )
 (
     input  clk,
@@ -16,8 +16,8 @@ module seven_segment_display
     input  [w_digit * 4 - 1:0] number,
     input  [w_digit     - 1:0] dots,
 
-    output logic [              7:0] abcdefgh,
-    output logic [w_digit     - 1:0] digit
+    output [              7:0] abcdefgh,
+    output [w_digit     - 1:0] digit
 );
 
     function [7:0] dig_to_seg (input [3:0] dig);
