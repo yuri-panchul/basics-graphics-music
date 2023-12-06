@@ -183,6 +183,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
 `ifdef ENABLE_INMP441
+`ifndef USE_DIGILENT_PMOD_MIC3
     inmp441_mic_i2s_receiver_v2
     # (
         .clk_mhz       ( clk_mhz ),
@@ -199,6 +200,33 @@ module board_specific_top
         .value ( mic      ),
         .ready ( mic_ready)
     );
+`endif
+`endif
+
+
+`ifdef USE_DIGILENT_PMOD_MIC3
+`ifndef ENABLE_INMP441
+
+    wire [11:0] mic_12;
+
+    digilent_pmod_mic3_spi_receiver_v2
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    i_microphone
+    (
+        .clk   ( clk                               ),
+        .rst   ( rst                               ),
+        .cs    ( GPIO [4]                          ),
+        .sck   ( GPIO [3]                          ),
+        .sdo   ( GPIO [6]                          ),
+        .ready ( mic_ready                         ),
+        .value ( mic_12                            )
+    );
+
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+`endif
 `endif
 
 endmodule
