@@ -47,19 +47,19 @@ module seven_segment_display
 
     // Calculate display update freq divider
 
-    localparam display_update_cnt_max = clk_mhz * 1000000 / w_digit / digit_update_hz,
-               w_display_update_cnt   = $clog2 (display_update_cnt_max + 1);
+    localparam display_update_cnt_top = clk_mhz * 1000000 / w_digit / digit_update_hz,
+               w_display_update_cnt   = $clog2 (display_update_cnt_top + 1);
 
     logic [w_display_update_cnt - 1:0] display_update_cnt;
 
     // Calculate data update freq divider
     
-    localparam data_update_cnt_max = digit_update_hz / data_update_hz,
-               w_data_update_cnt   = $clog2 (data_update_cnt_max + 1);
+    localparam data_update_cnt_top = digit_update_hz / data_update_hz,
+               w_data_update_cnt   = $clog2 (data_update_cnt_top + 1);
 
     logic [w_data_update_cnt - 1:0] data_update_cnt;
 
-    localparam w_index = $clog2 (w_digit + 1);
+    localparam w_index = $clog2 (w_digit);
     logic [w_index - 1:0] index;
 
     logic [w_digit * 4 - 1:0] number_r;
@@ -72,9 +72,9 @@ module seven_segment_display
             display_update_cnt <= '0;
             data_update_cnt    <= '0;
         end else begin
-            display_update_cnt <= display_update_cnt + 'd1;
+            display_update_cnt <= display_update_cnt + 1'd1;
 
-            if (display_update_cnt == w_display_update_cnt'(display_update_cnt_max))
+            if (display_update_cnt == w_display_update_cnt'(display_update_cnt_top))
             begin
                 display_update_cnt <= '0;
 
@@ -84,9 +84,9 @@ module seven_segment_display
                 if (index == w_digit - 1)
                 begin
                     index <= '0;
-                    data_update_cnt <= data_update_cnt + 'd1;
+                    data_update_cnt <= data_update_cnt + 1'd1;
 
-		    if (data_update_cnt == w_data_update_cnt'(data_update_cnt_max))
+		    if (data_update_cnt == w_data_update_cnt'(data_update_cnt_top))
                     begin
                         number_r        <= number;
                         data_update_cnt <= '0;

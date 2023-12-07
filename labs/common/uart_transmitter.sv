@@ -93,7 +93,7 @@ module uart_transmitter
         if(rst)
             bclk_cnt <= '0;
         else begin
-            bclk_cnt <= bclk_cnt + 'd1;
+            bclk_cnt <= bclk_cnt + 1'd1;
             if (bclk_cnt == bclk_top)
                     bclk_cnt <= '0;
         end
@@ -103,7 +103,7 @@ module uart_transmitter
     // Generate ready signal either if FSM is idleing, or every last STOP bit
     // but only once in every bclk.
 
-    assign ready = (state == S_IDLE) ? 'b1 :
+    assign ready = (state == S_IDLE) ? 1'b1 :
                    ((state == S_STOP) && (bitnum == stop_bits) && (bclk_cnt == bclk_top));
 
     // Modulate output TX signal depending on state and data
@@ -124,8 +124,8 @@ module uart_transmitter
         if(rst)
         begin
             state <= S_IDLE;
-            parity <= 'd0;
-            bitnum <= 'd0;
+            parity <= '0;
+            bitnum <= '0;
         end
         else
             begin
@@ -138,7 +138,7 @@ module uart_transmitter
 
                     S_XMIT:    if (bclk_stb)
                                begin
-                                   bitnum <= bitnum + 'd1;
+                                   bitnum <= bitnum + 1'd1;
                                    parity <= parity ^ data_buffer[bitnum];
                                    if (bitnum == data_length - 1)
                                    begin
@@ -155,12 +155,12 @@ module uart_transmitter
 
                     S_STOP:    if (bclk_stb)
                                begin
-                                   bitnum <= bitnum + 'd1;
+                                   bitnum <= bitnum + 1'd1;
                                    if (bitnum == stop_bits)
                                    begin
                                        // Get ready for next frame
-                                       parity <= 'd0;
-                                       bitnum <= 'd0;
+                                       parity <= '0;
+                                       bitnum <= '0;
 
                                        if(valid)
                                            state <= S_START;

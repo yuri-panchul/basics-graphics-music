@@ -34,7 +34,7 @@ module inmp441_mic_i2s_receiver_v2
     assign lr = left_right;
 
     localparam sck_top = clk_mhz * 1000000 / samplerate_hz / 64 / 2;
-    localparam w_sck_cnt = $clog2(sck_top) + 1;
+    localparam w_sck_cnt = $clog2(sck_top + 1);
 
     logic [w_sck_cnt - 1:0] sck_cnt;
 
@@ -46,21 +46,21 @@ module inmp441_mic_i2s_receiver_v2
     always_ff @ (posedge clk or posedge rst)
         if(rst)
         begin
-            sck_cnt <= 'd0;
-            bitnum   <= 'd0;
-            sck      <= 'b0;
+            sck_cnt <= '0;
+            bitnum   <= '0;
+            sck      <= '0;
         end else begin
-            sck_cnt <= sck_cnt + 'd1;
-            ready <= 'b0;
+            sck_cnt <= sck_cnt + 1'd1;
+            ready <= '0;
 
             if (sck_cnt == w_sck_cnt'(sck_top))
             begin
-                sck_cnt <= 'd0;
+                sck_cnt <= '0;
                 sck <= ~sck;
 
                 if (~sck) // last clk before SCK goes high
                 begin
-                    bitnum <= bitnum + 'd1;
+                    bitnum <= bitnum + 1'd1;
 
                     if (ws == lr)
                         shift <= {shift[22:0], sd};
@@ -70,7 +70,7 @@ module inmp441_mic_i2s_receiver_v2
                         (lr == 'b1 && bitnum == 'd0))
                     begin
                         value <= shift;
-                        ready <= 'b1;
+                        ready <= 1'b1;
                     end
                 end
             end

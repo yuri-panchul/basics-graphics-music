@@ -52,17 +52,17 @@ module digilent_pmod_mic3_spi_receiver_v2
             bitnum  <= 'd0;
             sck     <= 'b0;
         end else begin
-            sck_cnt <= sck_cnt + 'd1;
+            sck_cnt <= sck_cnt + 1'd1;
             ready   <= 'b0;
 
             if (sck_cnt == w_sck_cnt'(sck_max))
             begin
-                sck_cnt <= 'd0;
+                sck_cnt <= '0;
                 sck     <= ~sck;
 
                 if (~sck) // Process one bit when SCK is low 
                 begin
-                    bitnum <= bitnum + 'd1;
+                    bitnum <= bitnum + 1'd1;
 
                     // Shift one bit of data when CS is low
                     if (~cs)

@@ -87,9 +87,9 @@ module inmp441_mic_i2s_receiver
             else if (value_done)
             begin
                 value <= shift;
-                ready <= '1;
+                ready <= 1'b1;
             end
         end else
-            ready <= '0; // ready is strobing signal !!!
+            ready <= 1'b0; // ready is strobing signal !!!
 
 endmodule
