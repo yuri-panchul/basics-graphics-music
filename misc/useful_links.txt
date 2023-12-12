@@ -1,0 +1,56 @@
+# Some useful links
+Yuri Panchul, 2023.12.11
+
+## The main repositories:
+
+https://github.com/yuri-panchul/basics-graphics-music
+Introductory examples for the classes on ASIC and FPGA design and verification
+
+https://github.com/yuri-panchul/systemverilog-homework
+SystemVerilog coding problems ranging from elementary syntax to interview-level questions
+
+## Some inexpensive starter boards:
+
+Altera:
+
+Terasic DE-10 Lite
+$140 / $82 academic
+Least number of issues with ports and drivers
+http://de10-lite.terasic.com
+
+Saylinx Bundle 2
+$56
+Well-rounded budget board with 8-digit 7-segment display and VGA
+https://www.aliexpress.us/item/2255800651323111.html
+
+Xilinx:
+
+Digilent Basys 3 with Artix-7
+$160
+A convenient Xilinx board to start.
+It is supported by Xilinx Vivado and therefore can be used with SystemVerilog synthesis,
+unlike less expensive Spartan-6 boards, which can only be used with older Xilinx ISE toolchain.
+https://digilent.com/shop/basys-3-artix-7-fpga-trainer-board-recommended-for-introductory-users
+
+Gowin:
+
+Tang Primer 20K Doc
+$41
+With a nice shield to accomodate the peripherals
+https://www.aliexpress.us/item/3256804466994057.html
+
+## Add-ons
+
+If your FPGA board does not have a 7-segment display or you need extra buttons and LED, you can buy an add-on board with TM1638 chip.
+Choose one with 7-segment display and 8 buttons:
+$1.31 + delivery
+https://www.aliexpress.us/item/3256802635508991.html
+
+INMP441 Microphone
+https://www.aliexpress.us/item/3256803154251183.html
+https://www.aliexpress.us/item/3256804931575068.html
+
+VGA adapters for the boards without VGA port
+https://www.aliexpress.us/item/3256801343762247.html
+https://www.aliexpress.us/item/2251832615945702.html
+
