@@ -1,0 +1,2852 @@
+Improve VGA support by adding the parameters for RGB channel width, from 1 to 8 bits per channel.
+
+Add UART support and labs for all boards.
+
+
+
+
+Digilent Arty A7
+Supported: TM1638, INMP441, Pmod MIC3
+TODO: Add sound output
+
+Digilent Basys3
+Supported: INMP441
+TODO: Add sound output
+Available in Hacker Dojo from Yuri Panchul (referred later as Yuri's collection)
+
+EPI-MiniCY4, and Altera Cyclone IV board documented in http://www.emooc.cc/ProductDetail/1600208.html
+Supported: PMOD VGA, INMP441
+TODO: VGA666, sound output
+Yuri's collection
+
+Terasic Cyclone V GX Starter Kit
+Supported: PMOD VGA, VGA666, INMP441, I2S sound output
+
+Digilent Cmod A7
+TODO: Basic bringup, TM1638, PMOD VGA, VGA666, INMP441, I2S sound output
+Yuri's collection (Cmod A7-35T variant)
+
+Terasic DE0
+Supported: INMP441, I2S sound output
+Note: Requires older Quartus 13.0sp2 or 13.1
+Yuri's collection
+
+Terasic DE0-CV
+Supported: INMP441, I2S sound output
+Yuri's collection
+
+Terasic DE0-Nano
+Supported: TM1638, PMOD VGA, VGA666, INMP441, I2S sound output
+Yuri's collection
+
+Terasic DE0-Nano-SoC
+Supported: TM1638, PMOD VGA, VGA666, INMP441, I2S sound output
+
+Terasic DE10-Lite
+Supported: TM1638, INMP441, I2S sound output, Muller counter
+Yuri's collection
+
+Terasic DE10-Nano
+Supported: TM1638, PMOD VGA, VGA666, VGA Mister, INMP441, I2S sound output
+
+Terasic DE1-SoC
+Supported: INMP441
+TODO: I2S sound output
+Yuri's collection
+
+Terasic DE2-115
+Supported: INMP441, I2S sound output
+Yuri's collection
+
+dk_dev_3c120n
+No sound and graphics supported
+Yuri's collection
+
+ice40hx8k_evb_yosys
+Supported: TM1638, INMP441
+Support is not documented, has to be re-tested
+
+Nexys4
+Nexys4-DDR
+Nexys A7
+Supported: INMP441
+TODO: board's own microphone and sound output, I2S sound output
+Yuri's collection
+
+Omdazz
+RzRd
+Supported: INMP441, Pmod MIC3, I2S sound output
+Yuri's collection
+
+Orange Crab ECP5 with Yosys
+Supported: TM1638, INMP441
+TODO: I2S sound output, re-check and document the board
+Yuri's collection
+
+Piswords-6
+Supported: INMP441
+TODO: I2S sound output
+Yuri's collection
+
+
+
+\n\n********************** qmtech_c4_starter\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter clk_mhz = 50,
+              w_key   = 1,
+              w_sw    = 0,
+              w_led   = 1,
+              w_digit = 3,
+              w_gpio  = 36 - 3 + 1  // from GPIO_J12[36] till GPIO_J12[3]
+)
+(
+    input                     CLK,
+    input                     KEY,
+    output                    LED,
+
+    output [             7:0] ABCDEFGH_N,
+    output [w_digit    - 1:0] DIGIT_N,
+
+    output                    VGA_HSYNC,
+    output                    VGA_VSYNC,
+
+    output [             4:0] VGA_RED,
+    output [             5:0] VGA_GREEN,
+    output [             4:0] VGA_BLUE,
+
+    input                     UART_RX,
+
+    inout  [w_gpio + 3 - 1:3] GPIO_J12
+);
+
+    //------------------------------------------------------------------------
+
+    wire                 clk = CLK;
+    wire                 rst = ~ KEY;
+    wire                 led;
+
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
+
+    wire [          3:0] red, green, blue;
+    wire [         23:0] mic;
+    wire                 mic_ready;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TX;
+
+    //------------------------------------------------------------------------
+
+    assign ABCDEFGH_N = ~ abcdefgh;
+    assign DIGIT_N    = ~ digit;
+
+    assign VGA_RED    = {            red   [3], red   };
+    assign VGA_GREEN  = { green [3], green [3], green };
+    assign VGA_BLUE   = {            blue  [3], blue  };
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz  ( clk_mhz   ),
+        .w_key    ( 1         ),  // There are no keys
+        .w_sw     ( 1         ),  // There are no switches
+        .w_led    ( w_led     ),
+        .w_digit  ( w_digit   ),
+        .w_gpio   ( w_gpio    )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( '0        ),
+        .sw       ( '0        ),
+
+        .led      ( LED       ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( digit     ),
+
+        .vsync    ( VGA_VSYNC ),
+        .hsync    ( VGA_HSYNC ),
+
+        .red      ( red       ),
+        .green    ( green     ),
+        .blue     ( blue      ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+
+        .gpio     ( GPIO_J12  )
+    );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk          ),
+        .rst   ( rst          ),
+        .lr    ( GPIO_J12 [8] ),
+        .ws    ( GPIO_J12 [6] ),
+        .sck   ( GPIO_J12 [4] ),
+        .sd    ( GPIO_J12 [3] ),
+        .ready ( mic_ready    ),
+        .value ( mic          )
+    );
+
+    assign GPIO_J12 [7] = 1'b0;  // GND
+    assign GPIO_J12 [5] = 1'b1;  // VCC
+
+endmodule
+\n\n********************** rzrd\n\n
+// Asynchronous reset here is needed for some FPGA boards we use
+
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+// `define USE_DIGILENT_PMOD_MIC3
+
+`ifdef USE_DIGILENT_PMOD_MIC3
+    `define USE_SDRAM_PINS_AS_GPIO
+`else
+    `define USE_LCD_AS_GPIO
+`endif
+
+//----------------------------------------------------------------------------
+
+module board_specific_top
+# (
+    parameter clk_mhz = 50,
+              w_key   = 4,
+              w_sw    = 4,
+              w_led   = 4,
+              w_digit = 4,
+
+              `ifdef USE_SDRAM_PINS_AS_GPIO
+              w_gpio  = 14
+              `elsif USE_LCD_AS_GPIO
+              w_gpio  = 11
+              `else
+              w_gpio  = 1
+              `endif
+)
+(
+    input                  CLK,
+    input                  RESET,
+
+    input  [w_key   - 1:0] KEY,
+    output [w_led   - 1:0] LED,
+
+    output [          7:0] SEG,
+    output [w_digit - 1:0] DIG,
+
+    output                 VGA_HSYNC,
+    output                 VGA_VSYNC,
+    output                 VGA_R,
+    output                 VGA_G,
+    output                 VGA_B,
+
+    input                  UART_RXD,
+
+    inout  [w_gpio  - 1:0] PSEUDO_GPIO_USING_SDRAM_PINS,
+
+    inout                  LCD_RS,
+    inout                  LCD_RW,
+    inout                  LCD_E,
+    inout  [          7:0] LCD_D
+);
+
+    //------------------------------------------------------------------------
+
+    wire               clk     =   CLK;
+    wire               rst     = ~ RESET;
+    wire [w_sw  - 1:0] top_sw  = ~ KEY [w_sw - 1:0];
+    wire [w_key - 1:0] top_key = ~ KEY;
+
+    //------------------------------------------------------------------------
+
+    wire  [w_led   - 1:0] top_led;
+
+    wire  [          7:0] abcdefgh;
+    wire  [w_digit - 1:0] digit;
+
+    wire                  vga_vs, vga_hs;
+    wire  [          3:0] red, green, blue;
+
+    wire                  mic_ready;
+    wire  [         23:0] mic;
+    wire  [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                  UART_TXD;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_key   ( w_key   ),
+        .w_sw    ( w_sw    ),
+        .w_led   ( w_led   ),
+        .w_digit ( w_digit ),
+        .w_gpio  ( w_gpio  )
+    )
+    i_top
+    (
+        .clk      (   clk          ),
+        .slow_clk (   slow_clk     ),
+        .rst      (   rst          ),
+
+        .key      (   top_key      ),
+        .sw       (   top_sw       ),
+
+        .led      (   top_led      ),
+
+        .abcdefgh (   abcdefgh     ),
+        .digit    (   digit        ),
+
+        .vsync    (   VGA_VSYNC    ),
+        .hsync    (   VGA_HSYNC    ),
+
+        .red      (   red          ),
+        .green    (   green        ),
+        .blue     (   blue         ),
+
+        .uart_rx  (   UART_RXD     ),
+        .uart_tx  (   UART_TXD     ),
+
+        .mic_ready(   mic_ready    ),
+        .mic      (   mic          ),
+        .sound    (   sound        ),
+
+        `ifdef USE_SDRAM_PINS_AS_GPIO
+            .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
+        `elsif USE_LCD_AS_GPIO
+            .gpio ({ LCD_RS, LCD_RW, LCD_E, LCD_D })
+        `endif
+    );
+
+    //------------------------------------------------------------------------
+
+    assign LED       = ~ top_led;
+
+    assign SEG       = ~ abcdefgh;
+    assign DIG       = ~ digit;
+
+    assign VGA_R     = | red;
+    assign VGA_G     = | green;
+    assign VGA_B     = | blue;
+
+    //------------------------------------------------------------------------
+
+    `ifdef USE_DIGILENT_PMOD_MIC3
+
+    wire [11:0] mic_12;
+
+    digilent_pmod_mic3_spi_receiver i_microphone
+    (
+        .clk   ( clk                               ),
+        .rst   ( rst                               ),
+        .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
+        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
+        .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
+        .ready ( mic_ready                         ),
+        .value ( mic_12                            )
+    );
+
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [ 8] = 1'b0;  // GND
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [10] = 1'b1;  // VCC
+
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
+    //------------------------------------------------------------------------
+
+    `else  // USE_INMP_441_MIC
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk       ),
+        .rst   ( rst       ),
+        .lr    ( LCD_D [5] ),
+        .ws    ( LCD_D [3] ),
+        .sck   ( LCD_D [1] ),
+        .sd    ( LCD_D [2] ),
+        .ready ( mic_ready ),
+        .value ( mic       )
+    );
+
+    assign LCD_D [6] = 1'b0;  // GND
+    assign LCD_D [4] = 1'b1;  // VCC
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( LCD_E     ), // Pin 143
+        .bclk    ( LCD_RS    ), // Pin 141
+        .lrclk   ( LCD_RW    ), // Pin 138
+        .sdata   ( LCD_D [0] )  // Pin 142
+    );                          // GND and VCC 3.3V (30-45 mA)
+
+endmodule
+\n\n********************** rzrd_pmod_mic3\n\n
+// Asynchronous reset here is needed for some FPGA boards we use
+
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+`define USE_DIGILENT_PMOD_MIC3
+
+`ifdef USE_DIGILENT_PMOD_MIC3
+    `define USE_SDRAM_PINS_AS_GPIO
+`else
+    `define USE_LCD_AS_GPIO
+`endif
+
+//----------------------------------------------------------------------------
+
+module board_specific_top
+# (
+    parameter clk_mhz = 50,
+              w_key   = 4,
+              w_sw    = 4,
+              w_led   = 4,
+              w_digit = 4,
+
+              `ifdef USE_SDRAM_PINS_AS_GPIO
+              w_gpio  = 14
+              `elsif USE_LCD_AS_GPIO
+              w_gpio  = 11
+              `else
+              w_gpio  = 1
+              `endif
+)
+(
+    input                  CLK,
+    input                  RESET,
+
+    input  [w_key   - 1:0] KEY,
+    output [w_led   - 1:0] LED,
+
+    output [          7:0] SEG,
+    output [w_digit - 1:0] DIG,
+
+    output                 VGA_HSYNC,
+    output                 VGA_VSYNC,
+    output                 VGA_R,
+    output                 VGA_G,
+    output                 VGA_B,
+
+    input                  UART_RXD,
+
+    inout  [w_gpio  - 1:0] PSEUDO_GPIO_USING_SDRAM_PINS,
+
+    inout                  LCD_RS,
+    inout                  LCD_RW,
+    inout                  LCD_E,
+    inout  [          7:0] LCD_D
+);
+
+    //------------------------------------------------------------------------
+
+    wire               clk     =   CLK;
+    wire               rst     = ~ RESET;
+    wire [w_sw  - 1:0] top_sw  = ~ KEY [w_sw - 1:0];
+    wire [w_key - 1:0] top_key = ~ KEY;
+
+    //------------------------------------------------------------------------
+
+    wire  [w_led   - 1:0] top_led;
+
+    wire  [          7:0] abcdefgh;
+    wire  [w_digit - 1:0] digit;
+
+    wire                  vga_vs, vga_hs;
+    wire  [          3:0] red, green, blue;
+
+    wire                  mic_ready;
+    wire  [         23:0] mic;
+    wire  [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                  UART_TXD;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_key   ( w_key   ),
+        .w_sw    ( w_sw    ),
+        .w_led   ( w_led   ),
+        .w_digit ( w_digit ),
+        .w_gpio  ( w_gpio  )
+    )
+    i_top
+    (
+        .clk      (   clk          ),
+        .slow_clk (   slow_clk     ),
+        .rst      (   rst          ),
+
+        .key      (   top_key      ),
+        .sw       (   top_sw       ),
+
+        .led      (   top_led      ),
+
+        .abcdefgh (   abcdefgh     ),
+        .digit    (   digit        ),
+
+        .vsync    (   VGA_VSYNC    ),
+        .hsync    (   VGA_HSYNC    ),
+
+        .red      (   red          ),
+        .green    (   green        ),
+        .blue     (   blue         ),
+
+        .uart_rx  (   UART_RXD     ),
+        .uart_tx  (   UART_TXD     ),
+
+        .mic_ready(   mic_ready    ),
+        .mic      (   mic          ),
+        .sound    (   sound        ),
+
+        `ifdef USE_SDRAM_PINS_AS_GPIO
+            .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
+        `elsif USE_LCD_AS_GPIO
+            .gpio ({ LCD_RS, LCD_RW, LCD_E, LCD_D })
+        `endif
+    );
+
+    //------------------------------------------------------------------------
+
+    assign LED       = ~ top_led;
+
+    assign SEG       = ~ abcdefgh;
+    assign DIG       = ~ digit;
+
+    assign VGA_R     = | red;
+    assign VGA_G     = | green;
+    assign VGA_B     = | blue;
+
+    //------------------------------------------------------------------------
+
+    `ifdef USE_DIGILENT_PMOD_MIC3
+
+    wire [11:0] mic_12;
+
+    digilent_pmod_mic3_spi_receiver i_microphone
+    (
+        .clk   ( clk                               ),
+        .rst   ( rst                               ),
+        .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
+        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
+        .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
+        .ready ( mic_ready                         ),
+        .value ( mic_12                            )
+    );
+
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [ 8] = 1'b0;  // GND
+    assign PSEUDO_GPIO_USING_SDRAM_PINS [10] = 1'b1;  // VCC
+
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
+    //------------------------------------------------------------------------
+
+    `else  // USE_INMP_441_MIC
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk       ),
+        .rst   ( rst       ),
+        .lr    ( LCD_D [5] ),
+        .ws    ( LCD_D [3] ),
+        .sck   ( LCD_D [1] ),
+        .sd    ( LCD_D [2] ),
+        .ready ( mic_ready ),
+        .value ( mic       )
+    );
+
+    assign LCD_D [6] = 1'b0;  // GND
+    assign LCD_D [4] = 1'b1;  // VCC
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( LCD_E     ), // Pin 143
+        .bclk    ( LCD_RS    ), // Pin 141
+        .lrclk   ( LCD_RW    ), // Pin 138
+        .sdata   ( LCD_D [0] )  // Pin 142
+    );                          // GND and VCC 3.3V (30-45 mA)
+
+endmodule
+\n\n********************** saylinx\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter clk_mhz = 50,
+              w_key   = 3,
+              w_sw    = 3,
+              w_led   = 4,
+              w_digit = 8,
+              w_gpio  = 34 * 2
+)
+(
+    input                     CLK,
+    input                     RST_N,
+
+    input                     KEY2,
+    input                     KEY3,
+    input                     KEY4,
+
+    output [w_led      - 1:0] LED,
+
+    output [             7:0] SEG_DATA,
+    output [w_digit    - 1:0] SEG_SEL,
+
+    output                    VGA_OUT_HS,
+    output                    VGA_OUT_VS,
+
+    output [             4:0] VGA_OUT_R,
+    output [             5:0] VGA_OUT_G,
+    output [             4:0] VGA_OUT_B,
+
+    input                     UART_RXD,
+
+    inout  [w_gpio / 2 - 1:0] GPIO_0,
+    inout  [w_gpio / 2 - 1:0] GPIO_1
+);
+
+    //------------------------------------------------------------------------
+
+    wire                 clk = CLK;
+    wire                 rst = ~ RST_N;
+    wire [w_key   - 1:0] key = ~ { KEY2, KEY3, KEY4 };
+
+    wire [w_led   - 1:0] led;
+
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
+
+    wire [          3:0] red, green, blue;
+    wire [         23:0] mic;
+    wire                 mic_ready;
+    wire [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TXD;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_key   ( w_key   ),
+        .w_sw    ( w_sw    ),
+        .w_led   ( w_led   ),
+        .w_digit ( w_digit ),
+        .w_gpio  ( w_gpio  )
+    )
+    i_top
+    (
+        .clk      ( clk        ),
+        .slow_clk ( slow_clk   ),
+        .rst      ( rst        ),
+
+        .key      ( key        ),
+        .sw       ( key        ),
+
+        .led      ( LED        ),
+
+        .abcdefgh ( abcdefgh   ),
+        .digit    ( digit      ),
+
+        .vsync    ( VGA_OUT_VS ),
+        .hsync    ( VGA_OUT_HS ),
+
+        .red      ( red        ),
+        .green    ( green      ),
+        .blue     ( blue       ),
+
+        .uart_rx  ( UART_RXD   ),
+        .uart_tx  ( UART_TXD   ),
+
+        .mic_ready( mic_ready  ),
+        .mic      ( mic        ),
+        .sound    ( sound      ),
+
+        .gpio ( { GPIO_0, GPIO_1 } )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign SEG_DATA  = ~ abcdefgh;
+    assign SEG_SEL   = ~ digit;
+
+    assign VGA_OUT_R = { red   , 1'b0 };
+    assign VGA_OUT_G = { green , 2'b0 };
+    assign VGA_OUT_B = { blue  , 1'b0 };
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [0] ), // J1 pin 36
+        .ws    ( GPIO_0 [2] ), // J1 pin 34
+        .sck   ( GPIO_0 [4] ), // J1 pin 32
+        .sd    ( GPIO_0 [5] ), // J1 pin 31
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
+    assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk         ),
+        .reset   ( rst         ),
+        .data_in ( sound       ),
+        .mclk    ( GPIO_0 [12] ), // J1 pin 24
+        .bclk    ( GPIO_0 [10] ), // J1 pin 26
+        .lrclk   ( GPIO_0 [ 6] ), // J1 pin 30
+        .sdata   ( GPIO_0 [ 8] )  // J1 pin 28
+    );                            // J1 pin 37 - GND, pin 40 - D3V3 3.3V (30-45 mA)
+
+endmodule
+\n\n********************** saylinx_pmod_mic3\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+`define USE_DIGILENT_PMOD_MIC3
+
+module board_specific_top
+# (
+    parameter clk_mhz = 50,
+              w_key   = 3,
+              w_sw    = 3,
+              w_led   = 4,
+              w_digit = 8,
+              w_gpio  = 34 * 2
+)
+(
+    input                     CLK,
+    input                     RST_N,
+
+    input                     KEY2,
+    input                     KEY3,
+    input                     KEY4,
+
+    output [w_led      - 1:0] LED,
+
+    output [             7:0] SEG_DATA,
+    output [w_digit    - 1:0] SEG_SEL,
+
+    output                    VGA_OUT_HS,
+    output                    VGA_OUT_VS,
+
+    output [             4:0] VGA_OUT_R,
+    output [             5:0] VGA_OUT_G,
+    output [             4:0] VGA_OUT_B,
+
+    input                     UART_RXD,
+
+    inout  [w_gpio / 2 - 1:0] GPIO_0,
+    inout  [w_gpio / 2 - 1:0] GPIO_1
+);
+
+    //------------------------------------------------------------------------
+
+    wire                 clk = CLK;
+    wire                 rst = ~ RST_N;
+    wire [w_key   - 1:0] key = ~ { KEY2, KEY3, KEY4 };
+
+    wire [w_led   - 1:0] led;
+
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
+
+    wire [          3:0] red, green, blue;
+    wire [         23:0] mic;
+    wire                 mic_ready;
+    wire [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TXD;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_key   ( w_key   ),
+        .w_sw    ( w_sw    ),
+        .w_led   ( w_led   ),
+        .w_digit ( w_digit ),
+        .w_gpio  ( w_gpio  )
+    )
+    i_top
+    (
+        .clk      ( clk        ),
+        .slow_clk ( slow_clk   ),
+        .rst      ( rst        ),
+
+        .key      ( key        ),
+        .sw       ( key        ),
+
+        .led      ( LED        ),
+
+        .abcdefgh ( abcdefgh   ),
+        .digit    ( digit      ),
+
+        .vsync    ( VGA_OUT_VS ),
+        .hsync    ( VGA_OUT_HS ),
+
+        .red      ( red        ),
+        .green    ( green      ),
+        .blue     ( blue       ),
+
+        .uart_rx  ( UART_RXD   ),
+        .uart_tx  ( UART_TXD   ),
+
+        .mic_ready( mic_ready  ),
+        .mic      ( mic        ),
+        .sound    ( sound      ),
+
+        .gpio ( { GPIO_0, GPIO_1 } )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign SEG_DATA  = ~ abcdefgh;
+    assign SEG_SEL   = ~ digit;
+
+    assign VGA_OUT_R = { red   , 1'b0 };
+    assign VGA_OUT_G = { green , 2'b0 };
+    assign VGA_OUT_B = { blue  , 1'b0 };
+
+    `ifndef USE_DIGILENT_PMOD_MIC3
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [0] ), // J1 pin 36
+        .ws    ( GPIO_0 [2] ), // J1 pin 34
+        .sck   ( GPIO_0 [4] ), // J1 pin 32
+        .sd    ( GPIO_0 [5] ), // J1 pin 31
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
+    assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
+
+    `else
+
+    wire [11:0] mic_12;
+
+    digilent_pmod_mic3_spi_receiver i_microphone
+    (
+        .clk   ( clk         ),
+        .rst   ( rst         ),
+        .cs    ( GPIO_1 [26] ), // J2 pin 29
+        .sck   ( GPIO_1 [32] ), // J2 pin 35
+        .sdo   ( GPIO_1 [30] ), // J2 pin 33
+        .ready ( mic_ready   ),
+        .value ( mic_12      )
+    );
+
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk         ),
+        .reset   ( rst         ),
+        .data_in ( sound       ),
+        .mclk    ( GPIO_0 [12] ), // J1 pin 24
+        .bclk    ( GPIO_0 [10] ), // J1 pin 26
+        .lrclk   ( GPIO_0 [ 6] ), // J1 pin 30
+        .sdata   ( GPIO_0 [ 8] )  // J1 pin 28
+    );                            // J1 pin 37 - GND, pin 40 - D3V3 3.3V (30-45 mA)
+
+endmodule
+\n\n********************** tang_nano_20k\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter   clk_mhz = 27,
+                w_key   = 2,  // The last key is used for a reset
+                w_sw    = 0,
+                w_led   = 6,
+                w_digit = 0,
+                w_gpio  = 23
+)
+(
+    input                       CLK,
+
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
+
+    output [w_led       - 1:0]  LED,
+
+    inout  [w_gpio      - 1:0]  GPIO
+);
+
+    wire clk = CLK;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8;
+
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+    wire                      mic_ready;
+
+    wire                      VGA_HS;
+    wire                      VGA_VS;
+
+    wire  [              3:0] VGA_R;
+    wire  [              3:0] VGA_G;
+    wire  [              3:0] VGA_B;
+
+   //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
+
+    `else                   // TM1638 module is not connected
+
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+
+        assign LED      = ~ top_led;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz      ),
+        .w_key   ( w_top_key    ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw     ),
+        .w_led   ( w_top_led    ),
+        .w_digit ( w_top_digit  ),
+        .w_gpio  ( w_gpio       )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
+
+        .led      ( top_led   ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
+
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
+
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+        .gpio     (           )
+    );
+
+    //------------------------------------------------------------------------
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk      ( clk        ),
+        .rst      ( rst        ),
+        .hgfedcba ( hgfedcba   ),
+        .digit    ( tm_digit   ),
+        .ledr     ( tm_led     ),
+        .keys     ( tm_key     ),
+        .sio_clk  ( GPIO [15]  ),
+        .sio_stb  ( GPIO [14]  ),
+        .sio_data ( GPIO [16]  )
+    );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO [18]  ),
+        .ws    ( GPIO [19]  ),
+        .sck   ( GPIO [20]  ),
+        .sd    ( GPIO [17]  ),
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    assign GPIO [21] = 1'b0;  // GND
+    assign GPIO [22] = 1'b1;  // VCC
+
+    //------------------------------------------------------------------------
+
+    assign VGA_HS = GPIO [12];
+    assign VGA_VS = GPIO [13];
+    assign VGA_G  = GPIO [4:0];
+    assign VGA_R  = GPIO [8:4];
+    assign VGA_B  = GPIO [12:8];
+
+endmodule
+\n\n********************** tang_nano_9k\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter   clk_mhz = 27,
+                w_key   = 2,  // The last key is used for a reset
+                w_sw    = 0,
+                w_led   = 6,
+                w_digit = 0,
+                w_gpio  = 9
+)
+(
+    input                       CLK,
+
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
+
+    output [w_led       - 1:0]  LED,
+
+    output                      VGA_HS,
+    output                      VGA_VS,
+    output [              3:0]  VGA_R,
+    output [              3:0]  VGA_G,
+    output [              3:0]  VGA_B,
+
+    inout  [w_gpio      - 1:0]  GPIO
+);
+
+    wire clk = CLK;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8;
+
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+    wire                      mic_ready;
+
+   //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
+
+    `else                   // TM1638 module is not connected
+
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+
+        assign LED      = ~ top_led;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz   ),
+        .w_key   ( w_top_key ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw      ),
+        .w_led   ( w_top_led     ),
+        .w_digit ( w_top_digit   ),
+        .w_gpio  ( w_gpio    )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( top_key   ),
+        .sw       (           ),
+
+        .led      ( top_led   ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
+
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
+
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+        .gpio     (           )
+    );
+
+    //------------------------------------------------------------------------
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk      ( clk       ),
+        .rst      ( rst       ),
+        .hgfedcba ( hgfedcba  ),
+        .digit    ( tm_digit  ),
+        .ledr     ( tm_led    ),
+        .keys     ( tm_key    ),
+        .sio_clk  ( GPIO [0]  ),
+        .sio_stb  ( GPIO [1]  ),
+        .sio_data ( GPIO [2]  )
+    );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [4] ),
+        .sck   ( GPIO [3] ),
+        .sd    ( GPIO [6] ),
+        .ready ( mic_ready),
+        .value ( mic      )
+    );
+
+    assign GPIO [8] = 1'b0;  // GND
+    assign GPIO [7] = 1'b1;  // VCC
+
+endmodule
+\n\n********************** tang_nano_9k_gowin_yosys\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+`undef ENABLE_TM1638
+`undef ENABLE_INMP441
+
+module board_specific_top
+# (
+    parameter   clk_mhz = 27,
+                w_key   = 2,  // The last key is used for a reset
+                w_sw    = 0,
+                w_led   = 6,
+                w_digit = 0,
+                w_gpio  = 9
+)
+(
+    input                       CLK,
+
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
+
+    output [w_led       - 1:0]  LED,
+
+    output                      VGA_HS,
+    output                      VGA_VS,
+    output [              3:0]  VGA_R,
+    output [              3:0]  VGA_G,
+    output [              3:0]  VGA_B,
+
+    inout  [w_gpio      - 1:0]  GPIO
+);
+
+    wire clk = CLK;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8;
+
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+    wire                      mic_ready;
+
+   //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
+
+    `else                   // TM1638 module is not connected
+
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+
+        assign LED      = ~ top_led;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz   ),
+        .w_key   ( w_top_key ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw      ),
+        .w_led   ( w_top_led     ),
+        .w_digit ( w_top_digit   ),
+        .w_gpio  ( w_gpio    )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( top_key   ),
+        .sw       (           ),
+
+        .led      ( top_led   ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
+
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
+
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+        `ifndef ENABLE_TM1638
+        .gpio     ( GPIO      )
+        `else
+        .gpio     (           )
+        `endif
+    );
+
+    //------------------------------------------------------------------------
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
+`ifdef ENABLE_TM1638
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk      ( clk       ),
+        .rst      ( rst       ),
+        .hgfedcba ( hgfedcba  ),
+        .digit    ( tm_digit  ),
+        .ledr     ( tm_led    ),
+        .keys     ( tm_key    ),
+        .sio_clk  ( GPIO [0]  ),
+        .sio_stb  ( GPIO [1]  ),
+        .sio_data ( GPIO [2]  )
+    );
+`endif
+
+    //------------------------------------------------------------------------
+
+`ifdef ENABLE_INMP441
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    i_microphone
+    (
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ),
+        .ws    ( GPIO [4] ),
+        .sck   ( GPIO [3] ),
+        .sd    ( GPIO [6] ),
+        .ready ( mic_ready),
+        .value ( mic      )
+    );
+
+    assign GPIO [8] = 1'b0;  // GND
+    assign GPIO [7] = 1'b1;  // VCC
+`endif
+
+endmodule
+\n\n********************** tang_primer_20k_dock\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter   clk_mhz = 27,
+                w_key   = 5,  // The last key is used for a reset
+                w_sw    = 5,
+                w_led   = 6,
+                w_digit = 0,
+                w_gpio  = 32
+)
+(
+    input                       CLK,
+
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
+
+    output [w_led       - 1:0]  LED,
+
+    inout  [w_gpio / 4  - 1:0]  GPIO_0,
+    inout  [w_gpio / 4  - 1:0]  GPIO_1,
+    inout  [w_gpio / 4  - 1:0]  GPIO_2,
+    inout  [w_gpio / 4  - 1:0]  GPIO_3
+);
+
+    wire clk = CLK;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    logic [w_top_sw    - 1:0] top_sw;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+    wire                      mic_ready;
+
+    wire                      VGA_HS;
+    wire                      VGA_VS;
+
+    wire  [              3:0] VGA_R;
+    wire  [              3:0] VGA_G;
+    wire  [              3:0] VGA_B;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
+
+    `else                   // TM1638 module is not connected
+
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign LED      = ~ top_led;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz      ),
+        .w_key   ( w_top_key    ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw     ),
+        .w_led   ( w_top_led    ),
+        .w_digit ( w_top_digit  ),
+        .w_gpio  ( w_gpio       )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
+
+        .led      ( top_led   ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
+
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
+
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+        .gpio     (           )
+    );
+
+    //------------------------------------------------------------------------
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk        ( clk           ),
+        .rst        ( rst           ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO_0[2]     ),
+        .sio_stb    ( GPIO_0[3]     ),
+        .sio_data   ( GPIO_0[1]     )
+    );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_1 [1] ),
+        .ws    ( GPIO_1 [2] ),
+        .sck   ( GPIO_1 [3] ),
+        .sd    ( GPIO_1 [0] ),
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign GPIO_3 = { VGA_B, VGA_R };
+    assign GPIO_2 = { VGA_HS, VGA_VS, 2'bz, VGA_G };
+
+endmodule
+\n\n********************** tang_primer_20k_dock_alt\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter   clk_mhz = 27,
+                w_key   = 5,  // The last key is used for a reset
+                w_sw    = 5,
+                w_led   = 6,
+                w_digit = 0,
+                w_gpio  = 32
+)
+(
+    input                       CLK,
+
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
+
+    output [w_led       - 1:0]  LED,
+
+    inout  [w_gpio / 4  - 1:0]  GPIO_0,
+    inout  [w_gpio / 4  - 1:0]  GPIO_1,
+    inout  [w_gpio / 4  - 1:0]  GPIO_2,
+    inout  [w_gpio / 4  - 1:0]  GPIO_3
+);
+
+    wire clk = CLK;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    logic [w_top_sw    - 1:0] top_sw;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+    wire                      mic_ready;
+
+    wire                      VGA_HS;
+    wire                      VGA_VS;
+
+    wire  [              3:0] VGA_R;
+    wire  [              3:0] VGA_G;
+    wire  [              3:0] VGA_B;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
+
+    `else                   // TM1638 module is not connected
+
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign LED      = ~ top_led;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz      ),
+        .w_key   ( w_top_key    ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw     ),
+        .w_led   ( w_top_led    ),
+        .w_digit ( w_top_digit  ),
+        .w_gpio  ( w_gpio       )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
+
+        .led      ( top_led   ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
+
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
+
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+        .gpio     (           )
+    );
+
+    //------------------------------------------------------------------------
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk        ( clk           ),
+        .rst        ( rst           ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO_0[2]     ),
+        .sio_stb    ( GPIO_0[3]     ),
+        .sio_data   ( GPIO_0[1]     )
+    );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [5] ),
+        .ws    ( GPIO_0 [6] ),
+        .sck   ( GPIO_0 [7] ),
+        .sd    ( GPIO_0 [4] ),
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign GPIO_3 = {VGA_B, VGA_R};
+    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
+
+endmodule
+\n\n********************** tang_primer_20k_dock_gowin_yosys\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+`undef ENABLE_TM1638
+`undef ENABLE_INMP441
+
+module board_specific_top
+# (
+    parameter   clk_mhz = 27,
+                w_key   = 2,  // The last key is used for a reset
+                w_sw    = 4,
+                w_led   = 0,
+                w_digit = 0,
+                w_gpio  = 32
+)
+(
+    input                       CLK,
+
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
+
+    output [w_led       - 1:0]  LED,
+
+    inout  [w_gpio / 4  - 1:0]  GPIO_0,
+    inout  [w_gpio / 4  - 1:0]  GPIO_1,
+    inout  [w_gpio / 4  - 1:0]  GPIO_2,
+    inout  [w_gpio / 4  - 1:0]  GPIO_3
+);
+
+    wire clk = CLK;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    logic [w_top_sw    - 1:0] top_sw;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+    wire                      mic_ready;
+
+    wire                      VGA_HS;
+    wire                      VGA_VS;
+
+    wire  [              3:0] VGA_R;
+    wire  [              3:0] VGA_G;
+    wire  [              3:0] VGA_B;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
+
+    `else                   // TM1638 module is not connected
+
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign LED      = ~ top_led;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz      ),
+        .w_key   ( w_top_key    ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw     ),
+        .w_led   ( w_top_led    ),
+        .w_digit ( w_top_digit  ),
+        .w_gpio  ( w_gpio       )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
+
+        .led      ( top_led   ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
+
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
+
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+        `ifndef ENABLE_TM1638
+        .gpio     ( GPIO      )
+        `else
+        .gpio     (           )
+        `endif
+    );
+
+    //------------------------------------------------------------------------
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
+`ifdef ENABLE_TM1638
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk        ( clk           ),
+        .rst        ( rst           ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO_2 [2]    ),
+        .sio_stb    ( GPIO_2 [3]    ),
+        .sio_data   ( GPIO_2 [1]    )
+    );
+
+    //------------------------------------------------------------------------
+`endif
+
+`ifdef ENABLE_INMP441
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_3 [1] ),
+        .ws    ( GPIO_3 [2] ),
+        .sck   ( GPIO_3 [3] ),
+        .sd    ( GPIO_3 [0] ),
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+`endif
+
+    //------------------------------------------------------------------------
+
+    assign GPIO_0= { VGA_B, VGA_R };
+    assign GPIO_1 = { VGA_HS, VGA_VS, 2'bz, VGA_G };
+
+endmodule
+\n\n********************** tang_primer_20k_lite\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter   clk_mhz = 27,
+                w_key   = 2,  // The last key is used for a reset
+                w_sw    = 3,
+                w_led   = 0,
+                w_digit = 0,
+                w_gpio  = 32
+)
+(
+    input                       CLK,
+
+    input  [w_key       - 1:0]  KEY,
+    input  [w_sw        - 1:0]  SW,
+
+    input                       UART_RX,
+    output                      UART_TX,
+
+    output [w_led       - 1:0]  LED,
+
+    inout  [w_gpio / 4  - 1:0]  GPIO_0,
+    inout  [w_gpio / 4  - 1:0]  GPIO_1,
+    inout  [w_gpio / 4  - 1:0]  GPIO_2,
+    inout  [w_gpio / 4  - 1:0]  GPIO_3
+);
+
+    wire clk = CLK;
+
+    //------------------------------------------------------------------------
+
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        localparam w_top_key   = w_tm_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_tm_led,
+                   w_top_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_top_key   = w_key,
+                   w_top_sw    = w_sw,
+                   w_top_led   = w_led,
+                   w_top_digit = w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_top_key   - 1:0] top_key;
+    logic [w_top_sw    - 1:0] top_sw;
+    wire  [w_top_led   - 1:0] top_led;
+    wire  [w_top_digit - 1:0] top_digit;
+
+    wire                      rst;
+    wire  [              7:0] abcdefgh;
+    wire  [             23:0] mic;
+    wire                      mic_ready;
+
+    wire                      VGA_HS;
+    wire                      VGA_VS;
+
+    wire  [              3:0] VGA_R;
+    wire  [              3:0] VGA_G;
+    wire  [              3:0] VGA_B;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638    // TM1638 module is connected
+
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign tm_led   = top_led;
+        assign tm_digit = top_digit;
+
+    `else                   // TM1638 module is not connected
+
+        assign rst      = ~ KEY [w_key - 1];
+        assign top_key  = ~ KEY [w_key - 1:0];
+        assign top_sw   = ~ SW;
+
+        assign LED      = ~ top_led;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz      ),
+        .w_key   ( w_top_key    ),  // The last key is used for a reset
+        .w_sw    ( w_top_sw     ),
+        .w_led   ( w_top_led    ),
+        .w_digit ( w_top_digit  ),
+        .w_gpio  ( w_gpio       )
+    )
+    i_top
+    (
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
+
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
+
+        .led      ( top_led   ),
+
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
+
+        .vsync    ( VGA_VS    ),
+        .hsync    ( VGA_HS    ),
+
+        .red      ( VGA_R     ),
+        .green    ( VGA_G     ),
+        .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
+        .mic_ready( mic_ready ),
+        .mic      ( mic       ),
+        .gpio     (           )
+    );
+
+    //------------------------------------------------------------------------
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk        ( clk           ),
+        .rst        ( rst           ),
+        .hgfedcba   ( hgfedcba      ),
+        .digit      ( tm_digit      ),
+        .ledr       ( tm_led        ),
+        .keys       ( tm_key        ),
+        .sio_clk    ( GPIO_2 [2]    ),
+        .sio_stb    ( GPIO_2 [3]    ),
+        .sio_data   ( GPIO_2 [1]    )
+    );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_3 [1] ),
+        .ws    ( GPIO_3 [2] ),
+        .sck   ( GPIO_3 [3] ),
+        .sd    ( GPIO_3 [0] ),
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign GPIO_0= { VGA_B, VGA_R };
+    assign GPIO_1 = { VGA_HS, VGA_VS, 2'bz, VGA_G };
+
+endmodule
+\n\n********************** zeowaa\n\n
+// Asynchronous reset here is needed for some FPGA boards we use
+
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter clk_mhz = 50,
+              w_key   = 4,
+              w_sw    = 8,
+              w_led   = 12,
+              w_digit = 8,
+              w_gpio  = 19
+)
+(
+    input                  CLK,
+
+    input  [w_key   - 1:0] KEY_N,  // One key is used as a reset
+    input  [w_sw    - 1:0] SW_N,
+    output [w_led   - 1:0] LED_N,
+
+    output [          7:0] ABCDEFGH_N,
+    output [w_digit - 1:0] DIGIT_N,
+
+    output                 VGA_HSYNC,
+    output                 VGA_VSYNC,
+    output [          2:0] VGA_RGB,
+
+    input                  UART_RX,
+
+    inout  [w_gpio  - 1:0] GPIO
+);
+
+    localparam w_top_key = w_key - 1;  // One onboard key is used as a reset
+
+    wire                   clk     = CLK;
+    wire                   rst     = ~ KEY_N [w_key     - 1];
+    wire [w_top_key - 1:0] top_key = ~ KEY_N [w_top_key - 1:0];
+
+    //------------------------------------------------------------------------
+
+    wire [w_led   - 1:0] led;
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
+
+    wire [          3:0] red;
+    wire [          3:0] green;
+    wire [          3:0] blue;
+
+    wire [         23:0] mic;
+    wire                 mic_ready;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TX;
+
+    wire [         15:0] sound;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz   ),
+        .w_key   ( w_top_key ),
+        .w_sw    ( w_sw      ),
+        .w_led   ( w_led     ),
+        .w_digit ( w_digit   ),
+        .w_gpio  ( w_gpio    )
+    )
+    i_top
+    (
+        .clk      (   clk         ),
+        .slow_clk (   slow_clk    ),
+        .rst      (   rst         ),
+
+        .key      (   top_key     ),
+        .sw       ( ~ SW_N        ),
+
+        .led      (   led         ),
+
+        .abcdefgh (   abcdefgh    ),
+        .digit    (   digit       ),
+
+        .vsync    (   VGA_VSYNC   ),
+        .hsync    (   VGA_HSYNC   ),
+
+        .red      (   red         ),
+        .green    (   green       ),
+        .blue     (   blue        ),
+
+        .uart_rx  (   UART_RX     ),
+        .uart_tx  (   UART_TX     ),
+
+        .mic_ready(   mic_ready   ),
+        .mic      (   mic         ),
+        .sound    (   sound       ),
+
+        .gpio     (   GPIO        )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign LED_N      = ~ led;
+
+    assign ABCDEFGH_N = ~ abcdefgh;
+    assign DIGIT_N    = ~ digit;
+
+    assign VGA_RGB    = { | red, | green, | blue };
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk       ),
+        .rst   ( rst       ),
+        .lr    ( GPIO [5]  ), // P33
+        .ws    ( GPIO [3]  ), // P31
+        .sck   ( GPIO [1]  ), // P28
+        .sd    ( GPIO [0]  ), // P30
+        .ready ( mic_ready ),
+        .value ( mic       )
+    );
+
+    assign GPIO [4] = 1'b0;  // P34 - GND
+    assign GPIO [2] = 1'b1;  // P32 - VCC
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz   )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( GPIO [14] ), // P52
+        .bclk    ( GPIO [12] ), // P49
+        .lrclk   ( GPIO [8]  ), // P42
+        .sdata   ( GPIO [10] )  // P44
+    );                          // GND
+                                // J4 Pin 2 - VCC 3.3V (30-45 mA)
+
+endmodule
+\n\n********************** zeowaa_wo_dig_0\n\n
+// Asynchronous reset here is needed for some FPGA boards we use
+
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter clk_mhz = 50,
+              w_key   = 3,
+              w_sw    = 8,
+              w_led   = 12,
+              w_digit = 8,
+              w_gpio  = 19
+)
+(
+    input                    CLK,
+
+    input  [w_key + 1 - 1:0] KEY_N,  // One key is used as a reset
+    input  [w_sw      - 1:0] SW_N,
+    output [w_led     - 1:0] LED_N,
+
+    output [            7:0] ABCDEFGH_N,
+    output [w_digit   - 1:0] DIGIT_N,
+
+    output                   VGA_HSYNC,
+    output                   VGA_VSYNC,
+    output [            2:0] VGA_RGB,
+
+    input                    UART_RX,
+
+    inout  [w_gpio    - 1:0] GPIO
+);
+
+    wire clk = CLK;
+    wire rst = ~ KEY_N [3];
+
+    //------------------------------------------------------------------------
+
+    wire [w_led   - 1:0] led;
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
+
+    wire [          3:0] red;
+    wire [          3:0] green;
+    wire [          3:0] blue;
+
+    wire [         23:0] mic;
+    wire                 mic_ready;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TX;
+
+    wire [         15:0] sound;
+
+    //------------------------------------------------------------------------
+
+    // This logic is necessary to compensate the defective board
+
+    localparam w_top_digit = w_digit - 1;  // The right digit is not working on this board
+    wire [w_top_digit - 1:0] top_digit;
+
+    assign digit = { top_digit, 1'b0 };
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz ( clk_mhz     ),
+        .w_key   ( w_key       ),
+        .w_sw    ( w_sw        ),
+        .w_led   ( w_led       ),
+        .w_digit ( w_top_digit ),  // Note top_digit, not digit
+        .w_gpio  ( w_gpio      )
+    )
+    i_top
+    (
+        .clk      (   clk         ),
+        .slow_clk (   slow_clk    ),
+        .rst      (   rst         ),
+
+        .key      ( ~ KEY_N [2:0] ),
+        .sw       ( ~ SW_N        ),
+
+        .led      (   led         ),
+
+        .abcdefgh (   abcdefgh    ),
+        .digit    (   top_digit   ),  // Note top_digit, not digit
+
+        .vsync    (   VGA_VSYNC   ),
+        .hsync    (   VGA_HSYNC   ),
+
+        .red      (   red         ),
+        .green    (   green       ),
+        .blue     (   blue        ),
+
+        .uart_rx  (   UART_RX     ),
+        .uart_tx  (   UART_TX     ),
+
+        .mic_ready(   mic_ready   ),
+        .mic      (   mic         ),
+        .sound    (   sound       ),
+
+        .gpio     (   GPIO        )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign LED_N      = ~ led;
+
+    assign ABCDEFGH_N = ~ abcdefgh;
+    assign DIGIT_N    = ~ digit;
+
+    assign VGA_RGB    = { | red, | green, | blue };
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [5] ), // P33
+        .ws    ( GPIO [3] ), // P31
+        .sck   ( GPIO [1] ), // P28
+        .sd    ( GPIO [0] ), // P30
+        .ready ( mic_read ),
+        .value ( mic      )
+    );
+
+    assign GPIO [4] = 1'b0;  // P34 - GND
+    assign GPIO [2] = 1'b1;  // P32 - VCC
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( GPIO [14] ), // P52
+        .bclk    ( GPIO [12] ), // P49
+        .lrclk   ( GPIO [8]  ), // P42
+        .sdata   ( GPIO [10] )  // P44
+    );                          // GND
+                                // J4 Pin 2 - VCC 3.3V (30-45 mA)
+
+endmodule
+\n\n********************** zybo_z7\n\n
+`include "config.svh"
+`include "lab_specific_config.svh"
+
+module board_specific_top
+# (
+    parameter clk_mhz = 125,        // Main clk frequency
+              w_key   = 4,          // Number of buttons on the board
+              w_sw    = 4,          // Number of switches on the board
+              w_led   = 4,          // Number of LEDs on the board
+              w_digit = 0,          // 7Seg missing
+              w_gpio  = 8           // Standard Pmod JE
+)
+(
+    /* Reset - PROGB (see datasheet) */
+    input                      clk_125,
+    input  [w_key       - 1:0] key,
+    input  [w_sw        - 1:0] sw,
+    output [w_led       - 1:0] led,
+    inout  [w_gpio      - 1:0] gpio_JE
+);
+
+    wire clk = clk_125;
+
+    //------------------------------------------------------------------------
+
+    localparam w_sw_top = w_sw - 1;  // One sw is used as a reset
+
+    wire rst = sw[w_sw - 1];         // Last switch is used as a reset
+    wire [w_sw_top - 1:0] sw_top  = sw[w_sw_top - 1:0];
+
+    //------------------------------------------------------------------------
+
+    logic [              7:0] abcdefgh;
+    wire  [w_digit     - 1:0] digit;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                      UART_TX;
+    wire                      UART_RX = '1;
+
+    //------------------------------------------------------------------------
+
+    localparam w_key_tm   = 8,
+               w_led_tm   = 8,
+               w_digit_tm = 8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+        localparam w_key_top   = w_key_tm   > w_key   ? w_key_tm   : w_key,
+                w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
+                w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
+    `else
+        localparam w_key_top   = w_key_tm   + w_key,
+                w_led_top   = w_led_tm   + w_led,
+                w_digit_top = w_digit_tm + w_digit;
+    `endif
+
+    //------------------------------------------------------------------------------
+
+        wire  [w_key_tm    - 1:0] key_tm;
+        wire  [w_led_tm    - 1:0] led_tm;
+        wire  [w_digit_tm  - 1:0] digit_tm;
+
+        logic [w_key_top   - 1:0] key_top;
+        wire  [w_led_top   - 1:0] led_top;
+        wire  [w_digit_top - 1:0] digit_top;
+
+    //------------------------------------------------------------------------------
+
+    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+        assign key_top = {key_tm, key};
+        assign {led_tm, led} = led_top;
+        assign {digit_tm, digit} = digit_top;
+
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+        assign key_top = {key, key_tm};
+        assign {led, led_tm} = led_top;
+        assign {digit, digit_tm} = digit_top;
+
+    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+        always_comb
+        begin
+            key_top = '0;
+            key_top[w_key - 1:0] |= key;
+            key_top[w_key_tm - 1:0] |= key_tm;
+        end
+
+        assign led = led_top[w_led - 1:0];
+        assign led_tm = led_top[w_led_tm - 1:0];
+        assign digit = digit_top[0:0];
+        assign digit_tm = digit_top[w_digit_tm - 1:0];
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------------
+
+    top
+    # (
+        .clk_mhz  (clk_mhz),
+        .w_key    (w_key_top),
+        .w_sw     (w_sw_top),
+        .w_led    (w_led_top),
+        .w_digit  (w_digit_top),
+        .w_gpio   (w_gpio)
+    )
+    i_top
+    (
+        .clk      (clk),
+        .slow_clk (slow_clk),
+        .rst      (rst),
+
+        .key      (key_top),
+        .sw       (sw_top),
+        .led      (led_top),
+        .abcdefgh (abcdefgh),
+        .digit    (digit_top),
+
+        .vsync    ( ),
+        .hsync    ( ),
+        .red      ( ),
+        .green    ( ),
+        .blue     ( ),
+
+        .uart_rx  ( UART_RX ),
+        .uart_tx  ( UART_TX ),
+
+        .mic_ready( ),
+        .mic      ( ),
+        .gpio     ( )
+    );
+
+
+    /***************************************************************************
+     *                             module TM1638
+     **************************************************************************/
+    logic  [$left(abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits(abcdefgh); i++) begin
+            assign hgfedcba[i] = abcdefgh [$left(abcdefgh) - i];
+        end
+    endgenerate
+
+
+    //------------------------------------------------------------------------------
+
+    tm1638_board_controller
+    # (
+        .clk_mhz  (clk_mhz),
+        .w_digit  (w_digit_tm)        // fake parameter, digit count is hardcode in tm1638_board_controller
+    )
+    i_tm1638
+    (
+        .clk      (clk),
+        .rst      (rst),              // Don't make reset tm1638_board_controller by it's tm_key
+        .hgfedcba (hgfedcba),
+        .digit    (digit_tm),
+        .ledr     (led_tm),
+        .keys     (key_tm),
+        .sio_clk  (gpio_JE[1]),
+        .sio_stb  (gpio_JE[0]),
+        .sio_data (gpio_JE[2])
+    );
+
+endmodule: board_specific_top
