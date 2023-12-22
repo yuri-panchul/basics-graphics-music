@@ -1,3 +1,6 @@
+// This board is know as "MINI FPGA".
+// It is also documented in https://emooc.cc as EPI-LITE304
+
 `include "config.svh"
 `include "lab_specific_config.svh"
 
