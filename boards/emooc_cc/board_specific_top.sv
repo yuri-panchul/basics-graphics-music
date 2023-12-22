@@ -1,5 +1,9 @@
-// This board is know as "MINI FPGA".
-// It is also documented in https://emooc.cc as EPI-LITE304
+// This board is referred as "MINI FPGA", EPI-MiniCY4
+// and as a part of a kit called EPI-LITE304.
+//
+// See http://emooc.cc
+// and http://www.emooc.cc/ProductDetail/1600208.html
+// for more details.
 
 `include "config.svh"
 `include "lab_specific_config.svh"
