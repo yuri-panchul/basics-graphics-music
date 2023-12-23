@@ -123,3 +123,11 @@ Supported: INMP441, I2S sound output
 
 Zybo Z7
 No graphics and music support
+
+EPI-MiniCY4
+
+// and as a part of a kit called EPI-LITE304.
+//
+// See http://emooc.cc
+// and http://www.emooc.cc/ProductDetail/1600208.html
+// for more details.
