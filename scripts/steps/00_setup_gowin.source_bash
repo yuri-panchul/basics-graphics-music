@@ -29,6 +29,37 @@ fi
 
 #-----------------------------------------------------------------------------
 
+# If GOWIN_ROOTDIR -> use GOWIN_ROOTDIR/IDE
+# if ! GOWIN_HOME try (LInux) GOWIN_HOME=$HOME, /opt, /tools
+# if ! GOWIN_HOME try (Windows) /c /d /e
+# If $GOWIN_HOME/gowin/IDE -> use it
+# If $GOWIN_HOME/gowin/*
+
+# Yuri
+#
+# $HOME/gowin/IDE
+# /opt/gowin/IDE
+# $HOME/gowin/9.9.1/IDE
+# /opt/gowin/9.9.1/IDE
+# /c/gowin/IDE
+# /d/gowin/IDE
+# /c/gowin/9.9.1/IDE
+# /d/gowin/9.9.1/IDE
+
+# GOWIN_HOME (LInux) $HOME /opt (Windows) /c /d
+# GOWIN_ROOTDIR=/c/gowin/9.8.8
+
+# Victor
+
+# Linux
+# $HOME/gowin/IDE
+# /opt/gowin/IDE
+# Windows
+# /c/gowin/9.8.8/IDE
+# /c/gowin/9.9.1/IDE
+#
+# GOWIN_HOME=/c/gowin/9.8.8
+
 gowin_setup_ide ()
 {
     if is_command_available gw_sh$exe &&
@@ -63,11 +94,10 @@ gowin_setup_ide ()
             fi
         fi
 
-    elif  ( [ "$OSTYPE" = "cygwin"    ]  \
-         || [ "$OSTYPE" = "msys"      ] ) \
-         && ! [ -v "${GOWIN_HOME+x}" ]; then
+    elif  ( [ "$OSTYPE" = "cygwin" ]   \
+         || [ "$OSTYPE" = "msys"   ] ) \
+         && [ -z "${GOWIN_HOME-}"  ]; then
           GOWIN_HOME="/c/Gowin"
-
     else
         error "this script does not support your OS / platform '$OSTYPE'"
     fi
