@@ -94,7 +94,7 @@ if [ ! -d "$TEMPLATE_REPO" ]; then
     git clone https://github.com/${TARGET_REPO_FULLNAME}.git "$TEMPLATE_REPO"
 fi
 
-available_fpga_boards=$(find "$TEMPLATE_REPO/boards" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\n" " ")
+available_fpga_boards=$(find "$TEMPLATE_REPO/boards" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
 fpga_board_id=0
 
 for fpga_board in $available_fpga_boards
