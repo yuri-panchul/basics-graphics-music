@@ -115,23 +115,7 @@ module board_specific_top
     assign VGA_OUT_G = { green , 2'b0 };
     assign VGA_OUT_B = { blue  , 1'b0 };
 
-    `ifndef USE_DIGILENT_PMOD_MIC3
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO_0 [0] ), // J1 pin 36
-        .ws    ( GPIO_0 [2] ), // J1 pin 34
-        .sck   ( GPIO_0 [4] ), // J1 pin 32
-        .sd    ( GPIO_0 [5] ), // J1 pin 31
-        .ready ( mic_ready  ),
-        .value ( mic        )
-    );
-
-    assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
-    assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
-
-    `else
+    `ifdef USE_DIGILENT_PMOD_MIC3
 
     wire [11:0] mic_12;
 
@@ -148,6 +132,23 @@ module board_specific_top
 
     wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
     assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
+    `else
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( GPIO_0 [0] ), // J1 pin 36
+        .ws    ( GPIO_0 [2] ), // J1 pin 34
+        .sck   ( GPIO_0 [4] ), // J1 pin 32
+        .sd    ( GPIO_0 [5] ), // J1 pin 31
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
+    assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
 
     `endif
 

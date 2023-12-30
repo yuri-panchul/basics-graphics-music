@@ -1,4 +1,5 @@
-set_global_assignment   -name DEVICE EP4CE10F17C8
+# set_global_assignment -name DEVICE EP4CE10F17C8
+  set_global_assignment -name DEVICE EP4CE6F17C8
 
 set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
@@ -97,7 +98,10 @@ set_location_assignment PIN_R13  -to GPIO_0[32]
 set_location_assignment PIN_T14  -to GPIO_0[33]
 
 set_location_assignment PIN_B1   -to GPIO_1[0]
+
+# A potential bug here - there is a J16 mark on Saylinx board instead of C2
 set_location_assignment PIN_C2   -to GPIO_1[1]
+
 set_location_assignment PIN_B3   -to GPIO_1[2]
 set_location_assignment PIN_A2   -to GPIO_1[3]
 set_location_assignment PIN_B4   -to GPIO_1[4]
@@ -137,7 +141,7 @@ set_location_assignment PIN_E8   -to GPIO_1[33]
 # set_location_assignment PIN_M8  -to RTC_DATA
 # set_location_assignment PIN_N8  -to RTC_CE
 
-# These I2C pins conflict with SEG_SEL[7] and SEG_SEL[6]
+# These I2C pins conflict with SEG_SEL[0] and SEG_SEL[1]
 
 # set_location_assignment PIN_D1  -to I2C_SCL
 # set_location_assignment PIN_E6  -to I2C_SDA
