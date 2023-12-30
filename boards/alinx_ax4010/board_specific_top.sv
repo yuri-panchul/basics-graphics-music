@@ -1,6 +1,8 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+// `define USE_DIGILENT_PMOD_MIC3
+
 module board_specific_top
 # (
     parameter clk_mhz = 50,
@@ -113,6 +115,26 @@ module board_specific_top
     assign VGA_OUT_G = { green , 2'b0 };
     assign VGA_OUT_B = { blue  , 1'b0 };
 
+    `ifdef USE_DIGILENT_PMOD_MIC3
+
+    wire [11:0] mic_12;
+
+    digilent_pmod_mic3_spi_receiver i_microphone
+    (
+        .clk   ( clk         ),
+        .rst   ( rst         ),
+        .cs    ( GPIO_1 [26] ), // J2 pin 29
+        .sck   ( GPIO_1 [32] ), // J2 pin 35
+        .sdo   ( GPIO_1 [30] ), // J2 pin 33
+        .ready ( mic_ready   ),
+        .value ( mic_12      )
+    );
+
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
+    `else
+
     inmp441_mic_i2s_receiver i_microphone
     (
         .clk   ( clk        ),
@@ -127,6 +149,8 @@ module board_specific_top
 
     assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
     assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
+
+    `endif
 
     //------------------------------------------------------------------------
 
