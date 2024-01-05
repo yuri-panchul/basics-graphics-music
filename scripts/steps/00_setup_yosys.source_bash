@@ -175,6 +175,22 @@ configure_fpga_yosys_all ()
         else
             upload_method="openloader"
         fi
+    elif [[ "$fpga_board" =~ "karnix" ]]; then
+        printf "This board supports the following upload methods:\n"
+        printf "[o] for openFPGALoader using JTAG based on FTDI FT2232\n"
+        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n"
+
+        read -n 1 -r -p "Which upload method do you prefer ? "
+        printf "\n"
+
+        if [[ "$REPLY" =~ ^[Ee]$ ]] ; then
+            upload_method="ecpprog"
+        elif [[ "$REPLY" =~ ^[Oo]$ ]] ; then
+            upload_method="openloader"
+        else
+            printf "Unsupported method: $REPLY\n"
+            upload_method="openloader"
+        fi
     elif [[ "$fpga_board" =~ "ice40" ]]; then
         upload_method="iceprog"
     else
