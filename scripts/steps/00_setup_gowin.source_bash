@@ -143,7 +143,7 @@ gowin_setup_ide ()
         gowin_sh_full_real_path=$(command -v gw_sh$exe)
         gowin_prog_full_real_path=$(command -v programmer_cli$exe)
 
-        gowin_info_where_ide_and_programmer_are_found " using PATH"
+        gowin_finish_setup_and_report_where_found " using PATH"
         return
     fi
 
