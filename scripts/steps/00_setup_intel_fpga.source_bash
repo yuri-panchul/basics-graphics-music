@@ -33,6 +33,39 @@ fi
 #
 #-----------------------------------------------------------------------------
 
+intel_fpga_info_where_quartus_is_found ()
+{
+    # info "Found Quartus$1:"
+    # info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+    # info "PATH=$PATH"
+    # info "quartus_full_real_path=$quartus_full_real_path"
+
+    printf "%s\n" "$script: Found Quartus$1:"
+    printf "%s\n" "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+    printf "%s\n" "PATH=$PATH"
+    printf "%s\n" "quartus_full_real_path=$quartus_full_real_path"
+
+                [ -d "$QUARTUS_ROOTDIR" ] ||
+    error "directory '$QUARTUS_ROOTDIR' expected"
+
+                [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  ||
+    error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
+
+                      [ -f "$quartus_full_real_path" ] &&
+                      [ -x "$quartus_full_real_path" ] ||
+    error "executable file '$quartus_full_real_path' expected"
+
+                      [ -f "$quartus_sh_full_real_path" ] &&
+                      [ -x "$quartus_sh_full_real_path" ] ||
+    error "executable file '$quartus_sh_full_real_path' expected"
+
+                      [ -f "$quartus_pgm_full_real_path" ] &&
+                      [ -x "$quartus_pgm_full_real_path" ] ||
+    error "executable file '$quartus_pgm_full_real_path' expected"
+}
+
+#-----------------------------------------------------------------------------
+
 intel_fpga_try_install_dir ()
 {
     local dir="$1"
@@ -69,39 +102,6 @@ intel_fpga_try_install_dir ()
     fi
 
     attempt_intelfpga_install_parent_dirs="${attempt_intelfpga_install_parent_dirs:+$attempt_intelfpga_install_parent_dirs or }'$dir'"
-}
-
-#-----------------------------------------------------------------------------
-
-intel_fpga_info_where_quartus_is_found ()
-{
-    # info "Found Quartus$1:"
-    # info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
-    # info "PATH=$PATH"
-    # info "quartus_full_real_path=$quartus_full_real_path"
-
-    printf "%s\n" "$script: Found Quartus$1:"
-    printf "%s\n" "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
-    printf "%s\n" "PATH=$PATH"
-    printf "%s\n" "quartus_full_real_path=$quartus_full_real_path"
-
-                [ -d "$QUARTUS_ROOTDIR" ] ||
-    error "directory '$QUARTUS_ROOTDIR' expected"
-
-                [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  ||
-    error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
-
-                      [ -f "$quartus_full_real_path" ] &&
-                      [ -x "$quartus_full_real_path" ] ||
-    error "executable file '$quartus_full_real_path' expected"
-
-                      [ -f "$quartus_sh_full_real_path" ] &&
-                      [ -x "$quartus_sh_full_real_path" ] ||
-    error "executable file '$quartus_sh_full_real_path' expected"
-
-                      [ -f "$quartus_pgm_full_real_path" ] &&
-                      [ -x "$quartus_pgm_full_real_path" ] ||
-    error "executable file '$quartus_pgm_full_real_path' expected"
 }
 
 #-----------------------------------------------------------------------------
@@ -197,6 +197,7 @@ intel_fpga_setup_quartus ()
     then
         intel_fpga_try_install_dir "$HOME"
         intel_fpga_try_install_dir /opt
+        intel_fpga_try_install_dir /tools
 
     elif  [ "$OSTYPE" = "cygwin"    ]  \
        || [ "$OSTYPE" = "msys"      ]
