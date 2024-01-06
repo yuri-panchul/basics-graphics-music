@@ -29,7 +29,7 @@ fi
 
 #-----------------------------------------------------------------------------
 
-gowin_finish_setup ()
+gowin_finish_setup_and_report_where_found ()
 {
     # info                 "Found Gowin$1:"
     printf "%s\n" "$script: Found Gowin$1:"
