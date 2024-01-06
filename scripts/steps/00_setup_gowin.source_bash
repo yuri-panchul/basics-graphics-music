@@ -60,23 +60,97 @@ fi
 #
 # GOWIN_HOME=/c/gowin/9.8.8
 
-gowin_setup_ide ()
-{
-    if is_command_available gw_sh$exe &&
-       ( is_command_available openFPGALoader &&       [ "$OSTYPE" = "linux-gnu" ] ||
-         is_command_available programmer_cli$exe && ( [ "$OSTYPE" = "cygwin"    ] ||
-                                                      [ "$OSTYPE" = "msys"      ] ) ) ; then
-        gowin_sh="gw_sh$exe"
-        gowin_ide="gw_ide$exe"
-        gowin_pr="programmer_cli$exe"
+#-----------------------------------------------------------------------------
 
-        return  # Already set up
+gowin_info_where_ide_and_programmer_are_found ()
+{
+    # info                 "Found Gowin$1:"
+    printf "%s\n" "$script: Found Gowin$1:"
+
+    if [ -n "${GOWIN_VERSION_DIR-}" ]
+    then
+               # info "GOWIN_VERSION_DIR=$GOWIN_VERSION_DIR"
+        printf "%s\n" "GOWIN_VERSION_DIR=$GOWIN_VERSION_DIR"
+
+                    [ -d "$GOWIN_VERSION_DIR" ] ||
+        error "directory '$GOWIN_VERSION_DIR' expected"
+
+                    [ -d "$GOWIN_VERSION_DIR/IDE" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/IDE' expected"
+
+                    [ -d "$GOWIN_VERSION_DIR/Programmer" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/Programmer' expected"
+
+                    [ -d "$GOWIN_VERSION_DIR/IDE/bin" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/IDE/bin' expected"
+
+                    [ -d "$GOWIN_VERSION_DIR/Programmer/bin" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/Programmer/bin' expected"
+    else
     fi
 
+    # info "PATH=$PATH"
+    # info "gowin_ide_full_real_path=$gowin_ide_full_real_path"
+    # info "gowin_sh_full_real_path=$gowin_sh_full_real_path"
+    # info "gowin_prog_full_real_path=$gowin_prog_full_real_path"
+
+    printf "%s\n" "PATH=$PATH"
+    printf "%s\n" "gowin_ide_full_real_path=$gowin_ide_full_real_path"
+    printf "%s\n" "gowin_sh_full_real_path=$gowin_sh_full_real_path"
+    printf "%s\n" "gowin_prog_full_real_path=$gowin_prog_full_real_path"
+
+                      [ -f "$gowin_ide_full_real_path" ] &&
+                      [ -x "$gowin_ide_full_real_path" ] ||
+    error "executable file '$gowin_ide_full_real_path' expected"
+
+                      [ -f "$gowin_sh_full_real_path" ] &&
+                      [ -x "$gowin_sh_full_real_path" ] ||
+    error "executable file '$gowin_sh_full_real_path' expected"
+
+                      [ -f "$gowin_prog_full_real_path" ] &&
+                      [ -x "$gowin_prog_full_real_path" ] ||
+    error "executable file '$gowin_prog_full_real_path' expected"
+}
+
+#-----------------------------------------------------------------------------
+
+gowin_setup_ide ()
+{
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
+
+    #-------------------------------------------------------------------------
+
+    if [ -n "${GOWIN_VERSION_DIR-}" ]
+    then
+        export PATH="${PATH:+$PATH:}$GOWIN_VERSION_DIR/$quartus_bin_dir"
+
+        gowin_ide_full_real_path="$GOWIN_VERSION_DIR/IDE/bin/gw_ide$exe"
+        gowin_sh_full_real_path="$GOWIN_VERSION_DIR/IDE/bin/gw_sh$exe"
+        gowin_prog_full_real_path="$GOWIN_VERSION_DIR/Programmer/bin/programmer_cli$exe"
+
+        gowin_info_where_ide_and_programmer_are_found " using GOWIN_VERSION_DIR"
+        return
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if   is_command_available gw_sh$exe &&
+       ( is_command_available openFPGALoader &&       [ "$OSTYPE" = "linux-gnu" ] ||
+         is_command_available programmer_cli$exe && ( [ "$OSTYPE" = "cygwin"    ] ||
+                                                      [ "$OSTYPE" = "msys"      ] ) )
+    then
+        gowin_ide_full_real_path=$(command -v gw_ide$exe)
+        gowin_sh_full_real_path=$(command -v gw_sh$exe)
+        gowin_prog_full_real_path=$(command -v programmer_cli$exe)
+
+        gowin_info_where_ide_and_programmer_are_found " using PATH"
+        return
+    fi
+
+    #-------------------------------------------------------------------------
 
     # Consider changing priorities of /opt and $HOME
 
@@ -113,7 +187,7 @@ gowin_setup_ide ()
          && [ -d "$GOWIN_HOME/Programmer" ]; then
       gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh$exe"
       gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide$exe"
-      gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli$exe"
+      gowin_prog="$GOWIN_HOME/Programmer/bin/programmer_cli$exe"
 
       return
     fi
@@ -135,7 +209,7 @@ gowin_setup_ide ()
     export PATH="${PATH:+$PATH:}$GOWIN_HOME/IDE/bin:$GOWIN_HOME/Programmer/bin"
     gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh$exe"
     gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide$exe"
-    gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli$exe"
+    gowin_prog="$GOWIN_HOME/Programmer/bin/programmer_cli$exe"
 
     #-------------------------------------------------------------------------
 
@@ -291,7 +365,7 @@ configure_fpga_gowin_msys ()
     # fi
 
     prj_parent_dir=`pwd`
-    $gowin_pr -d $fpga_board_for_programmer $flash_method --fsFile ${prj_parent_dir/\/[[:alpha:]]\//${prj_parent_dir:1:1}:\/}/impl/pnr/fpga_project.fs
+    $gowin_prog -d $fpga_board_for_programmer $flash_method --fsFile ${prj_parent_dir/\/[[:alpha:]]\//${prj_parent_dir:1:1}:\/}/impl/pnr/fpga_project.fs
 }
 
 #-----------------------------------------------------------------------------
