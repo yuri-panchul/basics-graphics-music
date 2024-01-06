@@ -222,8 +222,10 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
-    find_command="$find_to_run $intelfpga_install_parent_dir/$intelfpga_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    choosen_version_dir=$($find_command | sort | tail -1)
+    find_dir="$intelfpga_install_parent_dir/$intelfpga_install_dir"
+    find_opt="-mindepth 1 -maxdepth 1 -type d -print"
+
+    choosen_version_dir=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
 
     if [ -z "$choosen_version_dir" ]
     then
@@ -242,7 +244,7 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
-    all_version_dirs=$($find_command | xargs echo)
+    all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
 
     if [ "$choosen_version_dir" != "$all_version_dirs" ]
     then

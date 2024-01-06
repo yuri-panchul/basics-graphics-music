@@ -108,11 +108,20 @@ gowin_try_install_dir ()
         return
     fi
 
-    find_command="$find_to_run \"$dir/gowin\" -mindepth 1 -maxdepth 1 -type d -print"
-    GOWIN_VERSION_DIR=$($find_command | sort | tail -1)
+    find_dir="$dir/gowin"
+    find_opt="-mindepth 1 -maxdepth 1 -type d -print"
 
-    [ -z "$GOWIN_VERSION_DIR" ] ||
+    GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
+
+    if [ -n "$GOWIN_VERSION_DIR" ]
+    then
+        all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
+
+        [ "$GOWIN_VERSION_DIR" == "$all_version_dirs" ] ||
+            warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
+
         gowin_finish_setup_and_report_where_found " inside subdirectory of '$dir'"
+    fi
 }
 
 #-----------------------------------------------------------------------------

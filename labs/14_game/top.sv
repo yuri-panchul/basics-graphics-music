@@ -10,9 +10,7 @@ module top
               w_gpio  = 100,
               w_vgar  = 4,
               w_vgag  = 4,
-              w_vgab  = 4,
-
-              strobe_to_update_xy_counter_width = 20
+              w_vgab  = 4
 )
 (
     input                        clk,
@@ -49,6 +47,9 @@ module top
 
     inout        [w_gpio  - 1:0] gpio
 );
+
+    localparam strobe_to_update_xy_counter_width
+        = $clog2 (clk_mhz * 1000 * 1000) - 6;
 
     //------------------------------------------------------------------------
 
