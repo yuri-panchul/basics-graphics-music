@@ -29,144 +29,180 @@ fi
 
 #-----------------------------------------------------------------------------
 
-# If GOWIN_ROOTDIR -> use GOWIN_ROOTDIR/IDE
-# if ! GOWIN_HOME try (LInux) GOWIN_HOME=$HOME, /opt, /tools
-# if ! GOWIN_HOME try (Windows) /c /d /e
-# If $GOWIN_HOME/gowin/IDE -> use it
-# If $GOWIN_HOME/gowin/*
+gowin_finish_setup_and_report_where_found ()
+{
+    # info                 "Found Gowin$1:"
+    printf "%s\n" "$script: Found Gowin$1:"
 
-# Yuri
-#
-# $HOME/gowin/IDE
-# /opt/gowin/IDE
-# $HOME/gowin/9.9.1/IDE
-# /opt/gowin/9.9.1/IDE
-# /c/gowin/IDE
-# /d/gowin/IDE
-# /c/gowin/9.9.1/IDE
-# /d/gowin/9.9.1/IDE
+    #-------------------------------------------------------------------------
 
-# GOWIN_HOME (LInux) $HOME /opt (Windows) /c /d
-# GOWIN_ROOTDIR=/c/gowin/9.8.8
+    if [ -n "${GOWIN_VERSION_DIR-}" ]
+    then
+               # info "GOWIN_VERSION_DIR=$GOWIN_VERSION_DIR"
+        printf "%s\n" "GOWIN_VERSION_DIR=$GOWIN_VERSION_DIR"
 
-# Victor
+                    [ -d "$GOWIN_VERSION_DIR" ] ||
+        error "directory '$GOWIN_VERSION_DIR' expected"
 
-# Linux
-# $HOME/gowin/IDE
-# /opt/gowin/IDE
-# Windows
-# /c/gowin/9.8.8/IDE
-# /c/gowin/9.9.1/IDE
-#
-# GOWIN_HOME=/c/gowin/9.8.8
+                    [ -d "$GOWIN_VERSION_DIR/IDE" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/IDE' expected"
+
+                    [ -d "$GOWIN_VERSION_DIR/Programmer" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/Programmer' expected"
+
+                    [ -d "$GOWIN_VERSION_DIR/IDE/bin" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/IDE/bin' expected"
+
+                    [ -d "$GOWIN_VERSION_DIR/Programmer/bin" ]  ||
+        error "directory '$GOWIN_VERSION_DIR/Programmer/bin' expected"
+
+        #---------------------------------------------------------------------
+
+        export PATH="${PATH:+$PATH:}$GOWIN_VERSION_DIR/IDE/bin:$GOWIN_VERSION_DIR/Programmer/bin"
+
+        gowin_ide_full_real_path="$GOWIN_VERSION_DIR/IDE/bin/gw_ide$exe"
+        gowin_sh_full_real_path="$GOWIN_VERSION_DIR/IDE/bin/gw_sh$exe"
+        gowin_prog_full_real_path="$GOWIN_VERSION_DIR/Programmer/bin/programmer_cli$exe"
+    fi
+
+    #-------------------------------------------------------------------------
+
+    # info "PATH=$PATH"
+    # info "gowin_ide_full_real_path=$gowin_ide_full_real_path"
+    # info "gowin_sh_full_real_path=$gowin_sh_full_real_path"
+    # info "gowin_prog_full_real_path=$gowin_prog_full_real_path"
+
+    printf "%s\n" "PATH=$PATH"
+    printf "%s\n" "gowin_ide_full_real_path=$gowin_ide_full_real_path"
+    printf "%s\n" "gowin_sh_full_real_path=$gowin_sh_full_real_path"
+    printf "%s\n" "gowin_prog_full_real_path=$gowin_prog_full_real_path"
+
+                      [ -f "$gowin_ide_full_real_path" ] &&
+                      [ -x "$gowin_ide_full_real_path" ] ||
+    error "executable file '$gowin_ide_full_real_path' expected"
+
+                      [ -f "$gowin_sh_full_real_path" ] &&
+                      [ -x "$gowin_sh_full_real_path" ] ||
+    error "executable file '$gowin_sh_full_real_path' expected"
+
+                      [ -f "$gowin_prog_full_real_path" ] &&
+                      [ -x "$gowin_prog_full_real_path" ] ||
+    error "executable file '$gowin_prog_full_real_path' expected"
+}
+
+#-----------------------------------------------------------------------------
+
+gowin_try_install_dir ()
+{
+    local dir="$1"
+
+    [ -z "${GOWIN_VERSION_DIR-}" ] && [ -n "${dir-}" ] || return 0
+
+    attempt_gowin_install_parent_dirs="${attempt_gowin_install_parent_dirs:+$attempt_gowin_install_parent_dirs or }'$dir'"
+
+    if    [ "$OSTYPE" = "cygwin" ]  \
+       || [ "$OSTYPE" = "msys"   ]
+    then
+        # Windows is not case sensitive
+        Gowin_gowin="Gowin"
+    else
+        Gowin_gowin="Gowin gowin"
+    fi
+
+    for gowin in $Gowin_gowin
+    do
+        [ -d "$dir/$gowin" ] || continue
+
+        if [ -d "$dir/$gowin/IDE" ] ; then
+            GOWIN_VERSION_DIR="$dir/$gowin"
+            gowin_finish_setup_and_report_where_found " inside '$dir'"
+            return
+        fi
+
+        find_dir="$dir/$gowin"
+        find_opt="-mindepth 1 -maxdepth 1 -type d -print"
+
+        GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
+
+        if [ -n "$GOWIN_VERSION_DIR" ]
+        then
+            all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
+
+            [ "$GOWIN_VERSION_DIR" == "$all_version_dirs" ] ||
+                warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
+
+            gowin_finish_setup_and_report_where_found " inside subdirectory of '$dir'"
+        fi
+    done
+}
+
+#-----------------------------------------------------------------------------
 
 gowin_setup_ide ()
 {
-    if is_command_available gw_sh$exe &&
-       ( is_command_available openFPGALoader &&       [ "$OSTYPE" = "linux-gnu" ] ||
-         is_command_available programmer_cli$exe && ( [ "$OSTYPE" = "cygwin"    ] ||
-                                                      [ "$OSTYPE" = "msys"      ] ) ) ; then
-        gowin_sh="gw_sh$exe"
-        gowin_ide="gw_ide$exe"
-        gowin_pr="programmer_cli$exe"
-
-        return  # Already set up
-    fi
-
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    # Consider changing priorities of /opt and $HOME
+    #-------------------------------------------------------------------------
+
+    if [ -n "${GOWIN_VERSION_DIR-}" ]
+    then
+        gowin_finish_setup_and_report_where_found " using GOWIN_VERSION_DIR"
+        return
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if   is_command_available gw_sh$exe &&
+       ( is_command_available openFPGALoader &&       [ "$OSTYPE" = "linux-gnu" ] ||
+         is_command_available programmer_cli$exe && ( [ "$OSTYPE" = "cygwin"    ] ||
+                                                      [ "$OSTYPE" = "msys"      ] ) )
+    then
+        gowin_ide_full_real_path=$(command -v gw_ide$exe)
+        gowin_sh_full_real_path=$(command -v gw_sh$exe)
+        gowin_prog_full_real_path=$(command -v programmer_cli$exe)
+
+        gowin_finish_setup_and_report_where_found " using PATH"
+        return
+    fi
+
+    #-------------------------------------------------------------------------
+
+    gowin_try_install_dir "${GOWIN_HOME-}"
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
-        GOWIN_HOME="$HOME/gowin"
+        gowin_try_install_dir "$HOME"
+        gowin_try_install_dir /opt
+        gowin_try_install_dir /tools
 
-        if ! [ -d $GOWIN_HOME ]
-        then
-            GOWIN_HOME=/opt/gowin
-
-            if ! [ -d "$GOWIN_HOME" ]
-            then
-                error "Gowin IDE not found in /opt/gowin or \"$HOME/gowin\" \n You can download Gowin EDA here: https://www.gowinsemi.com/en/support/download_eda/"
-            fi
-        fi
-
-    elif  ( [ "$OSTYPE" = "cygwin" ]   \
-         || [ "$OSTYPE" = "msys"   ] ) \
-         && [ -z "${GOWIN_HOME-}"  ]; then
-          GOWIN_HOME="/c/Gowin"
-    else
-        error "this script does not support your OS / platform '$OSTYPE'"
-    fi
-
-
-    #-------------------------------------------------------------------------
-
-    if ! [ -d "$GOWIN_HOME" ]; then
-        error "expected to find '$GOWIN_HOME' directory"  \
-              "'$GOWIN_HOME' location may be set by the environment variable GOWIN_HOME"
-    elif    [ -n "${GOWIN_HOME-}" ]  \
-         && [ -d "$GOWIN_HOME/IDE" ] \
-         && [ -d "$GOWIN_HOME/Programmer" ]; then
-      gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh$exe"
-      gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide$exe"
-      gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli$exe"
-
-      return
-    fi
-
-    #-------------------------------------------------------------------------
-
-    find_command="$find_to_run $GOWIN_HOME -mindepth 1 -maxdepth 1 -type d -print"
-    latest_version_dir=$($find_command | sort | tail -1)
-
-    if [ -z "$latest_version_dir" ]
+    elif  [ "$OSTYPE" = "cygwin" ]  \
+       || [ "$OSTYPE" = "msys"   ]
     then
-        error "cannot find any version of Gowin EDA installed in "  \
-              "'$gowinfpga_install_dir'"
+        gowin_try_install_dir /c
+        gowin_try_install_dir /d
+        gowin_try_install_dir /e
     fi
 
     #-------------------------------------------------------------------------
 
-    export GOWIN_HOME="$latest_version_dir"
-    export PATH="${PATH:+$PATH:}$GOWIN_HOME/IDE/bin:$GOWIN_HOME/Programmer/bin"
-    gowin_sh="$GOWIN_HOME/IDE/bin/gw_sh$exe"
-    gowin_ide="$GOWIN_HOME/IDE/bin/gw_ide$exe"
-    gowin_pr="$GOWIN_HOME/Programmer/bin/programmer_cli$exe"
-
-    #-------------------------------------------------------------------------
-
-    all_version_dirs=$($find_command | xargs echo)
-
-    if [ "$latest_version_dir" != "$all_version_dirs" ]
+    if [ -z "${GOWIN_VERSION_DIR-}" ]
     then
-        warning "multiple Gowin EDA versions installed in"  \
-                "'$gowinfpga_install_dir':"  \
-                "'$all_version_dirs'"
-
-        info "GOWIN_HOME=$GOWIN_HOME"
-        info "PATH=$PATH"
+        error "expected to find 'Gowin/IDE' or 'gowin/IDE',            \
+              any subdirectory of 'Gowin' or 'gowin'"                  \
+              "in ${attempt_gowin_install_parent_dirs}."               \
+              "The Gowin installation home location"                   \
+              "can be set by GOWIN_HOME environment variable,"         \
+              "such as 'GOWIN_HOME=/home/verilog'."                    \
+              " You can also use GOWIN_VERSION_DIR"                    \
+              " to specify the version subtree location,"              \
+              "such as 'GOWIN_VERSION_DIR=/home/verilog/gowin/0.99'."
     fi
-
-    #-------------------------------------------------------------------------
-
-                   [ -d "$GOWIN_HOME" ]  \
-    || error "directory '$GOWIN_HOME' expected"
-
-                   [ -d "$GOWIN_HOME/IDE/bin" ]  \
-    || error "directory '$GOWIN_HOME/IDE/bin' expected"
-
-                   [ -d "$GOWIN_HOME/Programmer/bin" ]  \
-    || error "directory '$GOWIN_HOME/Programmer/bin' expected"
-
-    #-------------------------------------------------------------------------
-
 }
 
-#-------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
 setup_run_directory_for_fpga_synthesis_gowin ()
 {
@@ -234,8 +270,8 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 
 synthesize_for_fpga_gowin ()
 {
-    is_command_available_or_error "$gowin_sh" " from GoWin IDE package"
-    "$gowin_sh" fpga_project.tcl
+    is_command_available_or_error "$gowin_sh_full_real_path" " from GoWin IDE package"
+    "$gowin_sh_full_real_path" fpga_project.tcl
 }
 
 #-----------------------------------------------------------------------------
@@ -255,7 +291,8 @@ configure_fpga_gowin ()
 
 configure_fpga_gowin_msys ()
 {
-    is_command_available_or_error programmer_cli " tool programmer_cli is not installed on system\n You can download and install Gowin EDA https://www.gowinsemi.com/en/support/home/"
+    is_command_available_or_error "$gowin_prog_full_real_path"  \
+        " tool programmer_cli ($gowin_prog_full_real_path) is not installed on system\n You can download and install Gowin EDA https://www.gowinsemi.com/en/support/home/"
 
     case $fpga_board in
 
@@ -272,6 +309,7 @@ configure_fpga_gowin_msys ()
         tang_nano_20k | \
         tang_primer_20k_dock | \
         tang_primer_20k_dock_alt | \
+        tang_primer_20k_dock_no_tm1638 | \
         tang_primer_20k_lite )
             fpga_board_for_programmer="GW2A-18C"
             flash_method="-r 36"                 ;;
@@ -291,7 +329,7 @@ configure_fpga_gowin_msys ()
     # fi
 
     prj_parent_dir=`pwd`
-    $gowin_pr -d $fpga_board_for_programmer $flash_method --fsFile ${prj_parent_dir/\/[[:alpha:]]\//${prj_parent_dir:1:1}:\/}/impl/pnr/fpga_project.fs
+    "$gowin_prog_full_real_path" -d $fpga_board_for_programmer $flash_method --fsFile ${prj_parent_dir/\/[[:alpha:]]\//${prj_parent_dir:1:1}:\/}/impl/pnr/fpga_project.fs
 }
 
 #-----------------------------------------------------------------------------
@@ -327,6 +365,7 @@ configure_fpga_gowin_all ()
         tang_nano_9k         ) fpga_board_for_openFPGALoader=tangnano9k    ;;
         tang_primer_20k_dock ) fpga_board_for_openFPGALoader=tangprimer20k ;;
         tang_primer_20k_dock_alt ) fpga_board_for_openFPGALoader=tangprimer20k ;;
+        tang_primer_20k_dock_no_tm1638 ) fpga_board_for_openFPGALoader=tangprimer20k ;;
         tang_primer_20k_lite ) fpga_board_for_openFPGALoader=tangprimer20k ;;
 
         *)
@@ -343,9 +382,9 @@ configure_fpga_gowin_all ()
 
 run_fpga_synthesis_gui_gowin ()
 {
-    is_command_available_or_error "$gowin_ide" " from GoWin IDE package"
+    is_command_available_or_error "$gowin_ide_full_real_path" " from GoWin IDE package"
 
     # TODO: Is it possible to load the project after a preceding synthesis run?
 
-    "$gowin_ide" -prj fpga_project.gprj
+    "$gowin_ide_full_real_path" -prj fpga_project.gprj
 }

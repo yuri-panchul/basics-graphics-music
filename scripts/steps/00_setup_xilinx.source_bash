@@ -31,18 +31,14 @@ fi
 
 xilinx_setup_vivado ()
 {
-    if is_command_available vivado ; then
-        return  # Already set up
-    fi
-
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \
     || [ "$OSTYPE" = "msys"      ]  \
     || return
 
-    vivado_install_dir=Xilinx/Vivado
-
     #-------------------------------------------------------------------------
+
+    vivado_install_dir=Xilinx/Vivado
 
     if [ -n "${XILINX_VIVADO-}" ]
     then
@@ -57,6 +53,12 @@ xilinx_setup_vivado ()
                "Trying to find Vivado directory elsewhere."          \
                "You can also use XILINX_HOME variable to specify"    \
                "a parent directory for '$vivado_install_dir'."
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if is_command_available vivado ; then
+        return  # Already set up
     fi
 
     #-------------------------------------------------------------------------
@@ -156,8 +158,10 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    find_command="$find_to_run $vivado_install_parent_dir/$vivado_install_dir -mindepth 1 -maxdepth 1 -type d -print"
-    latest_version_dir=$($find_command | sort | tail -1)
+    find_dir="$vivado_install_parent_dir/$vivado_install_dir"
+    find_opt="-mindepth 1 -maxdepth 1 -type d -print"
+
+    latest_version_dir=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
 
     if [ -z "$latest_version_dir" ]
     then
@@ -172,7 +176,7 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    all_version_dirs=$($find_command | xargs echo)
+    all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
 
     if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
