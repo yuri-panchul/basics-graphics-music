@@ -592,7 +592,7 @@ module tm1638_sio
             end
 
             S_WAIT: begin
-                sclk_d = sclk_q + 1;
+                sclk_d = sclk_q + 1'd1;
                 // wait till we're halfway into clock pulse
                 if (sclk_q == {1'b0, {CLK_DIV1{1'b1}}}) begin
                     sclk_d = 0;
@@ -601,7 +601,7 @@ module tm1638_sio
             end
 
             S_TRANSFER: begin
-                sclk_d = sclk_q + 1;
+                sclk_d = sclk_q + 1'd1;
                 if (sclk_q == 0) begin
                     // start of clock pulse, output MSB
                     dio_out_d = data_q[0];
@@ -612,7 +612,7 @@ module tm1638_sio
 
                 end else if (&sclk_q) begin
                     // end of pulse, tick the counter
-                    ctr_d = ctr_q + 1;
+                    ctr_d = ctr_q + 1'd1;
 
                     if (&ctr_q) begin
                         // last bit sent, switch back to idle
@@ -620,7 +620,7 @@ module tm1638_sio
                         next_state = S_IDLE;
                         data_out_d = data_q;
 
-                        dio_out_d = 0;
+                        dio_out_d = '0;
                     end
                 end
             end
