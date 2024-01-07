@@ -132,6 +132,7 @@ gowin_try_install_dir ()
                 warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
 
             gowin_finish_setup_and_report_where_found " inside subdirectory of '$dir'"
+            return
         fi
     done
 }
