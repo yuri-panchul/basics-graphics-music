@@ -100,28 +100,40 @@ gowin_try_install_dir ()
 
     attempt_gowin_install_parent_dirs="${attempt_gowin_install_parent_dirs:+$attempt_gowin_install_parent_dirs or }'$dir'"
 
-    [ -d "$dir/gowin" ] || return 0
-
-    if [ -d "$dir/gowin/IDE" ] ; then
-        GOWIN_VERSION_DIR="$dir/gowin"
-        gowin_finish_setup_and_report_where_found " inside '$dir'"
-        return
-    fi
-
-    find_dir="$dir/gowin"
-    find_opt="-mindepth 1 -maxdepth 1 -type d -print"
-
-    GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
-
-    if [ -n "$GOWIN_VERSION_DIR" ]
+    if    [ "$OSTYPE" = "cygwin" ]  \
+       || [ "$OSTYPE" = "msys"   ]
     then
-        all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
-
-        [ "$GOWIN_VERSION_DIR" == "$all_version_dirs" ] ||
-            warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
-
-        gowin_finish_setup_and_report_where_found " inside subdirectory of '$dir'"
+        # Windows is not case sensitive
+        Gowin_gowin="Gowin"
+    else
+        Gowin_gowin="Gowin gowin"
     fi
+
+    for gowin in $Gowin_gowin
+    do
+        [ -d "$dir/$gowin" ] || continue
+
+        if [ -d "$dir/$gowin/IDE" ] ; then
+            GOWIN_VERSION_DIR="$dir/$gowin"
+            gowin_finish_setup_and_report_where_found " inside '$dir'"
+            return
+        fi
+
+        find_dir="$dir/$gowin"
+        find_opt="-mindepth 1 -maxdepth 1 -type d -print"
+
+        GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
+
+        if [ -n "$GOWIN_VERSION_DIR" ]
+        then
+            all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
+
+            [ "$GOWIN_VERSION_DIR" == "$all_version_dirs" ] ||
+                warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
+
+            gowin_finish_setup_and_report_where_found " inside subdirectory of '$dir'"
+        fi
+    done
 }
 
 #-----------------------------------------------------------------------------
@@ -160,14 +172,14 @@ gowin_setup_ide ()
 
     gowin_try_install_dir "${GOWIN_HOME-}"
 
-    if    [ "$OSTYPE" = "linux-gnu" ]
+    if [ "$OSTYPE" = "linux-gnu" ]
     then
         gowin_try_install_dir "$HOME"
         gowin_try_install_dir /opt
         gowin_try_install_dir /tools
 
-    elif  [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
+    elif  [ "$OSTYPE" = "cygwin" ]  \
+       || [ "$OSTYPE" = "msys"   ]
     then
         gowin_try_install_dir /c
         gowin_try_install_dir /d
@@ -178,16 +190,19 @@ gowin_setup_ide ()
 
     if [ -z "${GOWIN_VERSION_DIR-}" ]
     then
-        error "expected to find 'gowin/IDE' or any subdirectory of 'gowin'"  \
-              "in ${attempt_gowin_install_parent_dirs}."                     \
-              "The Gowin installation home location"                         \
-              " can be set by GOWIN_HOME environment variable."              \
-              " You can also use GOWIN_VERSION_DIR"                          \
-              " to specify the version subtree location."
+        error "expected to find 'Gowin/IDE' or 'gowin/IDE',            \
+              any subdirectory of 'Gowin' or 'gowin'"                  \
+              "in ${attempt_gowin_install_parent_dirs}."               \
+              "The Gowin installation home location"                   \
+              "can be set by GOWIN_HOME environment variable,"         \
+              "such as 'GOWIN_HOME=/home/verilog'."                    \
+              " You can also use GOWIN_VERSION_DIR"                    \
+              " to specify the version subtree location,"              \
+              "such as 'GOWIN_VERSION_DIR=/home/verilog/gowin/0.99'."
     fi
 }
 
-#-------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
 setup_run_directory_for_fpga_synthesis_gowin ()
 {
