@@ -111,10 +111,16 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 
     cat "$board_dir/$fpga_board/Makefile" >> "$dir/Makefile"
 
-    # Copy pin config file for Lattice boards
+    # Copy pin config file for Lattice iCE40 boards
     if [ -f "$board_dir/$fpga_board/board_specific.pcf" ]
     then
         cat "$board_dir/$fpga_board/board_specific.pcf" > "$dir/board_specific.pcf"
+    fi
+
+    # Copy pin config file for Lattice ECP5 boards
+    if [ -f "$board_dir/$fpga_board/board_specific.lpf" ]
+    then
+        cat "$board_dir/$fpga_board/board_specific.lpf" > "$dir/board_specific.lpf"
     fi
 
     # Copy pin config file for Gowin boards
