@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "config.svh"
 
 module a_plus_b_using_fifos
 # (

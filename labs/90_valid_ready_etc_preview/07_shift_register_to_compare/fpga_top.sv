@@ -1,6 +1,6 @@
 // Asynchronous reset here is needed for the FPGA board we use
 
-`include "config.vh"
+`include "config.svh"
 
 module fpga_top
 (
