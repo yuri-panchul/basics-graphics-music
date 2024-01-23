@@ -76,7 +76,7 @@ module fpga_top
 
         wire [width - 1:0] up_data_const_array [0:2 ** width - 1]
             = '{ 4'h2, 4'h6, 4'hd, 4'hb, 4'h7, 4'he, 4'hc, 4'h4,
-                      4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
+                 4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
 
     `endif
 
@@ -104,11 +104,11 @@ module fpga_top
 
     wire [7:0] abcdefgh_pre;
 
-    seven_segment_4_digits i_display
+    seven_segment_display # (w_digit) i_display
     (
         .clk      (clk),
         .number   ({ up_data, 4'd0, 4'd0, down_data }),
-        .dots     (4'b0),
+        .dots     ('0),
         .abcdefgh (abcdefgh_pre),
         .digit    (digit),
         .*
@@ -116,9 +116,9 @@ module fpga_top
 
     //------------------------------------------------------------------------
 
-    localparam sign_valid   = 8'b01111111,
-                          sign_ready   = 8'b11111101,
-                          sign_nothing = 8'b11111111;
+    localparam sign_valid   = 8'b10000000,
+               sign_ready   = 8'b00000010,
+               sign_nothing = 8'b00000000;
 
     function [7:0] valid_ready_to_abcdefgh (logic valid, ready);
 
@@ -134,11 +134,13 @@ module fpga_top
     //------------------------------------------------------------------------
 
     always_comb
-        case (digit)
-        4'b1011: abcdefgh = valid_ready_to_abcdefgh ( up_valid   , up_ready   );
-        4'b1101: abcdefgh = valid_ready_to_abcdefgh ( down_valid , down_ready );
-        4'b1110: abcdefgh = down_valid ? abcdefgh_pre : sign_nothing;
-        default: abcdefgh = abcdefgh_pre;
+        case (digit [2:0])
+        3'b100  : abcdefgh = valid_ready_to_abcdefgh ( up_valid   , up_ready   );
+        3'b010  : abcdefgh = valid_ready_to_abcdefgh ( down_valid , down_ready );
+        3'b001  : abcdefgh = down_valid ? abcdefgh_pre : sign_nothing;
+        default : abcdefgh = abcdefgh_pre;
         endcase
 
 endmodule
+
+`endif

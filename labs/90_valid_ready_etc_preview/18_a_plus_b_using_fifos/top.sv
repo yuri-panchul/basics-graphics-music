@@ -160,11 +160,11 @@ module top
 
     wire [7:0] abcdefgh_pre;
 
-    seven_segment_4_digits i_display
+    seven_segment_display # (w_digit) i_display
     (
         .clk      (clk),
         .number   ({ a_data, b_data, 4'd0, sum_data }),
-        .dots     (4'b0),
+        .dots     ('0),
         .abcdefgh (abcdefgh_pre),
         .digit    (digit),
         .*
@@ -172,16 +172,16 @@ module top
 
     //------------------------------------------------------------------------
 
-    localparam sign_ready_a   = 8'b01111111,
-               sign_ready_b   = 8'b11111101,
-               sign_ready_sum = 8'b11101111,
-               sign_nothing   = 8'b11111111;
+    localparam sign_ready_a   = 8'b10000000,
+               sign_ready_b   = 8'b00000010,
+               sign_ready_sum = 8'b00010000,
+               sign_nothing   = 8'b00000000;
 
     always_comb
-        case (digit)
-        4'b1110: abcdefgh = sum_valid ? abcdefgh_pre : sign_nothing;
+        case (digit [1:0])
+        2'b01: abcdefgh = sum_valid ? abcdefgh_pre : sign_nothing;
 
-        4'b1101:
+        2'b10:
         begin
             abcdefgh = sign_nothing;
 
@@ -194,3 +194,5 @@ module top
         endcase
 
 endmodule
+
+`endif

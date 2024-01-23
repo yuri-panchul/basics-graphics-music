@@ -132,7 +132,7 @@ module top
 
     wire [7:0] abcdefgh_pre;
 
-    seven_segment_4_digits i_display
+    seven_segment_display # (w_digit) i_display
     (
         .clk      (clk),
         .number   ({ up_data, 4'd0, 4'd0, down_data }),
@@ -162,11 +162,13 @@ module top
     //------------------------------------------------------------------------
 
     always_comb
-        case (digit)
-        4'b1011: abcdefgh = valid_ready_to_abcdefgh ( up_valid   , up_ready   );
-        4'b1101: abcdefgh = valid_ready_to_abcdefgh ( down_valid , down_ready );
-        4'b1110: abcdefgh = down_valid ? abcdefgh_pre : sign_nothing;
+        case (digit [2:0])
+        3'b100:  abcdefgh = valid_ready_to_abcdefgh ( up_valid   , up_ready   );
+        3'b010:  abcdefgh = valid_ready_to_abcdefgh ( down_valid , down_ready );
+        3'b001:  abcdefgh = down_valid ? abcdefgh_pre : sign_nothing;
         default: abcdefgh = abcdefgh_pre;
         endcase
 
 endmodule
+
+`endif
