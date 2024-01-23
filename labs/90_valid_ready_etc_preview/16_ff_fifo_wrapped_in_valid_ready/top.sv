@@ -63,6 +63,8 @@ module top
 
     //------------------------------------------------------------------------
 
+    localparam width = 4, depth = w_digit;
+
     // Upstream
 
     wire               up_valid   = key [1];
