@@ -36,7 +36,7 @@ module shift_register_with_valid_and_debug
     assign out_valid = valid [depth - 1];
     assign out_data  = data  [depth - 1];
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     // TODO: Add logic to generate debug signals
     // START_SOLUTION

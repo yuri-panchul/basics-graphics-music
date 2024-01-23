@@ -17,21 +17,21 @@ module flip_flop_fifo_empty_full_optimized
     output               full
 );
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     localparam pointer_width = $clog2 (depth),
                           counter_width = $clog2 (depth + 1);
 
     localparam [counter_width - 1:0] max_ptr = counter_width' (depth - 1);
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     logic [pointer_width - 1:0] wr_ptr, rd_ptr;
     logic wr_ptr_odd_circle, rd_ptr_odd_circle;
 
     logic [width - 1:0] data [0: depth - 1];
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
@@ -52,7 +52,7 @@ module flip_flop_fifo_empty_full_optimized
             end
         end
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
@@ -73,7 +73,7 @@ module flip_flop_fifo_empty_full_optimized
             end
         end
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     always_ff @ (posedge clk)
         if (push)
@@ -81,7 +81,7 @@ module flip_flop_fifo_empty_full_optimized
 
     assign read_data = data [rd_ptr];
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     wire equal_ptrs = (wr_ptr == rd_ptr);
 
