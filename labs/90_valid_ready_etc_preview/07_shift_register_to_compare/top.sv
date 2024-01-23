@@ -118,7 +118,7 @@ module top
 
         wire [width - 1:0] in_data_const_array [0:2 ** width - 1]
             = '{ 4'h2, 4'h6, 4'hd, 4'hb, 4'h7, 4'he, 4'hc, 4'h4,
-                      4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
+                 4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
 
     `endif
 
@@ -170,3 +170,5 @@ module top
             abcdefgh = abcdefgh_pre;
 
 endmodule
+
+`endif

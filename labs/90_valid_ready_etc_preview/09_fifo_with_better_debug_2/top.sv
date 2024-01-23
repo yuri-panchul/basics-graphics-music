@@ -69,10 +69,7 @@ module top
     wire [fifo_width - 1:0] read_data;
     wire empty, full;
 
-    // Either of two leftmost keys is pressed
-    wire push = ~ full & key [1];
-
-    // Either of two rightmost keys is pressed
+    wire push = ~ full  & key [1];
     wire pop  = ~ empty & key [0];
 
     // With this implementation of FIFO

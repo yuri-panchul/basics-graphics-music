@@ -35,39 +35,16 @@ module fpga_top
 
     //------------------------------------------------------------------------
 
-    `ifdef SIMULATION
-
-        wire slow_clk = clk;
-
-    `else
-
-        wire slow_clk_raw, slow_clk;
-
-        slow_clk_gen # (26) i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
-
-        // "global" is Intel FPGA-specific primitive to route
-        // a signal coming from data into clock tree
-
-        global i_global (.in (slow_clk_raw), .out (slow_clk));
-
-    `endif  // `ifdef SIMULATION
-
-    //------------------------------------------------------------------------
-
     // Upstream
 
-    // Either of two leftmost keys is pressed
-
-    wire               up_valid = key_sw [3:2] != 2'b11;
+    wire               up_valid   = key [1];
     wire               up_ready;
     wire [width - 1:0] up_data;
 
     // Downstream
 
-    // Two rightmost keys are not pressed - ready is ON by default
-
     wire               down_valid;
-    wire               down_ready = key_sw [1:0] == 2'b11;
+    wire               down_ready = key [0];
     wire [width - 1:0] down_data;
 
     //------------------------------------------------------------------------

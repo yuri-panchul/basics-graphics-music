@@ -75,37 +75,18 @@ module top
 
     //------------------------------------------------------------------------
 
-    `ifdef SIMULATION
-
-        wire slow_clk = clk;
-
-    `else
-
-        wire slow_clk_raw, slow_clk;
-
-        slow_clk_gen # (26) i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
-
-        // "global" is Intel FPGA-specific primitive to route
-        // a signal coming from data into clock tree
-
-        global i_global (.in (slow_clk_raw), .out (slow_clk));
-
-    `endif  // `ifdef SIMULATION
-
-    //------------------------------------------------------------------------
-
-    wire               a_valid   = ~ key_sw [3];  // Leftmost key is pressed
+    wire               a_valid   = key [2];
     wire               a_ready;
     wire [width - 1:0] a_data;
 
-    wire               b_valid   = ~ key_sw [2];  // Second left key is pressed
+    wire               b_valid   = key [1];
     wire               b_ready;
     wire [width - 1:0] b_data;
 
-    // Two rightmost keys are not pressed - ready is ON by default
+    // key [0] is not pressed - ready is ON by default
 
     wire               sum_valid;
-    wire               sum_ready = (key_sw [1:0] == 2'b11);
+    wire               sum_ready = ~ key [0];
     wire [width - 1:0] sum_data;
 
     //------------------------------------------------------------------------
@@ -137,7 +118,7 @@ module top
 
         wire [width - 1:0] data_const_array [0:2 ** width - 1]
             = '{ 4'h2, 4'h6, 4'hd, 4'hb, 4'h7, 4'he, 4'hc, 4'h4,
-                      4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
+                 4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
 
     `endif
 
@@ -192,9 +173,9 @@ module top
     //------------------------------------------------------------------------
 
     localparam sign_ready_a   = 8'b01111111,
-                          sign_ready_b   = 8'b11111101,
-                          sign_ready_sum = 8'b11101111,
-                          sign_nothing   = 8'b11111111;
+               sign_ready_b   = 8'b11111101,
+               sign_ready_sum = 8'b11101111,
+               sign_nothing   = 8'b11111111;
 
     always_comb
         case (digit)
