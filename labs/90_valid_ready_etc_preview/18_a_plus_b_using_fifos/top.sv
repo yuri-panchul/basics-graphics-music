@@ -185,9 +185,9 @@ module top
         begin
             abcdefgh = sign_nothing;
 
-            if ( a_ready   ) abcdefgh &= sign_ready_a;
-            if ( b_ready   ) abcdefgh &= sign_ready_b;
-            if ( sum_ready ) abcdefgh &= sign_ready_sum;
+            if ( a_ready   ) abcdefgh |= sign_ready_a;
+            if ( b_ready   ) abcdefgh |= sign_ready_b;
+            if ( sum_ready ) abcdefgh |= sign_ready_sum;
         end
 
         default: abcdefgh = abcdefgh_pre;

@@ -156,7 +156,7 @@ module top
         2'b00: return sign_nothing;
         2'b10: return sign_valid;
         2'b01: return sign_ready;
-        2'b11: return sign_valid & sign_ready;
+        2'b11: return sign_valid | sign_ready;
         endcase
 
     endfunction
