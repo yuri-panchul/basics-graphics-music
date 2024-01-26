@@ -2,38 +2,68 @@
 
 `include "config.svh"
 
-module fpga_top
+`ifndef SIMULATION
+
+module top
 # (
-    parameter width = 4, depth = 4
+    parameter clk_mhz = 50,
+              w_key   = 4,
+              w_sw    = 8,
+              w_led   = 8,
+              w_digit = 8,
+              w_gpio  = 20
 )
 (
-    input              clk,
-    input              reset_n,
+    input                        clk,
+    input                        slow_clk,
+    input                        rst,
 
-    input        [3:0] key_sw,
-    output       [3:0] led,
+    // Keys, switches, LEDs
 
-    output logic [7:0] abcdefgh,
-    output       [3:0] digit,
+    input        [w_key   - 1:0] key,
+    input        [w_sw    - 1:0] sw,
+    output logic [w_led   - 1:0] led,
 
-    output             buzzer,
+    // A dynamic seven-segment display
 
-    output             hsync,
-    output             vsync,
-    output       [2:0] rgb
+    output logic [          7:0] abcdefgh,
+    output logic [w_digit - 1:0] digit,
+
+    // VGA
+
+    output logic                 vsync,
+    output logic                 hsync,
+    output logic [          3:0] red,
+    output logic [          3:0] green,
+    output logic [          3:0] blue,
+
+    input                        uart_rx,
+    output                       uart_tx,
+
+    input                        mic_ready,
+    input        [         23:0] mic,
+    output       [         15:0] sound,
+
+    // General-purpose Input/Output
+
+    inout        [w_gpio  - 1:0] gpio
 );
 
     //------------------------------------------------------------------------
 
-    wire rst = ~ reset_n;
-
-    assign led    = '1;
-    assign buzzer = 1'b1;
-    assign hsync  = 1'b1;
-    assign vsync  = 1'b1;
-    assign rgb    = 3'b0;
+    // assign led      = '0;
+    // assign abcdefgh = '0;
+    // assign digit    = '0;
+       assign vsync    = '0;
+       assign hsync    = '0;
+       assign red      = '0;
+       assign green    = '0;
+       assign blue     = '0;
+       assign sound    = '0;
 
     //------------------------------------------------------------------------
+
+    localparam width = 4, depth = w_digit;
 
     // Upstream
 
@@ -102,12 +132,14 @@ module fpga_top
 
     //------------------------------------------------------------------------
 
+    localparam w_number = w_digit * 4;
+
     wire [7:0] abcdefgh_pre;
 
     seven_segment_display # (w_digit) i_display
     (
         .clk      (clk),
-        .number   ({ up_data, 4'd0, 4'd0, down_data }),
+        .number   (w_number' ({ up_data, 4'd0, 4'd0, down_data })),
         .dots     ('0),
         .abcdefgh (abcdefgh_pre),
         .digit    (digit),
@@ -134,11 +166,12 @@ module fpga_top
     //------------------------------------------------------------------------
 
     always_comb
-        case (digit [2:0])
-        3'b100  : abcdefgh = valid_ready_to_abcdefgh ( up_valid   , up_ready   );
-        3'b010  : abcdefgh = valid_ready_to_abcdefgh ( down_valid , down_ready );
-        3'b001  : abcdefgh = down_valid ? abcdefgh_pre : sign_nothing;
-        default : abcdefgh = abcdefgh_pre;
+        case (digit [3:0])
+        4'b0100:  abcdefgh = valid_ready_to_abcdefgh ( up_valid   , up_ready   );
+        4'b0010:  abcdefgh = valid_ready_to_abcdefgh ( down_valid , down_ready );
+        4'b0001:  abcdefgh = down_valid ? abcdefgh_pre : sign_nothing;
+        4'b1000:  abcdefgh = abcdefgh_pre;
+        default:  abcdefgh = sign_nothing;
         endcase
 
 endmodule
