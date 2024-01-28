@@ -12,66 +12,27 @@ module board_specific_top
 )
 (
 // continue from here
-    input         CLK100MHZ,
-    input         CPU_RESETN,
+    input                sysclk,
 
-    input         BTNC,
-    input         BTNU,
-    input         BTNL,
-    input         BTNR,
-    input         BTND,
+    input  [w_key - 1:0] btn,
 
-    input  [15:0] SW,
-    output [15:0] LED,
+    output [w_led - 1:0] led,
 
-    output        LED16_B,
-    output        LED16_G,
-    output        LED16_R,
+    output               led0_b,
+    output               led0_g,
+    output               led0_r,
 
-    output        LED17_B,
-    output        LED17_G,
-    output        LED17_R,
+    inout  [7:1]         ja,
 
-    output        CA,
-    output        CB,
-    output        CC,
-    output        CD,
-    output        CE,
-    output        CF,
-    output        CG,
+    input                uart_txd_in,
+    output               uart_rxd_out
 
-    output        DP,
-
-    output [ 7:0] AN,
-
-    output [ 3:0] VGA_R,
-    output [ 3:0] VGA_G,
-    output [ 3:0] VGA_B,
-
-    output        VGA_HS,
-    output        VGA_VS,
-
-    input         UART_TXD_IN,
-
-    inout  [12:1] JA,
-    inout  [12:1] JB,
-    inout  [12:1] JC,
-    inout  [12:1] JD,
-
-    output        M_CLK,
-    input         M_DATA,
-    output        M_LRSEL,
-
-    output        AUD_PWM,
-    output        AUD_SD
 );
 
     //------------------------------------------------------------------------
 
-    wire clk =   CLK100MHZ;
-    wire rst = ~ CPU_RESETN;
-
-    wire UART_RXD_OUT; // FIXME: Should be assigned to some GPIO
+    wire clk =   sysclk;
+    wire rst =   0;
 
     //------------------------------------------------------------------------
 
@@ -92,9 +53,6 @@ module board_specific_top
 
     wire [ 7:0] abcdefgh;
     wire [ 7:0] digit;
-
-    assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
-    assign AN = ~ digit;
 
     wire [23:0] mic = '0;
     wire        mic_ready = '0;
@@ -123,24 +81,24 @@ module board_specific_top
         .slow_clk ( slow_clk ),
         .rst      ( rst      ),
 
-        .key      ( { BTND, BTNU, BTNL, BTNC, BTNR } ),
-        .sw       ( SW       ),
+        .key      ( btn      ),
+        .sw       (          ),
 
-        .led      ( LED      ),
+        .led      ( led      ),
 
         .abcdefgh ( abcdefgh ),
 
-        .digit    ( digit    ),
+        .digit    (          ),
 
-        .vsync    ( VGA_VS   ),
-        .hsync    ( VGA_HS   ),
+        .vsync    ( 0        ),
+        .hsync    ( 0        ),
 
-        .red      ( VGA_R    ),
-        .green    ( VGA_G    ),
-        .blue     ( VGA_B    ),
+        .red      ( 0        ),
+        .green    ( 0        ),
+        .blue     ( 0        ),
 
-        .uart_rx  ( UART_TXD_IN),
-        .uart_tx  ( UART_RXD_OUT),
+        .uart_rx  ( uart_txd_in),
+        .uart_tx  ( uart_rxd_out),
 
         .mic_ready( mic_ready),
         .mic      ( mic      ),
