@@ -22,7 +22,7 @@ module board_specific_top
     output               led0_g,
     output               led0_r,
 
-    inout  [7:1]         ja,
+    inout  [7:0]         ja,
 
     input                uart_txd_in,
     output               uart_rxd_out
