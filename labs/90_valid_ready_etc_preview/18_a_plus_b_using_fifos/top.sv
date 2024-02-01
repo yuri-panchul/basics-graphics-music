@@ -65,19 +65,44 @@ module top
 
     localparam width = 4, depth = 4;
 
-    wire               a_valid   = key [2];
+    wire               a_valid;
     wire               a_ready;
     wire [width - 1:0] a_data;
 
-    wire               b_valid   = key [1];
+    wire               b_valid;
     wire               b_ready;
     wire [width - 1:0] b_data;
 
-    // key [0] is not pressed - ready is ON by default
-
     wire               sum_valid;
-    wire               sum_ready = ~ key [0];
+    wire               sum_ready;
     wire [width - 1:0] sum_data;
+
+    //------------------------------------------------------------------------
+
+    generate
+        if (w_key >= 3)
+        begin : three_keys
+            // For example Saulinx board
+
+            assign a_valid   =   key [2];
+            assign b_valid   =   key [1];
+            assign sum_ready = ~ key [0];  // is not pressed - ready is ON by default
+        end
+        else if (w_key >= 2 && w_sw > 0)
+        begin : two_keys_and_switch
+            // For example DE0-Lite board
+
+            assign a_valid   =   key [0];  // Top key is pressed
+            assign b_valid   =   key [1];  // Bottom key is pressed
+            assign sum_ready = ~ sw  [0];  // Switch is not ON
+        end
+        else
+        begin : single_key
+            assign a_valid   =   key [0];
+            assign b_valid   =   key [0];
+            assign sum_ready = ~ key [0];
+        end
+    endgenerate
 
     //------------------------------------------------------------------------
 
