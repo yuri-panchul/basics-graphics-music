@@ -1,6 +1,6 @@
 // Asynchronous reset here is needed for one of FPGA boards we use
 
-`include "config.vh"
+`include "config.svh"
 
 // This solution is a Yuri Panchul's edition
 // of the code derived from:

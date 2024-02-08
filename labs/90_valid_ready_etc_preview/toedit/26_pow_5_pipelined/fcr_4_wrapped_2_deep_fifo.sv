@@ -1,6 +1,6 @@
 // Asynchronous reset here is needed for one of FPGA boards we use
 
-`include "config.vh"
+`include "config.svh"
 
 module fcr_4_wrapped_2_deep_fifo
 # (

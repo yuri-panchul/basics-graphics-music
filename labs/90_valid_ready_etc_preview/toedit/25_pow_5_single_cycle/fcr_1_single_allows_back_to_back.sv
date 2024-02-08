@@ -5,7 +5,7 @@
 
 // Asynchronous reset here is needed for one of FPGA boards we use
 
-`include "config.vh"
+`include "config.svh"
 
 module fcr_1_single_allows_back_to_back
 # (

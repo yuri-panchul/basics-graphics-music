@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "config.svh"
 
 module ff_fifo_pow2_depth
 # (

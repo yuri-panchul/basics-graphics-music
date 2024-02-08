@@ -15,7 +15,7 @@
 
 // Asynchronous reset here is needed for one of FPGA boards we use
 
-`include "config.vh"
+`include "config.svh"
 
 module fcr_2_single_half_perf_no_comb_path
 # (
