@@ -85,20 +85,21 @@ module pow_5_pipelined_with_credit_counter
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            crd_cnt <= '0;
+            crd_cnt <= crd_cnt_width' (pipeline_depth);
         else
             crd_cnt <= new_crd_cnt;
 
     //--------------------------------------------------------------------------
     // Valid logic
 
-    assign up_rdy          = crd_cnt != '0;
+    assign up_rdy          =   crd_cnt != '0;
 
-    assign pipe_up_vld     = up_vld & up_rdy;
-    assign pipe_up_data    = up_data;
+    assign pipe_up_vld     =   up_vld & up_rdy;
+    assign pipe_up_data    =   up_data;
 
-    assign fifo_push       = pipe_down_vld;
-    assign fifo_write_data = pipe_down_data;
+    assign fifo_push       =   pipe_down_vld;
+    assign fifo_pop        =   down_vld & down_rdy;
+    assign fifo_write_data =   pipe_down_data;
 
     assign down_vld        = ~ fifo_empty;
     assign down_data       =   fifo_read_data;
