@@ -89,4 +89,10 @@ module pow_5_pipelined_with_credit_counter
         else
             crd_cnt <= new_crd_cnt;
 
+    //--------------------------------------------------------------------------
+    // Valid logic
+
+    assign pipe_up_vld = up_vld & up_rdy;
+    assign up_rdy      = crd_cnt != '0;
+
 endmodule
