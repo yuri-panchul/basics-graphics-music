@@ -1,0 +1,6 @@
+set_global_assignment -name SYSTEMVERILOG_FILE fcr_1_single_allows_back_to_back.sv
+set_global_assignment -name SYSTEMVERILOG_FILE fcr_2_single_half_perf_no_comb_path.sv
+set_global_assignment -name SYSTEMVERILOG_FILE fcr_3_single_for_pipes_with_global_stall.sv
+set_global_assignment -name SYSTEMVERILOG_FILE fcr_4_wrapped_2_deep_fifo.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ff_fifo_pow2_depth.sv
+set_global_assignment -name SYSTEMVERILOG_FILE pow_5_single_cycle.sv
