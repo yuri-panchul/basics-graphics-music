@@ -1,3 +1,0 @@
-set_global_assignment -name SYSTEMVERILOG_FILE flip_flop_fifo_with_counter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE reg_without_flow_control.sv
-set_global_assignment -name SYSTEMVERILOG_FILE pow_5_pipelined_with_credit_counter.sv
