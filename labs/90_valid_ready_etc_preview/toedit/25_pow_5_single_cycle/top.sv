@@ -96,7 +96,19 @@ module top
 
     pow_5_single_cycle
     # (.width (width))
-    pow_5 (.clk (slow_clk), .*);
+    pow_5
+    (
+        .clk        ( slow_clk  ),
+        .rst        ( rst       ),
+
+        .up_vld     ( up_vld    ),
+        .up_rdy     ( up_rdy    ),
+        .up_data    ( up_data   ),
+
+        .down_vld   ( down_vld  ),
+        .down_rdy   ( down_rdy  ),
+        .down_data  ( down_data )
+    );
 
     //--------------------------------------------------------------------------
 
@@ -115,11 +127,12 @@ module top
     localparam sign_nothing = 8'b00000000;
 
     assign abcdefgh =
-          ( digit [3]   != 1'b0   & ~ up_rdy   )
-        | ( digit [2:0] != 3'b000 & ~ down_vld )
+          ( digit [3]   != 1'b0    & ~ up_rdy   )
+        | ( digit [2:0] !=  3'b000 & ~ down_vld )
+        |   digit [3:0] == 4'b0000
       ? sign_nothing : abcdefgh_pre;
 
-    assign led = w_led' (~ { up_vld, up_rdy, down_vld, down_rdy });
+    assign led = w_led' ({ up_vld, up_rdy, down_vld, down_rdy });
 
 endmodule
 

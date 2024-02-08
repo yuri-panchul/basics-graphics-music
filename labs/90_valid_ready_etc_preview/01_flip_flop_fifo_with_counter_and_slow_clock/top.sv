@@ -168,8 +168,9 @@ module top
         .*
     );
 
-    localparam sign_full  = 8'b1000_0000,
-               sign_empty = 8'b0001_0000;
+    localparam sign_full    = 8'b1000_0000,
+               sign_empty   = 8'b0001_0000,
+               sign_nothing = 8'b0000_0000;
 
     always_comb
         if (digit [read_data_digit] & empty)
@@ -181,7 +182,7 @@ module top
         else if (digit & digit_mask)
             abcdefgh = abcdefgh_pre;
         else
-            abcdefgh = '0;
+            abcdefgh = sign_nothing;
 
 endmodule
 
