@@ -16,7 +16,7 @@ module ff_fifo_pow2_depth
 );
 
     localparam pointer_width          = $clog2 (depth),
-                         extended_pointer_width = pointer_width + 1;
+               extended_pointer_width = pointer_width + 1;
 
     `ifdef SIMULATION
     // Check that the depth is truly a power of two
@@ -56,7 +56,7 @@ module ff_fifo_pow2_depth
 
     assign empty = (ext_rd_ptr == ext_wr_ptr);
 
-    assign full =   rd_ptr == wr_ptr
-                                & ext_rd_ptr [pointer_width] != ext_wr_ptr [pointer_width];
+    assign full  =   rd_ptr == wr_ptr
+                   & ext_rd_ptr [pointer_width] != ext_wr_ptr [pointer_width];
 
 endmodule

@@ -93,5 +93,3 @@ module pow_5_pipelined_without_flow_control
     );
 
 endmodule
-
-`undef FCR

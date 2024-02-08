@@ -2,10 +2,11 @@
 
 `include "config.svh"
 
-     `define FCR fcr_1_single_allows_back_to_back
+   `define FCR fcr_1_single_allows_back_to_back
 // `define FCR fcr_2_single_half_perf_no_comb_path
 // `define FCR fcr_3_single_for_pipes_with_global_stall
 // `define FCR fcr_4_wrapped_2_deep_fifo
+// `define FCR fcr_5_double_buffer_from_dally_harting
 
 module pow_5_pipelined
 # (
