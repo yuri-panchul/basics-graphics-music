@@ -1,6 +1,6 @@
 `include "config.svh"
 
-module priority_arbiter_from_2_fifos_wrapped_in_valid_ready
+module round_robin_arbiter_from_2_fifos_wrapped_in_valid_ready
 # (
     parameter width = 8, depth = 10
 )
@@ -75,10 +75,10 @@ module priority_arbiter_from_2_fifos_wrapped_in_valid_ready
 
     round_robin_arbiter_2_requests arb
     (
-        .clk ( clk ),
-        .rst ( rst ),
-        .request ( { a_down_valid , b_down_valid } ),
-        .grants  ( { a_grant      , b_grant      } )
+        .clk      ( clk ),
+        .rst      ( rst ),
+        .requests ( { a_down_valid , b_down_valid } ),
+        .grants   ( { a_grant      , b_grant      } )
     );
 
     //------------------------------------------------------------------------
