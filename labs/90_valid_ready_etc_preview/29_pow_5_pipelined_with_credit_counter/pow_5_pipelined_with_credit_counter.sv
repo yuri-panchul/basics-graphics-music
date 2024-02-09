@@ -92,7 +92,7 @@ module pow_5_pipelined_with_credit_counter
     //--------------------------------------------------------------------------
     // Valid logic
 
-    assign up_rdy          =   crd_cnt != '0;
+    assign up_rdy          =   crd_cnt != '0 | fifo_pop;
 
     assign pipe_up_vld     =   up_vld & up_rdy;
     assign pipe_up_data    =   up_data;
