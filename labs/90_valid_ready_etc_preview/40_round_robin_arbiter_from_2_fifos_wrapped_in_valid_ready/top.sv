@@ -106,11 +106,11 @@ module top
 
     wire [width - 2:0] a_data_pre;
 
-    counter_with_enable # (width) i_a_counter
+    counter_with_enable # (width - 1) i_a_counter
     (
         .clk    (slow_clk),
         .enable (a_valid & a_ready),
-        .cnt    (a_data_index),
+        .cnt    (a_data_pre),
         .*
     );
 
@@ -120,11 +120,11 @@ module top
 
     wire [width - 2:0] b_data_pre;
 
-    counter_with_enable # (width) i_b_counter
+    counter_with_enable # (width - 1) i_b_counter
     (
         .clk    (slow_clk),
         .enable (b_valid & b_ready),
-        .cnt    (b_data_index),
+        .cnt    (b_data_pre),
         .*
     );
 

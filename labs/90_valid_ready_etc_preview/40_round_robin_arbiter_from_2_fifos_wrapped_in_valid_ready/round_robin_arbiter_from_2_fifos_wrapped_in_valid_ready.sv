@@ -88,7 +88,6 @@ module round_robin_arbiter_from_2_fifos_wrapped_in_valid_ready
     assign a_down_ready = out_ready & a_grant;
     assign b_down_ready = out_ready & b_grant;
 
-    wire [width - 1:0] out_up_data
-        = a_down_valid & a_grant ? a_down_data : b_down_data;
+    assign out_data     = a_down_valid & a_grant ? a_down_data : b_down_data;
 
 endmodule
