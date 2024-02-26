@@ -30,16 +30,18 @@ do
     cp -f "$lab_dir/common/$f" "$design_dir/src"
 done
 
-$find_to_run .. -type f  \
-    \(                   \
-         -name '*.sv'    \
-    -o   -name '*.svh'   \
-    -o   -name '*.v'     \
-    -o   -name '*.vh'    \
-    -o   -name '*.hex'   \
-    \)                   \
-    -not -name tb.sv     \
-    | xargs -I % cp -f % "$design_dir/src"
+$find_to_run ..                             \
+       -type d -name run -prune             \
+    -o -type f                              \
+    \(                                      \
+             -name '*.sv' -not -name tb.sv  \
+        -o   -name '*.svh'                  \
+        -o   -name '*.v'                    \
+        -o   -name '*.vh'                   \
+        -o   -name '*.hex'                  \
+    \)                                      \
+    -print                                  \
+    | xargs -I % echo cp -f % "$design_dir/src"
 
 #-----------------------------------------------------------------------------
 
