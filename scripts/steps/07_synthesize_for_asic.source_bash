@@ -11,10 +11,30 @@ if [ -f ../asic_config.tcl ] ; then
     cp ../asic_config.tcl "$design_dir"/config.tcl
 fi
 
-$find_to_run  \
-    .. "$lab_dir/common"  \
-    -type f -name '*.sv*' -not -name tb.sv  \
-        | xargs -I % cp %  "$design_dir/src"
+#-----------------------------------------------------------------------------
+
+for f in                      \
+    config.svh                \
+    counter_with_enable.sv    \
+    lab_specific_config.svh   \
+    seven_segment_display.sv  \
+    shift_reg.sv              \
+    strobe_gen.sv             \
+    vga.sv
+do
+    cp "$lab_dir/common/$f" "$design_dir/src"
+done
+
+$find_to_run .. -type f  \
+    \(                   \
+         -name '*.sv'    \
+    -o   -name '*.svh'   \
+    -o   -name '*.v'     \
+    -o   -name '*.vh'    \
+    -o   -name '*.hex'   \
+    \)                   \
+    -not -name tb.sv     \
+    | xargs -I % cp %  "$design_dir/src"
 
 #-----------------------------------------------------------------------------
 
