@@ -41,7 +41,7 @@ $find_to_run ..                             \
         -o   -name '*.hex'                  \
     \)                                      \
     -print                                  \
-    | xargs -I % echo cp -f % "$design_dir/src"
+    | xargs -I % cp -f % "$design_dir/src"
 
 #-----------------------------------------------------------------------------
 
