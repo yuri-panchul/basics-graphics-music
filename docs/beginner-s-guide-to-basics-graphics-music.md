@@ -15,9 +15,7 @@ for instance, telecommunications, automotive etc.
 These examples facilitate learning for beginners by:-  
 
 1. Removing EDA and FPGA vendor complexity and restrictions.
-2. Compensating the gap between academia and industry in solving microarchitectural 
-   problems  
-	 necessary for a career in ASIC design, building CPU, GPU and networking chips.
+2. Compensating the gap between academia and industry in solving microarchitectural problems necessary for a career in ASIC design, building CPU, GPU and networking chips.
 3. Reducing the barrier of entry for them or a person who is transitioning to FPGA/ASIC design.
 
 
