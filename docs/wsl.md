@@ -10,7 +10,7 @@ Ubuntu
 ```
 $ sudo apt install linux-tools-virtual hwdata
 $ sudo update-alternatives --install /usr/local/bin/usbip usbip `ls /usr/lib/linux-tools/*/usbip | tail -n1` 20
-
+```
 ```
 $ uname -a
 Linux XXXX 5.15.133.1-microsoft-standard-WSL2 #1 SMP Thu Oct 5 21:02:42 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
