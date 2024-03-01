@@ -40,15 +40,17 @@ BUSID  VID:PID    DEVICE                                                        
 ```
 PS C:\Windows\system32> usbipd  bind --busid 4-2
 ```
+```
 PS C:\Windows\system32> usbipd  attach --busid 4-2 -w
 usbipd: info: Using WSL distribution 'Ubuntu' to attach; the device will be available in all WSL 2 distributions.
 usbipd: info: Using IP address 172.22.0.1 to reach the host.
-
+```
 Ubuntu
+```
 $ lsusb
 Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
 Bus 001 Device 004: ID 0403:6010 Future Technology Devices International, Ltd FT2232C/D/H Dual UART/FIFO IC
 Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-
+```
 
 
