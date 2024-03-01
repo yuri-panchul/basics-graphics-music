@@ -15,6 +15,9 @@ $ sudo update-alternatives --install /usr/local/bin/usbip usbip `ls /usr/lib/lin
 $ uname -a
 Linux XXXX 5.15.133.1-microsoft-standard-WSL2 #1 SMP Thu Oct 5 21:02:42 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
 ```
+
+Add Defaults        secure_path="/usr/lib/linux-tools/5.15.0-97-generic:  in /etc/sudoers
+
 ```
 $ sudo vi /etc/sudoers
 ```
