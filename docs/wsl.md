@@ -3,28 +3,32 @@ Reference document https://www.xda-developers.com/wsl-connect-usb-devices-window
  Then download and install the latest release. https://github.com/dorssel/usbipd-win/releases/latest
 
 Windows
+```
 > wsl --install
-
+```
 Ubuntu
-
+```
 $ sudo apt install linux-tools-virtual hwdata
-
 $ sudo update-alternatives --install /usr/local/bin/usbip usbip `ls /usr/lib/linux-tools/*/usbip | tail -n1` 20
 
+```
 $ uname -a
-
 Linux XXXX 5.15.133.1-microsoft-standard-WSL2 #1 SMP Thu Oct 5 21:02:42 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
-
+```
+```
 $ sudo vi /etc/sudoers
 ```
-\# See the man page for details on how to write a sudoers file.
-\#
+
+```
+# See the man page for details on how to write a sudoers file.
+#
 Defaults        env_reset
 Defaults        mail_badpass
 Defaults        secure_path="/usr/lib/linux-tools/5.15.0-97-generic:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 Defaults        use_pty
 ```
 Windows As Administrator
+```
 PS C:\Windows\system32> usbipd list
 Connected:
 BUSID  VID:PID    DEVICE                                                        STATE
@@ -32,9 +36,10 @@ BUSID  VID:PID    DEVICE                                                        
 1-8    04f2:b5c1  Integrated Camera                                             Not shared
 1-9    138a:0090  Synaptics WBDI                                                Not shared
 4-2    0403:6010  USB Serial Converter A, USB Serial Converter B                Not shared
-
+```
+```
 PS C:\Windows\system32> usbipd  bind --busid 4-2
-
+```
 PS C:\Windows\system32> usbipd  attach --busid 4-2 -w
 usbipd: info: Using WSL distribution 'Ubuntu' to attach; the device will be available in all WSL 2 distributions.
 usbipd: info: Using IP address 172.22.0.1 to reach the host.
