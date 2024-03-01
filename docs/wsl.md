@@ -57,3 +57,21 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 ```
 
 
+Installing openFPGALoader 
+Select Ubuntu steps
+https://trabucayre.github.io/openFPGALoader/guide/install.html
+
+```
+~/openFPGALoader$ openFPGALoader --detect
+empty
+No cable or board specified: using direct ft2232 interface
+Can't read iSerialNumber field from FTDI: considered as empty string
+Jtag frequency : requested 6.00MHz   -> real 6.00MHz
+index 0:
+        idcode 0x41111043
+        manufacturer lattice
+        family ECP5
+        model  LFE5U-25
+        irlength 8
+```
+
