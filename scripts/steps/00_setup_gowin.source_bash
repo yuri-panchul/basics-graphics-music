@@ -220,8 +220,8 @@ setup_run_directory_for_fpga_synthesis_gowin ()
     do
         $find_to_run  \
             "${verilog_src_dir/\/[[:alpha:]]\//${verilog_src_dir:1:1}:\/}"  \
-            -type f -name '*.sv' -not -name tb.sv  \
-            -printf "add_file -type verilog %p\n" \
+            -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
+            -printf "add_file -type verilog %p\n"  \
             >> "$dir/fpga_project.tcl"
     done
 
@@ -242,8 +242,8 @@ setup_run_directory_for_fpga_synthesis_gowin ()
         do
             $find_to_run  \
                 "${verilog_src_dir/\/[[:alpha:]]\//${verilog_src_dir:1:1}:\/}"  \
-                -type f -name '*.sv' -not -name tb.sv  \
-                -printf "<File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n" \
+                -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
+                -printf "<File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n"  \
                 >> "$dir/fpga_project.gprj"
         done
         echo "<File path=\"${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.cst\" type=\"file.cst\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
