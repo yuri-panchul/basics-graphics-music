@@ -5,7 +5,7 @@ design_dir="$openlane_dir/designs/$lab_name"
 mkdir -p  "$design_dir/src"
 
 rm    -rf "$design_dir"/*.tcl      \
-          "$design_dir/src"/*.*v*  \
+          "$design_dir/src"/*.{v,vh,sv,svh}  \
           "$design_dir/src"/*.hex
 
 cp "$script_dir/asic/"*.tcl "$design_dir"

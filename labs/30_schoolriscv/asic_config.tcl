@@ -1,7 +1,7 @@
 # User config
 
 set ::env(DESIGN_NAME) asic_top
-set ::env(VERILOG_FILES) [glob $::env(DESIGN_DIR)/src/*.*v]
+set ::env(VERILOG_FILES) [glob $::env(DESIGN_DIR)/src/*.{v,sv}]
 
 set ::env(CLOCK_PORT) "clk"
 
