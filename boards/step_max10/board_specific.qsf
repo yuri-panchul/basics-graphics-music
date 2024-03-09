@@ -1,0 +1,108 @@
+set_global_assignment -name FAMILY "MAX 10"
+set_global_assignment -name DEVICE 10M08SCM153C8G
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name FLOW_ENABLE_POWER_ANALYZER ON
+set_global_assignment -name POWER_DEFAULT_INPUT_IO_TOGGLE_RATE "12.5 %"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name USE_CONFIGURATION_DEVICE ON
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+
+
+set_location_assignment PIN_G21  -to CLOCK_50
+#set_location_assignment PIN_B12  -to CLOCK_50_2
+
+set_location_assignment PIN_J14   -to BTN[3]
+set_location_assignment PIN_J11   -to BTN[2]
+set_location_assignment PIN_K14   -to BTN[1]
+set_location_assignment PIN_J9    -to BTN[0]
+
+set_location_assignment PIN_E14   -to CLED1[2] #colored LED 1
+set_location_assignment PIN_E15   -to CLED1[1]
+set_location_assignment PIN_G15   -to CLED1[0]
+set_location_assignment PIN_D12   -to CLED2[2] #colored LED 2
+set_location_assignment PIN_C14   -to CLED2[1]
+set_location_assignment PIN_C15   -to CLED2[0]
+
+set_location_assignment PIN_N15   -to WAT_LED[0] #'water' led
+set_location_assignment PIN_N14   -to WAT_LED[1]
+set_location_assignment PIN_M14   -to WAT_LED[2]
+set_location_assignment PIN_M12   -to WAT_LED[3]
+set_location_assignment PIN_K12   -to WAT_LED[5] #copied from github, I know it looks wierd
+set_location_assignment PIN_L15   -to WAT_LED[4]
+set_location_assignment PIN_L11   -to WAT_LED[6]
+set_location_assignment PIN_K11   -to WAT_LED[7]
+
+set_location_assignment PIN_E2   -to SEG_LED1[8]
+set_location_assignment PIN_A3   -to SEG_LED2[0]
+set_location_assignment PIN_A2   -to SEG_LED2[1]
+set_location_assignment PIN_P2   -to SEG_LED2[2]
+set_location_assignment PIN_P1   -to SEG_LED2[3]
+set_location_assignment PIN_N1   -to SEG_LED2[4]
+set_location_assignment PIN_C1   -to SEG_LED2[5]
+set_location_assignment PIN_C2   -to SEG_LED2[6]
+set_location_assignment PIN_R2   -to SEG_LED2[7]
+set_location_assignment PIN_B1   -to SEG_LED2[8]
+set_location_assignment PIN_E1   -to SEG_LED1[0]
+set_location_assignment PIN_D2   -to SEG_LED1[1]
+set_location_assignment PIN_K2   -to SEG_LED1[2]
+set_location_assignment PIN_J2   -to SEG_LED1[3]
+set_location_assignment PIN_G2   -to SEG_LED1[4]
+set_location_assignment PIN_F5   -to SEG_LED1[5]
+set_location_assignment PIN_G5   -to SEG_LED1[6]
+set_location_assignment PIN_L1   -to SEG_LED1[7]
+
+set_location_assignment PIN_H13  -to SW[3]
+set_location_assignment PIN_H12  -to SW[2]
+set_location_assignment PIN_H11  -to SW[1]
+set_location_assignment PIN_J12  -to SW[0]
+
+set_location_assignment PIN_J5   -to clk_in
+
+set_location_assignment PIN_B4   -to GPIO[35]
+set_location_assignment PIN_A5   -to GPIO[34]
+set_location_assignment PIN_A7   -to GPIO[33]
+set_location_assignment PIN_B6   -to GPIO[32]
+set_location_assignment PIN_E7   -to GPIO[31]
+set_location_assignment PIN_D7   -to GPIO[30]
+set_location_assignment PIN_B7   -to GPIO[29]
+set_location_assignment PIN_C8   -to GPIO[28]
+set_location_assignment PIN_B8   -to GPIO[27]
+set_location_assignment PIN_D10  -to GPIO[26]
+set_location_assignment PIN_A9   -to GPIO[25]
+set_location_assignment PIN_A11  -to GPIO[24]
+set_location_assignment PIN_A13  -to GPIO[23]
+set_location_assignment PIN_B11  -to GPIO[22]
+set_location_assignment PIN_A14  -to GPIO[21]
+set_location_assignment PIN_B13  -to GPIO[20]
+set_location_assignment PIN_B14  -to GPIO[19]
+set_location_assignment PIN_B15  -to GPIO[18]
+set_location_assignment PIN_P15  -to GPIO[17]
+set_location_assignment PIN_R14  -to GPIO[16]
+set_location_assignment PIN_P12  -to GPIO[15]
+set_location_assignment PIN_R11  -to GPIO[14]
+set_location_assignment PIN_R9   -to GPIO[13]
+set_location_assignment PIN_P9   -to GPIO[12]
+set_location_assignment PIN_P8   -to GPIO[11]
+set_location_assignment PIN_P7   -to GPIO[10]
+set_location_assignment PIN_R7   -to GPIO[9]
+set_location_assignment PIN_P6   -to GPIO[8]
+set_location_assignment PIN_R5   -to GPIO[7]
+set_location_assignment PIN_L7   -to GPIO[6]
+set_location_assignment PIN_P4   -to GPIO[5]
+set_location_assignment PIN_L6   -to GPIO[4]
+set_location_assignment PIN_R3   -to GPIO[3]
+set_location_assignment PIN_M5   -to GPIO[2]
+set_location_assignment PIN_P3   -to GPIO[1]
+set_location_assignment PIN_M4   -to GPIO[0]

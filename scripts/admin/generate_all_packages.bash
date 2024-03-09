@@ -29,6 +29,7 @@ update_fpga_toolchain_var ()
         qmtech_c4_starter    | \
         rzrd                 | \
         saylinx              | \
+        step_max10           | \
         zeowaa               | \
         zeowaa_7_digit       )
 
