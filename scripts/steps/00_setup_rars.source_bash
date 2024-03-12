@@ -88,5 +88,6 @@ rars_assembly ()
 
 rars_run_gui ()
 {
+    cd ..
     $rars_cmd &
 }
