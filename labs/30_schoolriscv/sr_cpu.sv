@@ -24,7 +24,7 @@ module sr_cpu
     output  [31:0]  regData   // debug access reg data
 );
     // control wires
-    
+
     wire        aluZero;
     wire        pcSrc;
     wire        regWrite;
@@ -33,7 +33,7 @@ module sr_cpu
     wire  [2:0] aluControl;
 
     // instruction decode wires
-    
+
     wire [ 6:0] cmdOp;
     wire [ 4:0] rd;
     wire [ 2:0] cmdF3;
@@ -45,7 +45,7 @@ module sr_cpu
     wire [31:0] immU;
 
     // program counter
-    
+
     wire [31:0] pc;
     wire [31:0] pcBranch = pc + immB;
     wire [31:0] pcPlus4  = pc + 32'd4;
@@ -54,12 +54,12 @@ module sr_cpu
     register_with_rst r_pc (clk, rst, pcNext, pc);
 
     // program memory access
-    
+
     assign imAddr = pc >> 2;
     wire [31:0] instr = imData;
 
     // instruction decode
-    
+
     sr_decode id
     (
         .instr      ( instr       ),
@@ -75,7 +75,7 @@ module sr_cpu
     );
 
     // register file
-    
+
     wire [31:0] rd0;
     wire [31:0] rd1;
     wire [31:0] rd2;
@@ -96,7 +96,7 @@ module sr_cpu
     );
 
     // alu
-    
+
     wire [31:0] srcB = aluSrc ? immI : rd2;
     wire [31:0] aluResult;
 
@@ -112,7 +112,7 @@ module sr_cpu
     assign wd3 = wdSrc ? immU : aluResult;
 
     // control
-    
+
     sr_control sm_control
     (
         .cmdOp      ( cmdOp       ),
@@ -127,7 +127,7 @@ module sr_cpu
     );
 
     // debug register access
-    
+
     assign regData = (regAddr != '0) ? rd0 : pc;
 
 endmodule
