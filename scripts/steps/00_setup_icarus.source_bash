@@ -50,8 +50,8 @@ run_icarus_verilog ()
 {
     is_command_available_or_error_and_install iverilog
 
-    if [ -f program.s ] ; then
-        rars_setup
+    if [ -f ../program.s ] ; then
+        rars_assembly
     fi
 
     shopt -s nullglob

@@ -42,7 +42,9 @@ rars_setup ()
 
     #-------------------------------------------------------------------------
 
-    find_opt="-mindepth 1 -maxdepth 1 -type f -name 'rars*.jar' -print"
+    mkdir -p "$bin_dir"
+
+    find_opt="-mindepth 1 -maxdepth 1 -type f -name rars*.jar -print"
     latest_rars_jar=$($find_to_run "$bin_dir" $find_opt | sort | tail -1)
 
     if [ -z "$latest_rars_jar" ]
@@ -61,10 +63,10 @@ rars_setup ()
         warning "multiple versions of RARS"                                  \
                 "RISC-V instruction set simulator installed in '$bin_dir':"  \
                 "'$all_rars_jars'\n"                                         \
-                "Using '$latest_rars_jar' which appears the latest."
+                "Using '$latest_rars_jar' which appears to be the latest."
     fi
 
-    rars_cmd="java -jar $bin_dir/$latest_rars_jar"
+    rars_cmd="java -jar $latest_rars_jar"
 }
 
 #-----------------------------------------------------------------------------

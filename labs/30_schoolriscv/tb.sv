@@ -96,28 +96,45 @@ module tb;
     //------------------------------------------------------------------------
 
     int unsigned cycle = 0;
+    bit was_rst = 1'b0;
 
-    wire  [31:0] prev_imAddr;
-    wire  [31:0] prev_regData;
+    logic [31:0] prev_imAddr;
+    logic [31:0] prev_regData;
 
     always @ (posedge clk)
     begin
         $write ("cycle %5d", cycle ++);
 
         if (rst)
+        begin
             $write (" rst");
+            was_rst <= 1'b1;
+        end
         else
+        begin
             $write ("    ");
+        end
 
         if (imAddr !== prev_imAddr)
             $write (" %h", imAddr);
         else
             $write ("         ");
 
+        if (was_rst & ~ rst & $isunknown (imData))
+        begin
+            $display ("%s FAIL: fetched instruction at address %x contains Xs: %x",
+                `__FILE__, imAddr, imData);
+
+            $finish;
+        end
+
         if (regData !== prev_regData)
             $write (" %h", regData);
         else
             $write ("         ");
+
+        prev_imAddr  <= imAddr;
+        prev_regData <= regData;
 
         $display;
     end

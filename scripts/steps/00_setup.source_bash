@@ -202,6 +202,7 @@ source "$script_dir/steps/00_setup_xilinx.source_bash"
 source "$script_dir/steps/00_setup_open_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
 source "$script_dir/steps/00_setup_yosys.source_bash"
+source "$script_dir/steps/00_setup_rars.source_bash"
 
 #-----------------------------------------------------------------------------
 #
@@ -444,6 +445,6 @@ esac
 openlane_setup
 icarus_verilog_setup
 
-if [ -f program.s ] ; then
+if [ -f ../program.s ] ; then
     rars_setup
 fi
