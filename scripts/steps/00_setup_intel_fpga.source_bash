@@ -336,13 +336,13 @@ intel_fpga_setup_questa ()
                       [ -f "$vcover_command" ] ||
     error "executable file '$vcover_command' expected"
 
-             [ -x "$vsim_command" ] ||
-    warning "file '$vsim_command' is not executable."  \
-            "Questa is installed with incorrect permissions?"
+    #          [ -x "$vsim_command" ] ||
+    # warning "file '$vsim_command' is not executable."  \
+    #         "Questa is installed with incorrect permissions?"
 
-             [ -x "$vcover_command" ] ||
-    warning "file '$vcover_command' is not executable."  \
-            "Questa is installed with incorrect permissions?"
+    #          [ -x "$vcover_command" ] ||
+    # warning "file '$vcover_command' is not executable."  \
+    #         "Questa is installed with incorrect permissions?"
 }
 
 #-----------------------------------------------------------------------------

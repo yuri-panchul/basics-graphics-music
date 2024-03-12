@@ -3,6 +3,10 @@
 
 `timescale 1 ns / 1 ps
 
+`ifdef ALTERA_RESERVED_QIS
+    `default_nettype none
+`endif
+
 //----------------------------------------------------------------------------
 
 `ifdef VCS

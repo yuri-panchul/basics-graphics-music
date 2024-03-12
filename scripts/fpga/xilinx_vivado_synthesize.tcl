@@ -19,7 +19,7 @@ if {[file isdirectory ../../../../labs]} {
 
 read_verilog -sv [glob $extra_dot_dot../../common/*.sv]
 
-foreach file [glob ../*.sv] {
+foreach file [glob ../*.{v,sv}] {
     if {$file ne "../tb.sv"} {
         read_verilog -sv $file
     }
