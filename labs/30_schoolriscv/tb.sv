@@ -1,39 +1,42 @@
-`include "config.svh"
+//
+//  schoolRISCV - small RISC-V CPU
+//
+//  Originally based on Sarah L. Harris MIPS CPU
+//  & schoolMIPS project.
+//
+//  Copyright (c) 2017-2020 Stanislav Zhelnio & Aleksandr Romanov.
+//
+//  Modified in 2024 by Yuri Panchul & Mike Kuskov
+//  for systemverilog-homework project.
+//
 
 module tb;
 
-    localparam clk_mhz = 1,
-               w_key   = 4,
-               w_sw    = 8,
-               w_led   = 8,
-               w_digit = 8,
-               w_gpio  = 100;
+    logic        clk;
+    logic        rst;
 
-    //------------------------------------------------------------------------
+    wire  [31:0] imAddr;   // instruction memory address
+    wire  [31:0] imData;   // instruction memory data
 
-    logic       clk;
-    logic       rst;
-    logic [3:0] key;
-    logic [7:0] sw;
+    logic [ 4:0] regAddr;  // debug access reg address
+    wire  [31:0] regData;  // debug access reg data
 
-    //------------------------------------------------------------------------
-
-    top
-    # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
-    )
-    i_top
+    sr_cpu cpu
     (
-        .clk      ( clk ),
-        .slow_clk ( clk ),
-        .rst      ( rst ),
-        .key      ( key ),
-        .sw       ( sw  )
+        .clk     ( clk     ),
+        .rst     ( rst     ),
+
+        .imAddr  ( imAddr  ),
+        .imData  ( imData  ),
+
+        .regAddr ( regAddr ),
+        .regData ( regData )
+    );
+
+    instruction_rom # (.SIZE (1024)) rom
+    (
+        .a       ( imAddr  ),
+        .rd      ( imData  )
     );
 
     //------------------------------------------------------------------------
@@ -62,23 +65,61 @@ module tb;
     initial
     begin
         `ifdef __ICARUS__
-            $dumpvars;
+            // Uncomment the following `define
+            // to generate a VCD file and analyze it using GTKwave
+
+           $dumpvars;
         `endif
 
-        key <= '0;
-        sw  <= '0;
+        regAddr <= 5'd10;  // a0 register used for I/O
 
         @ (negedge rst);
 
-        repeat (50)
+        repeat (1000)
         begin
             @ (posedge clk);
 
-            key <= $urandom ();
-            sw  <= $urandom ();
+            if (  regData == 32'h00213d05    // Fibonacci
+                | regData == 32'h1c8cfc00 )  // Factorial
+            begin
+                $display ("%s PASS", `__FILE__);
+                $finish;
+            end
         end
 
+        $display ("%s FAIL: none of expected register values occured",
+            `__FILE__);
+
         $finish;
+    end
+
+    //------------------------------------------------------------------------
+
+    int unsigned cycle = 0;
+
+    wire  [31:0] prev_imAddr;
+    wire  [31:0] prev_regData;
+
+    always @ (posedge clk)
+    begin
+        $write ("cycle %5d", cycle ++);
+
+        if (rst)
+            $write (" rst");
+        else
+            $write ("    ");
+
+        if (imAddr !== prev_imAddr)
+            $write (" %h", imAddr);
+        else
+            $write ("         ");
+
+        if (regData !== prev_regData)
+            $write (" %h", regData);
+        else
+            $write ("         ");
+
+        $display;
     end
 
 endmodule
