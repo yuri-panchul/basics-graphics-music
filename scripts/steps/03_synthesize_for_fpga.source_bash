@@ -18,6 +18,10 @@ fi
 
 #-----------------------------------------------------------------------------
 
+rars_assembly
+
+#-----------------------------------------------------------------------------
+
 case $fpga_toolchain in
     quartus ) synthesize_for_fpga_quartus ;;
     gowin   ) synthesize_for_fpga_gowin   ;;

@@ -73,6 +73,8 @@ rars_setup ()
 
 rars_assembly ()
 {
+    [ -f ../program.s ] || return
+
     #  nc                              - Copyright notice will not be displayed
     #  a                               - assembly only, do not simulate
     #  ae<n>                           - terminate RARS with integer exit code if an assemble error occurs

@@ -67,18 +67,18 @@ module top
 
     sr_cpu cpu
     (
-        .clk     (   slow_clk ),
-        .rst_n   ( ~ rst      ),
-        .regAddr (   regAddr  ),
-        .regData (   regData  ),
-        .imAddr  (   imAddr   ),
-        .imData  (   imData   )
+        .clk     ( slow_clk ),
+        .rst     ( rst      ),
+        .regAddr ( regAddr  ),
+        .regData ( regData  ),
+        .imAddr  ( imAddr   ),
+        .imData  ( imData   )
     );
 
-    sm_rom # (.SIZE (64)) rom
+    instruction_rom # (.SIZE (64)) rom
     (
-        .a       (   imAddr   ),
-        .rd      (   imData   )
+        .a       ( imAddr   ),
+        .rd      ( imData   )
     );
 
     //------------------------------------------------------------------------

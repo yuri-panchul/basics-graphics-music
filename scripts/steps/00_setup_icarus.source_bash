@@ -50,9 +50,9 @@ run_icarus_verilog ()
 {
     is_command_available_or_error_and_install iverilog
 
-    if [ -f ../program.s ] ; then
-        rars_assembly
-    fi
+    rars_assembly
+
+    #-------------------------------------------------------------------------
 
     shopt -s nullglob
 
@@ -63,6 +63,8 @@ run_icarus_verilog ()
         |& tee "$log"
 
     shopt -u nullglob
+
+    #-------------------------------------------------------------------------
 
     vvp a.out |& tee "$log"
 
