@@ -8,6 +8,8 @@ rm    -rf "$design_dir"/*.tcl      \
           "$design_dir/src"/*.{v,vh,sv,svh}  \
           "$design_dir/src"/*.hex
 
+#-----------------------------------------------------------------------------
+
 cp "$script_dir/asic/"*.tcl "$design_dir"
 
 if [ -f ../asic_config.tcl ] ; then
@@ -42,6 +44,14 @@ $find_to_run ..                             \
     \)                                      \
     -print                                  \
     | xargs -I % cp -f % "$design_dir/src"
+
+#-----------------------------------------------------------------------------
+
+rars_assembly
+
+if [ -f program.hex ] ; then
+    cp -f program.hex "$design_dir/src"
+fi
 
 #-----------------------------------------------------------------------------
 
