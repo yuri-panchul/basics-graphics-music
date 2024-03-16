@@ -73,7 +73,9 @@ rars_setup ()
 
 rars_assembly ()
 {
-    [ -f ../program.s ] || return
+    if ! [ -f ../program.s ] ; then
+        return
+    fi
 
     #  nc                              - Copyright notice will not be displayed
     #  a                               - assembly only, do not simulate
