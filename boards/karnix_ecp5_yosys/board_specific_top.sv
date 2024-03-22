@@ -85,10 +85,11 @@ module board_specific_top
         assign tm_led   = top_led;
         assign tm_digit = top_digit;
 
+        assign LED      = top_led;
     `else                   // TM1638 module is not connected
 
-        assign rst      = ~ KEY [w_key - 1];
-        assign top_key  = ~ KEY [w_key - 1:0];
+        assign rst      = KEY [w_key - 1];
+        assign top_key  = KEY [w_key - 1:0];
 
         assign LED      = top_led;
 
