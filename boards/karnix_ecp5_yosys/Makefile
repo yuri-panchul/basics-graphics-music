@@ -46,7 +46,7 @@ endif
 fw: $(NAME).bin
 
 $(NAME).bin: $(LPF) $(DEPS)
-	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ecp5 -json $(NAME).json -top board_specific_top"
+	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ecp5 -noabc9 -json $(NAME).json -top board_specific_top"
 	nextpnr-ecp5 --package $(PACKAGE) --$(DEVICE) --json $(NAME).json --textcfg $(NAME)_out.config --lpf $(LPF) --lpf-allow-unconstrained
 	ecppack --compress --freq 38.8 --input $(NAME)_out.config --bit $(NAME).bin
 
