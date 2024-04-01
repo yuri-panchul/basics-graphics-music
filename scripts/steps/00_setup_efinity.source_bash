@@ -68,9 +68,9 @@ setup_run_directory_for_fpga_synthesis_efinity ()
 
     echo "$main_src_dir"
     mkdir -p "$main_src_dir/efinity_prj"
-    exe cp -f "$board_dir/$fpga_board/board_specific.peri.xml" "$board_dir/$fpga_board/board_specific.sdc" "$main_src_dir/efinity_prj"
-    replaceEscaped=$(sed 's/[&/\]/\\&/g' <<<"$main_src_dir")
-    sed "s/#lab_dir/$replaceEscaped/" "$board_dir/$fpga_board/board_specific.xml" > "$main_src_dir/efinity_prj/board_specific.xml"
+    exe cp -f "$board_dir/$fpga_board/board_specific.xml" "$board_dir/$fpga_board/board_specific.peri.xml" "$board_dir/$fpga_board/board_specific.sdc" "$main_src_dir/efinity_prj"
+#    replaceEscaped=$(sed 's/[&/\]/\\&/g' <<<"$main_src_dir")
+#    sed "s/#lab_dir/$replaceEscaped/" "$board_dir/$fpga_board/board_specific.xml" > "$main_src_dir/efinity_prj/board_specific.xml"
     cd "$main_src_dir/efinity_prj"
 }
 

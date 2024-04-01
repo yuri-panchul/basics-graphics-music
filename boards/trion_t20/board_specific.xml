@@ -7,7 +7,6 @@
     <efx:design_info def_veri_version="verilog_2k" def_vhdl_version="vhdl_2008">
         <efx:top_module name="board_specific_top" />
         <efx:design_file name="../../../boards/trion_t20/board_specific_top.sv" version="system_verilog" library="default" />
-        <efx:design_file name="#lab_dir/top.sv" version="system_verilog" library="default" />
         <efx:top_vhdl_arch name="" />
     </efx:design_info>
     <efx:constraint_info>
