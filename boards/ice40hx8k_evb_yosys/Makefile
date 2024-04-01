@@ -32,7 +32,7 @@ endif
 fw: $(NAME).bin
 
 $(NAME).bin: $(PCF) $(DEPS)
-	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ice40 -blif $(NAME).blif -top board_specific_top" -p "write_json $(NAME).json"
+	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ice40 -noabc9 -blif $(NAME).blif -top board_specific_top" -p "write_json $(NAME).json"
 	nextpnr-ice40 --hx$(DEVICE) --package $(PACKAGE) --json $(NAME).json --pcf $(PCF) --pcf-allow-unconstrained --asc $(NAME).asc
 	icepack -s $(NAME).asc $(NAME).bin
 
