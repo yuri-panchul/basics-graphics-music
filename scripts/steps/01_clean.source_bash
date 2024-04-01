@@ -2,7 +2,7 @@
 
 cd ..
 
-rm -rf run log.txt
+rm -rf run outflow work_* board_specific.* efinity_prj log.txt 
 
 if [ -n "${openlane_dir-}" ] ; then
     rm -rf "$openlane_dir/designs/$lab_name"
