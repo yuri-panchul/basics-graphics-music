@@ -33,10 +33,13 @@ fi
 
 efinity_setup_ide ()
 {
+#  Only Linux is supported for now
+#    || [ "$OSTYPE" = "cygwin"    ]  \
+#    || [ "$OSTYPE" = "msys"      ]  \
+
        [ "$OSTYPE" = "linux-gnu" ]  \
-    || [ "$OSTYPE" = "cygwin"    ]  \
-    || [ "$OSTYPE" = "msys"      ]  \
     || return
+
 
     #-------------------------------------------------------------------------
 
