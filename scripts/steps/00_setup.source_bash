@@ -198,6 +198,7 @@ fi
 
 source "$script_dir/steps/00_setup_intel_fpga.source_bash"
 source "$script_dir/steps/00_setup_gowin.source_bash"
+source "$script_dir/steps/00_setup_efinity.source_bash"
 source "$script_dir/steps/00_setup_xilinx.source_bash"
 source "$script_dir/steps/00_setup_open_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
@@ -236,6 +237,9 @@ setup_run_directory_for_fpga_synthesis()
     case $fpga_toolchain in
     quartus)
         setup_run_directory_for_fpga_synthesis_quartus "$dir" "$parent_dir"
+        ;;
+    efinity)
+        setup_run_directory_for_fpga_synthesis_efinity "$dir" "$parent_dir"
         ;;
     gowin)
         setup_run_directory_for_fpga_synthesis_gowin   "$dir" "$parent_dir"
@@ -314,6 +318,12 @@ update_fpga_toolchain_var ()
         tang_primer_20k_lite )
 
             fpga_toolchain=gowin
+        ;;
+
+        trion_t20            | \
+        fireant              )
+
+            fpga_toolchain=efinity
         ;;
 
         arty_a7*             | \
@@ -429,7 +439,7 @@ fpga_board_setup ()
 fpga_board_setup
 
 case $fpga_toolchain in
-    quartus )
+    quartus  )
         intel_fpga_setup_quartus
 
         if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
@@ -437,9 +447,10 @@ case $fpga_toolchain in
         fi
     ;;
 
-    gowin  ) gowin_setup_ide     ;;
-    xilinx ) xilinx_setup_vivado ;;
-    yosys  ) setup_yosys ;;
+    gowin   ) gowin_setup_ide     ;;
+    efinity ) efinity_setup_ide   ;;
+    xilinx  ) xilinx_setup_vivado ;;
+    yosys   ) setup_yosys         ;;
 esac
 
 openlane_setup
