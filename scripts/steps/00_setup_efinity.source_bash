@@ -70,11 +70,10 @@ setup_run_directory_for_fpga_synthesis_efinity ()
     main_src_dir="$2"
 
     echo "$main_src_dir"
-    mkdir -p "$main_src_dir/efinity_prj"
-    exe cp -f "$board_dir/$fpga_board/board_specific.xml" "$board_dir/$fpga_board/board_specific.peri.xml" "$board_dir/$fpga_board/board_specific.sdc" "$main_src_dir/efinity_prj"
+    exe cp -f "$board_dir/$fpga_board/board_specific.xml" "$board_dir/$fpga_board/board_specific.peri.xml" "$board_dir/$fpga_board/board_specific.sdc" "$main_src_dir/run"
 #    replaceEscaped=$(sed 's/[&/\]/\\&/g' <<<"$main_src_dir")
-#    sed "s/#lab_dir/$replaceEscaped/" "$board_dir/$fpga_board/board_specific.xml" > "$main_src_dir/efinity_prj/board_specific.xml"
-    cd "$main_src_dir/efinity_prj"
+#    sed "s/#lab_dir/$replaceEscaped/" "$board_dir/$fpga_board/board_specific.xml" > "$main_src_dir/run/board_specific.xml"
+    cd "$main_src_dir/run"
 }
 
 #-----------------------------------------------------------------------------
@@ -84,7 +83,7 @@ synthesize_for_fpga_efinity ()
     is_command_available_or_error efx_run.py " Efinity"
 
     setup_run_directory_for_fpga_synthesis
-    exe efx_run.py --pgm_opts "source=run/board_specific.lbf" --pgm_opts "dest=run/board_specific.hex" --flow compile "$main_src_dir/efinity_prj/board_specific.xml"
+    exe efx_run.py --pgm_opts "source=work_pnr/board_specific.lbf" --pgm_opts "dest=work_pnr/board_specific.hex" --flow compile "$main_src_dir/run/board_specific.xml"
 }
 
 #-----------------------------------------------------------------------------
@@ -93,7 +92,7 @@ configure_fpga_efinity ()
 {
     is_command_available_or_error efx_run.py " Efinity"
 
-    exe efx_run.py --pgm_opts "source=run/board_specific.hex" --flow program "$main_src_dir/efinity_prj/board_specific.xml"
+    exe efx_run.py --pgm_opts "source=work_pnr/board_specific.hex" --flow program "$main_src_dir/run/board_specific.xml"
 }
 
 #-----------------------------------------------------------------------------
