@@ -102,8 +102,8 @@ run_fpga_synthesis_gui_efinity ()
     is_command_available_or_error efinity " Efinity"
 
     setup_run_directory_for_fpga_synthesis
-    if [ -f "$main_src_dir/efinity_prj/board_specific.xml" ] ; then
-          exe efinity --project "$main_src_dir/efinity_prj/board_specific.xml" &
+    if [ -f "$main_src_dir/run/board_specific.xml" ] ; then
+          exe efinity --project "$main_src_dir/run/board_specific.xml" &
     else
           efinity &
     fi
