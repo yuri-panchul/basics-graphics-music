@@ -33,7 +33,7 @@ module board_specific_top
     //  LED  
     //-------------------------------------------------------------------------
 
-    output  [w_led - 1: 0]  led_internal,
+    output  [w_led - 1: 0]  led_n,
         
     //-------------------------------------------------------------------------
     //  UART  
@@ -100,6 +100,6 @@ module board_specific_top
         .gpio      (             )
     );
 
-    assign led_internal = ~ led;
+    assign led_n = ~ led;
 
 endmodule
