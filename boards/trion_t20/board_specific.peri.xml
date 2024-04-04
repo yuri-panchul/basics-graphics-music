@@ -30,29 +30,29 @@
         <efxpt:gpio name="keys[1]" gpio_def="GPIOL_05" mode="input" bus_name="keys" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
             <efxpt:input_config name="keys[1]" name_ddio_lo="" conn_type="normal" is_register="false" clock_name="" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="none"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[0]" gpio_def="GPIOR_104" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[0]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[0]" gpio_def="GPIOR_104" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[0]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[1]" gpio_def="GPIOR_105" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[1]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[1]" gpio_def="GPIOR_105" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[1]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[2]" gpio_def="GPIOR_117" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[2]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[2]" gpio_def="GPIOR_117" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[2]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[3]" gpio_def="GPIOR_118" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[3]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[3]" gpio_def="GPIOR_118" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[3]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[4]" gpio_def="GPIOR_153" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[4]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[4]" gpio_def="GPIOR_153" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[4]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[5]" gpio_def="GPIOR_154" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[5]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[5]" gpio_def="GPIOR_154" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[5]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[6]" gpio_def="GPIOR_155" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[6]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[6]" gpio_def="GPIOR_155" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[6]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
-        <efxpt:gpio name="led[7]" gpio_def="GPIOR_156" mode="output" bus_name="led" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
-            <efxpt:output_config name="led[7]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
+        <efxpt:gpio name="led_internal[7]" gpio_def="GPIOR_156" mode="output" bus_name="led_internal" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="led_internal[7]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" drive_strength="1"/>
         </efxpt:gpio>
         <efxpt:gpio name="pll_ref_in" gpio_def="GPIOL_75" mode="input" bus_name="" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
             <efxpt:input_config name="pll_ref_in" name_ddio_lo="" conn_type="pll_clkin" is_register="false" clock_name="" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="none"/>
@@ -70,7 +70,7 @@
             <efxpt:input_config name="sw[2]" name_ddio_lo="" conn_type="normal" is_register="false" clock_name="" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="none"/>
         </efxpt:gpio>
         <efxpt:global_unused_config state="input with weak pullup"/>
-        <efxpt:bus name="led" mode="output" msb="7" lsb="0"/>
+        <efxpt:bus name="led_internal" mode="output" msb="7" lsb="0"/>
         <efxpt:bus name="keys" mode="input" msb="1" lsb="0"/>
         <efxpt:bus name="sw" mode="input" msb="2" lsb="0"/>
     </efxpt:gpio_info>

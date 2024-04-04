@@ -16,40 +16,40 @@ module board_specific_top
     // PLL interface
     //-------------------------------------------------------------------------    
 
-    input   wire                pll_clk,
-    input   wire                pll_locked,
-    output  wire                pll_reset_n,
+    input   pll_clk,
+    input   pll_locked,
+    output  pll_reset_n,
 
     //-------------------------------------------------------------------------
     //  button  
     //-------------------------------------------------------------------------        
 
-    input   wire                rst_button,
+    input                   rst_button,
         
-    input   wire [w_key - 1 : 0]       keys,
+    input   [w_key - 1: 0]  keys,
 
-    input   wire [w_sw - 1 : 0]        sw,
+    input   [w_sw - 1: 0]   sw,
     //-------------------------------------------------------------------------
     //  LED  
     //-------------------------------------------------------------------------
 
-    output  wire [w_led - 1 : 0]       led,
+    output  [w_led - 1: 0]  led_internal,
         
     //-------------------------------------------------------------------------
     //  UART  
     //-------------------------------------------------------------------------
 
-    input   wire                RXD,
-    output  reg                 TXD
+    input                   RXD,
+    output logic            TXD
 );
 
-    wire [w_led - 1 : 0]       led_n;
+    wire [w_led - 1: 0]     led;
 
     //------------------------------------------------------------------------
 
-    wire                    clk  = pll_clk;
+    wire                    clk = pll_clk;
 
-    wire                    rst  = ~ rst_button;
+    wire                    rst = ~ rst_button;
 
     //------------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ module board_specific_top
         .key       ( keys        ),
         .sw        ( sw          ),
 
-        .led       ( led_n       ),
+        .led       ( led         ),
 
         .abcdefgh  (             ),
         .digit     (             ),
@@ -100,6 +100,6 @@ module board_specific_top
         .gpio      (             )
     );
 
-    assign led = ~ led_n;
+    assign led_internal = ~ led;
 
 endmodule
