@@ -43,6 +43,8 @@ module board_specific_top
     output  reg                 TXD
 );
 
+    wire [w_led - 1 : 0]       led_n;
+
     //------------------------------------------------------------------------
 
     wire                    clk  = pll_clk;
@@ -54,7 +56,7 @@ module board_specific_top
     wire slow_clk;
 
     slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    i_slow_clk_gen (.clk (clk), .rst (rst), .slow_clk (slow_clk));
 
     //------------------------------------------------------------------------
 
@@ -73,29 +75,31 @@ module board_specific_top
         .slow_clk  ( slow_clk    ),
         .rst       ( rst         ),
 
-        .key       ( keys ),
-        .sw        ( sw   ),
+        .key       ( keys        ),
+        .sw        ( sw          ),
 
-        .led       ( led  ),
+        .led       ( led_n       ),
 
-        .abcdefgh  (     ),
-        .digit     (     ),
+        .abcdefgh  (             ),
+        .digit     (             ),
 
-        .vsync     (     ),
-        .hsync     (     ),
+        .vsync     (             ),
+        .hsync     (             ),
 
-        .red       (     ),
-        .green     (     ),
-        .blue      (     ),
+        .red       (             ),
+        .green     (             ),
+        .blue      (             ),
 
-        .uart_rx   ( RXD     ),
-        .uart_tx   ( TXD     ),
+        .uart_rx   ( RXD         ),
+        .uart_tx   ( TXD         ),
 
-        .mic_ready (     ),
-        .mic       (     ),
-        .sound     (     ),
+        .mic_ready (             ),
+        .mic       (             ),
+        .sound     (             ),
 
-        .gpio      (     )
+        .gpio      (             )
     );
+
+    assign led = ~ led_n;
 
 endmodule

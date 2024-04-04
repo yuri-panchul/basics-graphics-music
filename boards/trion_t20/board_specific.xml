@@ -4,7 +4,7 @@
         <efx:device name="T20F256" />
         <efx:timing_model name="C4" />
     </efx:device_info>
-    <efx:design_info def_veri_version="verilog_2k" def_vhdl_version="vhdl_2008">
+    <efx:design_info def_veri_version="sv_09" def_vhdl_version="vhdl_2008">
         <efx:top_module name="board_specific_top" />
         <efx:design_file name="../../../boards/trion_t20/board_specific_top.sv" version="system_verilog" library="default" />
         <efx:top_vhdl_arch name="" />
@@ -17,7 +17,6 @@
     <efx:misc_info />
     <efx:ip_info />
     <efx:synthesis tool_name="efx_map">
-<!--        <efx:param name="work_dir" value="run" value_type="e_string" /> -->
         <efx:param name="write_efx_verilog" value="on" value_type="e_bool" />
         <efx:param name="include" value=".." value_type="e_string" />
         <efx:param name="include" value="../../../boards/trion_t20" value_type="e_string" />
@@ -50,7 +49,6 @@
         <efx:param name="mult_output_regs_packing" value="1" value_type="e_option" />
     </efx:synthesis>
     <efx:place_and_route tool_name="efx_pnr">
-<!--        <efx:param name="work_dir" value="run" value_type="e_string" /> -->
         <efx:param name="verbose" value="off" value_type="e_bool" />
         <efx:param name="load_delaym" value="on" value_type="e_bool" />
         <efx:param name="optimization_level" value="NULL" value_type="e_option" />
