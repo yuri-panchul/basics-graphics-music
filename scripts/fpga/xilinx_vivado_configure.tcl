@@ -9,9 +9,11 @@ if {! [info exists hw_device]} {
 
 open_hw
 connect_hw_server
+current_hw_target
 open_hw_target
-set_property PROGRAM.FILE fpga_project.bit [get_hw_devices $hw_device]
-program_hw_devices                         [get_hw_devices $hw_device]
+current_hw_device
+set_property PROGRAM.FILE fpga_project.bit [current_hw_device]
+program_hw_devices [current_hw_device]
 close_hw_target
 close_hw
 
