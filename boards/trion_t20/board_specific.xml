@@ -10,7 +10,7 @@
         <efx:top_vhdl_arch name="" />
     </efx:design_info>
     <efx:constraint_info>
-        <efx:sdc_file name="board_specific.sdc" />
+<!--        <efx:sdc_file name="board_specific.sdc" /> -->
         <efx:inter_file name="" />
     </efx:constraint_info>
     <efx:sim_info />
@@ -76,9 +76,4 @@
         <efx:param name="generate_hexbin" value="off" value_type="e_bool" />
         <efx:param name="jtag_usercode" value="0xFFFFFFFF" value_type="e_string" />
     </efx:bitstream_generation>
-    <efx:debugger>
-        <efx:param name="work_dir" value="work_dbg" value_type="e_string" />
-        <efx:param name="auto_instantiation" value="off" value_type="e_bool" />
-        <efx:param name="profile" value="NONE" value_type="e_string" />
-    </efx:debugger>
 </efx:project>

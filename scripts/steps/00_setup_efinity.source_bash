@@ -1,6 +1,6 @@
 expected_source_script=00_setup.source_bash
 
-exe() { echo "\$ ${@/eval/}" ; "$@" ; }
+# exe() { echo "\$ ${@/eval/}" ; "$@" ; }
 
 if [ -z "$BASH_SOURCE" ]
 then
@@ -69,10 +69,7 @@ setup_run_directory_for_fpga_synthesis_efinity ()
     dir="$1"
     main_src_dir="$2"
 
-    echo "$main_src_dir"
-    exe cp -f "$board_dir/$fpga_board/board_specific.xml" "$board_dir/$fpga_board/board_specific.peri.xml" "$board_dir/$fpga_board/board_specific.sdc" "$main_src_dir/run"
-#    replaceEscaped=$(sed 's/[&/\]/\\&/g' <<<"$main_src_dir")
-#    sed "s/#lab_dir/$replaceEscaped/" "$board_dir/$fpga_board/board_specific.xml" > "$main_src_dir/run/board_specific.xml"
+    cp -f "$board_dir/$fpga_board/board_specific.xml" "$board_dir/$fpga_board/board_specific.peri.xml" "$main_src_dir/run"
     cd "$main_src_dir/run"
 }
 
@@ -83,16 +80,18 @@ synthesize_for_fpga_efinity ()
     is_command_available_or_error efx_run.py " Efinity"
 
     setup_run_directory_for_fpga_synthesis
-    exe efx_run.py --pgm_opts "source=work_pnr/board_specific.lbf" --pgm_opts "dest=work_pnr/board_specific.hex" --flow compile "$main_src_dir/run/board_specific.xml"
+    efx_run.py --pgm_opts "source=work_pnr/board_specific.lbf" --pgm_opts "dest=work_pnr/board_specific.hex" --flow compile "$main_src_dir/run/board_specific.xml"
 }
 
 #-----------------------------------------------------------------------------
 
 configure_fpga_efinity ()
 {
-    is_command_available_or_error efx_run.py " Efinity"
+    dir="${1:-.}"
+    main_src_dir=$(readlink -f "$dir/..")
 
-    exe efx_run.py --pgm_opts "source=work_pnr/board_specific.hex" --flow program "$main_src_dir/run/board_specific.xml"
+    is_command_available_or_error efx_run.py " Efinity"
+    efx_run.py --pgm_opts "source=work_pnr/board_specific.hex" --flow program "$main_src_dir/run/board_specific.xml"
 }
 
 #-----------------------------------------------------------------------------
@@ -103,7 +102,7 @@ run_fpga_synthesis_gui_efinity ()
 
     setup_run_directory_for_fpga_synthesis
     if [ -f "$main_src_dir/run/board_specific.xml" ] ; then
-          exe efinity --project "$main_src_dir/run/board_specific.xml" &
+          efinity --project "$main_src_dir/run/board_specific.xml" &
     else
           efinity &
     fi

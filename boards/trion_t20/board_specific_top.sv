@@ -16,9 +16,9 @@ module board_specific_top
     // PLL interface
     //-------------------------------------------------------------------------    
 
-    input   pll_clk,
-    input   pll_locked,
-    output  pll_reset_n,
+    input   clk,
+//    input   pll_locked,
+//    output  pll_reset_n,
 
     //-------------------------------------------------------------------------
     //  button  
@@ -47,7 +47,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire                    clk = pll_clk;
+//    wire                    clk = pll_clk;
 
     wire                    rst = ~ rst_button;
 
