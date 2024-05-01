@@ -16,45 +16,47 @@ module board_specific_top
     // PLL interface
     //-------------------------------------------------------------------------    
 
-    input   wire                pll_clk,
-    input   wire                pll_locked,
-    output  wire                pll_reset_n,
+    input   clk,
+//    input   pll_locked,
+//    output  pll_reset_n,
 
     //-------------------------------------------------------------------------
     //  button  
     //-------------------------------------------------------------------------        
 
-    input   wire                rst_button,
+    input                   rst_button,
         
-    input   wire [w_key - 1 : 0]       keys,
+    input   [w_key - 1: 0]  keys,
 
-    input   wire [w_sw - 1 : 0]        sw,
+    input   [w_sw - 1: 0]   sw,
     //-------------------------------------------------------------------------
     //  LED  
     //-------------------------------------------------------------------------
 
-    output  wire [w_led - 1 : 0]       led,
+    output  [w_led - 1: 0]  led_n,
         
     //-------------------------------------------------------------------------
     //  UART  
     //-------------------------------------------------------------------------
 
-    input   wire                RXD,
-    output  reg                 TXD
+    input                   RXD,
+    output logic            TXD
 );
+
+    wire [w_led - 1: 0]     led;
 
     //------------------------------------------------------------------------
 
-    wire                    clk  = pll_clk;
+//    wire                    clk = pll_clk;
 
-    wire                    rst  = ~ rst_button;
+    wire                    rst = ~ rst_button;
 
     //------------------------------------------------------------------------
 
     wire slow_clk;
 
     slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    i_slow_clk_gen (.clk (clk), .rst (rst), .slow_clk (slow_clk));
 
     //------------------------------------------------------------------------
 
@@ -73,29 +75,31 @@ module board_specific_top
         .slow_clk  ( slow_clk    ),
         .rst       ( rst         ),
 
-        .key       ( keys ),
-        .sw        ( sw   ),
+        .key       ( keys        ),
+        .sw        ( sw          ),
 
-        .led       ( led  ),
+        .led       ( led         ),
 
-        .abcdefgh  (     ),
-        .digit     (     ),
+        .abcdefgh  (             ),
+        .digit     (             ),
 
-        .vsync     (     ),
-        .hsync     (     ),
+        .vsync     (             ),
+        .hsync     (             ),
 
-        .red       (     ),
-        .green     (     ),
-        .blue      (     ),
+        .red       (             ),
+        .green     (             ),
+        .blue      (             ),
 
-        .uart_rx   ( RXD     ),
-        .uart_tx   ( TXD     ),
+        .uart_rx   ( RXD         ),
+        .uart_tx   ( TXD         ),
 
-        .mic_ready (     ),
-        .mic       (     ),
-        .sound     (     ),
+        .mic_ready (             ),
+        .mic       (             ),
+        .sound     (             ),
 
-        .gpio      (     )
+        .gpio      (             )
     );
+
+    assign led_n = ~ led;
 
 endmodule
