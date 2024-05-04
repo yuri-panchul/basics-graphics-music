@@ -18,7 +18,7 @@ module instruction_rom
     input  [31:0] a,
     output [31:0] rd
 );
-    reg [31:0] rom [0:SIZE - 1];
+    logic [31:0] rom [0:SIZE - 1];
     assign rd = rom [a];
 
     initial $readmemh ("program.hex", rom);

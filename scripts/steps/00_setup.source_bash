@@ -334,6 +334,7 @@ update_fpga_toolchain_var ()
         nexys4               | \
         nexys4_ddr           | \
         nexys_a7             | \
+        qmtech_kintex_7      | \
         zybo_z7              )
 
             fpga_toolchain=xilinx
