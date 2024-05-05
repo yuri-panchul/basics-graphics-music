@@ -33,7 +33,8 @@ module vga
     output logic                    vsync,
     output logic                    display_on,
     output logic [HPOS_WIDTH - 1:0] hpos,
-    output logic [VPOS_WIDTH - 1:0] vpos
+    output logic [VPOS_WIDTH - 1:0] vpos,
+    output logic                    clk_px
 );
 
     // Derived constants
@@ -73,6 +74,8 @@ module vga
 
     logic [3:0] clk_en_cnt;
     logic clk_en;
+
+    assign clk_px = clk_en;
 
     always_ff @ (posedge clk or posedge rst)
     begin
