@@ -45,7 +45,7 @@ module board_specific_top
     localparam w_tm_key    =   8,
                w_tm_led    =   8,
                w_tm_digit  =   8,
-               w_vid_mhz   = 125;
+               f_vid_mhz   = 125;
 
 
     //------------------------------------------------------------------------
@@ -148,7 +148,7 @@ module board_specific_top
     top
     # (
 `ifdef USE_HDMI
-        .clk_mhz ( w_vid_mhz     ),
+        .clk_mhz ( f_vid_mhz     ),
 `else
         .clk_mhz ( clk_mhz     ),
 `endif
