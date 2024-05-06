@@ -31,13 +31,6 @@ module board_specific_top
     inout  [w_gpio      - 1:0]  GPIO
 );
 
-//    output                      VGA_HS,
-//    output                      VGA_VS,
-//    output [              3:0]  VGA_R,
-//    output [              3:0]  VGA_G,
-//    output [              3:0]  VGA_B,
-
-
     wire clk = CLK;
 
     //------------------------------------------------------------------------
@@ -45,7 +38,7 @@ module board_specific_top
     localparam w_tm_key    =   8,
                w_tm_led    =   8,
                w_tm_digit  =   8,
-               w_vid_mhz   = 125;
+               vid_clk_mhz = 125;
 
 
     //------------------------------------------------------------------------
@@ -148,7 +141,7 @@ module board_specific_top
     top
     # (
 `ifdef USE_HDMI
-        .clk_mhz ( w_vid_mhz     ),
+        .clk_mhz ( vid_clk_mhz ),
 `else
         .clk_mhz ( clk_mhz     ),
 `endif
