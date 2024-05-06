@@ -14,7 +14,9 @@ module game_top
 
     output       hsync,
     output       vsync,
-    output [2:0] rgb
+    output [2:0] rgb,
+    output logic dsp_on,
+    output logic clk_px
 );
 
     //------------------------------------------------------------------------
@@ -40,8 +42,10 @@ module game_top
         .vsync      ( vsync      ),
         .display_on ( display_on ),
         .hpos       ( pixel_x    ),
-        .vpos       ( pixel_y    )
+        .vpos       ( pixel_y    ),
+        .clk_px     ( clk_px     )
     );
+    assign dsp_on = display_on; 
 
     //------------------------------------------------------------------------
 

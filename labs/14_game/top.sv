@@ -35,6 +35,8 @@ module top
     output logic [ w_vgar - 1:0] red,
     output logic [ w_vgag - 1:0] green,
     output logic [ w_vgab - 1:0] blue,
+    output logic                 dsp_on,
+    output logic                 clk_px,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -85,11 +87,14 @@ module top
 
         .hsync            (   hsync              ),
         .vsync            (   vsync              ),
-        .rgb              (   rgb                )
+        .rgb              (   rgb                ),
+        .dsp_on           (   dsp_on             ),
+        .clk_px           (   clk_px             )
+     
     );
 
-    assign red   = { 4 { rgb [2] } };
-    assign green = { 4 { rgb [1] } };
-    assign blue  = { 4 { rgb [0] } };
+    assign red   = { w_vgar { rgb [2] } };
+    assign green = { w_vgag { rgb [1] } };
+    assign blue  = { w_vgab { rgb [0] } };
 
 endmodule
