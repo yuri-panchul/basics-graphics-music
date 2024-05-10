@@ -210,8 +210,7 @@ setup_run_directory_for_fpga_synthesis_gowin ()
     dir="$1"
     main_src_dir="$2"
 
-    > "$dir/fpga_project.tcl"
-    cat "$board_dir/$fpga_board/board_specific.tcl" >> "$dir/fpga_project.tcl"
+    cat "$board_dir/$fpga_board/board_specific.tcl" > "$dir/fpga_project.tcl"
 
     for verilog_src_dir in  \
         "$main_src_dir"  \
@@ -219,35 +218,34 @@ setup_run_directory_for_fpga_synthesis_gowin ()
         "$lab_dir/common"
     do
         $find_to_run  \
-            "${verilog_src_dir/\/[[:alpha:]]\//${verilog_src_dir:1:1}:\/}"  \
+            "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
             -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
             -printf "add_file -type verilog %p\n"  \
             >> "$dir/fpga_project.tcl"
     done
 
-    echo "add_file -type cst ${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.cst" >> "$dir/fpga_project.tcl"
-    echo "add_file -type sdc ${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.sdc" >> "$dir/fpga_project.tcl"
+    echo "add_file -type cst $(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.cst" >> "$dir/fpga_project.tcl"
+    echo "add_file -type sdc $(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.sdc" >> "$dir/fpga_project.tcl"
     echo "run all" >> "$dir/fpga_project.tcl"
-
-
 
     if [ -e "$board_dir/$fpga_board/fpga_project_01.gprj" ] && \
        [ -e "$board_dir/$fpga_board/fpga_project_02.gprj" ]
     then
         cat "$board_dir/$fpga_board/fpga_project_01.gprj" > "$dir/fpga_project.gprj"
+
         for verilog_src_dir in  \
             "$main_src_dir"  \
             "$board_dir/$fpga_board"  \
             "$lab_dir/common"
         do
             $find_to_run  \
-                "${verilog_src_dir/\/[[:alpha:]]\//${verilog_src_dir:1:1}:\/}"  \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
                 -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
                 -printf "<File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n"  \
                 >> "$dir/fpga_project.gprj"
         done
-        echo "<File path=\"${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.cst\" type=\"file.cst\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
-        echo "<File path=\"${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board/board_specific.sdc\" type=\"file.sdc\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
+        echo "<File path=\"$(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.cst\" type=\"file.cst\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
+        echo "<File path=\"$(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.sdc\" type=\"file.sdc\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
         cat "$board_dir/$fpga_board/fpga_project_02.gprj" >> "$dir/fpga_project.gprj"
     fi
 
@@ -258,10 +256,13 @@ setup_run_directory_for_fpga_synthesis_gowin ()
         then
             mkdir $dir/impl
         fi
+
         cat "$board_dir/$fpga_board/project_process_config_01.json" > "$dir/impl/project_process_config.json"
-        printf '   \"%s\",\n' "${lab_dir/\/[[:alpha:]]\//${lab_dir:1:1}:\/}/common" >> "$dir/impl/project_process_config.json"
-        printf '   \"%s\",\n' "${board_dir/\/[[:alpha:]]\//${board_dir:1:1}:\/}/$fpga_board" >> "$dir/impl/project_process_config.json"
-        printf '   \"%s\"\n' "${main_src_dir/\/[[:alpha:]]\//${main_src_dir:1:1}:\/}" >> "$dir/impl/project_process_config.json"
+
+        printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$lab_dir")/common"        >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$board_dir")/$fpga_board" >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\"\n'  "$(adj_path_for_gowin_win "$main_src_dir")"          >> "$dir/impl/project_process_config.json"
+
         cat "$board_dir/$fpga_board/project_process_config_02.json" >> "$dir/impl/project_process_config.json"
     fi
 
@@ -323,22 +324,30 @@ configure_fpga_gowin_msys ()
 
     #-------------------------------------------------------------------------
 
-    # read -n 1 -r -p "Would you like to choose a flash method ? S-SRAM E-Embedded Flash [s/E] "
-    # printf "\n"
+    if [ ]
+    then
+        read -n 1 -r -p "Would you like to choose a flash method ? S-SRAM E-Embedded Flash [s/E] "
+        printf "\n"
 
-    # if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
-          flash_method="-r 2"
-    # fi
+        if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
+            flash_method="-r 2"
+        fi
+    fi
 
-    prj_parent_dir=`pwd`
-    "$gowin_prog_full_real_path" -d $fpga_board_for_programmer $flash_method --fsFile ${prj_parent_dir/\/[[:alpha:]]\//${prj_parent_dir:1:1}:\/}/impl/pnr/fpga_project.fs
+    # "$gowin_prog_full_real_path" -d $fpga_board_for_programmer $flash_method --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
+
+    "$gowin_prog_full_real_path"           \
+        -d $fpga_board_for_programmer      \
+        $flash_method                      \
+        --fsFile impl/pnr/fpga_project.fs
 }
 
 #-----------------------------------------------------------------------------
 
 configure_fpga_gowin_all ()
 {
-    is_command_available_or_error openFPGALoader " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
+    is_command_available_or_error openFPGALoader \
+        " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
 
     #-------------------------------------------------------------------------
 
@@ -360,16 +369,13 @@ configure_fpga_gowin_all ()
 
     case $fpga_board in
 
-      # gowin_runber         ) fpga_board_for_openFPGALoader=runber        ;;
-        tang_nano_1k         ) fpga_board_for_openFPGALoader=tangnano1k    ;;
-        tang_nano_20k        ) fpga_board_for_openFPGALoader=tangnano20k   ;;
-        tang_nano_4k         ) fpga_board_for_openFPGALoader=tangnano4k    ;;
-        tang_nano_9k         ) fpga_board_for_openFPGALoader=tangnano9k    ;;
-        tang_nano_9k_hdmi    ) fpga_board_for_openFPGALoader=tangnano9k    ;;
-        tang_primer_20k_dock ) fpga_board_for_openFPGALoader=tangprimer20k ;;
-        tang_primer_20k_dock_alt ) fpga_board_for_openFPGALoader=tangprimer20k ;;
-        tang_primer_20k_dock_no_tm1638 ) fpga_board_for_openFPGALoader=tangprimer20k ;;
-        tang_primer_20k_lite ) fpga_board_for_openFPGALoader=tangprimer20k ;;
+      # gowin_runber          ) fpga_board_for_openFPGALoader=runber        ;;
+        tang_nano_1k*         ) fpga_board_for_openFPGALoader=tangnano1k    ;;
+        tang_nano_20k*        ) fpga_board_for_openFPGALoader=tangnano20k   ;;
+        tang_nano_4k*         ) fpga_board_for_openFPGALoader=tangnano4k    ;;
+        tang_nano_9k*         ) fpga_board_for_openFPGALoader=tangnano9k    ;;
+        tang_primer_20k_dock* ) fpga_board_for_openFPGALoader=tangprimer20k ;;
+        tang_primer_20k_lite* ) fpga_board_for_openFPGALoader=tangprimer20k ;;
 
         *)
             error "FPGA board $fpga_board is not supported by the script running openFPGALoader"
