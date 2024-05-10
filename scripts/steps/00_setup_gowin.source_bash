@@ -334,12 +334,10 @@ configure_fpga_gowin_msys ()
         fi
     fi
 
-    # "$gowin_prog_full_real_path" -d $fpga_board_for_programmer $flash_method --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
-
-    "$gowin_prog_full_real_path"           \
-        -d $fpga_board_for_programmer      \
-        $flash_method                      \
-        --fsFile impl/pnr/fpga_project.fs
+    "$gowin_prog_full_real_path"      \
+        -d $fpga_board_for_programmer \
+        $flash_method                 \
+        --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
 }
 
 #-----------------------------------------------------------------------------

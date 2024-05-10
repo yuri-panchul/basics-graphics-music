@@ -45,9 +45,9 @@ adj_path_for_gowin_win ()
     if    [ "$OSTYPE" = "cygwin" ]  \
        || [ "$OSTYPE" = "msys"   ]
     then
-        echo "${1/^\/[[:alpha:]]\//${1:1:1}:\/}"
+        echo ${1/#\/[[:alpha:]]\//${1:1:1}:\/}
     else
-        echo "$1"
+        echo $1
     fi
 }
 
