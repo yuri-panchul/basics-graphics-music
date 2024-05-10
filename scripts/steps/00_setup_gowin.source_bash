@@ -100,8 +100,8 @@ gowin_try_install_dir ()
 
     attempt_gowin_install_parent_dirs="${attempt_gowin_install_parent_dirs:+$attempt_gowin_install_parent_dirs or }'$dir'"
 
-    if    [ "$OSTYPE" = "cygwin" ]  \
-       || [ "$OSTYPE" = "msys"   ]
+    if [ "$OSTYPE" = "cygwin" ] ||
+       [ "$OSTYPE" = "msys"   ]
     then
         # Windows is not case sensitive
         Gowin_gowin="Gowin"
@@ -141,10 +141,10 @@ gowin_try_install_dir ()
 
 gowin_setup_ide ()
 {
-       [ "$OSTYPE" = "linux-gnu" ]  \
-    || [ "$OSTYPE" = "cygwin"    ]  \
-    || [ "$OSTYPE" = "msys"      ]  \
-    || return
+    [ "$OSTYPE" = "linux-gnu" ] ||
+    [ "$OSTYPE" = "cygwin"    ] ||
+    [ "$OSTYPE" = "msys"      ] ||
+    return
 
     #-------------------------------------------------------------------------
 
@@ -179,8 +179,8 @@ gowin_setup_ide ()
         gowin_try_install_dir /opt
         gowin_try_install_dir /tools
 
-    elif  [ "$OSTYPE" = "cygwin" ]  \
-       || [ "$OSTYPE" = "msys"   ]
+    elif [ "$OSTYPE" = "cygwin" ] ||
+         [ "$OSTYPE" = "msys"   ]
     then
         gowin_try_install_dir /c
         gowin_try_install_dir /d
@@ -212,8 +212,8 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 
     cat "$board_dir/$fpga_board/board_specific.tcl" > "$dir/fpga_project.tcl"
 
-    for verilog_src_dir in  \
-        "$main_src_dir"  \
+    for verilog_src_dir in        \
+        "$main_src_dir"           \
         "$board_dir/$fpga_board"  \
         "$lab_dir/common"
     do
@@ -228,28 +228,30 @@ setup_run_directory_for_fpga_synthesis_gowin ()
     echo "add_file -type sdc $(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.sdc" >> "$dir/fpga_project.tcl"
     echo "run all" >> "$dir/fpga_project.tcl"
 
-    if [ -e "$board_dir/$fpga_board/fpga_project_01.gprj" ] && \
+    if [ -e "$board_dir/$fpga_board/fpga_project_01.gprj" ] &&
        [ -e "$board_dir/$fpga_board/fpga_project_02.gprj" ]
     then
         cat "$board_dir/$fpga_board/fpga_project_01.gprj" > "$dir/fpga_project.gprj"
 
-        for verilog_src_dir in  \
-            "$main_src_dir"  \
+        for verilog_src_dir in        \
+            "$main_src_dir"           \
             "$board_dir/$fpga_board"  \
             "$lab_dir/common"
         do
             $find_to_run  \
                 "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
                 -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
-                -printf "<File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n"  \
+                -printf "        <File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n"  \
                 >> "$dir/fpga_project.gprj"
         done
-        echo "<File path=\"$(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.cst\" type=\"file.cst\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
-        echo "<File path=\"$(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.sdc\" type=\"file.sdc\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
+
+        echo "        <File path=\"$(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.cst\" type=\"file.cst\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
+        echo "        <File path=\"$(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.sdc\" type=\"file.sdc\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
+
         cat "$board_dir/$fpga_board/fpga_project_02.gprj" >> "$dir/fpga_project.gprj"
     fi
 
-    if [ -e "$board_dir/$fpga_board/project_process_config_01.json" ] && \
+    if [ -e "$board_dir/$fpga_board/project_process_config_01.json" ] &&
        [ -e "$board_dir/$fpga_board/project_process_config_02.json" ]
     then
         if ! [ -d $dir/impl ]
@@ -280,8 +282,8 @@ synthesize_for_fpga_gowin ()
 
 configure_fpga_gowin ()
 {
-    if [ "$OSTYPE" = "msys" ] ||
-       [ "$OSTYPE" = "cygwin"    ]
+    if [ "$OSTYPE" = "msys"   ] ||
+       [ "$OSTYPE" = "cygwin" ]
     then
         configure_fpga_gowin_msys
     else
@@ -300,20 +302,23 @@ configure_fpga_gowin_msys ()
 
       # gowin_runber |
         tang_nano_1k )
+
             fpga_board_for_programmer="GW1NZ-1"
             flash_method="-r 5"                  ;;
-        tang_nano_4k )
+
+        tang_nano_4k* )
+
             fpga_board_for_programmer="GW1NSR-4C"
             flash_method="-r 5"                  ;;
-        tang_nano_9k | \
-        tang_nano_9k_hdmi )
+
+        tang_nano_9k* )
+
             fpga_board_for_programmer="GW1NR-9C"
             flash_method="-r 5"                  ;;
-        tang_nano_20k | \
-        tang_primer_20k_dock | \
-        tang_primer_20k_dock_alt | \
-        tang_primer_20k_dock_no_tm1638 | \
-        tang_primer_20k_lite )
+
+        tang_nano_20k*   | \
+        tang_primer_20k* )
+
             fpga_board_for_programmer="GW2A-18C"
             flash_method="-r 36"                 ;;
 
