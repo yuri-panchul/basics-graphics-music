@@ -1,3 +1,11 @@
+// TODO
+// Find pins for the keys on the board
+// Debug I2S output
+// Check pin options in tcl file
+// Find out the status of I2C gpio pin 11
+// Parameterize red, green, blue width
+// Create a variant of 25K with 7-segment, leds and buttons on pmod.
+
 `include "config.svh"
 `include "lab_specific_config.svh"
 
@@ -65,7 +73,7 @@ module board_specific_top
         .key       ( tm_key    ),
         .sw        ( tm_key    ),
 
-        .led       ( key /* led */       ),
+        .led       ( led       ),
 
         .abcdefgh  ( abcdefgh  ),
         .digit     ( digit     ),
