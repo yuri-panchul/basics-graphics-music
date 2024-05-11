@@ -2,15 +2,16 @@
 
 module top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 8,
-              w_digit = 8,
-              w_gpio  = 100,
-              w_vgar  = 4,
-              w_vgag  = 4,
-              w_vgab  = 4
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+              w_key     = 4,
+              w_sw      = 8,
+              w_led     = 8,
+              w_digit   = 8,
+              w_gpio    = 100,
+              w_vgar    = 4,
+              w_vgag    = 4,
+              w_vgab    = 4
 )
 (
     input                        clk,
@@ -32,9 +33,9 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [ w_vgar - 1:0] red,
-    output logic [ w_vgag - 1:0] green,
-    output logic [ w_vgab - 1:0] blue,
+    output logic [w_vgar  - 1:0] red,
+    output logic [w_vgag  - 1:0] green,
+    output logic [w_vgab  - 1:0] blue,
     output logic                 dsp_on,
     output logic                 clk_px,
 
@@ -75,10 +76,11 @@ module top
 
     vga
     # (
-        .HPOS_WIDTH ( w_x     ),
-        .VPOS_WIDTH ( w_y     ),
+        .HPOS_WIDTH ( w_x        ),
+        .VPOS_WIDTH ( w_y        ),
 
-        .CLK_MHZ    ( clk_mhz )
+        .CLK_MHZ    ( clk_mhz    ),
+        .VGA_CLOCK  ( pixel_mhz  )
     )
     i_vga
     (
