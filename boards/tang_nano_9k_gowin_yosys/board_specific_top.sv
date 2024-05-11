@@ -73,7 +73,6 @@ module board_specific_top
     wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
-    wire                      mic_ready;
 
    //------------------------------------------------------------------------
 
@@ -136,7 +135,6 @@ module board_specific_top
         .uart_rx  ( UART_RX   ),
         .uart_tx  ( UART_TX   ),
 
-        .mic_ready( mic_ready ),
         .mic      ( mic       ),
         `ifndef ENABLE_TM1638
         .gpio     ( GPIO      )
@@ -195,7 +193,6 @@ module board_specific_top
         .ws    ( GPIO [4] ),
         .sck   ( GPIO [3] ),
         .sd    ( GPIO [6] ),
-        .ready ( mic_ready),
         .value ( mic      )
     );
 

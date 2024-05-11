@@ -47,7 +47,6 @@ module board_specific_top
     wire                  vga_vs, vga_hs;
     wire [           3:0] vga_r, vga_g, vga_b;
 
-    wire                  mic_ready;
     wire [          23:0] mic;
     wire [          15:0] sound;
 
@@ -154,7 +153,6 @@ module board_specific_top
         .uart_rx   ( UART_RX     ),
         .uart_tx   ( UART_TX     ),
 
-        .mic_ready ( mic_ready   ),
         .mic       ( mic         ),
 
         .sound     ( sound       ),
@@ -305,7 +303,6 @@ module board_specific_top
         .ws    ( GPIO_0 [2] ),  // JP1 pin 3
         .sck   ( GPIO_0 [4] ),  // JP1 pin 5
         .sd    ( GPIO_0 [5] ),  // JP1 pin 6
-        .ready ( mic_ready  ),
         .value ( mic        )
     );
 

@@ -37,7 +37,6 @@ module board_specific_top
     wire  [w_tm_digit  - 1:0] digit;
 
     wire  [             23:0] mic;
-    wire                      mic_ready;
 
     //------------------------------------------------------------------------
 
@@ -81,7 +80,6 @@ module board_specific_top
         .uart_rx   (           ),
         .uart_tx   (           ),
 
-        .mic_ready ( mic_ready ),
         .mic       ( mic       ),
         .gpio      ( gpio      )
     );
@@ -109,7 +107,6 @@ module board_specific_top
         .ws    ( gpio   [2] ),
         .sck   ( gpio   [4] ),
         .sd    ( gpio   [5] ),
-        .ready ( mic_ready  ),
         .value ( mic        )
     );
 

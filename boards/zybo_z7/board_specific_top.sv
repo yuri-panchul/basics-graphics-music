@@ -130,7 +130,6 @@ module board_specific_top
         .uart_rx  ( UART_RX ),
         .uart_tx  ( UART_TX ),
 
-        .mic_ready( ),
         .mic      ( ),
         .gpio     ( )
     );

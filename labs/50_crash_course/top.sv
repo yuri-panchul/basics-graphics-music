@@ -40,7 +40,6 @@ module top
 
     // SOUND
 
-    input                        mic_ready,
     input        [         23:0] mic,
     output       [         15:0] sound,
 

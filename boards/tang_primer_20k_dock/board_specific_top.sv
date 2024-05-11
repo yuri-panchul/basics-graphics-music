@@ -67,7 +67,6 @@ module board_specific_top
     wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
-    wire                      mic_ready;
 
     wire                      VGA_HS;
     wire                      VGA_VS;
@@ -139,7 +138,6 @@ module board_specific_top
         .uart_rx  ( UART_RX   ),
         .uart_tx  ( UART_TX   ),
 
-        .mic_ready( mic_ready ),
         .mic      ( mic       ),
         .gpio     (           )
     );
@@ -187,7 +185,6 @@ module board_specific_top
         .ws    ( GPIO_1 [2] ),
         .sck   ( GPIO_1 [3] ),
         .sd    ( GPIO_1 [0] ),
-        .ready ( mic_ready  ),
         .value ( mic        )
     );
 

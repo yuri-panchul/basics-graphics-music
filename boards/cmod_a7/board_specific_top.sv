@@ -55,7 +55,6 @@ module board_specific_top
     wire [ 7:0] digit;
 
     wire [23:0] mic = '0;
-    wire        mic_ready = '0;
 
     //------------------------------------------------------------------------
 
@@ -100,7 +99,6 @@ module board_specific_top
         .uart_rx  ( uart_txd_in),
         .uart_tx  ( uart_rxd_out),
 
-        .mic_ready( mic_ready),
         .mic      ( mic      ),
         .gpio     (          )
     );
@@ -113,7 +111,6 @@ module board_specific_top
         .ws    ( ja [5] ),
         .sck   ( ja [7] ),
         .sd    ( ja [6] ),
-        .ready ( mic_ready ),
         .value ( mic       )
     );
 

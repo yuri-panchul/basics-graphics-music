@@ -38,7 +38,6 @@ module top
     output                       uart_tx,
 
     // AUDIO
-    input                        mic_ready,
     input        [         23:0] mic,
     output       [         15:0] sound,
 

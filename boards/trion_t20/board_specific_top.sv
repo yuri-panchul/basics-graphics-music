@@ -93,7 +93,6 @@ module board_specific_top
         .uart_rx   ( RXD         ),
         .uart_tx   ( TXD         ),
 
-        .mic_ready (             ),
         .mic       (             ),
         .sound     (             ),
 

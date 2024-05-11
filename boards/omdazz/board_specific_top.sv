@@ -72,7 +72,6 @@ module board_specific_top
     wire                  vga_vs, vga_hs;
     wire  [          3:0] red, green, blue;
 
-    wire                  mic_ready;
     wire  [         23:0] mic;
     wire  [         15:0] sound;
 
@@ -121,7 +120,6 @@ module board_specific_top
         .uart_rx  (   UART_RXD     ),
         .uart_tx  (   UART_TXD     ),
 
-        .mic_ready(   mic_ready    ),
         .mic      (   mic          ),
         .sound    (   sound        ),
 
@@ -156,7 +154,6 @@ module board_specific_top
         .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
         .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
         .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
-        .ready ( mic_ready                         ),
         .value ( mic_12                            )
     );
 
@@ -178,7 +175,6 @@ module board_specific_top
         .ws    ( LCD_D [3] ),
         .sck   ( LCD_D [1] ),
         .sd    ( LCD_D [2] ),
-        .ready ( mic_ready ),
         .value ( mic       )
     );
 

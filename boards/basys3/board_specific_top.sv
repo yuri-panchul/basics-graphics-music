@@ -61,7 +61,6 @@ module board_specific_top
 
     assign an = ~ digit;
 
-    wire        mic_ready;
     wire [23:0] mic;
 
     //------------------------------------------------------------------------
@@ -108,7 +107,6 @@ module board_specific_top
         .uart_tx  ( UART_TX     ),
 
         .mic      ( mic         ),
-        .mic_ready( mic_ready   ),
         .gpio     (             )
     );
 
@@ -124,7 +122,6 @@ module board_specific_top
         .ws    ( JA [5] ),
         .sck   ( JA [4] ),
         .sd    ( JA [0] ),
-        .ready ( mic_ready ),
         .value ( mic       )
     );
 

@@ -52,7 +52,6 @@ module board_specific_top
     wire [                   3:0] vga_r,vga_g,vga_b;
 
     wire [                  23:0] mic;
-    wire                          mic_ready;
 
     wire                          UART_TX; // FIXME: Should be assigned to some GPIO
 
@@ -98,7 +97,6 @@ module board_specific_top
         .uart_rx  (   UART_RX   ),
         .uart_tx  (   UART_TX   ),
 
-        .mic_ready(   mic_ready ),
         .mic      (   mic       ),
         .gpio     (   GPIO      )
     );
@@ -253,7 +251,6 @@ module board_specific_top
         .ws    ( GPIO [2] ), // JP9 pin 3
         .sck   ( GPIO [4] ), // JP9 pin 5
         .sd    ( GPIO [5] ), // JP9 pin 6
-        .ready ( mic_ready),
         .value ( mic      )
     );
 

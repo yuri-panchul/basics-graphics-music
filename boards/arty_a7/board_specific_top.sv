@@ -78,7 +78,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire               mic_ready;
     wire [       23:0] mic;
     wire [        7:0] abcdefgh;
 
@@ -190,7 +189,6 @@ module board_specific_top
         .uart_tx  (UART_RXD_OUT),
 
         .mic      ( mic       ),
-        .mic_ready( mic_ready ),
         .gpio     ( GPIO      )
     );
 
@@ -237,7 +235,6 @@ module board_specific_top
         .ws        ( JD [4]     ),
         .sck       ( JD [7]     ),
         .sd        ( JD [6]     ),
-        .ready     ( mic_ready  ),
         .value     ( mic        )
     );
 
@@ -259,7 +256,6 @@ module board_specific_top
         .cs        ( JD [4]     ),
         .sck       ( JD [7]     ),
         .sdo       ( JD [6]     ),
-        .ready     ( mic_ready  ),
         .value     ( mic_12     )
     );
 

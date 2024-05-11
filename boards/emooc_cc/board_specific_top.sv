@@ -65,7 +65,6 @@ module board_specific_top
 
     // Microphone works by I2S protocol, assembling virtual 24 bits one by one
     wire [                   23:0] mic;
-    wire                           mic_ready;
 
     //------------------------------------------------------------------------
 
@@ -112,7 +111,6 @@ module board_specific_top
         .uart_tx  ( UART_TX   ),
 
         .mic      ( mic       ),
-        .mic_ready( mic_ready ),
         .gpio     (           )
     );
 
@@ -147,7 +145,6 @@ module board_specific_top
         .ws    ( GPIO_P1 [17] ), // PIN_A14
         .sck   ( GPIO_P1 [18] ), // PIN_B14
         .sd    ( GPIO_P1 [19] ), // PIN_A15
-        .ready ( mic_ready    ),
         .value ( mic          )
     );
 

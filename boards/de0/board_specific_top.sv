@@ -51,7 +51,6 @@ module board_specific_top
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
-    wire                 mic_ready;
     wire [         23:0] mic;
     wire [         15:0] sound;
 
@@ -101,7 +100,6 @@ module board_specific_top
         .uart_rx  (   UART_RX              ),
         .uart_tx  (   UART_TX              ),
 
-        .mic_ready(   mic_ready            ),
         .mic      (   mic                  ),
         .sound    (   sound                ),
 
@@ -174,7 +172,6 @@ module board_specific_top
         .ws    (   GPIO0_D [4] ), // JP4 pin 7
         .sck   (   GPIO0_D [6] ), // JP4 pin 9
         .sd    (   GPIO0_D [7] ), // JP4 pin 10
-        .ready (   mic_ready   ),
         .value (   mic         )
     );
 

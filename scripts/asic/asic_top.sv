@@ -53,7 +53,6 @@ module asic_top
         .blue      (          ),
         .uart_rx   (          ),
         .uart_tx   (          ),
-        .mic_ready (          ),
         .mic       (          ),
         .sound     (          ),
         .gpio      (          )
