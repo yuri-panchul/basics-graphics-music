@@ -1,0 +1,94 @@
+// The physical constraints and pin assignments
+//
+// Device: GW5A-25A
+// Part Number: GW5A-LV25MG121NC1/I0
+// Board: Tang Primer 25K Dock
+
+IO_LOC "clk" E2;
+
+IO_LOC "key[0]" H11;
+IO_LOC "key[1]" H10;
+
+// GPIO in the top
+
+IO_LOC "gpio[0]"  K2  ; IO_LOC "gpio[1]"  K1
+IO_LOC "gpio[2]"  L1  ; IO_LOC "gpio[3]"  L2
+IO_LOC "gpio[4]"  K4  ; IO_LOC "gpio[5]"  J4
+IO_LOC "gpio[6]"  G1  ; IO_LOC "gpio[7]"  G2
+IO_LOC "gpio[8]"  L3  ; IO_LOC "gpio[9]"  L4
+//                5V                      GND
+IO_LOC "gpio[10]" C2  ; IO_LOC "gpio[11]" B2
+IO_LOC "gpio[12]" F1  ; IO_LOC "gpio[13]" F2
+IO_LOC "gpio[14]" A1  ; IO_LOC "gpio[15]" E1
+IO_LOC "gpio[16]" D1  ; IO_LOC "gpio[17]" E3
+IO_LOC "gpio[18]" J2  ; IO_LOC "gpio[19]" J1
+IO_LOC "gpio[20]" H4  ; IO_LOC "gpio[21]" G4
+IO_LOC "gpio[22]" H2  ; IO_LOC "gpio[23]" H1
+IO_LOC "gpio[24]" J7  ; IO_LOC "gpio[25]" K7
+IO_LOC "gpio[26]" L8  ; IO_LOC "gpio[27]" L7
+IO_LOC "gpio[28]" K10 ; IO_LOC "gpio[29]" L10  // VCC
+IO_LOC "gpio[30]" K9  ; IO_LOC "gpio[31]" L9   // GND
+IO_LOC "gpio[32]" K8  ; IO_LOC "gpio[33]" J8   // STB
+IO_LOC "gpio[34]" F6  ; IO_LOC "gpio[35]" F7   // CLK
+IO_LOC "gpio[36]" J10 ; IO_LOC "gpio[37]" J11  // DIO
+
+// Pmod 0 on the left
+
+// F5 G7 H8 H5 GND 3V3
+// G5 G8 H7 J5 GND 3V3
+
+// Pmod 1 in the middle
+
+// A11 E11 K11 L5 GND 3V3
+// A10 E10 L11 K5 GND 3V3
+
+// Pmod 2 on the right
+
+//G11 D11 B11 C11 GND 3V3
+//G10 D10 B10 C10 GND 3V3
+
+// IO_PORT "pmod_io[0]" PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
+
+IO_PORT "clk"      IO_TYPE=LVCMOS33;
+
+IO_PORT "key[0]"   IO_TYPE=LVCMOS33;
+IO_PORT "key[1]"   IO_TYPE=LVCMOS33;
+
+IO_PORT "gpio[0]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[1]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[2]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[3]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[4]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[5]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[6]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[7]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[8]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[9]"  IO_TYPE=LVCMOS33;
+IO_PORT "gpio[10]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[11]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[12]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[13]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[14]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[15]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[16]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[17]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[18]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[19]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[20]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[21]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[22]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[23]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[24]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[25]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[26]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[27]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[28]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[29]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[30]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[31]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[32]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[33]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[34]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[35]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[36]" IO_TYPE=LVCMOS33;
+IO_PORT "gpio[37]" IO_TYPE=LVCMOS33;
