@@ -245,21 +245,21 @@ module board_specific_top
     );
 
 `ifdef USE_HDMI
-	DVI_TX_Top myDVI(
-		.I_rst_n      ( ~rst        ), //input I_rst_n
-		.I_serial_clk ( clk_hd      ), //input I_serial_clk
-		.I_rgb_clk    ( clk_px      ), //input I_rgb_clk
-		.I_rgb_vs     ( ~vsync      ), //input I_rgb_vs
-		.I_rgb_hs     ( ~hsync      ), //input I_rgb_hs
-		.I_rgb_de     ( display_on  ), //input I_rgb_de
-		.I_rgb_r      ( red         ), //input [7:0] I_rgb_r
-		.I_rgb_g      ( green       ), //input [7:0] I_rgb_g
-		.I_rgb_b      ( blue        ), //input [7:0] I_rgb_b
-		.O_tmds_clk_p ( tmds_clk_p  ), //output O_tmds_clk_p
-		.O_tmds_clk_n ( tmds_clk_n  ), //output O_tmds_clk_n
-		.O_tmds_data_p( tmds_d_p    ), //output [2:0] O_tmds_data_p
-		.O_tmds_data_n( tmds_d_n    ) //output [2:0] O_tmds_data_n
-	);
+    DVI_TX_Top myDVI(
+        .I_rst_n      ( ~rst        ), //input I_rst_n
+        .I_serial_clk ( clk_hd      ), //input I_serial_clk
+        .I_rgb_clk    ( clk_px      ), //input I_rgb_clk
+        .I_rgb_vs     ( ~vsync      ), //input I_rgb_vs
+        .I_rgb_hs     ( ~hsync      ), //input I_rgb_hs
+        .I_rgb_de     ( display_on  ), //input I_rgb_de
+        .I_rgb_r      ( red         ), //input [7:0] I_rgb_r
+        .I_rgb_g      ( green       ), //input [7:0] I_rgb_g
+        .I_rgb_b      ( blue        ), //input [7:0] I_rgb_b
+        .O_tmds_clk_p ( tmds_clk_p  ), //output O_tmds_clk_p
+        .O_tmds_clk_n ( tmds_clk_n  ), //output O_tmds_clk_n
+        .O_tmds_data_p( tmds_d_p    ), //output [2:0] O_tmds_data_p
+        .O_tmds_data_n( tmds_d_n    ) //output [2:0] O_tmds_data_n
+    );
 `endif
 
     assign GPIO [8] = 1'b0;  // GND
