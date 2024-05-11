@@ -9,6 +9,10 @@ module board_specific_top
                 w_led   = 0,
                 w_digit = 0,
                 w_gpio  = 38
+
+                // gpio 0..5 are reserved for INMP 441 I2S microphone.
+                // Odd gpio 17..27 are reserved I2S audio.
+                // Odd gpio 29..37 are reserved for TM1638.
 )
 (
     input                  clk,
@@ -55,31 +59,31 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( clk       ),
-        .slow_clk ( slow_clk  ),
-        .rst      ( rst       ),
+        .clk       ( clk       ),
+        .slow_clk  ( slow_clk  ),
+        .rst       ( rst       ),
 
-        .key      ( tm_key    ),
-        .sw       ( tm_key    ),
+        .key       ( tm_key    ),
+        .sw        ( tm_key    ),
 
-        .led      ( led       ),
+        .led       ( key /* led */       ),
 
-        .abcdefgh ( abcdefgh  ),
-        .digit    ( digit     ),
+        .abcdefgh  ( abcdefgh  ),
+        .digit     ( digit     ),
 
-        .vsync    (           ),
-        .hsync    (           ),
+        .vsync     (           ),
+        .hsync     (           ),
 
-        .red      (           ),
-        .green    (           ),
-        .blue     (           ),
+        .red       (           ),
+        .green     (           ),
+        .blue      (           ),
 
-        .uart_rx  (           ),
-        .uart_tx  (           ),
+        .uart_rx   (           ),
+        .uart_tx   (           ),
 
-        .mic_ready( mic_ready ),
-        .mic      ( mic       ),
-        .gpio     ( gpio      )
+        .mic_ready ( mic_ready ),
+        .mic       ( mic       ),
+        .gpio      ( gpio      )
     );
 
     //------------------------------------------------------------------------
@@ -94,6 +98,43 @@ module board_specific_top
             assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
         end
     endgenerate
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk        ),
+        .rst   ( rst        ),
+        .lr    ( gpio   [0] ),
+        .ws    ( gpio   [2] ),
+        .sck   ( gpio   [4] ),
+        .sd    ( gpio   [5] ),
+        .ready ( mic_ready  ),
+        .value ( mic        )
+    );
+
+    assign gpio [1] = 1'b0;  // GND
+    assign gpio [3] = 1'b1;  // VCC
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    i_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( gpio [17] ),
+        .bclk    ( gpio [19] ),
+        .lrclk   ( gpio [23] ),
+        .sdata   ( gpio [21] )
+    );
+
+    assign gpio [25] = 1'b0;  // GND
+    assign gpio [27] = 1'b1;  // VCC
 
     //------------------------------------------------------------------------
 
@@ -117,21 +158,5 @@ module board_specific_top
 
     assign gpio [31] = 1'b0;
     assign gpio [29] = 1'b1;
-
-    //------------------------------------------------------------------------
-
-    /*
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO_3 [1] ),
-        .ws    ( GPIO_3 [2] ),
-        .sck   ( GPIO_3 [3] ),
-        .sd    ( GPIO_3 [0] ),
-        .ready ( mic_ready  ),
-        .value ( mic        )
-    );
-    */
 
 endmodule

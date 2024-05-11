@@ -270,6 +270,8 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    // TODO: Change order!
+
     inmp441_mic_i2s_receiver i_microphone
     (
         .clk   ( clk        ),
