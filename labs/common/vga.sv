@@ -24,7 +24,7 @@ module vga
               V_TOP               =  33,  // Vertical top border
 
               CLK_MHZ             =  50,  // Clock frequency (50 or 100 MHz)
-              VGA_CLOCK           =  25   // Pixel clock of VGA in MHz
+              PIXEL_MHZ           =  25   // Pixel clock frequency of VGA in MHz
 )
 (
     input                           clk,
@@ -34,7 +34,7 @@ module vga
     output logic                    display_on,
     output logic [HPOS_WIDTH - 1:0] hpos,
     output logic [VPOS_WIDTH - 1:0] vpos,
-    output logic                    clk_px
+    output logic                    pixel_clk
 );
 
     // Derived constants
@@ -75,7 +75,7 @@ module vga
     logic [3:0] clk_en_cnt;
     logic clk_en;
 
-    assign clk_px = clk_en;
+    assign pixel_clk = clk_en;
 
     always_ff @ (posedge clk or posedge rst)
     begin
@@ -86,7 +86,7 @@ module vga
         end
         else
         begin
-            if (clk_en_cnt == (CLK_MHZ / VGA_CLOCK) - 1)
+            if (clk_en_cnt == (CLK_MHZ / PIXEL_MHZ) - 1)
             begin
                 clk_en_cnt <= 3'b0;
                 clk_en <= 1'b1;

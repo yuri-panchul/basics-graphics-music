@@ -159,37 +159,36 @@ module board_specific_top
     i_top
     (
 `ifdef USE_HDMI
-        .clk      ( clk_hd    ),
+        .clk        ( clk_hd     ),
 `else
-        .clk      ( clk       ),
+        .clk        ( clk        ),
 `endif
-        .slow_clk ( slow_clk  ),
-        .rst      ( rst       ),
+        .slow_clk   ( slow_clk   ),
+        .rst        ( rst        ),
 
-        .key      ( top_key   ),
-        .sw       (           ),
+        .key        ( top_key    ),
+        .sw         (            ),
 
-        .led      ( top_led   ),
+        .led        ( top_led    ),
 
-        .abcdefgh ( abcdefgh  ),
-        .digit    ( top_digit ),
+        .abcdefgh   ( abcdefgh   ),
+        .digit      ( top_digit  ),
 
-        .vsync    ( vsync     ),
-        .hsync    ( hsync     ),
+        .vsync      ( vsync      ),
+        .hsync      ( hsync      ),
 
-        .red      ( red       ),
-        .green    ( green     ),
-        .blue     ( blue      ),
-      `ifdef USE_HDMI
-        .dsp_on   ( display_on),
-        .clk_px   ( clk_px    ),
-      `endif
+        .red        ( red        ),
+        .green      ( green      ),
+        .blue       ( blue       ),
 
-        .uart_rx  ( UART_RX   ),
-        .uart_tx  ( UART_TX   ),
+        .display_on ( display_on ),
+        .pixel_clk  ( clk_px     ),
 
-        .mic      ( mic       ),
-        .gpio     (           )
+        .uart_rx    ( UART_RX    ),
+        .uart_tx    ( UART_TX    ),
+
+        .mic        ( mic        ),
+        .gpio       (            )
     );
 
     //------------------------------------------------------------------------

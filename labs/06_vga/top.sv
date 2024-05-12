@@ -80,7 +80,7 @@ module top
         .VPOS_WIDTH ( w_y        ),
 
         .CLK_MHZ    ( clk_mhz    ),
-        .VGA_CLOCK  ( pixel_mhz  )
+        .PIXEL_MHZ  ( pixel_mhz  )
     )
     i_vga
     (
@@ -91,7 +91,7 @@ module top
         .display_on ( display_on ),
         .hpos       ( x          ),
         .vpos       ( y          ),
-        .clk_px     ( clk_px     ) 
+        .pixel_clk  ( pixel_clk  )
     );
 
     assign dsp_on = display_on; 

@@ -2,7 +2,9 @@
 
 module game_top
 # (
-    parameter clk_mhz = 50,
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+
               strobe_to_update_xy_counter_width = 20
 )
 (
@@ -15,8 +17,8 @@ module game_top
     output       hsync,
     output       vsync,
     output [2:0] rgb,
-    output logic dsp_on,
-    output logic clk_px
+    output       display_on,
+    output       pixel_clk
 );
 
     //------------------------------------------------------------------------
@@ -32,7 +34,8 @@ module game_top
         .HPOS_WIDTH          ( `X_WIDTH             ),
         .VPOS_WIDTH          ( `Y_WIDTH             ),
 
-        .CLK_MHZ             ( clk_mhz              )
+        .CLK_MHZ             ( clk_mhz              ),
+        .PIXEL_MHZ           ( pixel_mhz            )
     )
     i_vga
     (
@@ -43,9 +46,8 @@ module game_top
         .display_on ( display_on ),
         .hpos       ( pixel_x    ),
         .vpos       ( pixel_y    ),
-        .clk_px     ( clk_px     )
+        .pixel_clk  ( pixel_clk  )
     );
-    assign dsp_on = display_on; 
 
     //------------------------------------------------------------------------
 

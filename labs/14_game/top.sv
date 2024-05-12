@@ -36,8 +36,8 @@ module top
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
-    output logic                 dsp_on,
-    output logic                 clk_px,
+    output                       display_on,
+    output                       pixel_clk,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -63,6 +63,8 @@ module top
     // assign red      = '0;
     // assign green    = '0;
     // assign blue     = '0;
+    // display_on      = '0;
+    // pixel_clk       = '0;
        assign sound    = '0;
        assign uart_tx  = '1;
 
@@ -72,7 +74,8 @@ module top
 
     game_top
     # (
-        .clk_mhz (clk_mhz),
+        .clk_mhz   ( clk_mhz   ),
+        .pixel_mhz ( pixel_mhz ),
 
         .strobe_to_update_xy_counter_width
         (strobe_to_update_xy_counter_width)
@@ -88,8 +91,8 @@ module top
         .hsync            (   hsync              ),
         .vsync            (   vsync              ),
         .rgb              (   rgb                ),
-        .dsp_on           (   dsp_on             ),
-        .clk_px           (   clk_px             )
+        .display_on       (   display_on         ),
+        .pixel_clk        (   pixel_clk          )
      
     );
 
