@@ -2,12 +2,16 @@
 
 module top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 8,
-              w_digit = 8,
-              w_gpio  = 100
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+              w_key     = 4,
+              w_sw      = 8,
+              w_led     = 8,
+              w_digit   = 8,
+              w_gpio    = 100,
+              w_red     = 4,
+              w_green   = 4,
+              w_blue    = 4
 )
 (
     input                        clk,
@@ -29,9 +33,11 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [          3:0] red,
-    output logic [          3:0] green,
-    output logic [          3:0] blue,
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
+    output                       display_on,
+    output                       pixel_clk,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -43,6 +49,23 @@ module top
 
     inout        [w_gpio  - 1:0] gpio
 );
+
+    //------------------------------------------------------------------------
+
+    // assign led        = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
+       assign vsync      = '0;
+       assign hsync      = '0;
+       assign red        = '0;
+       assign green      = '0;
+       assign blue       = '0;
+       assign display_on = '0;
+       assign pixel_clk  = '0;
+       assign sound      = '0;
+       assign uart_tx    = '1;
+
+    //------------------------------------------------------------------------
 
     localparam shield_gpio_base = 36,
                n_bulbs          = 2,
@@ -59,19 +82,6 @@ module top
     // assign shield_led     = geiger_input;
     // assign shield_speaker = | geiger_input;
     // assign shield_pwm     = '0;
-
-    //------------------------------------------------------------------------
-
-    // assign led      = '0;
-    // assign abcdefgh = '0;
-    // assign digit    = '0;
-       assign vsync    = '0;
-       assign hsync    = '0;
-       assign red      = '0;
-       assign green    = '0;
-       assign blue     = '0;
-       assign sound    = '0;
-       assign uart_tx  = '1;
 
     //------------------------------------------------------------------------
 
