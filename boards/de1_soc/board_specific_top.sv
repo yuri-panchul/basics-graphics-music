@@ -115,6 +115,8 @@ module board_specific_top
     assign VGA_G   = { vga_green_4b, 4'd0 };
     assign VGA_B   = { vga_blue_4b,  4'd0 };
 
+    // TODO: This signal has to be propagated from vga module
+
     assign VGA_BLANK_N = 1'b1;
     assign VGA_SYNC_N  = 0;
 

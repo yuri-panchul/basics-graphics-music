@@ -262,7 +262,7 @@ module board_specific_top
     (
         .clk     ( clk       ),
         .reset   ( rst       ),
-        .data_in ( sound     ),
+        .data_in ( sound     ), // TODO - check all comments with pins
         .mclk    ( GPIO [33] ), // JP5 pin 38
         .bclk    ( GPIO [31] ), // JP5 pin 36
         .lrclk   ( GPIO [27] ), // JP5 pin 32
