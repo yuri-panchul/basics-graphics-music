@@ -2,15 +2,16 @@
 
 module top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 8,
-              w_digit = 8,
-              w_gpio  = 100,
-              w_vgar  = 4,
-              w_vgag  = 4,
-              w_vgab  = 4
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+              w_key     = 4,
+              w_sw      = 8,
+              w_led     = 8,
+              w_digit   = 8,
+              w_gpio    = 100,
+              w_vgar    = 4,
+              w_vgag    = 4,
+              w_vgab    = 4
 )
 (
     input                        clk,

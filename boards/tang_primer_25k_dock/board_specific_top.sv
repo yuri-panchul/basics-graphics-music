@@ -12,7 +12,7 @@
 module board_specific_top
 # (
     parameter   clk_mhz   = 50,
-                pixel_mhz = 50,
+                pixel_mhz = 25,
                 w_key     = 2,
                 w_sw      = 0,
                 w_led     = 0,
@@ -199,8 +199,8 @@ module board_specific_top
         .I_rst_n        ( ~ rst         ),
         .I_rgb_clk      (   clk         ),
         .I_rgb_vs       (   vsync       ),
-        .I_rgb_hs       (    hsync      ),
-        .I_rgb_de       (   1'b1        ),
+        .I_rgb_hs       (   hsync       ),
+        .I_rgb_de       (   1'b0        ),
         .I_rgb_r        (   red         ),
         .I_rgb_g        (   green       ),
         .I_rgb_b        (   blue        ),
@@ -214,6 +214,13 @@ module board_specific_top
     assign pmod_0 [3] = tmds_clk_p;
 
     assign { pmod_0 [4], pmod_0 [5], pmod_0[6] } = tmds_data_n;
-    assign pmod_0 [7] = tmds_clk_p;
+    assign pmod_0 [7] = tmds_clk_n;
+
+    //------------------------------------------------------------------------
+
+    // Pmod VGA
+
+    assign pmod_1 = { green [7:4], 2'b0, vsync, hsync };
+    assign pmod_2 = { red   [7:4], blue [7:4] };
 
 endmodule
