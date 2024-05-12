@@ -18,9 +18,9 @@ module board_specific_top
                 w_led     = 0,
                 w_digit   = 0,
 
-                w_vgar    = 8,
-                w_vgag    = 8,
-                w_vgab    = 8,
+                w_red     = 8,
+                w_green   = 8,
+                w_blue    = 8,
 
                 w_gpio    = 38
 
@@ -58,9 +58,9 @@ module board_specific_top
     wire                      vsync;
     wire                      hsync;
 
-    wire  [w_vgar      - 1:0] red;
-    wire  [w_vgag      - 1:0] green;
-    wire  [w_vgab      - 1:0] blue;
+    wire  [w_red       - 1:0] red;
+    wire  [w_green     - 1:0] green;
+    wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
 
@@ -83,9 +83,9 @@ module board_specific_top
         .w_led     ( w_tm_led   ),
         .w_digit   ( w_tm_digit ),
 
-        .w_vgar    ( w_vgar     ),
-        .w_vgag    ( w_vgag     ),
-        .w_vgab    ( w_vgab     ),
+        .w_red     ( w_red      ),
+        .w_green   ( w_green    ),
+        .w_blue    ( w_blue     ),
 
         .w_gpio    ( w_gpio     )
     )

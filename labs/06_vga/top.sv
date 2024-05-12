@@ -9,9 +9,9 @@ module top
               w_led     = 8,
               w_digit   = 8,
               w_gpio    = 100,
-              w_vgar    = 4,
-              w_vgag    = 4,
-              w_vgab    = 4
+              w_red     = 4,
+              w_green   = 4,
+              w_blue    = 4
 )
 (
     input                        clk,
@@ -33,9 +33,9 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [w_vgar  - 1:0] red,
-    output logic [w_vgag  - 1:0] green,
-    output logic [w_vgab  - 1:0] blue,
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
     output logic                 dsp_on,
     output logic                 clk_px,
 
@@ -114,9 +114,9 @@ module top
         end
         else if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
         begin
-            red   = x [w_x - 2 -: w_vgar];
+            red   = x [w_x - 2 -: w_red];
             green = '1;
-            blue  = y [w_y - 2 -: w_vgab];
+            blue  = y [w_y - 2 -: w_blue];
         end
         `ifdef YOSYS
         else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
@@ -125,13 +125,13 @@ module top
         `endif
         begin
             red   = '1;
-            green = x [w_x - 2 -: w_vgag];
-            blue  = y [w_y - 2 -: w_vgab];
+            green = x [w_x - 2 -: w_green];
+            blue  = y [w_y - 2 -: w_blue];
         end
         else if (x_2 [9 +: w_y] < y)  // Parabola
         begin
-            red   = x [w_x - 2 -: w_vgar];
-            green = y [w_y - 2 -: w_vgag];
+            red   = x [w_x - 2 -: w_red];
+            green = y [w_y - 2 -: w_green];
             blue  = '1;
         end
     end

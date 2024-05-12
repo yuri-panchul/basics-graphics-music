@@ -9,9 +9,9 @@ module top
               w_led     = 8,
               w_digit   = 8,
               w_gpio    = 100,
-              w_vgar    = 4,
-              w_vgag    = 4,
-              w_vgab    = 4
+              w_red     = 4,
+              w_green   = 4,
+              w_blue    = 4
 )
 (
     input                        clk,
@@ -33,9 +33,9 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [ w_vgar - 1:0] red,
-    output logic [ w_vgag - 1:0] green,
-    output logic [ w_vgab - 1:0] blue,
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
     output logic                 dsp_on,
     output logic                 clk_px,
 
@@ -93,8 +93,8 @@ module top
      
     );
 
-    assign red   = { w_vgar { rgb [2] } };
-    assign green = { w_vgag { rgb [1] } };
-    assign blue  = { w_vgab { rgb [0] } };
+    assign red   = { w_red   { rgb [2] } };
+    assign green = { w_green { rgb [1] } };
+    assign blue  = { w_blue  { rgb [0] } };
 
 endmodule
