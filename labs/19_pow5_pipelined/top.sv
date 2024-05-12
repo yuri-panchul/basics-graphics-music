@@ -52,18 +52,18 @@ module top
 
     //------------------------------------------------------------------------
 
-       assign led      = '0;
-    // assign abcdefgh = '0;
-    // assign digit    = '0;
-       assign vsync    = '0;
-       assign hsync    = '0;
-       assign red      = '0;
-       assign green    = '0;
-       assign blue     = '0;
-       display_on      = '0;
-       pixel_clk       = '0;
-       assign sound    = '0;
-       assign uart_tx  = '1;
+       assign led        = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
+       assign vsync      = '0;
+       assign hsync      = '0;
+       assign red        = '0;
+       assign green      = '0;
+       assign blue       = '0;
+       assign display_on = '0;
+       assign pixel_clk  = '0;
+       assign sound      = '0;
+       assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
 

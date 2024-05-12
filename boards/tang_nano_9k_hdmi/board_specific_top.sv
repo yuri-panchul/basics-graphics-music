@@ -188,6 +188,7 @@ module board_specific_top
         .uart_tx    ( UART_TX    ),
 
         .mic        ( mic        ),
+        .sound      (            ),
         .gpio       (            )
     );
 
