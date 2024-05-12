@@ -36,8 +36,8 @@ module top
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
-    output logic                 dsp_on,
-    output logic                 clk_px,
+    output                       display_on,
+    output                       pixel_clk,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -69,8 +69,6 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire display_on;
-
     wire [w_x - 1:0] x;
     wire [w_y - 1:0] y;
 
@@ -93,8 +91,6 @@ module top
         .vpos       ( y          ),
         .pixel_clk  ( pixel_clk  )
     );
-
-    assign dsp_on = display_on; 
 
     //------------------------------------------------------------------------
     // Pattern 1

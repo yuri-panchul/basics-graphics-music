@@ -23,7 +23,6 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                  display_on;
     wire [`X_WIDTH - 1:0] pixel_x;
     wire [`Y_WIDTH - 1:0] pixel_y;
 
