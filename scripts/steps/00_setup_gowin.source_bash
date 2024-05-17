@@ -301,7 +301,7 @@ configure_fpga_gowin_msys ()
     case $fpga_board in
 
       # gowin_runber |
-        tang_nano_1k )
+        tang_nano_1k* )
 
             fpga_board_for_programmer="GW1NZ-1"
             flash_method="-r 5"                  ;;
@@ -320,6 +320,11 @@ configure_fpga_gowin_msys ()
         tang_primer_20k* )
 
             fpga_board_for_programmer="GW2A-18C"
+            flash_method="-r 36"                 ;;
+
+        tang_primer_25k* )
+
+            fpga_board_for_programmer="GW5A-25A"
             flash_method="-r 36"                 ;;
 
         *)
