@@ -150,10 +150,9 @@ module board_specific_top
         .w_digit ( w_top_digit   ),
         .w_gpio  ( w_gpio        )
 `ifdef USE_HDMI
-        ,
-        .w_red   ( 8             ),
-        .w_green ( 8             ),
-        .w_blue  ( 8             ),
+        , .w_red   ( 8             )
+        , .w_green ( 8             )
+        , .w_blue  ( 8             )
 `endif
     )
     i_top
