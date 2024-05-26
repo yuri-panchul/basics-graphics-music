@@ -51,7 +51,7 @@ module board_specific_top
     top
     # (
         .clk_mhz   ( clk_mhz    ),
-        .pixel_mhz ( pixel_mhz  ),
+        .pixel_mhz ( pixel_mhz  ), 
 
         .w_key     ( w_tm_key   ),
         .w_sw      ( w_tm_led   ),
@@ -89,7 +89,7 @@ module board_specific_top
         .uart_tx   (            ),
 
         .mic       (            ),
-        .gpio      ( gpio       )
+        .gpio      ( gpio       ) 
     );
 
     //------------------------------------------------------------------------
@@ -120,12 +120,12 @@ module board_specific_top
         .digit      ( digit    ),
         .ledr       ( tm_led   ),
         .keys       ( tm_key   ),
-        .sio_clk    ( gpio [3] ),  // Pin 7 from left top
-        .sio_stb    ( gpio [2] ),  // Pin 6 from left top
+        .sio_clk    ( gpio [2] ),  // Pin 7 from left top
+        .sio_stb    ( gpio [3] ),  // Pin 6 from left top
         .sio_data   ( gpio [4] )   // Pin 8 from left top
     );
 
-    // assign gpio [1] = 1'b0;  // GND       Pin 4 from left top
-    // assign gpio [0] = 1'b1;  // VCC 3.3V  Pin 5 from left top
+    assign gpio [1] = 1'b0;  // GND       Pin 4 from left top
+    assign gpio [0] = 1'b1;  // VCC 3.3V  Pin 5 from left top
 
 endmodule
