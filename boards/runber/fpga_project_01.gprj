@@ -3,5 +3,5 @@
 <Project>
     <Template>FPGA</Template>
     <Version>5</Version>
-    <Device name="GW1N4-030" pn="GW1N-LV4LQ144C6/I5">gw1n4-030</Device>
+    <Device name="GW1N-4" pn="GW1N-LV4LQ144C6/I5">gw1n4-030</Device>
     <FileList>
