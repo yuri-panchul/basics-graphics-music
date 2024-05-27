@@ -29,6 +29,9 @@ module board_specific_top
     input                  clk,
     input  [w_key  - 1:0]  key,
 
+    input                  serial_rx,
+    output                 serial_tx,
+
     inout  [w_gpio - 1:0]  gpio,
 
     output                 tmds_clk_n,
@@ -111,8 +114,8 @@ module board_specific_top
         .green     ( green      ),
         .blue      ( blue       ),
 
-        .uart_rx   (            ),
-        .uart_tx   (            ),
+        .uart_rx   ( serial_rx  ),
+        .uart_tx   ( serial_tx  ),
 
         .mic       ( mic        ),
         .gpio      ( gpio       )
