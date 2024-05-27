@@ -300,7 +300,7 @@ configure_fpga_gowin_msys ()
 
     case $fpga_board in
 
-      # gowin_runber |
+        runber        | \
         tang_nano_1k* )
 
             fpga_board_for_programmer="GW1NZ-1"
@@ -377,7 +377,7 @@ configure_fpga_gowin_all ()
 
     case $fpga_board in
 
-      # gowin_runber          ) fpga_board_for_openFPGALoader=runber        ;;
+        runber                ) fpga_board_for_openFPGALoader=runber        ;;
         tang_nano_1k*         ) fpga_board_for_openFPGALoader=tangnano1k    ;;
         tang_nano_20k*        ) fpga_board_for_openFPGALoader=tangnano20k   ;;
         tang_nano_4k*         ) fpga_board_for_openFPGALoader=tangnano4k    ;;
