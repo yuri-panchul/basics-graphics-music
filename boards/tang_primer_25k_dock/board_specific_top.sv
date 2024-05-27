@@ -1,8 +1,5 @@
 // TODO
-// Find pins for the keys on the board
 // Debug I2S output
-// Check pin options in tcl file
-// Find out the status of I2C gpio pin 11
 // Parameterize red, green, blue width
 // Create a variant of 25K with 7-segment, leds and buttons on pmod.
 
@@ -32,11 +29,15 @@ module board_specific_top
     input                  clk,
     input  [w_key  - 1:0]  key,
 
-    inout  [         7:0]  pmod_0,
-    inout  [         7:0]  pmod_1,
-    inout  [         7:0]  pmod_2,
+    inout  [w_gpio - 1:0]  gpio,
 
-    inout  [w_gpio - 1:0]  gpio
+    output                 tmds_clk_n,
+    output                 tmds_clk_p,
+    output [         2:0]  tmds_d_n,
+    output [         2:0]  tmds_d_p,
+
+    inout  [         7:0]  pmod_1,
+    inout  [         7:0]  pmod_2
 );
 
     //------------------------------------------------------------------------
@@ -191,9 +192,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire       tmds_clk_p,  tmds_clk_n;
-    wire [2:0] tmds_data_p, tmds_data_n;
-
     dvi_tx i_dvi_tx
     (
         .I_rst_n        ( ~ rst         ),
@@ -209,12 +207,6 @@ module board_specific_top
         .O_tmds_data_p  (   tmds_data_p ),
         .O_tmds_data_n  (   tmds_data_n )
     );
-
-    assign { pmod_0 [0], pmod_0 [1], pmod_0 [2] } = tmds_data_p;
-    assign pmod_0 [3] = tmds_clk_p;
-
-    assign { pmod_0 [4], pmod_0 [5], pmod_0[6] } = tmds_data_n;
-    assign pmod_0 [7] = tmds_clk_n;
 
     //------------------------------------------------------------------------
 
