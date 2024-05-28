@@ -93,17 +93,15 @@ IO_PORT "gpio[37]"  IO_TYPE=LVCMOS33;
 
 // Pmod 0 on the left used as DVI
 
-IO_LOC  "tmds_clk_p"  H5,J5;
-IO_PORT "tmds_clk_p"  IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
+// IO_LOC  "tmds_clk_p"  H5,J5;
+// IO_LOC  "tmds_d_p[0]" H8,H7;
+// IO_LOC  "tmds_d_p[1]" G7,G8;
+// IO_LOC  "tmds_d_p[2]" F5,G5;
 
-IO_LOC  "tmds_d_p[0]" H8,H7;
-IO_PORT "tmds_d_p[0]" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
-
-IO_LOC  "tmds_d_p[1]" G7,G8;
-IO_PORT "tmds_d_p[1]" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
-
-IO_LOC  "tmds_d_p[2]" F5,G5;
-IO_PORT "tmds_d_p[2]" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
+// IO_PORT "tmds_clk_p"  IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
+// IO_PORT "tmds_d_p[0]" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
+// IO_PORT "tmds_d_p[1]" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
+// IO_PORT "tmds_d_p[2]" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
 
 //----------------------------------------------------------------------------
 
