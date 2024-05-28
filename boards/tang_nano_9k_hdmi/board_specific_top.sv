@@ -1,7 +1,8 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-//` define USE_HDMI
+`define USE_HDMI
+`undef  ENABLE_TM1638
 
 module board_specific_top
 # (
@@ -153,7 +154,7 @@ module board_specific_top
         ,
         .w_red   ( 8             ),
         .w_green ( 8             ),
-        .w_blue  ( 8             ),
+        .w_blue  ( 8             )
 `endif
     )
     i_top
