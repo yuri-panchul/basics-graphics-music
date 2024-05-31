@@ -151,8 +151,8 @@ module board_specific_top
         .green    ( vga_g      ),
         .blue     ( vga_b      ),
 
-        .uart_rx  ( UART_RX   ),
-        .uart_tx  ( UART_TX   ),
+        .uart_rx  ( UART_RX    ),
+        .uart_tx  ( UART_TX    ),
 
         .mic      ( mic        ),
         .sound    ( sound      ),
@@ -162,11 +162,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    logic [    3:0] reg_vga_r, reg_vga_g, reg_vga_b;
-    logic           reg_vga_vs, reg_vga_hs;
+    logic [3:0] reg_vga_r, reg_vga_g, reg_vga_b;
+    logic       reg_vga_vs, reg_vga_hs;
 
-    // Registers remove combinational logic noise
-    always_ff @( posedge clk or posedge rst)
+    // Registers to remove the noise from combinational logic (glitches)
+
+    always_ff @ (posedge clk or posedge rst)
     begin
         if (rst)
         begin
@@ -187,6 +188,7 @@ module board_specific_top
     end
 
     // External VGA out at GPIO_1
+
     `ifdef  VGA666_BOARD
 
         // 4 bit color used
@@ -251,20 +253,20 @@ module board_specific_top
     tm1638_board_controller
     # (
         .clk_mhz ( clk_mhz    ),
-        .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
+        .w_digit ( w_tm_digit )         // fake parameter, digit count is hardcode in tm1638_board_controller
     )
     i_ledkey
     (
         .clk        ( clk           ),
-        .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
+        .rst        ( rst           ),  // Don't make reset tm1638_board_controller by it's tm_key
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
         .ledr       ( tm_led        ),
         .keys       ( tm_key        ),
-        .sio_stb    ( GPIO_0 [25]   ), // JP1 pin 32
-        .sio_clk    ( GPIO_0 [27]   ), // JP1 pin 34
-        .sio_data   ( GPIO_0 [29]   )  // JP1 pin 36
-    );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
+        .sio_stb    ( GPIO_0 [25]   ),  // JP1 pin 32
+        .sio_clk    ( GPIO_0 [27]   ),  // JP1 pin 34
+        .sio_data   ( GPIO_0 [29]   )   // JP1 pin 36
+    );                                  // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
     //------------------------------------------------------------------------
 
@@ -295,10 +297,10 @@ module board_specific_top
         .clk     ( clk         ),
         .reset   ( rst         ),
         .data_in ( sound       ),
-        .mclk    ( GPIO_1 [30] ), // JP2 pin 37
-        .bclk    ( GPIO_1 [28] ), // JP2 pin 35
-        .lrclk   ( GPIO_1 [24] ), // JP2 pin 31
-        .sdata   ( GPIO_1 [26] )  // JP2 pin 33
-    );                            // JP2 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
+        .mclk    ( GPIO_1 [30] ),  // JP2 pin 37
+        .bclk    ( GPIO_1 [28] ),  // JP2 pin 35
+        .lrclk   ( GPIO_1 [24] ),  // JP2 pin 31
+        .sdata   ( GPIO_1 [26] )   // JP2 pin 33
+    );                             // JP2 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
 endmodule

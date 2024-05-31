@@ -1,0 +1,73 @@
+// The physical constraints and pin assignments
+//
+// Device: GW1N4-030
+// Part Number: GW1N-UV4LQ144C6/I5
+// Board: Runber
+
+IO_LOC "clk" 4;
+
+IO_LOC "led[0]" 23;
+IO_LOC "led[1]" 24;
+IO_LOC "led[2]" 25;
+IO_LOC "led[3]" 26;
+IO_LOC "led[4]" 27;
+IO_LOC "led[5]" 28;
+IO_LOC "led[6]" 29;
+IO_LOC "led[7]" 30;
+
+IO_LOC "key[0]" 58;
+IO_LOC "key[1]" 59;
+IO_LOC "key[2]" 60;
+IO_LOC "key[3]" 61;
+IO_LOC "key[4]" 62;
+IO_LOC "key[5]" 63;
+IO_LOC "key[6]" 64;
+IO_LOC "key[7]" 65;
+
+IO_LOC "dig[0]" 137;
+IO_LOC "dig[1]" 140;
+IO_LOC "dig[2]" 141;
+IO_LOC "dig[3]" 7;
+
+IO_LOC "smg[0]" 8;
+IO_LOC "smg[1]" 139;
+IO_LOC "smg[2]" 12;
+IO_LOC "smg[3]" 11;
+IO_LOC "smg[4]" 9;
+IO_LOC "smg[5]" 142;
+IO_LOC "smg[6]" 138;
+IO_LOC "smg[7]" 10;
+
+IO_PORT "clk"  IO_TYPE=LVCMOS33;
+
+IO_PORT "key[0]"  IO_TYPE=LVCMOS33;
+IO_PORT "key[1]"  IO_TYPE=LVCMOS33;
+IO_PORT "key[2]"  IO_TYPE=LVCMOS33;
+IO_PORT "key[3]"  IO_TYPE=LVCMOS33;
+IO_PORT "key[4]"  IO_TYPE=LVCMOS33;
+IO_PORT "key[5]"  IO_TYPE=LVCMOS33;
+IO_PORT "key[6]"  IO_TYPE=LVCMOS33;
+IO_PORT "key[7]"  IO_TYPE=LVCMOS33;
+
+IO_PORT "led[0]"  IO_TYPE=LVCMOS33;
+IO_PORT "led[1]"  IO_TYPE=LVCMOS33;
+IO_PORT "led[2]"  IO_TYPE=LVCMOS33;
+IO_PORT "led[3]"  IO_TYPE=LVCMOS33;
+IO_PORT "led[4]"  IO_TYPE=LVCMOS33;
+IO_PORT "led[5]"  IO_TYPE=LVCMOS33;
+IO_PORT "led[6]"  IO_TYPE=LVCMOS33;
+IO_PORT "led[7]"  IO_TYPE=LVCMOS33;
+
+IO_PORT "smg[0]"  IO_TYPE=LVCMOS33;
+IO_PORT "smg[1]"  IO_TYPE=LVCMOS33;
+IO_PORT "smg[2]"  IO_TYPE=LVCMOS33;
+IO_PORT "smg[3]"  IO_TYPE=LVCMOS33;
+IO_PORT "smg[4]"  IO_TYPE=LVCMOS33;
+IO_PORT "smg[5]"  IO_TYPE=LVCMOS33;
+IO_PORT "smg[6]"  IO_TYPE=LVCMOS33;
+IO_PORT "smg[7]"  IO_TYPE=LVCMOS33;
+
+IO_PORT "dig[0]"  IO_TYPE=LVCMOS33;
+IO_PORT "dig[1]"  IO_TYPE=LVCMOS33;
+IO_PORT "dig[2]"  IO_TYPE=LVCMOS33;
+IO_PORT "dig[3]"  IO_TYPE=LVCMOS33;

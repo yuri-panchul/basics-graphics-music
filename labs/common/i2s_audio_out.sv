@@ -1,3 +1,8 @@
+
+// If the board has pins FLT, DMP, FMT and XMT,
+// then XMT should be connected to 3.3v,
+// rest of them (optionally) to the ground.
+
 module i2s_audio_out
 # (
     parameter clk_mhz = 50,
