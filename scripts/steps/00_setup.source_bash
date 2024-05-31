@@ -289,6 +289,19 @@ create_new_run_directories_for_fpga_synthesis()
 update_fpga_toolchain_var ()
 {
     case $fpga_board in
+
+        # Yosys should be the first because of * later
+
+        ice40hx8k_evb_yosys      | \
+        orangecrab_ecp5_yosys    | \
+        karnix_ecp5_yosys        | \
+        tang_nano_9k_gowin_yosys | \
+        tang_primer_20k_dock_gowin_yosys )
+
+            fpga_toolchain=yosys
+        ;;
+
+
         dk_dev_3c120n        | \
         de0                  | \
         de1                  | \
@@ -350,15 +363,6 @@ update_fpga_toolchain_var ()
         zybo_z7              )
 
             fpga_toolchain=xilinx
-        ;;
-
-        ice40hx8k_evb_yosys      | \
-        orangecrab_ecp5_yosys    | \
-        karnix_ecp5_yosys        | \
-        tang_nano_9k_gowin_yosys | \
-        tang_primer_20k_dock_gowin_yosys )
-
-            fpga_toolchain=yosys
         ;;
 
         *)
