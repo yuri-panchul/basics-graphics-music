@@ -5,12 +5,14 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 27,
-              w_key   = 2,  // The last key is used for a reset
-              w_sw    = 0,
-              w_led   = 6,
-              w_digit = 0,
-              w_gpio  = 10 + 7
+    parameter clk_mhz   = 27,
+              pixel_mhz = 9,
+
+              w_key     = 2,  // The last key is used for a reset
+              w_sw      = 0,
+              w_led     = 6,
+              w_digit   = 0,
+              w_gpio    = 7 + 10
 )
 (
     input                       CLK,
@@ -19,38 +21,38 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
-    output                      SMALL_LCD_CLK;
-    output                      SMALL_LCD_RESETN;
-    output                      SMALL_LCD_CS;
-    output                      SMALL_LCD_RS;
-    output                      SMALL_LCD_DATA;
+//  output                      SMALL_LCD_CLK,
+//  output                      SMALL_LCD_RESETN,
+//  output                      SMALL_LCD_CS,
+//  output                      SMALL_LCD_RS,
+//  output                      SMALL_LCD_DATA,
 
-    output                      LARGE_LCD_DE;
-    output                      LARGE_LCD_VS;
-    output                      LARGE_LCD_HS;
-    output                      LARGE_LCD_CK;
-    output                      LARGE_LCD_INIT;
-    output                      LARGE_LCD_BL;
+    output                      LARGE_LCD_DE,
+    output                      LARGE_LCD_VS,
+    output                      LARGE_LCD_HS,
+    output                      LARGE_LCD_CK,
+    output                      LARGE_LCD_INIT,
+    output                      LARGE_LCD_BL,
 
-    output [              7:3]  LARGE_LCD_R;
-    output [              7:2]  LARGE_LCD_G;
-    output [              7:3]  LARGE_LCD_B;
+    output [              7:3]  LARGE_LCD_R,
+    output [              7:2]  LARGE_LCD_G,
+    output [              7:3]  LARGE_LCD_B,
 
-#   output                      TMDS_CLK_N,
-#   output                      TMDS_CLK_P,
-#   output [              2:0]  TMDS_D_N,
-#   output [              2:0]  TMDS_D_P,
+//  output                      TMDS_CLK_N,
+//  output                      TMDS_CLK_P,
+//  output [              2:0]  TMDS_D_N,
+//  output [              2:0]  TMDS_D_P,
 
     input                       UART_RX,
     output                      UART_TX,
 
-    inout  [              9:0]  GPIO_0
-    inout  [              6:0]  GPIO_1
+    inout  [              6:0]  GPIO_0,
+    inout  [              9:0]  GPIO_1
 
-    output                      FLASH_CLK;
-    output                      FLASH_CSB;
-    output                      FLASH_MOSI;
-    input                       FLASH_MISO
+//  output                      FLASH_CLK,
+//  output                      FLASH_CSB,
+//  output                      FLASH_MOSI,
+//  input                       FLASH_MISO
 );
 
     wire clk = CLK;

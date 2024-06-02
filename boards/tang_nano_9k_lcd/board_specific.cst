@@ -10,17 +10,11 @@ IO_LOC "LED[3]"            14;
 IO_LOC "LED[4]"            15;
 IO_LOC "LED[5]"            16;
 
-IO_LOC  "SMALL_LCD_CLK"    76;
-IO_LOC  "SMALL_LCD_RESETN" 47;
-IO_LOC  "SMALL_LCD_CS"     48;
-IO_LOC  "SMALL_LCD_RS"     49;
-IO_LOC  "SMALL_LCD_DATA"   77;
-
-# IO_PORT "SMALL_LCD_CLK"    PULL_MODE=UP DRIVE=8;
-# IO_PORT "SMALL_LCD_CS"     PULL_MODE=UP DRIVE=8;
-# IO_PORT "SMALL_LCD_DATA"   PULL_MODE=UP DRIVE=8;
-# IO_PORT "SMALL_LCD_RESETN" PULL_MODE=UP DRIVE=8;
-# IO_PORT "SMALL_LCD_RS"     PULL_MODE=UP DRIVE=8;
+# IO_LOC  "SMALL_LCD_CLK"    76;
+# IO_LOC  "SMALL_LCD_RESETN" 47;
+# IO_LOC  "SMALL_LCD_CS"     48;
+# IO_LOC  "SMALL_LCD_RS"     49;
+# IO_LOC  "SMALL_LCD_DATA"   77;
 
 IO_LOC "LARGE_LCD_DE"      33;
 IO_LOC "LARGE_LCD_VS"      34;
@@ -56,27 +50,26 @@ IO_LOC "LARGE_LCD_B[7]"    41;
 IO_LOC "UART_TX"           17;
 IO_LOC "UART_RX"           18;
 
-IO_LOC "GPIO_1[0]          38;
-IO_LOC "GPIO_1[1]          37;
-IO_LOC "GPIO_1[2]          36;
-IO_LOC "GPIO_1[3]          39;
-IO_LOC "GPIO_1[4]          25;
-IO_LOC "GPIO_1[5]          26;
-IO_LOC "GPIO_1[6]          27;
-IO_LOC "GPIO_1[7]          28;
-IO_LOC "GPIO_1[8]          29;
-IO_LOC "GPIO_1[9]          30;
+IO_LOC "GPIO_0[0]"         85;
+IO_LOC "GPIO_0[1]"         84;
+IO_LOC "GPIO_0[2]"         83;
+IO_LOC "GPIO_0[3]"         82;
+IO_LOC "GPIO_0[4]"         81;
+IO_LOC "GPIO_0[5]"         80;
+IO_LOC "GPIO_0[6]"         79;
 
-IO_LOC "GPIO_0[0]          85;
-IO_LOC "GPIO_0[1]          84;
-IO_LOC "GPIO_0[2]          83;
-IO_LOC "GPIO_0[3]          82;
-IO_LOC "GPIO_0[4]          81;
-IO_LOC "GPIO_0[5]          80;
-IO_LOC "GPIO_0[6]          79;
+IO_LOC "GPIO_1[0]"         38;
+IO_LOC "GPIO_1[1]"         37;
+IO_LOC "GPIO_1[2]"         36;
+IO_LOC "GPIO_1[3]"         39;
+IO_LOC "GPIO_1[4]"         25;
+IO_LOC "GPIO_1[5]"         26;
+IO_LOC "GPIO_1[6]"         27;
+IO_LOC "GPIO_1[7]"         28;
+IO_LOC "GPIO_1[8]"         29;
+IO_LOC "GPIO_1[9]"         30;
 
-IO_LOC "FLASH_CLK"         59;
-IO_LOC "FLASH_CSB"         60;
-IO_LOC "FLASH_MOSI"        61;
-IO_LOC "FLASH_MISO"        62;
-
+# IO_LOC "FLASH_CLK"         59;
+# IO_LOC "FLASH_CSB"         60;
+# IO_LOC "FLASH_MOSI"        61;
+# IO_LOC "FLASH_MISO"        62;
