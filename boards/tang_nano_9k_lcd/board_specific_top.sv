@@ -1,7 +1,7 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-`undef ENABLE_TM1638
+// `undef ENABLE_TM1638
 
 module board_specific_top
 # (
@@ -179,5 +179,46 @@ module board_specific_top
     );
 
     assign LARGE_LCD_INIT = 1'b0;
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef ENABLE_TM1638
+
+    tm1638_board_controller
+    # (
+        .clk_mhz ( clk_mhz ),
+        .w_digit ( w_tm_digit )
+    )
+    i_tm1638
+    (
+        .clk      ( clk       ),
+        .rst      ( rst       ),
+        .hgfedcba ( hgfedcba  ),
+        .digit    ( tm_digit  ),
+        .ledr     ( tm_led    ),
+        .keys     ( tm_key    ),
+        .sio_clk  ( GPIO_1[5] ),
+        .sio_stb  ( GPIO_1[6] ),
+        .sio_data ( GPIO_1[4] )
+    );
+
+    `endif
 
 endmodule
