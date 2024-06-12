@@ -12,47 +12,65 @@ module board_specific_top
               w_sw      = 0,
               w_led     = 6,
               w_digit   = 0,
-              w_gpio    = 7 + 10
+              w_gpio    = 10,
+
+              w_red     = 5,
+              w_green   = 6,
+              w_blue    = 5
 )
 (
-    input                       CLK,
+    input                        CLK,
 
-    input  [w_key       - 1:0]  KEY,
+    input  [w_key        - 1:0]  KEY,
 
-    output [w_led       - 1:0]  LED,
+    output [w_led        - 1:0]  LED,
 
-//  output                      SMALL_LCD_CLK,
-//  output                      SMALL_LCD_RESETN,
-//  output                      SMALL_LCD_CS,
-//  output                      SMALL_LCD_RS,
-//  output                      SMALL_LCD_DATA,
+    output                       LARGE_LCD_DE,
+    output                       LARGE_LCD_VS,
+    output                       LARGE_LCD_HS,
+    output                       LARGE_LCD_CK,
+    output                       LARGE_LCD_INIT,
+    output                       LARGE_LCD_BL,
 
-    output                      LARGE_LCD_DE,
-    output                      LARGE_LCD_VS,
-    output                      LARGE_LCD_HS,
-    output                      LARGE_LCD_CK,
-    output                      LARGE_LCD_INIT,
-    output                      LARGE_LCD_BL,
+    output [7:7 + 1 - w_red   ]  LARGE_LCD_R,
+    output [7:7 + 1 - w_green ]  LARGE_LCD_G,
+    output [7:7 + 1 - w_blue  ]  LARGE_LCD_B,
 
-    output [              7:3]  LARGE_LCD_R,
-    output [              7:2]  LARGE_LCD_G,
-    output [              7:3]  LARGE_LCD_B,
+    input                        UART_RX,
+    output                       UART_TX,
 
-//  output                      TMDS_CLK_N,
-//  output                      TMDS_CLK_P,
-//  output [              2:0]  TMDS_D_N,
-//  output [              2:0]  TMDS_D_P,
+    // The following 4 pins (TF_CS, TF_MOSI, TF_SCLK, TF_MISO)
+    // are used for INMP441 microphone
+    // in basics-graphics-music labs
 
-    input                       UART_RX,
-    output                      UART_TX,
+    inout                        TF_CS,
+    inout                        TF_MOSI,
+    inout                        TF_SCLK,
+    inout                        TF_MISO,
 
-    inout  [              6:0]  GPIO_0,
-    inout  [              9:0]  GPIO_1
+    inout  [w_gpio       - 1:0]  GPIO,
 
-//  output                      FLASH_CLK,
-//  output                      FLASH_CSB,
-//  output                      FLASH_MOSI,
-//  input                       FLASH_MISO
+    // The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
+    // are used for the I2S audio output
+    // in basics-graphics-music labs
+
+    inout                        SMALL_LCD_CLK,
+    inout                        SMALL_LCD_RESETN,
+    inout                        SMALL_LCD_CS,
+    inout                        SMALL_LCD_RS,
+    inout                        SMALL_LCD_DATA,
+
+    // TMDS pins will be used later
+
+    // output                    TMDS_CLK_N,
+    // output                    TMDS_CLK_P,
+    // output [            2:0]  TMDS_D_N,
+    // output [            2:0]  TMDS_D_P,
+
+    output                       FLASH_CLK,
+    output                       FLASH_CSB,
+    output                       FLASH_MOSI,
+    input                        FLASH_MISO
 );
 
     wire clk = CLK;
@@ -114,12 +132,6 @@ module board_specific_top
         assign LED      = ~ top_led;
 
     `endif
-
-    //------------------------------------------------------------------------
-
-    localparam w_red   = 5,
-               w_green = 6,
-               w_blue  = 5;
 
     //------------------------------------------------------------------------
 
@@ -203,20 +215,20 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_digit ( w_tm_digit )
+        .clk_mhz  ( clk_mhz    ),
+        .w_digit  ( w_tm_digit )
     )
     i_tm1638
     (
-        .clk      ( clk       ),
-        .rst      ( rst       ),
-        .hgfedcba ( hgfedcba  ),
-        .digit    ( tm_digit  ),
-        .ledr     ( tm_led    ),
-        .keys     ( tm_key    ),
-        .sio_data ( GPIO_1[0] )
-        .sio_clk  ( GPIO_1[1] ),
-        .sio_stb  ( GPIO_1[2] ),
+        .clk      ( clk        ),
+        .rst      ( rst        ),
+        .hgfedcba ( hgfedcba   ),
+        .digit    ( tm_digit   ),
+        .ledr     ( tm_led     ),
+        .keys     ( tm_key     ),
+        .sio_data ( GPIO [0]   ),
+        .sio_clk  ( GPIO [1]   ),
+        .sio_stb  ( GPIO [2]   )
     );
 
     `endif
