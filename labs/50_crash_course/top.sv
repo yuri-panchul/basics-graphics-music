@@ -9,6 +9,7 @@ module top
               w_led     = 8,
               w_digit   = 8,
               w_gpio    = 100,
+
               w_red     = 4,
               w_green   = 4,
               w_blue    = 4
@@ -98,17 +99,16 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire display_on;
-
     wire [9:0] x;
     wire [9:0] y;
 
     vga
     # (
-        .HPOS_WIDTH ( 10      ),
-        .VPOS_WIDTH ( 10      ),
+        .HPOS_WIDTH ( 10         ),
+        .VPOS_WIDTH ( 10         ),
 
-        .CLK_MHZ    ( clk_mhz )
+        .CLK_MHZ    ( clk_mhz    ),
+        .PIXEL_MHZ  ( pixel_mhz  )
     )
     i_vga
     (
@@ -117,6 +117,7 @@ module top
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
         .display_on ( display_on ),
+        .pixel_clk  ( pixel_clk  ),
         .hpos       ( x          ),
         .vpos       ( y          )
     );
