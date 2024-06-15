@@ -112,6 +112,7 @@ module board_specific_top
     wire                      rst;
     wire  [              7:0] abcdefgh;
     wire  [             23:0] mic;
+    wire  [             15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -186,8 +187,8 @@ module board_specific_top
         .uart_tx    ( UART_TX    ),
 
         .mic        ( mic        ),
-        .sound      (            ),
-        .gpio       (            )
+        .sound      ( sound      ),
+        .gpio       ( gpio       )
     );
 
     assign LARGE_LCD_INIT = 1'b0;
@@ -232,5 +233,36 @@ module board_specific_top
     );
 
     `endif
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver i_microphone
+    (
+        .clk   ( clk           ),
+        .rst   ( rst           ),
+        .lr    ( TF_CS         ),
+        .ws    ( TF_MOSI       ),
+        .sck   ( TF_SCLK       ),
+        .sd    ( TF_MISO       ),
+        .value ( mic           )
+    );
+
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk            ),
+        .reset   ( rst            ),
+        .data_in ( sound          ),
+        .mclk    ( SMALL_LCD_DATA ),
+        .bclk    ( SMALL_LCD_CLK  ),
+        .lrclk   ( SMALL_LCD_RS   ),
+        .sdata   ( SMALL_LCD_CS   )
+    );
 
 endmodule

@@ -43,27 +43,30 @@ IO_LOC "UART_TX"            17;
 # are used for INMP441 microphone
 # in basics-graphics-music labs
 
-IO_LOC "TF_CS"              38;
-IO_LOC "TF_MOSI"            37;
-IO_LOC "TF_SCLK"            36;
-IO_LOC "TF_MISO"            39;
+IO_LOC "TF_CS"              38;  # inmp441: lr
+IO_LOC "TF_MOSI"            37;  # inmp441: ws
+IO_LOC "TF_SCLK"            36;  # inmp441: sck
+IO_LOC "TF_MISO"            39;  # inmp441: sd
 
-IO_LOC "GPIO[0]"            25;
-IO_LOC "GPIO[1]"            26;
-IO_LOC "GPIO[2]"            27;
+# The first 3 GPIO pins are used for TM1638 I/O module
+# which carries 8 LEDs, 8-digit 7-segment display and 8 keys
+
+IO_LOC "GPIO[0]"            25;  # tm1638: sio_data
+IO_LOC "GPIO[1]"            26;  # tm1638: sio_clk
+IO_LOC "GPIO[2]"            27;  # tm1638: sio_stb
 IO_LOC "GPIO[3]"            28;
 IO_LOC "GPIO[4]"            29;
 IO_LOC "GPIO[5]"            30;
 
 # The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
-# are used for the I2S audio output
+# are used for the I2S audio output module PCM5102
 # in basics-graphics-music labs
 
-IO_LOC "SMALL_LCD_CLK"      76;
+IO_LOC "SMALL_LCD_DATA"     77;  # pcm5102: sck   i2s_audio_out: mclk
+IO_LOC "SMALL_LCD_CLK"      76;  # pcm5102: bck   i2s_audio_out: bclk
 IO_LOC "SMALL_LCD_RESETN"   47;
-IO_LOC "SMALL_LCD_CS"       48;
-IO_LOC "SMALL_LCD_RS"       49;
-IO_LOC "SMALL_LCD_DATA"     77;
+IO_LOC "SMALL_LCD_CS"       48;  # pcm5102: din   i2s_audio_out: sdata
+IO_LOC "SMALL_LCD_RS"       49;  # pcm5102: lrck  i2s_audio_out: lrclk
 
 # TMDS pins will be used later
 
