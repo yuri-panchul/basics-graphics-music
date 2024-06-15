@@ -67,6 +67,7 @@ module board_specific_top
     wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
+    wire  [             15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -118,6 +119,8 @@ module board_specific_top
         .uart_tx   ( serial_tx  ),
 
         .mic       ( mic        ),
+        .sound     ( sound      ),
+
         .gpio      ( gpio       )
     );
 
