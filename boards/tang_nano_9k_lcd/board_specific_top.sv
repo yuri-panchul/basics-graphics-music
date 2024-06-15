@@ -119,11 +119,13 @@ module board_specific_top
 
     `ifdef ENABLE_TM1638  // TM1638 module is connected
 
-        assign rst      = tm_key [w_tm_key - 1];
-        assign top_key  = tm_key [w_tm_key - 1:0];
+        assign rst      = tm_key [w_tm_key - 1]   | ~ KEY [w_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0] | ~ KEY [w_key - 1:0];
 
         assign tm_led   = top_led;
         assign tm_digit = top_digit;
+
+        assign LED      = w_led' (~ top_led);
 
     `else                 // TM1638 module is not connected
 
@@ -143,14 +145,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-
     top
     # (
         .clk_mhz    ( clk_mhz      ),
         .pixel_mhz  ( pixel_mhz    ),
 
         .w_key      ( w_top_key    ),  // The last key is used for a reset
-        .w_sw       ( w_top_sw     ),
+        .w_sw       ( w_top_key    ),
         .w_led      ( w_top_led    ),
         .w_digit    ( w_top_digit  ),
         .w_gpio     ( w_gpio       ),
@@ -166,7 +167,7 @@ module board_specific_top
         .rst        ( rst          ),
 
         .key        ( top_key      ),
-        .sw         (              ),
+        .sw         ( top_key      ),
 
         .led        ( top_led      ),
 
@@ -183,12 +184,12 @@ module board_specific_top
         .display_on ( LARGE_LCD_DE ),
         .pixel_clk  ( LARGE_LCD_CK ),
 
-        .uart_rx    ( UART_RX    ),
-        .uart_tx    ( UART_TX    ),
+        .uart_rx    ( UART_RX      ),
+        .uart_tx    ( UART_TX      ),
 
-        .mic        ( mic        ),
-        .sound      ( sound      ),
-        .gpio       ( gpio       )
+        .mic        ( mic          ),
+        .sound      ( sound        ),
+        .gpio       ( gpio         )
     );
 
     assign LARGE_LCD_INIT = 1'b0;
@@ -216,20 +217,20 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .clk_mhz  ( clk_mhz    ),
-        .w_digit  ( w_tm_digit )
+        .clk_mhz  ( clk_mhz        ),
+        .w_digit  ( w_tm_digit     )
     )
     i_tm1638
     (
-        .clk      ( clk        ),
-        .rst      ( rst        ),
-        .hgfedcba ( hgfedcba   ),
-        .digit    ( tm_digit   ),
-        .ledr     ( tm_led     ),
-        .keys     ( tm_key     ),
-        .sio_data ( GPIO [0]   ),
-        .sio_clk  ( GPIO [1]   ),
-        .sio_stb  ( GPIO [2]   )
+        .clk      ( clk            ),
+        .rst      ( rst            ),
+        .hgfedcba ( hgfedcba       ),
+        .digit    ( tm_digit       ),
+        .ledr     ( tm_led         ),
+        .keys     ( tm_key         ),
+        .sio_data ( GPIO [0]       ),
+        .sio_clk  ( GPIO [1]       ),
+        .sio_stb  ( GPIO [2]       )
     );
 
     `endif
@@ -238,13 +239,13 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk           ),
-        .rst   ( rst           ),
-        .lr    ( TF_CS         ),
-        .ws    ( TF_MOSI       ),
-        .sck   ( TF_SCLK       ),
-        .sd    ( TF_MISO       ),
-        .value ( mic           )
+        .clk      ( clk            ),
+        .rst      ( rst            ),
+        .lr       ( TF_CS          ),
+        .ws       ( TF_MOSI        ),
+        .sck      ( TF_SCLK        ),
+        .sd       ( TF_MISO        ),
+        .value    ( mic            )
     );
 
 
@@ -252,17 +253,17 @@ module board_specific_top
 
     i2s_audio_out
     # (
-        .clk_mhz ( clk_mhz     )
+        .clk_mhz  ( clk_mhz        )
     )
     o_audio
     (
-        .clk     ( clk            ),
-        .reset   ( rst            ),
-        .data_in ( sound          ),
-        .mclk    ( SMALL_LCD_DATA ),
-        .bclk    ( SMALL_LCD_CLK  ),
-        .lrclk   ( SMALL_LCD_RS   ),
-        .sdata   ( SMALL_LCD_CS   )
+        .clk      ( clk            ),
+        .reset    ( rst            ),
+        .data_in  ( sound          ),
+        .mclk     ( SMALL_LCD_DATA ),
+        .bclk     ( SMALL_LCD_CLK  ),
+        .lrclk    ( SMALL_LCD_RS   ),
+        .sdata    ( SMALL_LCD_CS   )
     );
 
 endmodule

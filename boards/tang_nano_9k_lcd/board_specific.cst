@@ -1,3 +1,5 @@
+# The pin assignments
+
 IO_LOC "CLK"                52;
 
 IO_LOC "KEY[0]"             4;
