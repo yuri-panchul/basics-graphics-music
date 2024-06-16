@@ -1,5 +1,4 @@
 // TODO
-// Debug I2S output
 // Parameterize red, green, blue width
 // Create a variant of 25K with 7-segment, leds and buttons on pmod.
 
@@ -34,11 +33,16 @@ module board_specific_top
 
     inout  [w_gpio - 1:0]  gpio,
 
+    `ifdef ENABLE_DVI
+
     output                 tmds_clk_n,
     output                 tmds_clk_p,
     output [         2:0]  tmds_d_n,
     output [         2:0]  tmds_d_p,
 
+    `endif
+
+    inout  [         7:0]  pmod_0,
     inout  [         7:0]  pmod_1,
     inout  [         7:0]  pmod_2
 );
@@ -164,14 +168,12 @@ module board_specific_top
         .clk     ( clk       ),
         .reset   ( rst       ),
         .data_in ( sound     ),
-        .mclk    ( gpio [17] ),
-        .bclk    ( gpio [19] ),
-        .lrclk   ( gpio [23] ),
-        .sdata   ( gpio [21] )
-    );
 
-    assign gpio [25] = 1'b0;  // GND
-    assign gpio [27] = 1'b1;  // VCC
+        .mclk    ( pmod_0[4] ),
+        .bclk    ( pmod_0[5] ),
+        .sdata   ( pmod_0[6] ),
+        .lrclk   ( pmod_0[7] )
+    );
 
     //------------------------------------------------------------------------
 
@@ -198,6 +200,8 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef ENABLE_DVI
+
     dvi_tx i_dvi_tx
     (
         .I_rst_n        ( ~ rst         ),
@@ -213,6 +217,8 @@ module board_specific_top
         .O_tmds_data_p  (   tmds_data_p ),
         .O_tmds_data_n  (   tmds_data_n )
     );
+
+    `endif
 
     //------------------------------------------------------------------------
 
