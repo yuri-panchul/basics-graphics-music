@@ -5,6 +5,7 @@
 //`define USE_HDMI
 //`undef  ENABLE_TM1638
 `define ENABLE_TM1638
+`define BOARD_CLOCK_MHZ 27
 
 module board_specific_top
 # (
@@ -14,11 +15,16 @@ module board_specific_top
                 w_led   = 1,  // Mode LED
                 w_digit = 0,
                 	      // 38 GPIO with 18-3.3V, 9-2.5V, 11-1.8V
-                w_gpio  = 11  // 3.3V GPIO excluding 5 JTAG, Mode LED and Done control 
+                w_gpio  = 11, // 3.3V GPIO excluding 5 JTAG, Mode LED and Done control
                               // 0..2 used by TM1638 extension board with 8 LEDs, 8 Keys and 8 digits displays
                               // 3..6 used by inmp microphone i2s board
                               // 7 VCC
                               // 8 GND
+            `ifdef USE_HDMI
+                w_rgb_size = 8
+            `else
+                w_rgb_size = 4
+            `endif
 )
 (
     input                       CLK,
@@ -78,9 +84,9 @@ module board_specific_top
     wire                      vsync;
     wire                      hsync;
     wire                      display_on;
-    logic [              7:0] red;
-    logic [              7:0] green;
-    logic [              7:0] blue;
+    logic [w_rgb_size  - 1:0] red;
+    logic [w_rgb_size  - 1:0] green;
+    logic [w_rgb_size  - 1:0] blue;
 
     //------------------------------------------------------------------------
 

@@ -1,12 +1,28 @@
 `include "config.svh"
+/*
+ Hardware required
+   2 keys, 12 leds, 3 3.3V GPIO(if tm1638 module is used)
+
+ If leds or keys are not available on your board,
+ connect tm1639 board (7 Segment Display Keypad & LED Module) and uncommenting the line
+
+  `define ENABLE_TM1638 in ../common/lab_specific_config.svh file
+
+ tm1638_board
+ clk  - GPIO[1]
+ stb  - GPIO[2]
+ data - GPIO[0]
+ VCC  - 3V3
+ GNG  - GND
+*/
 
 module top
 # (
     parameter clk_mhz   = 50,
               pixel_mhz = 25,
-              w_key     = 4,
+              w_key     = 2,
               w_sw      = 8,
-              w_led     = 8,
+              w_led     = 4,
               w_digit   = 8,
               w_gpio    = 100,
               w_red     = 4,
