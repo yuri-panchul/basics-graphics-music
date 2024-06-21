@@ -2,15 +2,20 @@
 
 module top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 8,
-              w_digit = 8,
-              w_gpio  = 20
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+              w_key     = 4,
+              w_sw      = 8,
+              w_led     = 8,
+              w_digit   = 8,
+              w_gpio    = 100,
+              w_red     = 4,
+              w_green   = 4,
+              w_blue    = 4
 )
 (
     input                        clk,
+    input                        slow_clk,
     input                        rst,
 
     // Keys, switches, LEDs
@@ -28,11 +33,17 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [          3:0] red,
-    output logic [          3:0] green,
-    output logic [          3:0] blue,
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
+    output                       display_on,
+    output                       pixel_clk,
+
+    input                        uart_rx,
+    output                       uart_tx,
 
     input        [         23:0] mic,
+    output       [         15:0] sound,
 
     // General-purpose Input/Output
 
@@ -41,18 +52,18 @@ module top
 
     //------------------------------------------------------------------------
 
-    // assign led      = '0;
-    // assign abcdefgh = '0;
-    // assign digit    = '0;
-       assign vsync    = '0;
-       assign hsync    = '0;
-       assign red      = '0;
-       assign green    = '0;
-       assign blue     = '0;
-
-    //------------------------------------------------------------------------
-
-    wire [15:0] value = mic [23:8];
+    // assign led        = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
+       assign vsync      = '0;
+       assign hsync      = '0;
+       assign red        = '0;
+       assign green      = '0;
+       assign blue       = '0;
+       assign display_on = '0;
+       assign pixel_clk  = '0;
+       assign sound      = '0;
+       assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
     //
@@ -65,7 +76,7 @@ module top
     localparam w_number = w_digit * 4;
 
     // seven_segment_display # (w_digit)
-    // i_7segment (.number (w_number' (value)), .*);
+    // i_7segment (.number (w_number' (mic)), .*);
 
     //------------------------------------------------------------------------
     //
@@ -75,28 +86,25 @@ module top
 
     // It is enough for the counter to be 20 bit. Why?
 
-    logic [15:0] prev_value;
+    logic [23:0] prev_mic;
     logic [19:0] counter;
     logic [19:0] distance;
-
-    localparam [15:0] threshold = 16'h1100;
-
-    // A way to investigate thresholds
-    // wire [15:0] threshold = { ~ key_sw, 12'b0 };
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
         begin
-            prev_value <= 16'h0;
-            counter    <= 20'h0;
-            distance   <= 20'h0;
+            prev_mic <= '0;
+            counter  <= '0;
+            distance <= '0;
         end
         else
         begin
-            prev_value <= value;
+            prev_mic <= mic;
 
-            if (  value      >= threshold
-                & prev_value < threshold)
+            // Crossing from negative to positive numbers
+
+            if (  prev_mic [$left ( prev_mic )] == 1'b1
+                & mic      [$left ( mic      )] == 1'b0 )
             begin
                distance <= counter;
                counter  <= 20'h0;
@@ -179,7 +187,7 @@ module top
 
     //------------------------------------------------------------------------
 
-    function [19:0] check_freq_single_range (input [18:0] freq_100);
+    function [19:0] check_freq_single_range (input [18:0] freq_100, input [19:0] distance);
 
        check_freq_single_range =    distance > low_distance  (freq_100)
                                   & distance < high_distance (freq_100);
@@ -187,28 +195,28 @@ module top
 
     //------------------------------------------------------------------------
 
-    function [19:0] check_freq (input [18:0] freq_100);
+    function [19:0] check_freq (input [18:0] freq_100, input [19:0] distance);
 
-       check_freq =   check_freq_single_range (freq_100 * 4)
-                    | check_freq_single_range (freq_100 * 2)
-                    | check_freq_single_range (freq_100);
+       check_freq =   check_freq_single_range (freq_100 * 4 , distance)
+                    | check_freq_single_range (freq_100 * 2 , distance)
+                    | check_freq_single_range (freq_100     , distance);
 
     endfunction
 
     //------------------------------------------------------------------------
 
-    wire check_C  = check_freq (freq_100_C );
-    wire check_Cs = check_freq (freq_100_Cs);
-    wire check_D  = check_freq (freq_100_D );
-    wire check_Ds = check_freq (freq_100_Ds);
-    wire check_E  = check_freq (freq_100_E );
-    wire check_F  = check_freq (freq_100_F );
-    wire check_Fs = check_freq (freq_100_Fs);
-    wire check_G  = check_freq (freq_100_G );
-    wire check_Gs = check_freq (freq_100_Gs);
-    wire check_A  = check_freq (freq_100_A );
-    wire check_As = check_freq (freq_100_As);
-    wire check_B  = check_freq (freq_100_B );
+    wire check_C  = check_freq (freq_100_C  , distance );
+    wire check_Cs = check_freq (freq_100_Cs , distance );
+    wire check_D  = check_freq (freq_100_D  , distance );
+    wire check_Ds = check_freq (freq_100_Ds , distance );
+    wire check_E  = check_freq (freq_100_E  , distance );
+    wire check_F  = check_freq (freq_100_F  , distance );
+    wire check_Fs = check_freq (freq_100_Fs , distance );
+    wire check_G  = check_freq (freq_100_G  , distance );
+    wire check_Gs = check_freq (freq_100_Gs , distance );
+    wire check_A  = check_freq (freq_100_A  , distance );
+    wire check_As = check_freq (freq_100_As , distance );
+    wire check_B  = check_freq (freq_100_B  , distance );
 
     //------------------------------------------------------------------------
 
@@ -299,7 +307,7 @@ module top
     //------------------------------------------------------------------------
     //
     //  Exercise 4: Replace filtered note with unfiltered note.
-    //  Do you see the difference?Uncomment this instantation
+    //  Do you see the difference?
     //
     //------------------------------------------------------------------------
 

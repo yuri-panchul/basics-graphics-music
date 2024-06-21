@@ -1,0 +1,133 @@
+Improve VGA support by adding the parameters for RGB channel width, from 1 to 8 bits per channel.
+
+Add UART support and labs for all boards.
+
+
+
+
+Digilent Arty A7
+Supported: TM1638, INMP441, Pmod MIC3
+TODO: Add sound output
+
+Digilent Basys3
+Supported: INMP441
+TODO: Add sound output
+Available in Hacker Dojo from Yuri Panchul (referred later as Yuri's collection)
+
+EPI-MiniCY4, and Altera Cyclone IV board documented in http://www.emooc.cc/ProductDetail/1600208.html
+Supported: PMOD VGA, INMP441
+TODO: VGA666, sound output
+Yuri's collection
+
+Terasic Cyclone V GX Starter Kit
+Supported: PMOD VGA, VGA666, INMP441, I2S sound output
+
+Digilent Cmod A7
+TODO: Basic bringup, TM1638, PMOD VGA, VGA666, INMP441, I2S sound output
+Yuri's collection (Cmod A7-35T variant)
+
+Terasic DE0
+Supported: INMP441, I2S sound output
+Note: Requires older Quartus 13.0sp2 or 13.1
+Yuri's collection
+
+Terasic DE0-CV
+Supported: INMP441, I2S sound output
+Yuri's collection
+
+Terasic DE0-Nano
+Supported: TM1638, PMOD VGA, VGA666, INMP441, I2S sound output
+Yuri's collection
+
+Terasic DE0-Nano-SoC
+Supported: TM1638, PMOD VGA, VGA666, INMP441, I2S sound output
+
+Terasic DE10-Lite
+Supported: TM1638, INMP441, I2S sound output, Muller counter
+Yuri's collection
+
+Terasic DE10-Nano
+Supported: TM1638, PMOD VGA, VGA666, VGA Mister, INMP441, I2S sound output
+
+Terasic DE1-SoC
+Supported: INMP441
+TODO: I2S sound output
+Yuri's collection
+
+Terasic DE2-115
+Supported: INMP441, I2S sound output
+Yuri's collection
+
+dk_dev_3c120n
+No sound and graphics supported
+Yuri's collection
+
+ice40hx8k_evb_yosys
+Supported: TM1638, INMP441
+Support is not documented, has to be re-tested
+
+Nexys4
+Nexys4-DDR
+Nexys A7
+Supported: INMP441
+TODO: board's own microphone and sound output, I2S sound output
+Yuri's collection
+
+Omdazz
+RzRd
+Supported: INMP441, Pmod MIC3, I2S sound output
+Yuri's collection
+
+Orange Crab ECP5 with Yosys
+Supported: TM1638, INMP441
+TODO: I2S sound output, re-check and document the board
+Yuri's collection
+
+Piswords-6
+Supported: INMP441
+TODO: I2S sound output
+
+QMTech Cyclone IV Starter Kit
+Is not working. Need troubleshooting and basic bringup.
+Yuri's collection
+
+Saylinx
+Supported: INMP441, Pmod MIC3, I2S sound output
+Yuri's collection
+
+Tang Nano 20K
+Supported: TM1638, PMOD VGA, INMP441
+TODO: I2S sound output
+
+Tang Nano 9K
+Supported: TM1638, PMOD VGA, INMP441
+Toolchains: Gowin IDE and Yosys
+TODO: I2S sound output
+
+Tang Nano 9K
+Supported: TM1638, PMOD VGA, INMP441
+TODO: I2S sound output
+
+Tang Primer 20K Dock
+Supported: TM1638, PMOD VGA, INMP441
+Toolchains: Gowin IDE and Yosys
+TODO: VGA666, I2S sound output
+
+Tang Primer 20K Lite
+Supported: TM1638, PMOD VGA, INMP441
+Toolchains: Gowin IDE and Yosys
+TODO: VGA666, I2S sound output
+
+Zeowaa
+Supported: INMP441, I2S sound output
+
+Zybo Z7
+No graphics and music support
+
+EPI-MiniCY4
+
+// and as a part of a kit called EPI-LITE304.
+//
+// See http://emooc.cc
+// and http://www.emooc.cc/ProductDetail/1600208.html
+// for more details.

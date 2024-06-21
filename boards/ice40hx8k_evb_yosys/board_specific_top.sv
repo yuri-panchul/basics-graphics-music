@@ -1,9 +1,6 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-`undef ENABLE_TM1638
-`undef ENABLE_INMP441
-
 module board_specific_top
 # (
     parameter   clk_mhz = 100,
@@ -32,6 +29,8 @@ module board_specific_top
 
     inout  [w_gpio      - 1:0]  GPIO
 );
+
+    wire clk = CLK;
 
     //------------------------------------------------------------------------
 
@@ -93,6 +92,16 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+    wire slow_clk_local;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk_local), .*);
+
+    SB_GB clk_buf (.USER_SIGNAL_TO_GLOBAL_BUFFER(slow_clk_local), .GLOBAL_BUFFER_OUTPUT(slow_clk));
+
+    //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz ( clk_mhz   ),
@@ -104,7 +113,8 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -121,6 +131,9 @@ module board_specific_top
         .red      ( VGA_R     ),
         .green    ( VGA_G     ),
         .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
 
         .mic      ( mic       ),
         `ifndef ENABLE_TM1638
@@ -148,11 +161,12 @@ module board_specific_top
 `ifdef ENABLE_TM1638
     tm1638_board_controller
     # (
+        .clk_mhz ( clk_mhz    ),
         .w_digit ( w_tm_digit )
     )
     i_tm1638
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
         .rst      ( rst       ),
         .hgfedcba ( hgfedcba  ),
         .digit    ( tm_digit  ),
@@ -167,15 +181,20 @@ module board_specific_top
     //------------------------------------------------------------------------
 
 `ifdef ENABLE_INMP441
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver_v2
+    # (
+        .clk_mhz       ( clk_mhz ),
+        .samplerate_hz ( 22000   )
+    )
+    i_microphone
     (
-        .clk   ( CLK      ),
+        .clk   ( clk      ),
         .rst   ( rst      ),
         .lr    ( GPIO [5] ),
         .ws    ( GPIO [4] ),
         .sck   ( GPIO [3] ),
         .sd    ( GPIO [6] ),
-        .value ( mic      )
+        .value ( mic      ),
     );
 `endif
 

@@ -93,7 +93,17 @@ module board_specific_top
     assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
     assign AN = ~ digit;
 
-    wire [23:0] mic = '0;
+    wire [23:0] mic;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire        UART_TX;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
@@ -109,6 +119,7 @@ module board_specific_top
     i_top
     (
         .clk      ( clk      ),
+        .slow_clk ( slow_clk ),
         .rst      ( rst      ),
 
         .key      ( { BTND, BTNU, BTNL, BTNC, BTNR } ),
@@ -127,8 +138,29 @@ module board_specific_top
         .green    ( VGA_G    ),
         .blue     ( VGA_B    ),
 
+        .uart_rx  ( UART_TXD_IN),
+        .uart_tx  ( UART_TX   ),
+
         .mic      ( mic      ),
         .gpio     (          )
     );
+
+    //------------------------------------------------------------------------
+
+    inmp441_mic_i2s_receiver
+    # (.clk_mhz (100))
+    i_microphone
+    (
+        .clk   ( clk    ),
+        .rst   ( rst    ),
+        .lr    ( JD [9] ),
+        .ws    ( JD [8] ),
+        .sck   ( JD [7] ),
+        .sd    ( JD [1] ),
+        .value ( mic    )
+    );
+
+    assign JD [3] = 1'b0;  // GND
+    assign JD [2] = 1'b1;  // VCC
 
 endmodule

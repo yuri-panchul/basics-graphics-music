@@ -7,7 +7,7 @@ module tb;
                w_sw    = 8,
                w_led   = 8,
                w_digit = 8,
-               w_gpio  = 20;
+               w_gpio  = 100;
 
     //------------------------------------------------------------------------
 
@@ -30,11 +30,12 @@ module tb;
     )
     i_top
     (
-        .clk  ( clk ),
-        .rst  ( rst ),
-        .key  ( key ),
-        .sw   ( sw  ),
-        .led  ( led )
+        .clk      ( clk ),
+        .slow_clk ( clk ),
+        .rst      ( rst ),
+        .key      ( key ),
+        .sw       ( sw  ),
+        .led      ( led )
     );
 
     //------------------------------------------------------------------------
@@ -49,7 +50,7 @@ module tb;
         result   = led [0];
         expected = sel ? a : b;
 
-        if (result != expected)
+        if (result !== expected)
             $display ("Mismatch: %b ? %b : %b. expected: %b actual: %b",
                 sel, a, b, expected, result);
 
@@ -65,7 +66,7 @@ module tb;
         begin
             result = led [i];
 
-            if (result != expected)
+            if (result !== expected)
                 $display ("Mismatch in led bit %0d: %b ? %b : %b. expected: %b actual: %b",
                     i, sel, a, b, expected, result);
         end
@@ -77,7 +78,7 @@ module tb;
         begin
             result = i_top.all_muxes [i];
 
-            if (result != expected)
+            if (result !== expected)
                 $display ("Mismatch in mux %0d: %b ? %b : %b. expected: %b actual: %b",
                     i, sel, a, b, expected, result);
         end

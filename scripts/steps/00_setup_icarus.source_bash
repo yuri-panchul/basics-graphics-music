@@ -50,10 +50,21 @@ run_icarus_verilog ()
 {
     is_command_available_or_error_and_install iverilog
 
-    iverilog -g2005-sv \
+    rars_assembly
+
+    #-------------------------------------------------------------------------
+
+    shopt -s nullglob
+
+    iverilog -g2005-sv -s tb \
          -I ..      -I "$lab_dir/common" \
             ../*.sv    "$lab_dir/common"/*.sv \
+            ../*.v \
         |& tee "$log"
+
+    shopt -u nullglob
+
+    #-------------------------------------------------------------------------
 
     vvp a.out |& tee "$log"
 

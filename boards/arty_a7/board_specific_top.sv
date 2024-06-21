@@ -1,6 +1,8 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+`define INMP441_MIC
+
 module board_specific_top
 # (
     parameter clk_mhz = 100,
@@ -11,48 +13,50 @@ module board_specific_top
               w_gpio  = 42
 )
 (
-    input         CLK100MHZ,
-    input         CPU_RESETN,
+    input                  CLK100MHZ,
+    input                  CPU_RESETN,
 
-    input         BTN_0,
-    input         BTN_1,
-    input         BTN_2,
-    input         BTN_3,
+    input                  BTN_0,
+    input                  BTN_1,
+    input                  BTN_2,
+    input                  BTN_3,
 
+    input  [w_sw   - 1:0]  SW,
+    output [w_led  - 1:0]  LED,
 
-    input  [w_sw-1:0] SW,
-    output [w_led-1:0] LED,
+    output                 LED0_B,
+    output                 LED0_G,
+    output                 LED0_R,
 
-    output        LED0_B,
-    output        LED0_G,
-    output        LED0_R,
+    output                 LED1_B,
+    output                 LED1_G,
+    output                 LED1_R,
 
-    output        LED1_B,
-    output        LED1_G,
-    output        LED1_R,
+    output                 LED2_B,
+    output                 LED2_G,
+    output                 LED2_R,
 
-    output        LED2_B,
-    output        LED2_G,
-    output        LED2_R,
+    output                 LED3_B,
+    output                 LED3_G,
+    output                 LED3_R,
 
-    output        LED3_B,
-    output        LED3_G,
-    output        LED3_R,
+    input                  UART_TXD_IN,
 
+    inout  [7:0]           JA,
+    inout  [7:0]           JB,  // VGA_B and VGA_R
+    inout  [7:0]           JC,  // VGA_G and VGA_HS, VGA, VS
+    inout  [7:0]           JD,
 
-    input         UART_TXD_IN,
-
-    inout  [7:0] JA,
-    inout  [7:0] JB,        //VGA_B and VGA_R
-    inout  [7:0] JC,        //VGA_G and VGA_HS, VGA,VS
-    inout  [7:0] JD,
-    inout [w_gpio -1 :0] GPIO
+    inout  [w_gpio - 1:0]  GPIO
 );
 
     //------------------------------------------------------------------------
 
     wire clk =   CLK100MHZ;
     wire rst = ~ CPU_RESETN;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire UART_RXD_OUT;
 
     //------------------------------------------------------------------------
 
@@ -72,25 +76,21 @@ module board_specific_top
     assign LED3_G = 1'b0;
     assign LED3_R = 1'b0;
 
-    assign mic = { mic_16, 8'b0 };
+    //------------------------------------------------------------------------
 
+    wire [       23:0] mic;
+    wire [        7:0] abcdefgh;
 
     //------------------------------------------------------------------------
 
-    wire [          15:0] mic_16;
-    wire [          23:0] mic;
-    wire [           7:0] abcdefgh;
+    wire [        3:0] KEY    = { BTN_3, BTN_2, BTN_1, BTN_0 };
+    wire [ w_sw - 1:0] top_sw = SW [w_sw - 1:0];
 
-    //------------------------------------------------------------------------
+    localparam  w_tm_key     = 8,
+                w_tm_led     = 8,
+                w_tm_digit   = 8;
 
-    wire [           3:0] KEY = { BTN_3, BTN_2, BTN_1, BTN_0 } ;
-    wire [ w_sw - 1:0 ] top_sw = SW [w_sw - 1:0];
-
-localparam  w_tm_key     = 8,
-            w_tm_led     = 8,
-            w_tm_digit   = 8;
-
- `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
 
         localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
                    w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
@@ -113,7 +113,7 @@ localparam  w_tm_key     = 8,
     wire  [w_top_digit - 1:0] top_digit;
 
 
-  //------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
 
@@ -148,40 +148,51 @@ localparam  w_tm_key     = 8,
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
-        .clk_mhz ( clk_mhz ),
+        .clk_mhz ( clk_mhz     ),
         .w_key   ( w_top_key   ),
-        .w_sw    ( w_sw    ),
+        .w_sw    ( w_sw        ),
         .w_led   ( w_top_led   ),
         .w_digit ( w_top_digit ),
-        .w_gpio  ( w_gpio  )
+        .w_gpio  ( w_gpio      )
     )
     i_top
     (
-        .clk      ( clk    ),
-        .rst      ( rst    ),
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
+        .rst      ( rst       ),
 
-        .key      ( top_key ),
-        .sw       ( top_sw     ),
+        .key      ( top_key   ),
+        .sw       ( top_sw    ),
 
-        .led      ( top_led    ),
+        .led      ( top_led   ),
 
-        .abcdefgh ( abcdefgh   ),
-        .digit    ( top_digit  ),
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( top_digit ),
 
-        .vsync    ( JC[1] ),
-        .hsync    ( JC[0] ),
+        .vsync    ( JC [1]    ),
+        .hsync    ( JC [0]    ),
 
-        .red      ( JB[7:4]  ),
-        .green    ( JC[7:4]  ),
-        .blue     ( JB[3:0]  ),
+        .red      ( JB [7:4]  ),
+        .green    ( JC [7:4]  ),
+        .blue     ( JB [3:0]  ),
 
-        .mic      ( mic      ),
-        .gpio     ( GPIO   )
+        .uart_rx  (UART_TXD_IN),
+        .uart_tx  (UART_RXD_OUT),
+
+        .mic      ( mic       ),
+        .gpio     ( GPIO      )
     );
 
- wire [$left (abcdefgh):0] hgfedcba;
+    wire [$left (abcdefgh):0] hgfedcba;
 
     generate
         genvar i;
@@ -192,32 +203,62 @@ localparam  w_tm_key     = 8,
         end
     endgenerate
 
-tm1638_board_controller
+    tm1638_board_controller
     # (
-        .w_digit ( w_tm_digit ),        // fake parameter, digit count is hardcode in tm1638_board_controller
-        .clk_mhz ( clk_mhz    )
+        .w_digit   ( w_tm_digit ),  // fake parameter, digit count is hardcode in tm1638_board_controller
+        .clk_mhz   ( clk_mhz    )
     )
     i_ledkey
     (
-        .clk        ( clk           ),
-        .rst        ( rst           ),
-        .hgfedcba   ( hgfedcba      ),
-        .digit      ( tm_digit      ),
-        .ledr       ( tm_led        ),
-        .keys       ( tm_key        ),
-        .sio_clk    ( GPIO[40]      ),
-        .sio_stb    ( GPIO[41]      ),
-        .sio_data   ( GPIO[39]      )
+        .clk       ( clk        ),
+        .rst       ( rst        ),
+        .hgfedcba  ( hgfedcba   ),
+        .digit     ( tm_digit   ),
+        .ledr      ( tm_led     ),
+        .keys      ( tm_key     ),
+        .sio_clk   ( GPIO [40]  ),
+        .sio_stb   ( GPIO [41]  ),
+        .sio_data  ( GPIO [39]  )
     );
 
-digilent_pmod_mic3_spi_receiver i_mic
+    `ifdef INMP441_MIC
+
+    inmp441_mic_i2s_receiver
+    #(
+        .clk_mhz   ( clk_mhz    )
+    )
+    i_mic
     (
-        .clk        (clk            ),
-        .rst        (rst            ),
-        .cs         (JD[4]          ),
-        .sck        (JD[7]          ),
-        .sdo        (JD[6]          ),
-        .value      (mic_16         )
+        .clk       ( clk        ),
+        .rst       ( rst        ),
+        .lr        ( JD [5]     ),
+        .ws        ( JD [4]     ),
+        .sck       ( JD [7]     ),
+        .sd        ( JD [6]     ),
+        .value     ( mic        )
     );
+
+    `else
+
+    wire [11:0] mic_12;
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
+    digilent_pmod_mic3_spi_receiver
+    #(
+        .clk_mhz   ( clk_mhz    )
+    )
+    i_mic
+    (
+        .clk       ( clk        ),
+        .rst       ( rst        ),
+        .cs        ( JD [4]     ),
+        .sck       ( JD [7]     ),
+        .sdo       ( JD [6]     ),
+        .value     ( mic_12     )
+    );
+
+    `endif
 
 endmodule

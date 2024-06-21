@@ -2,18 +2,21 @@
 
 module top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 8,
-              w_digit = 8,
-              w_gpio  = 20,
-              w_vgar  = 4,
-              w_vgag  = 4,
-              w_vgab  = 4
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+              w_key     = 4,
+              w_sw      = 8,
+              w_led     = 8,
+              w_digit   = 8,
+              w_gpio    = 100,
+
+              w_red     = 4,
+              w_green   = 4,
+              w_blue    = 4
 )
 (
     input                        clk,
+    input                        slow_clk,
     input                        rst,
 
     // Keys, switches, LEDs
@@ -31,11 +34,17 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [ w_vgar - 1:0] red,
-    output logic [ w_vgag - 1:0] green,
-    output logic [ w_vgab - 1:0] blue,
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
+    output                       display_on,
+    output                       pixel_clk,
+
+    input                        uart_rx,
+    output                       uart_tx,
 
     input        [         23:0] mic,
+    output       [         15:0] sound,
 
     // General-purpose Input/Output
 
@@ -44,14 +53,18 @@ module top
 
     //------------------------------------------------------------------------
 
-       assign led      = '0;
-       assign abcdefgh = '0;
-       assign digit    = '0;
-    // assign vsync    = '0;
-    // assign hsync    = '0;
-    // assign red      = '0;
-    // assign green    = '0;
-    // assign blue     = '0;
+       assign led        = '0;
+       assign abcdefgh   = '0;
+       assign digit      = '0;
+    // assign vsync      = '0;
+    // assign hsync      = '0;
+    // assign red        = '0;
+    // assign green      = '0;
+    // assign blue       = '0;
+    // assign display_on = '0;
+    // assign pixel_clk  = '0;
+       assign sound      = '0;
+       assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
 
@@ -59,17 +72,16 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire display_on;
-
     wire [w_x - 1:0] x;
     wire [w_y - 1:0] y;
 
     vga
     # (
-        .HPOS_WIDTH ( w_x     ),
-        .VPOS_WIDTH ( w_y     ),
+        .HPOS_WIDTH ( w_x        ),
+        .VPOS_WIDTH ( w_y        ),
 
-        .CLK_MHZ    ( clk_mhz )
+        .CLK_MHZ    ( clk_mhz    ),
+        .PIXEL_MHZ  ( pixel_mhz  )
     )
     i_vga
     (
@@ -79,7 +91,8 @@ module top
         .vsync      ( vsync      ),
         .display_on ( display_on ),
         .hpos       ( x          ),
-        .vpos       ( y          )
+        .vpos       ( y          ),
+        .pixel_clk  ( pixel_clk  )
     );
 
     //------------------------------------------------------------------------
@@ -100,9 +113,9 @@ module top
         end
         else if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
         begin
-            red   = x [w_x - 2 -: 4];
+            red   = x [w_x - 2 -: w_red];
             green = '1;
-            blue  = y [w_y - 2 -: 4];
+            blue  = y [w_y - 2 -: w_blue];
         end
         `ifdef YOSYS
         else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
@@ -111,13 +124,13 @@ module top
         `endif
         begin
             red   = '1;
-            green = x [w_x - 2 -: 4];
-            blue  = y [w_y - 2 -: 4];
+            green = x [w_x - 2 -: w_green];
+            blue  = y [w_y - 2 -: w_blue];
         end
         else if (x_2 [9 +: w_y] < y)  // Parabola
         begin
-            red   = x [w_x - 2 -: 4];
-            green = y [w_y - 2 -: 4];
+            red   = x [w_x - 2 -: w_red];
+            green = y [w_y - 2 -: w_green];
             blue  = '1;
         end
     end

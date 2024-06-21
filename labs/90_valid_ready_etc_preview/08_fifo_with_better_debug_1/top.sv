@@ -1,20 +1,23 @@
-// Asynchronous reset here is needed for the FPGA board we use
-
 `include "config.svh"
 
 `ifndef SIMULATION
 
 module top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 8,
-              w_digit = 8,
-              w_gpio  = 20
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+              w_key     = 4,
+              w_sw      = 8,
+              w_led     = 8,
+              w_digit   = 8,
+              w_gpio    = 100,
+              w_red     = 4,
+              w_green   = 4,
+              w_blue    = 4
 )
 (
     input                        clk,
+    input                        slow_clk,
     input                        rst,
 
     // Keys, switches, LEDs
@@ -32,11 +35,17 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [          3:0] red,
-    output logic [          3:0] green,
-    output logic [          3:0] blue,
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
+    output                       display_on,
+    output                       pixel_clk,
+
+    input                        uart_rx,
+    output                       uart_tx,
 
     input        [         23:0] mic,
+    output       [         15:0] sound,
 
     // General-purpose Input/Output
 
@@ -45,47 +54,18 @@ module top
 
     //------------------------------------------------------------------------
 
-    // assign led      = '0;
-    // assign abcdefgh = '0;
-    // assign digit    = '0;
-       assign vsync    = '0;
-       assign hsync    = '0;
-       assign red      = '0;
-       assign green    = '0;
-       assign blue     = '0;
-
-    //------------------------------------------------------------------------
-
-    wire slow_clk_raw, slow_clk;
-
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk_raw (slow_clk_raw), .*);
-
-    `ifdef ALTERA_RESERVED_QIS
-
-        // "global" is Intel FPGA-specific primitive to route
-        // a signal coming from data into clock tree
-
-        global i_global (.in (slow_clk_raw), .out (slow_clk));
-
-    `elsif XILINX_VIVADO
-
-        // "BUFG" is Xilinx-specific primitive to route
-        // a signal coming from data into clock tree
-
-        BUFG   i_BUFG   (.I  (slow_clk_raw), .O   (slow_clk));
-
-    `elsif SIMULATION
-
-        assign slow_clk = slow_clk_raw;
-
-    `else
-
-        // `error_Unsupported_synthesis_tool
-
-        assign slow_clk = slow_clk_raw;
-
-    `endif
+    // assign led        = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
+       assign vsync      = '0;
+       assign hsync      = '0;
+       assign red        = '0;
+       assign green      = '0;
+       assign blue       = '0;
+       assign display_on = '0;
+       assign pixel_clk  = '0;
+       assign sound      = '0;
+       assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
 
@@ -95,10 +75,7 @@ module top
     wire [fifo_width - 1:0] read_data;
     wire empty, full;
 
-    // Either of two leftmost keys is pressed
-    wire push = ~ full & key [1];
-
-    // Either of two rightmost keys is pressed
+    wire push = ~ full  & key [1];
     wire pop  = ~ empty & key [0];
 
     // With this implementation of FIFO

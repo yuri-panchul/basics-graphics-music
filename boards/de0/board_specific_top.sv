@@ -52,6 +52,18 @@ module board_specific_top
     wire [w_digit - 1:0] digit;
 
     wire [         23:0] mic;
+    wire [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_RX = '1;
+    wire                 UART_TX;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
@@ -67,6 +79,7 @@ module board_specific_top
     i_top
     (
         .clk      (   clk                  ),
+        .slow_clk (   slow_clk             ),
         .rst      (   rst                  ),
 
         .key      (   top_key              ),
@@ -84,7 +97,12 @@ module board_specific_top
         .green    (   VGA_G                ),
         .blue     (   VGA_B                ),
 
+        .uart_rx  (   UART_RX              ),
+        .uart_tx  (   UART_TX              ),
+
         .mic      (   mic                  ),
+        .sound    (   sound                ),
+
         .gpio     (   { GPIO0_D, GPIO1_D } )
     );
 
@@ -159,5 +177,22 @@ module board_specific_top
 
     assign GPIO0_D [3] = 1'b0;    // GND - JP4 pin 6
     assign GPIO0_D [5] = 1'b1;    // VCC - JP4 pin 8
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk          ),
+        .reset   ( rst          ),
+        .data_in ( sound        ),
+        .mclk    ( GPIO0_D [29] ), // JP4 pin 38
+        .bclk    ( GPIO0_D [27] ), // JP4 pin 36
+        .lrclk   ( GPIO0_D [23] ), // JP4 pin 32
+        .sdata   ( GPIO0_D [25] )  // JP4 pin 34
+    );                             // JP4 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
 endmodule

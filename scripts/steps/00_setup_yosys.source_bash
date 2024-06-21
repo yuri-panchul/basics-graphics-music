@@ -101,8 +101,10 @@ setup_run_directory_for_fpga_synthesis_yosys ()
         "$board_dir/$fpga_board"  \
         "$lab_dir/common"
     do
+        # TODO: Check if we really need adj_path_for_gowin_win here
+
         $find_to_run  \
-            "${verilog_src_dir/\/[[:alpha:]]\//${verilog_src_dir:1:1}:\/}"  \
+            "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
             -type f -name '*.sv' -not -name tb.sv  \
             -printf "READ_VERILOG += -p \"read_verilog -sv %p\"\n" \
             -printf "DEPS += %p\n" \
@@ -111,10 +113,16 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 
     cat "$board_dir/$fpga_board/Makefile" >> "$dir/Makefile"
 
-    # Copy pin config file for Lattice boards
+    # Copy pin config file for Lattice iCE40 boards
     if [ -f "$board_dir/$fpga_board/board_specific.pcf" ]
     then
         cat "$board_dir/$fpga_board/board_specific.pcf" > "$dir/board_specific.pcf"
+    fi
+
+    # Copy pin config file for Lattice ECP5 boards
+    if [ -f "$board_dir/$fpga_board/board_specific.lpf" ]
+    then
+        cat "$board_dir/$fpga_board/board_specific.lpf" > "$dir/board_specific.lpf"
     fi
 
     # Copy pin config file for Gowin boards
@@ -173,6 +181,22 @@ configure_fpga_yosys_all ()
         elif [[ "$REPLY" =~ ^[Ee]$ ]] ; then
             upload_method="ecpprog"
         else
+            upload_method="openloader"
+        fi
+    elif [[ "$fpga_board" =~ "karnix" ]]; then
+        printf "This board supports the following upload methods:\n"
+        printf "[o] for openFPGALoader using JTAG based on FTDI FT2232\n"
+        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n"
+
+        read -n 1 -r -p "Which upload method do you prefer ? "
+        printf "\n"
+
+        if [[ "$REPLY" =~ ^[Ee]$ ]] ; then
+            upload_method="ecpprog"
+        elif [[ "$REPLY" =~ ^[Oo]$ ]] ; then
+            upload_method="openloader"
+        else
+            printf "Unsupported method: $REPLY\n"
             upload_method="openloader"
         fi
     elif [[ "$fpga_board" =~ "ice40" ]]; then

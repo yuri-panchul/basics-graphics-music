@@ -1,4 +1,4 @@
-PCF = board_specific.pcf
+LPF = board_specific.lpf
 DEVICE = 25k
 PACKAGE = CSFBGA285
 FTDI_CHANNEL = 1 ### FT2232 has two channels, select 0 for channel A or 1 for channel B
@@ -58,16 +58,16 @@ endif
 
 fw: $(NAME).bin
 
-$(NAME).bin: $(PCF) $(DEPS)
-	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ecp5 -json $(NAME).json -top board_specific_top"
-	nextpnr-ecp5 --package $(PACKAGE) --$(DEVICE) --json $(NAME).json --textcfg $(NAME)_out.config --lpf $(PCF) --lpf-allow-unconstrained
+$(NAME).bin: $(LPF) $(DEPS)
+	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ecp5 -noabc9 -json $(NAME).json -top board_specific_top"
+	nextpnr-ecp5 --package $(PACKAGE) --$(DEVICE) --json $(NAME).json --textcfg $(NAME)_out.config --lpf $(LPF) --lpf-allow-unconstrained
 	ecppack --compress --freq 38.8 --input $(NAME)_out.config --bit $(NAME).bin
 
 .PHONY: gui
-gui: $(PCF) $(DEPS)
+gui: $(LPF) $(DEPS)
 	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ecp5 -json $(NAME).json -top top" -p "hierarchy -check -top top" -p "proc" -p "show -prefix $(NAME) -notitle -colors 2 -width -format dot"
 	netlistsvg -o $(NAME).svg $(NAME).json
-	nextpnr-ecp5 --package $(PACKAGE) --$(DEVICE) --json $(NAME).json --textcfg $(NAME)_out.config --lpf $(PCF) --lpf-allow-unconstrained --placed-svg $(NAME)-placed.svg --routed-svg $(NAME)-routed.svg
+	nextpnr-ecp5 --package $(PACKAGE) --$(DEVICE) --json $(NAME).json --textcfg $(NAME)_out.config --lpf $(LPF) --lpf-allow-unconstrained --placed-svg $(NAME)-placed.svg --routed-svg $(NAME)-routed.svg
 	@if [ -f "`which firefox`" ]; then \
 		firefox $(NAME).svg $(NAME)-placed.svg $(NAME)-routed.svg; \
 	else \

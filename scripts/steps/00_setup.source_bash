@@ -1,5 +1,5 @@
 set -Eeuo pipefail  # See the meaning in scripts/README.md
-#set -x  # Print each command
+# set -x  # Print each command
 
 setup_source_bash_already_run=1
 
@@ -32,9 +32,24 @@ fi
 #-----------------------------------------------------------------------------
 
 package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/../..")
+
+bin_dir="$package_dir/bin"
 board_dir="$package_dir/boards"
 lab_dir="$package_dir/labs"
 script_dir="$package_dir/scripts"
+
+#-----------------------------------------------------------------------------
+
+adj_path_for_gowin_win ()
+{
+    if    [ "$OSTYPE" = "cygwin" ]  \
+       || [ "$OSTYPE" = "msys"   ]
+    then
+        echo ${1/#\/[[:alpha:]]\//${1:1:1}:\/}
+    else
+        echo $1
+    fi
+}
 
 #-----------------------------------------------------------------------------
 
@@ -70,7 +85,7 @@ info ()
     # However this method has disadvantage:
     # It prints "\n" for "\n" instead of a newline.
 
-    if [[ "$*" == *"%"* ]] ; then
+    if [[ "$*" == *"%"* ]] || [[ "$*" == *"\\"* ]] ; then
         printf "\n%s: %s\n" "$script" "$*" 1>&2
     else
         printf "\n%s: $*\n" "$script"      1>&2
@@ -177,6 +192,12 @@ then
     find_to_run=$true_find
 fi
 
+if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ] ; then
+    exe=".exe"
+else
+    exe=
+fi
+
 #-----------------------------------------------------------------------------
 #
 #   Tool setup:
@@ -190,10 +211,12 @@ fi
 
 source "$script_dir/steps/00_setup_intel_fpga.source_bash"
 source "$script_dir/steps/00_setup_gowin.source_bash"
+source "$script_dir/steps/00_setup_efinity.source_bash"
 source "$script_dir/steps/00_setup_xilinx.source_bash"
 source "$script_dir/steps/00_setup_open_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
 source "$script_dir/steps/00_setup_yosys.source_bash"
+source "$script_dir/steps/00_setup_rars.source_bash"
 
 #-----------------------------------------------------------------------------
 #
@@ -227,6 +250,9 @@ setup_run_directory_for_fpga_synthesis()
     case $fpga_toolchain in
     quartus)
         setup_run_directory_for_fpga_synthesis_quartus "$dir" "$parent_dir"
+        ;;
+    efinity)
+        setup_run_directory_for_fpga_synthesis_efinity "$dir" "$parent_dir"
         ;;
     gowin)
         setup_run_directory_for_fpga_synthesis_gowin   "$dir" "$parent_dir"
@@ -263,50 +289,70 @@ create_new_run_directories_for_fpga_synthesis()
 update_fpga_toolchain_var ()
 {
     case $fpga_board in
+
+        # Yosys should be the first because of * later
+
+        ice40hx8k_evb_yosys      | \
+        orangecrab_ecp5_yosys    | \
+        karnix_ecp5_yosys        | \
+        tang_nano_9k_gowin_yosys | \
+        tang_primer_20k_dock_gowin_yosys )
+
+            fpga_toolchain=yosys
+        ;;
+
         dk_dev_3c120n        | \
-        de0                  | \
         marsohod_mcy112      | \
-        marsohod_mcy316 )
+        marsohod_mcy316      | \
+        de0                  | \
+        de1                  | \
+        de2                  )
+
             fpga_toolchain=quartus
             use_old_version_of_quartus=1
         ;;
 
-        c4_mini_fpga         | \
-        c5gx                 | \
+        alinx_ax4010*        | \
+        c5gx*                | \
         de0_cv               | \
-        de0_nano             | \
-        de0_nano_alt_vga     | \
-        de0_nano_soc         | \
+        de0_nano*            | \
+        de0_nano_soc*        | \
         de1_soc              | \
         de2_115              | \
-        de10_lite            | \
-        de10_lite_tm1638     | \
-        de10_nano            | \
-        omdazz               | \
+        de10_lite*           | \
+        de10_nano*           | \
+        emooc_cc             | \
+        omdazz*              | \
         piswords6            | \
         qmtech_c4_starter    | \
-        rzrd                 | \
-        saylinx              | \
-        zeowaa               | \
-        zeowaa_7_digit       )
+        rzrd*                | \
+        saylinx*             | \
+        step_max10           | \
+        zeowaa*              )
 
             fpga_toolchain=quartus
             use_old_version_of_quartus=0
         ;;
 
-        gowin_runber         | \
-        tang_nano_1k         | \
-        tang_nano_20k        | \
-        tang_nano_4k         | \
-        tang_nano_9k         | \
-        tang_primer_20k_dock | \
-        tang_primer_20k_dock_alt | \
-        tang_primer_20k_lite )
+        runber               | \
+        tang_nano_1k*        | \
+        tang_nano_20k*       | \
+        tang_nano_4k*        | \
+        tang_nano_9k*        | \
+        tang_primer_20k_dock* | \
+        tang_primer_20k_lite* | \
+        tang_primer_25k_dock* )
 
             fpga_toolchain=gowin
         ;;
 
-        arty_a7              | \
+        trion_t20            | \
+        fireant              )
+
+            fpga_toolchain=efinity
+        ;;
+
+        arty_a7*             | \
         arty_s7              | \
         basys3               | \
         cmod_a7              | \
@@ -314,16 +360,10 @@ update_fpga_toolchain_var ()
         nexys4               | \
         nexys4_ddr           | \
         nexys_a7             | \
+        qmtech_kintex_7      | \
         zybo_z7              )
 
             fpga_toolchain=xilinx
-        ;;
-
-        ice40hx8k_evb_yosys      | \
-        orangecrab_ecp5_yosys    | \
-        tang_nano_9k_gowin_yosys | \
-        tang_primer_20k_dock_gowin_yosys )
-            fpga_toolchain=yosys
         ;;
 
         *)
@@ -360,7 +400,7 @@ fpga_board_setup ()
 
     #-------------------------------------------------------------------------
 
-    available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\n" " ")
+    available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
 
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
@@ -418,7 +458,7 @@ fpga_board_setup ()
 fpga_board_setup
 
 case $fpga_toolchain in
-    quartus )
+    quartus  )
         intel_fpga_setup_quartus
 
         if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
@@ -426,10 +466,15 @@ case $fpga_toolchain in
         fi
     ;;
 
-    gowin  ) gowin_setup_ide     ;;
-    xilinx ) xilinx_setup_vivado ;;
-    yosys  ) setup_yosys ;;
+    gowin   ) gowin_setup_ide     ;;
+    efinity ) efinity_setup_ide   ;;
+    xilinx  ) xilinx_setup_vivado ;;
+    yosys   ) setup_yosys         ;;
 esac
 
 openlane_setup
 icarus_verilog_setup
+
+if [ -f ../program.s ] ; then
+    rars_setup
+fi

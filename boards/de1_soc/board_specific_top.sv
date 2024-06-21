@@ -58,6 +58,17 @@ module board_specific_top
 
     wire  [                 23:0] mic;
 
+    // FIXME: Should be assigned to some GPIO!
+    wire                          UART_TX;
+    wire                          UART_RX = '1;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
     //------------------------------------------------------------------------
 
     top
@@ -72,6 +83,7 @@ module board_specific_top
     i_top
     (
         .clk      (   clk                ),
+        .slow_clk (   slow_clk           ),
         .rst      (   rst                ),
 
         .key      (   top_key            ),
@@ -89,6 +101,9 @@ module board_specific_top
         .green    (   vga_green_4b       ),
         .blue     (   vga_blue_4b        ),
 
+        .uart_rx  (   UART_RX            ),
+        .uart_tx  (   UART_TX            ),
+
         .mic      (   mic                ),
         .gpio     (   { GPIO_0, GPIO_1 } )
     );
@@ -99,6 +114,8 @@ module board_specific_top
     assign VGA_R   = { vga_red_4b,   4'd0 };
     assign VGA_G   = { vga_green_4b, 4'd0 };
     assign VGA_B   = { vga_blue_4b,  4'd0 };
+
+    // TODO: This signal has to be propagated from vga module
 
     assign VGA_BLANK_N = 1'b1;
     assign VGA_SYNC_N  = 0;

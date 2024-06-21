@@ -53,6 +53,10 @@ module board_specific_top
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TX;
+    wire                 UART_RX = '1;
+
     assign
     {
         seven_seg_a,
@@ -70,6 +74,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz ( clk_mhz ),
@@ -82,6 +93,7 @@ module board_specific_top
     i_top
     (
         .clk      (   clk         ),
+        .slow_clk (   slow_clk    ),
         .rst      (   rst         ),
 
         .key      ( ~ user_pb     ),
@@ -98,6 +110,9 @@ module board_specific_top
         .red      (               ),
         .green    (               ),
         .blue     (               ),
+
+        .uart_rx  (   UART_RX     ),
+        .uart_tx  (   UART_TX     ),
 
         .mic      (               ),
         .gpio     (               )

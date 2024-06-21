@@ -95,6 +95,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz ( clk_mhz   ),
@@ -107,6 +114,7 @@ module board_specific_top
     i_top
     (
         .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -123,6 +131,9 @@ module board_specific_top
         .red      ( VGA_R     ),
         .green    ( VGA_G     ),
         .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
 
         .mic      ( mic       ),
         `ifndef ENABLE_TM1638
@@ -147,8 +158,10 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+`ifdef ENABLE_TM1638
     tm1638_board_controller
     # (
+        .clk_mhz ( clk_mhz ),
         .w_digit ( w_tm_digit )
     )
     i_tm1638
@@ -163,10 +176,16 @@ module board_specific_top
         .sio_stb  ( GPIO [1]  ),
         .sio_data ( GPIO [2]  )
     );
+`endif
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+`ifdef ENABLE_INMP441
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    i_microphone
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
@@ -179,5 +198,6 @@ module board_specific_top
 
     assign GPIO [8] = 1'b0;  // GND
     assign GPIO [7] = 1'b1;  // VCC
+`endif
 
 endmodule

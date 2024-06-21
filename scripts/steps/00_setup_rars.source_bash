@@ -1,0 +1,95 @@
+expected_source_script=00_setup.source_bash
+
+if [ -z "$BASH_SOURCE" ]
+then
+    printf "script \"%s\" should be sourced from \"%s\"\n"  \
+           "$0" "$expected_source_script" 1>&2
+
+    exit 1
+fi
+
+this_script=$(basename "${BASH_SOURCE[0]}")
+source_script=$(basename "${BASH_SOURCE[1]}")
+
+if [ -z "$source_script" ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\"\n"  \
+           "$this_script" "$expected_source_script" 1>&2
+
+    return 1
+fi
+
+if [ "$source_script" != $expected_source_script ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\", not \"%s\"\n"  \
+           "$this_script" "$expected_source_script" "$source_script" 1>&2
+
+    exit 1
+fi
+
+#-----------------------------------------------------------------------------
+
+rars_setup ()
+{
+    if is_command_available rars ; then
+        rars_cmd=rars
+        return  # Already set up
+    fi
+
+    #-------------------------------------------------------------------------
+
+    is_command_available_or_error_and_install java$exe
+
+    #-------------------------------------------------------------------------
+
+    mkdir -p "$bin_dir"
+
+    find_opt="-mindepth 1 -maxdepth 1 -type f -name rars*.jar -print"
+    latest_rars_jar=$($find_to_run "$bin_dir" $find_opt | sort | tail -1)
+
+    if [ -z "$latest_rars_jar" ]
+    then
+        error "cannot find any version of RARS"                              \
+              "RISC-V instruction set simulator installed in '$bin_dir'."    \
+              "Download the latest 'rars*.jar'"                              \
+              "from https://github.com/TheThirdOne/rars/releases"            \
+              "and put it into '$bin_dir'."
+    fi
+
+    all_rars_jars=$($find_to_run "$bin_dir" $find_opt | xargs echo)
+
+    if [ "$latest_rars_jar" != "$all_rars_jars" ]
+    then
+        warning "multiple versions of RARS"                                  \
+                "RISC-V instruction set simulator installed in '$bin_dir':"  \
+                "'$all_rars_jars'\n"                                         \
+                "Using '$latest_rars_jar' which appears to be the latest."
+    fi
+
+    rars_cmd="java -jar $latest_rars_jar"
+}
+
+#-----------------------------------------------------------------------------
+
+rars_assembly ()
+{
+    if ! [ -f ../program.s ] ; then
+        return
+    fi
+
+    #  nc                              - Copyright notice will not be displayed
+    #  a                               - assembly only, do not simulate
+    #  ae<n>                           - terminate RARS with integer exit code if an assemble error occurs
+    #  dump .text HexText program.hex  - dump segment .text to program.hex file in HexText format
+
+    rars_args="nc a ae1 dump .text HexText program.hex"
+    $rars_cmd $rars_args ../program.s
+}
+
+#-----------------------------------------------------------------------------
+
+rars_run_gui ()
+{
+    cd ..
+    $rars_cmd &
+}

@@ -8,6 +8,10 @@ if {! [info exists part_name]} {
 }
 
 set extra_dot_dot ""
+create_project  board_specific_top ./gui_prj           \
+               -part $part_name                        \
+               -force                                  \
+               -quiet
 
 if {[file isdirectory ../../../../labs]} {
     set extra_dot_dot ../
@@ -15,7 +19,7 @@ if {[file isdirectory ../../../../labs]} {
 
 read_verilog -sv [glob $extra_dot_dot../../common/*.sv]
 
-foreach file [glob ../*.sv] {
+foreach file [glob ../*.{v,sv}] {
     if {$file ne "../tb.sv"} {
         read_verilog -sv $file
     }

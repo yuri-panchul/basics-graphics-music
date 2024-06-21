@@ -32,6 +32,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire                 clk = CLK;
     wire                 rst = ~ KEY;
     wire                 led;
 
@@ -41,6 +42,9 @@ module board_specific_top
     wire [          3:0] red, green, blue;
     wire [         23:0] mic;
 
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TX;
+
     //------------------------------------------------------------------------
 
     assign ABCDEFGH_N = ~ abcdefgh;
@@ -49,6 +53,13 @@ module board_specific_top
     assign VGA_RED    = {            red   [3], red   };
     assign VGA_GREEN  = { green [3], green [3], green };
     assign VGA_BLUE   = {            blue  [3], blue  };
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
@@ -63,7 +74,8 @@ module board_specific_top
     )
     i_top
     (
-        .clk      ( CLK       ),
+        .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
         .key      ( '0        ),
@@ -81,6 +93,9 @@ module board_specific_top
         .green    ( green     ),
         .blue     ( blue      ),
 
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
+
         .mic      ( mic       ),
 
         .gpio     ( GPIO_J12  )
@@ -90,7 +105,7 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK          ),
+        .clk   ( clk          ),
         .rst   ( rst          ),
         .lr    ( GPIO_J12 [8] ),
         .ws    ( GPIO_J12 [6] ),

@@ -19,6 +19,8 @@ module board_specific_top
     inout  [w_gpio      - 1:0] gpio_JE
 );
 
+    wire clk = clk_125;
+
     //------------------------------------------------------------------------
 
     localparam w_sw_top = w_sw - 1;  // One sw is used as a reset
@@ -30,6 +32,10 @@ module board_specific_top
 
     logic [              7:0] abcdefgh;
     wire  [w_digit     - 1:0] digit;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                      UART_TX;
+    wire                      UART_RX = '1;
 
     //------------------------------------------------------------------------
 
@@ -85,6 +91,13 @@ module board_specific_top
         assign digit_tm = digit_top[w_digit_tm - 1:0];
     `endif
 
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
     //------------------------------------------------------------------------------
 
     top
@@ -98,7 +111,8 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (clk_125),
+        .clk      (clk),
+        .slow_clk (slow_clk),
         .rst      (rst),
 
         .key      (key_top),
@@ -112,6 +126,9 @@ module board_specific_top
         .red      ( ),
         .green    ( ),
         .blue     ( ),
+
+        .uart_rx  ( UART_RX ),
+        .uart_tx  ( UART_TX ),
 
         .mic      ( ),
         .gpio     ( )
@@ -141,7 +158,7 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk      (clk_125),
+        .clk      (clk),
         .rst      (rst),              // Don't make reset tm1638_board_controller by it's tm_key
         .hgfedcba (hgfedcba),
         .digit    (digit_tm),

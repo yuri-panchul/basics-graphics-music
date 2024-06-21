@@ -29,6 +29,7 @@ update_fpga_toolchain_var ()
         qmtech_c4_starter    | \
         rzrd                 | \
         saylinx              | \
+        step_max10           | \
         zeowaa               | \
         zeowaa_7_digit       )
 
@@ -36,7 +37,7 @@ update_fpga_toolchain_var ()
             use_old_version_of_quartus=0
         ;;
 
-        gowin_runber         | \
+        runber               | \
         tang_nano_1k         | \
         tang_nano_20k        | \
         tang_nano_4k         | \
@@ -94,7 +95,7 @@ if [ ! -d "$TEMPLATE_REPO" ]; then
     git clone https://github.com/${TARGET_REPO_FULLNAME}.git "$TEMPLATE_REPO"
 fi
 
-available_fpga_boards=$(find "$TEMPLATE_REPO/boards" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\n" " ")
+available_fpga_boards=$(find "$TEMPLATE_REPO/boards" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
 fpga_board_id=0
 
 for fpga_board in $available_fpga_boards

@@ -48,6 +48,16 @@ module board_specific_top
     wire [          3:0] red, green, blue;
     wire [         23:0] mic;
 
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TXD;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
     //------------------------------------------------------------------------
 
     top
@@ -62,6 +72,7 @@ module board_specific_top
     i_top
     (
         .clk      (   clk       ),
+        .slow_clk (   slow_clk  ),
         .rst      (   rst       ),
 
         .key      (   top_key   ),
@@ -78,6 +89,9 @@ module board_specific_top
         .red      (   red       ),
         .green    (   green     ),
         .blue     (   blue      ),
+
+        .uart_rx  (   UART_RXD  ),
+        .uart_tx  (   UART_TXD  ),
 
         .mic      (   mic       ),
 
@@ -98,16 +112,16 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( clk       ),
-        .rst   ( rst       ),
-        .lr    ( GPIO [11] ),  // P1 pin 18
-        .ws    ( GPIO [13] ),  // P1 pin 20
-        .sck   ( GPIO [15] ),  // P1 pin 22
-        .sd    ( GPIO [14] ),  // P1 pin 21
-        .value ( mic       )
+        .clk   ( clk      ),
+        .rst   ( rst      ),
+        .lr    ( GPIO [0] ),
+        .ws    ( GPIO [2] ),
+        .sck   ( GPIO [4] ),
+        .sd    ( GPIO [5] ),
+        .value ( mic      )
     );
 
-    assign GPIO [10] = 1'b0;   // GND - P1 pin 17
-    assign GPIO [12] = 1'b1;   // VCC - P1 pin 19
+    assign GPIO [1] = 1'b0;
+    assign GPIO [3] = 1'b1;
 
 endmodule

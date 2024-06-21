@@ -93,6 +93,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
     top
     # (
         .clk_mhz ( clk_mhz      ),
@@ -105,6 +112,7 @@ module board_specific_top
     i_top
     (
         .clk      ( clk       ),
+        .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
         .key      ( top_key   ),
@@ -121,6 +129,9 @@ module board_specific_top
         .red      ( VGA_R     ),
         .green    ( VGA_G     ),
         .blue     ( VGA_B     ),
+
+        .uart_rx  ( UART_RX   ),
+        .uart_tx  ( UART_TX   ),
 
         .mic      ( mic       ),
         .gpio     (           )
@@ -143,6 +154,7 @@ module board_specific_top
 
     tm1638_board_controller
     # (
+        .clk_mhz ( clk_mhz ),
         .w_digit ( w_tm_digit )
     )
     i_tm1638

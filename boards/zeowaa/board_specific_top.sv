@@ -33,6 +33,7 @@ module board_specific_top
 
     localparam w_top_key = w_key - 1;  // One onboard key is used as a reset
 
+    wire                   clk     = CLK;
     wire                   rst     = ~ KEY_N [w_key     - 1];
     wire [w_top_key - 1:0] top_key = ~ KEY_N [w_top_key - 1:0];
 
@@ -48,6 +49,18 @@ module board_specific_top
 
     wire [         23:0] mic;
 
+    // FIXME: Should be assigned to some GPIO!
+    wire                 UART_TX;
+
+    wire [         15:0] sound;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
     //------------------------------------------------------------------------
 
     top
@@ -61,7 +74,8 @@ module board_specific_top
     )
     i_top
     (
-        .clk      (   CLK         ),
+        .clk      (   clk         ),
+        .slow_clk (   slow_clk    ),
         .rst      (   rst         ),
 
         .key      (   top_key     ),
@@ -79,7 +93,12 @@ module board_specific_top
         .green    (   green       ),
         .blue     (   blue        ),
 
+        .uart_rx  (   UART_RX     ),
+        .uart_tx  (   UART_TX     ),
+
         .mic      (   mic         ),
+        .sound    (   sound       ),
+
         .gpio     (   GPIO        )
     );
 
@@ -96,16 +115,34 @@ module board_specific_top
 
     inmp441_mic_i2s_receiver i_microphone
     (
-        .clk   ( CLK      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [3] ),
-        .sck   ( GPIO [1] ),
-        .sd    ( GPIO [0] ),
-        .value ( mic      )
+        .clk   ( clk       ),
+        .rst   ( rst       ),
+        .lr    ( GPIO [5]  ), // P33
+        .ws    ( GPIO [3]  ), // P31
+        .sck   ( GPIO [1]  ), // P28
+        .sd    ( GPIO [0]  ), // P30
+        .value ( mic       )
     );
 
-    assign GPIO [4] = 1'b0;  // GND
-    assign GPIO [2] = 1'b1;  // VCC
+    assign GPIO [4] = 1'b0;  // P34 - GND
+    assign GPIO [2] = 1'b1;  // P32 - VCC
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz   )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( GPIO [14] ), // P52
+        .bclk    ( GPIO [12] ), // P49
+        .lrclk   ( GPIO [8]  ), // P42
+        .sdata   ( GPIO [10] )  // P44
+    );                          // GND
+                                // J4 Pin 2 - VCC 3.3V (30-45 mA)
 
 endmodule

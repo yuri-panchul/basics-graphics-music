@@ -2,7 +2,9 @@
 
 module game_top
 # (
-    parameter clk_mhz = 50,
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+
               strobe_to_update_xy_counter_width = 20
 )
 (
@@ -14,12 +16,13 @@ module game_top
 
     output       hsync,
     output       vsync,
-    output [2:0] rgb
+    output [2:0] rgb,
+    output       display_on,
+    output       pixel_clk
 );
 
     //------------------------------------------------------------------------
 
-    wire                  display_on;
     wire [`X_WIDTH - 1:0] pixel_x;
     wire [`Y_WIDTH - 1:0] pixel_y;
 
@@ -30,7 +33,8 @@ module game_top
         .HPOS_WIDTH          ( `X_WIDTH             ),
         .VPOS_WIDTH          ( `Y_WIDTH             ),
 
-        .CLK_MHZ             ( clk_mhz              )
+        .CLK_MHZ             ( clk_mhz              ),
+        .PIXEL_MHZ           ( pixel_mhz            )
     )
     i_vga
     (
@@ -40,7 +44,8 @@ module game_top
         .vsync      ( vsync      ),
         .display_on ( display_on ),
         .hpos       ( pixel_x    ),
-        .vpos       ( pixel_y    )
+        .vpos       ( pixel_y    ),
+        .pixel_clk  ( pixel_clk  )
     );
 
     //------------------------------------------------------------------------

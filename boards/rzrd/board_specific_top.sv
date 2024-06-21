@@ -3,12 +3,9 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
-// `define USE_OBSOLETE_DIGILENT_MIC
-// `define USE_INMP_441_MIC_ON_OLD_POSITION
+// `define USE_DIGILENT_PMOD_MIC3
 
-`ifdef USE_OBSOLETE_DIGILENT_MIC
-    `define USE_SDRAM_PINS_AS_GPIO
-`elsif USE_INMP_441_MIC_ON_OLD_POSITION
+`ifdef USE_DIGILENT_PMOD_MIC3
     `define USE_SDRAM_PINS_AS_GPIO
 `else
     `define USE_LCD_AS_GPIO
@@ -26,7 +23,7 @@ module board_specific_top
 
               `ifdef USE_SDRAM_PINS_AS_GPIO
               w_gpio  = 14
-              `elif USE_LCD_AS_GPIO
+              `elsif USE_LCD_AS_GPIO
               w_gpio  = 11
               `else
               w_gpio  = 1
@@ -76,6 +73,17 @@ module board_specific_top
     wire  [          3:0] red, green, blue;
 
     wire  [         23:0] mic;
+    wire  [         15:0] sound;
+
+    // FIXME: Should be assigned to some GPIO!
+    wire                  UART_TXD;
+
+    //------------------------------------------------------------------------
+
+    wire slow_clk;
+
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
@@ -91,6 +99,7 @@ module board_specific_top
     i_top
     (
         .clk      (   clk          ),
+        .slow_clk (   slow_clk     ),
         .rst      (   rst          ),
 
         .key      (   top_key      ),
@@ -108,11 +117,15 @@ module board_specific_top
         .green    (   green        ),
         .blue     (   blue         ),
 
+        .uart_rx  (   UART_RXD     ),
+        .uart_tx  (   UART_TXD     ),
+
         .mic      (   mic          ),
+        .sound    (   sound        ),
 
         `ifdef USE_SDRAM_PINS_AS_GPIO
             .gpio ( PSEUDO_GPIO_USING_SDRAM_PINS )
-        `elif USE_LCD_AS_GPIO
+        `elsif USE_LCD_AS_GPIO
             .gpio ({ LCD_RS, LCD_RW, LCD_E, LCD_D })
         `endif
     );
@@ -130,9 +143,9 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef USE_OBSOLETE_DIGILENT_MIC
+    `ifdef USE_DIGILENT_PMOD_MIC3
 
-    wire [15:0] mic_16;
+    wire [11:0] mic_12;
 
     digilent_pmod_mic3_spi_receiver i_microphone
     (
@@ -141,31 +154,14 @@ module board_specific_top
         .cs    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
         .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [6] ),
         .sdo   ( PSEUDO_GPIO_USING_SDRAM_PINS  [4] ),
-        .value ( mic_16                            )
+        .value ( mic_12                            )
     );
 
     assign PSEUDO_GPIO_USING_SDRAM_PINS [ 8] = 1'b0;  // GND
     assign PSEUDO_GPIO_USING_SDRAM_PINS [10] = 1'b1;  // VCC
 
-    assign mic = { mic_16, 8'b0 };
-
-    //------------------------------------------------------------------------
-
-    `elsif USE_INMP_441_MIC_ON_OLD_POSITION
-
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk                               ),
-        .rst   ( rst                               ),
-        .lr    ( PSEUDO_GPIO_USING_SDRAM_PINS  [5] ),
-        .ws    ( PSEUDO_GPIO_USING_SDRAM_PINS  [3] ),
-        .sck   ( PSEUDO_GPIO_USING_SDRAM_PINS  [1] ),
-        .sd    ( PSEUDO_GPIO_USING_SDRAM_PINS  [0] ),
-        .value ( mic                               )
-    );
-
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [4] = 1'b0;  // GND
-    assign PSEUDO_GPIO_USING_SDRAM_PINS [2] = 1'b1;  // VCC
+    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
 
     //------------------------------------------------------------------------
 
@@ -175,16 +171,33 @@ module board_specific_top
     (
         .clk   ( clk       ),
         .rst   ( rst       ),
-        .lr    ( LCD_D [1] ),
-        .ws    ( LCD_D [2] ),
-        .sck   ( LCD_D [3] ),
-        .sd    ( LCD_D [6] ),
+        .lr    ( LCD_D [5] ),
+        .ws    ( LCD_D [3] ),
+        .sck   ( LCD_D [1] ),
+        .sd    ( LCD_D [2] ),
         .value ( mic       )
     );
 
-    assign LCD_D [4] = 1'b0;  // GND
-    assign LCD_D [5] = 1'b1;  // VCC
+    assign LCD_D [6] = 1'b0;  // GND
+    assign LCD_D [4] = 1'b1;  // VCC
 
     `endif
+
+    //------------------------------------------------------------------------
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    o_audio
+    (
+        .clk     ( clk       ),
+        .reset   ( rst       ),
+        .data_in ( sound     ),
+        .mclk    ( LCD_E     ), // Pin 143
+        .bclk    ( LCD_RS    ), // Pin 141
+        .lrclk   ( LCD_RW    ), // Pin 138
+        .sdata   ( LCD_D [0] )  // Pin 142
+    );                          // GND and VCC 3.3V (30-45 mA)
 
 endmodule

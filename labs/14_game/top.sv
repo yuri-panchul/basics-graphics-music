@@ -2,20 +2,20 @@
 
 module top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 8,
-              w_digit = 8,
-              w_gpio  = 20,
-              w_vgar  = 4,
-              w_vgag  = 4,
-              w_vgab  = 4,
-
-              strobe_to_update_xy_counter_width = 20
+    parameter clk_mhz   = 50,
+              pixel_mhz = 25,
+              w_key     = 4,
+              w_sw      = 8,
+              w_led     = 8,
+              w_digit   = 8,
+              w_gpio    = 100,
+              w_red     = 4,
+              w_green   = 4,
+              w_blue    = 4
 )
 (
     input                        clk,
+    input                        slow_clk,
     input                        rst,
 
     // Keys, switches, LEDs
@@ -33,27 +33,40 @@ module top
 
     output logic                 vsync,
     output logic                 hsync,
-    output logic [ w_vgar - 1:0] red,
-    output logic [ w_vgag - 1:0] green,
-    output logic [ w_vgab - 1:0] blue,
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
+    output                       display_on,
+    output                       pixel_clk,
+
+    input                        uart_rx,
+    output                       uart_tx,
 
     input        [         23:0] mic,
+    output       [         15:0] sound,
 
     // General-purpose Input/Output
 
     inout        [w_gpio  - 1:0] gpio
 );
 
+    localparam strobe_to_update_xy_counter_width
+        = $clog2 (clk_mhz * 1000 * 1000) - 6;
+
     //------------------------------------------------------------------------
 
-       assign led      = '0;
-       assign abcdefgh = '0;
-       assign digit    = '0;
-    // assign vsync    = '0;
-    // assign hsync    = '0;
-    // assign red      = '0;
-    // assign green    = '0;
-    // assign blue     = '0;
+       assign led        = '0;
+       assign abcdefgh   = '0;
+       assign digit      = '0;
+    // assign vsync      = '0;
+    // assign hsync      = '0;
+    // assign red        = '0;
+    // assign green      = '0;
+    // assign blue       = '0;
+    // assign display_on = '0;
+    // assign pixel_clk  = '0;
+       assign sound      = '0;
+       assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
 
@@ -61,7 +74,8 @@ module top
 
     game_top
     # (
-        .clk_mhz (clk_mhz),
+        .clk_mhz   ( clk_mhz   ),
+        .pixel_mhz ( pixel_mhz ),
 
         .strobe_to_update_xy_counter_width
         (strobe_to_update_xy_counter_width)
@@ -76,11 +90,14 @@ module top
 
         .hsync            (   hsync              ),
         .vsync            (   vsync              ),
-        .rgb              (   rgb                )
+        .rgb              (   rgb                ),
+        .display_on       (   display_on         ),
+        .pixel_clk        (   pixel_clk          )
+     
     );
 
-    assign red   = { 4 { rgb [2] } };
-    assign green = { 4 { rgb [1] } };
-    assign blue  = { 4 { rgb [0] } };
+    assign red   = { w_red   { rgb [2] } };
+    assign green = { w_green { rgb [1] } };
+    assign blue  = { w_blue  { rgb [0] } };
 
 endmodule

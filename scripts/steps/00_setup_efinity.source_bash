@@ -1,0 +1,109 @@
+expected_source_script=00_setup.source_bash
+
+# exe() { echo "\$ ${@/eval/}" ; "$@" ; }
+
+if [ -z "$BASH_SOURCE" ]
+then
+    printf "script \"%s\" should be sourced from \"%s\"\n"  \
+        "$0" "$expected_source_script" 1>&2
+
+    exit 1
+fi
+
+this_script=$(basename "${BASH_SOURCE[0]}")
+source_script=$(basename "${BASH_SOURCE[1]}")
+
+if [ -z "$source_script" ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\"\n"  \
+        "$this_script" "$expected_source_script" 1>&2
+
+    return 1
+fi
+
+if [ "$source_script" != $expected_source_script ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\", not \"%s\"\n"  \
+        "$this_script" "$expected_source_script" "$source_script" 1>&2
+
+    exit 1
+fi
+
+#-----------------------------------------------------------------------------
+
+efinity_setup_ide ()
+{
+#  Only Linux is supported for now
+#    || [ "$OSTYPE" = "cygwin"    ]  \
+#    || [ "$OSTYPE" = "msys"      ]  \
+
+       [ "$OSTYPE" = "linux-gnu" ]  \
+    || return
+
+
+    #-------------------------------------------------------------------------
+
+    if [ -n "${EFINITY_HOME-}" ]
+    then
+       if [ -d "$EFINITY_HOME/bin" ]
+       then
+           export PATH="${PATH:+$PATH:}$EFINITY_HOME/bin"
+           return
+       fi
+
+       warning "EFINITY_HOME variable is set to '$EFINITY_HOME',"  \
+               "but there is no directory '$EFINITY_HOME/bin'."
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if is_command_available efinity_sh.sh ; then
+        return  # Already set up
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+setup_run_directory_for_fpga_synthesis_efinity ()
+{
+    dir="$1"
+    main_src_dir="$2"
+
+    cp -f "$board_dir/$fpga_board/board_specific.xml" "$board_dir/$fpga_board/board_specific.peri.xml" "$main_src_dir/run"
+    cd "$main_src_dir/run"
+}
+
+#-----------------------------------------------------------------------------
+
+synthesize_for_fpga_efinity ()
+{
+    is_command_available_or_error efx_run.py " Efinity"
+
+    setup_run_directory_for_fpga_synthesis
+    efx_run.py --pgm_opts "source=work_pnr/board_specific.lbf" --pgm_opts "dest=work_pnr/board_specific.hex" --flow compile "$main_src_dir/run/board_specific.xml"
+}
+
+#-----------------------------------------------------------------------------
+
+configure_fpga_efinity ()
+{
+    dir="${1:-.}"
+    main_src_dir=$(readlink -f "$dir/..")
+
+    is_command_available_or_error efx_run.py " Efinity"
+    efx_run.py --pgm_opts "source=work_pnr/board_specific.hex" --flow program "$main_src_dir/run/board_specific.xml"
+}
+
+#-----------------------------------------------------------------------------
+
+run_fpga_synthesis_gui_efinity ()
+{
+    is_command_available_or_error efinity " Efinity"
+
+    setup_run_directory_for_fpga_synthesis
+    if [ -f "$main_src_dir/run/board_specific.xml" ] ; then
+          efinity --project "$main_src_dir/run/board_specific.xml" &
+    else
+          efinity &
+    fi
+}

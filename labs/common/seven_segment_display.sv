@@ -4,7 +4,9 @@
 
 module seven_segment_display
 # (
-    parameter w_digit = 2
+    parameter w_digit   = 2,
+    parameter clk_mhz   = 50,
+    parameter update_hz = 4 // Looks like a sane default
 )
 (
     input  clk,
@@ -42,25 +44,49 @@ module seven_segment_display
 
     endfunction
 
-    logic [15:0] cnt;
+    // Calculate display update freq divider
+
+    localparam cnt_max = clk_mhz * 1_000_000 / update_hz,
+               w_cnt   = $clog2 (cnt_max + 1);
+
+    logic [w_cnt - 1:0] cnt;
+
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            cnt <= 16'd0;
+            cnt <= '0;
+        else if (cnt == cnt_max)
+            cnt <= '0;
         else
-            cnt <= cnt + 16'd1;
+            cnt <= cnt + 1'd1;
+
+
+    // Update display output register with specified frequency
+
+    logic  [w_digit * 4 - 1:0] r_number;
+    wire enable = cnt == cnt_max;
+
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+            r_number <= '0;
+        else if (enable)
+            r_number <= number;
+
 
     localparam w_index = $clog2 (w_digit);
     logic [w_index - 1:0] index;
 
+
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             index <= '0;
-        else if (cnt == 16'b0)
+        else if (cnt[15:0] == 16'b0) // Perhaps a check is needed that w_cnt >= 16
             index <= (index == w_index' (w_digit - 1) ?
                 w_index' (0) : index + 1'd1);
 
-    assign abcdefgh = dig_to_seg (number [index * 4 +: 4]) ^ dots [index];
+    // Outputs are combinational like before
+    assign abcdefgh = dig_to_seg (r_number [index * 4 +: 4]) ^ dots [index];
     assign digit    = w_digit' (1'b1) << index;
 
 endmodule
