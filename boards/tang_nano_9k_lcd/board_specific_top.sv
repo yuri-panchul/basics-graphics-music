@@ -119,8 +119,8 @@ module board_specific_top
 
     `ifdef ENABLE_TM1638  // TM1638 module is connected
 
-        assign rst      = tm_key [w_tm_key - 1]   | ~ KEY [w_key - 1];
-        assign top_key  = tm_key [w_tm_key - 1:0] | ~ KEY [w_key - 1:0];
+        assign rst      = tm_key [w_tm_key - 1];
+        assign top_key  = tm_key [w_tm_key - 1:0];
 
         assign tm_led   = top_led;
         assign tm_digit = top_digit;
