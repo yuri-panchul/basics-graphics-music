@@ -2,6 +2,10 @@
 
 Introductory examples for the classes on ASIC and FPGA design and verification. Used for the following events:
 
+[Hacker Dojo in Mountain View, California in 2024](https://verilog-meetup.com)
+
+![Hacker Dojo in Mountain View, California in 2024](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2024_hacker_dojo.jpg)
+
 [ADA University in Baku, Azerbaijan in 2024](https://verilog-meetup.com/2024/02/28/azerbaijan-2024/)
 
 ![ADA University in Baku, Azerbaijan in 2024](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2024_ada_baku.jpg)
