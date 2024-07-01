@@ -1,18 +1,23 @@
 `include "config.svh"
+`include "lab_specific_config.svh"
 
 module top
 # (
-    parameter clk_mhz   = 50,
-              pixel_mhz = 25,
+
+// define one of VGA, _480_272_LCD_RGB,_800_480_LCD_RGB, _1280_1024_LCD_RGB
+// in labs/common/lab_specific_config.svh file
+
+    parameter clk_mhz   = 25,
+              pixel_mhz = 9,
               w_key     = 4,
               w_sw      = 8,
               w_led     = 8,
               w_digit   = 8,
               w_gpio    = 100,
 
-              w_red     = 4,
-              w_green   = 4,
-              w_blue    = 4
+              w_red     = 5,
+              w_green   = 6,
+              w_blue    = 5
 )
 (
     input                        clk,
@@ -30,7 +35,7 @@ module top
     output logic [          7:0] abcdefgh,
     output logic [w_digit - 1:0] digit,
 
-    // VGA
+    // VGA (LCD_RGB)
 
     output logic                 vsync,
     output logic                 hsync,
@@ -68,9 +73,21 @@ module top
 
     //------------------------------------------------------------------------
 
-    localparam w_x = 10, w_y = 10;
+    localparam w_x = 11, w_y = 11;
 
     //------------------------------------------------------------------------
+ `ifdef _480_272_LCD_RGB      // 4.3" display
+    pll_9m pll_9m_inst(
+        .clkout (clk_out),    //output clkout
+        .clkin  (clk)         //input clkin
+    );
+ `endif
+ `ifdef _800_480_LCD_RGB
+    pll_40m pll_40m_inst(     // 5.0", 7.0" display
+         .clkout (clk_out),        //output clkout
+         .clkin  (clk)             //input clkin
+   );
+ `endif
 
     wire [w_x - 1:0] x;
     wire [w_y - 1:0] y;
@@ -85,7 +102,7 @@ module top
     )
     i_vga
     (
-        .clk        ( clk        ),
+        .clk        ( clk_out    ),
         .rst        ( rst        ),
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
@@ -102,41 +119,38 @@ module top
 
     wire [w_x * 2 - 1:0] x_2 = x * x;
 
-    always_comb
+    always@(posedge clk or posedge rst)
     begin
-        red   = '0;
-        green = '0;
-        blue  = '0;
-
-        if (~ display_on)
+     if (rst)
         begin
+           red   <= '0;
+           green <= '0;
+           blue  <= '0;
         end
-        else if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
+     else
+     if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
         begin
-            red   = x [w_x - 2 -: w_red];
+            red   = '0;
             green = '1;
-            blue  = y [w_y - 2 -: w_blue];
+            blue  = '0;
         end
         `ifdef YOSYS
-        else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
+     else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
         `else
-        else if ((((x - 400) ** 2) + 2 * (y - 300) ** 2) < 100 ** 2)  // Ellipse
+     else if ((((x - 400) ** 2) + 2 * (y - 300) ** 2) < 100 ** 2)  // Ellipse
         `endif
         begin
             red   = '1;
             green = x [w_x - 2 -: w_green];
             blue  = y [w_y - 2 -: w_blue];
         end
-        else if (x_2 [9 +: w_y] < y)  // Parabola
+      else if (x_2 [9 +: w_y] < y)  // Parabola
         begin
             red   = x [w_x - 2 -: w_red];
             green = y [w_y - 2 -: w_green];
             blue  = '1;
         end
     end
-
-    /**/
-
     //------------------------------------------------------------------------
     // Pattern 3 - dynamic
 
