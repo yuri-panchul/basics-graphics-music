@@ -1,6 +1,12 @@
 // Asynchronous reset here is needed for one of FPGA boards we use
 
 `include "config.svh"
+/*
+INMP441 microphone requirements.
+frequencies
+	system clock - 0.5..3.2 MHz
+	word select  - 7.8..50  KHz
+*/
 
 module inmp441_mic_i2s_receiver
 # (
@@ -50,6 +56,7 @@ module inmp441_mic_i2s_receiver
     //------------------------------------------------------------------------
 
     assign sck = cnt [3];                // 50 MHz / 16   = 3.13 MHz
+                                         // 27 MHz / 16   = 1.69 MHz
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)

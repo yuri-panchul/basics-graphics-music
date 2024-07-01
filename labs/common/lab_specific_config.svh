@@ -17,4 +17,11 @@
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
 
+
+//Select one of
+//`define VGA
+//`define _480_272_LCD_RGB   // 4.3" display
+`define _800_480_LCD_RGB   // 5.0", 7.0" display
+//`define _1280_1024_LCD_RGB
+
 `endif  // `ifndef LAB_SPECIFIC_CONFIG_SVH

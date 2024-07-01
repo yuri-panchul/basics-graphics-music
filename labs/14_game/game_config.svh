@@ -3,8 +3,13 @@
 
 `include "config.svh"
 
-`define SCREEN_WIDTH   640
-`define SCREEN_HEIGHT  480
+`ifdef _480_272_LCD_RGB   // 4.3" display
+    `define SCREEN_WIDTH   480
+    `define SCREEN_HEIGHT  272
+`else
+    `define SCREEN_WIDTH   640
+    `define SCREEN_HEIGHT  480
+`endif
 
 `define X_WIDTH        10  // X coordinate width in bits
 `define Y_WIDTH        10  // Y coordinate width in bits

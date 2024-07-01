@@ -2,6 +2,9 @@
 
 module top
 # (
+// define one of VGA, _480_272_LCD_RGB,_800_480_LCD_RGB, _1280_1024_LCD_RGB
+// in labs/common/lab_specific_config.svh file
+
     parameter clk_mhz   = 50,
               pixel_mhz = 25,
               w_key     = 4,
@@ -9,9 +12,9 @@ module top
               w_led     = 8,
               w_digit   = 8,
               w_gpio    = 100,
-              w_red     = 4,
-              w_green   = 4,
-              w_blue    = 4
+              w_red     = 5,
+              w_green   = 6,
+              w_blue    = 5
 )
 (
     input                        clk,

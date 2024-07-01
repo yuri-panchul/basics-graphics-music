@@ -1,8 +1,46 @@
 `include "config.svh"
 
+/*
+Hardware required
+   1  key,
+   1  7segment displays,
+   1  INMP441 microphone with I2S interface,
+   7  3.3V GPIO (4 for microphone and 3 more if tm1638 module is used)
+
+If display is available on your board, connect
+TM1638 7 Segment Display Keypad & LED Module by uncommenting the line
+define ENABLE_TM1638 in ../common/lab_specific_config.svh file
+
+Below is the pin assignment fot Tang Nano 4k boad
+For different board check board_specific.sv file from boards folder
+tm1638_board
+  clk  - GPIO[1]
+  stb  - GPIO[2]
+  data - GPIO[0]
+  VCC  - 3V3
+  GNG  - GND
+
+microphone imp1441
+  lr     GPIO [5]
+  ws     GPIO [4]
+  sck    GPIO [3]
+  sd     GPIO [6]
+  VCC  - 3V3
+  GNG  - GND
+
+Lab uses microphone and recognises music notes from 4..5 octaves.
+Virtual piano https://www.musicca.com/piano
+Online tone generator https://www.szynalski.com/tone-generator/
+*/
+
 module top
 # (
-    parameter clk_mhz   = 50,
+    parameter
+      `ifdef BOARD_CLOCK_MHZ
+              clk_mhz   = BOARD_CLOCK_MHZ,  //For board fith system clock different from 50MHz
+      `else
+              clk_mhz   = 50,
+      `endif
               pixel_mhz = 25,
               w_key     = 4,
               w_sw      = 8,
@@ -143,7 +181,7 @@ module top
 
     `ifdef USE_STANDARD_FREQUENCIES
 
-    localparam freq_100_C  = 26163,
+    localparam freq_100_C  = 26163,  //4th Octave, middle of piano
                freq_100_Cs = 27718,
                freq_100_D  = 29366,
                freq_100_Ds = 31113,
@@ -194,11 +232,12 @@ module top
     endfunction
 
     //------------------------------------------------------------------------
+    // Checks notes from 4..6 octaves
 
     function [19:0] check_freq (input [18:0] freq_100, input [19:0] distance);
 
-       check_freq =   check_freq_single_range (freq_100 * 4 , distance)
-                    | check_freq_single_range (freq_100 * 2 , distance)
+       check_freq =   check_freq_single_range (freq_100 * 4 , distance)  // octave + 2
+                    | check_freq_single_range (freq_100 * 2 , distance)  // octave + 1
                     | check_freq_single_range (freq_100     , distance);
 
     endfunction
