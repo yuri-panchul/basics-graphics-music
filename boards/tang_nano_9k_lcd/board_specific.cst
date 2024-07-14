@@ -1,4 +1,5 @@
 # The pin assignments
+# All I/O pins here are 3.3V compatible unless specified otherwise
 
 IO_LOC "CLK"                52;
 
