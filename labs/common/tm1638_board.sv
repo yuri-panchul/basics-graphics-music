@@ -226,19 +226,19 @@ module tm1638_board_controller
               w_seg   = 8
 )
 (
-    input                             clk,
-    input                             rst,
-    input        [               7:0] hgfedcba,
-    input        [     w_digit - 1:0] digit,
-    input        [               7:0] ledr,
+    input                         clk,
+    input                         rst,
+    input        [           7:0] hgfedcba,
+    input        [ w_digit - 1:0] digit,
+    input        [           7:0] ledr,
     `ifdef HCW132
-    output logic [              15:0] keys,
+    output logic [          15:0] keys,
     `else
-    output logic [               7:0] keys,
+    output logic [           7:0] keys,
     `endif
-    output                            sio_clk,
-    output logic                      sio_stb,
-    inout                             sio_data
+    output                        sio_clk,
+    output logic                  sio_stb,
+    inout                         sio_data
 );
 
     `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
@@ -251,7 +251,7 @@ module tm1638_board_controller
         HIGH    = 1'b1,
         LOW     = 1'b0;
 
-    localparam [  7:0]
+    localparam [7:0]
         C_READ_KEYS   = 8'b01000010,
         C_WRITE_DISP  = 8'b01000000,
         C_SET_ADDR_0  = 8'b11000000,
@@ -269,11 +269,11 @@ module tm1638_board_controller
     // completion of 1us delay loop.
     wire               stb_delay_complete = (counter > clk_mhz ? 1 : 0);
 
-    logic  [      5:0] instruction_step;
-    logic  [      7:0] led_on;
+    logic  [5:0] instruction_step;
+    logic  [7:0] led_on;
 
-    logic              tm_rw;
-    wire               dio_in, dio_out;
+    logic        tm_rw;
+    wire         dio_in, dio_out;
 
     // setup tm1638 module with it's tristate IO
     //   tm_in      is written to module
@@ -286,21 +286,21 @@ module tm1638_board_controller
     //   dio_in     for reading from display
     //   dio_out    for sending to display
     //
-    logic              tm_latch;
-    wire               busy;
-    logic  [      7:0] tm_in;
-    wire   [      7:0] tm_out;
+    logic        tm_latch;
+    wire         busy;
+    logic  [7:0] tm_in;
+    wire   [7:0] tm_out;
 
     ///////////// RESET synhronizer ////////////
-    logic              reset_syn1;
-    logic              reset_syn2 = 0;
+    logic             reset_syn1;
+    logic             reset_syn2 = 0;
     always @(posedge clk) begin
-        reset_syn1  <= rst;
-        reset_syn2  <= reset_syn1;
+        reset_syn1 <= rst;
+        reset_syn2 <= reset_syn1;
     end
 
     ////////////// TM1563 dio //////////////////
-    assign sio_data = tm_rw ? dio_out : 'Z;
+    assign sio_data = tm_rw ? dio_out : 'z;
     assign dio_in   = sio_data;
 
     tm1638_sio
@@ -309,19 +309,19 @@ module tm1638_board_controller
     )
     tm1638_sio
     (
-        .clk        ( clk               ),
-        .rst        ( reset_syn2        ),
+        .clk        ( clk        ),
+        .rst        ( reset_syn2 ),
 
-        .data_latch ( tm_latch          ),
-        .data_in    ( tm_in             ),
-        .data_out   ( tm_out            ),
-        .rw         ( tm_rw             ),
+        .data_latch ( tm_latch   ),
+        .data_in    ( tm_in      ),
+        .data_out   ( tm_out     ),
+        .rw         ( tm_rw      ),
 
-        .busy       ( busy              ),
+        .busy       ( busy       ),
 
-        .sclk       ( sio_clk           ),
-        .dio_in     ( dio_in            ),
-        .dio_out    ( dio_out           )
+        .sclk       ( sio_clk    ),
+        .dio_in     ( dio_in     ),
+        .dio_out    ( dio_out    )
     );
 
     ////////////// TM1563 data /////////////////
@@ -383,26 +383,26 @@ module tm1638_board_controller
     // handles displaying 1-8 on a hex display
     task display_digit
     (
-        input [    7:0] segs
+        input [7:0] segs
     );
-        begin
-            tm_latch <= HIGH;
-            tm_in   <= segs;
-        end
+
+        tm_latch <= HIGH;
+        tm_in    <= segs;
+
     endtask
 
     // handles the LEDs 1-8
     task display_led
     (
-        input [    2:0] led
+        input [2:0] led
     );
-        begin
-            tm_latch <= HIGH;
-            tm_in <= {7'b0, led_on[led]};
-        end
+        tm_latch <= HIGH;
+        tm_in <= {7'b0, led_on[led]};
+
     endtask
 
     // controller FSM
+
     always @(posedge clk or posedge reset_syn2)
     begin
         if (reset_syn2) begin
@@ -431,20 +431,20 @@ module tm1638_board_controller
                     `ifdef HCW132
                     //  read back keys S1 - S16
                     4:  {keys[0], keys[1], keys[8], keys[9]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
-                    5:  {tm_latch}         <= {HIGH};
+                    5:  tm_latch           <= HIGH;
                     6:  {keys[2], keys[3], keys[10], keys[11]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
-                    7:  {tm_latch}         <= {HIGH};
+                    7:  tm_latch           <= HIGH;
                     8:  {keys[4], keys[5], keys[12], keys[13]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
-                    9:  {tm_latch}         <= {HIGH};
+                    9:  tm_latch           <= HIGH;
                     10:  {keys[6], keys[7], keys[14], keys[15]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
                     `else
                     //  read back keys S1 - S8
                     4:  {keys[7], keys[3]} <= {tm_out[0], tm_out[4]};
-                    5:  {tm_latch}         <= {HIGH};
+                    5:  tm_latch           <= HIGH;
                     6:  {keys[6], keys[2]} <= {tm_out[0], tm_out[4]};
-                    7:  {tm_latch}         <= {HIGH};
+                    7:  tm_latch           <= HIGH;
                     8:  {keys[5], keys[1]} <= {tm_out[0], tm_out[4]};
-                    9:  {tm_latch}         <= {HIGH};
+                    9:  tm_latch           <= HIGH;
                     10: {keys[4], keys[0]} <= {tm_out[0], tm_out[4]};
                     `endif
                     11: {counter, sio_stb} <= {COUNTER_0, HIGH}; // initiate 1us delay
