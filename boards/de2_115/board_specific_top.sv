@@ -32,9 +32,9 @@ module board_specific_top
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output [w_led    - 1:0] LEDR,    // The last 8 LEDR are optionally used to output 7SEG dp
+    output [w_led    - 1:0] LEDR,  // The last 8 LEDR are optionally used to output 7SEG dp
 
-    output logic [     6:0] HEX0,    // HEX[7] aka dp are not connected to FPGA at DE2-115
+    output logic [     6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE2-115
     output logic [     6:0] HEX1,
     output logic [     6:0] HEX2,
     output logic [     6:0] HEX3,
@@ -60,25 +60,40 @@ module board_specific_top
     localparam w_lab_sw = w_sw - 1;                // One sw is used as a reset
 
     `ifdef USE_HIGH_LED_FOR_7SEG_DP
-    localparam w_lab_led = w_led - w_digit;
+        localparam w_lab_led = w_led - w_digit;
     `else
-    localparam w_lab_led = w_led;
+        localparam w_lab_led = w_led;
     `endif
 
     //------------------------------------------------------------------------
 
-    wire                   clk     = CLOCK_50;
-    wire                   rst     = SW [w_lab_sw];
+    wire                    clk     = CLOCK_50;
+    wire                    rst     = SW [w_lab_sw];
 
-    wire [w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
-    wire [w_key     - 1:0] lab_key = ~ KEY;
-    wire [w_lab_led - 1:0] lab_led;
+    // Keys, switches, LEDs
 
-    wire [            7:0] abcdefgh;
-    wire [w_digit   - 1:0] digit;
+    wire [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
+    wire [ w_key     - 1:0] lab_key = ~ KEY;
+    wire [ w_lab_led - 1:0] lab_led;
 
-    wire [           23:0] mic;
-    wire [           15:0] sound;
+    // A dynamic seven-segment display
+
+    wire [             7:0] abcdefgh;
+    wire [ w_digit   - 1:0] digit;
+
+    // Graphics
+
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
+
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
+
+    // Microphone, sound output and UART
+
+    wire [            23:0] mic;
+    wire [            15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -91,46 +106,46 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz         ),
-        .w_key   ( w_lab_key       ),
-        .w_sw    ( w_lab_sw        ),
-        .w_led   ( w_led - w_digit ),              // The last 8 LEDR are used like a 7SEG dp
-        .w_digit ( w_digit         ),
-        .w_gpio  ( w_gpio          )               // GPIO[5:0] reserved for mic
+        .clk_mhz       ( clk_mhz       ),
+        .w_key         ( w_key         ),
+        .w_sw          ( w_lab_sw      ),
+        .w_led         ( w_lab_led     ),
+        .w_digit       ( w_digit       ),
+        .w_gpio        ( w_gpio        ),
+
+        .screen_width  ( screen_width  ),
+        .screen_height ( screen_height ),
+
+        .w_red         ( w_red         ),
+        .w_green       ( w_green       ),
+        .w_blue        ( w_blue        )
     )
     i_lab_top
     (
-        .clk      (   clk          ),
-        .slow_clk (   slow_clk     ),
-        .rst      (   rst          ),
+        .clk           (   clk          ),
+        .slow_clk      (   slow_clk     ),
+        .rst           (   rst          ),
 
-        .key      (   lab_key      ),
-        .sw       (   lab_sw       ),
+        .key           (   lab_key      ),
+        .sw            (   lab_sw       ),
 
-        .led      (   lab_led      ),
+        .led           (   lab_led      ),
 
-        .abcdefgh (   abcdefgh     ),
-        .digit    (   digit        ),
+        .abcdefgh      (   abcdefgh     ),
+        .digit         (   digit        ),
 
-        .vsync    (   VGA_VS       ),
-        .hsync    (   VGA_HS       ),
+        .mic           (   mic          ),
+        .sound         (   sound        ),
 
-        .red      (   VGA_R        ),
-        .green    (   vga_green_4b ),
-        .blue     (   vga_blue_4b  ),
+        .uart_rx       (                ),  // TODO
+        .uart_tx       (                ),  // TODO
 
-        .uart_rx  (                ),  // TODO
-        .uart_tx  (                ),  // TODO
-
-        .mic      (   mic          ),
-        .sound    (   sound        ),
-
-        .gpio     (   GPIO         )
+        .gpio          (   GPIO         )
     );
 
     //------------------------------------------------------------------------
 
-    assign LEDR [w_led - w_digit - 1:0] = lab_led; // The last 8 LEDR are used like a 7SEG dp
+    assign LEDR [w_lab_led:0] = lab_led;
 
     assign VGA_R   = { vga_red_4b,   4'd0 };
     assign VGA_G   = { vga_green_4b, 4'd0 };
@@ -171,8 +186,8 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire  [$left (abcdefgh):0] hgfedcba;
-    logic [$left    (digit):0] dp;
+    wire  [$left ( abcdefgh ):0] hgfedcba;
+    logic [$left ( digit    ):0] dp;
 
     generate
         genvar i;
@@ -248,7 +263,9 @@ module board_specific_top
             end
         end
 
-        assign LEDR [w_led - 1:w_led - w_digit] = dp;  // The last 8 LEDR are used like a 7SEG dp
+        `ifdef USE_HIGH_LED_FOR_7SEG_DP
+            assign LEDR [w_led - 1 : w_lb_led] = dp;
+        `endif
 
     `endif
 
@@ -258,31 +275,33 @@ module board_specific_top
     (
         .clk   ( clk      ),
         .rst   ( rst      ),
-        .lr    ( GPIO [0] ), // JP5 pin 1
-        .ws    ( GPIO [2] ), // JP5 pin 3
-        .sck   ( GPIO [4] ), // JP5 pin 5
-        .sd    ( GPIO [5] ), // JP5 pin 6
+        .lr    ( GPIO [0] ),
+        .ws    ( GPIO [2] ),
+        .sck   ( GPIO [4] ),
+        .sd    ( GPIO [5] ),
         .value ( mic      )
     );
 
-    assign GPIO [1] = 1'b0;  // GND - JP5 pin 2
-    assign GPIO [3] = 1'b1;  // VCC - JP5 pin 4
+    assign GPIO [1] = 1'b0;  // GND
+    assign GPIO [3] = 1'b1;  // VCC
 
     //------------------------------------------------------------------------
 
     i2s_audio_out
     # (
-        .clk_mhz ( clk_mhz     )
+        .clk_mhz ( clk_mhz   )
     )
-    o_audio
+    i_audio
     (
         .clk     ( clk       ),
         .reset   ( rst       ),
-        .data_in ( sound     ), // TODO - check all comments with pins
-        .mclk    ( GPIO [33] ), // JP5 pin 38
-        .bclk    ( GPIO [31] ), // JP5 pin 36
-        .lrclk   ( GPIO [27] ), // JP5 pin 32
-        .sdata   ( GPIO [29] )  // JP5 pin 34
-    );                          // JP5 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+        .data_in ( sound     ),
+        .mclk    ( GPIO [33] ),
+        .bclk    ( GPIO [31] ),
+        .lrclk   ( GPIO [27] ),
+        .sdata   ( GPIO [29] )
+    );
+
+    // VCC and GND for i2s_audio_out are on dedicated pins
 
 endmodule
