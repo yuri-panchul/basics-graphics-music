@@ -29,7 +29,7 @@ module tb;
 
         .strobe_to_update_xy_counter_width (1)
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk ),
         .slow_clk ( clk ),

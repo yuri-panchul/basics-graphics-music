@@ -35,7 +35,7 @@ module asic_top
         .w_digit   ( w_digit  ),
         .w_gpio    ( w_gpio   )
     )
-    i_top
+    i_lab_top
     (
         .clk       ( clk      ),
         .slow_clk  ( slow_clk ),

@@ -184,7 +184,7 @@ module board_specific_top
         .w_green ( w_top_green  ),
         .w_blue  ( w_top_blue   )
     )
-    i_top
+    i_lab_top
     (
 `ifdef ENABLE_HDMI
         .clk      ( clk_hd    ),

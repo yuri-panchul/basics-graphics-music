@@ -84,7 +84,7 @@ module board_specific_top
         .w_digit  ( w_digit         ),
         .w_gpio   ( w_gpio          )               // GPIO[5:0] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk                  ),
         .slow_clk (   slow_clk             ),

@@ -27,7 +27,7 @@ module testbench;
         .w_digit ( w_digit ),
         .w_gpio  ( w_gpio  )
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk ),
         .slow_clk ( clk ),

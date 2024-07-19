@@ -129,7 +129,7 @@ module board_specific_top
         .w_digit   ( w_top_digit ),
         .w_gpio    ( w_gpio      )       // GPIO_0 [31], [33], [35] reserved for tm1638; GPIO [11], [13], [15], [17] reserved for i2s audio; GPIO_0[5:0] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk       ( clk         ),
         .slow_clk  ( slow_clk    ),

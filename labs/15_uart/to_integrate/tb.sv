@@ -11,7 +11,7 @@ module tb;
         .baud_rate          (    1 ),
         .timeout_in_seconds ( 1000 )
     )
-    i_top
+    i_lab_top
     (
         .clk     ( clk     ),
         .reset_n ( reset_n ),

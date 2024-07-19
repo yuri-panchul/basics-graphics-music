@@ -87,7 +87,7 @@ module board_specific_top
         .w_digit ( 4 ),
         .w_gpio  ( 0 )
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk      ),
         .slow_clk ( slow_clk ),

@@ -146,7 +146,7 @@ module board_specific_top
         // top gpio includes both ARDUINO and GPIO pins
         // GPIO [31], [33], [35] reserved for tm1638, GPIO[5:0] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk                  ),
         .slow_clk ( slow_clk             ),

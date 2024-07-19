@@ -160,7 +160,7 @@ module board_specific_top
         .w_green    ( w_green      ),
         .w_blue     ( w_blue       )
     )
-    i_top
+    i_lab_top
     (
         .clk        ( clk          ),
         .slow_clk   ( slow_clk     ),

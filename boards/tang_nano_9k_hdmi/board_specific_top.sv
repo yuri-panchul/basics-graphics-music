@@ -157,7 +157,7 @@ module board_specific_top
         .w_blue  ( 8             )
 `endif
     )
-    i_top
+    i_lab_top
     (
 `ifdef USE_HDMI
         .clk        ( clk_hd     ),
