@@ -56,7 +56,7 @@ module board_specific_top
     wire [w_key    - 1:0] lab_key = ~ KEY;
 
     //------------------------------------------------------------------------
-    wire [ w_led - w_digit - 1:0] top_led;
+    wire [ w_led - w_digit - 1:0] lab_led;
 
     wire [                   7:0] abcdefgh;
     wire [         w_digit - 1:0] digit;
@@ -93,7 +93,7 @@ module board_specific_top
         .key      (   lab_key              ),
         .sw       (   lab_sw               ),
 
-        .led      (   top_led              ),
+        .led      (   lab_led              ),
 
         .abcdefgh (   abcdefgh             ),
         .digit    (   digit                ),
@@ -116,7 +116,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = top_led; // Last 8 LEDR are used like a 7SEG dp
+    assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = lab_led; // Last 8 LEDR are used like a 7SEG dp
 
     assign VGA_R   = { vga_red_4b,   4'd0 };
     assign VGA_G   = { vga_green_4b, 4'd0 };
