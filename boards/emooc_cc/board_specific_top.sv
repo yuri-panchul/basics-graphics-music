@@ -48,12 +48,12 @@ module board_specific_top
 
     // locally useful numeric constants
     localparam w_gpio   = w_gpio_j7 + w_gpio_p1 + w_gpio_p2,
-               w_top_sw = w_sw - 1;
+               w_lab_sw = w_sw - 1;
 
     // one switch is used as reset, others - as input signals;
     // for convenience, declare set of wires "top_sw"
     wire                  rst    = SW [w_sw - 1];
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire [w_lab_sw - 1:0] top_sw = SW [w_lab_sw - 1:0];
 
     // need explicit wire to be able to invert
     wire  [          7:0] abcdefgh;
@@ -80,7 +80,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz  ),
         .w_key   ( w_key    ),
-        .w_sw    ( w_top_sw ), // only non-reset switches used as inputs
+        .w_sw    ( w_lab_sw ), // only non-reset switches used as inputs
         .w_led   ( w_led    ),
         .w_digit ( w_digit  ),
         .w_gpio  ( w_gpio   )

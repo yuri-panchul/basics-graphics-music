@@ -38,12 +38,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw = w_sw - 1;  // One onboard SW is used as a reset
+    localparam w_lab_sw = w_sw - 1;  // One onboard SW is used as a reset
 
     wire                     clk = CLOCK_50;
 
-    wire                  rst    = SW [w_top_sw];
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire                  rst    = SW [w_lab_sw];
+    wire [w_lab_sw - 1:0] top_sw = SW [w_lab_sw - 1:0];
     wire [w_key    - 1:0] top_key = ~ BUTTON;
 
     //------------------------------------------------------------------------
@@ -71,7 +71,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz  ),
         .w_key   ( w_key    ),
-        .w_sw    ( w_top_sw ),
+        .w_sw    ( w_lab_sw ),
         .w_led   ( w_led    ),
         .w_digit ( w_digit  ),
         .w_gpio  ( w_gpio   )        // GPIO_0[7:2] reserved for mic

@@ -33,10 +33,10 @@ module board_specific_top
 
     wire clk = CLK;
 
-    localparam w_top_key = w_key - 1;  // One key is used as a reset
+    localparam w_lab_key = w_key - 1;  // One key is used as a reset
 
-    wire                   rst     = ~ KEY [w_top_key];
-    wire [w_top_key - 1:0] top_key = ~ KEY [w_top_key - 1:0];
+    wire                   rst     = ~ KEY [w_lab_key];
+    wire [w_lab_key - 1:0] top_key = ~ KEY [w_lab_key - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz ( clk_mhz   ),
-        .w_key   ( w_top_key ),
+        .w_key   ( w_lab_key ),
         .w_sw    ( w_sw      ),
         .w_led   ( w_led     ),
         .w_digit ( w_digit   ),

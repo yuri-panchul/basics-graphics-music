@@ -31,11 +31,11 @@ module board_specific_top
     inout  [w_gpio  - 1:0] GPIO
 );
 
-    localparam w_top_key = w_key - 1;  // One onboard key is used as a reset
+    localparam w_lab_key = w_key - 1;  // One onboard key is used as a reset
 
     wire                   clk     = CLK;
     wire                   rst     = ~ KEY_N [w_key     - 1];
-    wire [w_top_key - 1:0] top_key = ~ KEY_N [w_top_key - 1:0];
+    wire [w_lab_key - 1:0] top_key = ~ KEY_N [w_lab_key - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz ( clk_mhz   ),
-        .w_key   ( w_top_key ),
+        .w_key   ( w_lab_key ),
         .w_sw    ( w_sw      ),
         .w_led   ( w_led     ),
         .w_digit ( w_digit   ),

@@ -55,8 +55,8 @@ module board_specific_top
 
     // This logic is necessary to compensate the defective board
 
-    localparam w_top_digit = w_digit - 1;  // The right digit is not working on this board
-    wire [w_top_digit - 1:0] top_digit;
+    localparam w_lab_digit = w_digit - 1;  // The right digit is not working on this board
+    wire [w_lab_digit - 1:0] top_digit;
 
     assign digit = { top_digit, 1'b0 };
 
@@ -75,7 +75,7 @@ module board_specific_top
         .w_key   ( w_key       ),
         .w_sw    ( w_sw        ),
         .w_led   ( w_led       ),
-        .w_digit ( w_top_digit ),  // Note top_digit, not digit
+        .w_digit ( w_lab_digit ),  // Note top_digit, not digit
         .w_gpio  ( w_gpio      )
     )
     i_lab_top

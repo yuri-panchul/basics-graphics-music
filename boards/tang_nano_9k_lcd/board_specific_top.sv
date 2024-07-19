@@ -85,17 +85,17 @@ module board_specific_top
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 
-        localparam w_top_key   = w_tm_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_tm_led,
-                   w_top_digit = w_tm_digit;
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
 
     `else                   // TM1638 module is not connected
 
-        localparam w_top_key   = w_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_led,
-                   w_top_digit = w_digit;
+        localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_led,
+                   w_lab_digit = w_digit;
 
     `endif
 
@@ -105,9 +105,9 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] top_key;
+    wire  [w_lab_led   - 1:0] top_led;
+    wire  [w_lab_digit - 1:0] top_digit;
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
@@ -150,10 +150,10 @@ module board_specific_top
         .clk_mhz    ( clk_mhz      ),
         .pixel_mhz  ( pixel_mhz    ),
 
-        .w_key      ( w_top_key    ),  // The last key is used for a reset
-        .w_sw       ( w_top_key    ),
-        .w_led      ( w_top_led    ),
-        .w_digit    ( w_top_digit  ),
+        .w_key      ( w_lab_key    ),  // The last key is used for a reset
+        .w_sw       ( w_lab_key    ),
+        .w_led      ( w_lab_led    ),
+        .w_digit    ( w_lab_digit  ),
         .w_gpio     ( w_gpio       ),
 
         .w_red      ( w_red        ),

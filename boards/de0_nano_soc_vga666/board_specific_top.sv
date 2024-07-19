@@ -27,13 +27,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw   = w_sw - 1;         // One onboard SW is used as a reset
+    localparam w_lab_sw   = w_sw - 1;         // One onboard SW is used as a reset
 
     wire                  clk    = FPGA_CLK1_50;
 
-    wire                  rst    = SW [w_top_sw];
+    wire                  rst    = SW [w_lab_sw];
 
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire [w_lab_sw - 1:0] top_sw = SW [w_lab_sw - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -59,15 +59,15 @@ module board_specific_top
 
     `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
 
-        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
-                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
-                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
+        localparam w_lab_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_lab_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
+                   w_lab_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
     `else  // Concatenate the signals
 
-        localparam w_top_key   = w_tm_key   + w_key   ,
-                   w_top_led   = w_tm_led   + w_led   ,
-                   w_top_digit = w_tm_digit + w_digit ;
+        localparam w_lab_key   = w_tm_key   + w_key   ,
+                   w_lab_led   = w_tm_led   + w_led   ,
+                   w_lab_digit = w_tm_digit + w_digit ;
     `endif
 
     //------------------------------------------------------------------------
@@ -76,9 +76,9 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] top_key;
+    wire  [w_lab_led   - 1:0] top_led;
+    wire  [w_lab_digit - 1:0] top_digit;
 
     //------------------------------------------------------------------------
 
@@ -125,10 +125,10 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz ( clk_mhz     ),
-        .w_key   ( w_top_key   ),
-        .w_sw    ( w_top_sw    ),
-        .w_led   ( w_top_led   ),
-        .w_digit ( w_top_digit ),
+        .w_key   ( w_lab_key   ),
+        .w_sw    ( w_lab_sw    ),
+        .w_led   ( w_lab_led   ),
+        .w_digit ( w_lab_digit ),
         .w_gpio  ( w_gpio      )        // GPIO_0 [31], [33], [35] reserved for tm1638, GPIO_0[5:0] reserved for mic
     )
     i_lab_top

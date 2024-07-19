@@ -57,22 +57,22 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw = w_sw - 1;                // One sw is used as a reset
+    localparam w_lab_sw = w_sw - 1;                // One sw is used as a reset
 
     `ifdef USE_HIGH_LED_FOR_7SEG_DP
-    localparam w_top_led = w_led - w_digit;
+    localparam w_lab_led = w_led - w_digit;
     `else
-    localparam w_top_led = w_led;
+    localparam w_lab_led = w_led;
     `endif
 
     //------------------------------------------------------------------------
 
     wire                   clk     = CLOCK_50;
-    wire                   rst     = SW [w_top_sw];
+    wire                   rst     = SW [w_lab_sw];
 
-    wire [w_top_sw  - 1:0] top_sw  = SW [w_top_sw - 1:0];
+    wire [w_lab_sw  - 1:0] top_sw  = SW [w_lab_sw - 1:0];
     wire [w_key     - 1:0] top_key = ~ KEY;
-    wire [w_top_led - 1:0] top_led;
+    wire [w_lab_led - 1:0] top_led;
 
     wire [            7:0] abcdefgh;
     wire [w_digit   - 1:0] digit;
@@ -92,8 +92,8 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz ( clk_mhz         ),
-        .w_key   ( w_top_key       ),
-        .w_sw    ( w_top_sw        ),
+        .w_key   ( w_lab_key       ),
+        .w_sw    ( w_lab_sw        ),
         .w_led   ( w_led - w_digit ),              // The last 8 LEDR are used like a 7SEG dp
         .w_digit ( w_digit         ),
         .w_gpio  ( w_gpio          )               // GPIO[5:0] reserved for mic

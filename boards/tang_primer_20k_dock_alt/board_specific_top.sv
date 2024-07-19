@@ -53,39 +53,39 @@ module board_specific_top
 
     `ifdef ENABLE_TM1638    // TM1638 module is connected
 
-        localparam w_top_key   = w_tm_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_tm_led,
-                   w_top_digit = w_tm_digit;
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
 
     `else                   // TM1638 module is not connected
 
-        localparam w_top_key   = w_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_led,
-                   w_top_digit = w_digit;
+        localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_led,
+                   w_lab_digit = w_digit;
 
     `endif
 
     //------------------------------------------------------------------------
 
     `ifdef ENABLE_VGA16
-        localparam w_top_red   = 5,
-                   w_top_green = 6,
-                   w_top_blue  = 5;
+        localparam w_lab_red   = 5,
+                   w_lab_green = 6,
+                   w_lab_blue  = 5;
     `elsif ENABLE_VGA666
-        localparam w_top_red   = 6,
-                   w_top_green = 6,
-                   w_top_blue  = 6;
+        localparam w_lab_red   = 6,
+                   w_lab_green = 6,
+                   w_lab_blue  = 6;
     `elsif ENABLE_HDMI
         localparam vid_clk_mhz = 125,
-                   w_top_red   = 8,
-                   w_top_green = 8,
-                   w_top_blue  = 8;
+                   w_lab_red   = 8,
+                   w_lab_green = 8,
+                   w_lab_blue  = 8;
     `else
-        localparam w_top_red   = 4,
-                   w_top_green = 4,
-                   w_top_blue  = 4;
+        localparam w_lab_red   = 4,
+                   w_lab_green = 4,
+                   w_lab_blue  = 4;
     `endif
 
     //------------------------------------------------------------------------
@@ -94,10 +94,10 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    logic [w_top_sw    - 1:0] top_sw;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] top_key;
+    logic [w_lab_sw    - 1:0] top_sw;
+    wire  [w_lab_led   - 1:0] top_led;
+    wire  [w_lab_digit - 1:0] top_digit;
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
@@ -115,9 +115,9 @@ module board_specific_top
     wire                     VGA_HS;
     wire                     VGA_VS;
 
-    logic [ w_top_red   - 1:0] VGA_R;
-    logic [ w_top_green - 1:0] VGA_G;
-    logic [ w_top_blue  - 1:0] VGA_B;
+    logic [ w_lab_red   - 1:0] VGA_R;
+    logic [ w_lab_green - 1:0] VGA_G;
+    logic [ w_lab_blue  - 1:0] VGA_B;
 
     //------------------------------------------------------------------------
 
@@ -175,14 +175,14 @@ module board_specific_top
 `else
         .clk_mhz ( clk_mhz     ),
 `endif
-        .w_key   ( w_top_key    ),  // The last key is used for a reset
-        .w_sw    ( w_top_sw     ),
-        .w_led   ( w_top_led    ),
-        .w_digit ( w_top_digit  ),
+        .w_key   ( w_lab_key    ),  // The last key is used for a reset
+        .w_sw    ( w_lab_sw     ),
+        .w_led   ( w_lab_led    ),
+        .w_digit ( w_lab_digit  ),
         .w_gpio  ( w_gpio       ),
-        .w_red   ( w_top_red    ),
-        .w_green ( w_top_green  ),
-        .w_blue  ( w_top_blue   )
+        .w_red   ( w_lab_red    ),
+        .w_green ( w_lab_green  ),
+        .w_blue  ( w_lab_blue   )
     )
     i_lab_top
     (

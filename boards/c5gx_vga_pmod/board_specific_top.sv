@@ -33,12 +33,12 @@ module board_specific_top
     inout  [w_gpio - 1:0] GPIO
 );
 
-    localparam w_top_sw = w_sw - 1; // One sw is used as a reset
+    localparam w_lab_sw = w_sw - 1; // One sw is used as a reset
 
     wire                  clk     = CLOCK_50_B8A;
     wire                  rst     = ~ CPU_RESET_n;
 
-    wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
+    wire [w_lab_sw - 1:0] top_sw  = SW [w_lab_sw - 1:0];
     wire [w_key    - 1:0] top_key = ~ KEY;
 
     //------------------------------------------------------------------------
@@ -61,7 +61,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz         ),
         .w_key   ( w_key           ),
-        .w_sw    ( w_top_sw        ),
+        .w_sw    ( w_lab_sw        ),
         .w_led   ( w_led - w_digit ), // The last 4 LEDR are used like a 7SEG dp
         .w_digit ( w_digit         ),
         .w_gpio  ( w_gpio          )  // GPIO[5:0] reserved for mic
