@@ -57,8 +57,8 @@ module tb;
         //--------------------------------------------------------------------
         // Checking multiple bits
 
-        if ($bits (i_top.all_muxes) < $bits (led))
-            n_muxes_to_check = $bits (i_top.all_muxes);
+        if ($bits (i_lab_top.all_muxes) < $bits (led))
+            n_muxes_to_check = $bits (i_lab_top.all_muxes);
         else
             n_muxes_to_check = $bits (led);
 
@@ -74,9 +74,9 @@ module tb;
         //--------------------------------------------------------------------
         // White-box testing - checking XMR (external module reference)
 
-        for (int i = 0; i < $bits (i_top.all_muxes); i ++)
+        for (int i = 0; i < $bits (i_lab_top.all_muxes); i ++)
         begin
-            result = i_top.all_muxes [i];
+            result = i_lab_top.all_muxes [i];
 
             if (result !== expected)
                 $display ("Mismatch in mux %0d: %b ? %b : %b. expected: %b actual: %b",

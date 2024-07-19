@@ -85,7 +85,7 @@ module board_specific_top
         .w_digit ( w_digit  ),
         .w_gpio  ( w_gpio   )
     )
-    // i_top is an instance, passing signal mappings - ?..
+    // i_lab_top is an instance, passing signal mappings - ?..
     i_lab_top
     (
         .clk      ( clk       ),
