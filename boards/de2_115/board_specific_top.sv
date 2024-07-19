@@ -12,7 +12,7 @@ module board_specific_top
               w_sw          = 18,
               w_led         = 18,
               w_digit       = 8,
-              w_gpio        = 36
+              w_gpio        = 36,
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
               // Odd gpio .. are reserved I2S audio.
@@ -152,7 +152,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign LEDR [w_lab_led:0] = lab_led;
+    assign LEDR [w_lab_led - 1:0] = lab_led;
 
     //------------------------------------------------------------------------
 
@@ -234,7 +234,7 @@ module board_specific_top
         end
 
         `ifdef USE_HIGH_LED_FOR_7SEG_DP
-            assign LEDR [w_led - 1 : w_lb_led] = dp;
+            assign LEDR [w_led - 1 : w_lab_led] = dp;
         `endif
 
     `endif
