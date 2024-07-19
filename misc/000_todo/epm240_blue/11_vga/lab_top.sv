@@ -1,4 +1,4 @@
-module top
+module lab_top
 (
     input              clk,
     input              rst_n,

@@ -2,7 +2,7 @@
 
 `ifndef SIMULATION
 
-module top
+module lab_top
 # (
     parameter clk_mhz   = 50,
               pixel_mhz = 25,

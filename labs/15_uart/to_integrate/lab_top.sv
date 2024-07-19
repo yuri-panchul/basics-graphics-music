@@ -1,6 +1,6 @@
 // Asynchronous reset here is needed for the FPGA board we use
 
-module top
+module lab_top
 # (
     parameter clk_frequency       = 50 * 1000 * 1000,
               baud_rate           = 115200,

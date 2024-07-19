@@ -3,7 +3,7 @@
 `define HCW132
 `define ENABLE_INMP441
 
-module top
+module lab_top
 # (
     parameter clk_mhz = 50,
               w_key   = 4,
