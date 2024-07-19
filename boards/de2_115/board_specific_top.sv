@@ -1,24 +1,40 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+`define USE_HIGH_LED_FOR_7SEG_DP
+
 module board_specific_top
 # (
-    parameter clk_mhz   = 50,
-              w_key     = 4,
-              w_sw      = 18,
-              w_led     = 18,
-              w_digit   = 8,
-              w_gpio    = 36,        // GPIO[5:0] reserved for mic
-              vga_clock = 25         // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 4,
+              w_sw          = 18,
+              w_led         = 18,
+              w_digit       = 8,
+              w_gpio        = 36
+
+              // gpio 0..5 are reserved for INMP 441 I2S microphone.
+              // Odd gpio .. are reserved I2S audio.
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 8,
+              w_green       = 8,
+              w_blue        = 8,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                   CLOCK_50,
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output [w_led    - 1:0] LEDR,    // The last 8 LEDR are used like a 7SEG dp
+    output [w_led    - 1:0] LEDR,    // The last 8 LEDR are optionally used to output 7SEG dp
 
-    output logic [     6:0] HEX0,    // HEX[7] aka dp doesn't connected to FPGA at DE2-115
+    output logic [     6:0] HEX0,    // HEX[7] aka dp are not connected to FPGA at DE2-115
     output logic [     6:0] HEX1,
     output logic [     6:0] HEX2,
     output logic [     6:0] HEX3,
@@ -27,12 +43,12 @@ module board_specific_top
     output logic [     6:0] HEX6,
     output logic [     6:0] HEX7,
 
-    output                  VGA_CLK, // VGA DAC input triggers CLK
+    output                  VGA_CLK,
     output                  VGA_HS,
     output                  VGA_VS,
-    output [           7:0] VGA_R,
-    output [           7:0] VGA_G,
-    output [           7:0] VGA_B,
+    output [w_red    - 1:0] VGA_R,
+    output [w_green  - 1:0] VGA_G,
+    output [w_blue   - 1:0] VGA_B,
     output                  VGA_BLANK_N,
     output                  VGA_SYNC_N,
 
@@ -43,26 +59,26 @@ module board_specific_top
 
     localparam w_top_sw = w_sw - 1;                // One sw is used as a reset
 
-    wire                  clk     = CLOCK_50;
-    wire                  rst     = SW [w_top_sw];
-    wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
-    wire [w_key    - 1:0] top_key = ~ KEY;
+    `ifdef USE_HIGH_LED_FOR_7SEG_DP
+    localparam w_top_led = w_led - w_digit;
+    `else
+    localparam w_top_led = w_led;
+    `endif
 
     //------------------------------------------------------------------------
 
-    wire  [w_led - w_digit - 1:0] top_led;
+    wire                   clk     = CLOCK_50;
+    wire                   rst     = SW [w_top_sw];
 
-    wire  [                  7:0] abcdefgh;
-    wire  [        w_digit - 1:0] digit;
+    wire [w_top_sw  - 1:0] top_sw  = SW [w_top_sw - 1:0];
+    wire [w_key     - 1:0] top_key = ~ KEY;
+    wire [w_top_led - 1:0] top_led;
 
-    wire  [                  3:0] vga_red_4b,vga_green_4b,vga_blue_4b;
+    wire [            7:0] abcdefgh;
+    wire [w_digit   - 1:0] digit;
 
-    wire  [                 23:0] mic;
-    wire  [                 15:0] sound;
-
-    // FIXME: Should be assigned to some GPIO!
-    wire                          UART_TX;
-    wire                          UART_RX = '1;
+    wire [           23:0] mic;
+    wire [           15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -76,7 +92,7 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz ( clk_mhz         ),
-        .w_key   ( w_key           ),
+        .w_key   ( w_top_key       ),
         .w_sw    ( w_top_sw        ),
         .w_led   ( w_led - w_digit ),              // The last 8 LEDR are used like a 7SEG dp
         .w_digit ( w_digit         ),
@@ -99,12 +115,12 @@ module board_specific_top
         .vsync    (   VGA_VS       ),
         .hsync    (   VGA_HS       ),
 
-        .red      (   vga_red_4b   ),
+        .red      (   VGA_R        ),
         .green    (   vga_green_4b ),
         .blue     (   vga_blue_4b  ),
 
-        .uart_rx  (   UART_RX      ),
-        .uart_tx  (   UART_TX      ),
+        .uart_rx  (                ),  // TODO
+        .uart_tx  (                ),  // TODO
 
         .mic      (   mic          ),
         .sound    (   sound        ),
