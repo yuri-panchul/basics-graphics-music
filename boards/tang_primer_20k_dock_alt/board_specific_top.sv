@@ -97,7 +97,7 @@ module board_specific_top
     logic [w_lab_key   - 1:0] lab_key;
     logic [w_lab_sw    - 1:0] lab_sw;
     wire  [w_lab_led   - 1:0] lab_led;
-    wire  [w_lab_digit - 1:0] top_digit;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
@@ -143,7 +143,7 @@ module board_specific_top
         assign lab_sw   = ~ SW;
 
         assign tm_led   = lab_led;
-        assign tm_digit = top_digit;
+        assign tm_digit = lab_digit;
 
     `else                   // TM1638 module is not connected
 
@@ -200,7 +200,7 @@ module board_specific_top
         .led      ( lab_led   ),
 
         .abcdefgh ( abcdefgh  ),
-        .digit    ( top_digit ),
+        .digit    ( lab_digit ),
 
         .vsync    ( VGA_VS    ),
         .hsync    ( VGA_HS    ),

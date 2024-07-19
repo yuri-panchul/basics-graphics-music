@@ -89,7 +89,7 @@ module board_specific_top
 
     logic [w_lab_key   - 1:0] lab_key;
     wire  [w_lab_led   - 1:0] lab_led;
-    wire  [w_lab_digit - 1:0] top_digit;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     //------------------------------------------------------------------------
 
@@ -98,14 +98,14 @@ module board_specific_top
         assign lab_key = { tm_key, ~ KEY };
 
         assign { tm_led   , LEDR  } = lab_led;
-        assign { tm_digit , digit } = top_digit;
+        assign { tm_digit , digit } = lab_digit;
 
     `elsif CONCAT_REGULAR_SIGNALS_AND_TM
 
         assign lab_key = { ~ KEY, tm_key };
 
         assign { LEDR  , tm_led   } = lab_led;
-        assign { digit , tm_digit } = top_digit;
+        assign { digit , tm_digit } = lab_digit;
 
     `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
 
@@ -120,8 +120,8 @@ module board_specific_top
         assign LEDR     = lab_led   [w_led      - 1:0];
         assign tm_led   = lab_led   [w_tm_led   - 1:0];
 
-        assign digit    = top_digit [w_digit    - 1:0];
-        assign tm_digit = top_digit [w_tm_digit - 1:0];
+        assign digit    = lab_digit [w_digit    - 1:0];
+        assign tm_digit = lab_digit [w_tm_digit - 1:0];
 
     `endif
 
@@ -158,7 +158,7 @@ module board_specific_top
         .led      ( lab_led              ),
 
         .abcdefgh ( abcdefgh             ),
-        .digit    ( top_digit            ),
+        .digit    ( lab_digit            ),
 
         .vsync    ( VGA_VS               ),
         .hsync    ( VGA_HS               ),
