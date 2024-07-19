@@ -30,7 +30,7 @@ module board_specific_top
 
     wire                  rst    = SW [w_lab_sw];
     wire [w_lab_sw - 1:0] top_sw = SW [w_lab_sw - 1:0];
-    wire [w_key    - 1:0] top_key = ~ BTN;
+    wire [w_key    - 1:0] lab_key = ~ BTN;
 
     //------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ module board_specific_top
         .slow_clk (   slow_clk             ),
         .rst      (   rst                  ),
 
-        .key      (   top_key              ),
+        .key      (   lab_key              ),
         .sw       (   top_sw               ),
 
         .led      (   WAT_LED              ),

@@ -87,7 +87,7 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_lab_key   - 1:0] top_key;
+    logic [w_lab_key   - 1:0] lab_key;
     wire  [w_lab_led   - 1:0] top_led;
     wire  [w_lab_digit - 1:0] top_digit;
 
@@ -95,14 +95,14 @@ module board_specific_top
 
     `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
 
-        assign top_key = { tm_key, ~ KEY };
+        assign lab_key = { tm_key, ~ KEY };
 
         assign { tm_led   , LEDR  } = top_led;
         assign { tm_digit , digit } = top_digit;
 
     `elsif CONCAT_REGULAR_SIGNALS_AND_TM
 
-        assign top_key = { ~ KEY, tm_key };
+        assign lab_key = { ~ KEY, tm_key };
 
         assign { LEDR  , tm_led   } = top_led;
         assign { digit , tm_digit } = top_digit;
@@ -111,10 +111,10 @@ module board_specific_top
 
         always_comb
         begin
-            top_key = '0;
+            lab_key = '0;
 
-            top_key [w_key    - 1:0] |= ~ KEY;
-            top_key [w_tm_key - 1:0] |= tm_key;
+            lab_key [w_key    - 1:0] |= ~ KEY;
+            lab_key [w_tm_key - 1:0] |= tm_key;
         end
 
         assign LEDR     = top_led   [w_led      - 1:0];
@@ -152,7 +152,7 @@ module board_specific_top
         .slow_clk ( slow_clk             ),
         .rst      ( rst                  ),
 
-        .key      ( top_key              ),
+        .key      ( lab_key              ),
         .sw       ( top_sw               ),
 
         .led      ( top_led              ),

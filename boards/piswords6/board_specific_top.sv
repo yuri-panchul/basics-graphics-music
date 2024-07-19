@@ -36,7 +36,7 @@ module board_specific_top
     localparam w_lab_key = w_key - 1;  // One key is used as a reset
 
     wire                   rst     = ~ KEY [w_lab_key];
-    wire [w_lab_key - 1:0] top_key = ~ KEY [w_lab_key - 1:0];
+    wire [w_lab_key - 1:0] lab_key = ~ KEY [w_lab_key - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ module board_specific_top
         .slow_clk (   slow_clk  ),
         .rst      (   rst       ),
 
-        .key      (   top_key   ),
+        .key      (   lab_key   ),
         .sw       ( ~ SW        ),
 
         .led      (   led       ),

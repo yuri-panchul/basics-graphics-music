@@ -60,7 +60,7 @@ module board_specific_top
     wire               clk     =   CLK;
     wire               rst     = ~ RESET;
     wire [w_sw  - 1:0] top_sw  = ~ KEY [w_sw - 1:0];
-    wire [w_key - 1:0] top_key = ~ KEY;
+    wire [w_key - 1:0] lab_key = ~ KEY;
 
     //------------------------------------------------------------------------
 
@@ -102,7 +102,7 @@ module board_specific_top
         .slow_clk (   slow_clk     ),
         .rst      (   rst          ),
 
-        .key      (   top_key      ),
+        .key      (   lab_key      ),
         .sw       (   top_sw       ),
 
         .led      (   top_led      ),
