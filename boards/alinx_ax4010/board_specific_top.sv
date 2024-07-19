@@ -65,7 +65,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz ),
         .w_key   ( w_key   ),

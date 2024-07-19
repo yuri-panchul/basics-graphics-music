@@ -76,7 +76,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     // "top" module is a parametrized type, here are numeric parameters
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz  ),
         .w_key   ( w_key    ),

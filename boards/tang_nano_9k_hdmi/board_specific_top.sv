@@ -138,7 +138,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
 
-    top
+    lab_top
     # (
 `ifdef USE_HDMI
         .clk_mhz ( vid_clk_mhz ),

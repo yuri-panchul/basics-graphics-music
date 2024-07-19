@@ -26,7 +26,7 @@ module asic_top
     output logic [w_digit - 1:0] digit
 );
 
-    top
+    lab_top
     # (
         .clk_mhz   ( clk_mhz  ),
         .w_key     ( w_key    ),

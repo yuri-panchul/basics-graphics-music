@@ -33,7 +33,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz   ( clk_mhz    ),
         .pixel_mhz ( pixel_mhz  ),

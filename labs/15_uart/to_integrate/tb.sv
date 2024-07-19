@@ -5,7 +5,7 @@ module tb;
     logic [3:0] key_sw;
     logic       rx;
 
-    top
+    lab_top
     # (
         .clk_frequency      (   50 ),
         .baud_rate          (    1 ),
