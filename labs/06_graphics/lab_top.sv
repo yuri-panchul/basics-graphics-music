@@ -62,38 +62,12 @@ module lab_top
        assign led        = '0;
        assign abcdefgh   = '0;
        assign digit      = '0;
-    // assign vsync      = '0;
-    // assign hsync      = '0;
     // assign red        = '0;
     // assign green      = '0;
     // assign blue       = '0;
-    // assign display_on = '0;
-    // assign pixel_clk  = '0;
        assign sound      = '0;
        assign uart_tx    = '1;
 
-    //------------------------------------------------------------------------
-/*
-    vga
-    # (
-        .HPOS_WIDTH ( w_x        ),
-        .VPOS_WIDTH ( w_y        ),
-
-        .CLK_MHZ    ( clk_mhz    ),
-        .PIXEL_MHZ  ( pixel_mhz  )
-    )
-    i_vga
-    (
-        .clk        ( clk        ),
-        .rst        ( rst        ),
-        .hsync      ( hsync      ),
-        .vsync      ( vsync      ),
-        .display_on ( display_on ),
-        .hpos       ( x          ),
-        .vpos       ( y          ),
-        .pixel_clk  ( pixel_clk  )
-    );
-*/
     //------------------------------------------------------------------------
     // Pattern 1
 
@@ -107,10 +81,7 @@ module lab_top
         green = '0;
         blue  = '0;
 
-        if (~ display_on)
-        begin
-        end
-        else if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
+        if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
         begin
             red   = x [w_x - 2 -: w_red];
             green = '1;
@@ -176,16 +147,9 @@ module lab_top
 
     always_comb
     begin
-      red   = '0;
-      green = '0;
-      blue  = '0;
-
-      if (display_on)
-      begin
-        red   = xc + xc + yc + dx;
-        green = xc - yc - dy;
-        blue  = { 4 { & key } };
-      end
+      red   = xc + xc + yc + dx;
+      green = xc - yc - dy;
+      blue  = { 4 { & key } };
     end
 
     */

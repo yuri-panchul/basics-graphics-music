@@ -122,67 +122,37 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk           (   clk          ),
-        .slow_clk      (   slow_clk     ),
-        .rst           (   rst          ),
+        .clk           ( clk           ),
+        .slow_clk      ( slow_clk      ),
+        .rst           ( rst           ),
 
-        .key           (   lab_key      ),
-        .sw            (   lab_sw       ),
+        .key           ( lab_key       ),
+        .sw            ( lab_sw        ),
 
-        .led           (   lab_led      ),
+        .led           ( lab_led       ),
 
-        .abcdefgh      (   abcdefgh     ),
-        .digit         (   digit        ),
+        .abcdefgh      ( abcdefgh      ),
+        .digit         ( digit         ),
 
-        .mic           (   mic          ),
-        .sound         (   sound        ),
+        .x             ( x             ),
+        .y             ( y             ),
 
-        .uart_rx       (                ),  // TODO
-        .uart_tx       (                ),  // TODO
+        .red           ( VGA_R         ),
+        .green         ( VGA_G         ),
+        .blue          ( VGA_B         ),
 
-        .gpio          (   GPIO         )
+        .mic           ( mic           ),
+        .sound         ( sound         ),
+
+        .uart_rx       (               ),  // TODO
+        .uart_tx       (               ),  // TODO
+
+        .gpio          ( GPIO          )
     );
 
     //------------------------------------------------------------------------
 
     assign LEDR [w_lab_led:0] = lab_led;
-
-    assign VGA_R   = { vga_red_4b,   4'd0 };
-    assign VGA_G   = { vga_green_4b, 4'd0 };
-    assign VGA_B   = { vga_blue_4b,  4'd0 };
-
-    assign VGA_BLANK_N = 1'b1;
-    assign VGA_SYNC_N  = 0;
-
-    // Divide VGA DAC clock from clk_mhz to vga_clock
-    localparam CLK_DIV = $clog2 (clk_mhz / vga_clock) - 1;
-
-    logic [CLK_DIV:0] clk_en_cnt;
-    logic clk_en;
-
-    always_ff @ (posedge clk or posedge rst)
-    begin
-        if (rst)
-        begin
-            clk_en_cnt <= 'b0;
-            clk_en     <= 'b0;
-        end
-        else
-        begin
-            if (clk_en_cnt == (clk_mhz / vga_clock) - 1)
-            begin
-                clk_en_cnt <= 'b0;
-                clk_en     <= 'b1;
-            end
-            else
-            begin
-                clk_en_cnt <= clk_en_cnt + 1;
-                clk_en     <= 'b0;
-            end
-        end
-    end
-
-    assign VGA_CLK = clk_en;
 
     //------------------------------------------------------------------------
 
@@ -268,6 +238,31 @@ module board_specific_top
         `endif
 
     `endif
+
+    //------------------------------------------------------------------------
+
+    wire [9:0] x10; assign x = x10;
+    wire [9:0] y10; assign y = y10;
+
+    vga
+    # (
+        .CLK_MHZ     ( clk_mhz   ),
+        .PIXEL_MHZ   ( pixel_mhz )
+    )
+    i_vga
+    (
+        .clk         ( clk       ),
+        .rst         ( rst       ),
+        .hsync       ( VGA_HS    ),
+        .vsync       ( VGA_VS    ),
+        .display_on  (           ),
+        .hpos        ( x10       ),
+        .vpos        ( y10       ),
+        .pixel_clk   ( VGA_CLK   )
+    );
+
+    assign VGA_BLANK_N = 1'b1;
+    assign VGA_SYNC_N  = 0;
 
     //------------------------------------------------------------------------
 
