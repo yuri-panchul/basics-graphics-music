@@ -8,7 +8,7 @@ lappend all_signals tb.b
 lappend all_signals tb.key
 lappend all_signals tb.led
 lappend all_signals {tb.led[0]}
-lappend all_signals tb.i_top.all_muxes
+lappend all_signals tb.i_lab_top.all_muxes
 
 set num_added [ gtkwave::addSignalsFromList $all_signals ]
 
