@@ -45,7 +45,7 @@ module board_specific_top
     localparam w_lab_sw   = w_sw - 1;  // One onboard SW is used as a reset
 
     wire                  rst    = sw [w_sw - 1];
-    wire [w_lab_sw - 1:0] top_sw = sw [w_lab_sw - 1:0];
+    wire [w_lab_sw - 1:0] lab_sw = sw [w_lab_sw - 1:0];
 
     // FIXME: Should be assigned to some GPIO!
     wire                  UART_RX = '1;

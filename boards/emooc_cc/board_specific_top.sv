@@ -51,9 +51,9 @@ module board_specific_top
                w_lab_sw = w_sw - 1;
 
     // one switch is used as reset, others - as input signals;
-    // for convenience, declare set of wires "top_sw"
+    // for convenience, declare set of wires "lab_sw"
     wire                  rst    = SW [w_sw - 1];
-    wire [w_lab_sw - 1:0] top_sw = SW [w_lab_sw - 1:0];
+    wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
 
     // need explicit wire to be able to invert
     wire  [          7:0] abcdefgh;
@@ -93,7 +93,7 @@ module board_specific_top
         .rst      ( rst       ),
 
         .key      ( ~ KEY_N   ), // invert keys, bringing to standard
-        .sw       ( top_sw    ),
+        .sw       ( lab_sw    ),
 
         .led      ( LED       ),
 

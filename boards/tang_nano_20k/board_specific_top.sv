@@ -116,7 +116,7 @@ module board_specific_top
         .rst      ( rst       ),
 
         .key      ( lab_key   ),
-        .sw       ( top_sw    ),
+        .sw       ( lab_sw    ),
 
         .led      ( top_led   ),
 

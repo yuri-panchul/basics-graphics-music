@@ -95,7 +95,7 @@ module board_specific_top
     wire  [w_tm_digit  - 1:0] tm_digit;
 
     logic [w_lab_key   - 1:0] lab_key;
-    logic [w_lab_sw    - 1:0] top_sw;
+    logic [w_lab_sw    - 1:0] lab_sw;
     wire  [w_lab_led   - 1:0] top_led;
     wire  [w_lab_digit - 1:0] top_digit;
 
@@ -140,7 +140,7 @@ module board_specific_top
         assign rst      = tm_key [w_tm_key - 1];
       `endif
         assign lab_key  = tm_key [w_tm_key - 1:0];
-        assign top_sw   = ~ SW;
+        assign lab_sw   = ~ SW;
 
         assign tm_led   = top_led;
         assign tm_digit = top_digit;
@@ -153,7 +153,7 @@ module board_specific_top
         assign rst      = ~KEY[w_key - 1];
       `endif
         assign lab_key  = ~ KEY [w_key - 1:0];
-        assign top_sw   = ~ SW;
+        assign lab_sw   = ~ SW;
 
         assign LED      = ~ top_led;
 
@@ -195,7 +195,7 @@ module board_specific_top
         .rst      ( rst       ),
 
         .key      ( lab_key   ),
-        .sw       ( top_sw    ),
+        .sw       ( lab_sw    ),
 
         .led      ( top_led   ),
 

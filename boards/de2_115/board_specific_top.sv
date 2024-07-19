@@ -70,7 +70,7 @@ module board_specific_top
     wire                   clk     = CLOCK_50;
     wire                   rst     = SW [w_lab_sw];
 
-    wire [w_lab_sw  - 1:0] top_sw  = SW [w_lab_sw - 1:0];
+    wire [w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
     wire [w_key     - 1:0] lab_key = ~ KEY;
     wire [w_lab_led - 1:0] top_led;
 
@@ -105,7 +105,7 @@ module board_specific_top
         .rst      (   rst          ),
 
         .key      (   lab_key      ),
-        .sw       (   top_sw       ),
+        .sw       (   lab_sw       ),
 
         .led      (   top_led      ),
 

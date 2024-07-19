@@ -84,7 +84,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire [        3:0] KEY    = { BTN_3, BTN_2, BTN_1, BTN_0 };
-    wire [ w_sw - 1:0] top_sw = SW [w_sw - 1:0];
+    wire [ w_sw - 1:0] lab_sw = SW [w_sw - 1:0];
 
     localparam  w_tm_key     = 8,
                 w_tm_led     = 8,
@@ -171,7 +171,7 @@ module board_specific_top
         .rst      ( rst       ),
 
         .key      ( lab_key   ),
-        .sw       ( top_sw    ),
+        .sw       ( lab_sw    ),
 
         .led      ( top_led   ),
 
