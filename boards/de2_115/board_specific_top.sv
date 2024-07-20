@@ -262,7 +262,7 @@ module board_specific_top
     );
 
     assign VGA_BLANK_N = 1'b1;
-    assign VGA_SYNC_N  = 0;
+    assign VGA_SYNC_N  = 1'b0;
 
     //------------------------------------------------------------------------
 
