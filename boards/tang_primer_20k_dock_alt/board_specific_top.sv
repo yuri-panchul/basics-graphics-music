@@ -6,7 +6,7 @@
  `undef  ENABLE_VGA16
  `define ENABLE_HDMI
 
-`undef ENABLE_TM1638
+`undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module board_specific_top
 # (

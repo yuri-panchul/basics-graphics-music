@@ -6,7 +6,7 @@
 // in the lab directory
 
 // The following setting is needed for Gowin boards
-   `define ENABLE_TM1638
+   `define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 // HCW-132 variant of LED & KEY TM1638 board controller
 // `define HCW132

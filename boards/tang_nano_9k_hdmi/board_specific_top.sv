@@ -2,7 +2,7 @@
 `include "lab_specific_board_config.svh"
 
 `define USE_HDMI
-`undef  ENABLE_TM1638
+`undef  INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module board_specific_top
 # (

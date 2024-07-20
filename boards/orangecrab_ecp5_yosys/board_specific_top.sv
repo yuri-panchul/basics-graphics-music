@@ -1,7 +1,7 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-`undef ENABLE_TM1638
+`undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `undef ENABLE_INMP441
 
 module board_specific_top
@@ -139,7 +139,7 @@ module board_specific_top
         .uart_tx  ( UART_TX   ),
 
         .mic      ( mic       ),
-        `ifndef ENABLE_TM1638
+        `ifndef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
         .gpio     ( GPIO      )
         `else
         .gpio     (           )
@@ -161,7 +161,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-`ifdef ENABLE_TM1638
+`ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     tm1638_board_controller
     # (
         .clk_mhz ( clk_mhz ),

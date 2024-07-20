@@ -1,7 +1,7 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-// `undef ENABLE_TM1638
+// `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module board_specific_top
 # (
@@ -196,7 +196,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     wire [$left (abcdefgh):0] hgfedcba;
 
@@ -213,7 +213,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     tm1638_board_controller
     # (

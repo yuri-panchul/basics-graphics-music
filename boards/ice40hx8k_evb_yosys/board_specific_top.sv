@@ -136,7 +136,7 @@ module board_specific_top
         .uart_tx  ( UART_TX   ),
 
         .mic      ( mic       ),
-        `ifndef ENABLE_TM1638
+        `ifndef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
         .gpio     ( GPIO      )
         `else
         .gpio     (           )
@@ -158,7 +158,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-`ifdef ENABLE_TM1638
+`ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     tm1638_board_controller
     # (
         .clk_mhz ( clk_mhz    ),
