@@ -51,7 +51,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         localparam w_lab_key   = w_tm_key,
                    w_lab_sw    = w_sw,
@@ -132,7 +132,7 @@ module board_specific_top
    `endif
    //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
       `ifdef ENABLE_HDMI
         assign rst      = ~ ( ~tm_key[w_tm_key - 1] & pll_lock );
