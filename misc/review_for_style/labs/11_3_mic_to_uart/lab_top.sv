@@ -1,6 +1,6 @@
 `include "config.svh"
 `define ENABLE_TP1638
-`define HCW132
+`define USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE
 `define ENABLE_INMP441
 
 module lab_top

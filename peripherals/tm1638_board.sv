@@ -231,7 +231,7 @@ module tm1638_board_controller
     input        [           7:0] hgfedcba,
     input        [ w_digit - 1:0] digit,
     input        [           7:0] ledr,
-    `ifdef HCW132
+    `ifdef USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE
     output logic [          15:0] keys,
     `else
     output logic [           7:0] keys,
@@ -428,7 +428,7 @@ module tm1638_board_controller
                     2:  {tm_latch, tm_in}  <= {HIGH, C_READ_KEYS}; // read mode
                     3:  {tm_latch, tm_rw}  <= {HIGH, LOW};
 
-                    `ifdef HCW132
+                    `ifdef USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE
                     //  read back keys S1 - S16
                     4:  {keys[0], keys[1], keys[8], keys[9]} <= {tm_out[2], tm_out[6], tm_out[1], tm_out[5]};
                     5:  tm_latch           <= HIGH;
@@ -459,7 +459,7 @@ module tm1638_board_controller
                     17: {sio_stb, tm_rw}   <= {LOW, HIGH};
                     18: {tm_latch, tm_in}  <= {HIGH, C_SET_ADDR_0}; // set addr 0 pos
 
-                    `ifdef HCW132
+                    `ifdef USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE
                     // HCW-132 has very weird display map
                     19: display_digit({hex7[0],hex6[0],hex5[0],hex4[0],hex3[0],hex2[0],hex1[0],hex0[0]});
                     20: display_digit(8'b00000000);
