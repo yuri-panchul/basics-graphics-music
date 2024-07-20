@@ -1,10 +1,6 @@
 `ifndef LAB_SPECIFIC_CONFIG_SVH
 `define LAB_SPECIFIC_CONFIG_SVH
 
-// This is the default file included
-// when there is no lab_specific_board_config.svh
-// in the lab directory
-
    `define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 // `define USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE
 
@@ -15,3 +11,7 @@
 // `define EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
 
 `endif  // `ifndef LAB_SPECIFIC_CONFIG_SVH
+
+// This is the default file included
+// when there is no lab_specific_board_config.svh
+// in the lab directory
