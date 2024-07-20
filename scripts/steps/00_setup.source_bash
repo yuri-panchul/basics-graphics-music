@@ -36,6 +36,7 @@ package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/../..")
 bin_dir="$package_dir/bin"
 board_dir="$package_dir/boards"
 lab_dir="$package_dir/labs"
+peripheral_dir="$package_dir/peripherals"
 script_dir="$package_dir/scripts"
 
 #-----------------------------------------------------------------------------

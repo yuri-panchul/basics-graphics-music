@@ -23,11 +23,9 @@ cp "$script_dir/asic/asic_top.sv" "$design_dir/src"
 for f in                      \
     config.svh                \
     counter_with_enable.sv    \
-    lab_specific_config.svh   \
     seven_segment_display.sv  \
     shift_reg.sv              \
-    strobe_gen.sv             \
-    vga.sv
+    strobe_gen.sv
 do
     cp -f "$lab_dir/common/$f" "$design_dir/src"
 done
