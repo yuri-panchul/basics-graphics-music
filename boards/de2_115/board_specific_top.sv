@@ -241,62 +241,74 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [9:0] x10; assign x = x10;
-    wire [9:0] y10; assign y = y10;
+   `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-    vga
-    # (
-        .CLK_MHZ     ( clk_mhz   ),
-        .PIXEL_MHZ   ( pixel_mhz )
-    )
-    i_vga
-    (
-        .clk         ( clk       ),
-        .rst         ( rst       ),
-        .hsync       ( VGA_HS    ),
-        .vsync       ( VGA_VS    ),
-        .display_on  (           ),
-        .hpos        ( x10       ),
-        .vpos        ( y10       ),
-        .pixel_clk   ( VGA_CLK   )
-    );
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
 
-    assign VGA_BLANK_N = 1'b1;
-    assign VGA_SYNC_N  = 1'b0;
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz   ),
+            .PIXEL_MHZ   ( pixel_mhz )
+        )
+        i_vga
+        (
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( VGA_HS    ),
+            .vsync       ( VGA_VS    ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   ( VGA_CLK   )
+        );
 
-    //------------------------------------------------------------------------
+        assign VGA_BLANK_N = 1'b1;
+        assign VGA_SYNC_N  = 1'b0;
 
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [0] ),
-        .ws    ( GPIO [2] ),
-        .sck   ( GPIO [4] ),
-        .sd    ( GPIO [5] ),
-        .value ( mic      )
-    );
-
-    assign GPIO [1] = 1'b0;  // GND
-    assign GPIO [3] = 1'b1;  // VCC
+    `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz   )
-    )
-    i_audio
-    (
-        .clk     ( clk       ),
-        .reset   ( rst       ),
-        .data_in ( sound     ),
-        .mclk    ( GPIO [33] ),
-        .bclk    ( GPIO [31] ),
-        .lrclk   ( GPIO [27] ),
-        .sdata   ( GPIO [29] )
-    );
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-    // VCC and GND for i2s_audio_out are on dedicated pins
+        inmp441_mic_i2s_receiver i_microphone
+        (
+            .clk   ( clk      ),
+            .rst   ( rst      ),
+            .lr    ( GPIO [0] ),
+            .ws    ( GPIO [2] ),
+            .sck   ( GPIO [4] ),
+            .sd    ( GPIO [5] ),
+            .value ( mic      )
+        );
+
+        assign GPIO [1] = 1'b0;  // GND
+        assign GPIO [3] = 1'b1;  // VCC
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz   )
+        )
+        i_audio
+        (
+            .clk     ( clk       ),
+            .reset   ( rst       ),
+            .data_in ( sound     ),
+            .mclk    ( GPIO [33] ),
+            .bclk    ( GPIO [31] ),
+            .lrclk   ( GPIO [27] ),
+            .sdata   ( GPIO [29] )
+        );
+
+        // VCC and GND for i2s_audio_out are on dedicated pins
+
+    `endif
 
 endmodule
