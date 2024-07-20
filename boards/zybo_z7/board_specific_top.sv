@@ -45,7 +45,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
         localparam w_key_top   = w_key_tm   > w_key   ? w_key_tm   : w_key,
                 w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
                 w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
@@ -67,7 +67,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------------
 
-    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+    `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
         assign key_top = {key_tm, key};
         assign {led_tm, led} = led_top;
         assign {digit_tm, digit} = digit_top;
@@ -77,7 +77,7 @@ module board_specific_top
         assign {led, led_tm} = led_top;
         assign {digit, digit_tm} = digit_top;
 
-    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `else  // DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
         always_comb
         begin
             key_top = '0;

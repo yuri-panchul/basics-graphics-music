@@ -68,7 +68,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
         localparam w_lab_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
                    w_lab_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
@@ -93,7 +93,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+    `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
 
         assign lab_key = { tm_key, ~ KEY };
 
@@ -107,7 +107,7 @@ module board_specific_top
         assign { LEDR  , tm_led   } = lab_led;
         assign { digit , tm_digit } = lab_digit;
 
-    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `else  // DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
         always_comb
         begin
