@@ -100,7 +100,7 @@ module board_specific_top
         assign { tm_led   , LEDR  } = lab_led;
         assign { tm_digit , digit } = lab_digit;
 
-    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
 
         assign lab_key = { ~ KEY, tm_key };
 

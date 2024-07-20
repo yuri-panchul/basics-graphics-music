@@ -72,7 +72,7 @@ module board_specific_top
         assign {led_tm, led} = led_top;
         assign {digit_tm, digit} = digit_top;
 
-    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
         assign key_top = {key, key_tm};
         assign {led, led_tm} = led_top;
         assign {digit, digit_tm} = digit_top;
