@@ -241,7 +241,7 @@ module tm1638_board_controller
     inout                         sio_data
 );
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+    `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
         localparam static_hex = 1'b0;
     `else
         localparam static_hex = 1'b1;

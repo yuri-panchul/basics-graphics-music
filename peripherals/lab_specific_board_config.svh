@@ -5,16 +5,13 @@
 // when there is no lab_specific_board_config.svh
 // in the lab directory
 
-// The following setting is needed for Gowin boards
    `define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
-// HCW-132 variant of LED & KEY TM1638 board controller
 // `define USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE
-
-// `define EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
 
    `define DUPLICATE_TM_SIGNALS_WITH_REGULAR
 // `define CONCAT_REGULAR_SIGNALS_AND_TM
 // `define CONCAT_TM_SIGNALS_AND_REGULAR
+
+// `define EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
 
 `endif  // `ifndef LAB_SPECIFIC_CONFIG_SVH
