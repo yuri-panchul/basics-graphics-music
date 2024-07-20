@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 // `define ENABLE_VGA16
 // `define ENABLE_VGA666

@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 // `undef ENABLE_TM1638
 

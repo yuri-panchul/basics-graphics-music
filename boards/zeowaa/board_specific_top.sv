@@ -1,7 +1,7 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (

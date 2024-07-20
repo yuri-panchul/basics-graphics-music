@@ -3,7 +3,7 @@
 // Create a variant of 25K with 7-segment, leds and buttons on pmod.
 
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (

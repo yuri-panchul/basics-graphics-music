@@ -2,7 +2,7 @@
 `define LAB_SPECIFIC_CONFIG_SVH
 
 // This is the default file included
-// when there is no lab_specific_config.svh
+// when there is no lab_specific_board_config.svh
 // in the lab directory
 
 // The following setting is needed for Gowin boards
