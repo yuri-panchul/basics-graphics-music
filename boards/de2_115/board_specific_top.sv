@@ -8,7 +8,7 @@ module board_specific_top
 
               w_key         = 4,
               w_sw          = 18,
-              w_led         = 18,
+              w_led         = 8,
               w_digit       = 8,
               w_gpio        = 36,
 
@@ -30,7 +30,7 @@ module board_specific_top
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output [w_led    - 1:0] LEDR,
+    output logic [    17:0] LEDR,
     output logic [     8:0] LEDG,
 
     output logic [     6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE2-115
@@ -72,6 +72,7 @@ module board_specific_top
     // Keys, switches, LEDs
 
     wire [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
+    wire [ w_led     - 1:0] lab_led;
 
     // A dynamic seven-segment display
 
@@ -126,7 +127,7 @@ module board_specific_top
         .key           ( ~ KEY           ),
         .sw            (   lab_sw        ),
 
-        .led           (   LEDR          ),
+        .led           (   lab_led       ),
 
         .abcdefgh      (   abcdefgh      ),
         .digit         (   digit         ),
@@ -146,6 +147,10 @@ module board_specific_top
 
         .gpio          (   GPIO          )
     );
+
+    //------------------------------------------------------------------------
+
+    assign LEDG = { { $bits (LEDG) - w_led { 1'b0 } }, lab_led };
 
     //------------------------------------------------------------------------
 
@@ -187,10 +192,11 @@ module board_specific_top
 
         always_comb
         begin
-            LEDG = '0;
+            LEDR = '0;
 
             for (int i = 0; i < w_digit; i ++)
-                LEDG [i] = digit [i] ? hgfedcba [$left (HEX0) + 1] : '0;
+                LEDR [$bits (LEDR) - w_digit + i]
+                    = digit [i] ? hgfedcba [$left (HEX0) + 1] : '0;
         end
 
     `else
@@ -200,7 +206,7 @@ module board_specific_top
             if (rst)
             begin
                 { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 } <= '1;
-                LEDG <= '0;
+                LEDR <= '0;
             end
             else
             begin
@@ -214,7 +220,8 @@ module board_specific_top
                 if (digit [7]) HEX7 <= ~ hgfedcba [$left (HEX7):0];
 
                 for (int i = 0; i < w_digit; i ++)
-                    if (digit [i]) LEDG [i] <=  hgfedcba [$left (HEX0) + 1];
+                    if (digit [i])
+                        LEDR [$bits (LEDR) - w_digit + i] <=  hgfedcba [$left (HEX0) + 1];
             end
         end
 
