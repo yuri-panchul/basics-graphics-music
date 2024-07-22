@@ -1,8 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-`define USE_HIGH_LED_FOR_7SEG_DP
-
 module board_specific_top
 # (
     parameter clk_mhz       = 50,
@@ -32,7 +30,8 @@ module board_specific_top
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output [w_led    - 1:0] LEDR,  // The last 8 LEDR are optionally used to output 7SEG dp
+    output [w_led    - 1:0] LEDR,
+    output logic [     8:0] LEDG,
 
     output logic [     6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE2-115
     output logic [     6:0] HEX1,
@@ -52,18 +51,18 @@ module board_specific_top
     output                  VGA_BLANK_N,
     output                  VGA_SYNC_N,
 
+    input                   UART_RTS,
+    input                   UART_RXD,
+
+    output                  UART_CTS,
+    output                  UART_TXD,
+
     inout  [w_gpio   - 1:0] GPIO
 );
 
     //------------------------------------------------------------------------
 
-    localparam w_lab_sw = w_sw - 1;                // One sw is used as a reset
-
-    `ifdef USE_HIGH_LED_FOR_7SEG_DP
-        localparam w_lab_led = w_led - w_digit;
-    `else
-        localparam w_lab_led = w_led;
-    `endif
+    localparam w_lab_sw = w_sw - 1;  // One sw is used as a reset
 
     //------------------------------------------------------------------------
 
@@ -73,8 +72,6 @@ module board_specific_top
     // Keys, switches, LEDs
 
     wire [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
-    wire [ w_key     - 1:0] lab_key = ~ KEY;
-    wire [ w_lab_led - 1:0] lab_led;
 
     // A dynamic seven-segment display
 
@@ -106,58 +103,53 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       ( clk_mhz       ),
-        .w_key         ( w_key         ),
-        .w_sw          ( w_lab_sw      ),
-        .w_led         ( w_lab_led     ),
-        .w_digit       ( w_digit       ),
-        .w_gpio        ( w_gpio        ),
+        .clk_mhz       (   clk_mhz       ),
+        .w_key         (   w_key         ),
+        .w_sw          (   w_lab_sw      ),
+        .w_led         (   w_led         ),
+        .w_digit       (   w_digit       ),
+        .w_gpio        (   w_gpio        ),
 
-        .screen_width  ( screen_width  ),
-        .screen_height ( screen_height ),
+        .screen_width  (   screen_width  ),
+        .screen_height (   screen_height ),
 
-        .w_red         ( w_red         ),
-        .w_green       ( w_green       ),
-        .w_blue        ( w_blue        )
+        .w_red         (   w_red         ),
+        .w_green       (   w_green       ),
+        .w_blue        (   w_blue        )
     )
     i_lab_top
     (
-        .clk           ( clk           ),
-        .slow_clk      ( slow_clk      ),
-        .rst           ( rst           ),
+        .clk           (   clk           ),
+        .slow_clk      (   slow_clk      ),
+        .rst           (   rst           ),
 
-        .key           ( lab_key       ),
-        .sw            ( lab_sw        ),
+        .key           ( ~ KEY           ),
+        .sw            (   lab_sw        ),
 
-        .led           ( lab_led       ),
+        .led           (   LEDR          ),
 
-        .abcdefgh      ( abcdefgh      ),
-        .digit         ( digit         ),
+        .abcdefgh      (   abcdefgh      ),
+        .digit         (   digit         ),
 
-        .x             ( x             ),
-        .y             ( y             ),
+        .x             (   x             ),
+        .y             (   y             ),
 
-        .red           ( VGA_R         ),
-        .green         ( VGA_G         ),
-        .blue          ( VGA_B         ),
+        .red           (   VGA_R         ),
+        .green         (   VGA_G         ),
+        .blue          (   VGA_B         ),
 
-        .mic           ( mic           ),
-        .sound         ( sound         ),
+        .mic           (   mic           ),
+        .sound         (   sound         ),
 
-        .uart_rx       (               ),  // TODO
-        .uart_tx       (               ),  // TODO
+        .uart_rx       (   UART_RXD      ),
+        .uart_tx       (   UART_TXD      ),
 
-        .gpio          ( GPIO          )
+        .gpio          (   GPIO          )
     );
 
     //------------------------------------------------------------------------
 
-    assign LEDR [w_lab_led - 1:0] = lab_led;
-
-    //------------------------------------------------------------------------
-
-    wire  [$left ( abcdefgh ):0] hgfedcba;
-    logic [$left ( digit    ):0] dp;
+    wire [$left (abcdefgh):0] hgfedcba;
 
     generate
         genvar i;
@@ -193,14 +185,13 @@ module board_specific_top
 
         // positive logic
 
-        assign LEDR [    w_led - w_digit] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
-        assign LEDR [w_led - w_digit + 1] = digit [1] ? hgfedcba [$left (HEX1) + 1] : '0;
-        assign LEDR [w_led - w_digit + 2] = digit [2] ? hgfedcba [$left (HEX2) + 1] : '0;
-        assign LEDR [w_led - w_digit + 3] = digit [3] ? hgfedcba [$left (HEX3) + 1] : '0;
-        assign LEDR [w_led - w_digit + 4] = digit [4] ? hgfedcba [$left (HEX4) + 1] : '0;
-        assign LEDR [w_led - w_digit + 5] = digit [5] ? hgfedcba [$left (HEX5) + 1] : '0;
-        assign LEDR [w_led - w_digit + 6] = digit [6] ? hgfedcba [$left (HEX6) + 1] : '0;
-        assign LEDR [w_led - w_digit + 7] = digit [7] ? hgfedcba [$left (HEX7) + 1] : '0;
+        always_comb
+        begin
+            LEDG = '0;
+
+            for (int i = 0; i < w_digit; i ++)
+                LEDG [i] = digit [i] ? hgfedcba [$left (HEX0) + 1] : '0;
+        end
 
     `else
 
@@ -209,7 +200,7 @@ module board_specific_top
             if (rst)
             begin
                 { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 } <= '1;
-                dp <= '0;
+                LEDG <= '0;
             end
             else
             begin
@@ -222,20 +213,10 @@ module board_specific_top
                 if (digit [6]) HEX6 <= ~ hgfedcba [$left (HEX6):0];
                 if (digit [7]) HEX7 <= ~ hgfedcba [$left (HEX7):0];
 
-                if (digit [0]) dp[0] <=  hgfedcba [$left (HEX0) + 1];
-                if (digit [1]) dp[1] <=  hgfedcba [$left (HEX1) + 1];
-                if (digit [2]) dp[2] <=  hgfedcba [$left (HEX2) + 1];
-                if (digit [3]) dp[3] <=  hgfedcba [$left (HEX3) + 1];
-                if (digit [4]) dp[4] <=  hgfedcba [$left (HEX4) + 1];
-                if (digit [5]) dp[5] <=  hgfedcba [$left (HEX5) + 1];
-                if (digit [6]) dp[6] <=  hgfedcba [$left (HEX6) + 1];
-                if (digit [7]) dp[7] <=  hgfedcba [$left (HEX7) + 1];
+                for (int i = 0; i < w_digit; i ++)
+                    if (digit [i]) LEDG [i] <=  hgfedcba [$left (HEX0) + 1];
             end
         end
-
-        `ifdef USE_HIGH_LED_FOR_7SEG_DP
-            assign LEDR [w_led - 1 : w_lab_led] = dp;
-        `endif
 
     `endif
 

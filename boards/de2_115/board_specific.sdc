@@ -9,6 +9,7 @@ derive_clock_uncertainty
 
 # set_false_path -from * -to UART_TXD
   set_false_path -from * -to [get_ports {LEDR[*]}]
+  set_false_path -from * -to [get_ports {LEDG[*]}]
   set_false_path -from * -to [get_ports {HEX*}]
   set_false_path -from * -to [get_ports {VGA_*}]
   set_false_path -from * -to [get_ports {GPIO[*]}]

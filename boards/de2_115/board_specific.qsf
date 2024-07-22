@@ -4,11 +4,11 @@
 #-----------------------------------------------------------------------------
 
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK*
-  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
-# set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TXD
+
   set_instance_assignment -name IO_STANDARD "2.5 V"       -to KEY*
   set_instance_assignment -name IO_STANDARD "2.5 V"       -to SW*
   set_instance_assignment -name IO_STANDARD "2.5 V"       -to LEDR*
+  set_instance_assignment -name IO_STANDARD "2.5 V"       -to LEDG*
 
   set_instance_assignment -name IO_STANDARD "2.5 V"       -to HEX0*
   set_instance_assignment -name IO_STANDARD "2.5 V"       -to HEX1*
@@ -26,6 +26,7 @@
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX7*
 
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to VGA_*
+  set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART*
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO*
 
 #-----------------------------------------------------------------------------
@@ -35,9 +36,6 @@
 # set_location_assignment PIN_AG14 -to CLOCK2_50
 # set_location_assignment PIN_AG15 -to CLOCK3_50
   set_location_assignment PIN_Y2   -to CLOCK_50
-
-# set_location_assignment PIN_G9   -to UART_TXD
-  set_location_assignment PIN_G12  -to UART_RXD
 
   set_location_assignment PIN_M23  -to KEY[0]
   set_location_assignment PIN_M21  -to KEY[1]
@@ -81,6 +79,16 @@
   set_location_assignment PIN_G15  -to LEDR[15]
   set_location_assignment PIN_G16  -to LEDR[16]
   set_location_assignment PIN_H15  -to LEDR[17]
+
+  set_location_assignment PIN_E21  -to LEDG[0]
+  set_location_assignment PIN_E22  -to LEDG[1]
+  set_location_assignment PIN_E25  -to LEDG[2]
+  set_location_assignment PIN_E24  -to LEDG[3]
+  set_location_assignment PIN_H21  -to LEDG[4]
+  set_location_assignment PIN_G20  -to LEDG[5]
+  set_location_assignment PIN_G22  -to LEDG[6]
+  set_location_assignment PIN_G21  -to LEDG[7]
+  set_location_assignment PIN_F17  -to LEDG[8]
 
   set_location_assignment PIN_G18  -to HEX0[0]
   set_location_assignment PIN_F22  -to HEX0[1]
@@ -168,6 +176,11 @@
   set_location_assignment PIN_C12  -to VGA_B[5]
   set_location_assignment PIN_D11  -to VGA_B[6]
   set_location_assignment PIN_D12  -to VGA_B[7]
+
+  set_location_assignment PIN_G14  -to UART_RTS
+  set_location_assignment PIN_J13  -to UART_CTS
+  set_location_assignment PIN_G12  -to UART_RXD
+  set_location_assignment PIN_G9   -to UART_TXD
 
   set_location_assignment PIN_AB22 -to GPIO[0]
   set_location_assignment PIN_AC15 -to GPIO[1]
