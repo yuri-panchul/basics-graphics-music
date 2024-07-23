@@ -270,15 +270,15 @@ module board_specific_top
 //    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
    `ifdef ENABLE_VGA16
 
-      assign GPIO_3 = {2'bz, VGA_R[3], VGA_R[1], 2'bz, VGA_R[4], VGA_R[2]}; 
-      assign GPIO_2 = {VGA_G[5], VGA_G[3], VGA_G[1], VGA_B[4], VGA_R[0], VGA_G[4], VGA_G[2], VGA_G[0]}; 
+      assign GPIO_3 = {2'bz, VGA_R[3], VGA_R[1], 2'bz, VGA_R[4], VGA_R[2]};
+      assign GPIO_2 = {VGA_G[5], VGA_G[3], VGA_G[1], VGA_B[4], VGA_R[0], VGA_G[4], VGA_G[2], VGA_G[0]};
       assign GPIO_1 = {VGA_B[2], VGA_B[0], VGA_HS, 1'bz, VGA_B[3], VGA_B[1], VGA_VS, 1'bz};
 
    `elsif ENABLE_VGA666
 
       assign GPIO_3 = { VGA_G[4], VGA_G[5], VGA_R[2], VGA_B[4], VGA_VS,   VGA_HS,   VGA_B[0], VGA_R[1] };
-      assign GPIO_2 = { VGA_B[3], VGA_G[2], VGA_R[0], VGA_R[4], VGA_G[0], VGA_B[5], VGA_G[1], VGA_B[1] }; 
-      assign GPIO_1 = { VGA_R[5], 3'bz,                         VGA_B[2], VGA_G[3], VGA_R[3], 1'bz }; 
+      assign GPIO_2 = { VGA_B[3], VGA_G[2], VGA_R[0], VGA_R[4], VGA_G[0], VGA_B[5], VGA_G[1], VGA_B[1] };
+      assign GPIO_1 = { VGA_R[5], 3'bz,                         VGA_B[2], VGA_G[3], VGA_R[3], 1'bz };
 
    `elsif ENABLE_HDMI
     DVI_TX_Top myDVI(
@@ -302,6 +302,6 @@ module board_specific_top
       assign GPIO_2 = { VGA_B, VGA_R };
       assign GPIO_3 = { 2'bz, VGA_VS, VGA_HS, VGA_G };
 
-   `endif 
+   `endif
 
 endmodule

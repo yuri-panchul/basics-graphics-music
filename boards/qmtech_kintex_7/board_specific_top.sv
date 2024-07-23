@@ -110,7 +110,7 @@ module board_specific_top
         .blue     ( ),
 
         .mic      ( '0 ),
-        .gpio     (   ) 
+        .gpio     (   )
     );
 
 endmodule

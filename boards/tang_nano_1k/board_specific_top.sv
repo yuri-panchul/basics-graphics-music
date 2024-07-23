@@ -51,7 +51,7 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz   ( clk_mhz    ),
-        .pixel_mhz ( pixel_mhz  ), 
+        .pixel_mhz ( pixel_mhz  ),
 
         .w_key     ( w_tm_key   ),
         .w_sw      ( w_tm_led   ),
@@ -89,7 +89,7 @@ module board_specific_top
         .uart_tx   (            ),
 
         .mic       (            ),
-        .gpio      ( gpio       ) 
+        .gpio      ( gpio       )
     );
 
     //------------------------------------------------------------------------

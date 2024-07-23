@@ -61,7 +61,7 @@ module board_specific_top
     `endif
 
     //------------------------------------------------------------------------
- 
+
     wire                      clk_hdl;
     wire                      clk_hd;
     wire                      clk_px;
@@ -228,7 +228,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver 
+    inmp441_mic_i2s_receiver
     # (
         .clk_mhz ( clk_mhz )
     )

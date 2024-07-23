@@ -197,5 +197,5 @@ module board_specific_top
 
     assign GPIO_0 = { VGA_R, VGA_B };
     assign GPIO_1 = { VGA_G, 2'b00, VGA_VS, VGA_HS  };
-    
+
 endmodule

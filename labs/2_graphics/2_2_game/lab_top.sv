@@ -98,7 +98,7 @@ module lab_top
         .rgb              (   rgb                ),
         .display_on       (   display_on         ),
         .pixel_clk        (   pixel_clk          )
-     
+
     );
 
     assign red   = { w_red   { rgb [2] } };

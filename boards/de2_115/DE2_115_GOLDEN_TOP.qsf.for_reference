@@ -311,7 +311,7 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to TD_DATA[6]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to TD_DATA[7]
 
 #============================================================
-# USB 
+# USB
 #============================================================
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to OTG_DATA[0]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to OTG_DATA[1]
