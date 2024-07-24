@@ -157,71 +157,49 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz    ( clk_mhz      ),
-        .pixel_mhz  ( pixel_mhz    ),
+        .clk_mhz       ( clk_mhz       ),
 
-        .w_key      ( w_lab_key    ),  // The last key is used for a reset
-        .w_sw       ( w_lab_key    ),
-        .w_led      ( w_lab_led    ),
-        .w_digit    ( w_lab_digit  ),
-        .w_gpio     ( w_gpio       ),
+        .w_key         ( w_lab_key     ),  // The last key is used for a reset
+        .w_sw          ( w_lab_key     ),
+        .w_led         ( w_lab_led     ),
+        .w_digit       ( w_lab_digit   ),
+        .w_gpio        ( w_gpio        ),
 
-        .w_red      ( w_red        ),
-        .w_green    ( w_green      ),
-        .w_blue     ( w_blue       )
+        .screen_width  ( screen_width  ),
+        .screen_height ( screen_height ),
+
+        .w_red         ( w_red         ),
+        .w_green       ( w_green       ),
+        .w_blue        ( w_blue        )
     )
     i_lab_top
     (
-        .clk        ( clk          ),
-        .slow_clk   ( slow_clk     ),
-        .rst        ( rst          ),
+        .clk           ( clk           ),
+        .slow_clk      ( slow_clk      ),
+        .rst           ( rst           ),
 
-        .key        ( lab_key      ),
-        .sw         ( lab_key      ),
+        .key           ( lab_key       ),
+        .sw            ( lab_key       ),
 
-        .led        ( lab_led      ),
+        .led           ( lab_led       ),
 
-        .abcdefgh   ( abcdefgh     ),
-        .digit      ( lab_digit    ),
+        .abcdefgh      ( abcdefgh      ),
+        .digit         ( lab_digit     ),
 
-        .x          ( x            ),
-        .y          ( y            ),
+        .x             ( x             ),
+        .y             ( y             ),
 
-        .red        ( LARGE_LCD_R  ),
-        .green      ( LARGE_LCD_G  ),
-        .blue       ( LARGE_LCD_B  ),
+        .red           ( LARGE_LCD_R   ),
+        .green         ( LARGE_LCD_G   ),
+        .blue          ( LARGE_LCD_B   ),
 
-        .uart_rx    ( UART_RX      ),
-        .uart_tx    ( UART_TX      ),
+        .uart_rx       ( UART_RX       ),
+        .uart_tx       ( UART_TX       ),
 
-        .mic        ( mic          ),
-        .sound      ( sound        ),
-        .gpio       ( gpio         )
+        .mic           ( mic           ),
+        .sound         ( sound         ),
+        .gpio          ( gpio          )
     );
-
-    //------------------------------------------------------------------------
-
-    Gowin_rPLL i_Gowin_rPLL
-    (
-        .clkout ( LARGE_LCD_CLK ),  //  9 MHz
-        .clkin  ( clk           )   // 27 MHz
-    );
-
-    lcd_480_272
-    (
-        .PixelClk  ( LARGE_LCD_CK ),
-        .nRST      ( rst          ),
-
-        .LCD_DE    ( LARGE_LCD_DE ),
-        .LCD_HSYNC ( LARGE_LCD_HS ),
-        .LCD_VSYNC ( LARGE_LCD_VS ),
-
-        .x         ( x            ),
-        .y         ( y            )
-    );
-
-    assign LARGE_LCD_INIT = 1'b0;
-    assign LARGE_LCD_BL   = 1'b0;
 
     //------------------------------------------------------------------------
 
@@ -266,33 +244,68 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk      ( clk            ),
-        .rst      ( rst            ),
-        .lr       ( TF_CS          ),
-        .ws       ( TF_MOSI        ),
-        .sck      ( TF_SCLK        ),
-        .sd       ( TF_MISO        ),
-        .value    ( mic            )
-    );
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkout ( LARGE_LCD_CLK ),  //  9 MHz
+            .clkin  ( clk           )   // 27 MHz
+        );
+
+        lcd_480_272
+        (
+            .PixelClk  ( LARGE_LCD_CK ),
+            .nRST      ( rst          ),
+
+            .LCD_DE    ( LARGE_LCD_DE ),
+            .LCD_HSYNC ( LARGE_LCD_HS ),
+            .LCD_VSYNC ( LARGE_LCD_VS ),
+
+            .x         ( x            ),
+            .y         ( y            )
+        );
+
+        assign LARGE_LCD_INIT = 1'b0;
+        assign LARGE_LCD_BL   = 1'b0;
+
+    `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz  ( clk_mhz        )
-    )
-    inst_audio_out
-    (
-        .clk      ( clk            ),
-        .reset    ( rst            ),
-        .data_in  ( sound          ),
-        .mclk     ( SMALL_LCD_DATA ),
-        .bclk     ( SMALL_LCD_CLK  ),
-        .lrclk    ( SMALL_LCD_RS   ),
-        .sdata    ( SMALL_LCD_CS   )
-    );
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver i_microphone
+        (
+            .clk      ( clk            ),
+            .rst      ( rst            ),
+            .lr       ( TF_CS          ),
+            .ws       ( TF_MOSI        ),
+            .sck      ( TF_SCLK        ),
+            .sd       ( TF_MISO        ),
+            .value    ( mic            )
+        );
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz  ( clk_mhz        )
+        )
+        inst_audio_out
+        (
+            .clk      ( clk            ),
+            .reset    ( rst            ),
+            .data_in  ( sound          ),
+            .mclk     ( SMALL_LCD_DATA ),
+            .bclk     ( SMALL_LCD_CLK  ),
+            .lrclk    ( SMALL_LCD_RS   ),
+            .sdata    ( SMALL_LCD_CS   )
+        );
+
+    `endif
 
 endmodule
