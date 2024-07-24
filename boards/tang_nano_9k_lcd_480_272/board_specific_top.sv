@@ -248,21 +248,21 @@ module board_specific_top
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkout ( LARGE_LCD_CLK ),  //  9 MHz
-            .clkin  ( clk           )   // 27 MHz
+            .clkout ( LARGE_LCD_CK ),  //  9 MHz
+            .clkin  ( clk          )   // 27 MHz
         );
 
         lcd_480_272
         (
-            .PixelClk  ( LARGE_LCD_CK ),
-            .nRST      ( rst          ),
+            .PixelClk  (   LARGE_LCD_CK ),
+            .nRST      ( ~ rst          ),
 
-            .LCD_DE    ( LARGE_LCD_DE ),
-            .LCD_HSYNC ( LARGE_LCD_HS ),
-            .LCD_VSYNC ( LARGE_LCD_VS ),
+            .LCD_DE    (   LARGE_LCD_DE ),
+            .LCD_HSYNC (   LARGE_LCD_HS ),
+            .LCD_VSYNC (   LARGE_LCD_VS ),
 
-            .x         ( x            ),
-            .y         ( y            )
+            .x         (   x            ),
+            .y         (   y            )
         );
 
         assign LARGE_LCD_INIT = 1'b0;
