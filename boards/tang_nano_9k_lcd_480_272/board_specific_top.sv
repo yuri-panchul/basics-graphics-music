@@ -5,18 +5,24 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz   = 27,
-              pixel_mhz = 9,
+    parameter clk_mhz       = 27,
+              pixel_mhz     = 9,
 
-              w_key     = 2,  // The last key is used for a reset
-              w_sw      = 0,
-              w_led     = 6,
-              w_digit   = 0,
-              w_gpio    = 10,
+              w_key         = 2,  // The last key is used for a reset
+              w_sw          = 0,
+              w_led         = 6,
+              w_digit       = 0,
+              w_gpio        = 10,
 
-              w_red     = 5,
-              w_green   = 6,
-              w_blue    = 5
+              screen_width  = 480,
+              screen_height = 272,
+
+              w_red         = 5,
+              w_green       = 6,
+              w_blue        = 5,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                        CLK,
@@ -111,6 +117,10 @@ module board_specific_top
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
+
+    wire  [w_x         - 1:0] x;
+    wire  [w_y         - 1:0] y;
+
     wire  [             23:0] mic;
     wire  [             15:0] sound;
 
@@ -174,15 +184,12 @@ module board_specific_top
         .abcdefgh   ( abcdefgh     ),
         .digit      ( lab_digit    ),
 
-        .vsync      ( LARGE_LCD_VS ),
-        .hsync      ( LARGE_LCD_HS ),
+        .x          ( x            ),
+        .y          ( y            ),
 
         .red        ( LARGE_LCD_R  ),
         .green      ( LARGE_LCD_G  ),
         .blue       ( LARGE_LCD_B  ),
-
-        .display_on ( LARGE_LCD_DE ),
-        .pixel_clk  ( LARGE_LCD_CK ),
 
         .uart_rx    ( UART_RX      ),
         .uart_tx    ( UART_TX      ),
@@ -194,26 +201,27 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    Gowin_rPLL Gowin_rPLL_9Mhz
+    Gowin_rPLL i_Gowin_rPLL
     (
-        .clkout(LCD_CLK), // 9MHz
-        .clkin(XTAL_IN)   //27MHz
+        .clkout ( LARGE_LCD_CLK ),  //  9 MHz
+        .clkin  ( clk           )   // 27 MHz
     );
 
     lcd_480_272
     (
-        .PixelClk  ( LARGE_LCD_CLK   ),
-        .nRST      ( rst             ),
+        .PixelClk  ( LARGE_LCD_CK ),
+        .nRST      ( rst          ),
 
-        .LCD_DE    ( LARGE_LCD_DE    ),
-        .LCD_HSYNC ( LARGE_LCD_HSYNC ),
-        .LCD_VSYNC ( LARGE_LCD_VSYNC ),
+        .LCD_DE    ( LARGE_LCD_DE ),
+        .LCD_HSYNC ( LARGE_LCD_HS ),
+        .LCD_VSYNC ( LARGE_LCD_VS ),
 
-        .x         ( x         ),
-        .y         ( y         )
+        .x         ( x            ),
+        .y         ( y            )
     );
 
     assign LARGE_LCD_INIT = 1'b0;
+    assign LARGE_LCD_BL   = 1'b0;
 
     //------------------------------------------------------------------------
 
