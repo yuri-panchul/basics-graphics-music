@@ -246,23 +246,24 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        Gowin_rPLL i_Gowin_rPLL
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz      ),
+            .PIXEL_MHZ   ( pixel_mhz    )
+        )
+        i_vga
         (
-            .clkout ( LARGE_LCD_CLK ),  //  9 MHz
-            .clkin  ( clk           )   // 27 MHz
-        );
-
-        lcd_480_272
-        (
-            .PixelClk  ( LARGE_LCD_CK ),
-            .nRST      ( rst          ),
-
-            .LCD_DE    ( LARGE_LCD_DE ),
-            .LCD_HSYNC ( LARGE_LCD_HS ),
-            .LCD_VSYNC ( LARGE_LCD_VS ),
-
-            .x         ( x            ),
-            .y         ( y            )
+            .clk         ( clk          ),
+            .rst         ( rst          ),
+            .hsync       ( LARGE_LCD_HS ),
+            .vsync       ( LARGE_LCD_VS ),
+            .display_on  ( LARGE_LCD_DE ),
+            .hpos        ( x10          ),
+            .vpos        ( y10          ),
+            .pixel_clk   ( LARGE_LCD_CK )
         );
 
         assign LARGE_LCD_INIT = 1'b0;
