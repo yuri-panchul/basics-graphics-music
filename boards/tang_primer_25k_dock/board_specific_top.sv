@@ -164,7 +164,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     )
     )
-    i_audio
+    inst_audio_out
     (
         .clk     ( clk       ),
         .reset   ( rst       ),
