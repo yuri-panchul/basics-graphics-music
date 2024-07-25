@@ -21,8 +21,8 @@ module lcd_480_272
 
     // Modified for basic-graphics-music: Added x and y outputs
 
-    output [6:0] x,
-    output [6:0] y
+    output [8:0] x,
+    output [8:0] y
 );
 
     // Horizen count to Hsync, then next Horizen line.
@@ -105,7 +105,7 @@ module lcd_480_272
 
     // Modified for basic-graphics-music: Added x and y outputs
 
-    assign x = 7' (V_PixelCount - V_BackPorch);
-    assign y = 7' (H_PixelCount - H_BackPorch);
+    assign x = 9' (H_PixelCount - H_BackPorch);
+    assign y = 9' (V_PixelCount - V_BackPorch);
 
 endmodule

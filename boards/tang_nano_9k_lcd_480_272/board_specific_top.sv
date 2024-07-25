@@ -126,7 +126,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         assign rst      = tm_key [w_tm_key - 1];
@@ -152,6 +151,11 @@ module board_specific_top
 
     slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
     i_slow_clk_gen (.slow_clk (slow_clk), .*);
+
+    //------------------------------------------------------------------------
+
+    wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
+    wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
 
     //------------------------------------------------------------------------
 
@@ -186,8 +190,8 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
-        .x             ( x             ),
-        .y             ( y             ),
+        .x             ( mirrored_x    ),
+        .y             ( mirrored_y    ),
 
         .red           ( LARGE_LCD_R   ),
         .green         ( LARGE_LCD_G   ),

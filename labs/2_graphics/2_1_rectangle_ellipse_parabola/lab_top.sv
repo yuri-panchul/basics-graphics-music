@@ -71,10 +71,39 @@ module lab_top
     //------------------------------------------------------------------------
     // Pattern 1
 
-    /**/
-
     wire [w_x * 2 - 1:0] x_2 = x * x;
 
+    always_comb
+    begin
+        red   = '0;
+        green = '0;
+        blue  = '0;
+
+        if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
+        begin
+            red   = '0;
+            green = '1;
+            blue  = '0;
+        end
+        `ifdef YOSYS
+        else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
+        `else
+        else if ((((x - 400) ** 2) + 2 * (y - 300) ** 2) < 100 ** 2)  // Ellipse
+        `endif
+        begin
+            red   = '1;
+            green = '0;
+            blue  = '0;
+        end
+        else if (x_2 [9 +: w_y] < y)  // Parabola
+        begin
+            red   = '0;
+            green = '0;
+            blue  = '1;
+        end
+    end
+
+/*
     always_comb
     begin
         red   = '0;
@@ -104,8 +133,7 @@ module lab_top
             blue  = '1;
         end
     end
-
-    /**/
+*/
 
     //------------------------------------------------------------------------
     // Pattern 3 - dynamic
