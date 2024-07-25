@@ -73,67 +73,36 @@ module lab_top
 
     wire [w_x * 2 - 1:0] x_2 = x * x;
 
+    /**/
+
     always_comb
     begin
         red   = '0;
         green = '0;
         blue  = '0;
 
-        if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
+        if (   x >= screen_width  / 2
+             & x <  screen_width  * 2 / 3
+             & y >= screen_height / 2
+             & y <  screen_height * 2 / 3 )
         begin
-            red   = '0;
-            green = '1;
-            blue  = '0;
-        end
-        `ifdef YOSYS
-        else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
-        `else
-        else if ((((x - 400) ** 2) + 2 * (y - 300) ** 2) < 100 ** 2)  // Ellipse
-        `endif
-        begin
-            red   = '1;
-            green = '0;
-            blue  = '0;
-        end
-        else if (x_2 [9 +: w_y] < y)  // Parabola
-        begin
-            red   = '0;
-            green = '0;
-            blue  = '1;
-        end
-    end
-
-/*
-    always_comb
-    begin
-        red   = '0;
-        green = '0;
-        blue  = '0;
-
-        if (x > 100 & y > 100 & x < 150 & y < 400)  // Rectangle
-        begin
-            red   = x [w_x - 2 -: w_red];
-            green = '1;
-            blue  = y [w_y - 2 -: w_blue];
-        end
-        `ifdef YOSYS
-        else if ((((x - 400) * (x - 400)) + 2 * (y - 300) * (y - 300) ) < (100 * 100))  // Ellipse
-        `else
-        else if ((((x - 400) ** 2) + 2 * (y - 300) ** 2) < 100 ** 2)  // Ellipse
-        `endif
-        begin
-            red   = '1;
             green = x [w_x - 2 -: w_green];
-            blue  = y [w_y - 2 -: w_blue];
         end
-        else if (x_2 [9 +: w_y] < y)  // Parabola
+
+        `ifdef YOSYS
+        if (x * x  + 2 * y * y  < screen_width * screen_width / 4)  // Ellipse
+        `else
+        if (x ** 2 + 2 * y ** 2 < (screen_width / 2) ** 2)  // Ellipse
+        `endif
         begin
-            red   = x [w_x - 2 -: w_red];
-            green = y [w_y - 2 -: w_green];
-            blue  = '1;
+            red = x [w_x - 2 -: w_red];
         end
+
+        if (x_2 [w_x +: w_y] < y)  // Parabola
+            blue = y [w_y - 1 -: w_blue];
     end
-*/
+
+    /**/
 
     //------------------------------------------------------------------------
     // Pattern 3 - dynamic
