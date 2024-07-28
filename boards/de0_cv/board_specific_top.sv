@@ -29,9 +29,6 @@ module board_specific_top
     output logic [  6:0] HEX3,
     output logic [  6:0] HEX4,
     output logic [  6:0] HEX5,
-    output               VGA_CLK,
-    output               VGA_BLANK_N,
-    output               VGA_SYNC_N,
     output               VGA_HS,
     output               VGA_VS,
     output [        3:0] VGA_R,
@@ -95,8 +92,7 @@ module board_specific_top
         .abcdefgh (   abcdefgh           ),
         .digit    (   digit              ),
 
-       //.vsync    (   VGA_VS             ),
-       //.hsync    (   VGA_HS             ),
+
 
 
         .x        (   x                  ),
@@ -151,11 +147,10 @@ module board_specific_top
             .display_on  (           ),
             .hpos        ( x10       ),
             .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .pixel_clk   (           )
         );
 
-        assign VGA_BLANK_N = 1'b1;
-        assign VGA_SYNC_N  = 1'b0;
+
 
     `endif
     //------------------------------------------------------------------------
