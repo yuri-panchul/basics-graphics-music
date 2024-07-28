@@ -1,14 +1,19 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
               w_key   = 4,
               w_sw    = 10,
               w_led   = 10,
               w_digit = 6,
-              w_gpio  = 72     // GPIO_0[5:0] reserved for mic
+              w_gpio  = 72,     // GPIO_0[5:0] reserved for mic
+              screen_width  = 640,
+              screen_height = 480,
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                CLOCK_50,
@@ -24,7 +29,9 @@ module board_specific_top
     output logic [  6:0] HEX3,
     output logic [  6:0] HEX4,
     output logic [  6:0] HEX5,
-
+    output               VGA_CLK,
+    output               VGA_BLANK_N,
+    output               VGA_SYNC_N,
     output               VGA_HS,
     output               VGA_VS,
     output [        3:0] VGA_R,
@@ -36,15 +43,16 @@ module board_specific_top
 );
 
     //------------------------------------------------------------------------
-
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
     wire clk =    CLOCK_50;
     wire rst =  ~ RESET_N;
 
-    wire [w_key   - 1:0] top_key = ~ KEY;
+    wire [w_key   - 1:0] lab_key = ~ KEY;
 
     //------------------------------------------------------------------------
 
-    wire [w_led - w_digit - 1:0] top_led;
+    wire [w_led - w_digit - 1:0] lab_led;
 
     wire [                  7:0] abcdefgh;
     wire [        w_digit - 1:0] digit;
@@ -64,7 +72,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz         ),
         .w_key   ( w_key           ),
@@ -73,22 +81,26 @@ module board_specific_top
         .w_digit ( w_digit         ),
         .w_gpio  ( w_gpio          )             // GPIO_0[5:0] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk                ),
         .slow_clk (   slow_clk           ),
         .rst      (   rst                ),
 
-        .key      (   top_key            ),
+        .key      (   lab_key            ),
         .sw       (   SW                 ),
 
-        .led      (   top_led            ),
+        .led      (   lab_led            ),
 
         .abcdefgh (   abcdefgh           ),
         .digit    (   digit              ),
 
-        .vsync    (   VGA_VS             ),
-        .hsync    (   VGA_HS             ),
+       //.vsync    (   VGA_VS             ),
+       //.hsync    (   VGA_HS             ),
+
+
+        .x        (   x                  ),
+        .y        (   y                  ),
 
         .red      (   VGA_R              ),
         .green    (   VGA_G              ),
@@ -105,7 +117,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign LEDR [w_led - w_digit - 1:0] = top_led; // The last 6 LEDR are used like a 7SEG dp
+    assign LEDR [w_led - w_digit - 1:0] = lab_led; // The last 6 LEDR are used like a 7SEG dp
 
     //------------------------------------------------------------------------
 
@@ -120,10 +132,35 @@ module board_specific_top
             assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
         end
     endgenerate
+   `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz   ),
+            .PIXEL_MHZ   ( pixel_mhz )
+        )
+        i_vga
+        (
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( VGA_HS    ),
+            .vsync       ( VGA_VS    ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   ( VGA_CLK   )
+        );
+
+        assign VGA_BLANK_N = 1'b1;
+        assign VGA_SYNC_N  = 1'b0;
+
+    `endif
     //------------------------------------------------------------------------
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+    `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
 
         // Pro: This implementation is necessary for the lab 7segment_word
         // to properly demonstrate the idea of dynamic 7-segment display
@@ -202,7 +239,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     )
     )
-    o_audio
+    inst_audio_out
     (
         .clk     ( clk         ),
         .reset   ( rst         ),
