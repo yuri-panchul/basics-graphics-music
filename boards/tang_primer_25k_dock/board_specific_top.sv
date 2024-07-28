@@ -33,16 +33,16 @@ module board_specific_top
 
     inout  [w_gpio - 1:0]  gpio,
 
-    `ifdef ENABLE_DVI
+    //`ifdef ENABLE_DVI
 
     output                 tmds_clk_n,
     output                 tmds_clk_p,
     output [         2:0]  tmds_d_n,
     output [         2:0]  tmds_d_p,
 
-    `endif
+    //`endif
 
-    inout  [         7:0]  pmod_0,
+    //inout  [         7:0]  pmod_0,
     inout  [         7:0]  pmod_1,
     inout  [         7:0]  pmod_2
 );
@@ -62,6 +62,14 @@ module board_specific_top
 
     wire  [              7:0] abcdefgh;
     wire  [w_tm_digit  - 1:0] digit;
+
+     
+    wire                      clk_hdl;
+    wire                      clk_hd;
+    wire                      clk_px;
+    wire                      pll_lock;
+    wire                      sys_resetn;
+    wire                      display_on;
 
     wire                      vsync;
     wire                      hsync;
@@ -114,6 +122,9 @@ module board_specific_top
 
         .vsync     ( vsync      ),
         .hsync     ( hsync      ),
+
+        .display_on (display_on),
+        .pixel_clk  (pixel_clk),
 
         .red       ( red        ),
         .green     ( green      ),
@@ -169,10 +180,10 @@ module board_specific_top
         .reset   ( rst       ),
         .data_in ( sound     ),
 
-        .mclk    ( pmod_0[4] ),
-        .bclk    ( pmod_0[5] ),
-        .sdata   ( pmod_0[6] ),
-        .lrclk   ( pmod_0[7] )
+        .mclk    ( /*pmod_0[4]*/ ),
+        .bclk    ( /*pmod_0[5]*/ ),
+        .sdata   ( /*pmod_0[6]*/ ),
+        .lrclk   ( /*pmod_0[7]*/ )
     );
 
     //------------------------------------------------------------------------
@@ -200,15 +211,23 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_DVI
+    //`ifdef ENABLE_DVI
 
-    dvi_tx i_dvi_tx
+    Gowin_PLL pll_inst(
+        .lock(pll_lock), //output lock
+        .clkout0(clk_hdl), //output clkout0
+        .clkin(clk) //input clkin
+    );
+    //BUFG clHD(.I(clk_hdl), .O(clk_hd));
+
+    DVI_TX_PK  i_dvi_tx
     (
-        .I_rst_n        ( ~ rst         ),
-        .I_rgb_clk      (   clk         ),
-        .I_rgb_vs       (   vsync       ),
-        .I_rgb_hs       (   hsync       ),
-        .I_rgb_de       (   1'b0        ),
+        .I_rst_n        ( ~rst  && pll_lock ),
+        .I_serial_clk ( clk_hdl      ), //input I_serial_clk
+        .I_rgb_clk    ( clk_px      ), //input I_rgb_clk
+        .I_rgb_vs       (   ~vsync       ),
+        .I_rgb_hs       (   ~hsync       ),
+        .I_rgb_de       ( display_on  ), //input I_rgb_de
         .I_rgb_r        (   red         ),
         .I_rgb_g        (   green       ),
         .I_rgb_b        (   blue        ),
@@ -218,7 +237,7 @@ module board_specific_top
         .O_tmds_data_n  (   tmds_data_n )
     );
 
-    `endif
+    //`endif
 
     //------------------------------------------------------------------------
 

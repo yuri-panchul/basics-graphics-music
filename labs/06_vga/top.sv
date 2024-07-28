@@ -48,7 +48,7 @@ module top
 
     // General-purpose Input/Output
 
-    inout        [w_gpio  - 1:0] gpio
+    inout        [w_gpio  -  1:0] gpio
 );
 
     //------------------------------------------------------------------------
