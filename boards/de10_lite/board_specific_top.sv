@@ -37,7 +37,6 @@ module board_specific_top
     output logic    [7:0] HEX5,
 
 
-    output                  VGA_CLK,
     output                  VGA_HS,
     output                  VGA_VS,
     output [w_red    - 1:0] VGA_R,
