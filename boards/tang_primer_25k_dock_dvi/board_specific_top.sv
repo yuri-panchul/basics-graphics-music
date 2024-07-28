@@ -5,6 +5,8 @@
 `include "config.svh"
 `include "lab_specific_config.svh"
 
+`define ENABLE_DVI
+
 module board_specific_top
 # (
     parameter   clk_mhz   = 50,
@@ -40,9 +42,12 @@ module board_specific_top
     output [         2:0]  tmds_d_n,
     output [         2:0]  tmds_d_p,
 
-    `endif
+    `else
 
     inout  [         7:0]  pmod_0,
+
+    `endif
+
     inout  [         7:0]  pmod_1,
     inout  [         7:0]  pmod_2
 );
@@ -159,6 +164,8 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifndef ENABLE_DVI
+
     i2s_audio_out
     # (
         .clk_mhz ( clk_mhz     )
@@ -174,6 +181,8 @@ module board_specific_top
         .sdata   ( pmod_0[6] ),
         .lrclk   ( pmod_0[7] )
     );
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -206,9 +215,9 @@ module board_specific_top
     (
         .I_rst_n        ( ~ rst         ),
         .I_rgb_clk      (   clk         ),
-        .I_rgb_vs       (   vsync       ),
-        .I_rgb_hs       (   hsync       ),
-        .I_rgb_de       (   1'b0        ),
+        .I_rgb_vs       ( ~ vsync       ),
+        .I_rgb_hs       ( ~ hsync       ),
+        .I_rgb_de       (   1'b1        ),
         .I_rgb_r        (   red         ),
         .I_rgb_g        (   green       ),
         .I_rgb_b        (   blue        ),

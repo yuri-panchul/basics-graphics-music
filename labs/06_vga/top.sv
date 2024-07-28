@@ -9,6 +9,7 @@ module top
               w_led     = 8,
               w_digit   = 8,
               w_gpio    = 100,
+
               w_red     = 4,
               w_green   = 4,
               w_blue    = 4

@@ -35,33 +35,32 @@ IO_LOC "gpio[32]"   K8  ; IO_LOC "gpio[33]" J8   // STB
 IO_LOC "gpio[34]"   F6  ; IO_LOC "gpio[35]" F7   // CLK
 IO_LOC "gpio[36]"   J10 ; IO_LOC "gpio[37]" J11  // DIO
 
-
 //----------------------------------------------------------------------------
 
 // Pmod 0 on the left used as DVI
 
-//IO_LOC  "tmds_clk_p"  H5,J5;
-//IO_LOC  "tmds_d_p[0]" H8,H7;
-//IO_LOC  "tmds_d_p[1]" G7,G8;
-//IO_LOC  "tmds_d_p[2]" F5,G5;
+IO_LOC  "tmds_clk_p"  H5,J5;
+IO_LOC  "tmds_d_p[0]" H8,H7;
+IO_LOC  "tmds_d_p[1]" G7,G8;
+IO_LOC  "tmds_d_p[2]" F5,G5;
 
 //----------------------------------------------------------------------------
 
 // Pmod 0 on the left
 
-IO_LOC "pmod_0[0]" F5  ;  # sck
-IO_LOC "pmod_0[1]" G7  ;
-IO_LOC "pmod_0[2]" H8  ;
-IO_LOC "pmod_0[3]" H5  ;  # l
-// GND
-// 3V3
+// IO_LOC "pmod_0[0]" F5  ;  # sck
+// IO_LOC "pmod_0[1]" G7  ;
+// IO_LOC "pmod_0[2]" H8  ;
+// IO_LOC "pmod_0[3]" H5  ;  # l
+// // GND
+// // 3V3
 
-IO_LOC "pmod_0[4]" G5  ;
-IO_LOC "pmod_0[5]" G8  ;
-IO_LOC "pmod_0[6]" H7  ;
-IO_LOC "pmod_0[7]" J5  ;
-// GND
-// 3V3
+// IO_LOC "pmod_0[4]" G5  ;
+// IO_LOC "pmod_0[5]" G8  ;
+// IO_LOC "pmod_0[6]" H7  ;
+// IO_LOC "pmod_0[7]" J5  ;
+// // GND
+// // 3V3
 
 //----------------------------------------------------------------------------
 

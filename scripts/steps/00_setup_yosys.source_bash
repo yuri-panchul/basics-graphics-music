@@ -101,10 +101,10 @@ setup_run_directory_for_fpga_synthesis_yosys ()
         "$board_dir/$fpga_board"  \
         "$lab_dir/common"
     do
-        // TODO: Check if we really need adjust_path_for_gowin_win here
+        # TODO: Check if we really need adj_path_for_gowin_win here
 
         $find_to_run  \
-            "$(adjust_path_for_gowin_win "$verilog_src_dir")"  \
+            "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
             -type f -name '*.sv' -not -name tb.sv  \
             -printf "READ_VERILOG += -p \"read_verilog -sv %p\"\n" \
             -printf "DEPS += %p\n" \

@@ -136,3 +136,9 @@ IO_LOC "GPIO_0[1]" T7;
 IO_PORT "GPIO_0[1]" IO_TYPE=LVCMOS33;
 IO_LOC "GPIO_0[0]" T6;
 IO_PORT "GPIO_0[0]" IO_TYPE=LVCMOS33;
+
+// HDMI Output
+IO_LOC "tmds_d_p[0]" H14,H16;
+IO_LOC "tmds_d_p[1]" J15,K16;
+IO_LOC "tmds_d_p[2]" K14,K15;
+IO_LOC "tmds_clk_p" G16,H15;

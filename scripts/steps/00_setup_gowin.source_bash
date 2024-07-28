@@ -261,9 +261,9 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 
         cat "$board_dir/$fpga_board/project_process_config_01.json" > "$dir/impl/project_process_config.json"
 
-        printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$lab_dir")/common"        >> "$dir/impl/project_process_config.json"
-        printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$board_dir")/$fpga_board" >> "$dir/impl/project_process_config.json"
         printf '   \"%s\"\n'  "$(adj_path_for_gowin_win "$main_src_dir")"          >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$board_dir")/$fpga_board" >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$lab_dir")/common"        >> "$dir/impl/project_process_config.json"
 
         cat "$board_dir/$fpga_board/project_process_config_02.json" >> "$dir/impl/project_process_config.json"
     fi
@@ -300,7 +300,7 @@ configure_fpga_gowin_msys ()
 
     case $fpga_board in
 
-      # gowin_runber |
+        runber        | \
         tang_nano_1k* )
 
             fpga_board_for_programmer="GW1NZ-1"
@@ -377,7 +377,7 @@ configure_fpga_gowin_all ()
 
     case $fpga_board in
 
-      # gowin_runber          ) fpga_board_for_openFPGALoader=runber        ;;
+        runber                ) fpga_board_for_openFPGALoader=runber        ;;
         tang_nano_1k*         ) fpga_board_for_openFPGALoader=tangnano1k    ;;
         tang_nano_20k*        ) fpga_board_for_openFPGALoader=tangnano20k   ;;
         tang_nano_4k*         ) fpga_board_for_openFPGALoader=tangnano4k    ;;
