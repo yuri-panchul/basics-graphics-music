@@ -3,12 +3,17 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
               w_key   = 4,
               w_sw    = 10,
               w_led   = 10,
               w_digit = 6,
-              w_gpio  = 72     // GPIO_0[5:0] reserved for mic
+              w_gpio  = 72,     // GPIO_0[5:0] reserved for mic
+              screen_width  = 640,
+              screen_height = 480,
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                CLOCK_50,
@@ -24,7 +29,9 @@ module board_specific_top
     output logic [  6:0] HEX3,
     output logic [  6:0] HEX4,
     output logic [  6:0] HEX5,
-
+    output               VGA_CLK,
+    output               VGA_BLANK_N,
+    output               VGA_SYNC_N,
     output               VGA_HS,
     output               VGA_VS,
     output [        3:0] VGA_R,
@@ -36,7 +43,8 @@ module board_specific_top
 );
 
     //------------------------------------------------------------------------
-
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
     wire clk =    CLOCK_50;
     wire rst =  ~ RESET_N;
 
@@ -87,8 +95,12 @@ module board_specific_top
         .abcdefgh (   abcdefgh           ),
         .digit    (   digit              ),
 
-        .vsync    (   VGA_VS             ),
-        .hsync    (   VGA_HS             ),
+       //.vsync    (   VGA_VS             ),
+       //.hsync    (   VGA_HS             ),
+
+
+        .x        (   x                  ),
+        .y        (   y                  ),
 
         .red      (   VGA_R              ),
         .green    (   VGA_G              ),
@@ -120,7 +132,32 @@ module board_specific_top
             assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
         end
     endgenerate
+   `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz   ),
+            .PIXEL_MHZ   ( pixel_mhz )
+        )
+        i_vga
+        (
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( VGA_HS    ),
+            .vsync       ( VGA_VS    ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   ( VGA_CLK   )
+        );
+
+        assign VGA_BLANK_N = 1'b1;
+        assign VGA_SYNC_N  = 1'b0;
+
+    `endif
     //------------------------------------------------------------------------
 
     `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
