@@ -23,7 +23,7 @@ module tb;
     
     wire  [31:0] cycleCntPerf;  // clk counter for evaluation program time execution
 
-    sr_soc soc
+    sr_soc # (.CACHE_EN (0)) soc
     (
         .clk        ( clk          ),
         .rst        ( rst          ),
