@@ -4,7 +4,7 @@
 module board_specific_top
 # (
     parameter clk_mhz = 50,
-              pixel_mhz     = 25,
+              pixel_mhz = 50,
               w_key   = 2,
               w_sw    = 10,
               w_led   = 10,
