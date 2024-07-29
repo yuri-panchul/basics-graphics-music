@@ -62,8 +62,7 @@ module board_specific_top
 
     // Keys, switches, LEDs
 
-    wire [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
-    wire [ w_led     - 1:0] lab_led;
+    wire [ w_lab_sw  - 1:0] lab_sw = SW [w_lab_sw - 1:0];
 
     // A dynamic seven-segment display
 
@@ -118,7 +117,7 @@ module board_specific_top
         .key           ( ~ KEY              ),
         .sw            (   lab_sw           ),
 
-        .led           (   lab_led          ),
+        .led           (   LEDG             ),
 
         .abcdefgh      (   abcdefgh         ),
         .digit         (   digit            ),
@@ -138,10 +137,6 @@ module board_specific_top
 
 	.gpio          ( { GPIO_0, GPIO_1 } )
     );
-
-    //------------------------------------------------------------------------
-
-    assign LEDG = { { $bits (LEDG) - w_led { 1'b0 } }, lab_led };
 
     //------------------------------------------------------------------------
 
