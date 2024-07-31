@@ -1,4 +1,20 @@
 `include "config.svh"
+/*
+ Hardware required
+   3 keys, 12 leds, 3 3.3V GPIO(if tm1638 module is used)
+
+ If leds or keys are not available on your board,
+ connect tm1639 board (7 Segment Display Keypad & LED Module) and uncommenting the line
+
+  `define ENABLE_TM1638 in ../common/lab_specific_config.svh file
+
+ tm1638_board
+ clk  - GPIO[1]
+ stb  - GPIO[2]
+ data - GPIO[0]
+ VCC  - 3V3
+ GNG  - GND
+*/
 
 module top
 # (
@@ -93,6 +109,7 @@ module top
     //------------------------------------------------------------------------
 
     wire [1:0] ab = { a, b };
+    logic mux1;
     assign mux1 = ab [sel];
 
     //------------------------------------------------------------------------
@@ -121,7 +138,8 @@ module top
     // without using "?" operation, "if", "case" or a bit selection.
     // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
-    wire mux4 = 1'b0;
+    //wire mux4 = 1'b0;
+    wire mux4 = (sel & a) | (~sel & b);
 
     //------------------------------------------------------------------------
 
