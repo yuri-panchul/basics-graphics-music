@@ -102,36 +102,49 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz  (clk_mhz),
-        .w_key    (w_key_top),
-        .w_sw     (w_sw_top),
-        .w_led    (w_led_top),
-        .w_digit  (w_digit_top),
-        .w_gpio   (w_gpio)
+        .clk_mhz       (   clk_mhz           ),
+        .w_key         (   w_key_top         ),
+        .w_sw          (   w_sw_top          ),
+        .w_led         (   w_led_top         ),
+        .w_digit       (   w_digit_top       ),
+        .w_gpio        (   w_gpio            ),
+
+        .screen_width  (                     ),
+        .screen_height (                     ),
+
+        .w_red         (                     ),
+        .w_green       (                     ),
+        .w_blue        (                     )
     )
+    
     i_lab_top
     (
-        .clk      (clk),
-        .slow_clk (slow_clk),
-        .rst      (rst),
+        .clk           (   clk               ),
+        .slow_clk      (   slow_clk          ),
+        .rst           (   rst               ),
 
-        .key      (key_top),
-        .sw       (sw_top),
-        .led      (led_top),
-        .abcdefgh (abcdefgh),
-        .digit    (digit_top),
+        .key           (   key_top           ),
+        .sw            (   sw_top            ),
 
-        .vsync    ( ),
-        .hsync    ( ),
-        .red      ( ),
-        .green    ( ),
-        .blue     ( ),
+        .led           (   led_top           ),
 
-        .uart_rx  ( UART_RX ),
-        .uart_tx  ( UART_TX ),
+        .abcdefgh      (   abcdefgh          ),
+        .digit         (   digit_top         ),
 
-        .mic      ( ),
-        .gpio     ( )
+        .x             (                     ),
+        .y             (                     ),
+
+        .red           (                     ),
+        .green         (                     ),
+        .blue          (                     ),
+        
+        .mic           (                     ),
+        .sound         (                     ),
+
+        .uart_rx       (   UART_RX           ),
+        .uart_tx       (   UART_TX           ),
+
+        .gpio          (                     )
     );
 
 
