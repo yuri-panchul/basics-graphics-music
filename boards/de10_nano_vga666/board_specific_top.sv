@@ -2,18 +2,34 @@
 `include "lab_specific_board_config.svh"
 
 //--- VGA external ---
-   `define VGA666_BOARD
+ `define VGA666_BOARD
 // `define PMOD_VGA_BOARD
 // `define MISTER_IO_BOARD
 
 module board_specific_top
 # (
-    parameter clk_mhz  = 50,
-              w_key    = 2,
-              w_sw     = 4,
-              w_led    = 8,
-              w_digit  = 0,
-              w_gpio   = 36                   // GPIO_0 [31], [33], [35] reserved for tm1638; GPIO [11], [13], [15], [17] reserved for i2s audio; GPIO_0[5:0] reserved for mic
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 2,
+              w_sw          = 4,
+              w_led         = 8,
+              w_digit       = 0,
+              w_gpio        = 36,
+
+              // GPIO_0 [31], [33], [35] are reserved for tm1638.
+              // GPIO_0 [11], [13], [15], [17] are reserved for I2S audio.
+              // GPIO_0[5:0] are reserved for INMP 441 I2S microphone.
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 4,
+              w_green       = 4,
+              w_blue        = 4,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                    FPGA_CLK1_50,
@@ -30,6 +46,8 @@ module board_specific_top
 
     localparam w_lab_sw   = w_sw - 1;                             // One onboard SW is used as a reset
 
+    //------------------------------------------------------------------------
+
     wire                  clk    = FPGA_CLK1_50;
 
    `ifdef MISTER_IO_BOARD
@@ -38,14 +56,26 @@ module board_specific_top
         wire              rst    = SW [w_lab_sw];
     `endif
 
+    // Keys
+
     wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
 
-    //------------------------------------------------------------------------
+    // A dynamic seven-segment display
 
     wire [           7:0] abcdefgh;
 
-    wire                  vga_vs, vga_hs;
-    wire [           3:0] vga_r, vga_g, vga_b;
+    // Graphics
+
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
+
+    wire                    vs, hs;
+
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
+
+    // Microphone, sound output and UART
 
     wire [          23:0] mic;
     wire [          15:0] sound;
@@ -120,143 +150,132 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    lab_top
-    # (
-        .clk_mhz   ( clk_mhz     ),
-        .w_key     ( w_lab_key   ),
-        .w_sw      ( w_lab_sw    ),
-        .w_led     ( w_lab_led   ),
-        .w_digit   ( w_lab_digit ),
-        .w_gpio    ( w_gpio      )       // GPIO_0 [31], [33], [35] reserved for tm1638; GPIO [11], [13], [15], [17] reserved for i2s audio; GPIO_0[5:0] reserved for mic
-    )
-    i_lab_top
-    (
-        .clk       ( clk         ),
-        .slow_clk  ( slow_clk    ),
-        .rst       ( rst         ),
+    wire slow_clk;
 
-        .key       ( lab_key     ),
-        .sw        ( lab_sw      ),
-
-        .led       ( lab_led     ),
-
-        .abcdefgh  ( abcdefgh    ),
-        .digit     ( lab_digit   ),
-
-        .vsync     ( vga_vs      ),
-        .hsync     ( vga_hs      ),
-
-        .red       ( vga_r       ),
-        .green     ( vga_g       ),
-        .blue      ( vga_b       ),
-
-        .uart_rx   ( UART_RX     ),
-        .uart_tx   ( UART_TX     ),
-
-        .mic       ( mic         ),
-
-        .sound     ( sound       ),
-
-        .gpio      ( GPIO_0      )
-    );
+    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
-    logic [    3:0] reg_vga_r, reg_vga_g, reg_vga_b;
-    logic           reg_vga_vs, reg_vga_hs;
+    lab_top
+    # (
+        .clk_mhz       (   clk_mhz       ),
+        .w_key         (   w_lab_key     ),
+        .w_sw          (   w_lab_sw      ),
+        .w_led         (   w_lab_led     ),
+        .w_digit       (   w_lab_digit   ),
+        .w_gpio        (   w_gpio        ),
 
-    // Registers remove combinational logic noise
-    always_ff @( posedge clk or posedge rst)
-    begin
-        if (rst)
-        begin
-            reg_vga_r  <= '0;
-            reg_vga_g  <= '0;
-            reg_vga_b  <= '0;
-            reg_vga_vs <= '0;
-            reg_vga_hs <= '0;
-        end
-        else
-        begin
-            reg_vga_r  <= vga_r;
-            reg_vga_g  <= vga_g;
-            reg_vga_b  <= vga_b;
-            reg_vga_vs <= vga_vs;
-            reg_vga_hs <= vga_hs;
-        end
-    end
+        .screen_width  (   screen_width  ),
+        .screen_height (   screen_height ),
+
+        .w_red         (   w_red         ),
+        .w_green       (   w_green       ),
+        .w_blue        (   w_blue        )
+    )
+    i_lab_top
+    (
+        .clk           (   clk           ),
+        .slow_clk      (   slow_clk      ),
+        .rst           (   rst           ),
+
+        .key           (   lab_key       ),
+        .sw            (   lab_sw        ),
+
+        .led           (   lab_led       ),
+
+        .abcdefgh      (   abcdefgh      ),
+        .digit         (   lab_digit     ),
+
+        .x             (   x             ),
+        .y             (   y             ),
+
+        .red           (   red           ),
+        .green         (   green         ),
+        .blue          (   blue          ),
+
+        .mic           (   mic           ),
+        .sound         (   sound         ),
+
+        .uart_rx       (   UART_RX       ),
+        .uart_tx       (   UART_TX       ),
+
+        .gpio          (   GPIO_0        )
+    );
+
+    //------------------------------------------------------------------------
 
     // External VGA out at GPIO_1
     `ifdef  VGA666_BOARD
 
         // 4 bit color used
-        assign GPIO_1 [35] = reg_vga_vs;        // vga666_pi_Vsync - JP7 pin 40
-        assign GPIO_1 [33] = reg_vga_hs;        // vga666_pi_Hsync - JP7 pin 38
+        assign GPIO_1 [35] = vs;            // vga666_pi_Vsync - JP7 pin 40
+        assign GPIO_1 [33] = hs;            // vga666_pi_Hsync - JP7 pin 38
         // R
-        assign GPIO_1 [13] = reg_vga_r [0];     // vga666_red[4]   - JP7 pin 16
-        assign GPIO_1 [19] = reg_vga_r [1];     // vga666_red[5]   - JP7 pin 22
-        assign GPIO_1 [ 5] = reg_vga_r [2];     // vga666_red[6]   - JP7 pin 6
-        assign GPIO_1 [ 3] = reg_vga_r [3];     // vga666_red[7]   - JP7 pin 4
+        assign GPIO_1 [13] = red [0];       // vga666_red[4]   - JP7 pin 16
+        assign GPIO_1 [19] = red [1];       // vga666_red[5]   - JP7 pin 22
+        assign GPIO_1 [ 5] = red [2];       // vga666_red[6]   - JP7 pin 6
+        assign GPIO_1 [ 3] = red [3];       // vga666_red[7]   - JP7 pin 4
         // G
-        assign GPIO_1 [ 7] = reg_vga_g [0];     // vga666_green[4] - JP7 pin 8
-        assign GPIO_1 [21] = reg_vga_g [1];     // vga666_green[5] - JP7 pin 24
-        assign GPIO_1 [17] = reg_vga_g [2];     // vga666_green[6] - JP7 pin 20
-        assign GPIO_1 [15] = reg_vga_g [3];     // vga666_green[7] - JP7 pin 18
+        assign GPIO_1 [ 7] = green [0];     // vga666_green[4] - JP7 pin 8
+        assign GPIO_1 [21] = green [1];     // vga666_green[5] - JP7 pin 24
+        assign GPIO_1 [17] = green [2];     // vga666_green[6] - JP7 pin 20
+        assign GPIO_1 [15] = green [3];     // vga666_green[7] - JP7 pin 18
         // B
-        assign GPIO_1 [23] = reg_vga_b [0];     // vga666_blue[4]  - JP7 pin 26
-        assign GPIO_1 [ 9] = reg_vga_b [1];     // vga666_blue[5]  - JP7 pin 10
-        assign GPIO_1 [11] = reg_vga_b [2];     // vga666_blue[6]  - JP7 pin 14
-        assign GPIO_1 [25] = reg_vga_b [3];     // vga666_blue[7]  - JP7 pin 28
-                                                // vga666_GND      - JP7 pin 30
+        assign GPIO_1 [23] = blue [0];      // vga666_blue[4]  - JP7 pin 26
+        assign GPIO_1 [ 9] = blue [1];      // vga666_blue[5]  - JP7 pin 10
+        assign GPIO_1 [11] = blue [2];      // vga666_blue[6]  - JP7 pin 14
+        assign GPIO_1 [25] = blue [3];      // vga666_blue[7]  - JP7 pin 28
+                                            // vga666_GND      - JP7 pin 30
 
     `elsif PMOD_VGA_BOARD
 
-        assign GPIO_1 [ 7] = reg_vga_vs;        // JP7 pin  8
-        assign GPIO_1 [ 5] = reg_vga_hs;        // JP7 pin  6
+        assign GPIO_1 [ 7] = vs;            // JP7 pin  8
+        assign GPIO_1 [ 5] = hs;            // JP7 pin  6
         // R
-        assign GPIO_1 [35] = reg_vga_r [0];     // JP7 pin 40
-        assign GPIO_1 [33] = reg_vga_r [1];     // JP7 pin 38
-        assign GPIO_1 [31] = reg_vga_r [2];     // JP7 pin 36
-        assign GPIO_1 [29] = reg_vga_r [3];     // JP7 pin 34
+        assign GPIO_1 [35] = red [0];       // JP7 pin 40
+        assign GPIO_1 [33] = red [1];       // JP7 pin 38
+        assign GPIO_1 [31] = red [2];       // JP7 pin 36
+        assign GPIO_1 [29] = red [3];       // JP7 pin 34
         // G
-        assign GPIO_1 [25] = reg_vga_g [0];     // JP7 pin 28
-        assign GPIO_1 [23] = reg_vga_g [1];     // JP7 pin 26
-        assign GPIO_1 [21] = reg_vga_g [2];     // JP7 pin 24
-        assign GPIO_1 [19] = reg_vga_g [3];     // JP7 pin 22
+        assign GPIO_1 [25] = green [0];     // JP7 pin 28
+        assign GPIO_1 [23] = green [1];     // JP7 pin 26
+        assign GPIO_1 [21] = green [2];     // JP7 pin 24
+        assign GPIO_1 [19] = green [3];     // JP7 pin 22
         // B
-        assign GPIO_1 [17] = reg_vga_b [0];     // JP7 pin 20
-        assign GPIO_1 [15] = reg_vga_b [1];     // JP7 pin 18
-        assign GPIO_1 [13] = reg_vga_b [2];     // JP7 pin 16
-        assign GPIO_1 [11] = reg_vga_b [3];     // JP7 pin 14
-                                                // GND  - JP7 pin 30
-                                                // 3.3V - JP7 pin 29
+        assign GPIO_1 [17] = blue [0];      // JP7 pin 20
+        assign GPIO_1 [15] = blue [1];      // JP7 pin 18
+        assign GPIO_1 [13] = blue [2];      // JP7 pin 16
+        assign GPIO_1 [11] = blue [3];      // JP7 pin 14
+                                            // GND  - JP7 pin 30
+                                            // 3.3V - JP7 pin 29
 
     `elsif MISTER_IO_BOARD
 
-        // VGA out of MiSTer I/O board, 4 bit color used
-        assign GPIO_1 [16] = reg_vga_vs;        // JP7 pin 19
-        assign GPIO_1 [17] = reg_vga_hs;        // JP7 pin 20
+        // VGA out of MiSTer I/O board, 6 bit color used
+        assign GPIO_1 [16] = vs;            // JP7 pin 19
+        assign GPIO_1 [17] = hs;            // JP7 pin 20
         // R
-        assign GPIO_1 [35] = 1'b1;              // JP7 pin 40
-        assign GPIO_1 [33] = 1'b1;              // JP7 pin 38
-        assign GPIO_1 [31] = reg_vga_r [0];     // JP7 pin 36
-        assign GPIO_1 [29] = reg_vga_r [1];     // JP7 pin 34
-        assign GPIO_1 [27] = reg_vga_r [2];     // JP7 pin 32
-        assign GPIO_1 [25] = reg_vga_r [3];     // JP7 pin 28
+        assign GPIO_1 [35] = red [0];       // JP7 pin 40
+        assign GPIO_1 [33] = red [1];       // JP7 pin 38
+        assign GPIO_1 [31] = red [2];       // JP7 pin 36
+        assign GPIO_1 [29] = red [3];       // JP7 pin 34
+        assign GPIO_1 [27] = red [4];       // JP7 pin 32
+        assign GPIO_1 [25] = red [5];       // JP7 pin 28
         // G
-        assign GPIO_1 [34] = 1'b1;              // JP7 pin 39
-        assign GPIO_1 [32] = 1'b1;              // JP7 pin 37
-        assign GPIO_1 [30] = reg_vga_g [0];     // JP7 pin 35
-        assign GPIO_1 [28] = reg_vga_g [1];     // JP7 pin 33
-        assign GPIO_1 [26] = reg_vga_g [2];     // JP7 pin 31
-        assign GPIO_1 [24] = reg_vga_g [3];     // JP7 pin 27
+        assign GPIO_1 [34] = green [0];     // JP7 pin 39
+        assign GPIO_1 [32] = green [1];     // JP7 pin 37
+        assign GPIO_1 [30] = green [2];     // JP7 pin 35
+        assign GPIO_1 [28] = green [3];     // JP7 pin 33
+        assign GPIO_1 [26] = green [4];     // JP7 pin 31
+        assign GPIO_1 [24] = green [5];     // JP7 pin 27
         // B
-        assign GPIO_1 [19] = 1'b1;              // JP7 pin 22
-        assign GPIO_1 [21] = 1'b1;              // JP7 pin 24
-        assign GPIO_1 [23] = reg_vga_b [0];     // JP7 pin 26
-        assign GPIO_1 [22] = reg_vga_b [1];     // JP7 pin 25
-        assign GPIO_1 [20] = reg_vga_b [2];     // JP7 pin 23
-        assign GPIO_1 [18] = reg_vga_b [3];     // JP7 pin 21
+        assign GPIO_1 [19] = blue [0];      // JP7 pin 22
+        assign GPIO_1 [21] = blue [1];      // JP7 pin 24
+        assign GPIO_1 [23] = blue [2];      // JP7 pin 26
+        assign GPIO_1 [22] = blue [3];      // JP7 pin 25
+        assign GPIO_1 [20] = blue [4];      // JP7 pin 23
+        assign GPIO_1 [18] = blue [5];      // JP7 pin 21
 
     `endif
 
@@ -275,55 +294,93 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    tm1638_board_controller
-    # (
-        .clk_mhz ( clk_mhz    ),
-        .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
-    )
-    i_ledkey
-    (
-        .clk        ( clk           ),
-        .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
-        .hgfedcba   ( hgfedcba      ),
-        .digit      ( tm_digit      ),
-        .ledr       ( tm_led        ),
-        .keys       ( tm_key        ),
-        .sio_stb    ( GPIO_0 [27]   ), // JP1 pin 32
-        .sio_clk    ( GPIO_0 [29]   ), // JP1 pin 34
-        .sio_data   ( GPIO_0 [31]   )  // JP1 pin 36
-    );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz   ),
+            .PIXEL_MHZ   ( pixel_mhz )
+        )
+        i_vga
+        (
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( hs        ),
+            .vsync       ( vs        ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   (           )
+        );
+
+    `endif
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO_0 [0] ),  // JP1 pin 1
-        .ws    ( GPIO_0 [2] ),  // JP1 pin 3
-        .sck   ( GPIO_0 [4] ),  // JP1 pin 5
-        .sd    ( GPIO_0 [5] ),  // JP1 pin 6
-        .value ( mic        )
-    );
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    assign GPIO_0 [1] = 1'b0;   // GND - JP1 pin 2
-    assign GPIO_0 [3] = 1'b1;   // VCC - JP1 pin 4
+        tm1638_board_controller
+        # (
+            .clk_mhz ( clk_mhz    ),
+            .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
+        )
+        i_ledkey
+        (
+            .clk        ( clk           ),
+            .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
+            .hgfedcba   ( hgfedcba      ),
+            .digit      ( tm_digit      ),
+            .ledr       ( tm_led        ),
+            .keys       ( tm_key        ),
+            .sio_stb    ( GPIO_0 [27]   ), // JP1 pin 32
+            .sio_clk    ( GPIO_0 [29]   ), // JP1 pin 34
+            .sio_data   ( GPIO_0 [31]   )  // JP1 pin 36
+        );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
+
+    `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz     )
-    )
-    inst_audio_out
-    (
-        .clk     ( clk         ),
-        .reset   ( rst         ),
-        .data_in ( sound       ),
-        .mclk    ( GPIO_0 [17] ), // JP1 pin 20
-        .bclk    ( GPIO_0 [15] ), // JP1 pin 18
-        .lrclk   ( GPIO_0 [11] ), // JP1 pin 14
-        .sdata   ( GPIO_0 [13] )  // JP1 pin 16
-    );                            // JP1 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver i_microphone
+        (
+            .clk   ( clk        ),
+            .rst   ( rst        ),
+            .lr    ( GPIO_0 [0] ),  // JP1 pin 1
+            .ws    ( GPIO_0 [2] ),  // JP1 pin 3
+            .sck   ( GPIO_0 [4] ),  // JP1 pin 5
+            .sd    ( GPIO_0 [5] ),  // JP1 pin 6
+            .value ( mic        )
+        );
+
+        assign GPIO_0 [1] = 1'b0;   // GND - JP1 pin 2
+        assign GPIO_0 [3] = 1'b1;   // VCC - JP1 pin 4
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz     )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
+            .mclk    ( GPIO_0 [17] ), // JP1 pin 20
+            .bclk    ( GPIO_0 [15] ), // JP1 pin 18
+            .lrclk   ( GPIO_0 [11] ), // JP1 pin 14
+            .sdata   ( GPIO_0 [13] )  // JP1 pin 16
+        );                            // JP1 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
+
+    `endif
 
 endmodule
