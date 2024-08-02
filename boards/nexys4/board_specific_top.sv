@@ -216,20 +216,38 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz )
-    )
-    inst_audio_out
-    (
-        .clk     ( clk     ),
-        .reset   ( rst     ),
-        .data_in ( sound   ),
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz )
+        )
+        inst_pcm5102
+        (
+            .clk     ( clk     ),
+            .reset   ( rst     ),
+            .data_in ( sound   ),
 
-        .mclk    ( JC [4]  ),
-        .bclk    ( JC [5]  ),
-        .sdata   ( JC [6]  ),
-        .lrclk   ( JC [7]  )
-    );
+            .mclk    ( JC [4]  ),
+            .bclk    ( JC [5]  ),
+            .sdata   ( JC [6]  ),
+            .lrclk   ( JC [7]  )
+        );
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz )
+        )
+        inst_pmod_amp3
+        (
+            .clk     ( clk     ),
+            .reset   ( rst     ),
+            .data_in ( sound   ),
+
+            .mclk    ( JB [6]  ),
+            .bclk    ( JB [3]  ),
+            .sdata   ( JB [1]  ),
+            .lrclk   ( JB [0]  )
+        );
+
+    `endif
 
 endmodule
