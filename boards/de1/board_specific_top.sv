@@ -7,10 +7,10 @@ module board_specific_top
               pixel_mhz     = 25,
 
               w_key         = 4,
-              w_sw          = 10,		// One onboard SW is used as a reset
+              w_sw          = 10,        // One onboard SW is used as a reset
               w_led         = 8,
               w_digit       = 4,
-              w_gpio        = 72,		// GPIO_1[5:0] reserved for mic
+              w_gpio        = 72,        // GPIO_1[5:0] reserved for mic
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
               // Odd gpio .. are reserved I2S audio.
@@ -135,7 +135,7 @@ module board_specific_top
         .uart_rx       (   UART_RXD         ),
         .uart_tx       (   UART_TXD         ),
 
-	.gpio          ( { GPIO_0, GPIO_1 } )
+    .gpio          ( { GPIO_0, GPIO_1 } )
     );
 
     //------------------------------------------------------------------------

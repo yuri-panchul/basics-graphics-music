@@ -14,9 +14,9 @@
 
 
 # The default values for assignments are stored in the file
-#		DE0_Default_assignment_defaults.qdf
+#        DE0_Default_assignment_defaults.qdf
 # If this file doesn't exist, and for assignments not listed, see file
-#		assignment_defaults.qdf
+#        assignment_defaults.qdf
 
 # Altera recommends that you do not modify this file. This
 # file is updated automatically by the Quartus II software

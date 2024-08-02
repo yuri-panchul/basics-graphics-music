@@ -4,7 +4,7 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 100,
-    	      pixel_mhz     = 25,
+              pixel_mhz     = 25,
 
               w_key         = 5,
               w_sw          = 16,
@@ -194,7 +194,7 @@ module board_specific_top
      
         inmp441_mic_i2s_receiver
         # (
-    	    .clk_mhz ( clk_mhz )
+            .clk_mhz ( clk_mhz )
          )
         i_microphone
         (

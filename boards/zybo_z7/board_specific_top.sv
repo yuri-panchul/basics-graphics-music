@@ -67,7 +67,7 @@ module board_specific_top
     localparam w_key_tm   = 8,
                w_led_tm   = 8,
                w_digit_tm = 8;
-	
+    
     //------------------------------------------------------------------------
 
     `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
