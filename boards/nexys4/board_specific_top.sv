@@ -165,11 +165,11 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire [9:0] x10; assign x = x10;
-        wire [9:0] y10; assign y = y10;
-
-	wire display_on;
-	wire pixel_clk;
+     wire [9:0] x10; assign x = x10;
+     wire [9:0] y10; assign y = y10;
+     
+     wire       display_on;
+     wire       pixel_clk;
         
      vga
      # (
@@ -191,7 +191,9 @@ module board_specific_top
     `endif
     
     //------------------------------------------------------------------------
-
+    
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+    
     inmp441_mic_i2s_receiver
     # (
     	.clk_mhz ( clk_mhz )
@@ -210,4 +212,5 @@ module board_specific_top
     assign JD [2] = 1'b0;  // GND - JD pin 3
     assign JD [1] = 1'b1;  // VCC - JD pin 2
 
+   `endif
 endmodule
