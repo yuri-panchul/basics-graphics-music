@@ -4,6 +4,7 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 100,
+    	      pixel_mhz     = 25,
               w_key         = 5,
               w_sw          = 16,
               w_led         = 16,
@@ -30,8 +31,8 @@ module board_specific_top
     input                   btnR,
     input                   btnD,
 
-    input  [w_sw      -1:0] sw,
-    output [w_led     -1:0] led,
+    input  [w_sw     - 1:0] sw,
+    output [w_led    - 1:0] led,
 
     output                  RGB1_Red,
     output                  RGB1_Green,
@@ -48,9 +49,9 @@ module board_specific_top
     output                  Hsync,
     output                  Vsync,
 
-    output [w_red     -1:0] vgaRed,
-    output [w_blue    -1:0] vgaBlue,
-    output [w_green   -1:0] vgaGreen,
+    output [w_red    - 1:0] vgaRed,
+    output [w_blue   - 1:0] vgaBlue,
+    output [w_green  - 1:0] vgaGreen,
 
     input                   RsRx,
 
@@ -102,6 +103,7 @@ module board_specific_top
     // FIXME: Should be assigned to some GPIO!
     wire        UART_TX;
     wire        UART_RX = '1;
+    
     wire [w_gpio      - 1:0]  gpio;
 
     //------------------------------------------------------------------------
@@ -115,12 +117,12 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       ( clk_mhz          ),
-        .w_key         ( w_key            ),
-        .w_sw          ( w_sw             ),
-        .w_led         ( w_led            ),
-        .w_digit       ( w_digit          ),
-        .w_gpio        ( w_gpio           ),
+        .clk_mhz       (   clk_mhz        ),
+        .w_key         (   w_key          ),
+        .w_sw          (   w_sw           ),
+        .w_led         (   w_led          ),
+        .w_digit       (   w_digit        ),
+        .w_gpio        (   w_gpio         ),
         
         .screen_width  (   screen_width   ),
         .screen_height (   screen_height  ),
@@ -143,6 +145,9 @@ module board_specific_top
         .abcdefgh      ( abcdefgh         ),
 
         .digit         ( digit            ),
+        
+        .x             ( x                ),
+        .y             ( y                ),
 
         .red           ( vgaRed           ),
         .green         ( vgaBlue          ),
@@ -155,10 +160,42 @@ module board_specific_top
         .gpio          ( gpio             )
     );
 
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+	wire display_on;
+	wire pixel_clk;
+        
+     vga
+     # (
+         .CLK_MHZ     ( clk_mhz    ),
+         .PIXEL_MHZ   ( pixel_mhz  )
+     )
+     i_vga
+     (
+         .clk         ( clk        ),
+         .rst         ( rst        ),
+         .hsync       ( Hsync      ),
+         .vsync       ( Vsync      ),
+         .display_on  ( display_on ),
+         .hpos        ( x10        ),
+         .vpos        ( y10        ),
+         .pixel_clk   ( pixel_clk  )
+      );
+
+    `endif
+    
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver
-    # (.clk_mhz (100))
+    # (
+    	.clk_mhz ( clk_mhz )
+    )
     i_microphone
     (
         .clk   ( clk    ),

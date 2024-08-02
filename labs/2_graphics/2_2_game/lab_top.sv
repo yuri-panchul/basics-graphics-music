@@ -3,6 +3,7 @@
 module lab_top
 # (
     parameter  clk_mhz       = 50,
+               pixel_mhz     = 25,
                w_key         = 4,
                w_sw          = 8,
                w_led         = 8,
