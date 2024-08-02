@@ -11,7 +11,7 @@ module board_specific_top
               w_led         = 16,
               w_digit       = 8,
               w_gpio        = 32,
-              
+
               screen_width  = 640,
               screen_height = 480,
 
@@ -25,7 +25,7 @@ module board_specific_top
 (
     input                   clk,
     input                   btnCpuReset,
-  
+
     input                   btnC,
     input                   btnU,
     input                   btnL,
@@ -38,7 +38,7 @@ module board_specific_top
     output                  RGB1_Red,
     output                  RGB1_Green,
     output                  RGB1_Blue,
-  
+
     output                  RGB2_Red,
     output                  RGB2_Green,
     output                  RGB2_Blue,
@@ -101,7 +101,7 @@ module board_specific_top
 
     wire [w_x    - 1:0] x;
     wire [w_y    - 1:0] y;
-    
+
     wire [        23:0] mic;
     wire [        15:0] sound;
 
@@ -124,7 +124,7 @@ module board_specific_top
         .w_led         ( w_led          ),
         .w_digit       ( w_digit        ),
         .w_gpio        ( w_gpio         ),
-        
+
         .screen_width  ( screen_width   ),
         .screen_height ( screen_height  ),
 
@@ -145,7 +145,7 @@ module board_specific_top
 
         .abcdefgh      ( abcdefgh       ),
         .digit         ( digit          ),
-        
+
         .x             ( x              ),
         .y             ( y              ),
 
@@ -168,7 +168,7 @@ module board_specific_top
 
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
-        
+
         vga
         # (
             .CLK_MHZ     ( clk_mhz     ),
@@ -187,11 +187,11 @@ module board_specific_top
         );
 
     `endif
-    
+
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
-     
+
         inmp441_mic_i2s_receiver
         # (
             .clk_mhz ( clk_mhz )

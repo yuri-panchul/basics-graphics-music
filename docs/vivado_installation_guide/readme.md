@@ -27,10 +27,10 @@ This will open the installer GUI in a new window.
 The welcome screen of the installer GUI provides a reminder of the supported OS version.
 
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui1.png">
 </p>
 
@@ -38,30 +38,30 @@ The welcome screen of the installer GUI provides a reminder of the supported OS 
 Click Next, to proceed. The next window requires the user to provide the account credentials. The same account credentials were used at the beginning to log in to Xilinx and to download the Vivado software.
 
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui2.png">
 </p>
 
 
 In the select product window, select *Vivado* and proceed.
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui3.png">
 </p>
 
 Select Vivado ML Standard edition as it does not require a license to generate the necessary file to program the [Zybo-Z7](https://digilent.com/reference/programmable-logic/zybo-z7/start) development.
 
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui4.png">
 </p>
 
@@ -73,10 +73,10 @@ The two versions of Zybo-Z7, Z7-10, and Z7-20 include [Zynq-7000 SoC](https://ww
 Installing only the [Zynq-7000 SoC](https://www.amd.com/en/products/adaptive-socs-and-fpgas/soc/zynq-7000.html) will require less storage space as it can be seen in the figure below.
 
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui5.png">
 </p>
 
@@ -84,10 +84,10 @@ Installing only the [Zynq-7000 SoC](https://www.amd.com/en/products/adaptive-soc
 Agree to all the terms and conditions and process further.
 
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui6.png">
 </p>
 
@@ -95,20 +95,20 @@ Agree to all the terms and conditions and process further.
 The installing directory should be */tools/Xilinx*, there are errors in the image shown below because Vivado is already installed in the specified location. If it is a fresh installation then these errors will not be displayed.
 
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui7.png">
 </p>
 
 The final step is to click on the install button on the summary window. Here the installation location should specify the selected installation location by the user.
 
 <p align="center">
-<img 
+<img
     max-width: 100%
-    max-height: 300px 
-    display: block 
+    max-height: 300px
+    display: block
     src="./installer_gui8.png">
 </p>
 
@@ -243,7 +243,7 @@ If git is installed, it will provide the git version.
 
 ### Clone the Project Repo
 
-[Basic-Graphics-Music](https://github.com/yuri-panchul/basics-graphics-music/tree/main) provides the necessary execises to learn the basics of digital design to begin with. As you advance through the lab exercises, basic display interface for the FPGA includes leds,7-segment disaply and LCD display. The FPGA development includes audio connector that can process analogue signals. These catogories comprises of the lab. Hence, the name Basics-Graphics-Music. 
+[Basic-Graphics-Music](https://github.com/yuri-panchul/basics-graphics-music/tree/main) provides the necessary execises to learn the basics of digital design to begin with. As you advance through the lab exercises, basic display interface for the FPGA includes leds,7-segment disaply and LCD display. The FPGA development includes audio connector that can process analogue signals. These catogories comprises of the lab. Hence, the name Basics-Graphics-Music.
 
 ## Implementing The Design on Zybo-Z7
 
@@ -256,21 +256,21 @@ To understand the process to implement any design on the FPGA, let's learn the p
 </p>
 
 
-2. Navigate to the desired directory by using the *cd* command followed by the path to the location. 
+2. Navigate to the desired directory by using the *cd* command followed by the path to the location.
 
     ```
     cd basics-graphics-music/labs/1_basics/1_06_binary_counter
     ```
 3. Run the script *03_synthesize_for_fpga.bash* to generate the bit stream for the Zybo-Z7.
 
-    NOTE: TURN ON THE BOARD BEFORE RUNNING THE SCRIPT.    
+    NOTE: TURN ON THE BOARD BEFORE RUNNING THE SCRIPT.
 
-4. Once the bit stream generation is complete, the Vivado tool will open hardware target and program the board. After completion it will close the target. 
+4. Once the bit stream generation is complete, the Vivado tool will open hardware target and program the board. After completion it will close the target.
 
 <p align="center">
 <img  src="./log.png">
 </p>
-    
+
 
 
    When you see these instruction in the log the board should be working as shown in demo video. The demo shows the output of the binary counter.

@@ -754,7 +754,7 @@ set_location_assignment PIN_A8 -to QSPI_FLASH_DATA[2]
 set_location_assignment PIN_C7 -to QSPI_FLASH_DATA[3]
 set_location_assignment PIN_B7 -to QSPI_FLASH_SCLK
 set_location_assignment PIN_C9 -to QSPI_FLASH_CE_n
- 
+
 #============================================================
 # RISC-V JTAG
 #============================================================

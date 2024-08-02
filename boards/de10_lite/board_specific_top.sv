@@ -71,7 +71,7 @@ module board_specific_top
     wire [ w_red     - 1:0] red;
     wire [ w_green   - 1:0] green;
     wire [ w_blue    - 1:0] blue;
-    
+
 
     wire  [         23:0] mic;
     wire  [         15:0] sound;
@@ -97,8 +97,8 @@ module board_specific_top
         .w_led   ( w_led    ),
         .w_digit ( w_digit  ),
         .w_gpio  ( w_gpio   ),          // GPIO[5:0] reserved for mic
-    
-    
+
+
         .screen_width  (   screen_width  ),
         .screen_height (   screen_height ),
 
@@ -106,7 +106,7 @@ module board_specific_top
         .w_green       (   w_green       ),
         .w_blue        (   w_blue        )
 
-    
+
     )
     i_lab_top
     (

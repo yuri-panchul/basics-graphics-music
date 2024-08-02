@@ -9,7 +9,7 @@ module board_specific_top
               w_led         = 4,          // Number of LEDs on the board
               w_digit       = 0,          // 7Seg missing
               w_gpio        = 8,          // Standard Pmod JE
-              
+
               screen_width  = 640,
               screen_height = 480,
 
@@ -47,8 +47,8 @@ module board_specific_top
     wire                      UART_TX;
     wire                      UART_RX = '1;
     wire [w_gpio      - 1:0]  gpio;
-    
-    // // Graphics 
+
+    // Graphics
 
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
@@ -57,7 +57,7 @@ module board_specific_top
     wire [ w_green   - 1:0] green;
     wire [ w_blue    - 1:0] blue;
 
-    // Microphone and sound output 
+    // Microphone and sound output
 
     wire [            23:0] mic;
     wire [            15:0] sound;
@@ -67,7 +67,7 @@ module board_specific_top
     localparam w_key_tm   = 8,
                w_led_tm   = 8,
                w_digit_tm = 8;
-    
+
     //------------------------------------------------------------------------
 
     `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
@@ -141,7 +141,7 @@ module board_specific_top
         .w_green       (   w_green        ),
         .w_blue        (   w_blue         )
     )
-    
+
     i_lab_top
     (
         .clk           (   clk             ),
@@ -162,7 +162,7 @@ module board_specific_top
         .red           (   red             ),
         .green         (   green           ),
         .blue          (   blue            ),
-        
+
         .mic           (   mic             ),
         .sound         (   sound           ),
 
