@@ -5,6 +5,7 @@ module board_specific_top
 # (
     parameter clk_mhz       = 100,
     	      pixel_mhz     = 25,
+
               w_key         = 5,
               w_sw          = 16,
               w_led         = 16,
@@ -42,9 +43,9 @@ module board_specific_top
     output                  RGB2_Green,
     output                  RGB2_Blue,
 
-    output [6           :0] seg,
+    output [           6:0] seg,
     output                  dp,
-    output [7           :0] an,
+    output [           7:0] an,
 
     output                  Hsync,
     output                  Vsync,
@@ -55,10 +56,10 @@ module board_specific_top
 
     input                   RsRx,
 
-    inout  [7           :0] JA,
-    inout  [7           :0] JB,
-    inout  [7           :0] JC,
-    inout  [7           :0] JD,
+    inout  [           7:0] JA,
+    inout  [           7:0] JB,
+    inout  [           7:0] JC,
+    inout  [           7:0] JD,
 
     output                  micClk,
     input                   micData,
@@ -98,16 +99,13 @@ module board_specific_top
 
     assign an = ~ digit;
 
-    wire [w_x - 1:0] x;
-    wire [w_y - 1:0] y;
+    wire [w_x    - 1:0] x;
+    wire [w_y    - 1:0] y;
     
-    wire [23:0]	     mic;
+    wire [        23:0] mic;
+    wire [        15:0] sound;
 
-    // FIXME: Should be assigned to some GPIO!
-    wire        UART_TX;
-    wire        UART_RX = '1;
-    
-    wire [w_gpio      - 1:0]  gpio;
+    wire [w_gpio - 1:0] gpio;
 
     //------------------------------------------------------------------------
 
@@ -146,7 +144,6 @@ module board_specific_top
         .led           ( led            ),
 
         .abcdefgh      ( abcdefgh       ),
-
         .digit         ( digit          ),
         
         .x             ( x              ),
@@ -156,10 +153,12 @@ module board_specific_top
         .green         ( vgaBlue        ),
         .blue          ( vgaGreen       ),
 
-        .uart_rx       ( UART_RX        ),
-        .uart_tx       ( UART_TX        ),
-
         .mic           ( mic            ),
+        .sound         ( sound          ),
+
+        .uart_rx       ( RsRx           ),
+        .uart_tx       (                ),
+
         .gpio          ( gpio           )
     );
 
@@ -190,7 +189,7 @@ module board_specific_top
     `endif
     
     //------------------------------------------------------------------------
-   
+
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
      
         inmp441_mic_i2s_receiver
@@ -211,6 +210,26 @@ module board_specific_top
         assign JD [2] = 1'b0;  // GND - JD pin 3
         assign JD [1] = 1'b1;  // VCC - JD pin 2
 
-   `endif
-   
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+    i2s_audio_out
+    # (
+        .clk_mhz ( clk_mhz )
+    )
+    inst_audio_out
+    (
+        .clk     ( clk     ),
+        .reset   ( rst     ),
+        .data_in ( sound   ),
+
+        .mclk    ( JC [4]  ),
+        .bclk    ( JC [5]  ),
+        .sdata   ( JC [6]  ),
+        .lrclk   ( JC [7]  )
+    );
+
 endmodule
