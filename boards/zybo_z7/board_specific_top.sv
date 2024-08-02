@@ -3,12 +3,22 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 125,        // Main clk frequency
-              w_key   = 4,          // Number of buttons on the board
-              w_sw    = 4,          // Number of switches on the board
-              w_led   = 4,          // Number of LEDs on the board
-              w_digit = 0,          // 7Seg missing
-              w_gpio  = 8           // Standard Pmod JE
+    parameter clk_mhz       = 125,        // Main clk frequency
+              w_key         = 4,          // Number of buttons on the board
+              w_sw          = 4,          // Number of switches on the board
+              w_led         = 4,          // Number of LEDs on the board
+              w_digit       = 0,          // 7Seg missing
+              w_gpio        = 8,          // Standard Pmod JE
+              
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 8,
+              w_green       = 8,
+              w_blue        = 8,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     /* Reset - PROGB (see datasheet) */
@@ -36,23 +46,38 @@ module board_specific_top
     // FIXME: Should be assigned to some GPIO!
     wire                      UART_TX;
     wire                      UART_RX = '1;
+    wire [w_gpio      - 1:0]  gpio;
+    
+    // // Graphics 
+
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
+
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
+
+    // Microphone and sound output 
+
+    wire [            23:0] mic;
+    wire [            15:0] sound;
 
     //------------------------------------------------------------------------
 
     localparam w_key_tm   = 8,
                w_led_tm   = 8,
                w_digit_tm = 8;
-
+	
     //------------------------------------------------------------------------
 
     `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
         localparam w_key_top   = w_key_tm   > w_key   ? w_key_tm   : w_key,
-                w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
-                w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
+                   w_led_top   = w_led_tm   > w_led   ? w_led_tm   : w_led,
+                   w_digit_top = w_digit_tm > w_digit ? w_digit_tm : w_digit;
     `else
         localparam w_key_top   = w_key_tm   + w_key,
-                w_led_top   = w_led_tm   + w_led,
-                w_digit_top = w_digit_tm + w_digit;
+                   w_led_top   = w_led_tm   + w_led,
+                   w_digit_top = w_digit_tm + w_digit;
     `endif
 
     //------------------------------------------------------------------------------
@@ -68,13 +93,13 @@ module board_specific_top
     //------------------------------------------------------------------------------
 
     `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
-        assign key_top = {key_tm, key};
-        assign {led_tm, led} = led_top;
+        assign key_top           = {key_tm, key};
+        assign {led_tm, led}     = led_top;
         assign {digit_tm, digit} = digit_top;
 
     `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
-        assign key_top = {key, key_tm};
-        assign {led, led_tm} = led_top;
+        assign key_top           = {key, key_tm};
+        assign {led, led_tm}     = led_top;
         assign {digit, digit_tm} = digit_top;
 
     `else  // DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
@@ -85,9 +110,9 @@ module board_specific_top
             key_top[w_key_tm - 1:0] |= key_tm;
         end
 
-        assign led = led_top[w_led - 1:0];
-        assign led_tm = led_top[w_led_tm - 1:0];
-        assign digit = digit_top[0:0];
+        assign led      = led_top[w_led - 1:0];
+        assign led_tm   = led_top[w_led_tm - 1:0];
+        assign digit    = digit_top[0:0];
         assign digit_tm = digit_top[w_digit_tm - 1:0];
     `endif
 
@@ -102,36 +127,49 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz  (clk_mhz),
-        .w_key    (w_key_top),
-        .w_sw     (w_sw_top),
-        .w_led    (w_led_top),
-        .w_digit  (w_digit_top),
-        .w_gpio   (w_gpio)
+        .clk_mhz       (   clk_mhz        ),
+        .w_key         (   w_key_top      ),
+        .w_sw          (   w_sw_top       ),
+        .w_led         (   w_led_top      ),
+        .w_digit       (   w_digit_top    ),
+        .w_gpio        (   w_gpio         ),
+
+        .screen_width  (   screen_width   ),
+        .screen_height (   screen_height  ),
+
+        .w_red         (   w_red          ),
+        .w_green       (   w_green        ),
+        .w_blue        (   w_blue         )
     )
+    
     i_lab_top
     (
-        .clk      (clk),
-        .slow_clk (slow_clk),
-        .rst      (rst),
+        .clk           (   clk             ),
+        .slow_clk      (   slow_clk        ),
+        .rst           (   rst             ),
 
-        .key      (key_top),
-        .sw       (sw_top),
-        .led      (led_top),
-        .abcdefgh (abcdefgh),
-        .digit    (digit_top),
+        .key           (   key_top         ),
+        .sw            (   sw_top          ),
 
-        .vsync    ( ),
-        .hsync    ( ),
-        .red      ( ),
-        .green    ( ),
-        .blue     ( ),
+        .led           (   led_top         ),
 
-        .uart_rx  ( UART_RX ),
-        .uart_tx  ( UART_TX ),
+        .abcdefgh      (   abcdefgh        ),
+        .digit         (   digit_top       ),
 
-        .mic      ( ),
-        .gpio     ( )
+        .x             (   x               ),
+        .y             (   y               ),
+
+        .red           (   red             ),
+        .green         (   green           ),
+        .blue          (   blue            ),
+        
+        .mic           (   mic             ),
+        .sound         (   sound           ),
+
+        .uart_rx       (   UART_RX         ),
+        .uart_tx       (   UART_TX         ),
+
+        .gpio          (   gpio            )
     );
 
 
@@ -153,20 +191,20 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .clk_mhz  (clk_mhz),
-        .w_digit  (w_digit_tm)        // fake parameter, digit count is hardcode in tm1638_board_controller
+        .clk_mhz       (  clk_mhz         ),
+        .w_digit       (  w_digit_tm      )        // fake parameter, digit count is hardcode in tm1638_board_controller
     )
     i_tm1638
     (
-        .clk      (clk),
-        .rst      (rst),              // Don't make reset tm1638_board_controller by it's tm_key
-        .hgfedcba (hgfedcba),
-        .digit    (digit_tm),
-        .ledr     (led_tm),
-        .keys     (key_tm),
-        .sio_clk  (gpio_JE[1]),
-        .sio_stb  (gpio_JE[0]),
-        .sio_data (gpio_JE[2])
+        .clk           (  clk             ),
+        .rst           (  rst             ),              // Don't make reset tm1638_board_controller by it's tm_key
+        .hgfedcba      (  hgfedcba        ),
+        .digit         (  digit_tm        ),
+        .ledr          (  led_tm          ),
+        .keys          (  key_tm          ),
+        .sio_clk       (  gpio_JE[1]      ),
+        .sio_stb       (  gpio_JE[0]      ),
+        .sio_data      (  gpio_JE[2]      )
     );
 
 endmodule: board_specific_top
