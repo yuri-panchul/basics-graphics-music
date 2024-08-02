@@ -38,6 +38,19 @@ module board_specific_top
     input  [w_sw      - 1:0] SW,
     output [w_led     - 1:0] LED,             // LEDG onboard
 
+    inout                    HDMI_I2C_SCL,
+    inout                    HDMI_I2C_SDA,
+    inout                    HDMI_I2S,
+    inout                    HDMI_LRCLK,
+    inout                    HDMI_MCLK,
+    inout                    HDMI_SCLK,
+    output                   HDMI_TX_CLK,
+    output                   HDMI_TX_DE,
+    output [           23:0] HDMI_TX_D,
+    output                   HDMI_TX_HS,
+    input                    HDMI_TX_INT,
+    output                   HDMI_TX_VS,
+
     inout  [w_gpio    - 1:0] GPIO_0,
     inout  [w_gpio    - 1:0] GPIO_1
 );
@@ -252,32 +265,59 @@ module board_specific_top
 
     `elsif MISTER_IO_BOARD
 
-        // VGA out of MiSTer I/O board, 6 bit color used
+        // VGA out of MiSTer I/O board, 4 bit color used
         assign GPIO_1 [16] = vs;            // JP7 pin 19
         assign GPIO_1 [17] = hs;            // JP7 pin 20
         // R
-        assign GPIO_1 [35] = red [0];       // JP7 pin 40
-        assign GPIO_1 [33] = red [1];       // JP7 pin 38
-        assign GPIO_1 [31] = red [2];       // JP7 pin 36
-        assign GPIO_1 [29] = red [3];       // JP7 pin 34
-        assign GPIO_1 [27] = red [4];       // JP7 pin 32
-        assign GPIO_1 [25] = red [5];       // JP7 pin 28
+        assign GPIO_1 [35] = 1'b1;          // JP7 pin 40
+        assign GPIO_1 [33] = 1'b1;          // JP7 pin 38
+        assign GPIO_1 [31] = red [0];       // JP7 pin 36
+        assign GPIO_1 [29] = red [1];       // JP7 pin 34
+        assign GPIO_1 [27] = red [2];       // JP7 pin 32
+        assign GPIO_1 [25] = red [3];       // JP7 pin 28
         // G
-        assign GPIO_1 [34] = green [0];     // JP7 pin 39
-        assign GPIO_1 [32] = green [1];     // JP7 pin 37
-        assign GPIO_1 [30] = green [2];     // JP7 pin 35
-        assign GPIO_1 [28] = green [3];     // JP7 pin 33
-        assign GPIO_1 [26] = green [4];     // JP7 pin 31
-        assign GPIO_1 [24] = green [5];     // JP7 pin 27
+        assign GPIO_1 [34] = 1'b1;          // JP7 pin 39
+        assign GPIO_1 [32] = 1'b1;          // JP7 pin 37
+        assign GPIO_1 [30] = green [0];     // JP7 pin 35
+        assign GPIO_1 [28] = green [1];     // JP7 pin 33
+        assign GPIO_1 [26] = green [2];     // JP7 pin 31
+        assign GPIO_1 [24] = green [3];     // JP7 pin 27
         // B
-        assign GPIO_1 [19] = blue [0];      // JP7 pin 22
-        assign GPIO_1 [21] = blue [1];      // JP7 pin 24
-        assign GPIO_1 [23] = blue [2];      // JP7 pin 26
-        assign GPIO_1 [22] = blue [3];      // JP7 pin 25
-        assign GPIO_1 [20] = blue [4];      // JP7 pin 23
-        assign GPIO_1 [18] = blue [5];      // JP7 pin 21
+        assign GPIO_1 [19] = 1'b1;          // JP7 pin 22
+        assign GPIO_1 [21] = 1'b1;          // JP7 pin 24
+        assign GPIO_1 [23] = blue [0];      // JP7 pin 26
+        assign GPIO_1 [22] = blue [1];      // JP7 pin 25
+        assign GPIO_1 [20] = blue [2];      // JP7 pin 23
+        assign GPIO_1 [18] = blue [3];      // JP7 pin 21
 
     `endif
+
+    //------------------------------------------------------------------------
+
+    // HDMI Video
+    wire       pixel_clk;
+    wire       display_on;
+
+    assign HDMI_TX_CLK      = pixel_clk;
+    assign HDMI_TX_D        = {{red,{(8 - w_red){1'b1}}},{green,{(8 - w_green){1'b1}}},{blue,{(8 - w_blue){1'b1}}}}; // eight bit color is max
+    assign HDMI_TX_DE       = display_on;
+    assign HDMI_TX_HS       = hs;
+    assign HDMI_TX_VS       = vs;
+
+    // HDMI audio
+    assign HDMI_I2S         = 1'b0;
+    assign HDMI_LRCLK       = 1'b0;
+    assign HDMI_MCLK        = 1'b0;
+    assign HDMI_SCLK        = 1'b0;
+
+    // HDMI I2C configurator
+    I2C_HDMI_Config i_i2c_hdmi_conf (
+        .iCLK(clk),
+        .iRST_N(~rst),
+        .I2C_SCLK(HDMI_I2C_SCL),
+        .I2C_SDAT(HDMI_I2C_SDA),
+        .HDMI_TX_INT(HDMI_TX_INT)
+    );
 
     //------------------------------------------------------------------------
 
@@ -301,19 +341,21 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz   ),
-            .PIXEL_MHZ   ( pixel_mhz )
+            .H_DISPLAY   ( screen_width  ),
+            .V_DISPLAY   ( screen_height ),
+            .CLK_MHZ     ( clk_mhz       ),
+            .PIXEL_MHZ   ( pixel_mhz     )
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( hs        ),
-            .vsync       ( vs        ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   (           )
+            .clk         ( clk           ),
+            .rst         ( rst           ),
+            .hsync       ( hs            ),
+            .vsync       ( vs            ),
+            .display_on  ( display_on    ),
+            .hpos        ( x10           ),
+            .vpos        ( y10           ),
+            .pixel_clk   ( pixel_clk     )
         );
 
     `endif
