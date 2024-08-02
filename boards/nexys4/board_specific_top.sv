@@ -98,7 +98,10 @@ module board_specific_top
 
     assign an = ~ digit;
 
-    wire [23:0] mic;
+    wire [w_x - 1:0] x;
+    wire [w_y - 1:0] y;
+    
+    wire [23:0]	     mic;
 
     // FIXME: Should be assigned to some GPIO!
     wire        UART_TX;
@@ -117,47 +120,47 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       (   clk_mhz        ),
-        .w_key         (   w_key          ),
-        .w_sw          (   w_sw           ),
-        .w_led         (   w_led          ),
-        .w_digit       (   w_digit        ),
-        .w_gpio        (   w_gpio         ),
+        .clk_mhz       ( clk_mhz        ),
+        .w_key         ( w_key          ),
+        .w_sw          ( w_sw           ),
+        .w_led         ( w_led          ),
+        .w_digit       ( w_digit        ),
+        .w_gpio        ( w_gpio         ),
         
-        .screen_width  (   screen_width   ),
-        .screen_height (   screen_height  ),
+        .screen_width  ( screen_width   ),
+        .screen_height ( screen_height  ),
 
-        .w_red         (   w_red          ),
-        .w_green       (   w_green        ),
-        .w_blue        (   w_blue         )
+        .w_red         ( w_red          ),
+        .w_green       ( w_green        ),
+        .w_blue        ( w_blue         )
     )
     i_lab_top
     (
-        .clk           ( clk              ),
-        .slow_clk      ( slow_clk         ),
-        .rst           ( rst              ),
+        .clk           ( clk            ),
+        .slow_clk      ( slow_clk       ),
+        .rst           ( rst            ),
 
         .key           ( { btnD, btnU, btnL, btnC, btnR } ),
-        .sw            ( sw               ),
+        .sw            ( sw             ),
 
-        .led           ( led              ),
+        .led           ( led            ),
 
-        .abcdefgh      ( abcdefgh         ),
+        .abcdefgh      ( abcdefgh       ),
 
-        .digit         ( digit            ),
+        .digit         ( digit          ),
         
-        .x             ( x                ),
-        .y             ( y                ),
+        .x             ( x              ),
+        .y             ( y              ),
 
-        .red           ( vgaRed           ),
-        .green         ( vgaBlue          ),
-        .blue          ( vgaGreen         ),
+        .red           ( vgaRed         ),
+        .green         ( vgaBlue        ),
+        .blue          ( vgaGreen       ),
 
-        .uart_rx       ( UART_RX          ),
-        .uart_tx       ( UART_TX          ),
+        .uart_rx       ( UART_RX        ),
+        .uart_tx       ( UART_TX        ),
 
-        .mic           ( mic              ),
-        .gpio          ( gpio             )
+        .mic           ( mic            ),
+        .gpio          ( gpio           )
     );
 
     //------------------------------------------------------------------------
@@ -166,9 +169,6 @@ module board_specific_top
 
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
-     
-        wire       display_on;
-        wire       pixel_clk;
         
         vga
         # (
@@ -181,10 +181,10 @@ module board_specific_top
             .rst         ( rst        ),
             .hsync       ( Hsync      ),
             .vsync       ( Vsync      ),
-            .display_on  ( display_on ),
+            .display_on  (            ),
             .hpos        ( x10        ),
             .vpos        ( y10        ),
-            .pixel_clk   ( pixel_clk  )
+            .pixel_clk   (            )
         );
 
     `endif
