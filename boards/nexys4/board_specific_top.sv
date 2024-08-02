@@ -160,57 +160,57 @@ module board_specific_top
         .gpio          ( gpio             )
     );
 
-
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-     wire [9:0] x10; assign x = x10;
-     wire [9:0] y10; assign y = y10;
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
      
-     wire       display_on;
-     wire       pixel_clk;
+        wire       display_on;
+        wire       pixel_clk;
         
-     vga
-     # (
-         .CLK_MHZ     ( clk_mhz    ),
-         .PIXEL_MHZ   ( pixel_mhz  )
-     )
-     i_vga
-     (
-         .clk         ( clk        ),
-         .rst         ( rst        ),
-         .hsync       ( Hsync      ),
-         .vsync       ( Vsync      ),
-         .display_on  ( display_on ),
-         .hpos        ( x10        ),
-         .vpos        ( y10        ),
-         .pixel_clk   ( pixel_clk  )
-      );
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz     ),
+            .PIXEL_MHZ   ( pixel_mhz   )
+        )
+        i_vga
+        (
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( Hsync      ),
+            .vsync       ( Vsync      ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   ( pixel_clk  )
+        );
 
     `endif
     
     //------------------------------------------------------------------------
-    
+   
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
-    
-    inmp441_mic_i2s_receiver
-    # (
-    	.clk_mhz ( clk_mhz )
-    )
-    i_microphone
-    (
-        .clk   ( clk    ),
-        .rst   ( rst    ),
-        .lr    ( JD [6] ),
-        .ws    ( JD [5] ),
-        .sck   ( JD [4] ),
-        .sd    ( JD [0] ),
-        .value ( mic    )
-    );
+     
+        inmp441_mic_i2s_receiver
+        # (
+    	    .clk_mhz ( clk_mhz )
+         )
+        i_microphone
+        (
+            .clk     ( clk    ),
+            .rst     ( rst    ),
+            .lr      ( JD [6] ),
+            .ws      ( JD [5] ),
+            .sck     ( JD [4] ),
+            .sd      ( JD [0] ),
+            .value   ( mic    )
+        );
 
-    assign JD [2] = 1'b0;  // GND - JD pin 3
-    assign JD [1] = 1'b1;  // VCC - JD pin 2
+        assign JD [2] = 1'b0;  // GND - JD pin 3
+        assign JD [1] = 1'b1;  // VCC - JD pin 2
 
    `endif
+   
 endmodule
