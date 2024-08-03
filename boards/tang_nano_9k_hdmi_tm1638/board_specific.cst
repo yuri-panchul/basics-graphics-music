@@ -73,10 +73,10 @@ IO_LOC "SMALL_LCD_RS"       49;  # pcm5102: lrck  i2s_audio_out: lrclk
 
 # TMDS pins will be used later
 
-# IO_LOC "TMDS_CLK_P"       69,68;
-# IO_LOC "TMDS_D_P[0]"      71,70;
-# IO_LOC "TMDS_D_P[1]"      73,72;
-# IO_LOC "TMDS_D_P[2]"      75,74;
+IO_LOC "TMDS_CLK_P"         69,68;
+IO_LOC "TMDS_D_P[0]"        71,70;
+IO_LOC "TMDS_D_P[1]"        73,72;
+IO_LOC "TMDS_D_P[2]"        75,74;
 
 IO_LOC "FLASH_CLK"          59;
 IO_LOC "FLASH_CSB"          60;

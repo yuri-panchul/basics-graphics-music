@@ -1,12 +1,14 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-// `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+`ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+`endif
 
 module board_specific_top
 # (
     parameter clk_mhz       = 27,
-              pixel_mhz     = 9,
+              pixel_mhz     = 27,
 
               w_key         = 2,  // The last key is used for a reset
               w_sw          = 0,
@@ -14,12 +16,12 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 10,
 
-              screen_width  = 480,
-              screen_height = 272,
+              screen_width  = 640,
+              screen_height = 480,
 
-              w_red         = 5,
-              w_green       = 6,
-              w_blue        = 5,
+              w_red         = 8,
+              w_green       = 8,
+              w_blue        = 8,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
@@ -38,9 +40,9 @@ module board_specific_top
     output                       LARGE_LCD_INIT,
     output                       LARGE_LCD_BL,
 
-    output [7:7 + 1 - w_red   ]  LARGE_LCD_R,
-    output [7:7 + 1 - w_green ]  LARGE_LCD_G,
-    output [7:7 + 1 - w_blue  ]  LARGE_LCD_B,
+    output [               4:0]  LARGE_LCD_R,
+    output [               5:0]  LARGE_LCD_G,
+    output [               4:0]  LARGE_LCD_B,
 
     input                        UART_RX,
     output                       UART_TX,
@@ -121,11 +123,14 @@ module board_specific_top
     wire  [w_x         - 1:0] x;
     wire  [w_y         - 1:0] y;
 
+    wire  [w_red       - 1:0] red;
+    wire  [w_green     - 1:0] green;
+    wire  [w_blue      - 1:0] blue;
+
     wire  [             23:0] mic;
     wire  [             15:0] sound;
 
     //------------------------------------------------------------------------
-
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
@@ -189,9 +194,9 @@ module board_specific_top
         .x             ( x             ),
         .y             ( y             ),
 
-        .red           ( LARGE_LCD_R   ),
-        .green         ( LARGE_LCD_G   ),
-        .blue          ( LARGE_LCD_B   ),
+        .red           ( red           ),
+        .green         ( green         ),
+        .blue          ( blue          ),
 
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
@@ -246,28 +251,61 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        wire raw_serial_clk;
+
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkin  ( clk            ),
+            .clkout ( raw_serial_clk ),
+            .lock   (                )
+        );
+
+        wire serial_clk;
+
+        BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
+
+        //--------------------------------------------------------------------
+
+        wire hsync, vsync, display_on, pixel_clk;
+
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz      ),
-            .PIXEL_MHZ   ( pixel_mhz    )
+            .CLK_MHZ     ( clk_mhz    ),
+            .PIXEL_MHZ   ( pixel_mhz  )
         )
         i_vga
         (
-            .clk         ( clk          ),
-            .rst         ( rst          ),
-            .hsync       ( LARGE_LCD_HS ),
-            .vsync       ( LARGE_LCD_VS ),
-            .display_on  ( LARGE_LCD_DE ),
-            .hpos        ( x10          ),
-            .vpos        ( y10          ),
-            .pixel_clk   ( LARGE_LCD_CK )
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( hsync      ),
+            .vsync       ( vsync      ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   ( pixel_clk  )
         );
 
-        assign LARGE_LCD_INIT = 1'b0;
-        assign LARGE_LCD_BL   = 1'b0;
+        //--------------------------------------------------------------------
+
+        DVI_TX_Top i_DVI_TX_Top
+        (
+            .I_rst_n       ( ~ rst         ),
+            .I_serial_clk  (   serial_clk  ),
+            .I_rgb_clk     (   pixel_clk   ),
+            .I_rgb_vs      ( ~ vsync       ),
+            .I_rgb_hs      ( ~ hsync       ),
+            .I_rgb_de      (   display_on  ),
+            .I_rgb_r       (   red         ),
+            .I_rgb_g       (   green       ),
+            .I_rgb_b       (   blue        ),
+            .O_tmds_clk_p  (   tmds_clk_p  ),
+            .O_tmds_clk_n  (   tmds_clk_n  ),
+            .O_tmds_data_p (   tmds_d_p    ),
+            .O_tmds_data_n (   tmds_d_n    )
+        );
 
     `endif
 
