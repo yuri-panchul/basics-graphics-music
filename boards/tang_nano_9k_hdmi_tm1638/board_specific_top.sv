@@ -8,7 +8,7 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 27,
-              pixel_mhz     = 27,
+              pixel_mhz     = 25,
 
               w_key         = 2,  // The last key is used for a reset
               w_sw          = 0,
@@ -85,9 +85,9 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_tm_key    =   8,
-               w_tm_led    =   8,
-               w_tm_digit  =   8;
+    localparam w_tm_key   = 8,
+               w_tm_led   = 8,
+               w_tm_digit = 8;
 
     //------------------------------------------------------------------------
 
@@ -251,6 +251,8 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        localparam serial_clk_mhz = 125;
+
         wire raw_serial_clk;
 
         Gowin_rPLL i_Gowin_rPLL
@@ -273,19 +275,19 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz    ),
-            .PIXEL_MHZ   ( pixel_mhz  )
+            .CLK_MHZ     ( serial_clk_mhz  ),
+            .PIXEL_MHZ   ( pixel_mhz       )
         )
         i_vga
         (
-            .clk         ( clk        ),
-            .rst         ( rst        ),
-            .hsync       ( hsync      ),
-            .vsync       ( vsync      ),
-            .display_on  ( display_on ),
-            .hpos        ( x10        ),
-            .vpos        ( y10        ),
-            .pixel_clk   ( pixel_clk  )
+            .clk         ( serial_clk      ),
+            .rst         ( rst             ),
+            .hsync       ( hsync           ),
+            .vsync       ( vsync           ),
+            .display_on  ( display_on      ),
+            .hpos        ( x10             ),
+            .vpos        ( y10             ),
+            .pixel_clk   ( pixel_clk       )
         );
 
         //--------------------------------------------------------------------
