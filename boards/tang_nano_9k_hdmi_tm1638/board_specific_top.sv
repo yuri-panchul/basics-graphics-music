@@ -1,8 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-// `define FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `endif
