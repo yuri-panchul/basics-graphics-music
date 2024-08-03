@@ -303,10 +303,10 @@ module board_specific_top
             .I_rgb_r       (   red         ),
             .I_rgb_g       (   green       ),
             .I_rgb_b       (   blue        ),
-            .O_tmds_clk_p  (   tmds_clk_p  ),
-            .O_tmds_clk_n  (   tmds_clk_n  ),
-            .O_tmds_data_p (   tmds_d_p    ),
-            .O_tmds_data_n (   tmds_d_n    )
+            .O_tmds_clk_p  (   TMDS_CLK_P  ),
+            .O_tmds_clk_n  (   TMDS_CLK_N  ),
+            .O_tmds_data_p (   TMDS_D_P    ),
+            .O_tmds_data_n (   TMDS_D_N    )
         );
 
     `endif
