@@ -33,12 +33,16 @@ module board_specific_top
 
     output [w_led        - 1:0]  LED,
 
-    // LARGE_LCD pins conflict with TMDS pins
+    // Some LARGE_LCD pins share bank with TMDS pins
+    // which have different voltage requirements.
+    //
+    // However we can use LARGE_LCD_DE, VS, HS, CK,
+    // because they are assigned to a different bank.
 
-    // output                    LARGE_LCD_DE,
-    // output                    LARGE_LCD_VS,
-    // output                    LARGE_LCD_HS,
-    // output                    LARGE_LCD_CK,
+       output                    LARGE_LCD_DE,
+       output                    LARGE_LCD_VS,
+       output                    LARGE_LCD_HS,
+       output                    LARGE_LCD_CK,
     // output                    LARGE_LCD_INIT,
     // output                    LARGE_LCD_BL,
 
@@ -61,24 +65,32 @@ module board_specific_top
     inout  [w_gpio       - 1:0]  GPIO,
 
     // The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
-    // are used for the I2S audio output
+    // share bank with TMDS pins
+    // which have different voltage requirements.
+    //
+    // It means we cannot use them
+    // for I2S audio output module PCM5102
     // in basics-graphics-music labs
+    // when we use HDMI interface
 
-    inout                        SMALL_LCD_CLK,
-    inout                        SMALL_LCD_RESETN,
-    inout                        SMALL_LCD_CS,
-    inout                        SMALL_LCD_RS,
-    inout                        SMALL_LCD_DATA,
+    // inout                     SMALL_LCD_CLK,
+    // inout                     SMALL_LCD_RESETN,
+    // inout                     SMALL_LCD_CS,
+    // inout                     SMALL_LCD_RS,
+    // inout                     SMALL_LCD_DATA,
 
     output                       TMDS_CLK_N,
     output                       TMDS_CLK_P,
     output [               2:0]  TMDS_D_N,
-    output [               2:0]  TMDS_D_P,
+    output [               2:0]  TMDS_D_P
 
-    output                       FLASH_CLK,
-    output                       FLASH_CSB,
-    output                       FLASH_MOSI,
-    input                        FLASH_MISO
+    // This pins have bank conflict when used with HDMI
+
+    // ,
+    // output                    FLASH_CLK,
+    // output                    FLASH_CSB,
+    // output                    FLASH_MOSI,
+    // input                     FLASH_MISO
 );
 
     wire clk = CLK;
