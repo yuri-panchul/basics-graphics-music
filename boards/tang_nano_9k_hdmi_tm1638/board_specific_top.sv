@@ -33,16 +33,18 @@ module board_specific_top
 
     output [w_led        - 1:0]  LED,
 
-    output                       LARGE_LCD_DE,
-    output                       LARGE_LCD_VS,
-    output                       LARGE_LCD_HS,
-    output                       LARGE_LCD_CK,
-    output                       LARGE_LCD_INIT,
-    output                       LARGE_LCD_BL,
+    // LARGE_LCD pins conflict with TMDS pins
 
-    output [               4:0]  LARGE_LCD_R,
-    output [               5:0]  LARGE_LCD_G,
-    output [               4:0]  LARGE_LCD_B,
+    // output                    LARGE_LCD_DE,
+    // output                    LARGE_LCD_VS,
+    // output                    LARGE_LCD_HS,
+    // output                    LARGE_LCD_CK,
+    // output                    LARGE_LCD_INIT,
+    // output                    LARGE_LCD_BL,
+
+    // output [            4:0]  LARGE_LCD_R,
+    // output [            5:0]  LARGE_LCD_G,
+    // output [            4:0]  LARGE_LCD_B,
 
     input                        UART_RX,
     output                       UART_TX,
@@ -68,12 +70,10 @@ module board_specific_top
     inout                        SMALL_LCD_RS,
     inout                        SMALL_LCD_DATA,
 
-    // TMDS pins will be used later
-
-    // output                    TMDS_CLK_N,
-    // output                    TMDS_CLK_P,
-    // output [            2:0]  TMDS_D_N,
-    // output [            2:0]  TMDS_D_P,
+    output                       TMDS_CLK_N,
+    output                       TMDS_CLK_P,
+    output [               2:0]  TMDS_D_N,
+    output [               2:0]  TMDS_D_P,
 
     output                       FLASH_CLK,
     output                       FLASH_CSB,

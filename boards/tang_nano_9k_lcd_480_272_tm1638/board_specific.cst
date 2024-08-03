@@ -71,7 +71,7 @@ IO_LOC "SMALL_LCD_RESETN"   47;
 IO_LOC "SMALL_LCD_CS"       48;  # pcm5102: din   i2s_audio_out: sdata
 IO_LOC "SMALL_LCD_RS"       49;  # pcm5102: lrck  i2s_audio_out: lrclk
 
-# TMDS pins will be used later
+# TMDS pins conflict with LARGE_LCD pins
 
 # IO_LOC "TMDS_CLK_P"       69,68;
 # IO_LOC "TMDS_D_P[0]"      71,70;

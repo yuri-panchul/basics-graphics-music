@@ -13,31 +13,33 @@ IO_LOC "LED[3]"             14;
 IO_LOC "LED[4]"             15;
 IO_LOC "LED[5]"             16;
 
-IO_LOC "LARGE_LCD_DE"       33;
-IO_LOC "LARGE_LCD_VS"       34;
-IO_LOC "LARGE_LCD_HS"       40;
-IO_LOC "LARGE_LCD_CK"       35;
-IO_LOC "LARGE_LCD_INIT"     63;
-IO_LOC "LARGE_LCD_BL"       86;
+# LARGE_LCD pins conflict with TMDS pins
 
-IO_LOC "LARGE_LCD_R[3]"     75;
-IO_LOC "LARGE_LCD_R[4]"     74;
-IO_LOC "LARGE_LCD_R[5]"     73;
-IO_LOC "LARGE_LCD_R[6]"     72;
-IO_LOC "LARGE_LCD_R[7]"     71;
+# IO_LOC "LARGE_LCD_DE"     33;
+# IO_LOC "LARGE_LCD_VS"     34;
+# IO_LOC "LARGE_LCD_HS"     40;
+# IO_LOC "LARGE_LCD_CK"     35;
+# IO_LOC "LARGE_LCD_INIT"   63;
+# IO_LOC "LARGE_LCD_BL"     86;
 
-IO_LOC "LARGE_LCD_G[2]"     70;
-IO_LOC "LARGE_LCD_G[3]"     69;
-IO_LOC "LARGE_LCD_G[4]"     68;
-IO_LOC "LARGE_LCD_G[5]"     57;
-IO_LOC "LARGE_LCD_G[6]"     56;
-IO_LOC "LARGE_LCD_G[7]"     55;
+# IO_LOC "LARGE_LCD_R[3]"   75;
+# IO_LOC "LARGE_LCD_R[4]"   74;
+# IO_LOC "LARGE_LCD_R[5]"   73;
+# IO_LOC "LARGE_LCD_R[6]"   72;
+# IO_LOC "LARGE_LCD_R[7]"   71;
 
-IO_LOC "LARGE_LCD_B[3]"     54;
-IO_LOC "LARGE_LCD_B[4]"     53;
-IO_LOC "LARGE_LCD_B[5]"     51;
-IO_LOC "LARGE_LCD_B[6]"     42;
-IO_LOC "LARGE_LCD_B[7]"     41;
+# IO_LOC "LARGE_LCD_G[2]"   70;
+# IO_LOC "LARGE_LCD_G[3]"   69;
+# IO_LOC "LARGE_LCD_G[4]"   68;
+# IO_LOC "LARGE_LCD_G[5]"   57;
+# IO_LOC "LARGE_LCD_G[6]"   56;
+# IO_LOC "LARGE_LCD_G[7]"   55;
+
+# IO_LOC "LARGE_LCD_B[3]"   54;
+# IO_LOC "LARGE_LCD_B[4]"   53;
+# IO_LOC "LARGE_LCD_B[5]"   51;
+# IO_LOC "LARGE_LCD_B[6]"   42;
+# IO_LOC "LARGE_LCD_B[7]"   41;
 
 IO_LOC "UART_RX"            18;
 IO_LOC "UART_TX"            17;

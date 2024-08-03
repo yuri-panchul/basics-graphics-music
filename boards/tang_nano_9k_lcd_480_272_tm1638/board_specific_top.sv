@@ -68,7 +68,7 @@ module board_specific_top
     inout                        SMALL_LCD_RS,
     inout                        SMALL_LCD_DATA,
 
-    // TMDS pins will be used later
+    // TMDS pins conflict with LARGE_LCD pins
 
     // output                    TMDS_CLK_N,
     // output                    TMDS_CLK_P,
