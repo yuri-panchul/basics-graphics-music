@@ -13,12 +13,16 @@ IO_LOC "LED[3]"             14;
 IO_LOC "LED[4]"             15;
 IO_LOC "LED[5]"             16;
 
-# LARGE_LCD pins conflict with TMDS pins
+# Some LARGE_LCD pins share bank with TMDS pins
+# which have different voltage requirements.
+#
+# However we can use LARGE_LCD_DE, VS, HS, CK,
+# because they are assigned to a different bank.
 
-# IO_LOC "LARGE_LCD_DE"     33;
-# IO_LOC "LARGE_LCD_VS"     34;
-# IO_LOC "LARGE_LCD_HS"     40;
-# IO_LOC "LARGE_LCD_CK"     35;
+  IO_LOC "LARGE_LCD_DE"     33;  # HS: pcm5102: i2s_audio_out: mclk
+  IO_LOC "LARGE_LCD_VS"     34;  # CK: pcm5102: i2s_audio_out: bclk
+  IO_LOC "LARGE_LCD_HS"     40;  # B7: pcm5102: i2s_audio_out: sdata
+  IO_LOC "LARGE_LCD_CK"     35;  # B6: pcm5102: i2s_audio_out: lrclk
 # IO_LOC "LARGE_LCD_INIT"   63;
 # IO_LOC "LARGE_LCD_BL"     86;
 
@@ -64,14 +68,19 @@ IO_LOC "GPIO[4]"            29;
 IO_LOC "GPIO[5]"            30;
 
 # The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
-# are used for the I2S audio output module PCM5102
+# share bank with TMDS pins
+# which have different voltage requirements.
+#
+# It means we cannot use them
+# for I2S audio output module PCM5102
 # in basics-graphics-music labs
+# when we use HDMI interface
 
-IO_LOC "SMALL_LCD_DATA"     77;  # pcm5102: sck   i2s_audio_out: mclk
-IO_LOC "SMALL_LCD_CLK"      76;  # pcm5102: bck   i2s_audio_out: bclk
-IO_LOC "SMALL_LCD_RESETN"   47;
-IO_LOC "SMALL_LCD_CS"       48;  # pcm5102: din   i2s_audio_out: sdata
-IO_LOC "SMALL_LCD_RS"       49;  # pcm5102: lrck  i2s_audio_out: lrclk
+# IO_LOC "SMALL_LCD_DATA"     77;  # pcm5102: sck   i2s_audio_out: mclk
+# IO_LOC "SMALL_LCD_CLK"      76;  # pcm5102: bck   i2s_audio_out: bclk
+# IO_LOC "SMALL_LCD_RESETN"   47;
+# IO_LOC "SMALL_LCD_CS"       48;  # pcm5102: din   i2s_audio_out: sdata
+# IO_LOC "SMALL_LCD_RS"       49;  # pcm5102: lrck  i2s_audio_out: lrclk
 
 # TMDS pins will be used later
 
@@ -80,10 +89,12 @@ IO_LOC "TMDS_D_P[0]"        71,70;
 IO_LOC "TMDS_D_P[1]"        73,72;
 IO_LOC "TMDS_D_P[2]"        75,74;
 
-IO_LOC "FLASH_CLK"          59;
-IO_LOC "FLASH_CSB"          60;
-IO_LOC "FLASH_MOSI"         61;
-IO_LOC "FLASH_MISO"         62;
+# This pins have bank conflict when used with HDMI
+
+# IO_LOC "FLASH_CLK"          59;
+# IO_LOC "FLASH_CSB"          60;
+# IO_LOC "FLASH_MOSI"         61;
+# IO_LOC "FLASH_MISO"         62;
 
 # The following pins are not used for the lab examples
 # because they are 1.8V compatible
