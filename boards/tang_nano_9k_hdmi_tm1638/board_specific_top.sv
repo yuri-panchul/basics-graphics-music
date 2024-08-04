@@ -265,18 +265,17 @@ module board_specific_top
 
         localparam serial_clk_mhz = 125;
 
-        wire raw_serial_clk;
+        wire serial_clk;
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkin  ( clk            ),
-            .clkout ( raw_serial_clk ),
-            .lock   (                )
+            .clkin  ( clk        ),
+            .clkout ( serial_clk ),
+            .lock   (            )
         );
 
-        wire serial_clk;
-
-        BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
+        // Do we need to put serial_clk through BUFG?
+        // BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
 
         //--------------------------------------------------------------------
 
@@ -346,17 +345,17 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz  ( clk_mhz        )
+            .clk_mhz  ( clk_mhz      )
         )
         inst_audio_out
         (
-            .clk      ( clk            ),
-            .reset    ( rst            ),
-            .data_in  ( sound          ),
-            .mclk     ( SMALL_LCD_DATA ),
-            .bclk     ( SMALL_LCD_CLK  ),
-            .lrclk    ( SMALL_LCD_RS   ),
-            .sdata    ( SMALL_LCD_CS   )
+            .clk      ( clk          ),
+            .reset    ( rst          ),
+            .data_in  ( sound        ),
+            .mclk     ( LARGE_LCD_DE ),
+            .bclk     ( LARGE_LCD_VS ),
+            .lrclk    ( LARGE_LCD_HS ),
+            .sdata    ( LARGE_LCD_CK )
         );
 
     `endif
