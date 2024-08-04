@@ -1,16 +1,26 @@
-// Asynchronous reset here is needed for some FPGA boards we use
-
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 8,
-              w_led   = 12,
-              w_digit = 8,
-              w_gpio  = 19
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 4,
+              w_sw          = 8,
+              w_led         = 12,
+              w_digit       = 8,
+              w_gpio        = 19,
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 1,
+              w_green       = 1,
+              w_blue        = 1, 
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                  CLK,
@@ -31,17 +41,20 @@ module board_specific_top
     inout  [w_gpio  - 1:0] GPIO
 );
 
-    localparam w_lab_key = w_key - 1;  // One onboard key is used as a reset
+    localparam w_top_key = w_key - 1;  // One onboard key is used as a reset
 
     wire                   clk     = CLK;
     wire                   rst     = ~ KEY_N [w_key     - 1];
-    wire [w_lab_key - 1:0] lab_key = ~ KEY_N [w_lab_key - 1:0];
+    wire [w_top_key - 1:0] top_key = ~ KEY_N [w_top_key - 1:0];
 
     //------------------------------------------------------------------------
 
     wire [w_led   - 1:0] led;
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
+    
+    wire [w_x     - 1:0] x;
+    wire [w_y    -  1:0] y;
 
     wire [          3:0] red;
     wire [          3:0] green;
@@ -65,20 +78,27 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz   ),
-        .w_key   ( w_lab_key ),
-        .w_sw    ( w_sw      ),
-        .w_led   ( w_led     ),
-        .w_digit ( w_digit   ),
-        .w_gpio  ( w_gpio    )
-    )
+        .clk_mhz       ( clk_mhz      ),
+        .w_key         ( w_top_key    ),
+        .w_sw          ( w_sw         ),
+        .w_led         ( w_led        ),
+        .w_digit       ( w_digit      ),
+        .w_gpio        ( w_gpio       ),
+
+        .screen_width  ( screen_width ),
+        .screen_height ( screen_height),
+        
+        .w_red         ( w_red        ),
+        .w_green       ( w_green      ),
+        .w_blue        ( w_blue       ) 
+      )
     i_lab_top
     (
         .clk      (   clk         ),
         .slow_clk (   slow_clk    ),
         .rst      (   rst         ),
 
-        .key      (   lab_key     ),
+        .key      (   top_key     ),
         .sw       ( ~ SW_N        ),
 
         .led      (   led         ),
@@ -86,8 +106,8 @@ module board_specific_top
         .abcdefgh (   abcdefgh    ),
         .digit    (   digit       ),
 
-        .vsync    (   VGA_VSYNC   ),
-        .hsync    (   VGA_HSYNC   ),
+        .x        (   x           ),
+        .y        (   y           ),
 
         .red      (   red         ),
         .green    (   green       ),
@@ -113,6 +133,29 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz   ),
+            .PIXEL_MHZ   ( pixel_mhz )
+        )
+        i_vga
+        (
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( VGA_HSYNC ),
+            .vsync       ( VGA_VSYNC ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   (           )
+        );
+
+    `endif
     inmp441_mic_i2s_receiver i_microphone
     (
         .clk   ( clk       ),
@@ -133,7 +176,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz   )
     )
-    inst_audio_out
+    o_audio
     (
         .clk     ( clk       ),
         .reset   ( rst       ),
