@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 `define INMP441_MIC
 
@@ -84,23 +84,23 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire [        3:0] KEY    = { BTN_3, BTN_2, BTN_1, BTN_0 };
-    wire [ w_sw - 1:0] top_sw = SW [w_sw - 1:0];
+    wire [ w_sw - 1:0] lab_sw = SW [w_sw - 1:0];
 
     localparam  w_tm_key     = 8,
                 w_tm_led     = 8,
                 w_tm_digit   = 8;
 
-    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
-        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
-                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
-                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
+        localparam w_lab_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_lab_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
+                   w_lab_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
     `else  // Concatenate the signals
 
-        localparam w_top_key   = w_tm_key   + w_key   ,
-                   w_top_led   = w_tm_led   + w_led   ,
-                   w_top_digit = w_tm_digit + w_digit ;
+        localparam w_lab_key   = w_tm_key   + w_key   ,
+                   w_lab_led   = w_tm_led   + w_led   ,
+                   w_lab_digit = w_tm_digit + w_digit ;
     `endif
 
 
@@ -108,41 +108,41 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] lab_key;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
 
     //------------------------------------------------------------------------
 
-    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+    `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
 
-        assign top_key = { tm_key,  KEY };
+        assign lab_key = { tm_key,  KEY };
 
-        assign { tm_led   , LED   } = top_led;
-        assign             tm_digit = top_digit;
+        assign { tm_led   , LED   } = lab_led;
+        assign             tm_digit = lab_digit;
 
-    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
 
-        assign top_key = {  KEY, tm_key };
+        assign lab_key = {  KEY, tm_key };
 
-        assign { LED   , tm_led   } = top_led;
-        assign             tm_digit = top_digit;
+        assign { LED   , tm_led   } = lab_led;
+        assign             tm_digit = lab_digit;
 
-    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `else  // DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
         always_comb
         begin
-            top_key = '0;
+            lab_key = '0;
 
-            top_key [w_key    - 1:0] |=  KEY;
-            top_key [w_tm_key - 1:0] |= tm_key;
+            lab_key [w_key    - 1:0] |=  KEY;
+            lab_key [w_tm_key - 1:0] |= tm_key;
         end
 
-        assign LED      = top_led   [w_led      - 1:0];
-        assign tm_led   = top_led   [w_tm_led   - 1:0];
+        assign LED      = lab_led   [w_led      - 1:0];
+        assign tm_led   = lab_led   [w_tm_led   - 1:0];
 
-        assign tm_digit = top_digit [w_tm_digit - 1:0];
+        assign tm_digit = lab_digit [w_tm_digit - 1:0];
 
     `endif
 
@@ -155,28 +155,28 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz     ),
-        .w_key   ( w_top_key   ),
+        .w_key   ( w_lab_key   ),
         .w_sw    ( w_sw        ),
-        .w_led   ( w_top_led   ),
-        .w_digit ( w_top_digit ),
+        .w_led   ( w_lab_led   ),
+        .w_digit ( w_lab_digit ),
         .w_gpio  ( w_gpio      )
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk       ),
         .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
-        .key      ( top_key   ),
-        .sw       ( top_sw    ),
+        .key      ( lab_key   ),
+        .sw       ( lab_sw    ),
 
-        .led      ( top_led   ),
+        .led      ( lab_led   ),
 
         .abcdefgh ( abcdefgh  ),
-        .digit    ( top_digit ),
+        .digit    ( lab_digit ),
 
         .vsync    ( JC [1]    ),
         .hsync    ( JC [0]    ),

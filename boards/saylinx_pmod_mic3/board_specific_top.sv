@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 `define USE_DIGILENT_PMOD_MIC3
 
@@ -65,7 +65,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz ),
         .w_key   ( w_key   ),
@@ -74,7 +74,7 @@ module board_specific_top
         .w_digit ( w_digit ),
         .w_gpio  ( w_gpio  )
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk        ),
         .slow_clk ( slow_clk   ),
@@ -154,7 +154,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     )
     )
-    o_audio
+    inst_audio_out
     (
         .clk     ( clk         ),
         .reset   ( rst         ),

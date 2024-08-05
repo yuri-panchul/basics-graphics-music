@@ -408,9 +408,10 @@ setup_run_directory_for_fpga_synthesis_quartus ()
     # because these particular relative paths
     # are expected to contain only alnums, underscores and slashes.
 
-    rel_main_src_dir=$(realpath --relative-to="$dir" "$main_src_dir")
-    rel_board_dir=$(realpath    --relative-to="$dir" "$board_dir")
-    rel_lab_dir=$(realpath      --relative-to="$dir" "$lab_dir")
+    rel_main_src_dir=$(realpath   --relative-to="$dir" "$main_src_dir")
+    rel_board_dir=$(realpath      --relative-to="$dir" "$board_dir")
+    rel_peripheral_dir=$(realpath --relative-to="$dir" "$peripheral_dir")
+    rel_lab_dir=$(realpath        --relative-to="$dir" "$lab_dir")
 
     #-------------------------------------------------------------------------
 
@@ -423,12 +424,13 @@ set_global_assignment -name SDC_FILE                 $rel_board_dir/$fpga_board/
 
 set_global_assignment -name SEARCH_PATH $rel_main_src_dir
 set_global_assignment -name SEARCH_PATH $rel_board_dir/$fpga_board
+set_global_assignment -name SEARCH_PATH $rel_peripheral_dir
 set_global_assignment -name SEARCH_PATH $rel_lab_dir/common
 
 EOF
 
     $find_to_run  \
-        "$main_src_dir" "$board_dir/$fpga_board" "$lab_dir/common"  \
+        "$main_src_dir" "$board_dir/$fpga_board" "$peripheral_dir" "$lab_dir/common"  \
         -type f -name '*.sv' -not -name tb.sv  \
         -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
         >> "$dir/fpga_project.qsf"

@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -42,10 +42,10 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw   = w_sw - 1;  // One onboard SW is used as a reset
+    localparam w_lab_sw   = w_sw - 1;  // One onboard SW is used as a reset
 
     wire                  rst    = sw [w_sw - 1];
-    wire [w_top_sw - 1:0] top_sw = sw [w_top_sw - 1:0];
+    wire [w_lab_sw - 1:0] lab_sw = sw [w_lab_sw - 1:0];
 
     // FIXME: Should be assigned to some GPIO!
     wire                  UART_RX = '1;
@@ -72,16 +72,16 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz  ),
         .w_key   ( w_key    ),
-        .w_sw    ( w_top_sw ),
+        .w_sw    ( w_lab_sw ),
         .w_led   ( w_led    ),
         .w_digit ( w_digit  ),
         .w_gpio  ( w_gpio   )
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk         ),
         .slow_clk ( slow_clk    ),

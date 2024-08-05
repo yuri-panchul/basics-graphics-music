@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -40,16 +40,16 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw = w_sw - 1;                // One sw is used as a reset
+    localparam w_lab_sw = w_sw - 1;                // One sw is used as a reset
 
     wire                  clk     = CLOCK_50;
-    wire                  rst     = SW [w_top_sw];
-    wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
-    wire [w_key    - 1:0] top_key = ~ KEY;
+    wire                  rst     = SW [w_lab_sw];
+    wire [w_lab_sw - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
+    wire [w_key    - 1:0] lab_key = ~ KEY;
 
     //------------------------------------------------------------------------
 
-    wire  [w_led - w_digit - 1:0] top_led;
+    wire  [w_led - w_digit - 1:0] lab_led;
 
     wire  [                  7:0] abcdefgh;
     wire  [        w_digit - 1:0] digit;
@@ -71,25 +71,25 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz               ),
         .w_key   ( w_key                 ),
-        .w_sw    ( w_top_sw              ),
+        .w_sw    ( w_lab_sw              ),
         .w_led   ( w_led - w_digit       ),        // The last 6 LEDR are used like a 7SEG dp
         .w_digit ( w_digit               ),
         .w_gpio  ( w_gpio                )         // GPIO_0[5:0] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk                ),
         .slow_clk (   slow_clk           ),
         .rst      (   rst                ),
 
-        .key      (   top_key            ),
-        .sw       (   top_sw             ),
+        .key      (   lab_key            ),
+        .sw       (   lab_sw             ),
 
-        .led      (   top_led            ),
+        .led      (   lab_led            ),
 
         .abcdefgh (   abcdefgh           ),
         .digit    (   digit              ),
@@ -109,7 +109,7 @@ module board_specific_top
     );
     //------------------------------------------------------------------------
 
-    assign LEDR [w_led - w_digit - 1:0] = top_led; // The last 6 LEDR are used like a 7SEG dp
+    assign LEDR [w_led - w_digit - 1:0] = lab_led; // The last 6 LEDR are used like a 7SEG dp
 
     assign VGA_R   = { vga_red_4b,   4'd0 };
     assign VGA_G   = { vga_green_4b, 4'd0 };
@@ -166,7 +166,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+    `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
 
         // Pro: This implementation is necessary for the lab 7segment_word
         // to properly demonstrate the idea of dynamic 7-segment display

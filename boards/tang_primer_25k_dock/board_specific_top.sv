@@ -3,12 +3,13 @@
 // Create a variant of 25K with 7-segment, leds and buttons on pmod.
 
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
     parameter   clk_mhz   = 50,
                 pixel_mhz = 25,
+
                 w_key     = 2,
                 w_sw      = 0,
                 w_led     = 0,
@@ -90,7 +91,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz   ( clk_mhz    ),
         .pixel_mhz ( pixel_mhz  ),
@@ -106,7 +107,7 @@ module board_specific_top
 
         .w_gpio    ( w_gpio     )
     )
-    i_top
+    i_lab_top
     (
         .clk       ( clk        ),
         .slow_clk  ( slow_clk   ),
@@ -174,7 +175,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     )
     )
-    i_audio
+    inst_audio_out
     (
         .clk     ( clk       ),
         .reset   ( rst       ),

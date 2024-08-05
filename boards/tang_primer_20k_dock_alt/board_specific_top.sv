@@ -1,12 +1,12 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 // `define ENABLE_VGA16
 // `define ENABLE_VGA666
  `undef  ENABLE_VGA16
  `define ENABLE_HDMI
 
-`undef ENABLE_TM1638
+`undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module board_specific_top
 # (
@@ -51,41 +51,41 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        localparam w_top_key   = w_tm_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_tm_led,
-                   w_top_digit = w_tm_digit;
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
 
     `else                   // TM1638 module is not connected
 
-        localparam w_top_key   = w_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_led,
-                   w_top_digit = w_digit;
+        localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_led,
+                   w_lab_digit = w_digit;
 
     `endif
 
     //------------------------------------------------------------------------
 
     `ifdef ENABLE_VGA16
-        localparam w_top_red   = 5,
-                   w_top_green = 6,
-                   w_top_blue  = 5;
+        localparam w_lab_red   = 5,
+                   w_lab_green = 6,
+                   w_lab_blue  = 5;
     `elsif ENABLE_VGA666
-        localparam w_top_red   = 6,
-                   w_top_green = 6,
-                   w_top_blue  = 6;
+        localparam w_lab_red   = 6,
+                   w_lab_green = 6,
+                   w_lab_blue  = 6;
     `elsif ENABLE_HDMI
         localparam vid_clk_mhz = 125,
-                   w_top_red   = 8,
-                   w_top_green = 8,
-                   w_top_blue  = 8;
+                   w_lab_red   = 8,
+                   w_lab_green = 8,
+                   w_lab_blue  = 8;
     `else
-        localparam w_top_red   = 4,
-                   w_top_green = 4,
-                   w_top_blue  = 4;
+        localparam w_lab_red   = 4,
+                   w_lab_green = 4,
+                   w_lab_blue  = 4;
     `endif
 
     //------------------------------------------------------------------------
@@ -94,10 +94,10 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    logic [w_top_sw    - 1:0] top_sw;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] lab_key;
+    logic [w_lab_sw    - 1:0] lab_sw;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
@@ -115,9 +115,9 @@ module board_specific_top
     wire                     VGA_HS;
     wire                     VGA_VS;
 
-    logic [ w_top_red   - 1:0] VGA_R;
-    logic [ w_top_green - 1:0] VGA_G;
-    logic [ w_top_blue  - 1:0] VGA_B;
+    logic [ w_lab_red   - 1:0] VGA_R;
+    logic [ w_lab_green - 1:0] VGA_G;
+    logic [ w_lab_blue  - 1:0] VGA_B;
 
     //------------------------------------------------------------------------
 
@@ -132,18 +132,18 @@ module board_specific_top
    `endif
    //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
       `ifdef ENABLE_HDMI
         assign rst      = ~ ( ~tm_key[w_tm_key - 1] & pll_lock );
       `else
         assign rst      = tm_key [w_tm_key - 1];
       `endif
-        assign top_key  = tm_key [w_tm_key - 1:0];
-        assign top_sw   = ~ SW;
+        assign lab_key  = tm_key [w_tm_key - 1:0];
+        assign lab_sw   = ~ SW;
 
-        assign tm_led   = top_led;
-        assign tm_digit = top_digit;
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
 
     `else                   // TM1638 module is not connected
 
@@ -152,10 +152,10 @@ module board_specific_top
       `else
         assign rst      = ~KEY[w_key - 1];
       `endif
-        assign top_key  = ~ KEY [w_key - 1:0];
-        assign top_sw   = ~ SW;
+        assign lab_key  = ~ KEY [w_key - 1:0];
+        assign lab_sw   = ~ SW;
 
-        assign LED      = ~ top_led;
+        assign LED      = ~ lab_led;
 
     `endif
 
@@ -168,23 +168,23 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
 `ifdef ENABLE_HDMI
         .clk_mhz ( vid_clk_mhz ),
 `else
         .clk_mhz ( clk_mhz     ),
 `endif
-        .w_key   ( w_top_key    ),  // The last key is used for a reset
-        .w_sw    ( w_top_sw     ),
-        .w_led   ( w_top_led    ),
-        .w_digit ( w_top_digit  ),
+        .w_key   ( w_lab_key    ),  // The last key is used for a reset
+        .w_sw    ( w_lab_sw     ),
+        .w_led   ( w_lab_led    ),
+        .w_digit ( w_lab_digit  ),
         .w_gpio  ( w_gpio       ),
-        .w_red   ( w_top_red    ),
-        .w_green ( w_top_green  ),
-        .w_blue  ( w_top_blue   )
+        .w_red   ( w_lab_red    ),
+        .w_green ( w_lab_green  ),
+        .w_blue  ( w_lab_blue   )
     )
-    i_top
+    i_lab_top
     (
 `ifdef ENABLE_HDMI
         .clk      ( clk_hd    ),
@@ -194,13 +194,13 @@ module board_specific_top
         .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
-        .key      ( top_key   ),
-        .sw       ( top_sw    ),
+        .key      ( lab_key   ),
+        .sw       ( lab_sw    ),
 
-        .led      ( top_led   ),
+        .led      ( lab_led   ),
 
         .abcdefgh ( abcdefgh  ),
-        .digit    ( top_digit ),
+        .digit    ( lab_digit ),
 
         .vsync    ( VGA_VS    ),
         .hsync    ( VGA_HS    ),
@@ -270,15 +270,15 @@ module board_specific_top
 //    assign GPIO_2 = {VGA_HS, VGA_VS, 2'bz, VGA_G};
    `ifdef ENABLE_VGA16
 
-      assign GPIO_3 = {2'bz, VGA_R[3], VGA_R[1], 2'bz, VGA_R[4], VGA_R[2]}; 
-      assign GPIO_2 = {VGA_G[5], VGA_G[3], VGA_G[1], VGA_B[4], VGA_R[0], VGA_G[4], VGA_G[2], VGA_G[0]}; 
+      assign GPIO_3 = {2'bz, VGA_R[3], VGA_R[1], 2'bz, VGA_R[4], VGA_R[2]};
+      assign GPIO_2 = {VGA_G[5], VGA_G[3], VGA_G[1], VGA_B[4], VGA_R[0], VGA_G[4], VGA_G[2], VGA_G[0]};
       assign GPIO_1 = {VGA_B[2], VGA_B[0], VGA_HS, 1'bz, VGA_B[3], VGA_B[1], VGA_VS, 1'bz};
 
    `elsif ENABLE_VGA666
 
       assign GPIO_3 = { VGA_G[4], VGA_G[5], VGA_R[2], VGA_B[4], VGA_VS,   VGA_HS,   VGA_B[0], VGA_R[1] };
-      assign GPIO_2 = { VGA_B[3], VGA_G[2], VGA_R[0], VGA_R[4], VGA_G[0], VGA_B[5], VGA_G[1], VGA_B[1] }; 
-      assign GPIO_1 = { VGA_R[5], 3'bz,                         VGA_B[2], VGA_G[3], VGA_R[3], 1'bz }; 
+      assign GPIO_2 = { VGA_B[3], VGA_G[2], VGA_R[0], VGA_R[4], VGA_G[0], VGA_B[5], VGA_G[1], VGA_B[1] };
+      assign GPIO_1 = { VGA_R[5], 3'bz,                         VGA_B[2], VGA_G[3], VGA_R[3], 1'bz };
 
    `elsif ENABLE_HDMI
     DVI_TX_Top myDVI(
@@ -302,6 +302,6 @@ module board_specific_top
       assign GPIO_2 = { VGA_B, VGA_R };
       assign GPIO_3 = { 2'bz, VGA_VS, VGA_HS, VGA_G };
 
-   `endif 
+   `endif
 
 endmodule

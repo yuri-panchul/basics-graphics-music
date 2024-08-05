@@ -1,7 +1,7 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -31,11 +31,11 @@ module board_specific_top
     inout  [w_gpio  - 1:0] GPIO
 );
 
-    localparam w_top_key = w_key - 1;  // One onboard key is used as a reset
+    localparam w_lab_key = w_key - 1;  // One onboard key is used as a reset
 
     wire                   clk     = CLK;
     wire                   rst     = ~ KEY_N [w_key     - 1];
-    wire [w_top_key - 1:0] top_key = ~ KEY_N [w_top_key - 1:0];
+    wire [w_lab_key - 1:0] lab_key = ~ KEY_N [w_lab_key - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -63,22 +63,22 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz   ),
-        .w_key   ( w_top_key ),
+        .w_key   ( w_lab_key ),
         .w_sw    ( w_sw      ),
         .w_led   ( w_led     ),
         .w_digit ( w_digit   ),
         .w_gpio  ( w_gpio    )
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk         ),
         .slow_clk (   slow_clk    ),
         .rst      (   rst         ),
 
-        .key      (   top_key     ),
+        .key      (   lab_key     ),
         .sw       ( ~ SW_N        ),
 
         .led      (   led         ),
@@ -133,7 +133,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz   )
     )
-    o_audio
+    inst_audio_out
     (
         .clk     ( clk       ),
         .reset   ( rst       ),

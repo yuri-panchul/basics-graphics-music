@@ -36,6 +36,7 @@ package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/../..")
 bin_dir="$package_dir/bin"
 board_dir="$package_dir/boards"
 lab_dir="$package_dir/labs"
+peripheral_dir="$package_dir/peripherals"
 script_dir="$package_dir/scripts"
 
 #-----------------------------------------------------------------------------
@@ -425,14 +426,19 @@ fpga_board_setup ()
 
         create_fpga_board_select_file
 
-        read -n 1 -r -p "Would you like to create the new run directories for the synthesis of all labs in the package, based on your FPGA board selection? We recommend to do this if you plan to work with Quartus GUI rather than with the synthesis scripts. [y/n] "
-        printf "\n"
+        if [ ]
+        then
+            # This option is rarely used, so I decided to comment it out
 
-        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+            read -n 1 -r -p "Would you like to create the new run directories for the synthesis of all labs in the package, based on your FPGA board selection? We recommend to do this if you plan to work with synthesis GUI rather than with the synthesis scripts. [y/n] "
             printf "\n"
 
-            update_fpga_toolchain_var
-            create_new_run_directories_for_fpga_synthesis
+            if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+                printf "\n"
+
+                update_fpga_toolchain_var
+                create_new_run_directories_for_fpga_synthesis
+            fi
         fi
     fi
 

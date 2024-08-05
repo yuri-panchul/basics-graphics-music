@@ -1,7 +1,7 @@
 // Asynchronous reset here is needed for some FPGA boards we use
 
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 // `define USE_DIGILENT_PMOD_MIC3
 
@@ -59,12 +59,12 @@ module board_specific_top
 
     wire               clk     =   CLK;
     wire               rst     = ~ RESET;
-    wire [w_sw  - 1:0] top_sw  = ~ KEY [w_sw - 1:0];
-    wire [w_key - 1:0] top_key = ~ KEY;
+    wire [w_sw  - 1:0] lab_sw  = ~ KEY [w_sw - 1:0];
+    wire [w_key - 1:0] lab_key = ~ KEY;
 
     //------------------------------------------------------------------------
 
-    wire  [w_led   - 1:0] top_led;
+    wire  [w_led   - 1:0] lab_led;
 
     wire  [          7:0] abcdefgh;
     wire  [w_digit - 1:0] digit;
@@ -87,7 +87,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz ),
         .w_key   ( w_key   ),
@@ -96,16 +96,16 @@ module board_specific_top
         .w_digit ( w_digit ),
         .w_gpio  ( w_gpio  )
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk          ),
         .slow_clk (   slow_clk     ),
         .rst      (   rst          ),
 
-        .key      (   top_key      ),
-        .sw       (   top_sw       ),
+        .key      (   lab_key      ),
+        .sw       (   lab_sw       ),
 
-        .led      (   top_led      ),
+        .led      (   lab_led      ),
 
         .abcdefgh (   abcdefgh     ),
         .digit    (   digit        ),
@@ -132,7 +132,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign LED       = ~ top_led;
+    assign LED       = ~ lab_led;
 
     assign SEG       = ~ abcdefgh;
     assign DIG       = ~ digit;
@@ -189,7 +189,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     )
     )
-    o_audio
+    inst_audio_out
     (
         .clk     ( clk       ),
         .reset   ( rst       ),

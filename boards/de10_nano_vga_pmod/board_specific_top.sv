@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 //--- VGA external ---
 //   `define VGA666_BOARD
@@ -28,17 +28,17 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw   = w_sw - 1;                             // One onboard SW is used as a reset
+    localparam w_lab_sw   = w_sw - 1;                             // One onboard SW is used as a reset
 
     wire                  clk    = FPGA_CLK1_50;
 
    `ifdef MISTER_IO_BOARD
-        wire              rst    = SW [w_top_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] (JP7 pin 17) is BTN_RESET key on MiSTer I/O board, internal FGPA weak pull-up enabled;
+        wire              rst    = SW [w_lab_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] (JP7 pin 17) is BTN_RESET key on MiSTer I/O board, internal FGPA weak pull-up enabled;
     `else
-        wire              rst    = SW [w_top_sw];
+        wire              rst    = SW [w_lab_sw];
     `endif
 
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -62,17 +62,17 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
-        localparam w_top_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
-                   w_top_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
-                   w_top_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
+        localparam w_lab_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_lab_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
+                   w_lab_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
     `else  // Concatenate the signals
 
-        localparam w_top_key   = w_tm_key   + w_key   ,
-                   w_top_led   = w_tm_led   + w_led   ,
-                   w_top_digit = w_tm_digit + w_digit ;
+        localparam w_lab_key   = w_tm_key   + w_key   ,
+                   w_lab_led   = w_tm_led   + w_led   ,
+                   w_lab_digit = w_tm_digit + w_digit ;
     `endif
 
     //------------------------------------------------------------------------
@@ -81,67 +81,67 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] lab_key;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     //------------------------------------------------------------------------
 
-    `ifdef CONCAT_TM_SIGNALS_AND_REGULAR
+    `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
 
-        assign top_key = { tm_key, ~ KEY };
+        assign lab_key = { tm_key, ~ KEY };
 
-        assign { tm_led   , LED   } = top_led;
-        assign             tm_digit = top_digit;
+        assign { tm_led   , LED   } = lab_led;
+        assign             tm_digit = lab_digit;
 
-    `elsif CONCAT_REGULAR_SIGNALS_AND_TM
+    `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
 
-        assign top_key = { ~ KEY, tm_key };
+        assign lab_key = { ~ KEY, tm_key };
 
-        assign { LED   , tm_led   } = top_led;
-        assign             tm_digit = top_digit;
+        assign { LED   , tm_led   } = lab_led;
+        assign             tm_digit = lab_digit;
 
-    `else  // DUPLICATE_TM_SIGNALS_WITH_REGULAR
+    `else  // DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
         always_comb
         begin
-            top_key = '0;
+            lab_key = '0;
 
-            top_key [w_key    - 1:0] |= ~ KEY;
-            top_key [w_tm_key - 1:0] |= tm_key;
+            lab_key [w_key    - 1:0] |= ~ KEY;
+            lab_key [w_tm_key - 1:0] |= tm_key;
         end
 
-        assign LED      = top_led   [w_led      - 1:0];
-        assign tm_led   = top_led   [w_tm_led   - 1:0];
+        assign LED      = lab_led   [w_led      - 1:0];
+        assign tm_led   = lab_led   [w_tm_led   - 1:0];
 
-        assign tm_digit = top_digit [w_tm_digit - 1:0];
+        assign tm_digit = lab_digit [w_tm_digit - 1:0];
 
     `endif
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz   ( clk_mhz     ),
-        .w_key     ( w_top_key   ),
-        .w_sw      ( w_top_sw    ),
-        .w_led     ( w_top_led   ),
-        .w_digit   ( w_top_digit ),
+        .w_key     ( w_lab_key   ),
+        .w_sw      ( w_lab_sw    ),
+        .w_led     ( w_lab_led   ),
+        .w_digit   ( w_lab_digit ),
         .w_gpio    ( w_gpio      )       // GPIO_0 [31], [33], [35] reserved for tm1638; GPIO [11], [13], [15], [17] reserved for i2s audio; GPIO_0[5:0] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk       ( clk         ),
         .slow_clk  ( slow_clk    ),
         .rst       ( rst         ),
 
-        .key       ( top_key     ),
-        .sw        ( top_sw      ),
+        .key       ( lab_key     ),
+        .sw        ( lab_sw      ),
 
-        .led       ( top_led     ),
+        .led       ( lab_led     ),
 
         .abcdefgh  ( abcdefgh    ),
-        .digit     ( top_digit   ),
+        .digit     ( lab_digit   ),
 
         .vsync     ( vga_vs      ),
         .hsync     ( vga_hs      ),
@@ -314,7 +314,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     )
     )
-    o_audio
+    inst_audio_out
     (
         .clk     ( clk         ),
         .reset   ( rst         ),

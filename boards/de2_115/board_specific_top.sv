@@ -1,24 +1,39 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
-    parameter clk_mhz   = 50,
-              w_key     = 4,
-              w_sw      = 18,
-              w_led     = 18,
-              w_digit   = 8,
-              w_gpio    = 36,        // GPIO[5:0] reserved for mic
-              vga_clock = 25         // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 4,
+              w_sw          = 18,
+              w_led         = 8,
+              w_digit       = 8,
+              w_gpio        = 36,
+
+              // gpio 0..5 are reserved for INMP 441 I2S microphone.
+              // Odd gpio .. are reserved I2S audio.
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 8,
+              w_green       = 8,
+              w_blue        = 8,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                   CLOCK_50,
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output [w_led    - 1:0] LEDR,    // The last 8 LEDR are used like a 7SEG dp
+    output logic [    17:0] LEDR,
+    output logic [     8:0] LEDG,
 
-    output logic [     6:0] HEX0,    // HEX[7] aka dp doesn't connected to FPGA at DE2-115
+    output logic [     6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE2-115
     output logic [     6:0] HEX1,
     output logic [     6:0] HEX2,
     output logic [     6:0] HEX3,
@@ -27,42 +42,56 @@ module board_specific_top
     output logic [     6:0] HEX6,
     output logic [     6:0] HEX7,
 
-    output                  VGA_CLK, // VGA DAC input triggers CLK
+    output                  VGA_CLK,
     output                  VGA_HS,
     output                  VGA_VS,
-    output [           7:0] VGA_R,
-    output [           7:0] VGA_G,
-    output [           7:0] VGA_B,
+    output [w_red    - 1:0] VGA_R,
+    output [w_green  - 1:0] VGA_G,
+    output [w_blue   - 1:0] VGA_B,
     output                  VGA_BLANK_N,
     output                  VGA_SYNC_N,
+
+    input                   UART_RTS,
+    input                   UART_RXD,
+
+    output                  UART_CTS,
+    output                  UART_TXD,
 
     inout  [w_gpio   - 1:0] GPIO
 );
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw = w_sw - 1;                // One sw is used as a reset
-
-    wire                  clk     = CLOCK_50;
-    wire                  rst     = SW [w_top_sw];
-    wire [w_top_sw - 1:0] top_sw  = SW [w_top_sw - 1:0];
-    wire [w_key    - 1:0] top_key = ~ KEY;
+    localparam w_lab_sw = w_sw - 1;  // One sw is used as a reset
 
     //------------------------------------------------------------------------
 
-    wire  [w_led - w_digit - 1:0] top_led;
+    wire                    clk     = CLOCK_50;
+    wire                    rst     = SW [w_lab_sw];
 
-    wire  [                  7:0] abcdefgh;
-    wire  [        w_digit - 1:0] digit;
+    // Keys, switches, LEDs
 
-    wire  [                  3:0] vga_red_4b,vga_green_4b,vga_blue_4b;
+    wire [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
+    wire [ w_led     - 1:0] lab_led;
 
-    wire  [                 23:0] mic;
-    wire  [                 15:0] sound;
+    // A dynamic seven-segment display
 
-    // FIXME: Should be assigned to some GPIO!
-    wire                          UART_TX;
-    wire                          UART_RX = '1;
+    wire [             7:0] abcdefgh;
+    wire [ w_digit   - 1:0] digit;
+
+    // Graphics
+
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
+
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
+
+    // Microphone, sound output and UART
+
+    wire [            23:0] mic;
+    wire [            15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -73,90 +102,59 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
-        .clk_mhz ( clk_mhz         ),
-        .w_key   ( w_key           ),
-        .w_sw    ( w_top_sw        ),
-        .w_led   ( w_led - w_digit ),              // The last 8 LEDR are used like a 7SEG dp
-        .w_digit ( w_digit         ),
-        .w_gpio  ( w_gpio          )               // GPIO[5:0] reserved for mic
+        .clk_mhz       (   clk_mhz       ),
+        .w_key         (   w_key         ),
+        .w_sw          (   w_lab_sw      ),
+        .w_led         (   w_led         ),
+        .w_digit       (   w_digit       ),
+        .w_gpio        (   w_gpio        ),
+
+        .screen_width  (   screen_width  ),
+        .screen_height (   screen_height ),
+
+        .w_red         (   w_red         ),
+        .w_green       (   w_green       ),
+        .w_blue        (   w_blue        )
     )
-    i_top
+    i_lab_top
     (
-        .clk      (   clk          ),
-        .slow_clk (   slow_clk     ),
-        .rst      (   rst          ),
+        .clk           (   clk           ),
+        .slow_clk      (   slow_clk      ),
+        .rst           (   rst           ),
 
-        .key      (   top_key      ),
-        .sw       (   top_sw       ),
+        .key           ( ~ KEY           ),
+        .sw            (   lab_sw        ),
 
-        .led      (   top_led      ),
+        .led           (   lab_led       ),
 
-        .abcdefgh (   abcdefgh     ),
-        .digit    (   digit        ),
+        .abcdefgh      (   abcdefgh      ),
+        .digit         (   digit         ),
 
-        .vsync    (   VGA_VS       ),
-        .hsync    (   VGA_HS       ),
+        .x             (   x             ),
+        .y             (   y             ),
 
-        .red      (   vga_red_4b   ),
-        .green    (   vga_green_4b ),
-        .blue     (   vga_blue_4b  ),
+        .red           (   VGA_R         ),
+        .green         (   VGA_G         ),
+        .blue          (   VGA_B         ),
 
-        .uart_rx  (   UART_RX      ),
-        .uart_tx  (   UART_TX      ),
+        .mic           (   mic           ),
+        .sound         (   sound         ),
 
-        .mic      (   mic          ),
-        .sound    (   sound        ),
+        .uart_rx       (   UART_RXD      ),
+        .uart_tx       (   UART_TXD      ),
 
-        .gpio     (   GPIO         )
+        .gpio          (   GPIO          )
     );
 
     //------------------------------------------------------------------------
 
-    assign LEDR [w_led - w_digit - 1:0] = top_led; // The last 8 LEDR are used like a 7SEG dp
-
-    assign VGA_R   = { vga_red_4b,   4'd0 };
-    assign VGA_G   = { vga_green_4b, 4'd0 };
-    assign VGA_B   = { vga_blue_4b,  4'd0 };
-
-    assign VGA_BLANK_N = 1'b1;
-    assign VGA_SYNC_N  = 0;
-
-    // Divide VGA DAC clock from clk_mhz to vga_clock
-    localparam CLK_DIV = $clog2 (clk_mhz / vga_clock) - 1;
-
-    logic [CLK_DIV:0] clk_en_cnt;
-    logic clk_en;
-
-    always_ff @ (posedge clk or posedge rst)
-    begin
-        if (rst)
-        begin
-            clk_en_cnt <= 'b0;
-            clk_en     <= 'b0;
-        end
-        else
-        begin
-            if (clk_en_cnt == (clk_mhz / vga_clock) - 1)
-            begin
-                clk_en_cnt <= 'b0;
-                clk_en     <= 'b1;
-            end
-            else
-            begin
-                clk_en_cnt <= clk_en_cnt + 1;
-                clk_en     <= 'b0;
-            end
-        end
-    end
-
-    assign VGA_CLK = clk_en;
+    assign LEDG = { { $bits (LEDG) - w_led { 1'b0 } }, lab_led };
 
     //------------------------------------------------------------------------
 
-    wire  [$left (abcdefgh):0] hgfedcba;
-    logic [$left    (digit):0] dp;
+    wire [$left (abcdefgh):0] hgfedcba;
 
     generate
         genvar i;
@@ -169,7 +167,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+    `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
 
         // Pro: This implementation is necessary for the lab 7segment_word
         // to properly demonstrate the idea of dynamic 7-segment display
@@ -192,14 +190,14 @@ module board_specific_top
 
         // positive logic
 
-        assign LEDR [    w_led - w_digit] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
-        assign LEDR [w_led - w_digit + 1] = digit [1] ? hgfedcba [$left (HEX1) + 1] : '0;
-        assign LEDR [w_led - w_digit + 2] = digit [2] ? hgfedcba [$left (HEX2) + 1] : '0;
-        assign LEDR [w_led - w_digit + 3] = digit [3] ? hgfedcba [$left (HEX3) + 1] : '0;
-        assign LEDR [w_led - w_digit + 4] = digit [4] ? hgfedcba [$left (HEX4) + 1] : '0;
-        assign LEDR [w_led - w_digit + 5] = digit [5] ? hgfedcba [$left (HEX5) + 1] : '0;
-        assign LEDR [w_led - w_digit + 6] = digit [6] ? hgfedcba [$left (HEX6) + 1] : '0;
-        assign LEDR [w_led - w_digit + 7] = digit [7] ? hgfedcba [$left (HEX7) + 1] : '0;
+        always_comb
+        begin
+            LEDR = '0;
+
+            for (int i = 0; i < w_digit; i ++)
+                LEDR [$bits (LEDR) - w_digit + i]
+                    = digit [i] ? hgfedcba [$left (HEX0) + 1] : '0;
+        end
 
     `else
 
@@ -208,7 +206,7 @@ module board_specific_top
             if (rst)
             begin
                 { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 } <= '1;
-                dp <= '0;
+                LEDR <= '0;
             end
             else
             begin
@@ -221,52 +219,84 @@ module board_specific_top
                 if (digit [6]) HEX6 <= ~ hgfedcba [$left (HEX6):0];
                 if (digit [7]) HEX7 <= ~ hgfedcba [$left (HEX7):0];
 
-                if (digit [0]) dp[0] <=  hgfedcba [$left (HEX0) + 1];
-                if (digit [1]) dp[1] <=  hgfedcba [$left (HEX1) + 1];
-                if (digit [2]) dp[2] <=  hgfedcba [$left (HEX2) + 1];
-                if (digit [3]) dp[3] <=  hgfedcba [$left (HEX3) + 1];
-                if (digit [4]) dp[4] <=  hgfedcba [$left (HEX4) + 1];
-                if (digit [5]) dp[5] <=  hgfedcba [$left (HEX5) + 1];
-                if (digit [6]) dp[6] <=  hgfedcba [$left (HEX6) + 1];
-                if (digit [7]) dp[7] <=  hgfedcba [$left (HEX7) + 1];
+                for (int i = 0; i < w_digit; i ++)
+                    if (digit [i])
+                        LEDR [$bits (LEDR) - w_digit + i] <=  hgfedcba [$left (HEX0) + 1];
             end
         end
-
-        assign LEDR [w_led - 1:w_led - w_digit] = dp;  // The last 8 LEDR are used like a 7SEG dp
 
     `endif
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [0] ), // JP5 pin 1
-        .ws    ( GPIO [2] ), // JP5 pin 3
-        .sck   ( GPIO [4] ), // JP5 pin 5
-        .sd    ( GPIO [5] ), // JP5 pin 6
-        .value ( mic      )
-    );
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-    assign GPIO [1] = 1'b0;  // GND - JP5 pin 2
-    assign GPIO [3] = 1'b1;  // VCC - JP5 pin 4
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz   ),
+            .PIXEL_MHZ   ( pixel_mhz )
+        )
+        i_vga
+        (
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( VGA_HS    ),
+            .vsync       ( VGA_VS    ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   ( VGA_CLK   )
+        );
+
+        assign VGA_BLANK_N = 1'b1;
+        assign VGA_SYNC_N  = 1'b0;
+
+    `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz     )
-    )
-    o_audio
-    (
-        .clk     ( clk       ),
-        .reset   ( rst       ),
-        .data_in ( sound     ), // TODO - check all comments with pins
-        .mclk    ( GPIO [33] ), // JP5 pin 38
-        .bclk    ( GPIO [31] ), // JP5 pin 36
-        .lrclk   ( GPIO [27] ), // JP5 pin 32
-        .sdata   ( GPIO [29] )  // JP5 pin 34
-    );                          // JP5 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver i_microphone
+        (
+            .clk   ( clk      ),
+            .rst   ( rst      ),
+            .lr    ( GPIO [0] ),
+            .ws    ( GPIO [2] ),
+            .sck   ( GPIO [4] ),
+            .sd    ( GPIO [5] ),
+            .value ( mic      )
+        );
+
+        assign GPIO [1] = 1'b0;  // GND
+        assign GPIO [3] = 1'b1;  // VCC
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz   )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk       ),
+            .reset   ( rst       ),
+            .data_in ( sound     ),
+            .mclk    ( GPIO [33] ),
+            .bclk    ( GPIO [31] ),
+            .lrclk   ( GPIO [27] ),
+            .sdata   ( GPIO [29] )
+        );
+
+        // VCC and GND for i2s_audio_out are on dedicated pins
+
+    `endif
 
 endmodule

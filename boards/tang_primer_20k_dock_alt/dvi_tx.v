@@ -1120,6 +1120,6 @@ wire GND;
     .G(GND)
 );
   GSR GSR (
-    .GSRI(VCC) 
+    .GSRI(VCC)
 );
 endmodule /* DVI_TX_Top */

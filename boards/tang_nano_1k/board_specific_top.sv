@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -48,10 +48,10 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz   ( clk_mhz    ),
-        .pixel_mhz ( pixel_mhz  ), 
+        .pixel_mhz ( pixel_mhz  ),
 
         .w_key     ( w_tm_key   ),
         .w_sw      ( w_tm_led   ),
@@ -64,7 +64,7 @@ module board_specific_top
 
         .w_gpio    ( w_gpio     )
     )
-    i_top
+    i_lab_top
     (
         .clk       ( clk        ),
         .slow_clk  ( slow_clk   ),
@@ -89,7 +89,7 @@ module board_specific_top
         .uart_tx   (            ),
 
         .mic       (            ),
-        .gpio      ( gpio       ) 
+        .gpio      ( gpio       )
     );
 
     //------------------------------------------------------------------------

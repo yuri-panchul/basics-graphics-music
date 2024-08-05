@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -38,13 +38,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw = w_sw - 1;  // One onboard SW is used as a reset
+    localparam w_lab_sw = w_sw - 1;  // One onboard SW is used as a reset
 
     wire                     clk = CLOCK_50;
 
-    wire                  rst    = SW [w_top_sw];
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
-    wire [w_key    - 1:0] top_key = ~ BUTTON;
+    wire                  rst    = SW [w_lab_sw];
+    wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
+    wire [w_key    - 1:0] lab_key = ~ BUTTON;
 
     //------------------------------------------------------------------------
 
@@ -67,23 +67,23 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz  ),
         .w_key   ( w_key    ),
-        .w_sw    ( w_top_sw ),
+        .w_sw    ( w_lab_sw ),
         .w_led   ( w_led    ),
         .w_digit ( w_digit  ),
         .w_gpio  ( w_gpio   )        // GPIO_0[7:2] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk                  ),
         .slow_clk (   slow_clk             ),
         .rst      (   rst                  ),
 
-        .key      (   top_key              ),
-        .sw       (   top_sw               ),
+        .key      (   lab_key              ),
+        .sw       (   lab_sw               ),
 
         .led      (   LEDG                 ),
 
@@ -121,7 +121,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+    `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
 
         // Pro: This implementation is necessary for the lab 7segment_word
         // to properly demonstrate the idea of dynamic 7-segment display
@@ -184,7 +184,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz     )
     )
-    o_audio
+    inst_audio_out
     (
         .clk     ( clk          ),
         .reset   ( rst          ),

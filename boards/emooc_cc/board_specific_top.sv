@@ -6,7 +6,7 @@
 // for more details.
 
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -48,12 +48,12 @@ module board_specific_top
 
     // locally useful numeric constants
     localparam w_gpio   = w_gpio_j7 + w_gpio_p1 + w_gpio_p2,
-               w_top_sw = w_sw - 1;
+               w_lab_sw = w_sw - 1;
 
     // one switch is used as reset, others - as input signals;
-    // for convenience, declare set of wires "top_sw"
+    // for convenience, declare set of wires "lab_sw"
     wire                  rst    = SW [w_sw - 1];
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
+    wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
 
     // need explicit wire to be able to invert
     wire  [          7:0] abcdefgh;
@@ -76,24 +76,24 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     // "top" module is a parametrized type, here are numeric parameters
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz  ),
         .w_key   ( w_key    ),
-        .w_sw    ( w_top_sw ), // only non-reset switches used as inputs
+        .w_sw    ( w_lab_sw ), // only non-reset switches used as inputs
         .w_led   ( w_led    ),
         .w_digit ( w_digit  ),
         .w_gpio  ( w_gpio   )
     )
-    // i_top is an instance, passing signal mappings - ?..
-    i_top
+    // i_lab_top is an instance, passing signal mappings - ?..
+    i_lab_top
     (
         .clk      ( clk       ),
         .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
         .key      ( ~ KEY_N   ), // invert keys, bringing to standard
-        .sw       ( top_sw    ),
+        .sw       ( lab_sw    ),
 
         .led      ( LED       ),
 
