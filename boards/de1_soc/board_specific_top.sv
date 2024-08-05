@@ -9,39 +9,49 @@ module board_specific_top
               w_led     = 10,
               w_digit   = 6,
               w_gpio    = 72,        // GPIO_0[5:0] reserved for mic
-              vga_clock = 25         // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
+              vga_clock = 25,        // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
+
+              screen_width = 640,
+              screen_height = 480,
+              w_red = 8,
+              w_green = 8,
+              w_blue = 8,
+              w_x = $clog2 ( screen_width ),
+              w_y = $clog2 ( screen_height )
 )
 (
-    input                 CLOCK_50,
+    input                   CLOCK_50,
 
-    input  [w_key  - 1:0] KEY,
-    input  [w_sw   - 1:0] SW,
-    output [w_led  - 1:0] LEDR,    // The last 6 LEDR are used like a 7SEG dp
+    input  [w_key  - 1:0]   KEY,
+    input  [w_sw   - 1:0]   SW,
+    output [w_led  - 1:0]   LEDR,    // The last 6 LEDR are used like a 7SEG dp
 
-    output logic    [6:0] HEX0,    // HEX[7] aka dp doesn't connected to FPGA at DE1-SoC
-    output logic    [6:0] HEX1,
-    output logic    [6:0] HEX2,
-    output logic    [6:0] HEX3,
-    output logic    [6:0] HEX4,
-    output logic    [6:0] HEX5,
+    output logic    [6:0]   HEX0,    // HEX[7] aka dp doesn't connected to FPGA at DE1-SoC
+    output logic    [6:0]   HEX1,
+    output logic    [6:0]   HEX2,
+    output logic    [6:0]   HEX3,
+    output logic    [6:0]   HEX4,
+    output logic    [6:0]   HEX5,
 
-    output                VGA_CLK, // VGA DAC input triggers CLK
-    output                VGA_HS,
-    output                VGA_VS,
-    output [         7:0] VGA_R,
-    output [         7:0] VGA_G,
-    output [         7:0] VGA_B,
-    output                VGA_BLANK_N,
-    output                VGA_SYNC_N,
+    output                  VGA_CLK, // VGA DAC input triggers CLK
+    output                  VGA_HS,
+    output                  VGA_VS,
+    output [ w_red - 1:0]   VGA_R,
+    output [ w_green - 1:0] VGA_G,
+    output [ w_blue - 1:0]  VGA_B,
+    output                  VGA_BLANK_N,
+    output                  VGA_SYNC_N,
 
-    inout  [        35:0] GPIO_0,
-    inout  [        35:0] GPIO_1
+    inout  [        35:0]   GPIO_0,
+    inout  [        35:0]   GPIO_1
 );
 
     //------------------------------------------------------------------------
 
     localparam w_lab_sw = w_sw - 1;                // One sw is used as a reset
 
+    wire [w_x - 1:0] x;
+    wire [w_y - 1:0] y;
     wire                  clk     = CLOCK_50;
     wire                  rst     = SW [w_lab_sw];
     wire [w_lab_sw - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
@@ -78,7 +88,14 @@ module board_specific_top
         .w_sw    ( w_lab_sw              ),
         .w_led   ( w_led - w_digit       ),        // The last 6 LEDR are used like a 7SEG dp
         .w_digit ( w_digit               ),
-        .w_gpio  ( w_gpio                )         // GPIO_0[5:0] reserved for mic
+        .w_gpio  ( w_gpio                ),        // GPIO_0[5:0] reserved for mic
+
+        .screen_width  ( screen_width  ),
+        .screen_height ( screen_height ),
+
+        .w_red   ( w_red   ),
+        .w_green ( w_green ),
+        .w_blue  ( w_blue  )
     )
     i_lab_top
     (
@@ -94,8 +111,8 @@ module board_specific_top
         .abcdefgh (   abcdefgh           ),
         .digit    (   digit              ),
 
-        .vsync    (   VGA_VS             ),
-        .hsync    (   VGA_HS             ),
+        .x        ( x                    ),
+        .y        ( y                    ),
 
         .red      (   vga_red_4b         ),
         .green    (   vga_green_4b       ),
