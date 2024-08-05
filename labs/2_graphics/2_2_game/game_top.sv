@@ -14,8 +14,9 @@ module game_top
     input        launch_key,
     input  [1:0] left_right_keys,
 
-    output       hsync,
-    output       vsync,
+    input        x,
+    input        y,
+
     output [2:0] rgb,
     output       display_on,
     output       pixel_clk
@@ -26,7 +27,7 @@ module game_top
     wire [`X_WIDTH - 1:0] pixel_x;
     wire [`Y_WIDTH - 1:0] pixel_y;
 
-    vga
+   /* vga
     # (
         .N_MIXER_PIPE_STAGES ( `N_MIXER_PIPE_STAGES ),
 
@@ -47,6 +48,8 @@ module game_top
         .vpos       ( pixel_y    ),
         .pixel_clk  ( pixel_clk  )
     );
+*/
+
 
     //------------------------------------------------------------------------
 
@@ -345,5 +348,6 @@ module game_top
 
         .end_of_game_timer_running     ( end_of_game_timer_running     )
     );
+    
 
-endmodule
+    endmodule

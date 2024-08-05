@@ -3,13 +3,14 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
-              pixel_mhz = 50,
-              w_key   = 2,
-              w_sw    = 10,
-              w_led   = 10,
-              w_digit = 6,
-              w_gpio  = 36,             // GPIO[5:0] reserved for mic
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 2,
+              w_sw          = 10,
+              w_led         = 10,
+              w_digit       = 6,
+              w_gpio        = 32,             // GPIO[5:0] reserved for mic
 
               screen_width  = 640,
               screen_height = 480,
@@ -77,8 +78,8 @@ module board_specific_top
     wire  [         15:0] sound;
 
     // FIXME: Should be assigned to some GPIO!
-    wire                  UART_TX;
-    wire                  UART_RX = '1;
+    //wire                  UART_TX;
+    //wire                  UART_RX = '1;
 
     //------------------------------------------------------------------------
 
@@ -122,16 +123,16 @@ module board_specific_top
         .abcdefgh (   abcdefgh ),
         .digit    (   digit    ),
 
-        .x             (   x             ),
-        .y             (   y             ),
+        .x        (   x        ),
+        .y        (   y        ),
 
 
         .red      (   VGA_R    ),
         .green    (   VGA_G    ),
         .blue     (   VGA_B    ),
 
-        .uart_rx  (   UART_RX  ),
-        .uart_tx  (   UART_TX  ),
+       // .uart_rx  (   UART_RX  ),
+       //.uart_tx  (   UART_TX  ),
 
         .mic      (   mic      ),
         .sound    (   sound    ),
@@ -195,7 +196,7 @@ module board_specific_top
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
-        vga
+ /*       vga
         # (
             .CLK_MHZ     ( clk_mhz   ),
             .PIXEL_MHZ   ( pixel_mhz )
@@ -211,7 +212,7 @@ module board_specific_top
             .vpos        ( y10       ),
             .pixel_clk   ( VGA_CLK   )
         );
-
+*/
         assign VGA_BLANK_N = 1'b1;
         assign VGA_SYNC_N  = 1'b0;
 
@@ -244,7 +245,7 @@ module board_specific_top
         .clk     ( clk         ),
         .reset   ( rst         ),
         .data_in ( sound       ),
-        .mclk    ( GPIO [33]   ), // JP1 pin 38
+       // .mclk    ( GPIO [33]   ), // JP1 pin 38
         .bclk    ( GPIO [31]   ), // JP1 pin 36
         .lrclk   ( GPIO [27]   ), // JP1 pin 32
         .sdata   ( GPIO [29]   )  // JP1 pin 34
