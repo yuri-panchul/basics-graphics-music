@@ -45,7 +45,10 @@ module board_specific_top
     output [w_blue   - 1:0] VGA_B,
     output                  VGA_BLANK_N,
     output                  VGA_SYNC_N,
+    
 
+    output                  VGA_CLK,  //by sisa
+    
     inout  [w_gpio - 1:0] GPIO
 );
 
@@ -123,9 +126,6 @@ module board_specific_top
         .abcdefgh (   abcdefgh ),
         .digit    (   digit    ),
 
-        .x        (   x        ),
-        .y        (   y        ),
-
 
         .red      (   VGA_R    ),
         .green    (   VGA_G    ),
@@ -193,10 +193,13 @@ module board_specific_top
 
       `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        
+
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
- /*       vga
+
+       vga
         # (
             .CLK_MHZ     ( clk_mhz   ),
             .PIXEL_MHZ   ( pixel_mhz )
@@ -212,7 +215,7 @@ module board_specific_top
             .vpos        ( y10       ),
             .pixel_clk   ( VGA_CLK   )
         );
-*/
+
         assign VGA_BLANK_N = 1'b1;
         assign VGA_SYNC_N  = 1'b0;
 

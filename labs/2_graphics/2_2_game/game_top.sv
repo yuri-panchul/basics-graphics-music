@@ -27,6 +27,10 @@ module game_top
     wire [`X_WIDTH - 1:0] pixel_x;
     wire [`Y_WIDTH - 1:0] pixel_y;
 
+
+    assign pixel_x = x;   
+    assign pixel_y = y;
+
    /* vga
     # (
         .N_MIXER_PIPE_STAGES ( `N_MIXER_PIPE_STAGES ),
