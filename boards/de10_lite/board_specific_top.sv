@@ -3,13 +3,14 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
-              pixel_mhz = 50,
-              w_key   = 2,
-              w_sw    = 10,
-              w_led   = 10,
-              w_digit = 6,
-              w_gpio  = 36,             // GPIO[5:0] reserved for mic
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 2,
+              w_sw          = 10,
+              w_led         = 10,
+              w_digit       = 6,
+              w_gpio        = 36,             // GPIO[5:0] reserved for mic
 
               screen_width  = 640,
               screen_height = 480,
@@ -42,9 +43,7 @@ module board_specific_top
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
     output [w_blue   - 1:0] VGA_B,
-    output                  VGA_BLANK_N,
-    output                  VGA_SYNC_N,
-
+    
     inout  [w_gpio - 1:0] GPIO
 );
 
@@ -68,6 +67,7 @@ module board_specific_top
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
+
     wire [ w_red     - 1:0] red;
     wire [ w_green   - 1:0] green;
     wire [ w_blue    - 1:0] blue;
@@ -77,8 +77,8 @@ module board_specific_top
     wire  [         15:0] sound;
 
     // FIXME: Should be assigned to some GPIO!
-    wire                  UART_TX;
-    wire                  UART_RX = '1;
+    //wire                  UART_TX;
+    //wire                  UART_RX = '1;
 
     //------------------------------------------------------------------------
 
@@ -122,16 +122,15 @@ module board_specific_top
         .abcdefgh (   abcdefgh ),
         .digit    (   digit    ),
 
-        .x             (   x             ),
-        .y             (   y             ),
-
+        .x        (   x        ),
+        .y        (   y        ),
 
         .red      (   VGA_R    ),
         .green    (   VGA_G    ),
         .blue     (   VGA_B    ),
 
-        .uart_rx  (   UART_RX  ),
-        .uart_tx  (   UART_TX  ),
+       // .uart_rx  (   UART_RX  ),
+       //.uart_tx  (   UART_TX  ),
 
         .mic      (   mic      ),
         .sound    (   sound    ),
@@ -192,10 +191,13 @@ module board_specific_top
 
       `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        
+
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
-        vga
+
+       vga
         # (
             .CLK_MHZ     ( clk_mhz   ),
             .PIXEL_MHZ   ( pixel_mhz )
@@ -209,11 +211,8 @@ module board_specific_top
             .display_on  (           ),
             .hpos        ( x10       ),
             .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .pixel_clk   (           )
         );
-
-        assign VGA_BLANK_N = 1'b1;
-        assign VGA_SYNC_N  = 1'b0;
 
     `endif
 
