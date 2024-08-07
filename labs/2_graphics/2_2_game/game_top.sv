@@ -18,7 +18,7 @@ module game_top
     input        y,
 
     output [2:0] rgb,
-    output       display_on,
+    output       display_on,   //rgb_valid by sisa
     output       pixel_clk
 );
 
@@ -28,8 +28,8 @@ module game_top
     wire [`Y_WIDTH - 1:0] pixel_y;
 
 
-    assign pixel_x = x;   
-    assign pixel_y = y;
+    assign pixel_x = x ;   
+    assign pixel_y = y ;
 
    /* vga
     # (

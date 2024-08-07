@@ -43,11 +43,8 @@ module board_specific_top
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
     output [w_blue   - 1:0] VGA_B,
-    output                  VGA_BLANK_N,
-    output                  VGA_SYNC_N,
-    
-
-    output                  VGA_CLK,  //by sisa
+   // output                  VGA_BLANK_N,
+   // output                  VGA_SYNC_N,
     
     inout  [w_gpio - 1:0] GPIO
 );
@@ -71,6 +68,10 @@ module board_specific_top
 
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
+    
+    //temporary wire by sisa
+    logic  vga_clk;
+
 
     wire [ w_red     - 1:0] red;
     wire [ w_green   - 1:0] green;
@@ -126,6 +127,8 @@ module board_specific_top
         .abcdefgh (   abcdefgh ),
         .digit    (   digit    ),
 
+        .x        (   x        ),
+        .y        (   y        ),
 
         .red      (   VGA_R    ),
         .green    (   VGA_G    ),
@@ -213,11 +216,11 @@ module board_specific_top
             .display_on  (           ),
             .hpos        ( x10       ),
             .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .pixel_clk   ( vga_clk   )
         );
 
-        assign VGA_BLANK_N = 1'b1;
-        assign VGA_SYNC_N  = 1'b0;
+       // assign VGA_BLANK_N = 1'b1;
+       // assign VGA_SYNC_N  = 1'b0;
 
     `endif
 
