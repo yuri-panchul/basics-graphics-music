@@ -46,9 +46,7 @@ module lab_top
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
-   // output logic                 vsync,
-   // output logic                 hsync,
-
+   
     // Microphone, sound output and UART
 
     input        [         23:0] mic,
@@ -82,8 +80,6 @@ module lab_top
 
     wire [2:0] rgb;
    
-    wire display_on;
-    //wire pixel_clk;
 
     game_top
     # (
@@ -104,13 +100,9 @@ module lab_top
         .launch_key       ( | key                ),
         .left_right_keys  ( { key [1], key [0] } ),
 
-        //.hsync            (   hsync              ),
-        // .vsync           (   vsync              ),
         .rgb              (   rgb                ),
-        .display_on       (   display_on         )
-        //.pixel_clk        (   pixel_clk          )
-
-    );
+        .display_on       (                      )
+        );
 
     assign red   = { w_red   { rgb [2] } };
     assign green = { w_green { rgb [1] } };

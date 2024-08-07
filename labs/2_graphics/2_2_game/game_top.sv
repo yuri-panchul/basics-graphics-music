@@ -18,9 +18,8 @@ module game_top
     input        y,
 
     output [2:0] rgb,
-    output       display_on,   //rgb_valid by sisa
-    output       pixel_clk
-);
+    output       display_on   
+    );
 
     //------------------------------------------------------------------------
 
