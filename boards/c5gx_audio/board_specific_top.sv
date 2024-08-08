@@ -1,18 +1,28 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-//--- VGA external ---
-   `define VGA666_BOARD
-// `define PMOD_VGA_BOARD
-
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 4,
-              w_sw    = 10,
-              w_led   = 18,
-              w_digit = 4,
-              w_gpio  = 22          // GPIO[5:0] reserved for mic
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 4,
+              w_sw          = 10,
+              w_led         = 8,
+              w_digit       = 4,
+              w_gpio        = 22,
+
+              // GPIO[5:0] are reserved for INMP 441 I2S microphone.
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 4,
+              w_green       = 4,
+              w_blue        = 4,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                 CLOCK_50_B8A,
@@ -20,10 +30,10 @@ module board_specific_top
 
     input  [w_key  - 1:0] KEY,
     input  [w_sw   - 1:0] SW,
-    output [         9:0] LEDR,     // The last 4 LEDR are used like a 7SEG dp
-    output [         7:0] LEDG,
+    output logic [   9:0] LEDR,       // The last 4 LEDR are used like a 7SEG dp
+    output logic [   7:0] LEDG,
 
-    output logic [   6:0] HEX0,     // HEX[7] aka dp doesn't connected to FPGA at "Cyclone V GX Starter Kit"
+    output logic [   6:0] HEX0,       // HEX[7] aka dp are not connected to FPGA at "Cyclone V GX Starter Kit"
     output logic [   6:0] HEX1,
     output logic [   6:0] HEX2,
     output logic [   6:0] HEX3,
@@ -33,25 +43,43 @@ module board_specific_top
     inout  [w_gpio - 1:0] GPIO
 );
 
-    localparam w_lab_sw = w_sw - 1; // One sw is used as a reset
+    //------------------------------------------------------------------------
+
+    localparam w_lab_sw   = w_sw - 1; // One onboard SW is used as a reset
+
+    //------------------------------------------------------------------------
 
     wire                  clk     = CLOCK_50_B8A;
     wire                  rst     = ~ CPU_RESET_n;
 
-    wire [w_lab_sw - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
-    wire [w_key    - 1:0] lab_key = ~ KEY;
+    // Keys, switches, LEDs
 
-    //------------------------------------------------------------------------
+    wire [ w_key    - 1:0] lab_key = ~ KEY;
+    wire [ w_lab_sw - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
+    wire [ w_led    - 1:0] lab_led;
 
-    wire [ w_led - w_digit - 1:0] lab_led;
+    // A dynamic seven-segment display
 
-    wire [                   7:0] abcdefgh;
-    wire [         w_digit - 1:0] digit;
+    wire [            7:0] abcdefgh;
+    wire [  w_digit - 1:0] digit;
 
-    wire [                  23:0] mic;
-    wire [                  15:0] sound;
+    // Graphics
 
-    wire                          UART_TX; // FIXME: Should be assigned to some GPIO!
+    wire [ w_x      - 1:0] x;
+    wire [ w_y      - 1:0] y;
+
+    wire                   vs, hs;
+
+    wire [ w_red    - 1:0] red;
+    wire [ w_green  - 1:0] green;
+    wire [ w_blue   - 1:0] blue;
+
+    // Microphone, sound output and UART
+
+    wire [           23:0] mic;
+    wire [           15:0] sound;
+
+    wire                   UART_TX; // FIXME: Should be assigned to some GPIO
 
     //------------------------------------------------------------------------
 
@@ -64,51 +92,58 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz         ),
-        .w_key   ( w_key           ),
-        .w_sw    ( w_lab_sw        ),
-        .w_led   ( w_led - w_digit ), // The last 4 LEDR are used like a 7SEG dp
-        .w_digit ( w_digit         ),
-        .w_gpio  ( w_gpio          )  // GPIO[5:0] reserved for mic
+        .clk_mhz       (   clk_mhz       ),
+        .w_key         (   w_key         ),
+        .w_sw          (   w_lab_sw      ),
+        .w_led         (   w_led         ),
+        .w_digit       (   w_digit       ),
+        .w_gpio        (   w_gpio        ),
+
+        .screen_width  (   screen_width  ),
+        .screen_height (   screen_height ),
+
+        .w_red         (   w_red         ),
+        .w_green       (   w_green       ),
+        .w_blue        (   w_blue        )
+
     )
     i_lab_top
     (
-        .clk      (   clk       ),
-        .slow_clk ( slow_clk    ),
-        .rst      (   rst       ),
+        .clk           (   clk           ),
+        .slow_clk      (   slow_clk      ),
+        .rst           (   rst           ),
 
-        .key      (   lab_key   ),
-        .sw       (   lab_sw    ),
+        .key           (   lab_key       ),
+        .sw            (   lab_sw        ),
 
-        .led      (   lab_led   ),
+        .led           (   lab_led       ),
 
-        .abcdefgh (   abcdefgh  ),
-        .digit    (   digit     ),
+        .abcdefgh      (   abcdefgh      ),
+        .digit         (   digit         ),
 
-        .vsync    (             ),
-        .hsync    (             ),
+        .x             (   x             ),
+        .y             (   y             ),
 
-        .red      (             ),
-        .green    (             ),
-        .blue     (             ),
+        .red           (   red           ),
+        .green         (   green         ),
+        .blue          (   blue          ),
 
-        .uart_rx  (   UART_RX   ),
-        .uart_tx  (   UART_TX   ),
+        .mic           (   mic           ),
+        .sound         (   sound         ),
 
-        .mic      (   mic       ),
-        .sound    (   sound     ),
+        .uart_rx       (   UART_RX       ),
+        .uart_tx       (   UART_TX       ),
 
-        .gpio     (   GPIO      )
+        .gpio          (   GPIO          )
     );
 
     //------------------------------------------------------------------------
 
-    assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = lab_led; // The last 4 LEDR are used like a 7SEG dp
+    assign LEDG = { { $bits (LEDG) - w_led { 1'b0 } }, lab_led };
 
     //------------------------------------------------------------------------
 
     wire  [$left (abcdefgh):0] hgfedcba;
-    logic [$left    (digit):0] dp;
 
     generate
         genvar i;
@@ -140,10 +175,14 @@ module board_specific_top
 
         // positive logic
 
-        assign LEDR [$left(LEDR) - w_digit + 1] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
-        assign LEDR [$left(LEDR) - w_digit + 2] = digit [1] ? hgfedcba [$left (HEX1) + 1] : '0;
-        assign LEDR [$left(LEDR) - w_digit + 3] = digit [2] ? hgfedcba [$left (HEX2) + 1] : '0;
-        assign LEDR [$left(LEDR) - w_digit + 4] = digit [3] ? hgfedcba [$left (HEX3) + 1] : '0;
+        always_comb
+        begin
+            LEDR = '0;
+
+            for (int i = 0; i < w_digit; i ++)
+                LEDR [$bits (LEDR) - w_digit + i]
+                    = digit [i] ? hgfedcba [$left (HEX0) + 1] : '0;
+        end
 
     `else
 
@@ -151,7 +190,7 @@ module board_specific_top
             if (rst)
             begin
                 { HEX0, HEX1, HEX2, HEX3 } <= '1;
-                dp <= '0;
+                LEDR <= '0;
             end
             else
             begin
@@ -160,47 +199,80 @@ module board_specific_top
                 if (digit [2]) HEX2 <= ~ hgfedcba [$left (HEX2):0];
                 if (digit [3]) HEX3 <= ~ hgfedcba [$left (HEX3):0];
 
-                if (digit [0]) dp[0] <=  hgfedcba [$left (HEX0) + 1];
-                if (digit [1]) dp[1] <=  hgfedcba [$left (HEX1) + 1];
-                if (digit [2]) dp[2] <=  hgfedcba [$left (HEX2) + 1];
-                if (digit [3]) dp[3] <=  hgfedcba [$left (HEX3) + 1];
+                for (int i = 0; i < w_digit; i ++)
+                    if (digit [i])
+                        LEDR [$bits (LEDR) - w_digit + i] <=  hgfedcba [$left (HEX0) + 1];
             end
-
-        assign LEDR [$left(LEDR):$left(LEDR) - w_digit + 1] = dp;  // The last 4 LEDR are used like a 7SEG dp
 
     `endif
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   ( clk      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [0] ), // JP9 pin 1
-        .ws    ( GPIO [2] ), // JP9 pin 3
-        .sck   ( GPIO [4] ), // JP9 pin 5
-        .sd    ( GPIO [5] ), // JP9 pin 6
-        .value ( mic      )
-    );
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-    assign GPIO [1] = 1'b0;  // GND - JP9 pin 2
-    assign GPIO [3] = 1'b1;  // VCC - JP9 pin 4
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .H_DISPLAY   ( screen_width  ),
+            .V_DISPLAY   ( screen_height ),
+            .CLK_MHZ     ( clk_mhz       ),
+            .PIXEL_MHZ   ( pixel_mhz     )
+        )
+        i_vga
+        (
+            .clk         ( clk           ),
+            .rst         ( rst           ),
+            .hsync       ( hs            ),
+            .vsync       ( vs            ),
+            .display_on  (               ),
+            .hpos        ( x10           ),
+            .vpos        ( y10           ),
+            .pixel_clk   (               )
+        );
+
+    `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz     )
-    )
-    inst_audio_out
-    (
-        .clk     ( clk       ),
-        .reset   ( rst       ),
-        .data_in ( sound     ),
-        .mclk    ( GPIO [17] ), // JP9 pin 20
-        .bclk    ( GPIO [15] ), // JP9 pin 18
-        .lrclk   ( GPIO [11] ), // JP9 pin 14
-        .sdata   ( GPIO [13] )  // JP9 pin 16
-    );                          // JP9 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver i_microphone
+        (
+            .clk   ( clk      ),
+            .rst   ( rst      ),
+            .lr    ( GPIO [0] ),  // JP9 pin 1
+            .ws    ( GPIO [2] ),  // JP9 pin 3
+            .sck   ( GPIO [4] ),  // JP9 pin 5
+            .sd    ( GPIO [5] ),  // JP9 pin 6
+            .value ( mic      )
+        );
+
+        assign GPIO [1] = 1'b0;   // GND - JP9 pin 2
+        assign GPIO [3] = 1'b1;   // VCC - JP9 pin 4
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz     )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
+            .mclk    ( GPIO [17] ), // JP9 pin 20
+            .bclk    ( GPIO [15] ), // JP9 pin 18
+            .lrclk   ( GPIO [11] ), // JP9 pin 14
+            .sdata   ( GPIO [13] )  // JP9 pin 16
+        );                          // JP9 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
+
+    `endif
 
 endmodule
