@@ -1,6 +1,6 @@
 // This module is created based on https://github.com/sipeed/TangNano-9K-example/lcd_4.3/src/VGA_timing.v
 
-module lcd_480_272
+module lcd_480_272_tang_nano_9k
 (
     input        PixelClk,
     input        nRST,
