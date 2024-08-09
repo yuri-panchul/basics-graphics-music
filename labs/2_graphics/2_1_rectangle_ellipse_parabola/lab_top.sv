@@ -43,7 +43,8 @@ module lab_top
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
-
+    output logic                 vsync,
+    output logic                 hsync,
     // Microphone, sound output and UART
 
     input        [         23:0] mic,
