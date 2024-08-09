@@ -38,10 +38,20 @@ module board_specific_top
     output logic [   9:0] LEDR,       // The last 4 LEDR are used like a 7SEG dp
     output logic [   7:0] LEDG,
 
+    output                HDMI_TX_CLK,
+    output       [  23:0] HDMI_TX_D,
+    output                HDMI_TX_DE,
+    output                HDMI_TX_HS,
+    input                 HDMI_TX_INT,
+    output                HDMI_TX_VS,
+
     output logic [   6:0] HEX0,       // HEX[7] aka dp are not connected to FPGA at "Cyclone V GX Starter Kit"
     output logic [   6:0] HEX1,
     output logic [   6:0] HEX2,
     output logic [   6:0] HEX3,
+
+    output                I2C_SCL,
+    inout                 I2C_SDA,
 
     input                 UART_RX,
 
@@ -192,6 +202,27 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    // HDMI Video
+    wire       pixel_clk;
+    wire       display_on;
+
+    assign HDMI_TX_CLK      = pixel_clk;
+    assign HDMI_TX_D        = {{red,{(8 - w_red){1'b1}}},{green,{(8 - w_green){1'b1}}},{blue,{(8 - w_blue){1'b1}}}}; // eight bit color is max
+    assign HDMI_TX_DE       = display_on;
+    assign HDMI_TX_HS       = hs;
+    assign HDMI_TX_VS       = vs;
+
+    // HDMI I2C configurator
+    I2C_HDMI_Config i_i2c_hdmi_conf (
+        .iCLK(clk),
+        .iRST_N(~rst),
+        .I2C_SCLK(I2C_SCL),
+        .I2C_SDAT(I2C_SDA),
+        .HDMI_TX_INT(HDMI_TX_INT)
+    );
+
+    //------------------------------------------------------------------------
+
     assign LEDG = { { $bits (LEDG) - w_led { 1'b0 } }, lab_led };
 
     //------------------------------------------------------------------------
@@ -279,10 +310,10 @@ module board_specific_top
             .rst         ( rst           ),
             .hsync       ( hs            ),
             .vsync       ( vs            ),
-            .display_on  (               ),
+            .display_on  ( display_on    ),
             .hpos        ( x10           ),
             .vpos        ( y10           ),
-            .pixel_clk   (               )
+            .pixel_clk   ( pixel_clk     )
         );
 
     `endif
