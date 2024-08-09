@@ -17,7 +17,7 @@ module board_specific_top
 
               w_red         = 1,
               w_green       = 1,
-              w_blue        = 1, 
+              w_blue        = 1,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
@@ -52,7 +52,7 @@ module board_specific_top
     wire [w_led   - 1:0] led;
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
-    
+
     wire [w_x     - 1:0] x;
     wire [w_y    -  1:0] y;
 
@@ -87,10 +87,10 @@ module board_specific_top
 
         .screen_width  ( screen_width ),
         .screen_height ( screen_height),
-        
+
         .w_red         ( w_red        ),
         .w_green       ( w_green      ),
-        .w_blue        ( w_blue       ) 
+        .w_blue        ( w_blue       )
       )
     i_lab_top
     (

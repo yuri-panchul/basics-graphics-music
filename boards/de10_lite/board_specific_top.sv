@@ -43,7 +43,7 @@ module board_specific_top
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
     output [w_blue   - 1:0] VGA_B,
-    
+
     inout  [w_gpio - 1:0] GPIO
 );
 
@@ -191,7 +191,7 @@ module board_specific_top
 
       `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        
+
 
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;

@@ -46,7 +46,7 @@ module lab_top
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
-   
+
     // Microphone, sound output and UART
 
     input        [         23:0] mic,
@@ -79,7 +79,7 @@ module lab_top
     //------------------------------------------------------------------------
 
     wire [2:0] rgb;
-   
+
 
     game_top
     # (

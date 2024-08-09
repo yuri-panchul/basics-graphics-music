@@ -18,7 +18,7 @@ module game_top
     input        y,
 
     output [2:0] rgb,
-    output       display_on   
+    output       display_on
     );
 
     //------------------------------------------------------------------------
@@ -27,7 +27,7 @@ module game_top
     wire [`Y_WIDTH - 1:0] pixel_y;
 
 
-    assign pixel_x = x ;   
+    assign pixel_x = x ;
     assign pixel_y = y ;
 
    /* vga
@@ -351,6 +351,6 @@ module game_top
 
         .end_of_game_timer_running     ( end_of_game_timer_running     )
     );
-    
+
 
     endmodule
