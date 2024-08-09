@@ -258,7 +258,7 @@ module board_specific_top
             .clkin  ( clk          )   // 27 MHz
         );
 
-        lcd_480_272_tang_nano_9k i_lcd
+        lcd_480_272 i_lcd
         (
             .PixelClk  (   LARGE_LCD_CK ),
             .nRST      ( ~ rst          ),
