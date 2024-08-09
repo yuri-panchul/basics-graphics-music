@@ -7,78 +7,54 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz       = 27,
-              pixel_mhz     = 9,
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
 
-              w_key         = 2,  // The last key is used for a reset
+              w_key         = 4,  // The last key is used for a reset
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
-              w_gpio        = 10,
+              w_gpio        = 24,
 
               screen_width  = 480,
               screen_height = 272,
 
-              w_red         = 5,
+              w_red         = 6,
               w_green       = 6,
-              w_blue        = 5,
+              w_blue        = 6,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                        CLK,
+    input                   CLK,
 
-    input  [w_key        - 1:0]  KEY,
+    input  [w_key   - 1:0]  KEY,
+    output [w_led   - 1:0]  LED,
 
-    output [w_led        - 1:0]  LED,
+    output                  LCD_CLK,
+    output                  LCD_EN,
 
-    output                       LARGE_LCD_DE,
-    output                       LARGE_LCD_VS,
-    output                       LARGE_LCD_HS,
-    output                       LARGE_LCD_CK,
-    output                       LARGE_LCD_INIT,
-    output                       LARGE_LCD_BL,
+    output [w_red   - 1:0]  LCD_R,
+    output [w_green - 1:0]  LCD_G,
+    output [w_blue  - 1:0]  LCD_B,
 
-    output [7:7 + 1 - w_red   ]  LARGE_LCD_R,
-    output [7:7 + 1 - w_green ]  LARGE_LCD_G,
-    output [7:7 + 1 - w_blue  ]  LARGE_LCD_B,
+    output                  TMDS_CLK_N_0,
+    output                  TMDS_CLK_P_0,
+    output [          2:0]  TMDS_D_N_0,
+    output [          2:0]  TMDS_D_P_0,
 
-    input                        UART_RX,
-    output                       UART_TX,
+    output                  TMDS_CLK_N_1,
+    output                  TMDS_CLK_P_1,
+    output [          2:0]  TMDS_D_N_1,
+    output [          2:0]  TMDS_D_P_1,
 
-    // The following 4 pins (TF_CS, TF_MOSI, TF_SCLK, TF_MISO)
-    // are used for INMP441 microphone
-    // in basics-graphics-music labs
+    input                   UART2_RXD,
+    output                  UART2_TXD,
 
-    inout                        TF_CS,
-    inout                        TF_MOSI,
-    inout                        TF_SCLK,
-    inout                        TF_MISO,
-
-    inout  [w_gpio       - 1:0]  GPIO,
-
-    // The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
-    // are used for the I2S audio output
-    // in basics-graphics-music labs
-
-    inout                        SMALL_LCD_CLK,
-    inout                        SMALL_LCD_RESETN,
-    inout                        SMALL_LCD_CS,
-    inout                        SMALL_LCD_RS,
-    inout                        SMALL_LCD_DATA,
-
-    // TMDS pins conflict with LARGE_LCD pins
-
-    // output                    TMDS_CLK_N,
-    // output                    TMDS_CLK_P,
-    // output [            2:0]  TMDS_D_N,
-    // output [            2:0]  TMDS_D_P,
-
-    output                       FLASH_CLK,
-    output                       FLASH_CSB,
-    output                       FLASH_MOSI,
-    input                        FLASH_MISO
+    inout  [          7:0]  PMOD_0,
+    inout  [          7:0]  PMOD_1,
+    inout  [          7:0]  PMOD_2
 );
 
     wire clk = CLK;
