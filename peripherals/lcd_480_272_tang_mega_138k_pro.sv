@@ -1,15 +1,28 @@
-module lcd_timing
+// This module is created based on https://github.com/sipeed/TangMega-138KPro-example/blob/main/rgb_screen/480_272_screen/src/lcd_timing.v
+
+module lcd_480_272_tang_mega_138k_pro
 (
-    input                   lcd_clk,
-    input                   rst_n, // user button 3
+    input        lcd_clk,
+    input        rst_n, // user button 3
 
-    output                  lcd_en,
+    output       lcd_en,
 
-	output          [5:0]   lcd_r,
-	output          [5:0]   lcd_b,
-	output          [5:0]   lcd_g
+    // Modified for basic-graphics-music: Removed LCD_RGB ports.
+    // These output signals are assigned in the top module code
+    // using input from lab_top module.
+
+    /*
+    output [5:0] lcd_r,
+    output [5:0] lcd_b,
+    output [5:0] lcd_g
+    */
+
+    // Modified for basic-graphics-music: Added x and y outputs
+
+    output [8:0] x,
+    output [8:0] y
 );
-	
+
     // Horizen count to Hsync, then next Horizen line.
 
     parameter       H_Pixel_Valid    = 16'd480; 
@@ -53,6 +66,12 @@ module lcd_timing
     assign  lcd_en =    ( H_PixelCount >= H_BackPorch ) && ( H_PixelCount <= H_Pixel_Valid + H_BackPorch ) &&
                         ( V_PixelCount >= V_BackPorch ) && ( V_PixelCount <= V_Pixel_Valid + V_BackPorch ) && lcd_clk;
 
+    // Modified for basic-graphics-music: Removed LCD_RGB port assignments.
+    // These output signals are assigned in the top module code
+    // using input from lab_top module.
+
+    `ifdef COMMENTED_OUT
+
     // color bar
     localparam          Colorbar_width   =   H_Pixel_Valid / 18;
 
@@ -77,5 +96,12 @@ module lcd_timing
                         ( H_PixelCount < ( H_BackPorch +  Colorbar_width * 16 )) ? 6'b001000 :
                         ( H_PixelCount < ( H_BackPorch +  Colorbar_width * 17 )) ? 6'b010000 :
                         ( H_PixelCount < ( H_BackPorch +  Colorbar_width * 18 )) ? 6'b100000 : 6'b000000;
+
+    `endif
+
+    // Modified for basic-graphics-music: Added x and y outputs
+
+    assign x = 9' (H_PixelCount - H_BackPorch);
+    assign y = 9' (V_PixelCount - V_BackPorch);
 
 endmodule
