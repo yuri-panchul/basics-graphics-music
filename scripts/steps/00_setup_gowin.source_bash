@@ -307,28 +307,33 @@ configure_fpga_gowin_msys ()
         tang_nano_1k* )
 
             fpga_board_for_programmer="GW1NZ-1"
-            flash_method="-r 5"                  ;;
+            flash_method="-r 5"                     ;;
 
         tang_nano_4k* )
 
             fpga_board_for_programmer="GW1NSR-4C"
-            flash_method="-r 5"                  ;;
+            flash_method="-r 5"                     ;;
 
         tang_nano_9k* )
 
             fpga_board_for_programmer="GW1NR-9C"
-            flash_method="-r 5"                  ;;
+            flash_method="-r 5"                     ;;
 
         tang_nano_20k*   | \
         tang_primer_20k* )
 
             fpga_board_for_programmer="GW2A-18C"
-            flash_method="-r 36"                 ;;
+            flash_method="-r 36"                    ;;
 
         tang_primer_25k* )
 
             fpga_board_for_programmer="GW5A-25A"
-            flash_method="-r 36"                 ;;
+            flash_method="-r 36"                    ;;
+
+        tang_mega_138k* )
+
+            fpga_board_for_programmer="GW5AST-138B"
+            flash_method="-r 36"                    ;;
 
         *)
             error "FPGA board $fpga_board is not supported by the script running openFPGALoader"
@@ -380,14 +385,16 @@ configure_fpga_gowin_all ()
 
     case $fpga_board in
 
-        runber                ) fpga_board_for_openFPGALoader=runber        ;;
-        tang_nano_1k*         ) fpga_board_for_openFPGALoader=tangnano1k    ;;
-        tang_nano_20k*        ) fpga_board_for_openFPGALoader=tangnano20k   ;;
-        tang_nano_4k*         ) fpga_board_for_openFPGALoader=tangnano4k    ;;
-        tang_nano_9k*         ) fpga_board_for_openFPGALoader=tangnano9k    ;;
-        tang_primer_20k_dock* ) fpga_board_for_openFPGALoader=tangprimer20k ;;
-        tang_primer_20k_lite* ) fpga_board_for_openFPGALoader=tangprimer20k ;;
-        tang_primer_25k_dock* ) fpga_board_for_openFPGALoader=tangprimer25k ;;
+        runber                   ) fpga_board_for_openFPGALoader=runber        ;;
+        tang_nano_1k*            ) fpga_board_for_openFPGALoader=tangnano1k    ;;
+        tang_nano_20k*           ) fpga_board_for_openFPGALoader=tangnano20k   ;;
+        tang_nano_4k*            ) fpga_board_for_openFPGALoader=tangnano4k    ;;
+        tang_nano_9k*            ) fpga_board_for_openFPGALoader=tangnano9k    ;;
+        tang_primer_20k_dock*    ) fpga_board_for_openFPGALoader=tangprimer20k ;;
+        tang_primer_20k_lite*    ) fpga_board_for_openFPGALoader=tangprimer20k ;;
+        tang_primer_25k_dock*    ) fpga_board_for_openFPGALoader=tangprimer25k ;;
+        tang_mega_138k_dock*     ) fpga_board_for_openFPGALoader=tangmega138k  ;;
+        tang_mega_138k_pro_dock* ) fpga_board_for_openFPGALoader=tangmega138k  ;;
 
         *)
             error "FPGA board $fpga_board is not supported by the script running openFPGALoader"
