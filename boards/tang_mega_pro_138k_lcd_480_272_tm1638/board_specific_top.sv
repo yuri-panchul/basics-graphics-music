@@ -171,9 +171,9 @@ module board_specific_top
         .x             ( mirrored_x    ),
         .y             ( mirrored_y    ),
 
-        .red           ( LARGE_LCD_R   ),
-        .green         ( LARGE_LCD_G   ),
-        .blue          ( LARGE_LCD_B   ),
+        .red           ( LCD_R         ),
+        .green         ( LCD_G         ),
+        .blue          ( LCD_B         ),
 
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
@@ -230,30 +230,27 @@ module board_specific_top
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkout ( LARGE_LCD_CK ),  //  9 MHz
-            .clkin  ( clk          )   // 27 MHz
+            .clkout ( LCD_CLK ),  // 10 MHz
+            .clkin  ( clk     )   // 50 MHz
         );
 
         lcd_480_272 i_lcd
         (
-            .PixelClk  (   LARGE_LCD_CK ),
-            .nRST      ( ~ rst          ),
+            .PixelClk  (   LCD_CLK ),
+            .nRST      ( ~ rst     ),
 
-            .LCD_DE    (   LARGE_LCD_DE ),
-            .LCD_HSYNC (   LARGE_LCD_HS ),
-            .LCD_VSYNC (   LARGE_LCD_VS ),
+            .LCD_DE    (   LCD_EN  ),
+            .LCD_HSYNC (           ),
+            .LCD_VSYNC (           ),
 
-            .x         (   x            ),
-            .y         (   y            )
+            .x         (   x       ),
+            .y         (   y       )
         );
-
-        assign LARGE_LCD_INIT = 1'b0;
-        assign LARGE_LCD_BL   = 1'b0;
 
     `endif
 
     //------------------------------------------------------------------------
-
+/*
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
         inmp441_mic_i2s_receiver i_microphone
@@ -289,5 +286,5 @@ module board_specific_top
         );
 
     `endif
-
+*/
 endmodule
