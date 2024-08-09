@@ -228,10 +228,10 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        Gowin_rPLL i_Gowin_rPLL
+        Gowin_PLL i_Gowin_PLL
         (
-            .clkout ( LCD_CLK ),  // 10 MHz
-            .clkin  ( clk     )   // 50 MHz
+            .clkout0 ( LCD_CLK ),  // 10 MHz
+            .clkin   ( clk     )   // 50 MHz
         );
 
         lcd_480_272 i_lcd
