@@ -7,11 +7,11 @@ module board_specific_top
               pixel_mhz     = 25,
 
               w_key         = 4,
-              w_sw    = 18,         // One onboard SW is used as a reset
-              w_led   = 26,
-              w_digit = 8,
-              w_gpio  = 72,         // GPIO[5:0] reserved for mic
-              vga_clock = 25,       // Pixel clock of VGA in MHz, recommend be equal with VGA_CLOCK from labs/common/vga.sv
+              w_sw          = 10,		// One onboard SW is used as a reset
+              w_led         = 8,
+              w_digit       = 4,
+              w_gpio        = 72,		// GPIO_1[5:0] reserved for mic
+
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
               // Odd gpio .. are reserved I2S audio.
 
@@ -30,26 +30,19 @@ module board_specific_top
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output logic [     17:0] LEDR,    // The last 8 LEDR are used like a 7SEG dp
+    output logic [     9:0] LEDR,
     output logic [     7:0] LEDG,
 
-    output logic [     6:0] HEX0,    // HEX[7] aka dp doesn't connected to FPGA at DE2 board
+    output logic [     6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE1 board
     output logic [     6:0] HEX1,
     output logic [     6:0] HEX2,
     output logic [     6:0] HEX3,
-    output logic [     6:0] HEX4,
-    output logic [     6:0] HEX5,
-    output logic [     6:0] HEX6,
-    output logic [     6:0] HEX7,
 
-    output                VGA_CLK,
-    output                VGA_HS,
-    output                VGA_VS,
-    output                VGA_BLANK,
-    output                VGA_SYNC,
+    output                  VGA_HS,
+    output                  VGA_VS,
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 9:0] VGA_B,
+    output [w_blue   - 1:0] VGA_B,
 
     input                   UART_RXD,
     output                  UART_TXD,
@@ -76,14 +69,17 @@ module board_specific_top
     wire [             7:0] abcdefgh;
     wire [ w_digit   - 1:0] digit;
 
+    // Graphics
+
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
-    wire [ w_red     - 1:0] vga_red_4b;
-    wire [ w_green   - 1:0] vga_green_4b;
-    wire [ w_blue    - 1:0] vga_blue_4b;
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
 
     // Microphone, sound output and UART
+
     wire [            23:0] mic;
     wire [            15:0] sound;
 
@@ -101,7 +97,7 @@ module board_specific_top
         .clk_mhz       (   clk_mhz       ),
         .w_key         (   w_key         ),
         .w_sw          (   w_lab_sw      ),
-        .w_led         (   w_led - w_digit ),           // The last 8 LEDR are used like a 7SEG dp
+        .w_led         (   w_led         ),
         .w_digit       (   w_digit       ),
         .w_gpio        (   w_gpio        ),
 
@@ -128,9 +124,6 @@ module board_specific_top
 
         .x             (   x                ),
         .y             (   y                ),
-        .red           (   vga_red_4b       ),
-        .green         (   vga_green_4b     ),
-        .blue          (   vga_blue_4b      ),
 
         .red           (   VGA_R            ),
         .green         (   VGA_G            ),
@@ -147,46 +140,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_led; // Last 8 LEDR are used like a 7SEG dp
-
-    assign VGA_R   = { vga_red_4b,   4'd0 };
-    assign VGA_G   = { vga_green_4b, 4'd0 };
-    assign VGA_B   = { vga_blue_4b,  4'd0 };
-
-    assign VGA_BLANK = 1'b1;
-    assign VGA_SYNC  = 0;
-
-    // Divide VGA DAC clock from clk_mhz to vga_clock
-    localparam CLK_DIV = $clog2 (clk_mhz / vga_clock) - 1;
-
-    logic [CLK_DIV:0] clk_en_cnt;
-    logic clk_en;
-
-    always_ff @ (posedge clk or posedge rst)
-    begin
-        if (rst)
-        begin
-            clk_en_cnt <= 'b0;
-            clk_en     <= 'b0;
-        end
-        else
-        begin
-            if (clk_en_cnt == (clk_mhz / vga_clock) - 1)
-            begin
-                clk_en_cnt <= 'b0;
-                clk_en     <= 'b1;
-            end
-            else
-            begin
-                clk_en_cnt <= clk_en_cnt + 1;
-                clk_en     <= 'b0;
-            end
-        end
-    end
-
-    assign VGA_CLK = clk_en;
-
-    //------------------------------------------------------------------------
     wire [$left (abcdefgh):0] hgfedcba;
 
     generate
@@ -219,18 +172,19 @@ module board_specific_top
 
         // positive logic
 
-        assign LEDR [    w_led - w_digit] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
-        assign LEDR [w_led - w_digit + 1] = digit [1] ? hgfedcba [$left (HEX1) + 1] : '0;
-        assign LEDR [w_led - w_digit + 2] = digit [2] ? hgfedcba [$left (HEX2) + 1] : '0;
-        assign LEDR [w_led - w_digit + 3] = digit [3] ? hgfedcba [$left (HEX3) + 1] : '0;
-        assign LEDR [w_led - w_digit + 4] = digit [4] ? hgfedcba [$left (HEX4) + 1] : '0;
-        assign LEDR [w_led - w_digit + 5] = digit [5] ? hgfedcba [$left (HEX5) + 1] : '0;
-        assign LEDR [w_led - w_digit + 6] = digit [6] ? hgfedcba [$left (HEX6) + 1] : '0;
-        assign LEDR [w_led - w_digit + 7] = digit [7] ? hgfedcba [$left (HEX7) + 1] : '0;
+        always_comb
+        begin
+            LEDR = '0;
+
+            for (int i = 0; i < w_digit; i ++)
+                LEDR [$bits (LEDR) - w_digit + i]
+                    = digit [i] ? hgfedcba [$left (HEX0) + 1] : '0;
+        end
 
     `else
 
         always_ff @ (posedge clk or posedge rst)
+        begin
             if (rst)
             begin
                 { HEX0, HEX1, HEX2, HEX3 } <= '1;
@@ -247,6 +201,7 @@ module board_specific_top
                     if (digit [i])
                         LEDR [$bits (LEDR) - w_digit + i] <=  hgfedcba [$left (HEX0) + 1];
             end
+        end
 
     `endif
 
@@ -284,15 +239,15 @@ module board_specific_top
         (
             .clk   ( clk      ),
             .rst   ( rst      ),
-            .lr    ( GPIO_1 [0] ),    // JP2 pin 1
-            .ws    ( GPIO_1 [2] ),    // JP2 pin 3
-            .sck   ( GPIO_1 [4] ),    // JP2 pin 5
-            .sd    ( GPIO_1 [5] ),    // JP2 pin 6
+            .lr    ( GPIO_1 [0] ),
+            .ws    ( GPIO_1 [2] ),
+            .sck   ( GPIO_1 [4] ),
+            .sd    ( GPIO_1 [5] ),
             .value ( mic      )
         );
 
-        assign GPIO_1 [1] = 1'b0;  // GND- JP2 pin 2
-        assign GPIO_1 [3] = 1'b1;  // VCC- JP2 pin 4
+        assign GPIO_1 [1] = 1'b0;  // GND
+        assign GPIO_1 [3] = 1'b1;  // VCC
 
     `endif
     
@@ -310,11 +265,11 @@ module board_specific_top
             .clk     ( clk       ),
             .reset   ( rst       ),
             .data_in ( sound     ),
-            .mclk    ( GPIO_1 [29] ),    // JP2 pin 38
-            .bclk    ( GPIO_1 [27] ),    // JP2 pin 36
-            .lrclk   ( GPIO_1 [23] ),    // JP2 pin 32
-            .sdata   ( GPIO_1 [25] )     // JP2 pin 34
-        );				 // JP2 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+            .mclk    ( GPIO_1 [33] ),
+            .bclk    ( GPIO_1 [31] ),
+            .lrclk   ( GPIO_1 [27] ),
+            .sdata   ( GPIO_1 [29] )
+        );
 
 
     `endif

@@ -49,7 +49,7 @@ module board_specific_top
     output                VGA_SYNC,
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 9:0] VGA_B,
+    output [w_blue   - 1:0] VGA_B,
 
     input                   UART_RXD,
     output                  UART_TXD,
@@ -76,12 +76,14 @@ module board_specific_top
     wire [             7:0] abcdefgh;
     wire [ w_digit   - 1:0] digit;
 
+    wire  [                  3:0] vga_red_4b,vga_green_4b,vga_blue_4b;
+
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
-    wire [ w_red     - 1:0] vga_red_4b;
-    wire [ w_green   - 1:0] vga_green_4b;
-    wire [ w_blue    - 1:0] vga_blue_4b;
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
 
     // Microphone, sound output and UART
     wire [            23:0] mic;

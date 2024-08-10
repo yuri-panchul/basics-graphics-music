@@ -42,14 +42,11 @@ module board_specific_top
     output logic [     6:0] HEX6,
     output logic [     6:0] HEX7,
 
-    output                VGA_CLK,
     output                VGA_HS,
     output                VGA_VS,
-    output                VGA_BLANK,
-    output                VGA_SYNC,
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 9:0] VGA_B,
+    output [w_blue   - 1:0] VGA_B,
 
     input                   UART_RXD,
     output                  UART_TXD,
@@ -76,12 +73,14 @@ module board_specific_top
     wire [             7:0] abcdefgh;
     wire [ w_digit   - 1:0] digit;
 
+    wire  [                  3:0] vga_red_4b,vga_green_4b,vga_blue_4b;
+
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
-    wire [ w_red     - 1:0] vga_red_4b;
-    wire [ w_green   - 1:0] vga_green_4b;
-    wire [ w_blue    - 1:0] vga_blue_4b;
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
 
     // Microphone, sound output and UART
     wire [            23:0] mic;
@@ -148,45 +147,6 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_led; // Last 8 LEDR are used like a 7SEG dp
-
-    assign VGA_R   = { vga_red_4b,   4'd0 };
-    assign VGA_G   = { vga_green_4b, 4'd0 };
-    assign VGA_B   = { vga_blue_4b,  4'd0 };
-
-    assign VGA_BLANK = 1'b1;
-    assign VGA_SYNC  = 0;
-
-    // Divide VGA DAC clock from clk_mhz to vga_clock
-    localparam CLK_DIV = $clog2 (clk_mhz / vga_clock) - 1;
-
-    logic [CLK_DIV:0] clk_en_cnt;
-    logic clk_en;
-
-    always_ff @ (posedge clk or posedge rst)
-    begin
-        if (rst)
-        begin
-            clk_en_cnt <= 'b0;
-            clk_en     <= 'b0;
-        end
-        else
-        begin
-            if (clk_en_cnt == (clk_mhz / vga_clock) - 1)
-            begin
-                clk_en_cnt <= 'b0;
-                clk_en     <= 'b1;
-            end
-            else
-            begin
-                clk_en_cnt <= clk_en_cnt + 1;
-                clk_en     <= 'b0;
-            end
-        end
-    end
-
-    assign VGA_CLK = clk_en;
-
-    //------------------------------------------------------------------------
     wire [$left (abcdefgh):0] hgfedcba;
 
     generate
