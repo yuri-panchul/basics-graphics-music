@@ -256,16 +256,23 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-        inmp441_mic_i2s_receiver i_microphone
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz  ( clk_mhz    )
+        )
+        i_microphone
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .lr       ( TF_CS          ),
-            .ws       ( TF_MOSI        ),
-            .sck      ( TF_SCLK        ),
-            .sd       ( TF_MISO        ),
-            .value    ( mic            )
+            .clk      ( clk        ),
+            .rst      ( rst        ),
+            .lr       ( PMOD_0 [0] ),
+            .ws       ( PMOD_0 [1] ),
+            .sck      ( PMOD_0 [2] ),
+            .sd       ( PMOD_0 [6] ),
+            .value    ( mic        )
         );
+
+        assign PMOD_0 [4] = 1'b0;  // GND
+        assign PMOD_0 [5] = 1'b1;  // VCC
 
     `endif
 
@@ -275,7 +282,7 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz  ( clk_mhz        )
+            .clk_mhz  ( clk_mhz    )
         )
         inst_audio_out
         (

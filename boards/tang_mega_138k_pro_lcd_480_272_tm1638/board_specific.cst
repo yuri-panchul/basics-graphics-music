@@ -52,7 +52,7 @@ IO_LOC "UART2_RXD"     V16;
 IO_LOC "UART2_TXD"     U16;
 
 IO_LOC "PMOD_0[0]"     N18;  # Top
-IO_LOC "PMOD_0[1]"     L22;
+IO_LOC "PMOD_0[1]"     N26;
 IO_LOC "PMOD_0[2]"     R16;
 IO_LOC "PMOD_0[3]"     R17;
 # GND
