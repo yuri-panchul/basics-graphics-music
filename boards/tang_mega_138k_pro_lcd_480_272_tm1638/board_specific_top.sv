@@ -180,7 +180,10 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( gpio          )
+
+        .gpio          ( { PMOD_2,
+                           PMOD_1,
+                           PMOD_0  }   )
     );
 
     //------------------------------------------------------------------------
@@ -217,9 +220,9 @@ module board_specific_top
         .digit    ( tm_digit       ),
         .ledr     ( tm_led         ),
         .keys     ( tm_key         ),
-        .sio_data ( GPIO [0]       ),
-        .sio_clk  ( GPIO [1]       ),
-        .sio_stb  ( GPIO [2]       )
+        .sio_data ( PMOD_2 [5]     ),
+        .sio_clk  ( PMOD_2 [6]     ),
+        .sio_stb  ( PMOD_2 [7]     )
     );
 
     `endif
@@ -250,7 +253,7 @@ module board_specific_top
     `endif
 
     //------------------------------------------------------------------------
-/*
+
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
         inmp441_mic_i2s_receiver i_microphone
@@ -276,15 +279,15 @@ module board_specific_top
         )
         inst_audio_out
         (
-            .clk      ( clk            ),
-            .reset    ( rst            ),
-            .data_in  ( sound          ),
-            .mclk     ( SMALL_LCD_DATA ),
-            .bclk     ( SMALL_LCD_CLK  ),
-            .lrclk    ( SMALL_LCD_RS   ),
-            .sdata    ( SMALL_LCD_CS   )
+            .clk      ( clk        ),
+            .reset    ( rst        ),
+            .data_in  ( sound      ),
+            .mclk     ( PMOD_1 [4] ),
+            .bclk     ( PMOD_1 [5] ),
+            .sdata    ( PMOD_1 [6] ),
+            .lrclk    ( PMOD_1 [7] )
         );
 
     `endif
-*/
+
 endmodule

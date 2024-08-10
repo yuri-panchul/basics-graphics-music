@@ -65,7 +65,7 @@ IO_LOC "PMOD_0[7]"     T24;
 # GND
 # 3V3
 
-IO_LOC "PMOD_1[0]"     С24;  # Top
+IO_LOC "PMOD_1[0]"     C24;  # Top
 IO_LOC "PMOD_1[1]"     E25;
 IO_LOC "PMOD_1[2]"     L17;
 IO_LOC "PMOD_1[3]"     H14;
