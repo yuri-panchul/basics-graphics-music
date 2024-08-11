@@ -55,7 +55,7 @@ PLLA PLLA_inst (
     .MDWDI({gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd})
 );
 
-defparam PLLA_inst.FCLKIN = "27";
+defparam PLLA_inst.FCLKIN = "50";
 defparam PLLA_inst.IDIV_SEL = 1;
 defparam PLLA_inst.FBDIV_SEL = 1;
 defparam PLLA_inst.CLKFB_SEL = "INTERNAL";
