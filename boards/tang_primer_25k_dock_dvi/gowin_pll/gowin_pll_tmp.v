@@ -5,15 +5,15 @@
 //Part Number: GW5A-LV25MG121NC1/I0
 //Device: GW5A-25
 //Device Version: A
-//Created Time: Sun Aug  4 00:59:08 2024
+//Created Time: Sat Aug 10 23:46:09 2024
 
 //Change the instance name and port connections to the signal names
 //--------Copy here to design--------
-
-    /*Gowin_PLL your_instance_name(
+/*
+    Gowin_PLL your_instance_name(
         .lock(lock_o), //output lock
         .clkout0(clkout0_o), //output clkout0
         .clkin(clkin_i) //input clkin
-    );*/
-
+    );
+*/
 //--------Copy end-------------------
