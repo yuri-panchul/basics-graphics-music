@@ -15,14 +15,14 @@
 -rst_pwd false
 -rst_i false
 -rst_o false
--fclkin 27
+-fclkin 50
 -idiv_sel 1
 -clkfb_sel 0
 -fbdiv_sel 1
 -en_lock true
 -dyn_dpa_en false
 -clkout0_bypass false
--odiv0_sel 9
+-odiv0_sel 8
 -odiv0_frac_sel 0
 -clkout0_dt_dir 1
 -clkout0_dt_step 0
@@ -39,5 +39,5 @@
 -en_clkout5 false
 -en_clkout6 false
 -en_clkfbout false
--mdiv_sel 42
+-mdiv_sel 20
 -mdiv_frac_sel 0
