@@ -12,6 +12,42 @@ set_location_assignment PIN_V11 -to FPGA_CLK1_50
 # set_location_assignment PIN_Y13 -to FPGA_CLK2_50
 # set_location_assignment PIN_E11 -to FPGA_CLK3_50
 
+set_location_assignment PIN_U10  -to HDMI_I2C_SCL
+set_location_assignment PIN_AA4  -to HDMI_I2C_SDA
+set_location_assignment PIN_T13  -to HDMI_I2S
+set_location_assignment PIN_T11  -to HDMI_LRCLK
+set_location_assignment PIN_U11  -to HDMI_MCLK
+set_location_assignment PIN_T12  -to HDMI_SCLK
+set_location_assignment PIN_AG5  -to HDMI_TX_CLK
+set_location_assignment PIN_AD19 -to HDMI_TX_DE
+set_location_assignment PIN_AD12 -to HDMI_TX_D[0]
+set_location_assignment PIN_AE12 -to HDMI_TX_D[1]
+set_location_assignment PIN_W8   -to HDMI_TX_D[2]
+set_location_assignment PIN_Y8   -to HDMI_TX_D[3]
+set_location_assignment PIN_AD11 -to HDMI_TX_D[4]
+set_location_assignment PIN_AD10 -to HDMI_TX_D[5]
+set_location_assignment PIN_AE11 -to HDMI_TX_D[6]
+set_location_assignment PIN_Y5   -to HDMI_TX_D[7]
+set_location_assignment PIN_AF10 -to HDMI_TX_D[8]
+set_location_assignment PIN_Y4   -to HDMI_TX_D[9]
+set_location_assignment PIN_AE9  -to HDMI_TX_D[10]
+set_location_assignment PIN_AB4  -to HDMI_TX_D[11]
+set_location_assignment PIN_AE7  -to HDMI_TX_D[12]
+set_location_assignment PIN_AF6  -to HDMI_TX_D[13]
+set_location_assignment PIN_AF8  -to HDMI_TX_D[14]
+set_location_assignment PIN_AF5  -to HDMI_TX_D[15]
+set_location_assignment PIN_AE4  -to HDMI_TX_D[16]
+set_location_assignment PIN_AH2  -to HDMI_TX_D[17]
+set_location_assignment PIN_AH4  -to HDMI_TX_D[18]
+set_location_assignment PIN_AH5  -to HDMI_TX_D[19]
+set_location_assignment PIN_AH6  -to HDMI_TX_D[20]
+set_location_assignment PIN_AG6  -to HDMI_TX_D[21]
+set_location_assignment PIN_AF9  -to HDMI_TX_D[22]
+set_location_assignment PIN_AE8  -to HDMI_TX_D[23]
+set_location_assignment PIN_T8   -to HDMI_TX_HS
+set_location_assignment PIN_AF11 -to HDMI_TX_INT
+set_location_assignment PIN_V13  -to HDMI_TX_VS
+
 set_location_assignment PIN_AH17 -to KEY[0]
 set_location_assignment PIN_AH16 -to KEY[1]
 

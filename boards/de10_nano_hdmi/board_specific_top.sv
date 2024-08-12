@@ -4,7 +4,7 @@
 //--- VGA external ---
 // `define VGA666_BOARD
 // `define PMOD_VGA_BOARD
- `define MISTER_IO_BOARD
+// `define MISTER_IO_BOARD
 
 module board_specific_top
 # (
