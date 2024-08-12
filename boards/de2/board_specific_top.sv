@@ -49,7 +49,7 @@ module board_specific_top
     output                VGA_SYNC,
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 9:0] VGA_B,
+    output [w_blue   - 1:0] VGA_B,
 
     input                   UART_RXD,
     output                  UART_TXD,
@@ -61,6 +61,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     localparam w_lab_sw = w_sw - 1;  // One sw is used as a reset
+    localparam w_lab_led = w_led - w_digit;
 
     //------------------------------------------------------------------------
 
@@ -70,6 +71,8 @@ module board_specific_top
     // Keys, switches, LEDs
 
     wire [ w_lab_sw  - 1:0] lab_sw = SW [w_lab_sw - 1:0];
+    // wire [ w_lab_led - 1:0] lab_led;				// FIX?
+    // wire [ w_led - w_digit - 1:0] lab_led;
 
     // A dynamic seven-segment display
 
@@ -128,13 +131,10 @@ module board_specific_top
 
         .x             (   x                ),
         .y             (   y                ),
+
         .red           (   vga_red_4b       ),
         .green         (   vga_green_4b     ),
         .blue          (   vga_blue_4b      ),
-
-        .red           (   VGA_R            ),
-        .green         (   VGA_G            ),
-        .blue          (   VGA_B            ),
 
         .mic           (   mic              ),
         .sound         (   sound            ),
@@ -147,7 +147,8 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_led; // Last 8 LEDR are used like a 7SEG dp
+    //assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_led; // Last 8 LEDR are used like a 7SEG dp HACK?
+    // assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_lab_led; // Last 8 LEDR are used like a 7SEG dp HACK?
 
     assign VGA_R   = { vga_red_4b,   4'd0 };
     assign VGA_G   = { vga_green_4b, 4'd0 };
@@ -188,6 +189,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
     wire [$left (abcdefgh):0] hgfedcba;
+    logic [$left    (digit):0] dp;
 
     generate
         genvar i;
@@ -216,10 +218,14 @@ module board_specific_top
         assign HEX1  = digit [1] ? ~ hgfedcba [$left (HEX1):0]   : '1;
         assign HEX2  = digit [2] ? ~ hgfedcba [$left (HEX2):0]   : '1;
         assign HEX3  = digit [3] ? ~ hgfedcba [$left (HEX3):0]   : '1;
+        assign HEX4  = digit [4] ? ~ hgfedcba [$left (HEX4):0]   : '1;
+        assign HEX5  = digit [5] ? ~ hgfedcba [$left (HEX5):0]   : '1;
+        assign HEX6  = digit [6] ? ~ hgfedcba [$left (HEX6):0]   : '1;
+        assign HEX7  = digit [7] ? ~ hgfedcba [$left (HEX7):0]   : '1;
 
         // positive logic
 
-        assign LEDR [    w_led - w_digit] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
+        assign LEDR [w_led - w_digit    ] = digit [0] ? hgfedcba [$left (HEX0) + 1] : '0;
         assign LEDR [w_led - w_digit + 1] = digit [1] ? hgfedcba [$left (HEX1) + 1] : '0;
         assign LEDR [w_led - w_digit + 2] = digit [2] ? hgfedcba [$left (HEX2) + 1] : '0;
         assign LEDR [w_led - w_digit + 3] = digit [3] ? hgfedcba [$left (HEX3) + 1] : '0;
@@ -233,7 +239,7 @@ module board_specific_top
         always_ff @ (posedge clk or posedge rst)
             if (rst)
             begin
-                { HEX0, HEX1, HEX2, HEX3 } <= '1;
+                { HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 } <= '1;
                 LEDR <= '0;
             end
             else
@@ -242,6 +248,20 @@ module board_specific_top
                 if (digit [1]) HEX1 <= ~ hgfedcba [$left (HEX1):0];
                 if (digit [2]) HEX2 <= ~ hgfedcba [$left (HEX2):0];
                 if (digit [3]) HEX3 <= ~ hgfedcba [$left (HEX3):0];
+                if (digit [4]) HEX4 <= ~ hgfedcba [$left (HEX4):0];
+                if (digit [5]) HEX5 <= ~ hgfedcba [$left (HEX5):0];
+                if (digit [6]) HEX6 <= ~ hgfedcba [$left (HEX6):0];
+                if (digit [7]) HEX7 <= ~ hgfedcba [$left (HEX7):0];
+
+                if (digit [0]) dp[0] <=  hgfedcba [$left (HEX0) + 1];
+                if (digit [1]) dp[1] <=  hgfedcba [$left (HEX1) + 1];
+                if (digit [2]) dp[2] <=  hgfedcba [$left (HEX2) + 1];
+                if (digit [3]) dp[3] <=  hgfedcba [$left (HEX3) + 1];
+                if (digit [4]) dp[4] <=  hgfedcba [$left (HEX4) + 1];
+                if (digit [5]) dp[5] <=  hgfedcba [$left (HEX5) + 1];
+                if (digit [6]) dp[6] <=  hgfedcba [$left (HEX6) + 1];
+                if (digit [7]) dp[7] <=  hgfedcba [$left (HEX7) + 1];
+
 
                 for (int i = 0; i < w_digit; i ++)
                     if (digit [i])
@@ -314,7 +334,7 @@ module board_specific_top
             .bclk    ( GPIO_1 [27] ),    // JP2 pin 36
             .lrclk   ( GPIO_1 [23] ),    // JP2 pin 32
             .sdata   ( GPIO_1 [25] )     // JP2 pin 34
-        );				 // JP2 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+        );                               // JP2 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
 
     `endif
