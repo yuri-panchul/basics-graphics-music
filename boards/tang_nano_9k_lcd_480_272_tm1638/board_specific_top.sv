@@ -1,9 +1,25 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
+//----------------------------------------------------------------------------
+
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `endif
+
+`ifdef USE_LCD_800_480
+    `define LCD_MODULE         lcd_800_480
+
+    `define LCD_SCREEN_WIDTH   800
+    `define LCD_SCREEN_HEIGHT  480
+`else
+    `define LCD_MODULE         lcd_480_272
+
+    `define LCD_SCREEN_WIDTH   480
+    `define LCD_SCREEN_HEIGHT  272
+`endif
+
+//----------------------------------------------------------------------------
 
 module board_specific_top
 # (
@@ -16,8 +32,8 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 10,
 
-              screen_width  = 480,
-              screen_height = 272,
+              screen_width  = `LCD_SCREEN_WIDTH,
+              screen_height = `LCD_SCREEN_HEIGHT,
 
               w_red         = 5,
               w_green       = 6,
@@ -258,7 +274,7 @@ module board_specific_top
             .clkin  ( clk          )   // 27 MHz
         );
 
-        lcd_480_272 i_lcd
+        `LCD_MODULE i_lcd
         (
             .PixelClk  (   LARGE_LCD_CK ),
             .nRST      ( ~ rst          ),
