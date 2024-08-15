@@ -7,18 +7,6 @@
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `endif
 
-`ifdef USE_LCD_800_480
-    `define LCD_MODULE         lcd_800_480
-
-    `define LCD_SCREEN_WIDTH   800
-    `define LCD_SCREEN_HEIGHT  480
-`else
-    `define LCD_MODULE         lcd_480_272
-
-    `define LCD_SCREEN_WIDTH   480
-    `define LCD_SCREEN_HEIGHT  272
-`endif
-
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -32,8 +20,17 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 10,
 
-              screen_width  = `LCD_SCREEN_WIDTH,
-              screen_height = `LCD_SCREEN_HEIGHT,
+              `ifdef USE_LCD_800_480
+
+              screen_width  = 800,
+              screen_height = 480,
+
+              `else
+
+              screen_width  = 480,
+              screen_height = 272,
+
+              `endif
 
               w_red         = 5,
               w_green       = 6,
@@ -268,23 +265,47 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        Gowin_rPLL i_Gowin_rPLL
+        `ifdef USE_LCD_800_480
+
+            wire lcd_module_clk;
+
+            Gowin_rPLL i_Gowin_rPLL
+            (
+                .clkout  ( lcd_module_clk ),  // 200    MHz
+                .clkoutd ( LARGE_LCD_CK   ),  //  33.33 MHz
+                .clkin   ( clk            )   //  27    MHz
+            );
+
+        `else  // Using 480x272
+
+            Gowin_rPLL i_Gowin_rPLL
+            (
+                .clkout ( LARGE_LCD_CK ),  //  9 MHz
+                .clkin  ( clk          )   // 27 MHz
+            );
+
+        `endif
+
+        `ifdef USE_LCD_800_480
+        lcd_800_480
+        `else
+        lcd_480_272
+        `endif
+        i_lcd
         (
-            .clkout ( LARGE_LCD_CK ),  //  9 MHz
-            .clkin  ( clk          )   // 27 MHz
-        );
+            `ifdef USE_LCD_800_480
+            .CLK       (   lcd_module_clk ),
+            `endif
 
-        `LCD_MODULE i_lcd
-        (
-            .PixelClk  (   LARGE_LCD_CK ),
-            .nRST      ( ~ rst          ),
+            .PixelClk  (   LARGE_LCD_CK   ),
+            .nRST      ( ~ rst            ),
 
-            .LCD_DE    (   LARGE_LCD_DE ),
-            .LCD_HSYNC (   LARGE_LCD_HS ),
-            .LCD_VSYNC (   LARGE_LCD_VS ),
+            .LCD_DE    (   LARGE_LCD_DE   ),
+            .LCD_HSYNC (   LARGE_LCD_HS   ),
+            .LCD_VSYNC (   LARGE_LCD_VS   ),
 
-            .x         (   x            ),
-            .y         (   y            )
+            .x         (   x              ),
+            .y         (   y              )
         );
 
         assign LARGE_LCD_INIT = 1'b0;
