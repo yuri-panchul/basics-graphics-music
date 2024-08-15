@@ -280,8 +280,8 @@ module board_specific_top
 
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout ( LARGE_LCD_CK ),  //  9 MHz
-                .clkin  ( clk          )   // 27 MHz
+                .clkout  ( LARGE_LCD_CK   ),  //  9 MHz
+                .clkin   ( clk            )   // 27 MHz
             );
 
         `endif
