@@ -23,7 +23,7 @@ module lcd_800_480
 
     // Modified for basic-graphics-music: Added x and y outputs
 
-    output [8:0] x,
+    output [9:0] x,
     output [8:0] y
 );
 
@@ -138,7 +138,7 @@ module lcd_800_480
 
     // Modified for basic-graphics-music: Added x and y outputs
 
-    assign x = 9' (PixelCount - H_BackPorch);
-    assign y = 9' (LineCount  - V_BackPorch);
+    assign x = 10' (PixelCount - H_BackPorch);
+    assign y =  9' (LineCount  - V_BackPorch);
 
 endmodule
