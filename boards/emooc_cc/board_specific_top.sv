@@ -136,16 +136,19 @@ module board_specific_top
     assign GPIO_P1 [14] = vga_blue [1];  // PIN_B12
     assign GPIO_P1 [15] = vga_blue [0];  // PIN_A13
 
-    // type - without parameters - and an instance of a microphone
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz      )
+    )
+    i_microphone
     (
-        .clk   ( clk          ),
-        .rst   ( rst          ),
-        .lr    ( GPIO_P1 [16] ), // PIN_B13
-        .ws    ( GPIO_P1 [17] ), // PIN_A14
-        .sck   ( GPIO_P1 [18] ), // PIN_B14
-        .sd    ( GPIO_P1 [19] ), // PIN_A15
-        .value ( mic          )
+        .clk     ( clk          ),
+        .rst     ( rst          ),
+        .lr      ( GPIO_P1 [16] ),  // PIN_B13
+        .ws      ( GPIO_P1 [17] ),  // PIN_A14
+        .sck     ( GPIO_P1 [18] ),  // PIN_B14
+        .sd      ( GPIO_P1 [19] ),  // PIN_A15
+        .value   ( mic          )
     );
 
 endmodule

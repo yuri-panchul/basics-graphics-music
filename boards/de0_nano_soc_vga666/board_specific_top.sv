@@ -251,33 +251,37 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .clk_mhz ( clk_mhz    ),
-        .w_digit ( w_tm_digit )        // fake parameter, digit count is hardcode in tm1638_board_controller
+        .clk_mhz  ( clk_mhz    ),
+        .w_digit  ( w_tm_digit )    // fake parameter, digit count is hardcode in tm1638_board_controller
     )
     i_ledkey
     (
-        .clk        ( clk           ),
-        .rst        ( rst           ), // Don't make reset tm1638_board_controller by it's tm_key
-        .hgfedcba   ( hgfedcba      ),
-        .digit      ( tm_digit      ),
-        .ledr       ( tm_led        ),
-        .keys       ( tm_key        ),
-        .sio_clk    ( GPIO_0 [27]   ), // JP1 pin 32
-        .sio_stb    ( GPIO_0 [29]   ), // JP1 pin 34
-        .sio_data   ( GPIO_0 [31]   )  // JP1 pin 36
-    );                                 // JP1 pin 30 - GND, pin 29 - VCC 3.3V
+        .clk      ( clk         ),
+        .rst      ( rst         ),  // Don't make reset tm1638_board_controller by it's tm_key
+        .hgfedcba ( hgfedcba    ),
+        .digit    ( tm_digit    ),
+        .ledr     ( tm_led      ),
+        .keys     ( tm_key      ),
+        .sio_clk  ( GPIO_0 [27] ),  // JP1 pin 32
+        .sio_stb  ( GPIO_0 [29] ),  // JP1 pin 34
+        .sio_data ( GPIO_0 [31] )   // JP1 pin 36
+    );                              // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz    )
+    )
+    i_microphone
     (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO_0 [0] ),  // JP1 pin 1
-        .ws    ( GPIO_0 [2] ),  // JP1 pin 3
-        .sck   ( GPIO_0 [4] ),  // JP1 pin 5
-        .sd    ( GPIO_0 [5] ),  // JP1 pin 6
-        .value ( mic        )
+        .clk     ( clk        ),
+        .rst     ( rst        ),
+        .lr      ( GPIO_0 [0] ),  // JP1 pin 1
+        .ws      ( GPIO_0 [2] ),  // JP1 pin 3
+        .sck     ( GPIO_0 [4] ),  // JP1 pin 5
+        .sd      ( GPIO_0 [5] ),  // JP1 pin 6
+        .value   ( mic        )
     );
 
     assign GPIO_0 [1] = 1'b0;   // GND - JP1 pin 2

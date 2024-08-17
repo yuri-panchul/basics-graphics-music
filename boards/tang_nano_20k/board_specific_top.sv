@@ -172,15 +172,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz    )
+    )
+    i_microphone
     (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO [18]  ),
-        .ws    ( GPIO [19]  ),
-        .sck   ( GPIO [20]  ),
-        .sd    ( GPIO [17]  ),
-        .value ( mic        )
+        .clk     ( clk        ),
+        .rst     ( rst        ),
+        .lr      ( GPIO [18]  ),
+        .ws      ( GPIO [19]  ),
+        .sck     ( GPIO [20]  ),
+        .sd      ( GPIO [17]  ),
+        .value   ( mic        )
     );
 
     assign GPIO [21] = 1'b0;  // GND

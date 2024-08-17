@@ -167,15 +167,19 @@ module board_specific_top
 
     `else  // USE_INMP_441_MIC
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz   )
+    )
+    i_microphone
     (
-        .clk   ( clk       ),
-        .rst   ( rst       ),
-        .lr    ( LCD_D [5] ),
-        .ws    ( LCD_D [3] ),
-        .sck   ( LCD_D [1] ),
-        .sd    ( LCD_D [2] ),
-        .value ( mic       )
+        .clk     ( clk       ),
+        .rst     ( rst       ),
+        .lr      ( LCD_D [5] ),
+        .ws      ( LCD_D [3] ),
+        .sck     ( LCD_D [1] ),
+        .sd      ( LCD_D [2] ),
+        .value   ( mic       )
     );
 
     assign LCD_D [6] = 1'b0;  // GND

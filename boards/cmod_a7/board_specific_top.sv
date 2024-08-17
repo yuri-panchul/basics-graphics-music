@@ -103,15 +103,19 @@ module board_specific_top
         .gpio     (          )
     );
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz  )
+    )
+    i_microphone
     (
-        .clk   ( clk       ),
-        .rst   ( rst       ),
-        .lr    ( ja [4] ),
-        .ws    ( ja [5] ),
-        .sck   ( ja [7] ),
-        .sd    ( ja [6] ),
-        .value ( mic       )
+        .clk     ( clk      ),
+        .rst     ( rst      ),
+        .lr      ( ja [4]   ),
+        .ws      ( ja [5]   ),
+        .sck     ( ja [7]   ),
+        .sd      ( ja [6]   ),
+        .value   ( mic      )
     );
 
 endmodule

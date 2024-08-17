@@ -164,15 +164,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz     )
+    )
+    i_microphone
     (
-        .clk   (   clk         ),
-        .rst   (   rst         ),
-        .lr    (   GPIO0_D [2] ), // JP4 pin 5
-        .ws    (   GPIO0_D [4] ), // JP4 pin 7
-        .sck   (   GPIO0_D [6] ), // JP4 pin 9
-        .sd    (   GPIO0_D [7] ), // JP4 pin 10
-        .value (   mic         )
+        .clk     ( clk         ),
+        .rst     ( rst         ),
+        .lr      ( GPIO0_D [2] ),  // JP4 pin 5
+        .ws      ( GPIO0_D [4] ),  // JP4 pin 7
+        .sck     ( GPIO0_D [6] ),  // JP4 pin 9
+        .sd      ( GPIO0_D [7] ),  // JP4 pin 10
+        .value   ( mic         )
     );
 
     assign GPIO0_D [3] = 1'b0;    // GND - JP4 pin 6
@@ -182,7 +186,7 @@ module board_specific_top
 
     i2s_audio_out
     # (
-        .clk_mhz ( clk_mhz     )
+        .clk_mhz ( clk_mhz      )
     )
     inst_audio_out
     (

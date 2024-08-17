@@ -156,15 +156,20 @@ module board_specific_top
         );
 
     `endif
-    inmp441_mic_i2s_receiver i_microphone
+
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz   )
+    )
+    i_microphone
     (
-        .clk   ( clk       ),
-        .rst   ( rst       ),
-        .lr    ( GPIO [5]  ), // P33
-        .ws    ( GPIO [3]  ), // P31
-        .sck   ( GPIO [1]  ), // P28
-        .sd    ( GPIO [0]  ), // P30
-        .value ( mic       )
+        .clk     ( clk       ),
+        .rst     ( rst       ),
+        .lr      ( GPIO [5]  ), // P33
+        .ws      ( GPIO [3]  ), // P31
+        .sck     ( GPIO [1]  ), // P28
+        .sd      ( GPIO [0]  ), // P30
+        .value   ( mic       )
     );
 
     assign GPIO [4] = 1'b0;  // P34 - GND

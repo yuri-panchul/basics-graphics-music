@@ -121,9 +121,9 @@ module board_specific_top
     (
         .clk   ( clk         ),
         .rst   ( rst         ),
-        .cs    ( GPIO_1 [26] ), // J2 pin 29
-        .sck   ( GPIO_1 [32] ), // J2 pin 35
-        .sdo   ( GPIO_1 [30] ), // J2 pin 33
+        .cs    ( GPIO_1 [26] ),  // J2 pin 29
+        .sck   ( GPIO_1 [32] ),  // J2 pin 35
+        .sdo   ( GPIO_1 [30] ),  // J2 pin 33
         .value ( mic_12      )
     );
 
@@ -132,15 +132,19 @@ module board_specific_top
 
     `else
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz    )
+    )
+    i_microphone
     (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO_0 [0] ), // J1 pin 36
-        .ws    ( GPIO_0 [2] ), // J1 pin 34
-        .sck   ( GPIO_0 [4] ), // J1 pin 32
-        .sd    ( GPIO_0 [5] ), // J1 pin 31
-        .value ( mic        )
+        .clk     ( clk        ),
+        .rst     ( rst        ),
+        .lr      ( GPIO_0 [0] ),  // J1 pin 36
+        .ws      ( GPIO_0 [2] ),  // J1 pin 34
+        .sck     ( GPIO_0 [4] ),  // J1 pin 32
+        .sd      ( GPIO_0 [5] ),  // J1 pin 31
+        .value   ( mic        )
     );
 
     assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
@@ -159,10 +163,10 @@ module board_specific_top
         .clk     ( clk         ),
         .reset   ( rst         ),
         .data_in ( sound       ),
-        .mclk    ( GPIO_0 [12] ), // J1 pin 24
-        .bclk    ( GPIO_0 [10] ), // J1 pin 26
-        .lrclk   ( GPIO_0 [ 6] ), // J1 pin 30
-        .sdata   ( GPIO_0 [ 8] )  // J1 pin 28
-    );                            // J1 pin 37 - GND, pin 40 - D3V3 3.3V (30-45 mA)
+        .mclk    ( GPIO_0 [12] ),  // J1 pin 24
+        .bclk    ( GPIO_0 [10] ),  // J1 pin 26
+        .lrclk   ( GPIO_0 [ 6] ),  // J1 pin 30
+        .sdata   ( GPIO_0 [ 8] )   // J1 pin 28
+    );                             // J1 pin 37 - GND, pin 40 - D3V3 3.3V (30-45 mA)
 
 endmodule

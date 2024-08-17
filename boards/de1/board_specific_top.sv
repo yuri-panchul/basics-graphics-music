@@ -235,15 +235,19 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-        inmp441_mic_i2s_receiver i_microphone
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( clk_mhz    )
+        )
+        i_microphone
         (
-            .clk   ( clk      ),
-            .rst   ( rst      ),
-            .lr    ( GPIO_1 [0] ),
-            .ws    ( GPIO_1 [2] ),
-            .sck   ( GPIO_1 [4] ),
-            .sd    ( GPIO_1 [5] ),
-            .value ( mic      )
+            .clk     ( clk        ),
+            .rst     ( rst        ),
+            .lr      ( GPIO_1 [0] ),
+            .ws      ( GPIO_1 [2] ),
+            .sck     ( GPIO_1 [4] ),
+            .sd      ( GPIO_1 [5] ),
+            .value   ( mic        )
         );
 
         assign GPIO_1 [1] = 1'b0;  // GND
@@ -258,19 +262,18 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz ( clk_mhz   )
+            .clk_mhz ( clk_mhz     )
         )
         inst_audio_out
         (
-            .clk     ( clk       ),
-            .reset   ( rst       ),
-            .data_in ( sound     ),
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
             .mclk    ( GPIO_1 [33] ),
             .bclk    ( GPIO_1 [31] ),
             .lrclk   ( GPIO_1 [27] ),
             .sdata   ( GPIO_1 [29] )
         );
-
 
     `endif
 

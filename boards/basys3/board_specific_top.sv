@@ -113,7 +113,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver
-    # (.clk_mhz (100))
+    # (.clk_mhz (clk_mhz))
     i_microphone
     (
         .clk   ( clk    ),

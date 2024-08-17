@@ -184,19 +184,20 @@ module board_specific_top
     //------------------------------------------------------------------------
 
 `ifdef ENABLE_INMP441
+
     inmp441_mic_i2s_receiver
     # (
         .clk_mhz ( clk_mhz )
     )
     i_microphone
     (
-        .clk   ( clk      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [5] ),
-        .ws    ( GPIO [4] ),
-        .sck   ( GPIO [3] ),
-        .sd    ( GPIO [6] ),
-        .value ( mic      )
+        .clk    ( clk      ),
+        .rst    ( rst      ),
+        .lr     ( GPIO [5] ),
+        .ws     ( GPIO [4] ),
+        .sck    ( GPIO [3] ),
+        .sd     ( GPIO [6] ),
+        .value  ( mic      )
     );
 `endif
 
