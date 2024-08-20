@@ -93,7 +93,7 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 
     > "$dir/Makefile"
     echo "NAME = `basename $main_src_dir`" >> "$dir/Makefile"
-    echo "INC = $peripheral_dir;$lab_dir/common" >> "$dir/Makefile"
+    echo "INC = $peripheral_dir:$lab_dir/common" >> "$dir/Makefile"
     echo "BOARD = $fpga_board" >> "$dir/Makefile"
 
     for verilog_src_dir in  \
@@ -107,7 +107,7 @@ setup_run_directory_for_fpga_synthesis_yosys ()
         $find_to_run  \
             "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
             -type f -name '*.sv' -not -name tb.sv  \
-            -printf "READ_VERILOG += -p \"read_verilog -sv %p\"\n" \
+            -printf "READ_VERILOG += -p \"read_verilog -sv -formal %p\"\n" \
             -printf "DEPS += %p\n" \
             >> "$dir/Makefile"
     done
