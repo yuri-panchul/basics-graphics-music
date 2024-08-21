@@ -1,19 +1,27 @@
 `include "game_config.svh"
 
 module game_overlap
+#(
+    parameter screen_width  = 640,
+              screen_height = 480,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
+)
+//----------------------------------------------------------------------------
 (
     input                       clk,
     input                       rst,
 
-    input      [`X_WIDTH - 1:0] left_1,
-    input      [`X_WIDTH - 1:0] right_1,
-    input      [`Y_WIDTH - 1:0] top_1,
-    input      [`Y_WIDTH - 1:0] bottom_1,
+    input      [w_x      - 1:0] left_1,
+    input      [w_x      - 1:0] right_1,
+    input      [w_y      - 1:0] top_1,
+    input      [w_y      - 1:0] bottom_1,
 
-    input      [`X_WIDTH - 1:0] left_2,
-    input      [`X_WIDTH - 1:0] right_2,
-    input      [`Y_WIDTH - 1:0] top_2,
-    input      [`Y_WIDTH - 1:0] bottom_2,
+    input      [w_x      - 1:0] left_2,
+    input      [w_x      - 1:0] right_2,
+    input      [w_y      - 1:0] top_2,
+    input      [w_y      - 1:0] bottom_2,
 
     output logic                  overlap
 );

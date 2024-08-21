@@ -17,6 +17,12 @@ module game_sprite_top
               ROW_6         = 32'h000cc000,
               ROW_7         = 32'h000cc000,
 
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height ),
+
               strobe_to_update_xy_counter_width = 20
 )
 
@@ -26,38 +32,44 @@ module game_sprite_top
     input                     clk,
     input                     rst,
 
-    input  [`X_WIDTH   - 1:0] pixel_x,
-    input  [`Y_WIDTH   - 1:0] pixel_y,
+    input  [w_x        - 1:0] pixel_x,
+    input  [w_y        - 1:0] pixel_y,
 
     input                     sprite_write_xy,
     input                     sprite_write_dxy,
 
-    input  [`X_WIDTH   - 1:0] sprite_write_x,
-    input  [`Y_WIDTH   - 1:0] sprite_write_y,
+    input  [w_x        - 1:0] sprite_write_x,
+    input  [w_y        - 1:0] sprite_write_y,
 
     input  [ DX_WIDTH  - 1:0] sprite_write_dx,
     input  [ DY_WIDTH  - 1:0] sprite_write_dy,
 
     input                     sprite_enable_update,
 
-    output [`X_WIDTH   - 1:0] sprite_x,
-    output [`Y_WIDTH   - 1:0] sprite_y,
+    output [w_x        - 1:0] sprite_x,
+    output [w_y        - 1:0] sprite_y,
 
     output                    sprite_within_screen,
 
-    output [`X_WIDTH   - 1:0] sprite_out_left,
-    output [`X_WIDTH   - 1:0] sprite_out_right,
-    output [`Y_WIDTH   - 1:0] sprite_out_top,
-    output [`Y_WIDTH   - 1:0] sprite_out_bottom,
+    output [w_x        - 1:0] sprite_out_left,
+    output [w_x        - 1:0] sprite_out_right,
+    output [w_y        - 1:0] sprite_out_top,
+    output [w_y        - 1:0] sprite_out_bottom,
 
     output                    rgb_en,
-    output [`RGB_WIDTH - 1:0] rgb
+    output [             2:0] rgb
 );
 
     game_sprite_control
     #(
         .DX_WIDTH              ( DX_WIDTH              ),
         .DY_WIDTH              ( DY_WIDTH              ),
+
+        .screen_width
+        (screen_width),
+
+        .screen_height
+        (screen_height),
 
         .strobe_to_update_xy_counter_width
         (strobe_to_update_xy_counter_width)

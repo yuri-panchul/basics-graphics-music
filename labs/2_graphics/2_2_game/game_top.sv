@@ -2,40 +2,47 @@
 
 module game_top
 # (
-    parameter clk_mhz   = 50,
-              pixel_mhz = 25,
+    parameter  clk_mhz       = 50,
+               pixel_mhz     = 25,
 
-              strobe_to_update_xy_counter_width = 20
+               screen_width  = 640,
+               screen_height = 480,
+
+               w_x           = $clog2 ( screen_width  ),
+               w_y           = $clog2 ( screen_height ),
+
+               strobe_to_update_xy_counter_width = 20
 )
 (
-    input        clk,
-    input        rst,
+    input              clk,
+    input              rst,
 
-    input        launch_key,
-    input  [1:0] left_right_keys,
+    input              launch_key,
+    input  [      1:0] left_right_keys,
 
-    input        x,
-    input        y,
+    input  [w_x - 1:0] x,
+    input  [w_y - 1:0] y,
 
     output [2:0] rgb,
     output       display_on
-    );
+);
 
     //------------------------------------------------------------------------
 
-    wire [`X_WIDTH - 1:0] pixel_x;
-    wire [`Y_WIDTH - 1:0] pixel_y;
+    wire [w_x - 1:0] pixel_x;
+    wire [w_y - 1:0] pixel_y;
 
 
     assign pixel_x = x ;
     assign pixel_y = y ;
+    assign display_on = (x < screen_width && y < screen_height) ? '1 : '0;
 
    /* vga
     # (
         .N_MIXER_PIPE_STAGES ( `N_MIXER_PIPE_STAGES ),
 
-        .HPOS_WIDTH          ( `X_WIDTH             ),
-        .VPOS_WIDTH          ( `Y_WIDTH             ),
+        .HPOS_WIDTH          ( w_x                  ),
+        .VPOS_WIDTH          ( w_y                  ),
 
         .CLK_MHZ             ( clk_mhz              ),
         .PIXEL_MHZ           ( pixel_mhz            )
@@ -65,23 +72,23 @@ module game_top
     wire                     sprite_target_write_xy;
     wire                     sprite_target_write_dxy;
 
-    logic [`X_WIDTH   - 1:0] sprite_target_write_x;
-    wire  [`Y_WIDTH   - 1:0] sprite_target_write_y;
+    logic [w_x        - 1:0] sprite_target_write_x;
+    wire  [w_y        - 1:0] sprite_target_write_y;
 
     logic [             1:0] sprite_target_write_dx;
     wire                     sprite_target_write_dy;
 
     wire                     sprite_target_enable_update;
 
-    wire  [`X_WIDTH   - 1:0] sprite_target_x;
-    wire  [`Y_WIDTH   - 1:0] sprite_target_y;
+    wire  [w_x        - 1:0] sprite_target_x;
+    wire  [w_y        - 1:0] sprite_target_y;
 
     wire                     sprite_target_within_screen;
 
-    wire  [`X_WIDTH   - 1:0] sprite_target_out_left;
-    wire  [`X_WIDTH   - 1:0] sprite_target_out_right;
-    wire  [`Y_WIDTH   - 1:0] sprite_target_out_top;
-    wire  [`Y_WIDTH   - 1:0] sprite_target_out_bottom;
+    wire  [w_x        - 1:0] sprite_target_out_left;
+    wire  [w_x        - 1:0] sprite_target_out_right;
+    wire  [w_y        - 1:0] sprite_target_out_top;
+    wire  [w_y        - 1:0] sprite_target_out_bottom;
 
     wire                     sprite_target_rgb_en;
     wire  [             2:0] sprite_target_rgb;
@@ -97,12 +104,12 @@ module game_top
         end
         else
         begin
-            sprite_target_write_x  = `SCREEN_WIDTH - 8;
+            sprite_target_write_x  = screen_width - 8;
             sprite_target_write_dx = { 1'b1, random [6] };
         end
     end
 
-    assign sprite_target_write_y  = `SCREEN_HEIGHT / 10 + random [5:0];
+    assign sprite_target_write_y  = screen_height / 10 + random [5:0];
     assign sprite_target_write_dy = 1'd0;
 
     //------------------------------------------------------------------------
@@ -123,6 +130,12 @@ module game_top
         .ROW_5 ( 32'h00099000 ),
         .ROW_6 ( 32'h00099000 ),
         .ROW_7 ( 32'h000bb000 ),
+
+        .screen_width
+        (screen_width),
+
+        .screen_height
+        (screen_height),
 
         .strobe_to_update_xy_counter_width
         (strobe_to_update_xy_counter_width)
@@ -165,31 +178,31 @@ module game_top
     wire                    sprite_torpedo_write_xy;
     wire                    sprite_torpedo_write_dxy;
 
-    wire [`X_WIDTH   - 1:0] sprite_torpedo_write_x;
-    wire [`Y_WIDTH   - 1:0] sprite_torpedo_write_y;
+    wire [w_x        - 1:0] sprite_torpedo_write_x;
+    wire [w_y        - 1:0] sprite_torpedo_write_y;
 
     logic  [             1:0] sprite_torpedo_write_dx;
     logic  [             2:0] sprite_torpedo_write_dy;
 
     wire                    sprite_torpedo_enable_update;
 
-    wire [`X_WIDTH   - 1:0] sprite_torpedo_x;
-    wire [`Y_WIDTH   - 1:0] sprite_torpedo_y;
+    wire [w_x        - 1:0] sprite_torpedo_x;
+    wire [w_y        - 1:0] sprite_torpedo_y;
 
     wire                    sprite_torpedo_within_screen;
 
-    wire [`X_WIDTH   - 1:0] sprite_torpedo_out_left;
-    wire [`X_WIDTH   - 1:0] sprite_torpedo_out_right;
-    wire [`Y_WIDTH   - 1:0] sprite_torpedo_out_top;
-    wire [`Y_WIDTH   - 1:0] sprite_torpedo_out_bottom;
+    wire [w_x        - 1:0] sprite_torpedo_out_left;
+    wire [w_x        - 1:0] sprite_torpedo_out_right;
+    wire [w_y        - 1:0] sprite_torpedo_out_top;
+    wire [w_y        - 1:0] sprite_torpedo_out_bottom;
 
     wire                    sprite_torpedo_rgb_en;
     wire [             2:0] sprite_torpedo_rgb;
 
     //------------------------------------------------------------------------
 
-    assign sprite_torpedo_write_x  = `SCREEN_WIDTH / 2 + random [15:10];
-    assign sprite_torpedo_write_y  = `SCREEN_HEIGHT - 16;
+    assign sprite_torpedo_write_x  = screen_width / 2 + random [15:10];
+    assign sprite_torpedo_write_y  = screen_height - 16;
 
     always_comb
     begin
@@ -226,6 +239,12 @@ module game_top
         .ROW_5 ( 32'hcc0cc0cc ),
         .ROW_6 ( 32'hcc0cc0cc ),
         .ROW_7 ( 32'hcc0cc0cc ),
+
+        .screen_width
+        (screen_width),
+
+        .screen_height
+        (screen_height),
 
         .strobe_to_update_xy_counter_width
         (strobe_to_update_xy_counter_width)
@@ -267,7 +286,12 @@ module game_top
 
     wire collision;
 
-    game_overlap overlap
+    game_overlap
+    #(
+        .screen_width  ( screen_width  ),
+	.screen_height ( screen_height )
+    )
+    overlap
     (
         .clk       ( clk                        ),
         .rst       ( rst                        ),
@@ -352,5 +376,4 @@ module game_top
         .end_of_game_timer_running     ( end_of_game_timer_running     )
     );
 
-
-    endmodule
+endmodule

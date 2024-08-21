@@ -12,7 +12,13 @@ module game_sprite_display
               ROW_4         = 32'hcccccccc,
               ROW_5         = 32'h000cc000,
               ROW_6         = 32'h000cc000,
-              ROW_7         = 32'h000cc000
+              ROW_7         = 32'h000cc000,
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 
 //----------------------------------------------------------------------------
@@ -21,76 +27,76 @@ module game_sprite_display
     input                         clk,
     input                         rst,
 
-    input      [`X_WIDTH   - 1:0] pixel_x,
-    input      [`Y_WIDTH   - 1:0] pixel_y,
+    input      [w_x        - 1:0] pixel_x,
+    input      [w_y        - 1:0] pixel_y,
 
-    input      [`X_WIDTH   - 1:0] sprite_x,
-    input      [`Y_WIDTH   - 1:0] sprite_y,
+    input      [w_x        - 1:0] sprite_x,
+    input      [w_y        - 1:0] sprite_y,
 
     output logic                    sprite_within_screen,
 
-    output logic [`X_WIDTH   - 1:0] sprite_out_left,
-    output logic [`X_WIDTH   - 1:0] sprite_out_right,
-    output logic [`Y_WIDTH   - 1:0] sprite_out_top,
-    output logic [`Y_WIDTH   - 1:0] sprite_out_bottom,
+    output logic [w_x        - 1:0] sprite_out_left,
+    output logic [w_x        - 1:0] sprite_out_right,
+    output logic [w_y        - 1:0] sprite_out_top,
+    output logic [w_y        - 1:0] sprite_out_bottom,
 
     output logic                    rgb_en,
-    output logic [`RGB_WIDTH - 1:0] rgb
+    output logic [             2:0] rgb
 );
 
     //------------------------------------------------------------------------
 
-    localparam ERGB_WIDTH = 1 + `RGB_WIDTH;
+    localparam ERGB_WIDTH = 1 + 3;
 
     //------------------------------------------------------------------------
 
-    wire [`X_WIDTH:0] screen_w_1_minus_sprite
-        = `SCREEN_WIDTH - 1 - { 1'b0, sprite_x };
+    wire [w_x:0] screen_w_1_minus_sprite
+        = screen_width - 1 - { 1'b0, sprite_x };
 
-    wire [`X_WIDTH:0] x_sprite_plus_w_1
+    wire [w_x:0] x_sprite_plus_w_1
         = { 1'b0, sprite_x } + SPRITE_WIDTH - 1;
 
     wire x_sprite_within_screen
-        = // sprite_x < `SCREEN_WIDTH;
+        = // sprite_x < `screen_width;
 
-             screen_w_1_minus_sprite [`X_WIDTH] == 1'b0
-          && x_sprite_plus_w_1       [`X_WIDTH] == 1'b0;
+             screen_w_1_minus_sprite [w_x] == 1'b0
+          && x_sprite_plus_w_1       [w_x] == 1'b0;
 
     //------------------------------------------------------------------------
 
-    wire [`X_WIDTH:0] x_pixel_minus_sprite
+    wire [w_x:0] x_pixel_minus_sprite
         = { 1'b0, pixel_x } - { 1'b0, sprite_x };
 
-    wire [`X_WIDTH:0] x_sprite_plus_w_1_minus_pixel
+    wire [w_x:0] x_sprite_plus_w_1_minus_pixel
         = x_sprite_plus_w_1 - { 1'b0, pixel_x };
 
-    wire x_hit =    x_pixel_minus_sprite          [`X_WIDTH] == 1'b0
-                 && x_sprite_plus_w_1_minus_pixel [`X_WIDTH] == 1'b0;
+    wire x_hit =    x_pixel_minus_sprite          [w_x] == 1'b0
+                 && x_sprite_plus_w_1_minus_pixel [w_x] == 1'b0;
 
     //------------------------------------------------------------------------
 
-    wire [`Y_WIDTH:0] screen_h_1_minus_sprite
-        = `SCREEN_HEIGHT - 1 - { 1'b0, sprite_y };
+    wire [w_y:0] screen_h_1_minus_sprite
+        = screen_height - 1 - { 1'b0, sprite_y };
 
-    wire [`Y_WIDTH:0] y_sprite_plus_h_1
+    wire [w_y:0] y_sprite_plus_h_1
         = { 1'b0, sprite_y } + SPRITE_HEIGHT - 1;
 
     wire y_sprite_within_screen
-        = // sprite_y < `SCREEN_HEIGHT;
+        = // sprite_y < screen_height;
 
-             screen_h_1_minus_sprite [`Y_WIDTH] == 1'b0
-          && y_sprite_plus_h_1       [`Y_WIDTH] == 1'b0;
+             screen_h_1_minus_sprite [w_y] == 1'b0
+          && y_sprite_plus_h_1       [w_y] == 1'b0;
 
     //------------------------------------------------------------------------
 
-    wire [`Y_WIDTH:0] y_pixel_minus_sprite
+    wire [w_y:0] y_pixel_minus_sprite
         = { 1'b0, pixel_y } - { 1'b0, sprite_y };
 
-    wire [`Y_WIDTH:0] y_sprite_plus_h_1_minus_pixel
+    wire [w_y:0] y_sprite_plus_h_1_minus_pixel
         = y_sprite_plus_h_1 - { 1'b0, pixel_y };
 
-    wire y_hit =    y_pixel_minus_sprite          [`Y_WIDTH] == 1'b0
-                 && y_sprite_plus_h_1_minus_pixel [`Y_WIDTH] == 1'b0;
+    wire y_hit =    y_pixel_minus_sprite          [w_y] == 1'b0
+                 && y_sprite_plus_h_1_minus_pixel [w_y] == 1'b0;
 
     //------------------------------------------------------------------------
 
@@ -101,7 +107,7 @@ module game_sprite_display
     wire [2:0] row_index    = y_pixel_minus_sprite [2:0];
     wire [2:0] column_index = x_pixel_minus_sprite [2:0];
 
-    logic [SPRITE_WIDTH * ERGB_WIDTH - 1:0] row;
+    logic [screen_width * ERGB_WIDTH - 1:0] row;
 
     always_comb
         case (row_index)
