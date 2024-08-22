@@ -1,10 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-//--- VGA external ---
-   `define VGA666_BOARD
-// `define PMOD_VGA_BOARD
-
 module board_specific_top
 # (
     parameter clk_mhz       = 50,
@@ -16,8 +12,8 @@ module board_specific_top
               w_digit       = 4,
               w_gpio        = 22,
 
-              // GPIO[9:6], [21:11] are reserved for VGA.
               // GPIO[5:0] are reserved for INMP 441 I2S microphone.
+              // GPIO [11], [13], [15], [17] are reserved for I2S audio.
 
               screen_width  = 640,
               screen_height = 480,
@@ -89,9 +85,10 @@ module board_specific_top
     wire [ w_green  - 1:0] green;
     wire [ w_blue   - 1:0] blue;
 
-    // Microphone and UART
+    // Microphone, sound output and UART
 
     wire [           23:0] mic;
+    wire [           15:0] sound;
 
     wire                   UART_TX; // FIXME: Should be assigned to some GPIO
 
@@ -143,82 +140,12 @@ module board_specific_top
         .blue          (   blue          ),
 
         .mic           (   mic           ),
-        .sound         (                 ),
+        .sound         (   sound         ),
 
         .uart_rx       (   UART_RX       ),
         .uart_tx       (   UART_TX       ),
 
         .gpio          (   GPIO          )
-    );
-
-    //------------------------------------------------------------------------
-
-    // External VGA out at GPIO
-    `ifdef  VGA666_BOARD
-
-        // 4 bit color used
-        assign GPIO [21] = vs;              // vga666_pi_Vsync - JP9 pin 24
-        assign GPIO [19] = hs;              // vga666_pi_Hsync - JP9 pin 22
-        // R
-        assign GPIO [16] = red [0];         // vga666_red[4]   - JP9 pin 19
-        assign GPIO [11] = red [1];         // vga666_red[5]   - JP9 pin 14
-        assign GPIO [ 9] = red [2];         // vga666_red[6]   - JP9 pin 10
-        assign GPIO [ 7] = red [3];         // vga666_red[7]   - JP9 pin  8
-        // G
-        assign GPIO [ 6] = green [0];       // vga666_green[4] - JP9 pin  7
-        assign GPIO [13] = green [1];       // vga666_green[5] - JP9 pin 16
-        assign GPIO [20] = green [2];       // vga666_green[6] - JP9 pin 23
-        assign GPIO [18] = green [3];       // vga666_green[7] - JP9 pin 21
-        // B
-        assign GPIO [15] = blue [0];        // vga666_blue[4]  - JP9 pin 18
-        assign GPIO [12] = blue [1];        // vga666_blue[5]  - JP9 pin 15
-        assign GPIO [14] = blue [2];        // vga666_blue[6]  - JP9 pin 17
-        assign GPIO [17] = blue [3];        // vga666_blue[7]  - JP9 pin 20
-                                            // vga666_GND      - JP9 pin 12
-
-    `elsif PMOD_VGA_BOARD
-
-        assign GPIO [19] = vs;              // JP9 pin 22
-        assign GPIO [21] = hs;              // JP9 pin 24
-        // R
-        assign GPIO [ 6] = red [0];         // JP9 pin  7
-        assign GPIO [ 8] = red [1];         // JP9 pin  9
-        assign GPIO [ 7] = red [2];         // JP9 pin  8
-        assign GPIO [ 9] = red [3];         // JP9 pin 10
-        // G
-        assign GPIO [11] = green [0];       // JP9 pin 14
-        assign GPIO [13] = green [1];       // JP9 pin 16
-        assign GPIO [15] = green [2];       // JP9 pin 18
-        assign GPIO [17] = green [3];       // JP9 pin 20
-        // B
-        assign GPIO [12] = blue [0];        // JP9 pin 15
-        assign GPIO [14] = blue [1];        // JP9 pin 17
-        assign GPIO [16] = blue [2];        // JP9 pin 19
-        assign GPIO [18] = blue [3];        // JP9 pin 21
-                                            // GND  - JP9 pin 30
-                                            // 3.3V - JP9 pin 29
-
-    `endif
-
-    //------------------------------------------------------------------------
-
-    // HDMI Video
-    wire       pixel_clk;
-    wire       display_on;
-
-    assign HDMI_TX_CLK      = pixel_clk;
-    assign HDMI_TX_D        = {{red,{(8 - w_red){1'b1}}},{green,{(8 - w_green){1'b1}}},{blue,{(8 - w_blue){1'b1}}}}; // eight bit color is max
-    assign HDMI_TX_DE       = display_on;
-    assign HDMI_TX_HS       = hs;
-    assign HDMI_TX_VS       = vs;
-
-    // HDMI I2C configurator
-    I2C_HDMI_Config i_i2c_hdmi_conf (
-        .iCLK(clk),
-        .iRST_N(~rst),
-        .I2C_SCLK(I2C_SCL),
-        .I2C_SDAT(I2C_SDA),
-        .HDMI_TX_INT(HDMI_TX_INT)
     );
 
     //------------------------------------------------------------------------
@@ -316,6 +243,25 @@ module board_specific_top
             .pixel_clk   ( pixel_clk     )
         );
 
+        // HDMI Video out
+        wire       pixel_clk;
+        wire       display_on;
+
+        assign HDMI_TX_CLK      = pixel_clk;
+        assign HDMI_TX_D        = {{red,{(8 - w_red){1'b1}}},{green,{(8 - w_green){1'b1}}},{blue,{(8 - w_blue){1'b1}}}}; // eight bit color is max
+        assign HDMI_TX_DE       = display_on;
+        assign HDMI_TX_HS       = hs;
+        assign HDMI_TX_VS       = vs;
+
+        // HDMI transmitter configuration
+        I2C_HDMI_Config i_i2c_hdmi_conf (
+            .iCLK(clk),
+            .iRST_N(~rst),
+            .I2C_SCLK(I2C_SCL),
+            .I2C_SDAT(I2C_SDA),
+            .HDMI_TX_INT(HDMI_TX_INT)
+        );
+
     `endif
 
     //------------------------------------------------------------------------
@@ -324,21 +270,42 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz  ( clk_mhz  )
+            .clk_mhz ( clk_mhz  )
         )
         i_microphone
         (
-            .clk      ( clk      ),
-            .rst      ( rst      ),
-            .lr       ( GPIO [0] ),  // JP9 pin 1
-            .ws       ( GPIO [2] ),  // JP9 pin 3
-            .sck      ( GPIO [4] ),  // JP9 pin 5
-            .sd       ( GPIO [5] ),  // JP9 pin 6
-            .value    ( mic      )
+            .clk     ( clk      ),
+            .rst     ( rst      ),
+            .lr      ( GPIO [0] ),  // JP9 pin 1
+            .ws      ( GPIO [2] ),  // JP9 pin 3
+            .sck     ( GPIO [4] ),  // JP9 pin 5
+            .sd      ( GPIO [5] ),  // JP9 pin 6
+            .value   ( mic      )
         );
 
         assign GPIO [1] = 1'b0;   // GND - JP9 pin 2
         assign GPIO [3] = 1'b1;   // VCC - JP9 pin 4
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz     )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
+            .mclk    ( GPIO [17] ), // JP9 pin 20
+            .bclk    ( GPIO [15] ), // JP9 pin 18
+            .lrclk   ( GPIO [11] ), // JP9 pin 14
+            .sdata   ( GPIO [13] )  // JP9 pin 16
+        );                          // JP9 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
     `endif
 
