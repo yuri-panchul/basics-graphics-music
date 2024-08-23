@@ -1,11 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-//--- VGA external ---
-// `define VGA666_BOARD
-// `define PMOD_VGA_BOARD
- `define MISTER_IO_BOARD
-
 module board_specific_top
 # (
     parameter clk_mhz       = 50,
@@ -63,13 +58,9 @@ module board_specific_top
 
     wire                  clk    = FPGA_CLK1_50;
 
-   `ifdef MISTER_IO_BOARD
-        wire              rst    = SW [w_lab_sw] | ~ GPIO_1 [14]; // GPIO_1 [14] (JP7 pin 17) is BTN_RESET key on MiSTer I/O board, internal FGPA weak pull-up enabled;
-    `else
-        wire              rst    = SW [w_lab_sw];
-    `endif
+    wire                  rst    = SW [w_lab_sw];
 
-    // Keys
+    // Switches
 
     wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
 
@@ -218,109 +209,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    // External VGA out at GPIO_1
-    `ifdef  VGA666_BOARD
-
-        // 4 bit color used
-        assign GPIO_1 [35] = vs;            // vga666_pi_Vsync - JP7 pin 40
-        assign GPIO_1 [33] = hs;            // vga666_pi_Hsync - JP7 pin 38
-        // R
-        assign GPIO_1 [13] = red [0];       // vga666_red[4]   - JP7 pin 16
-        assign GPIO_1 [19] = red [1];       // vga666_red[5]   - JP7 pin 22
-        assign GPIO_1 [ 5] = red [2];       // vga666_red[6]   - JP7 pin 6
-        assign GPIO_1 [ 3] = red [3];       // vga666_red[7]   - JP7 pin 4
-        // G
-        assign GPIO_1 [ 7] = green [0];     // vga666_green[4] - JP7 pin 8
-        assign GPIO_1 [21] = green [1];     // vga666_green[5] - JP7 pin 24
-        assign GPIO_1 [17] = green [2];     // vga666_green[6] - JP7 pin 20
-        assign GPIO_1 [15] = green [3];     // vga666_green[7] - JP7 pin 18
-        // B
-        assign GPIO_1 [23] = blue [0];      // vga666_blue[4]  - JP7 pin 26
-        assign GPIO_1 [ 9] = blue [1];      // vga666_blue[5]  - JP7 pin 10
-        assign GPIO_1 [11] = blue [2];      // vga666_blue[6]  - JP7 pin 14
-        assign GPIO_1 [25] = blue [3];      // vga666_blue[7]  - JP7 pin 28
-                                            // vga666_GND      - JP7 pin 30
-
-    `elsif PMOD_VGA_BOARD
-
-        assign GPIO_1 [ 7] = vs;            // JP7 pin  8
-        assign GPIO_1 [ 5] = hs;            // JP7 pin  6
-        // R
-        assign GPIO_1 [35] = red [0];       // JP7 pin 40
-        assign GPIO_1 [33] = red [1];       // JP7 pin 38
-        assign GPIO_1 [31] = red [2];       // JP7 pin 36
-        assign GPIO_1 [29] = red [3];       // JP7 pin 34
-        // G
-        assign GPIO_1 [25] = green [0];     // JP7 pin 28
-        assign GPIO_1 [23] = green [1];     // JP7 pin 26
-        assign GPIO_1 [21] = green [2];     // JP7 pin 24
-        assign GPIO_1 [19] = green [3];     // JP7 pin 22
-        // B
-        assign GPIO_1 [17] = blue [0];      // JP7 pin 20
-        assign GPIO_1 [15] = blue [1];      // JP7 pin 18
-        assign GPIO_1 [13] = blue [2];      // JP7 pin 16
-        assign GPIO_1 [11] = blue [3];      // JP7 pin 14
-                                            // GND  - JP7 pin 30
-                                            // 3.3V - JP7 pin 29
-
-    `elsif MISTER_IO_BOARD
-
-        // VGA out of MiSTer I/O board, 4 bit color used
-        assign GPIO_1 [16] = vs;            // JP7 pin 19
-        assign GPIO_1 [17] = hs;            // JP7 pin 20
-        // R
-        assign GPIO_1 [35] = 1'b1;          // JP7 pin 40
-        assign GPIO_1 [33] = 1'b1;          // JP7 pin 38
-        assign GPIO_1 [31] = red [0];       // JP7 pin 36
-        assign GPIO_1 [29] = red [1];       // JP7 pin 34
-        assign GPIO_1 [27] = red [2];       // JP7 pin 32
-        assign GPIO_1 [25] = red [3];       // JP7 pin 28
-        // G
-        assign GPIO_1 [34] = 1'b1;          // JP7 pin 39
-        assign GPIO_1 [32] = 1'b1;          // JP7 pin 37
-        assign GPIO_1 [30] = green [0];     // JP7 pin 35
-        assign GPIO_1 [28] = green [1];     // JP7 pin 33
-        assign GPIO_1 [26] = green [2];     // JP7 pin 31
-        assign GPIO_1 [24] = green [3];     // JP7 pin 27
-        // B
-        assign GPIO_1 [19] = 1'b1;          // JP7 pin 22
-        assign GPIO_1 [21] = 1'b1;          // JP7 pin 24
-        assign GPIO_1 [23] = blue [0];      // JP7 pin 26
-        assign GPIO_1 [22] = blue [1];      // JP7 pin 25
-        assign GPIO_1 [20] = blue [2];      // JP7 pin 23
-        assign GPIO_1 [18] = blue [3];      // JP7 pin 21
-
-    `endif
-
-    //------------------------------------------------------------------------
-
-    // HDMI Video
-    wire       pixel_clk;
-    wire       display_on;
-
-    assign HDMI_TX_CLK      = pixel_clk;
-    assign HDMI_TX_D        = {{red,{(8 - w_red){1'b1}}},{green,{(8 - w_green){1'b1}}},{blue,{(8 - w_blue){1'b1}}}}; // eight bit color is max
-    assign HDMI_TX_DE       = display_on;
-    assign HDMI_TX_HS       = hs;
-    assign HDMI_TX_VS       = vs;
-
-    // HDMI audio
-    assign HDMI_I2S         = 1'b0;
-    assign HDMI_LRCLK       = 1'b0;
-    assign HDMI_MCLK        = 1'b0;
-    assign HDMI_SCLK        = 1'b0;
-
-    // HDMI I2C configurator
-    I2C_HDMI_Config i_i2c_hdmi_conf (
-        .iCLK(clk),
-        .iRST_N(~rst),
-        .I2C_SCLK(HDMI_I2C_SCL),
-        .I2C_SDAT(HDMI_I2C_SDA),
-        .HDMI_TX_INT(HDMI_TX_INT)
-    );
-
-    //------------------------------------------------------------------------
-
     wire [$left (abcdefgh):0] hgfedcba;
 
     generate
@@ -356,6 +244,31 @@ module board_specific_top
             .hpos        ( x10           ),
             .vpos        ( y10           ),
             .pixel_clk   ( pixel_clk     )
+        );
+
+        // HDMI Video
+        wire       pixel_clk;
+        wire       display_on;
+
+        assign HDMI_TX_CLK      = pixel_clk;
+        assign HDMI_TX_D        = {{red,{(8 - w_red){1'b1}}},{green,{(8 - w_green){1'b1}}},{blue,{(8 - w_blue){1'b1}}}}; // eight bit color is max
+        assign HDMI_TX_DE       = display_on;
+        assign HDMI_TX_HS       = hs;
+        assign HDMI_TX_VS       = vs;
+
+        // HDMI audio
+        assign HDMI_I2S         = 1'b0;
+        assign HDMI_LRCLK       = 1'b0;
+        assign HDMI_MCLK        = 1'b0;
+        assign HDMI_SCLK        = 1'b0;
+
+        // HDMI transmitter configuration
+        I2C_HDMI_Config i_i2c_hdmi_conf (
+            .iCLK(clk),
+            .iRST_N(~rst),
+            .I2C_SCLK(HDMI_I2C_SCL),
+            .I2C_SDAT(HDMI_I2C_SDA),
+            .HDMI_TX_INT(HDMI_TX_INT)
         );
 
     `endif
