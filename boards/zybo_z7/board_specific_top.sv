@@ -29,11 +29,8 @@ module board_specific_top
     output [w_led       - 1:0] led,
     inout  [w_gpio      - 1:0] gpio_JE,
     
-    output                     VGA_HS,
-    output                     VGA_VS,
-    output [w_red       - 1:0] VGA_R,
-    output [w_green     - 1:0] VGA_G,
-    output [w_blue      - 1:0] VGA_B
+    output [w_gpio      - 1:0] jd,
+    output [w_gpio      - 1:0] jc
 );
 
     wire clk = clk_125;
@@ -63,8 +60,6 @@ module board_specific_top
     wire [ w_red     - 1:0] red;
     wire [ w_green   - 1:0] green;
     wire [ w_blue    - 1:0] blue;
-    
-    wire                    display_on;
 
     // Microphone and sound output
 
@@ -168,7 +163,6 @@ module board_specific_top
         .x             (   x               ),
         .y             (   y               ),
 
-        .display_on    (   display_on      ),
         .red           (   red             ),
         .green         (   green           ),
         .blue          (   blue            ),
@@ -222,9 +216,9 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-	assign VGA_R = red;
-	assign VGA_G = green;
-	assign VGA_B = blue;
+	assign jc[3:0] = red;
+	assign jc[7:4] = green;
+	assign jd[3:0] = blue;
 	
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
@@ -238,9 +232,9 @@ module board_specific_top
         (
             .clk         ( clk         ),
             .rst         ( rst         ),
-            .hsync       ( VGA_HS      ),
-            .vsync       ( VGA_VS      ),
-            .display_on  ( display_on  ),
+            .hsync       ( jd[4]       ),
+            .vsync       ( jd[5]       ),
+            .display_on  (             ),
             .hpos        ( x10         ),
             .vpos        ( y10         ),
             .pixel_clk   ( VGA_CLK     )
