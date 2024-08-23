@@ -39,7 +39,6 @@ module lab_top
 
     input        [w_x     - 1:0] x,
     input        [w_y     - 1:0] y,
-    input                        display_on,
     
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
@@ -100,7 +99,7 @@ module lab_top
 
         if (x_2 [w_x +: w_y] < y)  // Parabola
             blue = y [w_y - 1 -: w_blue];
-     end
+    end
 
     /**/
 
