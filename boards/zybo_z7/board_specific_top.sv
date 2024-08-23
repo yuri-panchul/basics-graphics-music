@@ -4,6 +4,7 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 125,        // Main clk frequency
+    	      pixel_mhz     = 25,         
               w_key         = 4,          // Number of buttons on the board
               w_sw          = 4,          // Number of switches on the board
               w_led         = 4,          // Number of LEDs on the board
@@ -13,9 +14,9 @@ module board_specific_top
               screen_width  = 640,
               screen_height = 480,
 
-              w_red         = 8,
-              w_green       = 8,
-              w_blue        = 8,
+              w_red         = 4,
+              w_green       = 4,
+              w_blue        = 4,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
@@ -26,7 +27,10 @@ module board_specific_top
     input  [w_key       - 1:0] key,
     input  [w_sw        - 1:0] sw,
     output [w_led       - 1:0] led,
-    inout  [w_gpio      - 1:0] gpio_JE
+    inout  [w_gpio      - 1:0] gpio_JE,
+    
+    output [w_gpio      - 1:0] jd,
+    output [w_gpio      - 1:0] jc
 );
 
     wire clk = clk_125;
@@ -207,4 +211,40 @@ module board_specific_top
         .sio_data      (  gpio_JE[2]      )
     );
 
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+	assign jc[3:0] = red;
+	assign jc[7:4] = green;
+	assign jd[3:0] = blue;
+	
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz     ),
+            .PIXEL_MHZ   ( pixel_mhz   )
+        )
+        i_vga
+        (
+            .clk         ( clk         ),
+            .rst         ( rst         ),
+            .hsync       ( jd[4]       ),
+            .vsync       ( jd[5]       ),
+            .display_on  (             ),
+            .hpos        ( x10         ),
+            .vpos        ( y10         ),
+            .pixel_clk   ( VGA_CLK     )
+        );
+
+        assign VGA_BLANK_N = 1'b1;
+        assign VGA_SYNC_N  = 1'b0;
+
+    `endif
+
+    //------------------------------------------------------------------------
+    
 endmodule: board_specific_top

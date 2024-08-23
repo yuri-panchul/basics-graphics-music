@@ -39,7 +39,7 @@ module lab_top
 
     input        [w_x     - 1:0] x,
     input        [w_y     - 1:0] y,
-
+    
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
@@ -73,13 +73,12 @@ module lab_top
 
     wire [w_x * 2 - 1:0] x_2 = x * x;
 
-    /**/
-
     always_comb
     begin
         red   = '0;
         green = '0;
         blue  = '0;
+
 
         if (   x >= screen_width  / 2
              & x <  screen_width  * 2 / 3
@@ -107,7 +106,7 @@ module lab_top
     //------------------------------------------------------------------------
     // Pattern 3 - dynamic
 
-    /*
+   /* 
 
     wire enable;
 
