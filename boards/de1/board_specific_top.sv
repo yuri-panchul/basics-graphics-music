@@ -135,7 +135,7 @@ module board_specific_top
         .uart_rx       (   UART_RXD         ),
         .uart_tx       (   UART_TXD         ),
 
-    .gpio          ( { GPIO_0, GPIO_1 } )
+        .gpio          ( { GPIO_0, GPIO_1 } )
     );
 
     //------------------------------------------------------------------------
