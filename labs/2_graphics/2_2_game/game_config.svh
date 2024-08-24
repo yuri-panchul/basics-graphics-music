@@ -3,14 +3,6 @@
 
 `include "config.svh"
 
-`define SCREEN_WIDTH   640
-`define SCREEN_HEIGHT  480
-
-`define X_WIDTH        10  // X coordinate width in bits
-`define Y_WIDTH        10  // Y coordinate width in bits
-
-`define RGB_WIDTH      3
-
 `ifndef GAME_MASTER_FSM_MODULE
 
    `define GAME_MASTER_FSM_MODULE   game_master_fsm_1_regular_state_encoded

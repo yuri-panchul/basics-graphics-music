@@ -75,7 +75,7 @@ module vga
     logic [3:0] clk_en_cnt;
     logic clk_en;
 
-    assign pixel_clk = clk_en;
+    assign pixel_clk = (CLK_MHZ >= 2*PIXEL_MHZ) ? clk_en : clk;
 
     always_ff @ (posedge clk or posedge rst)
     begin
@@ -101,7 +101,7 @@ module vga
 
     // Making all outputs registered
 
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @ (posedge pixel_clk or posedge rst)
     begin
         if (rst)
         begin
@@ -111,7 +111,7 @@ module vga
             hpos        <= 1'b0;
             vpos        <= 1'b0;
         end
-        else if (clk_en)
+        else
         begin
             hsync       <= ~ (    d_hpos >= H_SYNC_START
                                && d_hpos <= H_SYNC_END   );

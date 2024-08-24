@@ -2,8 +2,14 @@
 
 module game_sprite_control
 #(
-    parameter DX_WIDTH = 2,  // X speed width in bits
-              DY_WIDTH = 2,  // Y speed width in bits
+    parameter DX_WIDTH      = 2,  // X speed width in bits
+              DY_WIDTH      = 2,  // Y speed width in bits
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height ),
 
               strobe_to_update_xy_counter_width = 20
 )
@@ -17,16 +23,16 @@ module game_sprite_control
     input                    sprite_write_xy,
     input                    sprite_write_dxy,
 
-    input  [`X_WIDTH  - 1:0] sprite_write_x,
-    input  [`Y_WIDTH  - 1:0] sprite_write_y,
+    input  [w_x       - 1:0] sprite_write_x,
+    input  [w_y       - 1:0] sprite_write_y,
 
     input  [ DX_WIDTH - 1:0] sprite_write_dx,
     input  [ DY_WIDTH - 1:0] sprite_write_dy,
 
     input                    sprite_enable_update,
 
-    output [`X_WIDTH  - 1:0] sprite_x,
-    output [`Y_WIDTH  - 1:0] sprite_y
+    output [w_x       - 1:0] sprite_x,
+    output [w_y       - 1:0] sprite_y
 );
 
     wire strobe_to_update_xy;
@@ -36,8 +42,8 @@ module game_sprite_control
     strobe_generator
     (clk, rst, strobe_to_update_xy);
 
-    logic [`X_WIDTH  - 1:0] x;
-    logic [`Y_WIDTH  - 1:0] y;
+    logic [w_x       - 1:0] x;
+    logic [w_y       - 1:0] y;
 
     logic [ DX_WIDTH - 1:0] dx;
     logic [ DY_WIDTH - 1:0] dy;
@@ -57,8 +63,8 @@ module game_sprite_control
         begin
             // Add with signed-extended dx and dy
 
-            x <= x + { { `X_WIDTH - DX_WIDTH { dx [DX_WIDTH - 1] } }, dx };
-            y <= y + { { `Y_WIDTH - DY_WIDTH { dy [DY_WIDTH - 1] } }, dy };
+            x <= x + { { w_x - DX_WIDTH { dx [DX_WIDTH - 1] } }, dx };
+            y <= y + { { w_y - DY_WIDTH { dy [DY_WIDTH - 1] } }, dy };
         end
 
     always_ff @ (posedge clk or posedge rst)

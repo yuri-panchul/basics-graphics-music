@@ -3,9 +3,6 @@
 module lab_top
 # (
     parameter  clk_mhz       = 50,
-               pixel_mhz     = 25,
-
-
                w_key         = 4,
                w_sw          = 8,
                w_led         = 8,
@@ -72,40 +69,43 @@ module lab_top
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
+    // Pattern 1
 
-    localparam strobe_to_update_xy_counter_width
-        = $clog2 (clk_mhz * 1000 * 1000) - 6;
+    /**/
 
-    //------------------------------------------------------------------------
+    always_comb
+    begin
+        red   = '0;
+        green = '0;
+        blue  = '0;
 
-    wire [2:0] rgb;
+        if (x < 128)
+        begin
+            red = x[6:3];
+        end
 
+        if (x >= 128 && x < 128+128)
+        begin
+            green = x[6:3];
+        end
 
-    game_top
-    # (
-        .clk_mhz                           (clk_mhz                          ),
-        .pixel_mhz                         (pixel_mhz                        ),
-        .screen_width                      (screen_width                     ),
-        .screen_height                     (screen_height                    ),
-        .strobe_to_update_xy_counter_width (strobe_to_update_xy_counter_width)
-    )
-    i_game_top
-    (
-        .clk              (   clk                ),
-        .rst              (   rst                ),
-        .x                (   x                  ),
-        .y                (   y                  ),
+        if (x >= 128+128 && x < 128+128+128)
+        begin
+            blue = x[6:3];
+        end
 
+        if (x >= 128+128+128 && x < 128+128+128+128)
+        begin
+            red = x[6:3];
+            green = x[6:3];
+        end
 
-        .launch_key       ( | key                ),
-        .left_right_keys  ( { key [1], key [0] } ),
+        if (x >= 128+128+128+128 && x < 128+128+128+128+128)
+        begin
+            green = x[6:3];
+            blue = x[6:3];
+        end
 
-        .rgb              (   rgb                ),
-        .display_on       (                      )
-        );
-
-    assign red   = { w_red   { rgb [2] } };
-    assign green = { w_green { rgb [1] } };
-    assign blue  = { w_blue  { rgb [0] } };
+    end
 
 endmodule
