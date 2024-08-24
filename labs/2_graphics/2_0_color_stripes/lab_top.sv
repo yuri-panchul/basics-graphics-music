@@ -73,39 +73,37 @@ module lab_top
 
     /**/
 
+    wire [3:0] x4 = x [6:3];
+
+    logic [3:0] red_4, green_4, blue_4;
+
     always_comb
     begin
-        red   = '0;
-        green = '0;
-        blue  = '0;
+        red_4   = '0;
+        green_4 = '0;
+        blue_4  = '0;
 
-        if (x < 128)
+             if (x <     128)  red_4   = x4;
+
+        else if (x < 2 * 128)  green_4 = x4;
+
+        else if (x < 3 * 128)  blue_4  = x4;
+
+        else if (x < 4 * 128)
         begin
-            red = x[6:3];
+            red_4   = x4;
+            green_4 = x4;
         end
 
-        if (x >= 128 && x < 128+128)
+        else if (x < 5 * 128)
         begin
-            green = x[6:3];
+            green_4 = x4;
+            blue_4  = x4;
         end
 
-        if (x >= 128+128 && x < 128+128+128)
-        begin
-            blue = x[6:3];
-        end
-
-        if (x >= 128+128+128 && x < 128+128+128+128)
-        begin
-            red = x[6:3];
-            green = x[6:3];
-        end
-
-        if (x >= 128+128+128+128 && x < 128+128+128+128+128)
-        begin
-            green = x[6:3];
-            blue = x[6:3];
-        end
-
+        red   = { red_4   , { w_red   - 4 { 1'b0 } } };
+        green = { green_4 , { w_green - 4 { 1'b0 } } };
+        blue  = { blue_4  , { w_blue  - 4 { 1'b0 } } };
     end
 
 endmodule
