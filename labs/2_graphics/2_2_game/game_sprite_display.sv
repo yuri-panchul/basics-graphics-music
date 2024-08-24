@@ -24,29 +24,29 @@ module game_sprite_display
 //----------------------------------------------------------------------------
 
 (
-    input                         clk,
-    input                         rst,
+    input                                clk,
+    input                                rst,
 
-    input      [w_x        - 1:0] pixel_x,
-    input      [w_y        - 1:0] pixel_y,
+    input        [w_x             - 1:0] pixel_x,
+    input        [w_y             - 1:0] pixel_y,
 
-    input      [w_x        - 1:0] sprite_x,
-    input      [w_y        - 1:0] sprite_y,
+    input        [w_x             - 1:0] sprite_x,
+    input        [w_y             - 1:0] sprite_y,
 
-    output logic                    sprite_within_screen,
+    output logic                         sprite_within_screen,
 
-    output logic [w_x        - 1:0] sprite_out_left,
-    output logic [w_x        - 1:0] sprite_out_right,
-    output logic [w_y        - 1:0] sprite_out_top,
-    output logic [w_y        - 1:0] sprite_out_bottom,
+    output logic [w_x             - 1:0] sprite_out_left,
+    output logic [w_x             - 1:0] sprite_out_right,
+    output logic [w_y             - 1:0] sprite_out_top,
+    output logic [w_y             - 1:0] sprite_out_bottom,
 
-    output logic                    rgb_en,
-    output logic [             2:0] rgb
+    output logic                         rgb_en,
+    output logic [`GAME_RGB_WIDTH - 1:0] rgb
 );
 
     //------------------------------------------------------------------------
 
-    localparam ERGB_WIDTH = 1 + 3;
+    localparam ERGB_WIDTH = 1 + `GAME_RGB_WIDTH;
 
     //------------------------------------------------------------------------
 
