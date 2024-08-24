@@ -80,8 +80,6 @@ module board_specific_top
     wire [w_x     - 1:0] x;
     wire [w_y     - 1:0] y;
 
-    wire [          7:0] red_8, green_8, blue_8;
-
     wire [         23:0] mic;
     wire [         15:0] sound;
 
@@ -110,9 +108,9 @@ module board_specific_top
         .screen_width  (   screen_width  ),
         .screen_height (   screen_height ),
 
-        .w_red         (   8             ),  // This is not true RGB channel width
-        .w_green       (   8             ),
-        .w_blue        (   8             )
+        .w_red         (   w_red         ),  // This is not true RGB channel width
+        .w_green       (   w_green       ),
+        .w_blue        (   w_blue        )
     )
     i_lab_top
     (
@@ -131,9 +129,9 @@ module board_specific_top
         .x             (   x             ),
         .y             (   y             ),
 
-        .red           (   red_8         ),
-        .green         (   green_8       ),
-        .blue          (   blue_8        ),
+        .red           (   VGA_R         ),
+        .green         (   VGA_G         ),
+        .blue          (   VGA_B         ),
 
         .uart_rx       (   UART_RXD      ),
         .uart_tx       (   UART_TXD      ),
@@ -178,10 +176,6 @@ module board_specific_top
             .vpos        ( y10       ),
             .pixel_clk   (           )
         );
-
-        assign VGA_R = | red_8;
-        assign VGA_G = | green_8;
-        assign VGA_B = | blue_8;
 
     `endif
 
