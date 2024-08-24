@@ -30,6 +30,7 @@ module board_specific_top
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
+
     output logic [    17:0] LEDR,
     output logic [     8:0] LEDG,
 
