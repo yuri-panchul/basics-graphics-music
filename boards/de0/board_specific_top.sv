@@ -29,23 +29,20 @@ module board_specific_top
     input  [ w_sw     - 1:0] SW,
     output [ w_led    - 1:0] LEDG,
 
-    output logic            HEX0_DP,
-    output logic [     6:0] HEX0_D,
-    output logic            HEX1_DP,
-    output logic [     6:0] HEX1_D,
-    output logic            HEX2_DP,
-    output logic [     6:0] HEX2_D,
-    output logic            HEX3_DP,
-    output logic [     6:0] HEX3_D,
+    output logic             HEX0_DP,
+    output logic [      6:0] HEX0_D,
+    output logic             HEX1_DP,
+    output logic [      6:0] HEX1_D,
+    output logic             HEX2_DP,
+    output logic [      6:0] HEX2_D,
+    output logic             HEX3_DP,
+    output logic [      6:0] HEX3_D,
 
-    output                   VGA_CLK,
     output                   VGA_HS,
     output                   VGA_VS,
     output [ w_red    - 1:0] VGA_R,
     output [ w_green  - 1:0] VGA_G,
     output [ w_blue   - 1:0] VGA_B,
-    output                   VGA_BLANK_N,
-    output                   VGA_SYNC_N,
     
     input                    UART_RTS,
     input                    UART_RXD,
@@ -217,11 +214,8 @@ module board_specific_top
             .display_on  (           ),
             .hpos        ( x10       ),
             .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .pixel_clk   (           )
         );
-
-        assign VGA_BLANK_N = 1'b1;
-        assign VGA_SYNC_N  = 1'b0;
 
     `endif
 
@@ -229,7 +223,11 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-        inmp441_mic_i2s_receiver i_microphone
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( clk_mhz  )
+        )
+        i_microphone
         (
             .clk   ( clk         ),
             .rst   ( rst         ),
@@ -262,7 +260,8 @@ module board_specific_top
             .bclk    ( GPIO0_D [27] ), // JP4 pin 36
             .lrclk   ( GPIO0_D [23] ), // JP4 pin 32
             .sdata   ( GPIO0_D [25] )  // JP4 pin 34
-        );                             // JP4 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+        );                             // JP4 pin 30 - GND
+                                       // JP4 pin 29 - VCC 3.3V (30-45 mA)
 
     `endif
 
