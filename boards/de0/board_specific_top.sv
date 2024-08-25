@@ -4,17 +4,17 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 50,
-			  pixel_mhz     = 25,
-			  
+              pixel_mhz     = 25,
+              
               w_key         = 3,
-              w_sw          = 10,          // One onboard SW is used as a reset
+              w_sw          = 10,  // One onboard SW is used as a reset
               w_led         = 10,
               w_digit       = 4,
-              w_gpio        = 64,           // GPIO_0[7:2] reserved for mic
-			  
+              w_gpio        = 64,  // GPIO_0[7:2] reserved for mic
+              
               screen_width  = 640,
               screen_height = 480,
-			  
+              
               w_red         = 4,
               w_green       = 4,
               w_blue        = 4,
@@ -23,70 +23,67 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                CLOCK_50,
+    input                    CLOCK_50,
 
-    input  [w_key - 1:0] KEY,	//Changed by Grafov
-    input  [w_sw  - 1:0] SW,
-    output [w_led - 1:0] LEDG,
+    input  [ w_key    - 1:0] KEY,
+    input  [ w_sw     - 1:0] SW,
+    output [ w_led    - 1:0] LEDG,
 
-    output logic         HEX0_DP,
-    output logic [  6:0] HEX0_D,
-    output logic         HEX1_DP,
-    output logic [  6:0] HEX1_D,
-    output logic         HEX2_DP,
-    output logic [  6:0] HEX2_D,
-    output logic         HEX3_DP,
-    output logic [  6:0] HEX3_D,
+    output logic            HEX0_DP,
+    output logic [     6:0] HEX0_D,
+    output logic            HEX1_DP,
+    output logic [     6:0] HEX1_D,
+    output logic            HEX2_DP,
+    output logic [     6:0] HEX2_D,
+    output logic            HEX3_DP,
+    output logic [     6:0] HEX3_D,
 
-	output                  VGA_CLK,		//Added Grafov
-    output                  VGA_HS,
-    output                  VGA_VS,
-	output [w_red    - 1:0] VGA_R,
-    output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 1:0] VGA_B,
-    output                  VGA_BLANK_N,	//Added Grafov
-    output                  VGA_SYNC_N,		//Added Grafov
-	
-    input                   UART_RTS,		//Added Grafov
-    input                   UART_RXD,		//Added Grafov
+    output                   VGA_CLK,
+    output                   VGA_HS,
+    output                   VGA_VS,
+    output [ w_red    - 1:0] VGA_R,
+    output [ w_green  - 1:0] VGA_G,
+    output [ w_blue   - 1:0] VGA_B,
+    output                   VGA_BLANK_N,
+    output                   VGA_SYNC_N,
+    
+    input                    UART_RTS,
+    input                    UART_RXD,
 
-    output                  UART_CTS,		//Added Grafov
-    output                  UART_TXD,		//Added Grafov
-	
-    inout  [          31:0] GPIO0_D,
-    inout  [          31:0] GPIO1_D
+    output                   UART_CTS,
+    output                   UART_TXD,
+    
+    inout  [          31:0]  GPIO0_D,
+    inout  [          31:0]  GPIO1_D
 );
 
     //------------------------------------------------------------------------
 
     localparam w_lab_sw = w_sw - 1;  // One onboard SW is used as a reset
 
-    wire                     clk = CLOCK_50;
+    wire                   clk    = CLOCK_50;
 
-    wire                  rst    = SW [w_lab_sw];
-    wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
-    //wire [w_key    - 1:0] lab_key = ~ BUTTON; Changed by Grafov
+    wire                   rst    = SW [w_lab_sw];
+    wire [ w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
 
     //------------------------------------------------------------------------
 
-    wire [          7:0] abcdefgh;
-    wire [w_digit - 1:0] digit;
-	
-	// Graphics								//Added Grafov
+    // Seven-segment display
 
-    wire [ w_x       - 1:0] x;				//Added Grafov
-    wire [ w_y       - 1:0] y;				//Added Grafov
+    wire [            7:0] abcdefgh;
+    wire [ w_digit  - 1:0] digit;
+    
+    // Graphics
 
-    wire [ w_red     - 1:0] red;			//Added Grafov
-    wire [ w_green   - 1:0] green;			//Added Grafov
-    wire [ w_blue    - 1:0] blue;			//Added Grafov
+    wire [ w_x     - 1:0] x;
+    wire [ w_y     - 1:0] y;
 
-    wire [         23:0] mic;
-    wire [         15:0] sound;
+    wire [ w_red   - 1:0] red;
+    wire [ w_green - 1:0] green;
+    wire [ w_blue  - 1:0] blue;
 
-    // FIXME: Should be assigned to some GPIO!
-    wire                 UART_RX = '1;		// ??????
-    wire                 UART_TX;			// ??????
+    wire [          23:0] mic;
+    wire [          15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -99,51 +96,48 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       ( clk_mhz         ),
-        .w_key         ( w_key           ),
-        .w_sw          ( w_lab_sw        ),
-        .w_led         ( w_led           ),
-        .w_digit       ( w_digit         ),
-        .w_gpio        ( w_gpio          ),        // GPIO_0[7:2] reserved for mic
-		
-        .screen_width  (   screen_width  ),		//Added Grafov
-        .screen_height (   screen_height ),		//Added Grafov
+        .clk_mhz       (   clk_mhz              ),
+        .w_key         (   w_key                ),
+        .w_sw          (   w_lab_sw             ),
+        .w_led         (   w_led                ),
+        .w_digit       (   w_digit              ),
+        .w_gpio        (   w_gpio               ),  // GPIO_0[7:2] reserved for mic
 
-        .w_red         (   w_red         ),		//Added Grafov
-        .w_green       (   w_green       ),		//Added Grafov
-        .w_blue        (   w_blue        )		//Added Grafov
+        .screen_width  (   screen_width         ),
+        .screen_height (   screen_height        ),
+
+        .w_red         (   w_red                ),
+        .w_green       (   w_green              ),
+        .w_blue        (   w_blue               )
     )
     i_lab_top
     (
-        .clk      (   clk                  ),
-        .slow_clk (   slow_clk             ),
-        .rst      (   rst                  ),
+        .clk           (   clk                  ),
+        .slow_clk      (   slow_clk             ),
+        .rst           (   rst                  ),
 
-        .key      ( ~ KEY                  ),	//Changed by Grafov
-        .sw       (   lab_sw               ),
+        .key           ( ~ KEY                  ),
+        .sw            (   lab_sw               ),
 
-        .led      (   LEDG                 ),
+        .led           (   LEDG                 ),
 
-        .abcdefgh (   abcdefgh             ),
-        .digit    (   digit                ),
-		
-        .x        (   x                    ),	//Added Grafov
-        .y        (   y                    ),	//Added Grafov		
+        .abcdefgh      (   abcdefgh             ),
+        .digit         (   digit                ),
 
- //       .vsync    (   VGA_VS               ),	//Deleted Grafov
- //       .hsync    (   VGA_HS               ),	//Deleted Grafov
+        .x             (   x                    ),
+        .y             (   y                    ),
 
-        .red      (   VGA_R                ),
-        .green    (   VGA_G                ),
-        .blue     (   VGA_B                ),
+        .red           (   VGA_R                ),
+        .green         (   VGA_G                ),
+        .blue          (   VGA_B                ),
 
-        .mic      (   mic                  ),	//Changed Grafov
-        .sound    (   sound                ),	//Changed Grafov
+        .mic           (   mic                  ),
+        .sound         (   sound                ),
 
-        .uart_rx  (   UART_RXD             ),	//Changed Grafov
-        .uart_tx  (   UART_TXD             ),	//Changed Grafov
+        .uart_rx       (   UART_RXD             ),
+        .uart_tx       (   UART_TXD             ),
 
-        .gpio     (   { GPIO0_D, GPIO1_D } )
+        .gpio          (   { GPIO0_D, GPIO1_D } )
     );
 
     //------------------------------------------------------------------------
@@ -201,8 +195,7 @@ module board_specific_top
             end
 
     `endif
-	
-// BEGIN inserted Grafov
+
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
@@ -233,44 +226,44 @@ module board_specific_top
     `endif
 
     //------------------------------------------------------------------------
-// END inserted Grafov
- 
- //------------------------------------------------------------------------
- `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE		// Inserted Grafov
-  
-    inmp441_mic_i2s_receiver i_microphone
-    (
-        .clk   (   clk         ),
-        .rst   (   rst         ),
-        .lr    (   GPIO0_D [2] ), // JP4 pin 5
-        .ws    (   GPIO0_D [4] ), // JP4 pin 7
-        .sck   (   GPIO0_D [6] ), // JP4 pin 9
-        .sd    (   GPIO0_D [7] ), // JP4 pin 10
-        .value (   mic         )
-    );
 
-    assign GPIO0_D [3] = 1'b0;    // GND - JP4 pin 6
-    assign GPIO0_D [5] = 1'b1;    // VCC - JP4 pin 8
- `endif												// Inserted Grafov
- //------------------------------------------------------------------------
- 
- //------------------------------------------------------------------------
- `ifdef INSTANTIATE_SOUND_OTPUUT_INTERFACE_MODULE	// Inserted Grafov
- 
-  i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz     )
-    )
-    inst_audio_out
-    (
-        .clk     ( clk          ),
-        .reset   ( rst          ),
-        .data_in ( sound        ),
-        .mclk    ( GPIO0_D [29] ), // JP4 pin 38
-        .bclk    ( GPIO0_D [27] ), // JP4 pin 36
-        .lrclk   ( GPIO0_D [23] ), // JP4 pin 32
-        .sdata   ( GPIO0_D [25] )  // JP4 pin 34
-    );                             // JP4 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
- `endif												// Inserted Grafov
- 
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver i_microphone
+        (
+            .clk   ( clk         ),
+            .rst   ( rst         ),
+            .lr    ( GPIO0_D [2] ), // JP4 pin 5
+            .ws    ( GPIO0_D [4] ), // JP4 pin 7
+            .sck   ( GPIO0_D [6] ), // JP4 pin 9
+            .sd    ( GPIO0_D [7] ), // JP4 pin 10
+            .value ( mic         )
+        );
+
+        assign GPIO0_D [3] = 1'b0;    // GND - JP4 pin 6
+        assign GPIO0_D [5] = 1'b1;    // VCC - JP4 pin 8
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OTPUUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz     )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk          ),
+            .reset   ( rst          ),
+            .data_in ( sound        ),
+            .mclk    ( GPIO0_D [29] ), // JP4 pin 38
+            .bclk    ( GPIO0_D [27] ), // JP4 pin 36
+            .lrclk   ( GPIO0_D [23] ), // JP4 pin 32
+            .sdata   ( GPIO0_D [25] )  // JP4 pin 34
+        );                             // JP4 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+
+    `endif
+
 endmodule
