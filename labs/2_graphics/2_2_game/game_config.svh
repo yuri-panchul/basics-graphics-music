@@ -3,6 +3,8 @@
 
 `include "config.svh"
 
+`define GAME_RGB_WIDTH       3
+
 `ifndef GAME_MASTER_FSM_MODULE
 
    `define GAME_MASTER_FSM_MODULE   game_master_fsm_1_regular_state_encoded

@@ -29,35 +29,35 @@ module game_sprite_top
 //----------------------------------------------------------------------------
 
 (
-    input                     clk,
-    input                     rst,
+    input                          clk,
+    input                          rst,
 
-    input  [w_x        - 1:0] pixel_x,
-    input  [w_y        - 1:0] pixel_y,
+    input  [w_x             - 1:0] pixel_x,
+    input  [w_y             - 1:0] pixel_y,
 
-    input                     sprite_write_xy,
-    input                     sprite_write_dxy,
+    input                          sprite_write_xy,
+    input                          sprite_write_dxy,
 
-    input  [w_x        - 1:0] sprite_write_x,
-    input  [w_y        - 1:0] sprite_write_y,
+    input  [w_x             - 1:0] sprite_write_x,
+    input  [w_y             - 1:0] sprite_write_y,
 
-    input  [ DX_WIDTH  - 1:0] sprite_write_dx,
-    input  [ DY_WIDTH  - 1:0] sprite_write_dy,
+    input  [DX_WIDTH        - 1:0] sprite_write_dx,
+    input  [DY_WIDTH        - 1:0] sprite_write_dy,
 
-    input                     sprite_enable_update,
+    input                          sprite_enable_update,
 
-    output [w_x        - 1:0] sprite_x,
-    output [w_y        - 1:0] sprite_y,
+    output [w_x             - 1:0] sprite_x,
+    output [w_y             - 1:0] sprite_y,
 
-    output                    sprite_within_screen,
+    output                         sprite_within_screen,
 
-    output [w_x        - 1:0] sprite_out_left,
-    output [w_x        - 1:0] sprite_out_right,
-    output [w_y        - 1:0] sprite_out_top,
-    output [w_y        - 1:0] sprite_out_bottom,
+    output [w_x             - 1:0] sprite_out_left,
+    output [w_x             - 1:0] sprite_out_right,
+    output [w_y             - 1:0] sprite_out_top,
+    output [w_y             - 1:0] sprite_out_bottom,
 
-    output                    rgb_en,
-    output [             2:0] rgb
+    output                         rgb_en,
+    output [`GAME_RGB_WIDTH - 1:0] rgb
 );
 
     game_sprite_control
