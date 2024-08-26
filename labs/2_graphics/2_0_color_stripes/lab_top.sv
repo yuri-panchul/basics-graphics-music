@@ -79,33 +79,37 @@ module lab_top
         green = '0;
         blue  = '0;
 
-        if (x < 128)
+        if(x < screen_width && y < screen_height)
         begin
-            red = x[6:3];
-        end
 
-        if (x >= 128 && x < 128+128)
-        begin
-            green = x[6:3];
-        end
+            if (x < 128)
+            begin
+                red = x[w_red+3:3];
+            end
+    
+            if (x >= 128 && x < 128+128)
+            begin
+                green = x[w_green+3:3];
+            end
+    
+            if (x >= 128+128 && x < 128+128+128)
+            begin
+                blue = x[w_blue+3:3];
+            end
+    
+            if (x >= 128+128+128 && x < 128+128+128+128)
+            begin
+                red = x[w_red+3:3];
+                green = x[w_green+3:3];
+            end
+    
+            if (x >= 128+128+128+128 && x < 128+128+128+128+128)
+            begin
+                green = x[6:3];
+                blue = x[6:3];
+            end
 
-        if (x >= 128+128 && x < 128+128+128)
-        begin
-            blue = x[6:3];
         end
-
-        if (x >= 128+128+128 && x < 128+128+128+128)
-        begin
-            red = x[6:3];
-            green = x[6:3];
-        end
-
-        if (x >= 128+128+128+128 && x < 128+128+128+128+128)
-        begin
-            green = x[6:3];
-            blue = x[6:3];
-        end
-
     end
-
+    
 endmodule
