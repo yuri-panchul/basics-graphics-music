@@ -18,7 +18,7 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
-              w_gpio        = 10,
+              w_gpio        = 6,
 
               `ifdef USE_LCD_800_480
 
