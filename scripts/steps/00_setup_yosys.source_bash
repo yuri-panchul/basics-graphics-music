@@ -110,6 +110,13 @@ setup_run_directory_for_fpga_synthesis_yosys ()
             -printf "READ_VERILOG += -p \"read_verilog -sv -formal %p\"\n" \
             -printf "DEPS += %p\n" \
             >> "$dir/Makefile"
+
+        $find_to_run  \
+            "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+            -type f -name '*.v' \
+            -printf "READ_VERILOG += -p \"read_verilog %p\"\n" \
+            -printf "DEPS += %p\n" \
+            >> "$dir/Makefile"
     done
 
     cat "$board_dir/$fpga_board/Makefile" >> "$dir/Makefile"
