@@ -18,9 +18,9 @@ module board_specific_top
               screen_width  = 640,
               screen_height = 480,
 
-              w_red         = 4,
-              w_green       = 4,
-              w_blue        = 4,
+              w_red         = 8,
+              w_green       = 8,
+              w_blue        = 8,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
