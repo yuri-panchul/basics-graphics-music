@@ -23,29 +23,29 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                CLOCK_50,
-    input                RESET_N,
+    input                   CLOCK_50,
+    input                   RESET_N,
 
-    input  [w_key - 1:0] KEY,
-    input  [w_sw  - 1:0] SW,
-    output [w_led - 1:0] LEDR,  // The last 6 LEDR are used like a 7SEG dp
+    input  [ w_key   - 1:0] KEY,
+    input  [ w_sw    - 1:0] SW,
+    output [ w_led   - 1:0] LEDR,  // The last 6 LEDR are used like a 7SEG dp
 
-    output logic [  6:0] HEX0,  // HEX[7] aka dp doesn't connected to FPGA at DE0-CV
-    output logic [  6:0] HEX1,
-    output logic [  6:0] HEX2,
-    output logic [  6:0] HEX3,
-    output logic [  6:0] HEX4,
-    output logic [  6:0] HEX5,
+    output logic [     6:0] HEX0,  // HEX[7] aka dp doesn't connected to FPGA at DE0-CV
+    output logic [     6:0] HEX1,
+    output logic [     6:0] HEX2,
+    output logic [     6:0] HEX3,
+    output logic [     6:0] HEX4,
+    output logic [     6:0] HEX5,
 
-    output               VGA_HS,
-    output               VGA_VS,
+    output                  VGA_HS,
+    output                  VGA_VS,
 
-    output [        3:0] VGA_R,
-    output [        3:0] VGA_G,
-    output [        3:0] VGA_B,
+    output [ w_red   - 1:0] VGA_R,
+    output [ w_green - 1:0] VGA_G,
+    output [ w_blue  - 1:0] VGA_B,
 
-    inout  [       35:0] GPIO_0,
-    inout  [       35:0] GPIO_1
+    inout  [          35:0] GPIO_0,
+    inout  [          35:0] GPIO_1
 );
 
     //------------------------------------------------------------------------
