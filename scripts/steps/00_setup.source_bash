@@ -293,11 +293,7 @@ update_fpga_toolchain_var ()
 
         # Yosys should be the first because of * later
 
-        ice40hx8k_evb_yosys              | \
-        orangecrab_ecp5_yosys            | \
-        karnix_ecp5_yosys                | \
-        tang_nano_9k_gowin_yosys         | \
-        tang_primer_20k_dock_gowin_yosys )
+        *_yosys )
 
             fpga_toolchain=yosys
         ;;

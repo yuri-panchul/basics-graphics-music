@@ -83,27 +83,32 @@ module lab_top
         green_4 = '0;
         blue_4  = '0;
 
-             if (x <     128)  red_4   = x4;
-
-        else if (x < 2 * 128)  green_4 = x4;
-
-        else if (x < 3 * 128)  blue_4  = x4;
-
-        else if (x < 4 * 128)
+        if(x < screen_width && y < screen_height)
         begin
-            red_4   = x4;
-            green_4 = x4;
-        end
 
-        else if (x < 5 * 128)
-        begin
-            green_4 = x4;
-            blue_4  = x4;
-        end
+                 if (x <     128)  red_4   = x4;
 
-        red   = { red_4   , { w_red   - 4 { 1'b0 } } };
-        green = { green_4 , { w_green - 4 { 1'b0 } } };
-        blue  = { blue_4  , { w_blue  - 4 { 1'b0 } } };
+            else if (x < 2 * 128)  green_4 = x4;
+
+            else if (x < 3 * 128)  blue_4  = x4;
+
+            else if (x < 4 * 128)
+            begin
+                red_4   = x4;
+                green_4 = x4;
+            end
+
+            else if (x < 5 * 128)
+            begin
+                green_4 = x4;
+                blue_4  = x4;
+            end
+
+            red   = { red_4   , { w_red   - 4 { 1'b0 } } };
+            green = { green_4 , { w_green - 4 { 1'b0 } } };
+            blue  = { blue_4  , { w_blue  - 4 { 1'b0 } } };
+
+        end
     end
-
+    
 endmodule
