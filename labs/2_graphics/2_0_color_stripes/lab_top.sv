@@ -83,7 +83,7 @@ module lab_top
         green_4 = '0;
         blue_4  = '0;
 
-        if(x < screen_width && y < screen_height)
+        if (x < screen_width && y < screen_height)
         begin
 
                  if (x <     128)  red_4   = x4;
@@ -103,12 +103,11 @@ module lab_top
                 green_4 = x4;
                 blue_4  = x4;
             end
-
-            red   = { red_4   , { w_red   - 4 { 1'b0 } } };
-            green = { green_4 , { w_green - 4 { 1'b0 } } };
-            blue  = { blue_4  , { w_blue  - 4 { 1'b0 } } };
-
         end
+
+        red   = { red_4   , { w_red   - 4 { 1'b0 } } };
+        green = { green_4 , { w_green - 4 { 1'b0 } } };
+        blue  = { blue_4  , { w_blue  - 4 { 1'b0 } } };
     end
     
 endmodule
