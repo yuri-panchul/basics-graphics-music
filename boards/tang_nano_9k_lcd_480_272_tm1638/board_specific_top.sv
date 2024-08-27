@@ -205,11 +205,8 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
-        //.x             ( mirrored_x    ),
-        //.y             ( mirrored_y    ),
-        .x             ( x    ),
-        .y             ( y    ),
-
+        .x             ( mirrored_x    ),
+        .y             ( mirrored_y    ),
 
         .red           ( LARGE_LCD_R   ),
         .green         ( LARGE_LCD_G   ),
