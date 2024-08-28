@@ -32,20 +32,28 @@ endif
 fw: $(NAME).bin
 
 $(NAME).bin: $(PCF) $(DEPS)
-	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ice40 -noabc9 -blif $(NAME).blif -top board_specific_top" -p "write_json $(NAME).json"
+	yosys -p "verilog_defaults -add -I$(subst :, -I,$(INC))" $(READ_VERILOG) -p "synth_ice40 -noabc9 -blif $(NAME).blif -top board_specific_top" -p "write_json $(NAME).json"
 	nextpnr-ice40 --hx$(DEVICE) --package $(PACKAGE) --json $(NAME).json --pcf $(PCF) --pcf-allow-unconstrained --asc $(NAME).asc
 	icepack -s $(NAME).asc $(NAME).bin
 
+
 .PHONY: gui
 gui: $(PCF) $(DEPS)
-	yosys -p "verilog_defaults -add -I$(INC)" $(READ_VERILOG) -p "synth_ice40 -blif $(NAME).blif -top top" -p "write_json $(NAME).json" -p "hierarchy -check -top top" -p "proc" -p "show -prefix $(NAME) -notitle -colors 2 -width -format dot"
+	yosys -p "verilog_defaults -add -I$(subst :, -I,$(INC))" $(READ_VERILOG) -p "read_verilog -sv +/ice40/cells_sim.v" -p "hierarchy -check -top board_specific_top" -p "proc; opt; fsm; memory; opt" -p "show -prefix $(NAME) -notitle -colors 2 -width -format dot"
+	@if [ -f "`which dot`" ]; then \
+		echo "Generating PDFs with schematics..."; \
+		dot -Tpdf -O $(NAME).dot; \
+	else \
+		echo "Note: 'dot' utility is not installed, PDF won't be generated!"; \
+	fi
+	@echo "Generating SVGs with routing and placement..."
 	netlistsvg -o $(NAME).svg $(NAME).json
 	nextpnr-ice40 --hx$(DEVICE) --package $(PACKAGE) --json $(NAME).json --pcf $(PCF) --pcf-allow-unconstrained --asc $(NAME).asc --placed-svg $(NAME)-placed.svg --routed-svg $(NAME)-routed.svg
 	@if [ -f "`which firefox`" ]; then \
-		firefox $(NAME).svg $(NAME)-placed.svg $(NAME)-routed.svg; \
+		firefox $(NAME).svg $(NAME)-placed.svg $(NAME)-routed.svg $(NAME).*pdf; \
 	else \
-		echo "Firefox is not installed, cannot show you SVG files:"; \
-		ls -al $(NAME).svg $(NAME)-placed.svg $(NAME)-routed.svg; \
+		echo "Firefox is not installed, cannot show you SVG and PDF files:"; \
+		ls -al $(NAME).svg $(NAME)-placed.svg $(NAME)-routed.svg $(NAME).*pdf; \
 	fi
 	@if [ -f "`which xdot`" ]; then \
 		xdot $(NAME).dot; \
