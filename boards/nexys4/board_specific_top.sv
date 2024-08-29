@@ -91,21 +91,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [7:0] abcdefgh;
-    wire [7:0] digit;
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
 
     assign { seg [0], seg [1], seg [2], seg [3],
              seg [4], seg [5], seg [6], dp       } = ~ abcdefgh;
 
     assign an = ~ digit;
 
-    wire [w_x    - 1:0] x;
-    wire [w_y    - 1:0] y;
+    wire [w_x - 1:0] x;
+    wire [w_y - 1:0] y;
 
-    wire [        23:0] mic;
-    wire [        15:0] sound;
-
-    wire [w_gpio - 1:0] gpio;
+    wire [     23:0] mic;
+    wire [     15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -159,7 +157,7 @@ module board_specific_top
         .uart_rx       ( RsRx           ),
         .uart_tx       (                ),
 
-        .gpio          ( gpio           )
+        .gpio          (                )
     );
 
     //------------------------------------------------------------------------

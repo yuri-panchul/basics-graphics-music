@@ -99,13 +99,17 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [ 7:0] abcdefgh;
-    wire [ 7:0] digit;
+    wire [          7:0] abcdefgh;
+    wire [w_digit - 1:0] digit;
 
     assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
     assign AN = ~ digit;
 
-    wire [23:0] mic;
+    wire [w_x - 1:0] x;
+    wire [w_y - 1:0] y;
+
+    wire [     23:0] mic;
+    wire [     15:0] sound;
 
     // FIXME: Should be assigned to some GPIO!
     wire        UART_TX;
@@ -121,58 +125,136 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz       ( clk_mhz        ),
+        .w_key         ( w_key          ),
+        .w_sw          ( w_sw           ),
+        .w_led         ( w_led          ),
+        .w_digit       ( w_digit        ),
+        .w_gpio        ( w_gpio         ),
+
+        .screen_width  ( screen_width   ),
+        .screen_height ( screen_height  ),
+
+        .w_red         ( w_red          ),
+        .w_green       ( w_green        ),
+        .w_blue        ( w_blue         )
     )
     i_lab_top
     (
-        .clk      ( clk      ),
-        .slow_clk ( slow_clk ),
-        .rst      ( rst      ),
+        .clk           ( clk            ),
+        .slow_clk      ( slow_clk       ),
+        .rst           ( rst            ),
 
-        .key      ( { BTND, BTNU, BTNL, BTNC, BTNR } ),
-        .sw       ( SW       ),
+        .key           ( { BTND, BTNU, BTNL, BTNC, BTNR } ),
+        .sw            ( SW             ),
 
-        .led      ( LED      ),
+        .led           ( LED            ),
 
-        .abcdefgh ( abcdefgh ),
+        .abcdefgh      ( abcdefgh       ),
+        .digit         ( digit          ),
 
-        .digit    ( digit    ),
+        .x             ( x              ),
+        .y             ( y              ),
 
-        .vsync    ( VGA_VS   ),
-        .hsync    ( VGA_HS   ),
+        .red           ( VGA_R          ),
+        .green         ( VGA_G          ),
+        .blue          ( VGA_B          ),
 
-        .red      ( VGA_R    ),
-        .green    ( VGA_G    ),
-        .blue     ( VGA_B    ),
+        .mic           ( mic            ),
+        .sound         ( sound          ),
 
-        .uart_rx  ( UART_TXD_IN),
-        .uart_tx  ( UART_TX   ),
+        .uart_rx       ( UART_TXD_IN    ),
+        .uart_tx       ( UART_TX        ),
 
-        .mic      ( mic      ),
-        .gpio     (          )
+        .gpio          (                )
     );
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver
-    # (.clk_mhz (100))
-    i_microphone
-    (
-        .clk   ( clk    ),
-        .rst   ( rst    ),
-        .lr    ( JD [9] ),
-        .ws    ( JD [8] ),
-        .sck   ( JD [7] ),
-        .sd    ( JD [1] ),
-        .value ( mic    )
-    );
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-    assign JD [3] = 1'b0;  // GND
-    assign JD [2] = 1'b1;  // VCC
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz     ),
+            .PIXEL_MHZ   ( pixel_mhz   )
+        )
+        i_vga
+        (
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HS     ),
+            .vsync       ( VGA_VS     ),
+            .display_on  (            ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
+        );
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( clk_mhz )
+        )
+        i_microphone
+        (
+            .clk     ( clk     ),
+            .rst     ( rst     ),
+            .lr      ( JD [9]  ),
+            .ws      ( JD [8]  ),
+            .sck     ( JD [7]  ),
+            .sd      ( JD [1]  ),
+            .value   ( mic     )
+        );
+
+        assign JD [3] = 1'b0;  // GND
+        assign JD [2] = 1'b1;  // VCC
+    
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz )
+        )
+        inst_pcm5102
+        (
+            .clk     ( clk     ),
+            .reset   ( rst     ),
+            .data_in ( sound   ),
+
+            .mclk    ( JC [ 7]  ),
+            .bclk    ( JC [ 8]  ),
+            .sdata   ( JC [ 9]  ),
+            .lrclk   ( JC [10]  )
+        );
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz )
+        )
+        inst_pmod_amp3
+        (
+            .clk     ( clk     ),
+            .reset   ( rst     ),
+            .data_in ( sound   ),
+
+            .mclk    ( JB [9]  ),
+            .bclk    ( JB [4]  ),
+            .sdata   ( JB [2]  ),
+            .lrclk   ( JB [1]  )
+        );
+
+    `endif
 
 endmodule
