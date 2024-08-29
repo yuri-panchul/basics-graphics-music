@@ -20,7 +20,10 @@ module lab_top
                w_blue        = 4,
 
                w_x           = $clog2 ( screen_width  ),
-               w_y           = $clog2 ( screen_height )
+               w_y           = $clog2 ( screen_height ),
+
+               strobe_to_update_xy_counter_width
+                   = $clog2 (clk_mhz * 1000 * 1000) - 6
 )
 (
     input                        clk,
@@ -70,11 +73,6 @@ module lab_top
     // assign blue       = '0;
        assign sound      = '0;
        assign uart_tx    = '1;
-
-    //------------------------------------------------------------------------
-
-    localparam strobe_to_update_xy_counter_width
-        = $clog2 (clk_mhz * 1000 * 1000) - 6;
 
     //------------------------------------------------------------------------
 
