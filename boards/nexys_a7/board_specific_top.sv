@@ -3,66 +3,78 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 100,
-              w_key   = 5,
-              w_sw    = 16,
-              w_led   = 16,
-              w_digit = 8,
-              w_gpio  = 32
+    parameter clk_mhz       = 100,
+              pixel_mhz     = 25,
+
+              w_key         = 5,
+              w_sw          = 16,
+              w_led         = 16,
+              w_digit       = 8,
+              w_gpio        = 32,
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 4,
+              w_green       = 4,
+              w_blue        = 4,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
-    input         CLK100MHZ,
-    input         CPU_RESETN,
+    input                   CLK100MHZ,
+    input                   CPU_RESETN,
 
-    input         BTNC,
-    input         BTNU,
-    input         BTNL,
-    input         BTNR,
-    input         BTND,
+    input                   BTNC,
+    input                   BTNU,
+    input                   BTNL,
+    input                   BTNR,
+    input                   BTND,
 
-    input  [15:0] SW,
-    output [15:0] LED,
+    input  [w_sw     - 1:0] SW,
+    output [w_led    - 1:0] LED,
 
-    output        LED16_B,
-    output        LED16_G,
-    output        LED16_R,
+    output                  LED16_B,
+    output                  LED16_G,
+    output                  LED16_R,
 
-    output        LED17_B,
-    output        LED17_G,
-    output        LED17_R,
+    output                  LED17_B,
+    output                  LED17_G,
+    output                  LED17_R,
 
-    output        CA,
-    output        CB,
-    output        CC,
-    output        CD,
-    output        CE,
-    output        CF,
-    output        CG,
+    output                  CA,
+    output                  CB,
+    output                  CC,
+    output                  CD,
+    output                  CE,
+    output                  CF,
+    output                  CG,
 
-    output        DP,
+    output                  DP,
 
-    output [ 7:0] AN,
+    output [w_digit  - 1:0] AN,
 
-    output [ 3:0] VGA_R,
-    output [ 3:0] VGA_G,
-    output [ 3:0] VGA_B,
+    output [w_red    - 1:0] VGA_R,
+    output [w_blue   - 1:0] VGA_G,
+    output [w_green  - 1:0] VGA_B,
 
-    output        VGA_HS,
-    output        VGA_VS,
+    output                  VGA_HS,
+    output                  VGA_VS,
 
-    input         UART_TXD_IN,
+    input                   UART_TXD_IN,
 
-    inout  [12:1] JA,
-    inout  [12:1] JB,
-    inout  [12:1] JC,
-    inout  [12:1] JD,
+    inout            [12:1] JA,
+    inout            [12:1] JB,
+    inout            [12:1] JC,
+    inout            [12:1] JD,
 
-    output        M_CLK,
-    input         M_DATA,
-    output        M_LRSEL,
+    output                  M_CLK,
+    input                   M_DATA,
+    output                  M_LRSEL,
 
-    output        AUD_PWM,
-    output        AUD_SD
+    output                  AUD_PWM,
+    output                  AUD_SD
 );
 
     //------------------------------------------------------------------------

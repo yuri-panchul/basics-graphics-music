@@ -45,7 +45,7 @@ module board_specific_top
 
     output [           6:0] seg,
     output                  dp,
-    output [           7:0] an,
+    output [w_digit  - 1:0] an,
 
     output                  Hsync,
     output                  Vsync,
