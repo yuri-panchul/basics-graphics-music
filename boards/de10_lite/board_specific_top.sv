@@ -21,30 +21,28 @@ module board_specific_top
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
-
 )
 (
-    input                 MAX10_CLK1_50,
+    input                    MAX10_CLK1_50,
 
-    input  [w_key  - 1:0] KEY,
-    input  [w_sw   - 1:0] SW,
-    output [w_led  - 1:0] LEDR,
+    input  [ w_key    - 1:0] KEY,
+    input  [ w_sw     - 1:0] SW,
+    output [ w_led    - 1:0] LEDR,
 
-    output logic    [7:0] HEX0,
-    output logic    [7:0] HEX1,
-    output logic    [7:0] HEX2,
-    output logic    [7:0] HEX3,
-    output logic    [7:0] HEX4,
-    output logic    [7:0] HEX5,
+    output logic       [7:0] HEX0,
+    output logic       [7:0] HEX1,
+    output logic       [7:0] HEX2,
+    output logic       [7:0] HEX3,
+    output logic       [7:0] HEX4,
+    output logic       [7:0] HEX5,
 
+    output                   VGA_HS,
+    output                   VGA_VS,
+    output [ w_red    - 1:0] VGA_R,
+    output [ w_green  - 1:0] VGA_G,
+    output [ w_blue   - 1:0] VGA_B,
 
-    output                  VGA_HS,
-    output                  VGA_VS,
-    output [w_red    - 1:0] VGA_R,
-    output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 1:0] VGA_B,
-
-    inout  [w_gpio - 1:0] GPIO
+    inout  [ w_gpio   - 1:0] GPIO
 );
 
     //------------------------------------------------------------------------
@@ -53,8 +51,8 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire                    clk    = MAX10_CLK1_50;
-    wire                    rst    = SW [w_sw - 1];
+    wire clk = MAX10_CLK1_50;
+    wire rst = SW [w_sw - 1];
 
     // Keys, switches, LEDs
 
