@@ -1,4 +1,4 @@
-module serial_adder_with_vld
+module serial_adder_with_vld_and_last
 (
   input  clk,
   input  rst,
