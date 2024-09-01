@@ -53,6 +53,8 @@ run_icarus_verilog ()
     rars_assembly
 
     #-------------------------------------------------------------------------
+    
+    # TODO: Add board specific files to sumulate Video signals. -piet
 
     shopt -s nullglob
 
