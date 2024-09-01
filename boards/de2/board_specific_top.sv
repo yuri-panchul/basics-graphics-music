@@ -30,7 +30,7 @@ module board_specific_top
 
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
-    output logic [     17:0] LEDR,    // The last 8 LEDR are used like a 7SEG dp
+    output logic [    17:0] LEDR,    // The last 8 LEDR are used like a 7SEG dp
     output logic [     7:0] LEDG,
 
     output logic [     6:0] HEX0,    // HEX[7] aka dp doesn't connected to FPGA at DE2 board
@@ -42,14 +42,14 @@ module board_specific_top
     output logic [     6:0] HEX6,
     output logic [     6:0] HEX7,
 
-    output                VGA_CLK,
-    output                VGA_HS,
-    output                VGA_VS,
-    output                VGA_BLANK,
-    output                VGA_SYNC,
+    output                  VGA_CLK,
+    output                  VGA_HS,
+    output                  VGA_VS,
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
     output [w_blue   - 1:0] VGA_B,
+    output                  VGA_BLANK_N,
+    output                  VGA_SYNC_N,
 
     input                   UART_RXD,
     output                  UART_TXD,
@@ -72,21 +72,24 @@ module board_specific_top
 
     wire [ w_lab_sw  - 1:0] lab_sw = SW [w_lab_sw - 1:0];
     // wire [ w_lab_led - 1:0] lab_led;				// FIX?
-    // wire [ w_led - w_digit - 1:0] lab_led;
+    wire [ w_led - w_digit - 1:0] lab_led;
 
     // A dynamic seven-segment display
 
     wire [             7:0] abcdefgh;
     wire [ w_digit   - 1:0] digit;
 
+    // Graphics
+
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
-    wire [ w_red     - 1:0] vga_red_4b;
-    wire [ w_green   - 1:0] vga_green_4b;
-    wire [ w_blue    - 1:0] vga_blue_4b;
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
 
     // Microphone, sound output and UART
+
     wire [            23:0] mic;
     wire [            15:0] sound;
 
@@ -132,9 +135,9 @@ module board_specific_top
         .x             (   x                ),
         .y             (   y                ),
 
-        .red           (   vga_red_4b       ),
-        .green         (   vga_green_4b     ),
-        .blue          (   vga_blue_4b      ),
+        .red           (   VGA_R            ),
+        .green         (   VGA_G            ),
+        .blue          (   VGA_B            ),
 
         .mic           (   mic              ),
         .sound         (   sound            ),
@@ -150,6 +153,7 @@ module board_specific_top
     //assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_led; // Last 8 LEDR are used like a 7SEG dp HACK?
     // assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = w_lab_led; // Last 8 LEDR are used like a 7SEG dp HACK?
 
+`ifdef NOT_NEEDED
     assign VGA_R   = { vga_red_4b,   4'd0 };
     assign VGA_G   = { vga_green_4b, 4'd0 };
     assign VGA_B   = { vga_blue_4b,  4'd0 };
@@ -186,6 +190,7 @@ module board_specific_top
     end
 
     assign VGA_CLK = clk_en;
+ `endif
 
     //------------------------------------------------------------------------
     wire [$left (abcdefgh):0] hgfedcba;
@@ -253,16 +258,6 @@ module board_specific_top
                 if (digit [6]) HEX6 <= ~ hgfedcba [$left (HEX6):0];
                 if (digit [7]) HEX7 <= ~ hgfedcba [$left (HEX7):0];
 
-                if (digit [0]) dp[0] <=  hgfedcba [$left (HEX0) + 1];
-                if (digit [1]) dp[1] <=  hgfedcba [$left (HEX1) + 1];
-                if (digit [2]) dp[2] <=  hgfedcba [$left (HEX2) + 1];
-                if (digit [3]) dp[3] <=  hgfedcba [$left (HEX3) + 1];
-                if (digit [4]) dp[4] <=  hgfedcba [$left (HEX4) + 1];
-                if (digit [5]) dp[5] <=  hgfedcba [$left (HEX5) + 1];
-                if (digit [6]) dp[6] <=  hgfedcba [$left (HEX6) + 1];
-                if (digit [7]) dp[7] <=  hgfedcba [$left (HEX7) + 1];
-
-
                 for (int i = 0; i < w_digit; i ++)
                     if (digit [i])
                         LEDR [$bits (LEDR) - w_digit + i] <=  hgfedcba [$left (HEX0) + 1];
@@ -284,15 +279,18 @@ module board_specific_top
         )
         i_vga
         (
-            .clk         ( clk    ),
-            .rst         ( rst    ),
-            .hsync       ( VGA_HS ),
-            .vsync       ( VGA_VS ),
-            .display_on  (        ),
-            .hpos        ( x10    ),
-            .vpos        ( y10    ),
-            .pixel_clk   (        )
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( VGA_HS    ),
+            .vsync       ( VGA_VS    ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   ( VGA_CLK   )
         );
+
+        assign VGA_BLANK_N = 1'b1;
+        assign VGA_SYNC_N  = 1'b0;
 
     `endif
 
@@ -316,6 +314,7 @@ module board_specific_top
 
     `endif
     
+
 
     //------------------------------------------------------------------------
 
