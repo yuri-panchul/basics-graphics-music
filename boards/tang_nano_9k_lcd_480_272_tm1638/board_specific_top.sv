@@ -25,12 +25,7 @@ module board_specific_top
               screen_width  = 800,
               screen_height = 480,
 
-              `elsif USE_LCD_480_272_ML6485
-
-              screen_width  = 480,
-              screen_height = 272,
-
-              `else
+              `else  // USE_LCD_480_272 or USE_LCD_480_272_ML6485
 
               screen_width  = 480,
               screen_height = 272,

@@ -21,64 +21,61 @@ module board_specific_top
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
-
 )
 (
-    input                 MAX10_CLK1_50,
+    input                    MAX10_CLK1_50,
 
-    input  [w_key  - 1:0] KEY,
-    input  [w_sw   - 1:0] SW,
-    output [w_led  - 1:0] LEDR,
+    input  [ w_key    - 1:0] KEY,
+    input  [ w_sw     - 1:0] SW,
+    output [ w_led    - 1:0] LEDR,
 
-    output logic    [7:0] HEX0,
-    output logic    [7:0] HEX1,
-    output logic    [7:0] HEX2,
-    output logic    [7:0] HEX3,
-    output logic    [7:0] HEX4,
-    output logic    [7:0] HEX5,
+    output logic       [7:0] HEX0,
+    output logic       [7:0] HEX1,
+    output logic       [7:0] HEX2,
+    output logic       [7:0] HEX3,
+    output logic       [7:0] HEX4,
+    output logic       [7:0] HEX5,
 
+    output                   VGA_HS,
+    output                   VGA_VS,
+    output [ w_red    - 1:0] VGA_R,
+    output [ w_green  - 1:0] VGA_G,
+    output [ w_blue   - 1:0] VGA_B,
 
-    output                  VGA_HS,
-    output                  VGA_VS,
-    output [w_red    - 1:0] VGA_R,
-    output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 1:0] VGA_B,
-
-    inout  [w_gpio - 1:0] GPIO
+    inout  [ w_gpio   - 1:0] GPIO
 );
 
     //------------------------------------------------------------------------
 
-    localparam w_lab_sw   = w_sw - 1;  // One onboard SW is used as a reset
-
-    wire clk = MAX10_CLK1_50;
-
-    wire                  rst    = SW [w_sw - 1];
-    wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
-    wire [w_key    - 1:0] lab_key = ~ KEY;
+    localparam w_lab_sw = w_sw - 1;  // One onboard SW is used as a reset
 
     //------------------------------------------------------------------------
 
-    wire  [          7:0] abcdefgh;
-    wire  [w_digit - 1:0] digit;
+    wire clk = MAX10_CLK1_50;
+    wire rst = SW [w_sw - 1];
+
+    // Keys, switches, LEDs
+
+    wire [ w_lab_sw  - 1:0] lab_sw = SW [w_lab_sw - 1:0];
+
+    // A dynamic seven-segment display
+
+    wire [             7:0] abcdefgh;
+    wire [ w_digit   - 1:0] digit;
 
     // Graphics
 
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
-
     wire [ w_red     - 1:0] red;
     wire [ w_green   - 1:0] green;
     wire [ w_blue    - 1:0] blue;
 
+    // Microphone, sound output and UART
 
-    wire  [         23:0] mic;
-    wire  [         15:0] sound;
-
-    // FIXME: Should be assigned to some GPIO!
-    //wire                  UART_TX;
-    //wire                  UART_RX = '1;
+    wire [            23:0] mic;
+    wire [            15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -91,13 +88,12 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz  ),
-        .w_key   ( w_key    ),
-        .w_sw    ( w_lab_sw ),
-        .w_led   ( w_led    ),
-        .w_digit ( w_digit  ),
-        .w_gpio  ( w_gpio   ),          // GPIO[5:0] reserved for mic
-
+        .clk_mhz       (   clk_mhz       ),
+        .w_key         (   w_key         ),
+        .w_sw          (   w_lab_sw      ),
+        .w_led         (   w_led         ),
+        .w_digit       (   w_digit       ),
+        .w_gpio        (   w_gpio        ),
 
         .screen_width  (   screen_width  ),
         .screen_height (   screen_height ),
@@ -105,37 +101,35 @@ module board_specific_top
         .w_red         (   w_red         ),
         .w_green       (   w_green       ),
         .w_blue        (   w_blue        )
-
-
     )
     i_lab_top
     (
-        .clk      (   clk      ),
-        .slow_clk (   slow_clk ),
-        .rst      (   rst      ),
+        .clk           (   clk           ),
+        .slow_clk      (   slow_clk      ),
+        .rst           (   rst           ),
 
-        .key      (   lab_key  ),
-        .sw       (   lab_sw   ),
+        .key           ( ~ KEY           ),
+        .sw            (   lab_sw        ),
 
-        .led      (   LEDR     ),
+        .led           (   LEDR          ),
 
-        .abcdefgh (   abcdefgh ),
-        .digit    (   digit    ),
+        .abcdefgh      (   abcdefgh      ),
+        .digit         (   digit         ),
 
-        .x        (   x        ),
-        .y        (   y        ),
+        .x             (   x             ),
+        .y             (   y             ),
 
-        .red      (   VGA_R    ),
-        .green    (   VGA_G    ),
-        .blue     (   VGA_B    ),
+        .red           (   VGA_R         ),
+        .green         (   VGA_G         ),
+        .blue          (   VGA_B         ),
 
-       // .uart_rx  (   UART_RX  ),
-       //.uart_tx  (   UART_TX  ),
+        .uart_rx       (                 ),
+        .uart_tx       (                 ),
 
-        .mic      (   mic      ),
-        .sound    (   sound    ),
+        .mic           (   mic           ),
+        .sound         (   sound         ),
 
-        .gpio     (   GPIO     )
+        .gpio          (   GPIO          )
     );
 
     //------------------------------------------------------------------------
@@ -189,15 +183,14 @@ module board_specific_top
 
     `endif
 
-      `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+    //------------------------------------------------------------------------
 
-
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
-
-       vga
+        vga
         # (
             .CLK_MHZ     ( clk_mhz   ),
             .PIXEL_MHZ   ( pixel_mhz )
@@ -218,40 +211,49 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver
-    # (
-        .clk_mhz ( clk_mhz  )
-    )
-    i_microphone
-    (
-        .clk     ( clk      ),
-        .rst     ( rst      ),
-        .lr      ( GPIO [0] ),  // JP1 pin 1
-        .ws      ( GPIO [2] ),  // JP1 pin 3
-        .sck     ( GPIO [4] ),  // JP1 pin 5
-        .sd      ( GPIO [5] ),  // JP1 pin 6
-        .value   ( mic      )
-    );
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-    assign GPIO [1] = 1'b0;  // GND - JP1 pin 2
-    assign GPIO [3] = 1'b1;  // VCC - JP1 pin 4
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( clk_mhz  )
+        )
+        i_microphone
+        (
+            .clk     ( clk      ),
+            .rst     ( rst      ),
+            .lr      ( GPIO [0] ),  // JP1 pin 1
+            .ws      ( GPIO [2] ),  // JP1 pin 3
+            .sck     ( GPIO [4] ),  // JP1 pin 5
+            .sd      ( GPIO [5] ),  // JP1 pin 6
+            .value   ( mic      )
+        );
+
+        assign GPIO [1] = 1'b0;  // GND - JP1 pin 2
+        assign GPIO [3] = 1'b1;  // VCC - JP1 pin 4
+
+    `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz     )
-    )
-    inst_audio_out
-    (
-        .clk     ( clk         ),
-        .reset   ( rst         ),
-        .data_in ( sound       ),
-        .mclk    ( GPIO [33]   ), // JP1 pin 38
-        .bclk    ( GPIO [31]   ), // JP1 pin 36
-        .lrclk   ( GPIO [27]   ), // JP1 pin 32
-        .sdata   ( GPIO [29]   )  // JP1 pin 34
-   );                             // JP1 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz     )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
+            .mclk    ( GPIO [33]   ), // JP1 pin 38
+            .bclk    ( GPIO [31]   ), // JP1 pin 36
+            .lrclk   ( GPIO [27]   ), // JP1 pin 32
+            .sdata   ( GPIO [29]   )  // JP1 pin 34
+        );                            // JP1 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+
+        // VCC and GND for i2s_audio_out are on dedicated pins
+
+    `endif
 
 endmodule

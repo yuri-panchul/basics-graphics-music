@@ -1,9 +1,13 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
+//----------------------------------------------------------------------------
+
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `endif
+
+//----------------------------------------------------------------------------
 
 module board_specific_top
 # (
@@ -16,8 +20,18 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 24,
 
+              `ifdef USE_LCD_800_480
+
+              screen_width  = 800,
+              screen_height = 480,
+
+              `else  // USE_LCD_480_272 or USE_LCD_480_272_ML6485
+
               screen_width  = 480,
               screen_height = 272,
+
+              `endif
+
 
               w_red         = 6,
               w_green       = 6,
