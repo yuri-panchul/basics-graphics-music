@@ -1,4 +1,5 @@
 `include "config.svh"
+`include "game_config.svh"
 
 module lab_top
 # (
@@ -78,8 +79,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [2:0] rgb;
-
+    wire [`GAME_RGB_WIDTH - 1:0] rgb;
 
     game_top
     # (
@@ -100,9 +100,8 @@ module lab_top
         .launch_key       ( | key                ),
         .left_right_keys  ( { key [1], key [0] } ),
 
-        .rgb              (   rgb                ),
-        .display_on       (                      )
-        );
+        .rgb              (   rgb                )
+    );
 
     assign red   = { w_red   { rgb [2] } };
     assign green = { w_green { rgb [1] } };
