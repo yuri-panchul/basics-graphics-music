@@ -20,6 +20,8 @@ module game_top
     input                          launch_key,
     input  [                  1:0] left_right_keys,
 
+    input                          display_on,
+
     input  [w_x             - 1:0] x,
     input  [w_y             - 1:0] y,
 
@@ -34,29 +36,29 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                     sprite_target_write_xy;
-    wire                     sprite_target_write_dxy;
+    wire                          sprite_target_write_xy;
+    wire                          sprite_target_write_dxy;
 
-    logic [w_x        - 1:0] sprite_target_write_x;
-    wire  [w_y        - 1:0] sprite_target_write_y;
+    logic [w_x             - 1:0] sprite_target_write_x;
+    wire  [w_y             - 1:0] sprite_target_write_y;
 
-    logic [             1:0] sprite_target_write_dx;
-    wire                     sprite_target_write_dy;
+    logic [                  1:0] sprite_target_write_dx;
+    wire                          sprite_target_write_dy;
 
-    wire                     sprite_target_enable_update;
+    wire                          sprite_target_enable_update;
 
-    wire  [w_x        - 1:0] sprite_target_x;
-    wire  [w_y        - 1:0] sprite_target_y;
+    wire  [w_x             - 1:0] sprite_target_x;
+    wire  [w_y             - 1:0] sprite_target_y;
 
-    wire                     sprite_target_within_screen;
+    wire                          sprite_target_within_screen;
 
-    wire  [w_x        - 1:0] sprite_target_out_left;
-    wire  [w_x        - 1:0] sprite_target_out_right;
-    wire  [w_y        - 1:0] sprite_target_out_top;
-    wire  [w_y        - 1:0] sprite_target_out_bottom;
+    wire  [w_x             - 1:0] sprite_target_out_left;
+    wire  [w_x             - 1:0] sprite_target_out_right;
+    wire  [w_y             - 1:0] sprite_target_out_top;
+    wire  [w_y             - 1:0] sprite_target_out_bottom;
 
-    wire                     sprite_target_rgb_en;
-    wire  [             2:0] sprite_target_rgb;
+    wire                          sprite_target_rgb_en;
+    wire  [`GAME_RGB_WIDTH - 1:0] sprite_target_rgb;
 
     //------------------------------------------------------------------------
 
@@ -140,29 +142,29 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                    sprite_torpedo_write_xy;
-    wire                    sprite_torpedo_write_dxy;
+    wire                          sprite_torpedo_write_xy;
+    wire                          sprite_torpedo_write_dxy;
 
-    wire [w_x        - 1:0] sprite_torpedo_write_x;
-    wire [w_y        - 1:0] sprite_torpedo_write_y;
+    wire  [w_x             - 1:0] sprite_torpedo_write_x;
+    wire  [w_y             - 1:0] sprite_torpedo_write_y;
 
-    logic  [             1:0] sprite_torpedo_write_dx;
-    logic  [             2:0] sprite_torpedo_write_dy;
+    logic [                  1:0] sprite_torpedo_write_dx;
+    logic [                  2:0] sprite_torpedo_write_dy;
 
-    wire                    sprite_torpedo_enable_update;
+    wire                          sprite_torpedo_enable_update;
 
-    wire [w_x        - 1:0] sprite_torpedo_x;
-    wire [w_y        - 1:0] sprite_torpedo_y;
+    wire  [w_x             - 1:0] sprite_torpedo_x;
+    wire  [w_y             - 1:0] sprite_torpedo_y;
 
-    wire                    sprite_torpedo_within_screen;
+    wire                          sprite_torpedo_within_screen;
 
-    wire [w_x        - 1:0] sprite_torpedo_out_left;
-    wire [w_x        - 1:0] sprite_torpedo_out_right;
-    wire [w_y        - 1:0] sprite_torpedo_out_top;
-    wire [w_y        - 1:0] sprite_torpedo_out_bottom;
+    wire  [w_x             - 1:0] sprite_torpedo_out_left;
+    wire  [w_x             - 1:0] sprite_torpedo_out_right;
+    wire  [w_y             - 1:0] sprite_torpedo_out_top;
+    wire  [w_y             - 1:0] sprite_torpedo_out_bottom;
 
-    wire                    sprite_torpedo_rgb_en;
-    wire [             2:0] sprite_torpedo_rgb;
+    wire                          sprite_torpedo_rgb_en;
+    wire  [`GAME_RGB_WIDTH - 1:0] sprite_torpedo_rgb;
 
     //------------------------------------------------------------------------
 

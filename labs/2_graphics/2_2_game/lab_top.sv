@@ -44,6 +44,8 @@ module lab_top
 
     // Graphics
 
+    input                        display_on,
+
     input        [w_x     - 1:0] x,
     input        [w_y     - 1:0] y,
 
@@ -91,12 +93,14 @@ module lab_top
     (
         .clk              (   clk                ),
         .rst              (   rst                ),
-        .x                (   x                  ),
-        .y                (   y                  ),
-
 
         .launch_key       ( | key                ),
         .left_right_keys  ( { key [1], key [0] } ),
+
+        .display_on       (   display_on         ),
+
+        .x                (   x                  ),
+        .y                (   y                  ),
 
         .rgb              (   rgb                )
     );

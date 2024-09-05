@@ -65,6 +65,8 @@ module board_specific_top
 
     // Graphics
 
+    wire                    display_on;
+
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
@@ -115,6 +117,8 @@ module board_specific_top
 
         .abcdefgh      (   abcdefgh      ),
         .digit         (   digit         ),
+
+        .display_on    (   display_on    ),
 
         .x             (   x             ),
         .y             (   y             ),
@@ -197,14 +201,14 @@ module board_specific_top
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HS    ),
-            .vsync       ( VGA_VS    ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   (           )
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HS     ),
+            .vsync       ( VGA_VS     ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
         );
 
     `endif
