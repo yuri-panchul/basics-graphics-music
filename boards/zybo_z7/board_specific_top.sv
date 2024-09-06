@@ -29,8 +29,9 @@ module board_specific_top
     output [w_led       - 1:0] led,
     inout  [w_gpio      - 1:0] gpio_JE,
     
-    output [w_gpio      - 1:0] jd,
-    output [w_gpio      - 1:0] jc
+    output [w_gpio      - 1:0] jb,
+    output [w_gpio      - 1:0] jc,
+    output [w_gpio      - 1:0] jd
 );
 
     wire clk = clk_125;
@@ -245,6 +246,25 @@ module board_specific_top
 
     `endif
 
-    //------------------------------------------------------------------------
-    
+    //------------------------------------------------------------------------ 
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz   )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk       ),
+            .reset   ( rst       ),
+            .data_in ( sound     ),
+            .mclk    ( jb[0]     ),
+            .bclk    ( jb[2]     ),
+            .lrclk   ( jb[1]     ),
+            .sdata   ( jb[3]     )
+        );
+
+    `endif
+ 
 endmodule: board_specific_top
