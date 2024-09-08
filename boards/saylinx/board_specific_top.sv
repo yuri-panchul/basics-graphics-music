@@ -5,12 +5,24 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz = 50,
-              w_key   = 3,
-              w_sw    = 3,
-              w_led   = 4,
-              w_digit = 8,
-              w_gpio  = 34 * 2
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
+
+              w_key         = 3,
+              w_sw          = 0,
+              w_led         = 4,
+              w_digit       = 8,
+              w_gpio        = 34 * 2
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 5,
+              w_green       = 6,
+              w_blue        = 5,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                     CLK,
@@ -44,17 +56,14 @@ module board_specific_top
     wire                 rst = ~ RST_N;
     wire [w_key   - 1:0] key = ~ { KEY2, KEY3, KEY4 };
 
-    wire [w_led   - 1:0] led;
-
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
 
-    wire [          3:0] red, green, blue;
+    wire [w_x     - 1:0] x;
+    wire [w_y     - 1:0] y;
+
     wire [         23:0] mic;
     wire [         15:0] sound;
-
-    // FIXME: Should be assigned to some GPIO!
-    wire                 UART_TXD;
 
     //------------------------------------------------------------------------
 
@@ -67,41 +76,49 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_mhz       (   clk_mhz          ),
+
+        .w_key         (   w_key            ),
+        .w_sw          (   w_key            ),
+        .w_led         (   w_led            ),
+        .w_digit       (   w_digit          ),
+        .w_gpio        (   w_gpio           ),
+
+        .screen_width  (   screen_width     ),
+        .screen_height (   screen_height    ),
+
+        .w_red         (   w_red            ),
+        .w_green       (   w_green          ),
+        .w_blue        (   w_blue           )
     )
     i_lab_top
     (
-        .clk      ( clk        ),
-        .slow_clk ( slow_clk   ),
-        .rst      ( rst        ),
+        .clk           (   clk              ),
+        .slow_clk      (   slow_clk         ),
+        .rst           (   rst              ),
 
-        .key      ( key        ),
-        .sw       ( key        ),
+        .key           (   key              ),
+        .sw            (   key              ),
 
-        .led      ( LED        ),
+        .led           (   LED              ),
 
-        .abcdefgh ( abcdefgh   ),
-        .digit    ( digit      ),
+        .abcdefgh      (   abcdefgh         ),
+        .digit         (   digit            ),
 
-        .vsync    ( VGA_OUT_VS ),
-        .hsync    ( VGA_OUT_HS ),
+        .x             (   x                ),
+        .y             (   y                ),
 
-        .red      ( red        ),
-        .green    ( green      ),
-        .blue     ( blue       ),
+        .red           (   VGA_OUT_R        ),
+        .green         (   VGA_OUT_G        ),
+        .blue          (   VGA_OUT_B        ),
 
-        .uart_rx  ( UART_RXD   ),
-        .uart_tx  ( UART_TXD   ),
+        .uart_rx       (   UART_RXD         ),
+        .uart_tx       (   UART_TXD         ),
 
-        .mic      ( mic        ),
-        .sound    ( sound      ),
+        .mic           (   mic              ),
+        .sound         (   sound            ),
 
-        .gpio ( { GPIO_0, GPIO_1 } )
+        .gpio          ( { GPIO_0, GPIO_1 } )
     );
 
     //------------------------------------------------------------------------
@@ -109,64 +126,96 @@ module board_specific_top
     assign SEG_DATA  = ~ abcdefgh;
     assign SEG_SEL   = ~ digit;
 
-    assign VGA_OUT_R = { red   , 1'b0 };
-    assign VGA_OUT_G = { green , 2'b0 };
-    assign VGA_OUT_B = { blue  , 1'b0 };
+    //------------------------------------------------------------------------
 
-    `ifdef USE_DIGILENT_PMOD_MIC3
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-    wire [11:0] mic_12;
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
 
-    digilent_pmod_mic3_spi_receiver i_microphone
-    (
-        .clk   ( clk         ),
-        .rst   ( rst         ),
-        .cs    ( GPIO_1 [26] ), // J2 pin 29
-        .sck   ( GPIO_1 [32] ), // J2 pin 35
-        .sdo   ( GPIO_1 [30] ), // J2 pin 33
-        .value ( mic_12      )
-    );
-
-    wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
-    assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
-
-    `else
-
-    inmp441_mic_i2s_receiver
-    # (
-        .clk_mhz ( clk_mhz    )
-    )
-    i_microphone
-    (
-        .clk     ( clk        ),
-        .rst     ( rst        ),
-        .lr      ( GPIO_0 [0] ), // J1 pin 36
-        .ws      ( GPIO_0 [2] ), // J1 pin 34
-        .sck     ( GPIO_0 [4] ), // J1 pin 32
-        .sd      ( GPIO_0 [5] ), // J1 pin 31
-        .value   ( mic        )
-    );
-
-    assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
-    assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz    ),
+            .PIXEL_MHZ   ( pixel_mhz  )
+        )
+        i_vga
+        (
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_OUT_HS ),
+            .vsync       ( VGA_OUT_VS ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   (           )
+        );
 
     `endif
 
     //------------------------------------------------------------------------
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz     )
-    )
-    inst_audio_out
-    (
-        .clk     ( clk         ),
-        .reset   ( rst         ),
-        .data_in ( sound       ),
-        .mclk    ( GPIO_0 [12] ), // J1 pin 24
-        .bclk    ( GPIO_0 [10] ), // J1 pin 26
-        .lrclk   ( GPIO_0 [ 6] ), // J1 pin 30
-        .sdata   ( GPIO_0 [ 8] )  // J1 pin 28
-    );                            // J1 pin 37 - GND, pin 40 - D3V3 3.3V (30-45 mA)
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        `ifdef USE_DIGILENT_PMOD_MIC3
+
+        wire [11:0] mic_12;
+
+        digilent_pmod_mic3_spi_receiver i_microphone
+        (
+            .clk   ( clk         ),
+            .rst   ( rst         ),
+            .cs    ( GPIO_1 [26] ), // J2 pin 29
+            .sck   ( GPIO_1 [32] ), // J2 pin 35
+            .sdo   ( GPIO_1 [30] ), // J2 pin 33
+            .value ( mic_12      )
+        );
+
+        wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+        assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+
+        `else
+
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( clk_mhz    )
+        )
+        i_microphone
+        (
+            .clk     ( clk        ),
+            .rst     ( rst        ),
+            .lr      ( GPIO_0 [0] ), // J1 pin 36
+            .ws      ( GPIO_0 [2] ), // J1 pin 34
+            .sck     ( GPIO_0 [4] ), // J1 pin 32
+            .sd      ( GPIO_0 [5] ), // J1 pin 31
+            .value   ( mic        )
+        );
+
+        assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
+        assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
+
+        `endif
+        
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz     )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
+            .mclk    ( GPIO_0 [12] ), // J1 pin 24
+            .bclk    ( GPIO_0 [10] ), // J1 pin 26
+            .lrclk   ( GPIO_0 [ 6] ), // J1 pin 30
+            .sdata   ( GPIO_0 [ 8] )  // J1 pin 28
+        );                            // J1 pin 37 - GND, pin 40 - D3V3 3.3V (30-45 mA)
+
+    `endif
 
 endmodule
