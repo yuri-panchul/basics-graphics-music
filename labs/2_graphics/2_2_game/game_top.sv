@@ -14,52 +14,17 @@ module game_top
                strobe_to_update_xy_counter_width = 20
 )
 (
-    input              clk,
-    input              rst,
+    input                          clk,
+    input                          rst,
 
-    input              launch_key,
-    input  [      1:0] left_right_keys,
+    input                          launch_key,
+    input  [                  1:0] left_right_keys,
 
-    input  [w_x - 1:0] x,
-    input  [w_y - 1:0] y,
+    input  [w_x             - 1:0] x,
+    input  [w_y             - 1:0] y,
 
-    output [2:0] rgb,
-    output       display_on
+    output [`GAME_RGB_WIDTH - 1:0] rgb
 );
-
-    //------------------------------------------------------------------------
-
-    wire [w_x - 1:0] pixel_x;
-    wire [w_y - 1:0] pixel_y;
-
-
-    assign pixel_x = x ;
-    assign pixel_y = y ;
-    assign display_on = (x < screen_width && y < screen_height) ? '1 : '0;
-
-   /* vga
-    # (
-        .N_MIXER_PIPE_STAGES ( `N_MIXER_PIPE_STAGES ),
-
-        .HPOS_WIDTH          ( w_x                  ),
-        .VPOS_WIDTH          ( w_y                  ),
-
-        .CLK_MHZ             ( clk_mhz              ),
-        .PIXEL_MHZ           ( pixel_mhz            )
-    )
-    i_vga
-    (
-        .clk        ( clk        ),
-        .rst        ( rst        ),
-        .hsync      ( hsync      ),
-        .vsync      ( vsync      ),
-        .display_on ( display_on ),
-        .hpos       ( pixel_x    ),
-        .vpos       ( pixel_y    ),
-        .pixel_clk  ( pixel_clk  )
-    );
-*/
-
 
     //------------------------------------------------------------------------
 
@@ -145,8 +110,8 @@ module game_top
         .clk                   ( clk                          ),
         .rst                   ( rst                          ),
 
-        .pixel_x               ( pixel_x                      ),
-        .pixel_y               ( pixel_y                      ),
+        .pixel_x               ( x                            ),
+        .pixel_y               ( y                            ),
 
         .sprite_write_xy       ( sprite_target_write_xy       ),
         .sprite_write_dxy      ( sprite_target_write_dxy      ),
@@ -254,8 +219,8 @@ module game_top
         .clk                   ( clk                           ),
         .rst                   ( rst                           ),
 
-        .pixel_x               ( pixel_x                       ),
-        .pixel_y               ( pixel_y                       ),
+        .pixel_x               ( x                             ),
+        .pixel_y               ( y                             ),
 
         .sprite_write_xy       ( sprite_torpedo_write_xy       ),
         .sprite_write_dxy      ( sprite_torpedo_write_dxy      ),
