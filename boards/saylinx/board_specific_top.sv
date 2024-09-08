@@ -200,15 +200,15 @@ module board_specific_top
         (
             .clk     ( clk        ),
             .rst     ( rst        ),
-            .lr      ( GPIO_0 [0] ), // J1 pin 36
-            .ws      ( GPIO_0 [2] ), // J1 pin 34
-            .sck     ( GPIO_0 [4] ), // J1 pin 32
-            .sd      ( GPIO_0 [5] ), // J1 pin 31
+            .lr      ( GPIO_0 [0] ), // N2
+            .ws      ( GPIO_0 [2] ), // P2
+            .sck     ( GPIO_0 [4] ), // P8
+            .sd      ( GPIO_0 [5] ), // K9
             .value   ( mic        )
         );
 
-        assign GPIO_0 [1] = 1'b0;  // GND - J1 pin 35
-        assign GPIO_0 [3] = 1'b1;  // VCC - J1 pin 33
+        assign GPIO_0 [1] = 1'b0;  // GND - P1
+        assign GPIO_0 [3] = 1'b1;  // VCC - R1
 
         `endif
         
