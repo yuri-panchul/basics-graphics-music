@@ -12,7 +12,7 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 4,
               w_digit       = 8,
-              w_gpio        = 34 * 2
+              w_gpio        = 34 * 2,
 
               screen_width  = 640,
               screen_height = 480,
@@ -45,6 +45,7 @@ module board_specific_top
     output [             4:0] VGA_OUT_B,
 
     input                     UART_RXD,
+    output                    UART_TXD,
 
     inout  [w_gpio / 2 - 1:0] GPIO_0,
     inout  [w_gpio / 2 - 1:0] GPIO_1
@@ -56,12 +57,28 @@ module board_specific_top
     wire                 rst = ~ RST_N;
     wire [w_key   - 1:0] key = ~ { KEY2, KEY3, KEY4 };
 
+    // Seven-segment display
+
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
+
+    // Graphics
+
+    wire                 display_on;
 
     wire [w_x     - 1:0] x;
     wire [w_y     - 1:0] y;
 
+    wire [w_red   - 1:0] red;
+    wire [w_green - 1:0] green;
+    wire [w_blue  - 1:0] blue;
+    
+    assign VGA_OUT_R = display_on ? red   : '0;
+    assign VGA_OUT_G = display_on ? green : '0;
+    assign VGA_OUT_B = display_on ? blue  : '0;
+
+    // Sound
+    
     wire [         23:0] mic;
     wire [         15:0] sound;
 
@@ -108,9 +125,9 @@ module board_specific_top
         .x             (   x                ),
         .y             (   y                ),
 
-        .red           (   VGA_OUT_R        ),
-        .green         (   VGA_OUT_G        ),
-        .blue          (   VGA_OUT_B        ),
+        .red           (   red              ),
+        .green         (   green            ),
+        .blue          (   blue             ),
 
         .uart_rx       (   UART_RXD         ),
         .uart_tx       (   UART_TXD         ),
@@ -144,10 +161,10 @@ module board_specific_top
             .rst         ( rst        ),
             .hsync       ( VGA_OUT_HS ),
             .vsync       ( VGA_OUT_VS ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   (           )
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
         );
 
     `endif
