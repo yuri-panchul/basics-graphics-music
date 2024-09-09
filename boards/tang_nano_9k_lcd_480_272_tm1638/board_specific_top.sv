@@ -1,13 +1,13 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-`define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
-
 //----------------------------------------------------------------------------
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `endif
+
+`define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 
 //----------------------------------------------------------------------------
 
