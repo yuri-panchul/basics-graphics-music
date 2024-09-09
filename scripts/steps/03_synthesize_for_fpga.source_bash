@@ -11,9 +11,9 @@ then
     iverilog -g2005-sv \
          -I ..      -I "$lab_dir/common" \
             ../*.sv    "$lab_dir/common"/*.sv \
-        |& tee "$log"
+        2>&1 | tee "$log"
 
-    vvp a.out |& tee -a "$log"
+    vvp a.out 2>&1 | tee -a "$log"
 fi
 
 #-----------------------------------------------------------------------------

@@ -233,7 +233,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
         i2s_audio_out
         # (

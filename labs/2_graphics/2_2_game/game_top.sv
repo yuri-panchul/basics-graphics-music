@@ -299,8 +299,6 @@ module game_top
         .clk                           ( clk                           ),
         .rst                           ( rst                           ),
 
-        .display_on                    ( display_on                    ),
-
         .sprite_target_rgb_en          ( sprite_target_rgb_en          ),
         .sprite_target_rgb             ( sprite_target_rgb             ),
 

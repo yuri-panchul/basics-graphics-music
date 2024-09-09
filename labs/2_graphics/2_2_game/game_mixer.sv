@@ -5,8 +5,6 @@ module game_mixer
     input                          clk,
     input                          rst,
 
-    input                          display_on,
-
     input                          sprite_target_rgb_en,
     input  [`GAME_RGB_WIDTH - 1:0] sprite_target_rgb,
 
@@ -22,8 +20,6 @@ module game_mixer
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            rgb <= 3'b000;
-        else if (! display_on)
             rgb <= 3'b000;
         else if (end_of_game_timer_running)
             rgb <= { 1'b1, ~ game_won, random };
