@@ -6,7 +6,7 @@ module imitate_reset_on_power_up
     output rst
 );
 
-    logic [24:0] rst_cnt = '1;
+    logic [23:0] rst_cnt = '1;
     assign rst = | rst_cnt;
 
     always_ff @ (posedge clk)
