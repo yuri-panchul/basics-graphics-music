@@ -2,20 +2,20 @@
 
 module game_mixer
 (
-    input                          clk,
-    input                          rst,
+    input                                clk,
+    input                                rst,
 
-    input                          sprite_target_rgb_en,
-    input  [`GAME_RGB_WIDTH - 1:0] sprite_target_rgb,
+    input                                sprite_target_rgb_en,
+    input        [`GAME_RGB_WIDTH - 1:0] sprite_target_rgb,
 
-    input                          sprite_torpedo_rgb_en,
-    input  [`GAME_RGB_WIDTH - 1:0] sprite_torpedo_rgb,
+    input                                sprite_torpedo_rgb_en,
+    input        [`GAME_RGB_WIDTH - 1:0] sprite_torpedo_rgb,
 
-    input                          game_won,
-    input                          end_of_game_timer_running,
-    input                          random,
+    input                                game_won,
+    input                                end_of_game_timer_running,
+    input                                random,
 
-    output [`GAME_RGB_WIDTH - 1:0] rgb
+    output logic [`GAME_RGB_WIDTH - 1:0] rgb
 );
 
     always_ff @ (posedge clk or posedge rst)

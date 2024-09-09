@@ -1,6 +1,8 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
+`define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+
 //----------------------------------------------------------------------------
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -151,7 +153,16 @@ module board_specific_top
 
         assign LED      = w_led' (~ lab_led);
 
-    `else                 // TM1638 module is not connected
+    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+
+        wire rst;
+
+        imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
+
+        assign lab_key  = ~ KEY [w_key - 1:0];
+        assign LED      = ~ lab_led;
+
+    `else  // TM1638 module is not connected and no reset initation
 
         assign rst      = ~ KEY [w_key - 1];
         assign lab_key  = ~ KEY [w_key - 1:0];
