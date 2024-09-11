@@ -237,19 +237,21 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz   ),
-            .PIXEL_MHZ   ( pixel_mhz )
+            .H_DISPLAY   ( screen_width  ),
+            .V_DISPLAY   ( screen_height ),
+            .CLK_MHZ     ( clk_mhz       ),
+            .PIXEL_MHZ   ( pixel_mhz     )
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HS    ),
-            .vsync       ( VGA_VS    ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .clk         ( clk           ),
+            .rst         ( rst           ),
+            .hsync       ( VGA_HS        ),
+            .vsync       ( VGA_VS        ),
+            .display_on  (               ),
+            .hpos        ( x10           ),
+            .vpos        ( y10           ),
+            .pixel_clk   ( VGA_CLK       )
         );
 
         assign VGA_BLANK_N = 1'b1;
