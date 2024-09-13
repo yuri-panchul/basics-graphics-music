@@ -1,113 +1,99 @@
-// CLK
-IO_LOC "CLK" 4;
-IO_PORT "CLK" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+# The pin assignments
+# All I/O pins here are 3.3V compatible unless specified otherwise
+
+IO_LOC "CLK"                4;
+
+IO_LOC "KEY[0]"             88;
+IO_LOC "KEY[1]"             87;
+
+IO_LOC "LED[0]"             15;
+IO_LOC "LED[1]"             16;
+IO_LOC "LED[2]"             17;
+IO_LOC "LED[3]"             20;
+IO_LOC "LED[4]"             19;
+IO_LOC "LED[5]"             18;
 
 
-// LED
+# Some LARGE_LCD pins share bank with TMDS pins
+# which have different voltage requirements.
+#
+# Usage of LARGE_LCD conflicts with HDMI usage
 
-IO_LOC "LED[5]" 15;
-IO_PORT "LED[5]" IO_TYPE=LVCMOS33;
+IO_LOC "LARGE_LCD_DE"       48;
+IO_LOC "LARGE_LCD_VS"       26;
+IO_LOC "LARGE_LCD_HS"       25;
+IO_LOC "LARGE_LCD_CK"       77;
+IO_LOC "LARGE_LCD_BL"       49;
 
-IO_LOC "LED[4]" 16;
-IO_PORT "LED[4]" IO_TYPE=LVCMOS33;
+# IO_LOC "LARGE_LCD_R[3]"   42;
+# IO_LOC "LARGE_LCD_R[4]"   41;
+# IO_LOC "LARGE_LCD_R[5]"   49;
+# IO_LOC "LARGE_LCD_R[6]"   39;
+# IO_LOC "LARGE_LCD_R[7]"   38;
 
-IO_LOC "LED[3]" 17;
-IO_PORT "LED[3]" IO_TYPE=LVCMOS33;
+# IO_LOC "LARGE_LCD_G[2]"   37;
+# IO_LOC "LARGE_LCD_G[3]"   36;
+# IO_LOC "LARGE_LCD_G[4]"   35;
+# IO_LOC "LARGE_LCD_G[5]"   34;
+# IO_LOC "LARGE_LCD_G[6]"   33;
+# IO_LOC "LARGE_LCD_G[7]"   32;
 
-IO_LOC "LED[2]" 18;
-IO_PORT "LED[2]" IO_TYPE=LVCMOS33;
+# IO_LOC "LARGE_LCD_B[3]"   31;
+# IO_LOC "LARGE_LCD_B[4]"   30;
+# IO_LOC "LARGE_LCD_B[5]"   29;
+# IO_LOC "LARGE_LCD_B[6]"   28;
+# IO_LOC "LARGE_LCD_B[7]"   27;
 
-IO_LOC "LED[1]" 19;
-IO_PORT "LED[1]" IO_TYPE=LVCMOS33;
+# UART to debugger
+IO_LOC "UART_TX"            70;
+IO_LOC "UART_RX"            69;
 
-IO_LOC "LED[0]" 20;
-IO_PORT "LED[0]" IO_TYPE=LVCMOS33;
+# The following 4 pins (TF_CS, TF_MOSI, TF_SCLK, TF_MISO)
+# are used for INMP441 microphone
+# in basics-graphics-music labs
 
+IO_LOC "TF_CS"              72;  # inmp441: lr
+IO_LOC "TF_MOSI"            71;  # inmp441: ws
+IO_LOC "TF_SCLK"            53;  # inmp441: sck
+IO_LOC "TF_MISO"            52;  # inmp441: sd
 
-// UART
+# The first 3 GPIO pins are used for TM1638 I/O module
+# which carries 8 LEDs, 8-digit 7-segment display and 8 keys
 
-IO_LOC "UART_TX" 70;
-IO_PORT "UART_TX" IO_TYPE=LVCMOS33;
+# Config for usage with maket board (do not use board power pins)  
+IO_LOC "GPIO[0]"            73;  # tm1638: sio_data
+IO_LOC "GPIO[1]"            74;  # tm1638: sio_clk
+IO_LOC "GPIO[2]"            75;  # tm1638: sio_stb
 
-IO_LOC "UART_RX" 69;
-IO_PORT "UART_RX" IO_TYPE=LVCMOS33;
+# Alternative config without maket board (use board power pins)
+# conflicts with usage of LED[5:3]
+# IO_LOC "GPIO[0]"          20;  # tm1638: sio_data
+# IO_LOC "GPIO[1]"          19;  # tm1638: sio_clk
+# IO_LOC "GPIO[2]"          18;  # tm1638: sio_stb
 
+IO_LOC "GPIO[3]"            76;
+IO_LOC "GPIO[4]"            86;
+IO_LOC "GPIO[5]"            79;
 
-// KEY
+# TMDS pins for HDMI output
+# IO_LOC "TMDS_CLK_P"       34,33;
+# IO_LOC "TMDS_D_P[0]"      36,35;
+# IO_LOC "TMDS_D_P[1]"      38,37;
+# IO_LOC "TMDS_D_P[2]"      40,39;
 
-IO_LOC "KEY[1]" 87;
-IO_PORT "KEY[1]" IO_TYPE=LVCMOS33;
+# SDIO pins for SD-cards 
+# IO_LOC "SDIO_D1"          85;
+# IO_LOC "SDIO_D0"          84;
+# IO_LOC "SDIO_CLK"         83;
+# IO_LOC "SDIO_CMD"         82;
+# IO_LOC "SDIO_D3"          81;
+# IO_LOC "SDIO_D2"          80;
 
-IO_LOC "KEY[0]" 88;
-IO_PORT "KEY[0]" IO_TYPE=LVCMOS33;
+# Onboard I2S audio
+IO_LOC "I2S_BCLK"           56;
+IO_LOC "I2S_LRCK"           55;
+IO_LOC "I2S_DIN"            54;
+IO_LOC "I2S_EN"             51;
 
-
-// GPIO
-IO_LOC "GPIO[0]" 79;
-IO_PORT "GPIO[0]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[1]" 86;
-IO_PORT "GPIO[1]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[2]" 49;
-IO_PORT "GPIO[2]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[3]" 55;
-IO_PORT "GPIO[3]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[4]" 48;
-IO_PORT "GPIO[4]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[5]" 51;
-IO_PORT "GPIO[5]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[6]" 54;
-IO_PORT "GPIO[6]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[7]" 56;
-IO_PORT "GPIO[7]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[8]" 41;
-IO_PORT "GPIO[8]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[9]" 42;
-IO_PORT "GPIO[9]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[10]" 80;
-IO_PORT "GPIO[10]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[11]" 76;
-IO_PORT "GPIO[11]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[12]" 72;
-IO_PORT "GPIO[12]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[13]" 71;
-IO_PORT "GPIO[13]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[14]" 31;
-IO_PORT "GPIO[14]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[15]" 30;
-IO_PORT "GPIO[15]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[16]" 29;
-IO_PORT "GPIO[16]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[17]" 26;
-IO_PORT "GPIO[17]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[18]" 25;
-IO_PORT "GPIO[18]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[19]" 28;
-IO_PORT "GPIO[19]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[20]" 27;
-IO_PORT "GPIO[20]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[21]" 77;
-IO_PORT "GPIO[21]" IO_TYPE=LVCMOS33;
-
-IO_LOC "GPIO[22]" 85;
-IO_PORT "GPIO[22]" IO_TYPE=LVCMOS33;
+# WS2812, conflicts with GPIO[5]
+# IO_LOC "WS2812"           79;
