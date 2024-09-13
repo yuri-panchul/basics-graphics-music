@@ -244,13 +244,12 @@ module board_specific_top
             .rst         ( rst           ),
             .hsync       ( VGA_HS        ),
             .vsync       ( VGA_VS        ),
-            .display_on  (               ),
+            .display_on  ( VGA_BLANK_N   ),
             .hpos        ( x10           ),
             .vpos        ( y10           ),
             .pixel_clk   ( VGA_CLK       )
         );
 
-        assign VGA_BLANK_N = 1'b1;
         assign VGA_SYNC_N  = 1'b0;
 
     `endif
