@@ -1,0 +1,99 @@
+# The pin assignments
+# All I/O pins here are 3.3V compatible unless specified otherwise
+
+IO_LOC "CLK"                4;
+
+IO_LOC "KEY[0]"             88;
+IO_LOC "KEY[1]"             87;
+
+IO_LOC "LED[0]"             15;
+IO_LOC "LED[1]"             16;
+IO_LOC "LED[2]"             17;
+IO_LOC "LED[3]"             20;
+IO_LOC "LED[4]"             19;
+IO_LOC "LED[5]"             18;
+
+
+# Some LCD pins share bank with TMDS pins
+# which have different voltage requirements.
+#
+# Usage of LCD conflicts with HDMI usage
+
+IO_LOC "LCD_DE"             48;
+IO_LOC "LCD_VS"             26;
+IO_LOC "LCD_HS"             25;
+IO_LOC "LCD_CK"             77;
+IO_LOC "LCD_INIT"           76;
+IO_LOC "LCD_BL"             49;
+
+IO_LOC "LCD_R[3]"           42;
+IO_LOC "LCD_R[4]"           41;
+IO_LOC "LCD_R[5]"           40;
+IO_LOC "LCD_R[6]"           39;
+IO_LOC "LCD_R[7]"           38;
+
+IO_LOC "LCD_G[2]"           37;
+IO_LOC "LCD_G[3]"           36;
+IO_LOC "LCD_G[4]"           35;
+IO_LOC "LCD_G[5]"           34;
+IO_LOC "LCD_G[6]"           33;
+IO_LOC "LCD_G[7]"           32;
+
+IO_LOC "LCD_B[3]"           31;
+IO_LOC "LCD_B[4]"           30;
+IO_LOC "LCD_B[5]"           29;
+IO_LOC "LCD_B[6]"           28;
+IO_LOC "LCD_B[7]"           27;
+
+# UART to debugger
+IO_LOC "UART_TX"            70;
+IO_LOC "UART_RX"            69;
+
+# The following 4 pins (MIC_LR, MIC_WS, MIC_SCLK, MIC_SD)
+# are used for INMP441 microphone
+# in basics-graphics-music labs
+
+IO_LOC "MIC_LR"             72;
+IO_LOC "MIC_WS"             71;
+IO_LOC "MIC_SCLK"           53;
+IO_LOC "MIC_SD"             52;
+
+# The first 3 GPIO pins are used for TM1638 I/O module
+# which carries 8 LEDs, 8-digit 7-segment display and 8 keys
+
+# Config for usage with maket board (do not use board power pins)  
+IO_LOC "GPIO[0]"            73;  # tm1638: sio_data
+IO_LOC "GPIO[1]"            74;  # tm1638: sio_clk
+IO_LOC "GPIO[2]"            75;  # tm1638: sio_stb
+
+# Alternative config without maket board (use board power pins)
+# conflicts with usage of LED[5:3]
+# IO_LOC "GPIO[0]"          20;  # tm1638: sio_data
+# IO_LOC "GPIO[1]"          19;  # tm1638: sio_clk
+# IO_LOC "GPIO[2]"          18;  # tm1638: sio_stb
+
+IO_LOC "GPIO[3]"            86;
+IO_LOC "GPIO[4]"            79;
+
+# TMDS pins for HDMI output
+# IO_LOC "TMDS_CLK_P"       34,33;
+# IO_LOC "TMDS_D_P[0]"      36,35;
+# IO_LOC "TMDS_D_P[1]"      38,37;
+# IO_LOC "TMDS_D_P[2]"      40,39;
+
+# SDIO pins for SD-cards 
+# IO_LOC "SDIO_D1"          85;
+# IO_LOC "SDIO_D0"          84;
+# IO_LOC "SDIO_CLK"         83;
+# IO_LOC "SDIO_CMD"         82;
+# IO_LOC "SDIO_D3"          81;
+# IO_LOC "SDIO_D2"          80;
+
+# Onboard I2S audio
+IO_LOC "I2S_BCLK"           56;
+IO_LOC "I2S_LRCK"           55;
+IO_LOC "I2S_DIN"            54;
+IO_LOC "I2S_EN"             51;
+
+# WS2812, conflicts with GPIO[4]
+# IO_LOC "WS2812"           79;
