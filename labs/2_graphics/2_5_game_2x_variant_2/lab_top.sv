@@ -85,8 +85,8 @@ module lab_top
     # (
         .clk_mhz                           (clk_mhz                          ),
         .pixel_mhz                         (pixel_mhz                        ),
-        .screen_width                      (screen_width                     ),
-        .screen_height                     (screen_height                    ),
+        .screen_width                      (screen_width  / 2                ),
+        .screen_height                     (screen_height / 2                ),
         .strobe_to_update_xy_counter_width (strobe_to_update_xy_counter_width)
     )
     i_game_top
@@ -99,8 +99,8 @@ module lab_top
 
         .display_on       (   display_on         ),
 
-        .x                (   x                  ),
-        .y                (   y                  ),
+        .x                (   x [$left (x):1]    ),
+        .y                (   y [$left (y):1]    ),
 
         .rgb              (   rgb                )
     );

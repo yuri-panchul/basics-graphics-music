@@ -106,7 +106,13 @@ module game_sprite_top
         .ROW_4                 ( ROW_4                 ),
         .ROW_5                 ( ROW_5                 ),
         .ROW_6                 ( ROW_6                 ),
-        .ROW_7                 ( ROW_7                 )
+        .ROW_7                 ( ROW_7                 ),
+
+        .screen_width
+        (screen_width),
+
+        .screen_height
+        (screen_height)
     )
     sprite_display
     (
