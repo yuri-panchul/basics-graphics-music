@@ -20,9 +20,9 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
-              w_gpio        = 6,
+              w_gpio        = 5,
 
-              screen_width  = 640,
+              screen_width  = 800,
               screen_height = 480,
 
               w_red         = 8,
@@ -39,34 +39,31 @@ module board_specific_top
 
     output [w_led        - 1:0]  LED,
 
-    // Some LARGE_LCD pins share bank with TMDS pins
+    // Some LCD pins share bank with TMDS pins
     // which have different voltage requirements.
-    //
-    // However we can use LARGE_LCD_DE, VS, HS, CK,
-    // because they are assigned to a different bank.
 
-       output                    LARGE_LCD_DE,
-       output                    LARGE_LCD_VS,
-       output                    LARGE_LCD_HS,
-       output                    LARGE_LCD_CK,
-       output                    LARGE_LCD_BL,
-    // output                    LARGE_LCD_INIT,
+    // output                    LCD_DE,
+    // output                    LCD_VS,
+    // output                    LCD_HS,
+    // output                    LCD_CLK,
+    // output                    LCD_BL,
+    // output                    LCD_INIT,
 
-    // output [            4:0]  LARGE_LCD_R,
-    // output [            5:0]  LARGE_LCD_G,
-    // output [            4:0]  LARGE_LCD_B,
+    // output [            4:0]  LCD_R,
+    // output [            5:0]  LCD_G,
+    // output [            4:0]  LCD_B,
 
     input                        UART_RX,
     output                       UART_TX,
 
-    // The following 4 pins (TF_CS, TF_MOSI, TF_SCLK, TF_MISO)
+    // The following 4 pins (MIC_LR, MIC_WS, MIC_SCLK, MIC_SD)
     // are used for INMP441 microphone
     // in basics-graphics-music labs
 
-    inout                        TF_CS,
-    inout                        TF_MOSI,
-    inout                        TF_SCLK,
-    inout                        TF_MISO,
+    inout                        MIC_LR,
+    inout                        MIC_WS,
+    inout                        MIC_SCLK,
+    inout                        MIC_SD,
 
     inout  [w_gpio       - 1:0]  GPIO,
 
@@ -332,10 +329,10 @@ module board_specific_top
         (
             .clk      ( clk            ),
             .rst      ( rst            ),
-            .lr       ( TF_CS          ),
-            .ws       ( TF_MOSI        ),
-            .sck      ( TF_SCLK        ),
-            .sd       ( TF_MISO        ),
+            .lr       ( MIC_LR         ),
+            .ws       ( MIC_WS         ),
+            .sck      ( MIC_SCLK       ),
+            .sd       ( MIC_SD         ),
             .value    ( mic            )
         );
 
