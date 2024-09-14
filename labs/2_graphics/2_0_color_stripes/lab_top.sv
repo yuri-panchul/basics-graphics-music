@@ -69,9 +69,6 @@ module lab_top
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
-    // Pattern 1
-
-    /**/
 
     wire [3:0] x4 = x [6:3];
 
@@ -83,6 +80,7 @@ module lab_top
         green_4 = '0;
         blue_4  = '0;
 
+        // This should be removed after we finish with display_on in wrapper
         if (x < screen_width && y < screen_height)
         begin
 
