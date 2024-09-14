@@ -2,10 +2,10 @@
 
 module game_timer # ( parameter width = 32 )
 (
-    input                    clk,
-    input                    rst,
-    input      [width - 1:0] value,
-    input                    start,
+    input                      clk,
+    input                      rst,
+    input        [width - 1:0] value,
+    input                      start,
     output logic               running
 );
 
@@ -23,10 +23,10 @@ module game_timer # ( parameter width = 32 )
         end
         else if (running)
         begin
-           if (counter == { width, 1'b0 })
-               running <= 1'b0;
+            if (counter == '0)
+                running <= 1'b0;
 
-            counter <= counter - 1;
+            counter <= counter - 1'd1;
         end
 
 endmodule

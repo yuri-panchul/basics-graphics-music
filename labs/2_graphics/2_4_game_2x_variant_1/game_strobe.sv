@@ -2,8 +2,8 @@
 
 module game_strobe # ( parameter width = 32 )
 (
-    input      clk,
-    input      rst,
+    input        clk,
+    input        rst,
     output logic strobe
 );
 
@@ -12,7 +12,7 @@ module game_strobe # ( parameter width = 32 )
     always_ff @ (posedge clk or posedge rst)
         if (rst)
         begin
-            counter <= { width, 1'b0 };
+            counter <= '0;
             strobe  <= 1'b0;
         end
         else

@@ -2,20 +2,29 @@
 
 module game_sprite_top
 #(
-    parameter SPRITE_WIDTH  = 8,
-              SPRITE_HEIGHT = 8,
+    parameter SPRITE_WIDTH  = 16,
+              SPRITE_HEIGHT = 16,
 
               DX_WIDTH      = 2,  // X speed width in bits
               DY_WIDTH      = 2,  // Y speed width in bits
 
-              ROW_0         = 32'h000cc000,
-              ROW_1         = 32'h000cc000,
-              ROW_2         = 32'h000cc000,
-              ROW_3         = 32'hcccccccc,
-              ROW_4         = 32'hcccccccc,
-              ROW_5         = 32'h000cc000,
-              ROW_6         = 32'h000cc000,
-              ROW_7         = 32'h000cc000,
+              ROW_0         = 64'h000000cccc000000,
+              ROW_1         = 64'h000000cccc000000,
+              ROW_2         = 64'h000000cccc000000,
+              ROW_3         = 64'h000000cccc000000,
+              ROW_4         = 64'h000000cccc000000,
+              ROW_5         = 64'h000000cccc000000,
+              ROW_6         = 64'hcccccccccccccccc,
+              ROW_7         = 64'hcccccccccccccccc,
+              ROW_8         = 64'hcccccccccccccccc,
+              ROW_9         = 64'hcccccccccccccccc,
+              ROW_10        = 64'hcccccccccccccccc,
+              ROW_11        = 64'h000000cccc000000,
+              ROW_12        = 64'h000000cccc000000,
+              ROW_13        = 64'h000000cccc000000,
+              ROW_14        = 64'h000000cccc000000,
+              ROW_15        = 64'h000000cccc000000,
+
 
               screen_width  = 640,
               screen_height = 480,
@@ -98,7 +107,7 @@ module game_sprite_top
     #(
         .SPRITE_WIDTH          ( SPRITE_WIDTH          ),
         .SPRITE_HEIGHT         ( SPRITE_HEIGHT         ),
-
+  
         .ROW_0                 ( ROW_0                 ),
         .ROW_1                 ( ROW_1                 ),
         .ROW_2                 ( ROW_2                 ),
@@ -106,7 +115,16 @@ module game_sprite_top
         .ROW_4                 ( ROW_4                 ),
         .ROW_5                 ( ROW_5                 ),
         .ROW_6                 ( ROW_6                 ),
-        .ROW_7                 ( ROW_7                 )
+        .ROW_7                 ( ROW_7                 ),
+        .ROW_8                 ( ROW_8                 ),
+        .ROW_9                 ( ROW_9                 ),
+        .ROW_10                ( ROW_10                ),
+        .ROW_11                ( ROW_11                ),
+        .ROW_12                ( ROW_12                ),
+        .ROW_13                ( ROW_13                ),
+        .ROW_14                ( ROW_14                ),
+        .ROW_15                ( ROW_15                )
+
     )
     sprite_display
     (

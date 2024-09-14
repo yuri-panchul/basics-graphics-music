@@ -2,17 +2,25 @@
 
 module game_sprite_display
 #(
-    parameter SPRITE_WIDTH  = 8,
-              SPRITE_HEIGHT = 8,
+    parameter SPRITE_WIDTH  = 16,
+              SPRITE_HEIGHT = 16,
 
-              ROW_0         = 32'h000cc000,
-              ROW_1         = 32'h000cc000,
-              ROW_2         = 32'h000cc000,
-              ROW_3         = 32'hcccccccc,
-              ROW_4         = 32'hcccccccc,
-              ROW_5         = 32'h000cc000,
-              ROW_6         = 32'h000cc000,
-              ROW_7         = 32'h000cc000,
+              ROW_0         = 64'h000000cccc000000,
+              ROW_1         = 64'h000000cccc000000,
+              ROW_2         = 64'h000000cccc000000,
+              ROW_3         = 64'h000000cccc000000,
+              ROW_4         = 64'h000000cccc000000,
+              ROW_5         = 64'h000000cccc000000,
+              ROW_6         = 64'hcccccccccccccccc,
+              ROW_7         = 64'hcccccccccccccccc,
+              ROW_8         = 64'hcccccccccccccccc,
+              ROW_9         = 64'hcccccccccccccccc,
+              ROW_10        = 64'hcccccccccccccccc,
+              ROW_11        = 64'h000000cccc000000,
+              ROW_12        = 64'h000000cccc000000,
+              ROW_13        = 64'h000000cccc000000,
+              ROW_14        = 64'h000000cccc000000,
+              ROW_15        = 64'h000000cccc000000,
 
               screen_width  = 640,
               screen_height = 480,
@@ -104,35 +112,53 @@ module game_sprite_display
     // TODO: instantiate here a more generic mux that is handled by all
     // synthesis tools well
 
-    wire [2:0] row_index    = y_pixel_minus_sprite [2:0];
-    wire [2:0] column_index = x_pixel_minus_sprite [2:0];
+    wire [3:0] row_index    = y_pixel_minus_sprite [3:0];
+    wire [3:0] column_index = x_pixel_minus_sprite [3:0];
 
     logic [screen_width * ERGB_WIDTH - 1:0] row;
 
     always_comb
         case (row_index)
-        3'd0: row = ROW_0;
-        3'd1: row = ROW_1;
-        3'd2: row = ROW_2;
-        3'd3: row = ROW_3;
-        3'd4: row = ROW_4;
-        3'd5: row = ROW_5;
-        3'd6: row = ROW_6;
-        3'd7: row = ROW_7;
+        4'd0 : row = ROW_0;
+        4'd1 : row = ROW_1;
+        4'd2 : row = ROW_2;
+        4'd3 : row = ROW_3;
+        4'd4 : row = ROW_4;
+        4'd5 : row = ROW_5;
+        4'd6 : row = ROW_6;
+        4'd7 : row = ROW_7;
+        4'd8 : row = ROW_8;
+        4'd9 : row = ROW_9;
+        4'd10: row = ROW_10;
+        4'd11: row = ROW_11;
+        4'd12: row = ROW_12;
+        4'd13: row = ROW_13;
+        4'd14: row = ROW_14;
+        4'd15: row = ROW_15;
         endcase
 
     logic [ERGB_WIDTH - 1:0] ergb;
 
     always_comb
         case (column_index)
-        3'd0: ergb = row [31:28];
-        3'd1: ergb = row [27:24];
-        3'd2: ergb = row [23:20];
-        3'd3: ergb = row [19:16];
-        3'd4: ergb = row [15:12];
-        3'd5: ergb = row [11: 8];
-        3'd6: ergb = row [ 7: 4];
-        3'd7: ergb = row [ 3: 0];
+       
+        4'd0:  ergb = row [63:60];
+        4'd1:  ergb = row [59:56];
+        4'd2:  ergb = row [55:52];
+        4'd3:  ergb = row [51:48];
+        4'd4:  ergb = row [47:44];
+        4'd5:  ergb = row [43:40];
+        4'd6:  ergb = row [39:36];
+        4'd7:  ergb = row [35:32];
+        4'd8:  ergb = row [31:28];
+        4'd9:  ergb = row [27:24];
+        4'd10: ergb = row [23:20];
+        4'd11: ergb = row [19:16];
+        4'd12: ergb = row [15:12];
+        4'd13: ergb = row [11: 8];
+        4'd14: ergb = row [ 7: 4];
+        4'd15: ergb = row [ 3: 0];
+
         endcase
 
     //------------------------------------------------------------------------

@@ -83,29 +83,42 @@ module game_top
 
     game_sprite_top
     #(
-        .SPRITE_WIDTH  ( 8 ),
-        .SPRITE_HEIGHT ( 8 ),
+         .SPRITE_WIDTH  ( 16 ),
+         .SPRITE_HEIGHT ( 16),
 
-        .DX_WIDTH      ( 2 ),
-        .DY_WIDTH      ( 1 ),
+         .DX_WIDTH      ( 2 ),
+         .DY_WIDTH      ( 1 ),
 
-        .ROW_0 ( 32'h000bb000 ),
-        .ROW_1 ( 32'h00099000 ),
-        .ROW_2 ( 32'h00099000 ),
-        .ROW_3 ( 32'hb99ff99b ),
-        .ROW_4 ( 32'hb99ff99b ),
-        .ROW_5 ( 32'h00099000 ),
-        .ROW_6 ( 32'h00099000 ),
-        .ROW_7 ( 32'h000bb000 ),
+      // .ROW_0 ( 32'h000bb000 ),
+      // .ROW_1 ( 32'h00099000 ),
+      // .ROW_2 ( 32'h00099000 ),
+      // .ROW_3 ( 32'hb99ff99b ),
+      // .ROW_4 ( 32'hb99ff99b ),
+      // .ROW_5 ( 32'h00099000 ),
+      // .ROW_6 ( 32'h00099000 ),
+      // .ROW_7 ( 32'h000bb000 ),
 
-        .screen_width
-        (screen_width),
+         .ROW_1 ( 64'h000000bbbb000000),
+         .ROW_2 ( 64'h000000bbbb000000),
+         .ROW_3 ( 64'h0000009999000000),
+         .ROW_4 ( 64'h0000009999000000),
+         .ROW_5 ( 64'h0000009999000000),
+         .ROW_6 ( 64'hbb9999ffff9999bb),
+         .ROW_7 ( 64'hbb9999ffff9999bb),
+         .ROW_8 ( 64'hbb9999ffff9999bb),
+         .ROW_9 ( 64'hbb9999ffff9999bb),
+         .ROW_10( 64'hbb9999ffff9999bb),
+         .ROW_11( 64'h0000009999000000),
+         .ROW_12( 64'h0000009999000000),
+         .ROW_13( 64'h0000009999000000),
+         .ROW_14( 64'h000000bbbb000000),
+         .ROW_15( 64'h000000bbbb000000),
+         .screen_width       (screen_width),
 
-        .screen_height
-        (screen_height),
+         .screen_height       (screen_height),
 
-        .strobe_to_update_xy_counter_width
-        (strobe_to_update_xy_counter_width)
+         .strobe_to_update_xy_counter_width
+         (strobe_to_update_xy_counter_width)
     )
     sprite_target
     (
@@ -192,20 +205,36 @@ module game_top
 
     game_sprite_top
     #(
-        .SPRITE_WIDTH  ( 8 ),
-        .SPRITE_HEIGHT ( 8 ),
+        .SPRITE_WIDTH  ( 16 ),
+        .SPRITE_HEIGHT ( 16 ),
 
         .DX_WIDTH      ( 2 ),
         .DY_WIDTH      ( 3 ),
 
-        .ROW_0 ( 32'h000cc000 ),
-        .ROW_1 ( 32'h00cccc00 ),
-        .ROW_2 ( 32'h0cceecc0 ),
-        .ROW_3 ( 32'hcccccccc ),
-        .ROW_4 ( 32'hcc0cc0cc ),
-        .ROW_5 ( 32'hcc0cc0cc ),
-        .ROW_6 ( 32'hcc0cc0cc ),
-        .ROW_7 ( 32'hcc0cc0cc ),
+     // .ROW_0 ( 32'h000cc000 ),
+     // .ROW_1 ( 32'h00cccc00 ),
+     // .ROW_2 ( 32'h0cceecc0 ),
+     // .ROW_3 ( 32'hcccccccc ),
+     // .ROW_4 ( 32'hcc0cc0cc ),
+     // .ROW_5 ( 32'hcc0cc0cc ),
+     // .ROW_6 ( 32'hcc0cc0cc ),
+     // .ROW_7 ( 32'hcc0cc0cc ),
+
+        .ROW_1 ( 64'h0000000cc0000000),
+        .ROW_2 ( 64'h000000cccc000000),
+        .ROW_3 ( 64'h00000cccccc00000),
+        .ROW_4 ( 64'h0000ccceeccc0000),
+        .ROW_5 ( 64'h00cccceeeecccc00),
+        .ROW_6 ( 64'h0cccceeeeeecccc0),
+        .ROW_7 ( 64'hcccccccccccccccc),
+        .ROW_8 ( 64'hcccccccccccccccc),
+        .ROW_9 ( 64'hcccc00cccc00cccc),
+        .ROW_10( 64'hcccc00cccc00cccc),
+        .ROW_11( 64'hcccc00cccc00cccc),
+        .ROW_12( 64'hcccc00cccc00cccc),
+        .ROW_13( 64'hcccc00cccc00cccc),
+        .ROW_14( 64'hcccc00cccc00cccc),
+        .ROW_15( 64'hcccc00cccc00cccc),
 
         .screen_width
         (screen_width),
