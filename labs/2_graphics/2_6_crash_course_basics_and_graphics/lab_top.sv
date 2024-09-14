@@ -100,31 +100,6 @@ module lab_top
     );
 
     //------------------------------------------------------------------------
-
-    wire [9:0] x;
-    wire [9:0] y;
-
-    vga
-    # (
-        .HPOS_WIDTH ( 10         ),
-        .VPOS_WIDTH ( 10         ),
-
-        .CLK_MHZ    ( clk_mhz    ),
-        .PIXEL_MHZ  ( pixel_mhz  )
-    )
-    i_vga
-    (
-        .clk        ( clk        ),
-        .rst        ( rst        ),
-        .hsync      ( hsync      ),
-        .vsync      ( vsync      ),
-        .display_on ( display_on ),
-        .pixel_clk  ( pixel_clk  ),
-        .hpos       ( x          ),
-        .vpos       ( y          )
-    );
-
-    //------------------------------------------------------------------------
     // Static pattern
 
     /*
