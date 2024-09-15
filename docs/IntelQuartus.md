@@ -10,16 +10,21 @@ please share your experience.
 
 ## Windows
 
-**Important:** According to Intel, you may need up to 30 GB of free space for the installation.
+**Important:** According to Intel, you may need up to _30 GB_ of free space for the installation.
 
-1. Download the [Intel® **Quartus**® Prime **Lite** Edition Design Software Version **23** for Windows](https://www.intel.com/content/www/us/en/software-kit/825278/intel-quartus-prime-lite-edition-design-software-version-23-1-1-for-windows.html?wapkw=quartus%20lite) from Intel web site
-2. Use an installer tool to download and install the required packages:
-   * Required: _"Quartus Prime Lite Edition"_, device support for your chip
+1. Download the 
+   [Intel® **Quartus**® Prime **Lite Edition** Design Software Version **23** for Windows](https://www.intel.com/content/www/us/en/products/details/fpga/development-tools/quartus-prime/resource.html)
+   from Intel web site
+   * _"Installer (New!)"_ is the recommended option as it speeds up the installation process. 
+     In case you need additional help with an installer tool, 
+     check out the _"Installer Quick Video"_ link from the same page  
+2. Running an intaller tool will prompt you to download and install the required packages:
+   * Required: _"Quartus Prime Lite Edition"_, _"Device"_ support files for your board
    * Recommended: _"Quartus Prime Help"_, _"Questa-Intel"_, _"Quartus Prime Programmer and Tools"_
    * Default values for download and install paths are usually sufficient.
-   * If one of device downloads fail (e.g. _"MAX 10"_,) skip it for now.
+   * :warning: If one of device downloads fail (e.g. _"MAX 10"_,) skip it for now.
      Follow the [Troubleshooting](#Troubleshooting) instructions
-     for a manual installation.
+     for a manual installation afterwards.
 3. Verify you got up to three directories: `C:\flexlm`, `C:\intelFPGA`, and `C:\intelFPGA_lite`.
 
 In most cases, no additional steps are necessary. The installation will be automatically detected and configured when an appropriate board is selected.
@@ -34,7 +39,6 @@ You may encounter the following error message during synthesis:
 
 In most cases, no additional steps are necessary. The installation will be automatically discovered and configured when an appropriate board is selected.
 
-### Troubleshooting
 
 #### Synthesis for a board fails with _Error (20004)_
 
@@ -86,4 +90,4 @@ Follow these steps:
 
 ## Linux
 
-_TODO: Integrate with [beginner-s-guide-to-basics-graphics-music.md](./beginner-s-guide-to-basics-graphics-music.md)_
+_:wrench: TODO: Integrate with [beginner-s-guide-to-basics-graphics-music.md](./beginner-s-guide-to-basics-graphics-music.md)_

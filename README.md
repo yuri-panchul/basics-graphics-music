@@ -28,13 +28,14 @@ You only need a few things to get started:
 4. Run [`06_choose_another_fpga_board.bash`](./labs/1_basics/1_01_and_or_not_xor_de_morgan/06_choose_another_fpga_board.bash) to select your board.
 5. Run [`03_synthesize_for_fpga.bash`](./labs/1_basics/1_01_and_or_not_xor_de_morgan/03_synthesize_for_fpga.bash) to synthesize, place, and program your board all in one go.
 
-That's it! You're now running Verilog example code on real hardware. Press buttons on the board and check for LEDs to light up accordingly.
+That's it! You're now running Verilog example code on real hardware. 
+Press buttons on the board and check for LEDs to light up accordingly.
 
 ## First time setup
 
 1. Follow the instructions for [Windows](#Windows), [Linux](#Linux), or [macOS](#macOS) to set up your environment.
-1. Optional: Configure VSCode:
-   1. Install these extensions: _TODO: Verilog extensions configuration_
+1. Optional: Configure _VSCode_:
+   1. Install these extensions: _:wrench: TODO: Verilog extensions configuration_
    1. Recommended extensions: _GitHub Pull Requests_ and _GitHub Repositories_
 1. Checkout this GitHub repository. Check out 
    [Git Cheat Sheet](./git_cheat_sheet.md) if you need additional help
@@ -65,13 +66,13 @@ You're welcome to try at your own risk and peril.
 See [documentation](./docs/wsl.md).
 
 * Required: Download and install [Git for Windows](https://git-scm.com/download/win).
-  * *Important:* We recommend on the _"Adjusting your PATH environment"_ step to select 
+  * :warning: We recommend on the _"Adjusting your PATH environment"_ step to select 
     _"Use Git and optional Unix tools from the Windows Command Prompt"_.    
 * Required: Bash: Compatibility is only verified with Bash installed as part of the [Git for Windows](https://git-scm.com/download/win) package.
 * Recommended: Download and install 
       [VScode](https://apps.microsoft.com/detail/xp9khm4bk9fz7q)
 
-**Important:** Examples and scripts can _only_ be run with a _Git Bash_ terminal. 
+:warning: Examples and scripts can _only_ be run with a _Git Bash_ terminal. 
 There are mutliple different options to open it.
 Choose one that works best for you:
 
@@ -118,11 +119,15 @@ If you do not know where to start:
 
 ## Supported Boards
 
-> WIP: Work in progress. Only a minority of supported boards are documented. Your contributions are welcome.
+> :wrench: Work in progress. Only a few out of dozens of supported boards are documented.
+Your contributions are welcome.
 
-| Board     | Variations | Compatibility                                      |
-|-----------|------------|----------------------------------------------------|
-| DE10-Lite |            | Windows with [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+* Compatibility: :apple: macOS, :penguin: Linux, :computer: Windows, :globe_with_meridians: Open Source
+
+| Chip          | Board                | Variants                                             | Software                                           |
+|---------------|----------------------|------------------------------------------------------|----------------------------------------------------|
+| Altera MAX 10 | Terasic DE10-Lite    | [`de10_lite`](./boards/de10_lite/)                   | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Gowin GW1NR-9 | Sipeed Tang Nano 20K | [`tang_nano_20k_lcd_800_480_tm1638`](./boards/tang_nano_20k_lcd_800_480_tm1638/) | [Gowin EDA](./docs/GowinEDA.md)                    |
 
 # Verilog Events Across the World
 
