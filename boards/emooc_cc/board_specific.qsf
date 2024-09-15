@@ -1,3 +1,5 @@
+# This file is created based on https://www.yuque.com/yingmuketang/01/ri3fkv
+
 set_global_assignment   -name DEVICE EP4CE6F17C8
 
 set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
