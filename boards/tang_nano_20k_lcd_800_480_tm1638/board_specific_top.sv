@@ -48,40 +48,52 @@ module board_specific_top
     output                       LCD_DE,
     output                       LCD_VS,
     output                       LCD_HS,
-    output                       LCD_CK,
-    output                       LCD_BL,
-    output                       LCD_INIT,
+    output                       LCD_CLK,
 
-    output [7:7 + 1 - w_red   ]  LCD_R,
-    output [7:7 + 1 - w_green ]  LCD_G,
-    output [7:7 + 1 - w_blue  ]  LCD_B,
+    output [            4:0]     LCD_R,
+    output [            5:0]     LCD_G,
+    output [            4:0]     LCD_B,
 
     input                        UART_RX,
     output                       UART_TX,
 
-    // The following 4 pins (MIC_LR, MIC_WS, MIC_SCLK, MIC_SD)
-    // are used for INMP441 microphone
-    // in basics-graphics-music labs
-
-    inout                        MIC_LR,
-    inout                        MIC_WS,
-    inout                        MIC_SCLK,
-    inout                        MIC_SD,
-
     inout  [w_gpio       - 1:0]  GPIO,
 
-    // TMDS pins conflict with LCD pins
+    // DVI ports
+    // output                    O_TMDS_CLK_N,
+    // output                    O_TMDS_CLK_P,
+    // output [            2:0]  O_TMDS_DATA_N,
+    // output [            2:0]  O_TMDS_DATA_P,
 
-    // output                       TMDS_CLK_N,
-    // output                       TMDS_CLK_P,
-    // output [               2:0]  TMDS_D_N,
-    // output [               2:0]  TMDS_D_P,
+    inout                        EDID_CLK,
+    inout                        EDID_DAT,
 
-    // Pins for onboard I2S DAC
-    output                       I2S_BCLK,
-    output                       I2S_LRCK,
-    output                       I2S_DIN,
-    output                       I2S_EN
+    // output                    JOYSTICK_CLK,
+    // output                    JOYSTICK_MOSI,
+    // output                    JOYSTICK_MISO,
+    // output                    JOYSTICK_CS,
+
+    // output                    JOYSTICK_CLK2,
+    // output                    JOYSTICK_MOSI2,
+    output                       JOYSTICK_MISO2,
+    output                       JOYSTICK_CS2,
+
+    // SD card ports
+    output                       SD_CLK,
+    output                       SD_CMD,
+    inout                        SD_DAT0,
+    inout                        SD_DAT1,
+    inout                        SD_DAT2,
+    inout                        SD_DAT3, 
+
+    // Ports for on-board I2S amplifier
+    output                       HP_BCK,
+    output                       HP_DIN,
+    output                       HP_WS,
+    output                       PA_EN,
+
+    // On-board WS2812 RGB LED with a serial interface
+    inout                        WS2812
 );
 
     wire clk = CLK;
@@ -258,8 +270,8 @@ module board_specific_top
         .ledr     ( tm_led         ),
         .keys     ( tm_key         ),
         .sio_data ( GPIO [0]       ),
-        .sio_clk  ( GPIO [1]       ),
-        .sio_stb  ( GPIO [2]       )
+        .sio_clk  ( JOYSTICK_CS2   ),
+        .sio_stb  ( JOYSTICK_MISO2 )
     );
 
     `endif
@@ -310,10 +322,10 @@ module board_specific_top
         (
             .clk      ( clk            ),
             .rst      ( rst            ),
-            .lr       ( MIC_LR         ),
-            .ws       ( MIC_WS         ),
-            .sck      ( MIC_SCLK       ),
-            .sd       ( MIC_SD         ),
+            .lr       ( GPIO[1]        ),
+            .ws       ( GPIO[2]        ),
+            .sck      ( GPIO[3]        ),
+            .sd       ( SD_DAT1        ),
             .value    ( mic            )
         );
 
@@ -324,7 +336,7 @@ module board_specific_top
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
         // For tang_nano_20k DAC do not require mclk signal
-        // but it needs enable signal I2S_EN
+        // but it needs enable signal PA_EN
 
         i2s_audio_out
         # (
@@ -336,13 +348,13 @@ module board_specific_top
             .reset    ( rst          ),
             .data_in  ( sound        ),
             .mclk     (              ),
-            .bclk     ( I2S_BCLK     ),
-            .lrclk    ( I2S_LRCK     ),
-            .sdata    ( I2S_DIN      )
+            .bclk     ( HP_BCK       ),
+            .lrclk    ( HP_WS        ),
+            .sdata    ( HP_DIN       )
         );
 
         // Enable DAC
-        assign I2S_EN = 1'b1;
+        assign PA_EN = 1'b1;
 
     `endif
 
