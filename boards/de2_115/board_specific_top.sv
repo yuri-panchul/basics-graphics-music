@@ -70,7 +70,7 @@ module board_specific_top
     wire                    clk     = CLOCK_50;
     wire                    rst     = SW [w_lab_sw];
 
-    // Keys, switches, LEDs
+    // Switches, LEDs
 
     wire [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
     wire [ w_led     - 1:0] lab_led;
@@ -85,11 +85,7 @@ module board_specific_top
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
-    wire [ w_red     - 1:0] red;
-    wire [ w_green   - 1:0] green;
-    wire [ w_blue    - 1:0] blue;
-
-    // Microphone, sound output and UART
+    // Microphone, sound output
 
     wire [            23:0] mic;
     wire [            15:0] sound;
@@ -237,22 +233,23 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz   ),
-            .PIXEL_MHZ   ( pixel_mhz )
+            .H_DISPLAY   ( screen_width  ),
+            .V_DISPLAY   ( screen_height ),
+            .CLK_MHZ     ( clk_mhz       ),
+            .PIXEL_MHZ   ( pixel_mhz     )
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HS    ),
-            .vsync       ( VGA_VS    ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .clk         ( clk           ),
+            .rst         ( rst           ),
+            .hsync       ( VGA_HS        ),
+            .vsync       ( VGA_VS        ),
+            .display_on  ( VGA_BLANK_N   ),
+            .hpos        ( x10           ),
+            .vpos        ( y10           ),
+            .pixel_clk   ( VGA_CLK       )
         );
 
-        assign VGA_BLANK_N = 1'b1;
         assign VGA_SYNC_N  = 1'b0;
 
     `endif
