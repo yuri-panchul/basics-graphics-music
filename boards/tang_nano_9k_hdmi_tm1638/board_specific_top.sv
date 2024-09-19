@@ -16,7 +16,10 @@ module board_specific_top
     parameter clk_mhz       = 27,
               pixel_mhz     = 25,
 
-              w_key         = 2,  // The last key is used for a reset
+              // We use sw as an alias to key on Tang Nano 9K,
+              // either with or without TM1638
+
+              w_key         = 2,
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
@@ -112,16 +115,17 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         localparam w_lab_key   = w_tm_key,
-                   w_lab_sw    = w_sw,
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
-    `else                   // TM1638 module is not connected
+    `else  // TM1638 module is not connected
+
+        // We create a dummy seven-segment digit
+        // to avoid errors in the labs with seven-segment display
 
         localparam w_lab_key   = w_key,
-                   w_lab_sw    = w_sw,
                    w_lab_led   = w_led,
-                   w_lab_digit = w_digit;
+                   w_lab_digit = 1;  // w_digit;
 
     `endif
 
@@ -166,7 +170,7 @@ module board_specific_top
 
         imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
 
-        assign lab_key  = ~ KEY [w_key - 1:0];
+        assign lab_key  = ~ KEY;
         assign LED      = ~ lab_led;
 
     `else  // TM1638 module is not connected and no reset initation
@@ -191,7 +195,7 @@ module board_specific_top
     # (
         .clk_mhz       ( clk_mhz       ),
 
-        .w_key         ( w_lab_key     ),  // The last key is used for a reset
+        .w_key         ( w_lab_key     ),
         .w_sw          ( w_lab_key     ),
         .w_led         ( w_lab_led     ),
         .w_digit       ( w_lab_digit   ),
