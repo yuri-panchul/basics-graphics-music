@@ -56,6 +56,7 @@ module board_specific_top
     output                 VGA_B,
 
     input                  UART_RXD,
+    output                 UART_TXD,
 
     inout  [w_gpio  - 1:0] PSEUDO_GPIO_USING_SDRAM_PINS,
 
@@ -74,17 +75,30 @@ module board_specific_top
 
     wire [w_led   - 1:0] lab_led;
 
+    // Seven-segment display
+
     wire [          7:0] abcdefgh;
     wire [w_digit - 1:0] digit;
+
+    // Graphics
+
+    wire                 display_on;
 
     wire [w_x     - 1:0] x;
     wire [w_y     - 1:0] y;
 
+    wire [w_red   - 1:0] red;
+    wire [w_green - 1:0] green;
+    wire [w_blue  - 1:0] blue;
+
+    assign VGA_R = display_on ? red   : '0;
+    assign VGA_G = display_on ? green : '0;
+    assign VGA_B = display_on ? blue  : '0;
+
+    // Sound
+
     wire [         23:0] mic;
     wire [         15:0] sound;
-
-    // FIXME: Should be assigned to some GPIO!
-    wire                  UART_TXD;
 
     //------------------------------------------------------------------------
 
@@ -108,7 +122,7 @@ module board_specific_top
         .screen_width  (   screen_width  ),
         .screen_height (   screen_height ),
 
-        .w_red         (   w_red         ),  // This is not true RGB channel width
+        .w_red         (   w_red         ),
         .w_green       (   w_green       ),
         .w_blue        (   w_blue        )
     )
@@ -129,9 +143,9 @@ module board_specific_top
         .x             (   x             ),
         .y             (   y             ),
 
-        .red           (   VGA_R         ),
-        .green         (   VGA_G         ),
-        .blue          (   VGA_B         ),
+        .red           (   red           ),
+        .green         (   green         ),
+        .blue          (   blue          ),
 
         .uart_rx       (   UART_RXD      ),
         .uart_tx       (   UART_TXD      ),
@@ -167,14 +181,14 @@ module board_specific_top
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HSYNC ),
-            .vsync       ( VGA_VSYNC ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   (           )
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HSYNC  ),
+            .vsync       ( VGA_VSYNC  ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
         );
 
     `endif

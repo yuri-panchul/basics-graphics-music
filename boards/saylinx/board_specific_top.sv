@@ -40,9 +40,9 @@ module board_specific_top
     output                    VGA_OUT_HS,
     output                    VGA_OUT_VS,
 
-    output [             4:0] VGA_OUT_R,
-    output [             5:0] VGA_OUT_G,
-    output [             4:0] VGA_OUT_B,
+    output [w_red      - 1:0] VGA_OUT_R,
+    output [w_green    - 1:0] VGA_OUT_G,
+    output [w_blue     - 1:0] VGA_OUT_B,
 
     input                     UART_RXD,
     output                    UART_TXD,
@@ -55,6 +55,7 @@ module board_specific_top
 
     wire                 clk = CLK;
     wire                 rst = ~ RST_N;
+
     wire [w_key   - 1:0] key = ~ { KEY2, KEY3, KEY4 };
 
     // Seven-segment display
