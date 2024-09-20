@@ -232,6 +232,8 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        wire display_on;
+
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
@@ -242,17 +244,17 @@ module board_specific_top
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HS    ),
-            .vsync       ( VGA_VS    ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HS     ),
+            .vsync       ( VGA_VS     ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   ( VGA_CLK    )
         );
 
-        assign VGA_BLANK_N = 1'b1;
+        assign VGA_BLANK_N = display_on;
         assign VGA_SYNC_N  = 1'b0;
 
     `endif
