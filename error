@@ -1,7 +1,0 @@
-Reading constraint file: "/home/verilog/Desktop/pk_repo/new_graphics/basics-graphics-music/boards/tang_primer_25k_dock_dvi/board_specific.cst"
-ERROR  (CT1143) : Bank 1 vccio is locked by short circuit bank(0), conflicting BANK_VCCIO set by 'u_LVDS_b' : IO_TYPE = LVDS25E in the same bank
-ERROR  (CT1143) : Bank 1 vccio is locked by short circuit bank(0), conflicting BANK_VCCIO set by 'u_LVDS_g' : IO_TYPE = LVDS25E in the same bank
-ERROR  (CT1143) : Bank 1 vccio is locked by short circuit bank(0), conflicting BANK_VCCIO set by 'u_LVDS_r' : IO_TYPE = LVDS25E in the same bank
-ERROR  (CT1143) : Bank 1 vccio is locked by short circuit bank(0), conflicting BANK_VCCIO set by 'u_LVDS_clk' : IO_TYPE = LVDS25E in the same bank
-ERROR  (CT1136) : Bank 1 vccio(2.5) is locked by other constraint or embedded port, conflicting BANK_VCCIO set by 'pmod_1_3_obuf' : IO_TYPE = LVCMOS33 in the same bank
-ERROR  (CT1136) : Bank 1 vccio(2.5) is locked by other constraint or embedded port, conflicting BANK_VCCIO set by 'pmod_1_7_obuf' : IO_TYPE = LVCMOS33 in the same bank
