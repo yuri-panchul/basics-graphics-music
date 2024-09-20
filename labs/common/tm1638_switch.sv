@@ -9,9 +9,10 @@
 
 module tm1638_switch
 # (
-    parameter clk_mhz = 50,
-              w_digit = 8,
-              w_seg   = 8
+    parameter clk_mhz  = 50,
+              w_digit  = 8,
+              w_seg    = 8,
+			  W_TM_KEY = `W_TM_KEY
 )
 (
     input                             clk,
@@ -34,17 +35,16 @@ module tm1638_switch
 
     generate
         genvar i;
-        for (i = 0; i < $bit (tm_keys); i++) begin
-            if(tm_keys[i])
-                switches_d[i] = ~switches[i];
+        for (i = 0; i < $bits (tm_keys); i++) begin: tm_switch_gen
+            assign switches_d[i] = tm_keys[i] ? (~ switches[i]) : switches[i];
         end
     endgenerate
 
     always_ff @(posedge clk or posedge rst) begin
         if (rst)
-            switches <= '0
+            switches <= '0;
         else
-            switches <= switches_d
+            switches <= switches_d;
     end
 
     tm1638_board_controller
