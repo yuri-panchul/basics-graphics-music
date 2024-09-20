@@ -8,6 +8,21 @@
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+`define REVERSE_KEY
+`define REVERSE_LED
+
+//----------------------------------------------------------------------------
+
+`define SWAP_BITS(dst, src)                                      \
+                                                                 \
+    generate                                                     \
+        genvar dst``_i;                                          \
+                                                                 \
+        for (dst``_i = 0; dst``_i < $bits (dst); dst``_i ++)     \
+        begin : dst``_label                                      \
+            assign dst [dst``_i] = src [$left (dst) - dst``_i];  \
+        end                                                      \
+    endgenerate                                                  \
 
 //----------------------------------------------------------------------------
 
@@ -164,23 +179,35 @@ module board_specific_top
 
         assign LED      = w_led' (~ lab_led);
 
-    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+    `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        wire rst;
+        `ifdef IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+            imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
+        `else
+            `ifdef REVERSE_KEY
+                assign rst = ~ KEY [0];
+            `else
+                assign rst = ~ KEY [w_key - 1];
+            `endif
+        `endif
 
-        imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
+        //--------------------------------------------------------------------
 
-        assign lab_key  = ~ KEY;
-        assign LED      = ~ lab_led;
+        `ifdef REVERSE_KEY
+            `SWAP_BITS (lab_key, ~ KEY);
+        `else
+            assign lab_key = ~ KEY;
+        `endif
 
-    `else  // TM1638 module is not connected and no reset initation
+        //--------------------------------------------------------------------
 
-        assign rst      = ~ KEY [w_key - 1];
-        assign lab_key  = ~ KEY [w_key - 1:0];
+        `ifdef REVERSE_LED
+            `SWAP_BITS (LED, ~ lab_led);
+        `else
+            assign LED = ~ lab_led;
+        `endif
 
-        assign LED      = ~ lab_led;
-
-    `endif
+    `endif  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     //------------------------------------------------------------------------
 
@@ -234,7 +261,7 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( gpio          )
+        .gpio          ( GPIO          )
     );
 
     //------------------------------------------------------------------------
