@@ -9,6 +9,8 @@
     `define USE_LCD_AS_GPIO
 `endif
 
+`define USE_INTERNALLY_WIDE_COLOR_CHANNELS
+
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -32,9 +34,19 @@ module board_specific_top
               screen_width  = 640,
               screen_height = 480,
 
+              `ifdef USE_INTERNALLY_WIDE_COLOR_CHANNELS
+
+              w_red         = 4,
+              w_green       = 4,
+              w_blue        = 4,
+
+              `else
+
               w_red         = 1,
               w_green       = 1,
               w_blue        = 1,
+
+              `endif
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
@@ -91,9 +103,9 @@ module board_specific_top
     wire [w_green - 1:0] green;
     wire [w_blue  - 1:0] blue;
 
-    assign VGA_R = display_on ? red   : '0;
-    assign VGA_G = display_on ? green : '0;
-    assign VGA_B = display_on ? blue  : '0;
+    assign VGA_R = display_on ? | red   : '0;
+    assign VGA_G = display_on ? | green : '0;
+    assign VGA_B = display_on ? | blue  : '0;
 
     // Sound
 
