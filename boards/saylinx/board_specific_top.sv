@@ -175,40 +175,40 @@ module board_specific_top
 
         `ifdef USE_DIGILENT_PMOD_MIC3
 
-        wire [11:0] mic_12;
+            wire [11:0] mic_12;
 
-        digilent_pmod_mic3_spi_receiver i_microphone
-        (
-            .clk   ( clk         ),
-            .rst   ( rst         ),
-            .cs    ( GPIO_1 [26] ), // J2 pin 29
-            .sck   ( GPIO_1 [32] ), // J2 pin 35
-            .sdo   ( GPIO_1 [30] ), // J2 pin 33
-            .value ( mic_12      )
-        );
+            digilent_pmod_mic3_spi_receiver i_microphone
+            (
+                .clk   ( clk         ),
+                .rst   ( rst         ),
+                .cs    ( GPIO_1 [26] ), // J2 pin 29
+                .sck   ( GPIO_1 [32] ), // J2 pin 35
+                .sdo   ( GPIO_1 [30] ), // J2 pin 33
+                .value ( mic_12      )
+            );
 
-        wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
-        assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
+            wire [11:0] mic_12_minus_offset = mic_12 - 12'h800;
+            assign mic = { { 12 { mic_12_minus_offset [11] } }, mic_12_minus_offset };
 
         `else
 
-        inmp441_mic_i2s_receiver
-        # (
-            .clk_mhz ( clk_mhz    )
-        )
-        i_microphone
-        (
-            .clk     ( clk        ),
-            .rst     ( rst        ),
-            .lr      ( GPIO_0 [0] ), // N2
-            .ws      ( GPIO_0 [2] ), // P2
-            .sck     ( GPIO_0 [4] ), // P8
-            .sd      ( GPIO_0 [5] ), // K9
-            .value   ( mic        )
-        );
+            inmp441_mic_i2s_receiver
+            # (
+                .clk_mhz ( clk_mhz    )
+            )
+            i_microphone
+            (
+                .clk     ( clk        ),
+                .rst     ( rst        ),
+                .lr      ( GPIO_0 [0] ), // N2
+                .ws      ( GPIO_0 [2] ), // P2
+                .sck     ( GPIO_0 [4] ), // P8
+                .sd      ( GPIO_0 [5] ), // K9
+                .value   ( mic        )
+            );
 
-        assign GPIO_0 [1] = 1'b0;  // GND - P1
-        assign GPIO_0 [3] = 1'b1;  // VCC - R1
+            assign GPIO_0 [1] = 1'b0;  // GND - P1
+            assign GPIO_0 [3] = 1'b1;  // VCC - R1
 
         `endif
         
