@@ -15,7 +15,7 @@ set_false_path -from * -to [get_ports {DIG[*]}]
 
 set_false_path -from * -to [get_ports {VGA*}]
 
-# set_false_path -from * -to UART_TXD
+set_false_path -from * -to UART_TXD
 
 set_false_path -from * -to [get_ports {PSEUDO_GPIO_USING_SDRAM_PINS[*]}]
 set_false_path -from * -to [get_ports {LCD*}]
