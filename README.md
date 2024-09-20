@@ -5,7 +5,7 @@
 These are examples to demonstrate labs sessions for [systemverilog-homework](https://github.com/yuri-panchul/systemverilog-homework) which are portable [SystemVerilog](https://en.wikipedia.org/wiki/SystemVerilog)
 examples for FPGA and ASIC.
 
-> [FPGA](https://en.wikipedia.org/wiki/Field-programmable_gate_array) Field Programmable Gate Array is a type of integrated circuit <s>that can be programmed multiple times</s>.
+> [FPGA](https://en.wikipedia.org/wiki/Field-programmable_gate_array) Field Programmable Gate Array is a type of integrated circuit that can be programmed multiple times.
 It consists of an array of programmable logic blocks and interconnects that can be configured to perform
 various digital functions. FPGAs are commonly used in applications where flexibility, speed, and parallel
 processing capabilities are required, such as in telecommunications, automotive and aerospace.
