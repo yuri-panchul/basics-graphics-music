@@ -8,6 +8,21 @@
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+`define REVERSE_KEY
+`define REVERSE_LED
+
+//----------------------------------------------------------------------------
+
+`define SWAP_BITS(dst, src)                                      \
+                                                                 \
+    generate                                                     \
+        genvar dst``_i;                                          \
+                                                                 \
+        for (dst``_i = 0; dst``_i < $bits (dst); dst``_i ++)     \
+        begin : dst``_label                                      \
+            assign dst [dst``_i] = src [$left (dst) - dst``_i];  \
+        end                                                      \
+    endgenerate                                                  \
 
 //----------------------------------------------------------------------------
 
@@ -16,7 +31,10 @@ module board_specific_top
     parameter clk_mhz       = 27,
               pixel_mhz     = 9,
 
-              w_key         = 2,  // The last key is used for a reset
+              // We use sw as an alias to key on Tang Nano 9K,
+              // either with or without TM1638
+
+              w_key         = 2,
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
@@ -100,25 +118,26 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_tm_key    =   8,
-               w_tm_led    =   8,
-               w_tm_digit  =   8;
+    localparam w_tm_key   = 8,
+               w_tm_led   = 8,
+               w_tm_digit = 8;
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         localparam w_lab_key   = w_tm_key,
-                   w_lab_sw    = w_sw,
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
-    `else                   // TM1638 module is not connected
+    `else  // TM1638 module is not connected
+
+        // We create a dummy seven-segment digit
+        // to avoid errors in the labs with seven-segment display
 
         localparam w_lab_key   = w_key,
-                   w_lab_sw    = w_sw,
                    w_lab_led   = w_led,
-                   w_lab_digit = w_digit;
+                   w_lab_digit = 1;  // w_digit;
 
     `endif
 
@@ -153,23 +172,35 @@ module board_specific_top
 
         assign LED      = w_led' (~ lab_led);
 
-    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+    `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        wire rst;
+        `ifdef IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+            imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
+        `else
+            `ifdef REVERSE_KEY
+                assign rst = ~ KEY [0];
+            `else
+                assign rst = ~ KEY [w_key - 1];
+            `endif
+        `endif
 
-        imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
+        //--------------------------------------------------------------------
 
-        assign lab_key  = ~ KEY [w_key - 1:0];
-        assign LED      = ~ lab_led;
+        `ifdef REVERSE_KEY
+            `SWAP_BITS (lab_key, ~ KEY);
+        `else
+            assign lab_key = ~ KEY;
+        `endif
 
-    `else  // TM1638 module is not connected and no reset initation
+        //--------------------------------------------------------------------
 
-        assign rst      = ~ KEY [w_key - 1];
-        assign lab_key  = ~ KEY [w_key - 1:0];
+        `ifdef REVERSE_LED
+            `SWAP_BITS (LED, ~ lab_led);
+        `else
+            assign LED = ~ lab_led;
+        `endif
 
-        assign LED      = ~ lab_led;
-
-    `endif
+    `endif  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     //------------------------------------------------------------------------
 
@@ -189,7 +220,7 @@ module board_specific_top
     # (
         .clk_mhz       ( clk_mhz       ),
 
-        .w_key         ( w_lab_key     ),  // The last key is used for a reset
+        .w_key         ( w_lab_key     ),
         .w_sw          ( w_lab_key     ),
         .w_led         ( w_lab_led     ),
         .w_digit       ( w_lab_digit   ),
@@ -228,23 +259,15 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( gpio          )
+        .gpio          ( GPIO          )
     );
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    wire [$left (abcdefgh):0] hgfedcba;
-
-    generate
-        genvar i;
-
-        for (i = 0; i < $bits (abcdefgh); i ++)
-        begin : abc
-            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-        end
-    endgenerate
+        wire [$left (abcdefgh):0] hgfedcba;
+        `SWAP_BITS (hgfedcba, abcdefgh);
 
     `endif
 

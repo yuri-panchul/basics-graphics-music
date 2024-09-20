@@ -228,6 +228,8 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        wire display_on;
+
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
