@@ -16,7 +16,13 @@ module board_specific_top
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
+
+                `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+                w_led         = 2,  // High bits of LED conflict with HDMI pins
+                `else
                 w_led         = 6,
+                `endif
+
                 w_digit       = 0,
                 w_gpio        = 32,
 

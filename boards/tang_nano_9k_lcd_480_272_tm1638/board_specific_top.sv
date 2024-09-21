@@ -151,7 +151,6 @@ module board_specific_top
     wire  [w_lab_led   - 1:0] lab_led;
     wire  [w_lab_digit - 1:0] lab_digit;
 
-    wire                      rst;
     wire  [              7:0] abcdefgh;
 
     wire  [w_x         - 1:0] x;
@@ -164,8 +163,33 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        assign rst      = tm_key [w_tm_key - 1];
-        assign lab_key  = tm_key [w_tm_key - 1:0];
+        wire rst_on_power_up;
+        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+
+        wire rst = rst_on_power_up | (| (~ KEY));
+
+    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+
+        wire rst_on_power_up;
+        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+
+        wire rst = rst_on_power_up;
+
+    `else  // Reset using an on-board button
+
+        `ifdef REVERSE_KEY
+            wire rst = ~ KEY [0];
+        `else
+            wire rst = ~ KEY [w_key - 1];
+        `endif
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        assign lab_key  = tm_key;
 
         assign tm_led   = lab_led;
         assign tm_digit = lab_digit;
@@ -173,18 +197,6 @@ module board_specific_top
         assign LED      = w_led' (~ lab_led);
 
     `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
-        `ifdef IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
-            imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
-        `else
-            `ifdef REVERSE_KEY
-                assign rst = ~ KEY [0];
-            `else
-                assign rst = ~ KEY [w_key - 1];
-            `endif
-        `endif
-
-        //--------------------------------------------------------------------
 
         `ifdef REVERSE_KEY
             `SWAP_BITS (lab_key, ~ KEY);
