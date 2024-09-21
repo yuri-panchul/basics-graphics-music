@@ -12,39 +12,34 @@ module tm1638_switch
     parameter clk_mhz  = 50,
               w_digit  = 8,
               w_seg    = 8,
-			  W_TM_KEY = `W_TM_KEY
 )
 (
     input                             clk,
     input                             rst,
     input        [               7:0] hgfedcba,
     input        [     w_digit - 1:0] digit,
-    input        [               7:0] ledr,
-    output logic [    W_TM_KEY - 1:0] keys,
+    output logic [   `W_TM_KEY - 1:0] switches,
     output                            sio_clk,
     output logic                      sio_stb,
     inout                             sio_data
 );
-
-    logic [    W_TM_KEY - 1:0] switches, switches_d;
-    logic [    W_TM_KEY - 1:0] tm_keys;
+    logic [   `W_TM_KEY - 1:0] tm_keys_r;
+    logic [   `W_TM_KEY - 1:0] tm_keys, tm_keys_press;
     logic [               7:0] tm_leds;
 
     assign keys = switches;
     assign tm_leds = switches[7:0];
-
-    generate
-        genvar i;
-        for (i = 0; i < $bits (tm_keys); i++) begin: tm_switch_gen
-            assign switches_d[i] = tm_keys[i] ? (~ switches[i]) : switches[i];
-        end
-    endgenerate
+    assign tm_keys_press = (~ tm_keys_r) & tm_keys;
 
     always_ff @(posedge clk or posedge rst) begin
-        if (rst)
+        if (rst) begin
             switches <= '0;
-        else
-            switches <= switches_d;
+            tm_keys_r <= '0;
+        end
+        else begin
+            tm_keys_r <= tm_keys;
+            switches <= switches ^ tm_keys_press;
+        end
     end
 
     tm1638_board_controller
