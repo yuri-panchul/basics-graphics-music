@@ -75,7 +75,7 @@ module lab_top
     // Generate a strobe signal 10 times a second
 
     strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (10))
+    # (.clk_mhz (clk_mhz), .strobe_hz (30))
     i_strobe_gen
     (.strobe (enable), .*);
 

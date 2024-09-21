@@ -103,9 +103,9 @@ module board_specific_top
     wire [w_green - 1:0] green;
     wire [w_blue  - 1:0] blue;
 
-    assign VGA_R = display_on ? | red   : '0;
-    assign VGA_G = display_on ? | green : '0;
-    assign VGA_B = display_on ? | blue  : '0;
+    assign VGA_R = display_on & ( | red   );
+    assign VGA_G = display_on & ( | green );
+    assign VGA_B = display_on & ( | blue  );
 
     // Sound
 
@@ -270,11 +270,11 @@ module board_specific_top
             .clk     ( clk       ),
             .reset   ( rst       ),
             .data_in ( sound     ),
-            .mclk    ( LCD_E     ), // Pin 143
-            .bclk    ( LCD_RS    ), // Pin 141
-            .lrclk   ( LCD_RW    ), // Pin 138
-            .sdata   ( LCD_D [0] )  // Pin 142
-        );                          // GND and VCC 3.3V (30-45 mA)
+            .mclk    ( LCD_E     ),  // Pin 143
+            .bclk    ( LCD_RS    ),  // Pin 141
+            .lrclk   ( LCD_RW    ),  // Pin 138
+            .sdata   ( LCD_D [0] )   // Pin 142
+        );                           // GND and VCC 3.3V (30-45 mA)
 
     `endif
 
