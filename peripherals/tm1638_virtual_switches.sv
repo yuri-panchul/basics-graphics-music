@@ -50,8 +50,8 @@ module tm1638_virtual_switches
         .digit      ( digit    ),
         .ledr       ( switches ),
         .keys       ( keys     ),
-        .sio_stb    ( sio_clk  ),
-        .sio_clk    ( sio_stb  ),
+        .sio_clk    ( sio_clk  ),
+        .sio_stb    ( sio_stb  ),
         .sio_data   ( sio_data )
     );
 

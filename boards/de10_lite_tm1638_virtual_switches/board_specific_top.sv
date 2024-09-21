@@ -52,7 +52,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_lab_sw = w_sw - 1;  // One onboard SW is used as a reset
+    localparam w_de_sw = w_sw - 1;  // One onboard SW is used as a reset
 
     //------------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ module board_specific_top
 
     // Keys, switches, LEDs
 
-    wire [ w_lab_sw  - 1:0] lab_sw = SW [w_lab_sw - 1:0];
+    wire [ w_de_sw - 1:0] de_sw = SW [w_de_sw - 1:0];
 
     // A dynamic seven-segment display
 
@@ -87,6 +87,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     localparam w_tm_key     = 8,
+               w_tm_sw      = 8,
                w_tm_led     = 8,
                w_tm_digit   = 8;
 
@@ -95,12 +96,14 @@ module board_specific_top
     `ifdef DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
         localparam w_lab_key   = w_tm_key   > w_key   ? w_tm_key   : w_key   ,
+                   w_lab_sw    = w_tm_sw    > w_de_sw ? w_tm_sw    : w_de_sw ,
                    w_lab_led   = w_tm_led   > w_led   ? w_tm_led   : w_led   ,
                    w_lab_digit = w_tm_digit > w_digit ? w_tm_digit : w_digit ;
 
     `else  // Concatenate the signals
 
         localparam w_lab_key   = w_tm_key   + w_key   ,
+                   w_lab_sw    = w_tm_sw    + w_de_sw ,
                    w_lab_led   = w_tm_led   + w_led   ,
                    w_lab_digit = w_tm_digit + w_digit ;
     `endif
@@ -108,10 +111,12 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_sw     - 1:0] tm_sw;
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
     logic [w_lab_key   - 1:0] lab_key;
+    logic [w_lab_sw    - 1:0] lab_sw;
     wire  [w_lab_led   - 1:0] lab_led;
     wire  [w_lab_digit - 1:0] lab_digit;
 
@@ -120,30 +125,37 @@ module board_specific_top
     `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
 
         assign lab_key = { tm_key, ~ KEY };
+        assign lab_sw  = { tm_sw , de_sw };
 
-        assign { tm_led   , LEDR  } = lab_led;
-        assign             tm_digit = lab_digit;
+        assign { tm_led, LEDR     } = lab_led;
+        assign           tm_digit   = lab_digit;
 
     `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
 
         assign lab_key = { ~ KEY, tm_key };
+        assign lab_sw  = { de_sw, tm_sw  };
 
-        assign { LEDR  , tm_led   } = lab_led;
-        assign             tm_digit = lab_digit;
+        assign { LEDR, tm_led   } = lab_led;
+        assign         tm_digit   = lab_digit;
 
     `else  // DUPLICATE_TM1638_SIGNALS_WITH_REGULAR
 
         always_comb
         begin
             lab_key = '0;
+            lab_sw  = '0;
 
             lab_key [w_key    - 1:0] |= ~ KEY;
             lab_key [w_tm_key - 1:0] |= tm_key;
+
+            lab_sw [w_de_sw - 1:0] |= de_sw;
+            lab_sw [w_tm_sw - 1:0] |= tm_sw;
         end
 
         assign LEDR     = lab_led   [w_led      - 1:0];
         assign tm_led   = lab_led   [w_tm_led   - 1:0];
 
+        assign digit    = lab_digit [w_digit    - 1:0];
         assign tm_digit = lab_digit [w_tm_digit - 1:0];
 
     `endif
@@ -160,10 +172,10 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz       (   clk_mhz            ),
-        .w_key         (   w_key              ),
+        .w_key         (   w_lab_key          ),
         .w_sw          (   w_lab_sw           ),
-        .w_led         (   w_led              ),
-        .w_digit       (   w_digit            ),
+        .w_led         (   w_lab_led          ),
+        .w_digit       (   w_lab_digit        ),
         .w_gpio        (   w_arduino + w_gpio ),
 
         .screen_width  (   screen_width       ),
@@ -185,7 +197,7 @@ module board_specific_top
         .led           (   lab_led            ),
 
         .abcdefgh      (   abcdefgh           ),
-        .digit         (   digit              ),
+        .digit         (   lab_digit          ),
 
         .x             (   x                  ),
         .y             (   y                  ),
@@ -333,19 +345,17 @@ module board_specific_top
 
         tm1638_virtual_switches
         # (
-            .clk_mhz  ( clk_mhz    ),
-            .w_digit  ( w_tm_digit )    // fake parameter, digit count is hardcode in tm1638_board_controller
+            .clk_mhz  ( clk_mhz    )
         )
         i_ledkey
         (
-            .clk      ( clk         ),
-            .rst      ( rst         ),  // Don't make reset tm1638_board_controller by it's tm_key
-            .hgfedcba ( hgfedcba    ),
-            .digit    ( tm_digit    ),
-            .ledr     ( tm_led      ),
-            .keys     ( tm_key      ),
-            .sio_clk  ( GPIO [27] ),  // JP1 pin 32
-            .sio_stb  ( GPIO [29] ),  // JP1 pin 34
+            .clk      ( clk       ),
+            .rst      ( rst       ),  // Don't make reset tm1638_board_controller by it's tm_key
+            .hgfedcba ( hgfedcba  ),
+            .digit    ( tm_digit  ),
+            .switches ( tm_sw     ),
+            .sio_stb  ( GPIO [27] ),  // JP1 pin 32
+            .sio_clk  ( GPIO [29] ),  // JP1 pin 34
             .sio_data ( GPIO [31] )   // JP1 pin 36
         );                              // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
