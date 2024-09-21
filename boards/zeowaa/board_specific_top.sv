@@ -3,6 +3,8 @@
 
 `define USE_INTERNALLY_WIDE_COLOR_CHANNELS
 
+// `define  COMPENSATE_DEFECTIVE_BOARD_WITH_DIGIT_0_NOT_WORKING
+
 module board_specific_top
 # (
     parameter clk_mhz       = 50,
@@ -64,9 +66,20 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [w_led   - 1:0] led;
-    wire [          7:0] abcdefgh;
-    wire [w_digit - 1:0] digit;
+    wire [w_led - 1:0] led;
+
+    //------------------------------------------------------------------------
+
+    `ifdef COMPENSATE_DEFECTIVE_BOARD_WITH_DIGIT_0_NOT_WORKING
+        localparam w_lab_digit = w_digit - 1;
+    `else
+        localparam w_lab_digit = w_digit;
+    `endif
+
+    wire [              7:0] abcdefgh;
+    wire [w_lab_digit - 1:0] lab_digit;
+
+    //------------------------------------------------------------------------
 
     // Graphics
 
@@ -99,7 +112,7 @@ module board_specific_top
         .w_key         (   w_lab_key     ),
         .w_sw          (   w_sw          ),
         .w_led         (   w_led         ),
-        .w_digit       (   w_digit       ),
+        .w_digit       (   w_lab_digit   ),
         .w_gpio        (   w_gpio        ),
 
         .screen_width  (   screen_width  ),
@@ -121,7 +134,7 @@ module board_specific_top
         .led           (   led           ),
 
         .abcdefgh      (   abcdefgh      ),
-        .digit         (   digit         ),
+        .digit         (   lab_digit     ),
 
         .x             (   x             ),
         .y             (   y             ),
@@ -141,12 +154,17 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign LED_N      = ~ led;
+    assign LED_N       = ~ led;
 
-    assign ABCDEFGH_N = ~ abcdefgh;
-    assign DIGIT_N    = ~ digit;
+    assign ABCDEFGH_N  = ~ abcdefgh;
 
-    assign VGA_RGB    = display_on ? { | red, | green, | blue } : '0;
+    `ifdef COMPENSATE_DEFECTIVE_BOARD_WITH_DIGIT_0_NOT_WORKING
+        assign DIGIT_N = ~ { lab_digit, 1'b0 };
+    `else
+        assign DIGIT_N = ~   lab_digit;
+    `endif
+
+    assign VGA_RGB     = display_on ? { | red, | green, | blue } : '0;
 
     //------------------------------------------------------------------------
 
