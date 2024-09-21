@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 `ifdef HCW132
     `define W_TM_KEY 16
@@ -11,7 +11,7 @@ module tm1638_switch
 # (
     parameter clk_mhz  = 50,
               w_digit  = 8,
-              w_seg    = 8,
+              w_seg    = 8
 )
 (
     input                             clk,
@@ -27,7 +27,6 @@ module tm1638_switch
     logic [   `W_TM_KEY - 1:0] tm_keys, tm_keys_press;
     logic [               7:0] tm_leds;
 
-    assign keys = switches;
     assign tm_leds = switches[7:0];
     assign tm_keys_press = (~ tm_keys_r) & tm_keys;
 
