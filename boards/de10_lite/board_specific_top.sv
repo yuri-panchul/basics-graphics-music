@@ -20,29 +20,34 @@ module board_specific_top
               w_blue        = 4,
 
               w_x           = $clog2 ( screen_width  ),
-              w_y           = $clog2 ( screen_height )
+              w_y           = $clog2 ( screen_height ),
+
+              w_arduino     = 16
 )
 (
-    input                    MAX10_CLK1_50,
+    input                     MAX10_CLK1_50,
 
-    input  [ w_key    - 1:0] KEY,
-    input  [ w_sw     - 1:0] SW,
-    output [ w_led    - 1:0] LEDR,
+    input  [ w_key     - 1:0] KEY,
+    input  [ w_sw      - 1:0] SW,
+    output [ w_led     - 1:0] LEDR,
 
-    output logic       [7:0] HEX0,
-    output logic       [7:0] HEX1,
-    output logic       [7:0] HEX2,
-    output logic       [7:0] HEX3,
-    output logic       [7:0] HEX4,
-    output logic       [7:0] HEX5,
+    output logic        [7:0] HEX0,
+    output logic        [7:0] HEX1,
+    output logic        [7:0] HEX2,
+    output logic        [7:0] HEX3,
+    output logic        [7:0] HEX4,
+    output logic        [7:0] HEX5,
 
-    output                   VGA_HS,
-    output                   VGA_VS,
-    output [ w_red    - 1:0] VGA_R,
-    output [ w_green  - 1:0] VGA_G,
-    output [ w_blue   - 1:0] VGA_B,
+    output                    VGA_HS,
+    output                    VGA_VS,
+    output [ w_red     - 1:0] VGA_R,
+    output [ w_green   - 1:0] VGA_G,
+    output [ w_blue    - 1:0] VGA_B,
 
-    inout  [ w_gpio   - 1:0] GPIO
+    inout  [ w_gpio    - 1:0] GPIO,
+
+    output                    ARDUINO_RESET_N,
+    inout  [ w_arduino - 1:0] ARDUINO_IO
 );
 
     //------------------------------------------------------------------------
@@ -53,6 +58,8 @@ module board_specific_top
 
     wire clk = MAX10_CLK1_50;
     wire rst = SW [w_sw - 1];
+
+    assign ARDUINO_RESET_N = ~ rst;
 
     // Keys, switches, LEDs
 
@@ -94,48 +101,48 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       (   clk_mhz       ),
-        .w_key         (   w_key         ),
-        .w_sw          (   w_lab_sw      ),
-        .w_led         (   w_led         ),
-        .w_digit       (   w_digit       ),
-        .w_gpio        (   w_gpio        ),
+        .clk_mhz       (   clk_mhz            ),
+        .w_key         (   w_key              ),
+        .w_sw          (   w_lab_sw           ),
+        .w_led         (   w_led              ),
+        .w_digit       (   w_digit            ),
+        .w_gpio        (   w_arduino + w_gpio ),
 
-        .screen_width  (   screen_width  ),
-        .screen_height (   screen_height ),
+        .screen_width  (   screen_width       ),
+        .screen_height (   screen_height      ),
 
-        .w_red         (   w_red         ),
-        .w_green       (   w_green       ),
-        .w_blue        (   w_blue        )
+        .w_red         (   w_red              ),
+        .w_green       (   w_green            ),
+        .w_blue        (   w_blue             )
     )
     i_lab_top
     (
-        .clk           (   clk           ),
-        .slow_clk      (   slow_clk      ),
-        .rst           (   rst           ),
+        .clk           (   clk                ),
+        .slow_clk      (   slow_clk           ),
+        .rst           (   rst                ),
 
-        .key           ( ~ KEY           ),
-        .sw            (   lab_sw        ),
+        .key           ( ~ KEY                ),
+        .sw            (   lab_sw             ),
 
-        .led           (   LEDR          ),
+        .led           (   LEDR               ),
 
-        .abcdefgh      (   abcdefgh      ),
-        .digit         (   digit         ),
+        .abcdefgh      (   abcdefgh           ),
+        .digit         (   digit              ),
 
-        .x             (   x             ),
-        .y             (   y             ),
+        .x             (   x                  ),
+        .y             (   y                  ),
 
-        .red           (   red           ),
-        .green         (   green         ),
-        .blue          (   blue          ),
+        .red           (   red                ),
+        .green         (   green              ),
+        .blue          (   blue               ),
 
-        .uart_rx       (                 ),
-        .uart_tx       (                 ),
+        .uart_rx       (                      ),
+        .uart_tx       (                      ),
 
-        .mic           (   mic           ),
-        .sound         (   sound         ),
+        .mic           (   mic                ),
+        .sound         (   sound              ),
 
-        .gpio          (   GPIO          )
+        .gpio          ( { ARDUINO_IO, GPIO } )
     );
 
     //------------------------------------------------------------------------
