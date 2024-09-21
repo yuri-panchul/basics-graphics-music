@@ -144,6 +144,7 @@ module board_specific_top
         assign LEDR     = lab_led   [w_led      - 1:0];
         assign tm_led   = lab_led   [w_tm_led   - 1:0];
 
+        assign digit    = lab_digit [w_digit    - 1:0];
         assign tm_digit = lab_digit [w_tm_digit - 1:0];
 
     `endif
@@ -160,10 +161,10 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz       (   clk_mhz            ),
-        .w_key         (   w_key              ),
+        .w_key         (   w_lab_key          ),
         .w_sw          (   w_lab_sw           ),
-        .w_led         (   w_led              ),
-        .w_digit       (   w_digit            ),
+        .w_led         (   w_lab_led          ),
+        .w_digit       (   w_lab_digit        ),
         .w_gpio        (   w_arduino + w_gpio ),
 
         .screen_width  (   screen_width       ),
@@ -185,7 +186,7 @@ module board_specific_top
         .led           (   lab_led            ),
 
         .abcdefgh      (   abcdefgh           ),
-        .digit         (   digit              ),
+        .digit         (   lab_digit          ),
 
         .x             (   x                  ),
         .y             (   y                  ),
@@ -317,10 +318,10 @@ module board_specific_top
             .clk     ( clk         ),
             .reset   ( rst         ),
             .data_in ( sound       ),
-            .mclk    ( GPIO [33]   ), // JP1 pin 38
-            .bclk    ( GPIO [31]   ), // JP1 pin 36
-            .lrclk   ( GPIO [27]   ), // JP1 pin 32
-            .sdata   ( GPIO [29]   )  // JP1 pin 34
+            .mclk    ( GPIO [32]   ), // JP1 pin 37
+            .bclk    ( GPIO [30]   ), // JP1 pin 35
+            .lrclk   ( GPIO [26]   ), // JP1 pin 31
+            .sdata   ( GPIO [28]   )  // JP1 pin 33
         );                            // JP1 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
         // VCC and GND for i2s_audio_out are on dedicated pins
@@ -333,20 +334,19 @@ module board_specific_top
 
         tm1638_board_controller
         # (
-            .clk_mhz  ( clk_mhz    ),
-            .w_digit  ( w_tm_digit )    // fake parameter, digit count is hardcode in tm1638_board_controller
+            .clk_mhz  ( clk_mhz    )
         )
         i_ledkey
         (
-            .clk      ( clk         ),
-            .rst      ( rst         ),  // Don't make reset tm1638_board_controller by it's tm_key
-            .hgfedcba ( hgfedcba    ),
-            .digit    ( tm_digit    ),
-            .ledr     ( tm_led      ),
-            .keys     ( tm_key      ),
-            //.sio_clk  ( GPIO [27] ),  // JP1 pin 32
-            //.sio_stb  ( GPIO [29] ),  // JP1 pin 34
-            //.sio_data ( GPIO [31] )   // JP1 pin 36
+            .clk      ( clk       ),
+            .rst      ( rst       ),  // Don't make reset tm1638_board_controller by it's tm_key
+            .hgfedcba ( hgfedcba  ),
+            .digit    ( tm_digit  ),
+            .ledr     ( tm_led    ),
+            .keys     ( tm_key    ),
+            .sio_stb  ( GPIO [27] ),  // JP1 pin 32
+            .sio_clk  ( GPIO [29] ),  // JP1 pin 34
+            .sio_data ( GPIO [31] )   // JP1 pin 36
         );                              // JP1 pin 30 - GND, pin 29 - VCC 3.3V
 
     `endif
