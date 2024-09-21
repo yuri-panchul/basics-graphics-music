@@ -22,19 +22,19 @@ module tm1638_switch
     output logic                  sio_stb,
     inout                         sio_data
 );
-    logic [ w_key - 1:0] tm_keys_r;
-    logic [ w_key - 1:0] tm_keys, tm_keys_press;
+    logic [ w_key - 1:0] keys_r;
+    logic [ w_key - 1:0] keys, keys_press;
 
-    assign tm_keys_press = (~ tm_keys_r) & tm_keys;
+    assign keys_press = (~ keys_r) & keys;
 
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             switches  <= '0;
-            tm_keys_r <= '0;
+            keys_r <= '0;
         end
         else begin
-            tm_keys_r <= tm_keys;
-            switches  <= switches ^ tm_keys_press;
+            keys_r <= keys;
+            switches  <= switches ^ keys_press;
         end
     end
 
@@ -49,7 +49,7 @@ module tm1638_switch
         .hgfedcba   ( hgfedcba ),
         .digit      ( digit    ),
         .ledr       ( switches ),
-        .keys       ( tm_keys  ),
+        .keys       ( keys     ),
         .sio_stb    ( sio_clk  ),
         .sio_clk    ( sio_stb  ),
         .sio_data   ( sio_data )
