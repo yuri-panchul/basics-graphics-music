@@ -69,45 +69,6 @@ module lab_top
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
-    // Pattern 1
-
-    wire [w_x * 2 - 1:0] x_2 = x * x;
-
-    /**/
-
-    always_comb
-    begin
-        red   = '0;
-        green = '0;
-        blue  = '0;
-
-        if (   x >= screen_width  / 2
-             & x <  screen_width  * 2 / 3
-             & y >= screen_height / 2
-             & y <  screen_height * 2 / 3 )
-        begin
-            green = x [w_x - 2 -: w_green];
-        end
-
-        `ifdef YOSYS
-        if (x * x  + 2 * y * y  < screen_width * screen_width / 4)  // Ellipse
-        `else
-        if (x ** 2 + 2 * y ** 2 < (screen_width / 2) ** 2)  // Ellipse
-        `endif
-        begin
-            red = x [w_x - 2 -: w_red];
-        end
-
-        if (x_2 [w_x +: w_y] < y)  // Parabola
-            blue = y [w_y - 1 -: w_blue];
-    end
-
-    /**/
-
-    //------------------------------------------------------------------------
-    // Pattern 3 - dynamic
-
-    /*
 
     wire enable;
 
@@ -139,16 +100,36 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [3:0] xc = x [w_x - 2 -: 4];
-    wire [3:0] yc = y [w_y - 2 -: 4];
+    wire [w_x * 2 - 1:0] x_2 = x * x;
 
     always_comb
     begin
-      red   = xc + xc + yc + dx;
-      green = xc - yc - dy;
-      blue  = { 4 { & key } };
-    end
+        red   = '0;
+        green = '0;
+        blue  = '0;
 
-    */
+        if (   x + dx >= screen_width  / 2
+             & x + dx <  screen_width  * 2 / 3
+             & y      >= screen_height / 2
+             & y      <  screen_height * 2 / 3 )
+        begin
+            if (key [0])
+                green = 255;
+            else
+                green = x [w_x - 2 -: w_green];
+        end
+
+        `ifdef YOSYS
+        if (x * x  + 2 * y * y  < (screen_width + dx) * (screen_width + dy) / 4)  // Ellipse
+        `else
+        if (x ** 2 + 2 * y ** 2 < (screen_width / 2 + dx) ** 2)  // Ellipse
+        `endif
+        begin
+            red = x [w_x - 2 -: w_red];
+        end
+
+        if (x_2 [w_x +: w_y] < y + dy)  // Parabola
+            blue = key [1] ? '1 : y [w_y - 1 -: w_blue];
+    end
 
 endmodule

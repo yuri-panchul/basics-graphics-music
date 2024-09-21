@@ -72,12 +72,18 @@ module board_specific_top
 
     // Graphics
 
+    wire                    display_on;
+
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
     wire [ w_red     - 1:0] red;
     wire [ w_green   - 1:0] green;
     wire [ w_blue    - 1:0] blue;
+
+    assign VGA_R = display_on ? red   : '0;
+    assign VGA_G = display_on ? green : '0;
+    assign VGA_B = display_on ? blue  : '0;
 
     // Microphone, sound output and UART
 
@@ -126,9 +132,9 @@ module board_specific_top
         .x             (   x                  ),
         .y             (   y                  ),
 
-        .red           (   VGA_R              ),
-        .green         (   VGA_G              ),
-        .blue          (   VGA_B              ),
+        .red           (   red                ),
+        .green         (   green              ),
+        .blue          (   blue               ),
 
         .uart_rx       (                      ),
         .uart_tx       (                      ),
@@ -199,19 +205,19 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz   ),
-            .PIXEL_MHZ   ( pixel_mhz )
+            .CLK_MHZ     ( clk_mhz    ),
+            .PIXEL_MHZ   ( pixel_mhz  )
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HS    ),
-            .vsync       ( VGA_VS    ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   (           )
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HS     ),
+            .vsync       ( VGA_VS     ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
         );
 
     `endif
@@ -246,18 +252,18 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz ( clk_mhz     )
+            .clk_mhz ( clk_mhz   )
         )
         inst_audio_out
         (
-            .clk     ( clk         ),
-            .reset   ( rst         ),
-            .data_in ( sound       ),
-            .mclk    ( GPIO [33]   ), // JP1 pin 38
-            .bclk    ( GPIO [31]   ), // JP1 pin 36
-            .lrclk   ( GPIO [27]   ), // JP1 pin 32
-            .sdata   ( GPIO [29]   )  // JP1 pin 34
-        );                            // JP1 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
+            .clk     ( clk       ),
+            .reset   ( rst       ),
+            .data_in ( sound     ),
+            .mclk    ( GPIO [33] ), // JP1 pin 38
+            .bclk    ( GPIO [31] ), // JP1 pin 36
+            .lrclk   ( GPIO [27] ), // JP1 pin 32
+            .sdata   ( GPIO [29] )  // JP1 pin 34
+        );                          // JP1 pin 30 - GND, pin 29 - VCC 3.3V (30-45 mA)
 
         // VCC and GND for i2s_audio_out are on dedicated pins
 

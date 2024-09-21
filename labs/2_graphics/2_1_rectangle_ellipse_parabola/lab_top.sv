@@ -69,11 +69,8 @@ module lab_top
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
-    // Pattern 1
 
     wire [w_x * 2 - 1:0] x_2 = x * x;
-
-    /**/
 
     always_comb
     begin
@@ -86,7 +83,10 @@ module lab_top
              & y >= screen_height / 2
              & y <  screen_height * 2 / 3 )
         begin
-            green = x [w_x - 2 -: w_green];
+            if (key [0])
+                green = 255;
+            else
+                green = x [w_x - 2 -: w_green];
         end
 
         `ifdef YOSYS
@@ -99,56 +99,7 @@ module lab_top
         end
 
         if (x_2 [w_x +: w_y] < y)  // Parabola
-            blue = y [w_y - 1 -: w_blue];
+            blue = key [1] ? '1 : y [w_y - 1 -: w_blue];
     end
-
-    /**/
-
-    //------------------------------------------------------------------------
-    // Pattern 3 - dynamic
-
-    /*
-
-    wire enable;
-
-    // Generate a strobe signal 10 times a second
-
-    strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (10))
-    i_strobe_gen
-    (.strobe (enable), .*);
-
-    //------------------------------------------------------------------------
-
-    wire inv_key_0 = ~ key [0];
-    wire inv_key_1 = ~ key [1];
-
-    logic [7:0] dx, dy;
-
-    always_ff @ (posedge clk)
-        if (rst)
-        begin
-            dx <= 4'b0;
-            dy <= 4'b0;
-        end
-        else if (enable)
-        begin
-            dx <= dx + inv_key_0;
-            dy <= dy + inv_key_1;
-        end
-
-    //------------------------------------------------------------------------
-
-    wire [3:0] xc = x [w_x - 2 -: 4];
-    wire [3:0] yc = y [w_y - 2 -: 4];
-
-    always_comb
-    begin
-      red   = xc + xc + yc + dx;
-      green = xc - yc - dy;
-      blue  = { 4 { & key } };
-    end
-
-    */
 
 endmodule

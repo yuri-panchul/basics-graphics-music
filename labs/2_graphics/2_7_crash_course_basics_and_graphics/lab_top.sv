@@ -157,10 +157,7 @@ module lab_top
         green = '0;
         blue  = '0;
 
-        if (~ display_on)
-        begin
-        end
-        else if (x > 100 & (y - dy) > 100 & x < 150 & y < 400)  // Rectangle
+        if (x > 100 & (y - dy) > 100 & x < 150 & y < 400)  // Rectangle
         begin
             red   = '1;
             green = '0;
@@ -195,5 +192,21 @@ module lab_top
     end
 
     /**/
+
+    //------------------------------------------------------------------------
+
+    /*
+
+    wire [3:0] xc = x [w_x - 2 -: 4];
+    wire [3:0] yc = y [w_y - 2 -: 4];
+
+    always_comb
+    begin
+      red   = xc + xc + yc + dx;
+      green = xc - yc - dy;
+      blue  = { 4 { & key } };
+    end
+
+    */
 
 endmodule
