@@ -85,7 +85,7 @@ module board_specific_top
     assign VGA_G = display_on ? green : '0;
     assign VGA_B = display_on ? blue  : '0;
 
-    // Microphone, sound output and UART
+    // Microphone and sound output
 
     wire [            23:0] mic;
     wire [            15:0] sound;

@@ -61,16 +61,34 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire [w_lab_led - 1:0] lab_led;
+    // Keys, switches, LEDs
 
-    wire [            7:0] abcdefgh;
-    wire [w_digit   - 1:0] digit;
+    wire [ w_lab_led - 1:0] lab_led;
 
-    wire [w_x       - 1:0] x;
-    wire [w_y       - 1:0] y;
+    // A dynamic seven-segment display
 
-    wire [           23:0] mic;
-    wire [           15:0] sound;
+    wire [             7:0] abcdefgh;
+    wire [ w_digit   - 1:0] digit;
+
+    // Graphics
+
+    wire                    display_on;
+
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
+
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
+
+    assign VGA_R = display_on ? red   : '0;
+    assign VGA_G = display_on ? green : '0;
+    assign VGA_B = display_on ? blue  : '0;
+
+    // Microphone and sound output
+
+    wire [            23:0] mic;
+    wire [            15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -114,9 +132,9 @@ module board_specific_top
         .x             (   x                  ),
         .y             (   y                  ),
 
-        .red           (   VGA_R              ),
-        .green         (   VGA_G              ),
-        .blue          (   VGA_B              ),
+        .red           (   red                ),
+        .green         (   green              ),
+        .blue          (   blue               ),
 
         .mic           (   mic                ),
         .sound         (   sound              ),
@@ -211,19 +229,19 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz   ),
-            .PIXEL_MHZ   ( pixel_mhz )
+            .CLK_MHZ     ( clk_mhz    ),
+            .PIXEL_MHZ   ( pixel_mhz  )
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HS    ),
-            .vsync       ( VGA_VS    ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   (           )
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HS     ),
+            .vsync       ( VGA_VS     ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
         );
 
     `endif
