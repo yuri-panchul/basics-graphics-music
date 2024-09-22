@@ -63,6 +63,7 @@ module board_specific_top
     output                  VGA_VS,
 
     input                   UART_TXD_IN,
+    output                  UART_RXD_OUT,
 
     inout            [12:1] JA,
     inout            [12:1] JB,
@@ -105,14 +106,19 @@ module board_specific_top
     assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
     assign AN = ~ digit;
 
-    wire [w_x - 1:0] x;
-    wire [w_y - 1:0] y;
+    wire [w_x     - 1:0] x;
+    wire [w_y     - 1:0] y;
 
-    wire [     23:0] mic;
-    wire [     15:0] sound;
+    wire [w_red   - 1:0] red;
+    wire [w_green - 1:0] green;
+    wire [w_blue  - 1:0] blue;
 
-    // FIXME: Should be assigned to some GPIO!
-    wire        UART_TX;
+    assign VGA_R = display_on ? red   : '0;
+    assign VGA_G = display_on ? green : '0;
+    assign VGA_B = display_on ? blue  : '0;
+
+    wire [         23:0] mic;
+    wire [         15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -156,15 +162,15 @@ module board_specific_top
         .x             ( x              ),
         .y             ( y              ),
 
-        .red           ( VGA_R          ),
-        .green         ( VGA_G          ),
-        .blue          ( VGA_B          ),
+        .red           ( red            ),
+        .green         ( green          ),
+        .blue          ( blue           ),
 
         .mic           ( mic            ),
         .sound         ( sound          ),
 
         .uart_rx       ( UART_TXD_IN    ),
-        .uart_tx       ( UART_TX        ),
+        .uart_tx       ( UART_RXD_OUT   ),
 
         .gpio          (                )
     );
@@ -187,7 +193,7 @@ module board_specific_top
             .rst         ( rst        ),
             .hsync       ( VGA_HS     ),
             .vsync       ( VGA_VS     ),
-            .display_on  (            ),
+            .display_on  ( display_on ),
             .hpos        ( x10        ),
             .vpos        ( y10        ),
             .pixel_clk   (            )
