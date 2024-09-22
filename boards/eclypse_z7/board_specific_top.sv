@@ -1,6 +1,8 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
+`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
 module board_specific_top
 # (
     parameter clk_mhz       = 125,
@@ -32,14 +34,62 @@ module board_specific_top
 
     output               led1_b,
     output               led1_g,
-    output               led1_r
+    output               led1_r,
 
-
+    output [        7:0] jb
 );
+
+    wire rst = btn [0];
 
     //------------------------------------------------------------------------
 
-    wire rst = ~ btn [0];
+    localparam w_tm_key    =   8,
+               w_tm_led    =   8,
+               w_tm_digit  =   8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_tm_key,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
+
+    `else                   // TM1638 module is not connected
+
+        localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_key,
+                   w_lab_led   = w_led,
+                   w_lab_digit = 1; // w_digit; // To avoid syntax error in lab_top
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire  [w_tm_key    - 1:0] tm_key;
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
+
+    logic [w_lab_key   - 1:0] lab_key;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
+
+    wire  [              7:0] abcdefgh;
+
+   //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        assign lab_key  = tm_key;
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
+
+    `else                 // TM1638 module is not connected
+        assign lab_key  = btn;
+    `endif
+
+    //------------------------------------------------------------------------
 
     wire [w_led - 1:0] lab_led;
     assign { led0_b, led0_g, led0_r, led1_b, led1_g, led1_r } = lab_led;
@@ -56,10 +106,10 @@ module board_specific_top
     lab_top
     # (
         .clk_mhz       ( clk_mhz        ),
-        .w_key         ( w_key          ),
-        .w_sw          ( w_key          ),
-        .w_led         ( w_led          ),
-        .w_digit       ( 1 /* w_digit */       ),
+        .w_key         ( w_lab_key      ),
+        .w_sw          ( w_lab_sw       ),
+        .w_led         ( w_lab_led      ),
+        .w_digit       ( w_lab_digit    ),
         .w_gpio        ( 1 /* w_gpio  */       ),
 
         .screen_width  ( screen_width   ),
@@ -75,13 +125,13 @@ module board_specific_top
         .slow_clk      ( slow_clk       ),
         .rst           ( rst            ),
 
-        .key           ( ~ btn          ),
-        .sw            ( ~ btn          ),
+        .key           ( lab_key        ),
+        .sw            ( lab_key        ),
 
         .led           ( lab_led        ),
 
-        .abcdefgh      (        ),
-        .digit         (          ),
+        .abcdefgh      ( abcdefgh       ),
+        .digit         ( lab_digit      ),
 
         .x             (             ),
         .y             (            ),
@@ -98,6 +148,42 @@ module board_specific_top
 
         .gpio          (                )
     );
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
+    tm1638_board_controller
+    # (
+        .clk_mhz  ( clk_mhz        ),
+        .w_digit  ( w_tm_digit     )
+    )
+    i_tm1638
+    (
+        .clk      ( clk            ),
+        .rst      ( rst            ),
+        .hgfedcba ( hgfedcba       ),
+        .digit    ( tm_digit       ),
+        .ledr     ( tm_led         ),
+        .keys     ( tm_key         ),
+        .sio_data ( jb       [5]   ),
+        .sio_clk  ( jb       [6]   ),
+        .sio_stb  ( jb       [7]   )
+    );
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -192,3 +278,4 @@ module board_specific_top
     `endif
 
 endmodule
+

@@ -30,14 +30,14 @@ set_property -dict { PACKAGE_PIN A19   IOSTANDARD LVCMOS33 } [get_ports { led1_r
 #set_property -dict { PACKAGE_PIN G16   IOSTANDARD LVCMOS33 } [get_ports { ja[7] }]; #IO_L4N_T0 Sch=ja10_fpga
 
 ## Pmod Header JB
-#set_property -dict { PACKAGE_PIN G15   IOSTANDARD LVCMOS33 } [get_ports { jb[0] }]; #IO_L4P_T0 Sch=jb1_fpga
-#set_property -dict { PACKAGE_PIN D16   IOSTANDARD LVCMOS33 } [get_ports { jb[1] }]; #IO_L2P_T0_AD8P Sch=jb2_fpga
-#set_property -dict { PACKAGE_PIN D17   IOSTANDARD LVCMOS33 } [get_ports { jb[2] }]; #IO_L2N_T0_AD8N Sch=jb3_fpga
-#set_property -dict { PACKAGE_PIN E18   IOSTANDARD LVCMOS33 } [get_ports { jb[3] }]; #IO_L5N_T0_AD9N Sch=jb4_fpga
-#set_property -dict { PACKAGE_PIN F18   IOSTANDARD LVCMOS33 } [get_ports { jb[4] }]; #IO_L5P_T0_AD9P Sch=jb7_fpga
-#set_property -dict { PACKAGE_PIN G17   IOSTANDARD LVCMOS33 } [get_ports { jb[5] }]; #IO_L6P_T0 Sch=jb8_fpga
-#set_property -dict { PACKAGE_PIN H18   IOSTANDARD LVCMOS33 } [get_ports { jb[6] }]; #IO_25 Sch=jb9_fpga
-#set_property -dict { PACKAGE_PIN H17   IOSTANDARD LVCMOS33 } [get_ports { jb[7] }]; #IO_0 Sch=jb10_fpga
+set_property -dict { PACKAGE_PIN G15   IOSTANDARD LVCMOS33 } [get_ports { jb[0] }]; #IO_L4P_T0 Sch=jb1_fpga
+set_property -dict { PACKAGE_PIN D16   IOSTANDARD LVCMOS33 } [get_ports { jb[1] }]; #IO_L2P_T0_AD8P Sch=jb2_fpga
+set_property -dict { PACKAGE_PIN D17   IOSTANDARD LVCMOS33 } [get_ports { jb[2] }]; #IO_L2N_T0_AD8N Sch=jb3_fpga
+set_property -dict { PACKAGE_PIN E18   IOSTANDARD LVCMOS33 } [get_ports { jb[3] }]; #IO_L5N_T0_AD9N Sch=jb4_fpga
+set_property -dict { PACKAGE_PIN F18   IOSTANDARD LVCMOS33 } [get_ports { jb[4] }]; #IO_L5P_T0_AD9P Sch=jb7_fpga
+set_property -dict { PACKAGE_PIN G17   IOSTANDARD LVCMOS33 } [get_ports { jb[5] }]; #IO_L6P_T0 Sch=jb8_fpga
+set_property -dict { PACKAGE_PIN H18   IOSTANDARD LVCMOS33 } [get_ports { jb[6] }]; #IO_25 Sch=jb9_fpga
+set_property -dict { PACKAGE_PIN H17   IOSTANDARD LVCMOS33 } [get_ports { jb[7] }]; #IO_0 Sch=jb10_fpga
 
 ## Syzygy Port A
 #set_property -dict { PACKAGE_PIN N20  } [get_ports { syzygy_a_c2p_clk_n }]; #IO_L14N_T2_SRCC Sch=syzygy_a_c2p_clk_n
