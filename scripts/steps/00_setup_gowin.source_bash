@@ -301,6 +301,82 @@ configure_fpga_gowin_msys ()
     is_command_available_or_error "$gowin_prog_full_real_path"  \
         " tool programmer_cli ($gowin_prog_full_real_path) is not installed on system\n You can download and install Gowin EDA https://www.gowinsemi.com/en/support/home/"
 
+    # Run programmer_cli.exe -h to see the list of operations. As of September 2024:
+    # /c/Gowin/Gowin_V1.9.9.03_Education_x64/Programmer/bin/programmer_cli.exe -h
+    #   --operation_index <int>, --run <int>, -r <int>
+    #      0: Read Device Codes;
+    #      1: Reprogram;
+    #      2: SRAM Program;
+    #      3: SRAM Read;
+    #      4: SRAM Program and Verify;
+    # ->   5: embFlash Erase,Program;
+    #      6: embFlash Erase,Program,Verify;
+    #      7: embFlash Erase Only;
+    #      8: exFlash Erase,Program;
+    #      9: exFlash Erase,Program,Verify;
+    #      10: exFlash Bulk Erase;
+    #      11: exFlash Verify;
+    #      12: exFlash Erase,Program in bscan;
+    #      13: exFlash Erase,Program,Verify in bscan;
+    #      14: exFlash Bulk Erase in bscan;
+    #      15: exFlash Verify in bscan;
+    #      16: SRAM Program JTAG 1149;
+    #      17: SRAM Program,Verify JTAG 1149;
+    #      18: bsdl read;
+    #      19: embFlash 2nd Erase,Program;
+    #      20: embFlash 2nd Erase,Program,Verify;
+    #      21: embFlash 2nd Erase Only;
+    #      22: -R-;
+    #      23: Connect to JTAG of MCU;
+    #      24: SRAM Erase;
+    #      25: Authentication Code Erase,Program,Verify;
+    #      26: Authentication Code Read;
+    #      27: Firmware Erase,Program Securely;
+    #      28: Firmware Erase Only;
+    #      29: Firmware Erase,Program;
+    #      30: Firmware Erase,Program,Verify;
+    #      31: exFlash C Bin Erase,Program;
+    #      32: exFlash C Bin Erase,Program,Verify;
+    #      33: -R-;
+    #      34: MFG Write iRef;
+    #      35: CSR File Erase,Program,Verify;
+    # ->   36: exFlash Erase,Program thru GAO-Bridge;
+    #      37: exFlash Erase,Program,Verify thru GAO-Bridge;
+    #      38: exFlash C Bin Erase,Program thru GAO-Bridge;
+    #      39: exFlash C Bin Erase,Program,Verify thru GAO-Bridge;
+    #      40: DK-GoAI-GW1NSR4C_QN48 v1.1;
+    #      41: DK-GoAI-GW1NSR4C_QN48 v2.2;
+    #      42: DK-GoAI-GW2AR18_QN88P v1.1;
+    #      43: -R-;
+    #      44: sFlash Erase,Program;
+    #      45: sFlash Erase,Program,Verify;
+    #      46: sFlash Verify Only;
+    #      47: sFlash Bulk Erase;
+    #      48: sFlash Background Erase,Program;
+    #      49: sFlash Background Erase,Program,Verify;
+    #      50: sFlash Erase,Program,Verify thru GAO-Bridge;
+    #      51: exFlash Detect ID;
+    #      52: exFlash Bulk Erase 5AT;
+    #      53: exFlash Erase,Program 5AT;
+    #      54: exFlash Erase,Program,Verify 5AT;
+    #      55: exFlash C Bin Erase,Program 5AT;
+    #      56: exFlash C Bin Erase,Program,Verify 5AT;
+    #      57: I2C Program SRAM;
+    #      58: I2C Program Flash;
+    #      59: I2C Erase Flash Only;
+    #      60: I2C Erase Flash Only thru I2C-SPI;
+    #      61: I2C Erase,Program Flash thru I2C-SPI;
+    #      62: EBR Read;
+    #      63: sFlash Background Erase,Program,Verify thru GAO-Bridge;
+    #      64: sFlash Bulk Erase in bscan;
+    #      65: sFlash Erase,Program in bscan;
+    #      66: exFlash Verify 5AT;
+    #      67: exFlash Verify thru GAO-Bridge 5AT;
+    #      68: exFlash Erase,Program thru GAO-Bridge 5AT;
+    #      69: exFlash Erase,Program,Verify thru GAO-Bridge 5AT;
+    #      70: -R-;
+    #      71: -R-;
+
     case $fpga_board in
 
         runber        | \

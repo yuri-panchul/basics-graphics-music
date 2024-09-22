@@ -22,12 +22,14 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 5,
 
-              screen_width  = 800,
+              // SiPeed claims to support 1280x720 resolution: https://github.com/sipeed/TangNano-20K-example?tab=readme-ov-file#hdmi 
+              // For some reason, only 640x480 was correctly detected by my monitor.
+              screen_width  = 640,
               screen_height = 480,
-
-              w_red         = 5,
-              w_green       = 6,
-              w_blue        = 5,
+              // HDMI uses 8bit color depth
+              w_red         = 8,
+              w_green       = 8,
+              w_blue        = 8,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
