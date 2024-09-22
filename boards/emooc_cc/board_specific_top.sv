@@ -28,28 +28,29 @@ module board_specific_top
               w_blue        = 4,
 
               w_x           = $clog2 ( screen_width  ),
-              w_y           = $clog2 ( screen_height )
+              w_y           = $clog2 ( screen_height ),
+            
+              w_gpio_j7     = 36,
+              w_gpio_p1     = 21,
+              w_gpio_p2     = 21
 )
 (
-    input                   CLK,
+    input                           CLK,
 
-    input  [w_key   - 1:0]  KEY,
-    input  [w_sw    - 1:0]  SW,
-    output [w_led   - 1:0]  LED,
+    input  [w_key         - 1:0]    KEY_N,
+    input  [w_sw          - 1:0]    SW,
 
-    output [          7:0]  SEG,
-    output [w_digit - 1:0]  DIG,
+    output [w_led         - 1:0]    LED,
 
-    input                   UART_RX,
-    output                  UART_TX,
+    output [                7:0]    ABCDEFGH,
+    output [w_digit       - 1:0]    DIGIT_N,
 
-    output                  VGA_HSYNC,
-    output                  VGA_VSYNC,
-    output [w_red   - 1:0]  VGA_R,
-    output [w_green - 1:0]  VGA_G,
-    output [w_blue  - 1:0]  VGA_B,
+    input                           UART_RX,
+    output                          UART_TX,
 
-    inout  [w_gpio - 1:0 ]  GPIO
+    inout  [w_gpio_j7 + 3 - 1:3]    GPIO_J7,
+    inout  [w_gpio_p1 + 2 - 1:2]    GPIO_P1,
+    inout  [w_gpio_p2 + 2 - 1:2]    GPIO_P2
 );
 
     //------------------------------------------------------------------------
@@ -60,6 +61,8 @@ module board_specific_top
     wire [w_key    - 2:0]   lab_key;
     wire [w_led    - 1:0]   lab_led;
 
+    wire [w_gpio   - 1:0]   lab_gpio;
+
 
     // A dynamic seven-segment display
 
@@ -69,6 +72,14 @@ module board_specific_top
     // Graphics
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
+
+    // VGA
+    wire                    vga_hsync;
+    wire                    vga_vsync;
+
+    wire [ w_red     - 1:0] vga_red;
+    wire [ w_green   - 1:0] vga_green;
+    wire [ w_blue    - 1:0] vga_blue;
 
     // Microphone, sound output and UART
 
@@ -107,7 +118,7 @@ module board_specific_top
         .slow_clk      (   slow_clk      ),
         .rst           (   rst           ),
 
-        .key           ( ~ lab_key       ),
+        .key           (   lab_key       ),
         .sw            ( ~ SW            ),
 
         .led           (   lab_led       ),
@@ -118,9 +129,9 @@ module board_specific_top
         .x             (   x             ),
         .y             (   y             ),
 
-        .red           (   VGA_R         ),
-        .green         (   VGA_G         ),
-        .blue          (   VGA_B         ),
+        .red           (   vga_red       ),
+        .green         (   vga_green     ),
+        .blue          (   vga_blue      ),
 
         .uart_rx       (   UART_RX       ),
         .uart_tx       (   UART_TX       ),
@@ -128,7 +139,7 @@ module board_specific_top
         .mic           (   mic           ),
         .sound         (   sound         ),
 
-        .gpio          (   GPIO          )
+        .gpio          (   lab_gpio      )
     );
 
     //------------------------------------------------------------------------
@@ -137,11 +148,20 @@ module board_specific_top
 
     assign LED       = ~ lab_led;
 
-    assign SEG       =   abcdefgh;
-    assign DIG       = ~ digit;
+    assign ABCDEFGH  =   abcdefgh;
+    assign DIGIT_N   = ~ digit;
 
-    assign rst       = ~ KEY [w_key - 1  ];
-    assign lab_key   =   KEY [w_key - 2:0];
+    assign rst       = ~ KEY_N [w_key - 1  ];
+    assign lab_key   = ~ KEY_N [w_key - 2:0];
+
+    assign vga_hsync =   GPIO_P1 [2];
+    assign vga_vsync =   GPIO_P1 [3];
+
+    assign vga_red   =   GPIO_P1 [7  :  4];
+    assign vga_green =   GPIO_P1 [11 :  8];
+    assign vga_blue  =   GPIO_P1 [15 : 12];   
+
+    assign lab_gpio  =   GPIO_P2 [14 :  6];
 
     //------------------------------------------------------------------------
 
@@ -159,8 +179,8 @@ module board_specific_top
         (
             .clk         ( clk          ),
             .rst         ( rst          ),
-            .hsync       ( VGA_HSYNC    ),
-            .vsync       ( VGA_VSYNC    ),
+            .hsync       ( vga_hsync    ),
+            .vsync       ( vga_vsync    ),
             .display_on  (              ),
             .hpos        ( x10          ),
             .vpos        ( y10          ),
@@ -179,13 +199,13 @@ module board_specific_top
         )
         i_microphone
         (
-            .clk     ( clk       ),
-            .rst     ( rst       ),
-            .lr      ( GPIO[0]   ),  // PIN_B13
-            .ws      ( GPIO[1]   ),  // PIN_A14
-            .sck     ( GPIO[2]   ),  // PIN_B14
-            .sd      ( GPIO[3]   ),  // PIN_A15
-            .value   ( mic       )
+            .clk     ( clk          ),
+            .rst     ( rst          ),
+            .lr      ( GPIO_P1 [16] ),  // PIN_B13
+            .ws      ( GPIO_P1 [17] ),  // PIN_A14
+            .sck     ( GPIO_P1 [18] ),  // PIN_B14
+            .sd      ( GPIO_P1 [19] ),  // PIN_A15
+            .value   ( mic          )
         );
 
     `endif 
@@ -200,13 +220,13 @@ module board_specific_top
         )
         inst_audio_out
         (
-            .clk     ( clk       ),
-            .reset   ( rst       ),
-            .data_in ( sound     ),
-            .mclk    ( GPIO [4]  ),  // PIN_N6 
-            .bclk    ( GPIO [5]  ),  // PIN_R8
-            .lrclk   ( GPIO [6]  ),  // PIN_T8
-            .sdata   ( GPIO [7]  )   // PIN_T9
+            .clk     ( clk          ),
+            .reset   ( rst          ),
+            .data_in ( sound        ),
+            .mclk    ( GPIO_P2 [2]  ),  // PIN_N6 
+            .bclk    ( GPIO_P2 [3]  ),  // PIN_R8
+            .lrclk   ( GPIO_P2 [4]  ),  // PIN_T8
+            .sdata   ( GPIO_P2 [5]  )   // PIN_T9
         );
 
     `endif
