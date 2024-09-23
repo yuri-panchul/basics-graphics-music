@@ -223,10 +223,10 @@ module board_specific_top
             .clk     ( clk          ),
             .reset   ( rst          ),
             .data_in ( sound        ),
-            .mclk    ( GPIO_P2 [2]  ),  // PIN_N6 
-            .bclk    ( GPIO_P2 [3]  ),  // PIN_R8
-            .lrclk   ( GPIO_P2 [4]  ),  // PIN_T8
-            .sdata   ( GPIO_P2 [5]  )   // PIN_T9
+            .mclk    ( GPIO_P2 [2]  ),  // PIN_N6 on FPGA // SCK on sound card
+            .bclk    ( GPIO_P2 [3]  ),  // PIN_R8 on FPGA // BCK on sound card
+            .lrclk   ( GPIO_P2 [4]  ),  // PIN_T8 on FPGA // LCK on sound card
+            .sdata   ( GPIO_P2 [5]  )   // PIN_T9 on FPGA // DIN on sound card
         );
 
     `endif
