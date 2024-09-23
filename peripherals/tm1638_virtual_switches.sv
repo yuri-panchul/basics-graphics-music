@@ -5,7 +5,7 @@
     `error_HCW132_is_not_compatible_with_tm1638_switches_module
 `endif
 
-module tm1638_switch
+module tm1638_virtual_switches
 # (
     parameter clk_mhz = 50,
               w_digit = 8,
@@ -50,8 +50,8 @@ module tm1638_switch
         .digit      ( digit    ),
         .ledr       ( switches ),
         .keys       ( keys     ),
-        .sio_stb    ( sio_clk  ),
-        .sio_clk    ( sio_stb  ),
+        .sio_clk    ( sio_clk  ),
+        .sio_stb    ( sio_stb  ),
         .sio_data   ( sio_data )
     );
 
