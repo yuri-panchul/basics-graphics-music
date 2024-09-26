@@ -1,3 +1,6 @@
+> **Warning:** This document is deprecated and WSL is no longer supported.
+
+
 Reference document https://www.xda-developers.com/wsl-connect-usb-devices-windows-11/
 
 Then download and install the latest release USBIPD for Windows. https://github.com/dorssel/usbipd-win/releases/latest

@@ -1,7 +1,7 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
-`undef ENABLE_TM1638
+`undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module board_specific_top
 # (
@@ -39,19 +39,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        localparam w_top_key   = w_tm_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_tm_led,
-                   w_top_digit = w_tm_digit;
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
 
     `else                   // TM1638 module is not connected
 
-        localparam w_top_key   = w_key,
-                   w_top_sw    = w_sw,
-                   w_top_led   = w_led,
-                   w_top_digit = w_digit;
+        localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
+                   w_lab_led   = w_led,
+                   w_lab_digit = w_digit;
 
     `endif
 
@@ -61,10 +61,10 @@ module board_specific_top
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
 
-    logic [w_top_key   - 1:0] top_key;
-    logic [w_top_sw    - 1:0] top_sw;
-    wire  [w_top_led   - 1:0] top_led;
-    wire  [w_top_digit - 1:0] top_digit;
+    logic [w_lab_key   - 1:0] lab_key;
+    logic [w_lab_sw    - 1:0] lab_sw;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
@@ -79,22 +79,22 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef ENABLE_TM1638    // TM1638 module is connected
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         assign rst      = tm_key [w_tm_key - 1];
-        assign top_key  = tm_key [w_tm_key - 1:0];
-        assign top_sw   = ~ SW;
+        assign lab_key  = tm_key [w_tm_key - 1:0];
+        assign lab_sw   = ~ SW;
 
-        assign tm_led   = top_led;
-        assign tm_digit = top_digit;
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
 
     `else                   // TM1638 module is not connected
 
         assign rst      = ~ KEY [w_key - 1];
-        assign top_key  = ~ KEY [w_key - 1:0];
-        assign top_sw   = ~ SW;
+        assign lab_key  = ~ KEY [w_key - 1:0];
+        assign lab_sw   = ~ SW;
 
-        assign LED      = ~ top_led;
+        assign LED      = ~ lab_led;
 
     `endif
 
@@ -107,28 +107,28 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz      ),
-        .w_key   ( w_top_key    ),  // The last key is used for a reset
-        .w_sw    ( w_top_sw     ),
-        .w_led   ( w_top_led    ),
-        .w_digit ( w_top_digit  ),
+        .w_key   ( w_lab_key    ),  // The last key is used for a reset
+        .w_sw    ( w_lab_sw     ),
+        .w_led   ( w_lab_led    ),
+        .w_digit ( w_lab_digit  ),
         .w_gpio  ( w_gpio       )
     )
-    i_top
+    i_lab_top
     (
         .clk      ( clk       ),
         .slow_clk ( slow_clk  ),
         .rst      ( rst       ),
 
-        .key      ( top_key   ),
-        .sw       ( top_sw    ),
+        .key      ( lab_key   ),
+        .sw       ( lab_sw    ),
 
-        .led      ( top_led   ),
+        .led      ( lab_led   ),
 
         .abcdefgh ( abcdefgh  ),
-        .digit    ( top_digit ),
+        .digit    ( lab_digit ),
 
         .vsync    ( VGA_VS    ),
         .hsync    ( VGA_HS    ),
@@ -179,15 +179,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz    )
+    )
+    i_microphone
     (
-        .clk   ( clk        ),
-        .rst   ( rst        ),
-        .lr    ( GPIO_3 [1] ),
-        .ws    ( GPIO_3 [2] ),
-        .sck   ( GPIO_3 [3] ),
-        .sd    ( GPIO_3 [0] ),
-        .value ( mic        )
+        .clk     ( clk        ),
+        .rst     ( rst        ),
+        .lr      ( GPIO_3 [1] ),
+        .ws      ( GPIO_3 [2] ),
+        .sck     ( GPIO_3 [3] ),
+        .sd      ( GPIO_3 [0] ),
+        .value   ( mic        )
     );
 
     //------------------------------------------------------------------------
@@ -197,5 +201,5 @@ module board_specific_top
 
     assign GPIO_0 = { VGA_R, VGA_B };
     assign GPIO_1 = { VGA_G, 2'b00, VGA_VS, VGA_HS  };
-    
+
 endmodule

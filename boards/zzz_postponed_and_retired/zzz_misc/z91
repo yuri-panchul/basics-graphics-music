@@ -1,0 +1,101 @@
+Fully supported:
+
+de0_cv - need to improve formatting
+de1
+de10_lite - need to improve formatting
+de2_115
+nexys4
+tang_nano_9k_lcd_480_272_no_tm1638
+tang_nano_9k_lcd_480_272_tm1638
+
+Fully supported soon:
+
+tang_nano_9k_lcd_800_480_no_tm1638
+tang_nano_9k_lcd_800_480_tm1638
+
+Priority & easy
+
+alinx_ax4010
+basys3
+de0
+de10_lite_tm1638_switches
+de1_soc
+de2
+nexys4_ddr
+nexys_a7
+omdazz
+omdazz
+omdazz_pmod_mic3
+piswords6
+rzrd
+rzrd_pmod_mic3
+saylinx
+saylinx_pmod_mic3
+zybo_z7
+
+High priority
+
+tang_mega_138k
+tang_mega_pro_138k
+
+Breadboarding required, less priority
+
+de0_nano_vga666
+de0_nano_vga_pmod
+emooc_cc
+
+Priority & difficult
+
+c5gx_hdmi
+
+Need to notify
+
+arty_a7
+arty_a7_pmod_mic3
+c5gx_vga666
+c5gx_vga_pmod
+de0_nano_soc_vga666
+de0_nano_soc_vga_pmod
+de10_nano_vga666
+de10_nano_vga_mister
+de10_nano_vga_pmod
+qmtech_kintex_7
+
+Others
+
+c5gx_vga666
+c5gx_vga_pmod
+dk_dev_3c120n
+tang_nano_20k
+tang_primer_20k_dock
+tang_primer_20k_dock_alt
+tang_primer_20k_dock_gowin_yosys
+tang_primer_20k_dock_no_tm1638
+tang_primer_20k_lite
+tang_primer_25k_dock
+tang_primer_25k_dock_dvi
+
+Eventually
+
+cmod_a7
+step_max10
+tang_nano_1k
+tang_nano_1k_min
+tang_nano_9k_hdmi
+trion_t20
+
+Ask Ruslan
+
+ice40hx8k_evb_yosys
+karnix_ecp5_yosys
+orangecrab_ecp5_yosys
+tang_nano_9k_gowin_yosys
+
+Remove
+
+c5gx_audio - merge with c5gx*
+de10_lite_tm1638_arduino - need to merge with de10_lite
+qmtech_c4_starter
+runber - rare board, broken
+tang_nano_9k_lcd - supplanted by other tang_nano_9k config
+tang_nano_9k - supplanted by other tang_nano_9k config

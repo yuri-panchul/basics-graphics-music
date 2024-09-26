@@ -1,17 +1,20 @@
 set_global_assignment -name DEVICE EP3C16F484C6
 
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
-#set_global_assignment -name ADVANCED_PHYSICAL_OPTIMIZATION OFF
+# set_global_assignment -name ADVANCED_PHYSICAL_OPTIMIZATION OFF
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
 set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
 
-    set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
 
 set_location_assignment PIN_G21  -to CLOCK_50
-#set_location_assignment PIN_B12  -to CLOCK_50_2
+# set_location_assignment PIN_B12  -to CLOCK_50_2
 
-#set_location_assignment PIN_U21   -to UART_TXD
-set_location_assignment PIN_U22   -to UART_RXD
+set_location_assignment PIN_V22  -to UART_RTS
+set_location_assignment PIN_U22  -to UART_RXD
+
+set_location_assignment PIN_V21  -to UART_CTS
+set_location_assignment PIN_U21  -to UART_TXD
 
 set_location_assignment PIN_H2   -to BUTTON[0]
 set_location_assignment PIN_G3   -to BUTTON[1]

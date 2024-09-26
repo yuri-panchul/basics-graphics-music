@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -47,16 +47,16 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_top_sw = w_sw - 1;  // One onboard SW is used as a reset
+    localparam w_lab_sw = w_sw - 1;  // One onboard SW is used as a reset
 
     wire                  clk = CLOCK_50;
 
-    wire                  rst    = SW [w_top_sw];
-    wire [w_top_sw - 1:0] top_sw = SW [w_top_sw - 1:0];
-    wire [w_key    - 1:0] top_key = ~ KEY;
+    wire                  rst    = SW [w_lab_sw];
+    wire [w_lab_sw - 1:0] lab_sw = SW [w_lab_sw - 1:0];
+    wire [w_key    - 1:0] lab_key = ~ KEY;
 
     //------------------------------------------------------------------------
-    wire [ w_led - w_digit - 1:0] top_led;
+    wire [ w_led - w_digit - 1:0] lab_led;
 
     wire [                   7:0] abcdefgh;
     wire [         w_digit - 1:0] digit;
@@ -75,25 +75,25 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz  ( clk_mhz         ),
         .w_key    ( w_key           ),
-        .w_sw     ( w_top_sw        ),
+        .w_sw     ( w_lab_sw        ),
         .w_led    ( w_led - w_digit ),              // The last 8 LEDR are used like a 7SEG dp
         .w_digit  ( w_digit         ),
         .w_gpio   ( w_gpio          )               // GPIO[5:0] reserved for mic
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk                  ),
         .slow_clk (   slow_clk             ),
         .rst      (   rst                  ),
 
-        .key      (   top_key              ),
-        .sw       (   top_sw               ),
+        .key      (   lab_key              ),
+        .sw       (   lab_sw               ),
 
-        .led      (   top_led              ),
+        .led      (   lab_led              ),
 
         .abcdefgh (   abcdefgh             ),
         .digit    (   digit                ),
@@ -116,7 +116,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = top_led; // Last 8 LEDR are used like a 7SEG dp
+    assign { LEDR [$left(LEDR) - w_digit:0], LEDG } = lab_led; // Last 8 LEDR are used like a 7SEG dp
 
     assign VGA_R   = { vga_red_4b,   4'd0 };
     assign VGA_G   = { vga_green_4b, 4'd0 };
@@ -171,7 +171,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef EMULATE_DYNAMIC_7SEG_WITHOUT_STICKY_FLOPS
+    `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
 
         // Pro: This implementation is necessary for the lab 7segment_word
         // to properly demonstrate the idea of dynamic 7-segment display
@@ -240,19 +240,23 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz  )
+    )
+    i_microphone
     (
-        .clk   (   clk          ),
-        .rst   (   rst          ),
-        .lr    (   GPIO_1 [0]   ), // JP2 pin 1
-        .ws    (   GPIO_1 [2]   ), // JP2 pin 3
-        .sck   (   GPIO_1 [4]   ), // JP2 pin 5
-        .sd    (   GPIO_1 [5]   ), // JP2 pin 6
-        .value (   mic          )
+        .clk     ( clk        ),
+        .rst     ( rst        ),
+        .lr      ( GPIO_1 [0] ),  // JP2 pin 1
+        .ws      ( GPIO_1 [2] ),  // JP2 pin 3
+        .sck     ( GPIO_1 [4] ),  // JP2 pin 5
+        .sd      ( GPIO_1 [5] ),  // JP2 pin 6
+        .value   ( mic        )
     );
 
-    assign GPIO_1 [1] = 1'b0;      // GND - JP2 pin 2
-    assign GPIO_1 [3] = 1'b1;      // VCC - JP2 pin 4
+    assign GPIO_1 [1] = 1'b0;  // GND - JP2 pin 2
+    assign GPIO_1 [3] = 1'b1;  // VCC - JP2 pin 4
 
     //------------------------------------------------------------------------
 
@@ -260,7 +264,7 @@ module board_specific_top
     # (
         .clk_mhz ( clk_mhz      )
     )
-    o_audio
+    inst_audio_out
     (
         .clk     ( clk          ),
         .reset   ( rst          ),

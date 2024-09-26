@@ -1,0 +1,29 @@
+Only DE10-Lite has DP
+
+Both LEDR and LEDG
+
+C5GX
+DE1
+DE2
+DE2-115
+
+LEDR only
+
+DE0-CV
+DE10-Lite
+DE1-SoC
+
+LEDG
+
+DE0
+
+
+LEDG
+
+de0_nano_soc_vga666/board_specific_top.sv
+de0_nano_soc_vga_pmod/board_specific_top.sv
+de0_nano_vga666/board_specific_top.sv
+de0_nano_vga_pmod/board_specific_top.sv
+de10_nano_vga666/board_specific_top.sv
+de10_nano_vga_mister/board_specific_top.sv
+de10_nano_vga_pmod/board_specific_top.sv
