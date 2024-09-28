@@ -11,7 +11,13 @@ module board_specific_top
               w_key         = 3,
               w_sw          = 0,
               w_led         = 4,
+
+              `ifdef ALINX_AX4010
+              w_digit       = 6,
+              `else
               w_digit       = 8,
+              `endif
+
               w_gpio        = 34 * 2,
 
               screen_width  = 640,
@@ -182,9 +188,9 @@ module board_specific_top
             (
                 .clk   ( clk         ),
                 .rst   ( rst         ),
-                .cs    ( GPIO_1 [26] ), // J2 pin 29
-                .sck   ( GPIO_1 [32] ), // J2 pin 35
-                .sdo   ( GPIO_1 [30] ), // J2 pin 33
+                .cs    ( GPIO_1 [26] ), // C6
+                .sck   ( GPIO_1 [32] ), // E9
+                .sdo   ( GPIO_1 [30] ), // D8
                 .value ( mic_12      )
             );
 
@@ -228,11 +234,11 @@ module board_specific_top
             .clk     ( clk         ),
             .reset   ( rst         ),
             .data_in ( sound       ),
-            .mclk    ( GPIO_0 [12] ), // J1 pin 24
-            .bclk    ( GPIO_0 [10] ), // J1 pin 26
-            .lrclk   ( GPIO_0 [ 6] ), // J1 pin 30
-            .sdata   ( GPIO_0 [ 8] )  // J1 pin 28
-        );                            // J1 pin 37 - GND, pin 40 - D3V3 3.3V (30-45 mA)
+            .mclk    ( GPIO_0 [12] ), // R3 PCM5102: SCK
+            .bclk    ( GPIO_0 [10] ), // P3 PCM5102: BCK
+            .lrclk   ( GPIO_0 [ 6] ), // L9 PCM5102: LCK
+            .sdata   ( GPIO_0 [ 8] )  // M9 PCM5102: DIN
+        );                            // 3.3V, GND on dedicated pins
 
     `endif
 
