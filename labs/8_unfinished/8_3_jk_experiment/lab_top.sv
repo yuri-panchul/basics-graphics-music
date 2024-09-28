@@ -59,9 +59,9 @@ module lab_top
 
     jk_trigger_MasterSlave tr
     (
-        .clk (key [0]),
-        .j   (key [1]),
-        .k   (key [2]),
+        .clk (sw  [0]),
+        .j   (sw  [1]),
+        .k   (sw  [2]),
         .q   (led [0]),
         .q_n (led [1])
     );
