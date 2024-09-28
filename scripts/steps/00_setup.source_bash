@@ -57,6 +57,13 @@ adj_path_for_gowin_win ()
 script=$(basename "$0")
 log="$PWD/log.txt"
 
+if [[ $script =~ check_setup_and_choose_fpga_board ]]
+then
+    offer_to_create_all_run_dirs=1
+else
+    offer_to_create_all_run_dirs=0
+fi
+
 if [[ $script =~ choose.*fpga_board ]]
 then
     offer_to_create_a_new_fpga_board_select_file=1
@@ -417,10 +424,8 @@ fpga_board_setup ()
 
         create_fpga_board_select_file
 
-        if [ ]
+        if [ $offer_to_create_all_run_dirs = 1 ]
         then
-            # This option is rarely used, so I decided to comment it out
-
             read -n 1 -r -p "Would you like to create the new run directories for the synthesis of all labs in the package, based on your FPGA board selection? We recommend to do this if you plan to work with synthesis GUI rather than with the synthesis scripts. [y/n] "
             printf "\n"
 
