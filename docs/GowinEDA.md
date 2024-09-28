@@ -14,9 +14,9 @@ You may need up to 2 GB of free space for the installation.
 
 1. Download the latest [GOWIN® EDA](https://www.gowinsemi.com/en/support/download_eda) from Gowin web site
    * :warning: Make sure to choose a _"Gowin V1.9 **Education** (Windows)"_ download. 
-   * :info: _"Windows x64"_ and _"Windows x86"_ versions are identical, pick either
+   * :information_source: _"Windows x64"_ and _"Windows x86"_ versions are identical, pick either
 2. Run the installer:
-   * :info: You may get a blue window _"Windows protected your PC"_. 
+   * :information_source: You may get a blue window _"Windows protected your PC"_. 
      Click _"More info"_ and then _"Run anyway"_ to continue.
    * Please, install the drivers when requested.
 3. Run a _"Gowin"_ application from the Windows start menu once

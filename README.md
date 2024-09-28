@@ -121,15 +121,58 @@ If you do not know where to start:
 
 ## Supported Boards
 
-> :wrench: Work in progress. Only a few out of dozens of supported boards are documented.
+> :wrench: Work in progress. Please, double-check information for your board online.
 Your contributions are welcome.
 
-* Compatibility: :apple: macOS, :penguin: Linux, :computer: Windows, :globe_with_meridians: Open Source
+| FPGA Chip          | Board                | Variants                                             | Software                                           |
+|--------------------|----------------------|------------------------------------------------------|----------------------------------------------------|
+| Altera Cyclone II  | Terasic DE1          | [`de1`](./boards/de1/)                               | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone II  | Terasic DE2          | [`de2`](./boards/de2/)                               | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone III | Terasic DE0          | [`de0`](./boards/de0/)                               | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone III | Altera DK-DEV-3C120N | [`dk_dev_3c120n`](./boards/dk_dev_3c120n/)           | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone IV  | Alinx AX4010         | [`alinx_ax4010`](./boards/alinx_ax4010/)             | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone IV  | Terasic DE0-Nano     | [`de0_nano_vga_pmod`](./boards/de0_nano_vga_pmod/) <br/> [`de0_nano_vga666`](./boards/de0_nano_vga666/) | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone IV  | Zeowaa               | [`zeowaa`](./boards/zeowaa/) <br/> [`zeowaa_wo_dig_0`](./boards/zeowaa_wo_dig_0/) |                                                    |
+| Altera Cyclone IV  | Terasic DE2-115      | [`de2_115`](./boards/de2_115/)                       | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone V   | Terasic DE0-CV       | [`de0_cv`](./boards/de0_cv/)                         | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone V   | Terasic DE10-Nano    | [`de10_nano`](./boards/de10_nano/)                   | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone V SoC | Terasic DE0-Nano SoC | [`de0_nano_soc_vga_pmod`](./boards/de0_nano_soc_vga_pmod/) <br/> [`de0_nano_soc_vga666`](./boards/de0_nano_soc_vga666/) | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone V SoC | Terasic DE1-SoC    | [`de1_soc`](./boards/de1_soc/)                       | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone V GX | Terasic C5GX        | [`c5gx`](./boards/c5gx/)                             | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera MAX 10      | Terasic DE10-Lite    | [`de10_lite`](./boards/de10_lite/)                   | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Emooc              | CC                   | [`emooc_cc`](./boards/emooc_cc/)                     |                                                    |
+| Gowin GW5AST-LV138 | [SiPeed Tang Mega 138K](https://wiki.sipeed.com/hardware/en/tang/tang-mega-138k/mega-138k.html) | [`tang_mega_138k_lcd_480_272_tm1638`](./boards/tang_mega_138k_lcd_480_272_tm1638/) <br/> [`tang_mega_138k_pro_lcd_480_272_no_tm1638`](./boards/tang_mega_138k_pro_lcd_480_272_no_tm1638/) <br/> [`tang_mega_138k_pro_lcd_480_272_tm1638`](./boards/tang_mega_138k_pro_lcd_480_272_tm1638/) | [Gowin EDA](./docs/GowinEDA.md) |
+| Gowin GW1NR-9      | [SiPeed Tang Nano 9K](https://wiki.sipeed.com/hardware/en/tang/Tang-Nano-9K/Nano-9K.html) | [`tang_nano_9k_lcd_480_272_no_tm1638_yosys`](./boards/tang_nano_9k_lcd_480_272_no_tm1638_yosys/) <br/> [`tang_nano_9k_lcd_480_272_tm1638`](./boards/tang_nano_9k_lcd_480_272_tm1638/) <br/> [`tang_nano_9k_lcd_480_272_tm1638_yosys`](./boards/tang_nano_9k_lcd_480_272_tm1638_yosys/) <br/> [`tang_nano_9k_lcd_800_480_no_tm1638`](./boards/tang_nano_9k_lcd_800_480_no_tm1638/) <br/> [`tang_nano_9k_lcd_800_480_no_tm1638_yosys`](./boards/tang_nano_9k_lcd_800_480_no_tm1638_yosys/) <br/> [`tang_nano_9k_lcd_800_480_tm1638`](./boards/tang_nano_9k_lcd_800_480_tm1638/) <br/> [`tang_nano_9k_lcd_800_480_tm1638_yosys`](./boards/tang_nano_9k_lcd_800_480_tm1638_yosys/) <br/> [`tang_nano_9k_lcd_ml6485_no_tm1638_yosys`](./boards/tang_nano_9k_lcd_ml6485_no_tm1638_yosys/) <br/> [`tang_nano_9k_lcd_ml6485_tm1638_yosys`](./boards/tang_nano_9k_lcd_ml6485_tm1638_yosys/) | [Gowin EDA](./docs/GowinEDA.md) <br/> [Yosys](./docs/Yosys.md) |
+| Gowin GW2A-LV18    | [SiPeed Tang Primer 20K](https://wiki.sipeed.com/hardware/en/tang/tang-primer-20k/primer-20k.html) | [`tang_primer_20k_dock_hdmi_no_tm1638`](./boards/tang_primer_20k_dock_hdmi_no_tm1638/) <br/> [`tang_primer_20k_dock_hdmi_tm1638`](./boards/tang_primer_20k_dock_hdmi_tm1638/) <br/> [`tang_primer_20k_dock_no_hdmi_no_tm1638`](./boards/tang_primer_20k_dock_no_hdmi_no_tm1638/) <br/> [`tang_primer_20k_dock_no_hdmi_tm1638`](./boards/tang_primer_20k_dock_no_hdmi_tm1638/) <br/> [`tang_primer_20k_lite`](./boards/tang_primer_20k_lite/) | [Gowin EDA](./docs/GowinEDA.md) |
+| Gowin GW5A-LV25    | [SiPeed Tang Primer 25K](https://wiki.sipeed.com/hardware/en/tang/tang-primer-25k/primer-25k.html) | [`tang_primer_25k`](./boards/tang_primer_25k/)       | [Gowin EDA](./docs/GowinEDA.md) |
+| Gowin GW12AR-18    | [Sipeed Tang Nano 20K](https://wiki.sipeed.com/hardware/en/tang/tang-nano-20k/nano-20k.html) | [`tang_nano_20k_hdmi_tm1638`](./boards/tang_nano_20k_hdmi_tm1638/) <br/> [`tang_nano_20k_lcd_800_480_tm1638`](./boards/tang_nano_20k_lcd_800_480_tm1638/) | [Gowin EDA](./docs/GowinEDA.md) |
+| Lattice ECP5       | [OrangeCrab](https://github.com/orangecrab-fpga/orangecrab-hardware) | [`orangecrab_ecp5_yosys`](./boards/orangecrab_ecp5_yosys/) | [Yosys](./docs/Yosys.md)                           |
+| Lattice ECP5       | [Karnix](https://github.com/Fabmicro-LLC/Karnix_ASB-254) | [`karnix_ecp5_yosys`](./boards/karnix_ecp5_yosys/)   | [Yosys](./docs/Yosys.md)                           |
+| Lattice iCE40      | [Lattice iCE40-HX8K](https://www.latticesemi.com/Products/DevelopmentBoardsAndKits/iCE40HX8KBreakoutBoard.aspx) | [`ice40hx8k_evb_yosys`](./boards/ice40hx8k_evb_yosys/) | [Yosys](./docs/Yosys.md)                           |
+| Omdazz(?)          | Omdazz(?)           | [`omdazz`](./boards/omdazz/) <br/> [`omdazz_pmod_mic3`](./boards/omdazz_pmod_mic3/) |                                                    |
+| Rzrd(?)            | Rzrd(?)             | [`rzrd`](./boards/rzrd/) <br/> [`rzrd_pmod_mic3`](./boards/rzrd_pmod_mic3/) |                                                    |
+| Xilinx Artix-7     | Arty A7             | [`arty_a7`](./boards/arty_a7/) <br/> [`arty_a7_pmod_mic3`](./boards/arty_a7_pmod_mic3/) | [Vivado](./docs/vivado_installation_guide/readme.md) |
+| Xilinx Artix-7     | Basys 3             | [`basys3`](./boards/basys3/)                         | [Vivado](./docs/vivado_installation_guide/readme.md) |
+| Xilinx Artix-7     | Nexys 4             | [`nexys4`](./boards/nexys4/)                         | [Vivado](./docs/vivado_installation_guide/readme.md) |
+| Xilinx Artix-7     | Nexys 4 DDR         | [`nexys4_ddr`](./boards/nexys4_ddr/)                 | [Vivado](./docs/vivado_installation_guide/readme.md) |
+| Xilinx Artix-7     | Nexys A7            | [`nexys_a7`](./boards/nexys_a7/)                     | [Vivado](./docs/vivado_installation_guide/readme.md) |
+| Xilinx Spartan 6   | Pisword S6          | [`piswords6`](./boards/piswords6/)                   |                                                    |
+| Xilinx Spartan 6   | Saylinx             | [`saylinx`](./boards/saylinx/) <br/> [`saylinx_pmod_mic3`](./boards/saylinx_pmod_mic3/) |                                                    |
+| Xilinx Kintex 7    | [QMTech Kintex 7](https://github.com/carlosedp/QMTechBaseBoard) | [`qmtech_kintex_7`](./boards/qmtech_kintex_7/)       | [Vivado](./docs/vivado_installation_guide/readme.md) |
+| Xilinx Zynq-7000   | Zybo Z7             | [`zybo_z7`](./boards/zybo_z7/)                       | [Vivado](./docs/vivado_installation_guide/readme.md) |
+### External hardware
 
-| Chip          | Board                | Variants                                             | Software                                           |
-|---------------|----------------------|------------------------------------------------------|----------------------------------------------------|
-| Altera MAX 10 | Terasic DE10-Lite    | [`de10_lite`](./boards/de10_lite/)                   | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
-| Gowin GW1NR-9 | Sipeed Tang Nano 20K | [`tang_nano_20k_lcd_800_480_tm1638`](./boards/tang_nano_20k_lcd_800_480_tm1638/) | [Gowin EDA](./docs/GowinEDA.md)                    |
+Not all boards include everything on the same board. To compensate for this we use external boards and hardware to extend input and output capabilities. The most common external hardware is:
+
+* All variants: [INMP441](https://www.aliexpress.us/item/3256803154251183.html) [I2S](https://en.wikipedia.org/wiki/I%C2%B2S) microphone
+* Almost all variants: PCM5102 [I2S](https://en.wikipedia.org/wiki/I%C2%B2S) stereo audio DAC.
+  Some boards do not require an external DAC as they have an on-board DAC (Tang Nano 20K)
+* `tm1638` or `no_tm1638`: with and without [TM1638](https://www.aliexpress.us/item/3256802635508991.html): 8-digit 7-segment display with 8 buttons (enabled in `tm1638` variants)
+* `hdmi`: HDMI on-board output
+* `lcd_480_272`: [40-pin 480x272 LCD display](https://www.adafruit.com/product/1591)
+* `lcd_800_480`: [40-pin 800x480 LCD display](https://www.adafruit.com/product/1596)
+* `yosys`: The same hardware, but uses [Yosys](https://github.com/YosysHQ/yosys) open source toolchain instead of a proprietary one. 
+ 
 
 # Verilog Events Across the World
 

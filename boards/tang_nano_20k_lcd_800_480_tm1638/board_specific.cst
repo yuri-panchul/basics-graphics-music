@@ -62,7 +62,7 @@
     IO_LOC "SD_CLK"             83;
     IO_LOC "SD_CMD"             82;
     IO_LOC "SD_DAT0"            84;
-    IO_LOC "SD_DAT1"            85;  // Used for inmp441 sck
+    IO_LOC "SD_DAT1"            85;  // Used for inmp441 sd
     IO_LOC "SD_DAT2"            80;
     IO_LOC "SD_DAT3"            81;
 
