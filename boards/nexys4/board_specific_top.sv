@@ -99,8 +99,18 @@ module board_specific_top
 
     assign an = ~ digit;
 
-    wire [w_x - 1:0] x;
-    wire [w_y - 1:0] y;
+    wire                 display_on;
+
+    wire [w_x     - 1:0] x;
+    wire [w_y     - 1:0] y;
+
+    wire [w_red   - 1:0] red;
+    wire [w_green - 1:0] green;
+    wire [w_blue  - 1:0] blue;
+
+    assign vgaRed   = display_on ? red   : '0;
+    assign vgaBlue  = display_on ? green : '0;
+    assign vgaGreen = display_on ? blue  : '0;
 
     wire [     23:0] mic;
     wire [     15:0] sound;
@@ -147,9 +157,9 @@ module board_specific_top
         .x             ( x              ),
         .y             ( y              ),
 
-        .red           ( vgaRed         ),
-        .green         ( vgaBlue        ),
-        .blue          ( vgaGreen       ),
+        .red           ( red            ),
+        .green         ( green          ),
+        .blue          ( blue           ),
 
         .mic           ( mic            ),
         .sound         ( sound          ),
@@ -169,8 +179,8 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz     ),
-            .PIXEL_MHZ   ( pixel_mhz   )
+            .CLK_MHZ     ( clk_mhz    ),
+            .PIXEL_MHZ   ( pixel_mhz  )
         )
         i_vga
         (
@@ -178,7 +188,7 @@ module board_specific_top
             .rst         ( rst        ),
             .hsync       ( Hsync      ),
             .vsync       ( Vsync      ),
-            .display_on  (            ),
+            .display_on  ( display_on ),
             .hpos        ( x10        ),
             .vpos        ( y10        ),
             .pixel_clk   (            )

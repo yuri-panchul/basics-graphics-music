@@ -106,6 +106,8 @@ module board_specific_top
     assign { CA, CB, CC, CD, CE, CF, CG, DP } = ~ abcdefgh;
     assign AN = ~ digit;
 
+    wire                 display_on;
+
     wire [w_x     - 1:0] x;
     wire [w_y     - 1:0] y;
 
