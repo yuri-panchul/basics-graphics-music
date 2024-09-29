@@ -16,9 +16,8 @@ set_false_path -from * -to VGA_VSYNC
 set_false_path -from * -to VGA_HSYNC
 set_false_path -from * -to [get_ports {VGA_RGB[*]}]
 
+set_false_path -from * -to UART_TX
 set_false_path -from * -to [get_ports {GPIO[*]}]
-
-# set_false_path -from * -to UART_TX
 
 # BUZZER
 
