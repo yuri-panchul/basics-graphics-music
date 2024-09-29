@@ -37,8 +37,10 @@ module board_specific_top
     output logic      [6:0] HEX5,
 
     output                  VGA_CLK,  // VGA DAC input triggers CLK
+
     output                  VGA_HS,
     output                  VGA_VS,
+
     output [ w_red   - 1:0] VGA_R,
     output [ w_green - 1:0] VGA_G,
     output [ w_blue  - 1:0] VGA_B,
@@ -59,22 +61,29 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire                  clk     = CLOCK_50;
+    wire                     clk     = CLOCK_50;
 
-    wire                  rst     = SW [w_lab_sw];
-    wire [w_lab_sw - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
+    wire                     rst     = SW [w_lab_sw];
+    wire  [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
 
     //------------------------------------------------------------------------
 
-    wire  [w_led - w_digit - 1:0] lab_led;
+    wire  [ w_lab_led - 1:0] lab_led;
 
-    wire  [                  7:0] abcdefgh;
-    wire  [        w_digit - 1:0] digit;
+    // A dynamic seven-segment display
 
-    wire  [w_x - 1:0] x;
-    wire  [w_y - 1:0] y;
+    wire  [             7:0] abcdefgh;
+    wire  [ w_digit   - 1:0] digit;
 
-    wire  [                 23:0] mic;
+    // Graphics
+
+    wire  [ w_x       - 1:0] x;
+    wire  [ w_y       - 1:0] y;
+
+    // Microphone and sound output
+
+    wire [             23:0] mic;
+    wire [             15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -87,49 +96,51 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz               ),
-        .w_key   ( w_key                 ),
-        .w_sw    ( w_lab_sw              ),
-        .w_led   ( w_led - w_digit       ),        // The last 6 LEDR are used like a 7SEG dp
-        .w_digit ( w_digit               ),
-        .w_gpio  ( w_gpio                ),        // GPIO_0[5:0] reserved for mic
+        .clk_mhz       ( clk_mhz              ),
+        .w_key         ( w_key                ),
+        .w_sw          ( w_lab_sw             ),
+        .w_led         ( w_lab_led            ),  // The last 6 LEDR are used like a 7SEG dp
+        .w_digit       ( w_digit              ),
+        .w_gpio        ( w_gpio               ),  // GPIO_0[5:0] reserved for mic
 
-        .screen_width  ( screen_width  ),
-        .screen_height ( screen_height ),
+        .screen_width  ( screen_width         ),
+        .screen_height ( screen_height        ),
 
-        .w_red   ( w_red   ),
-        .w_green ( w_green ),
-        .w_blue  ( w_blue  )
+        .w_red         ( w_red                ),
+        .w_green       ( w_green              ),
+        .w_blue        ( w_blue               )
     )
     i_lab_top
     (
-        .clk      (   clk                ),
-        .slow_clk (   slow_clk           ),
-        .rst      (   rst                ),
+        .clk           (   clk                ),
+        .slow_clk      (   slow_clk           ),
+        .rst           (   rst                ),
 
-        .key      ( ~ KEY                ),
-        .sw       (   lab_sw             ),
+        .key           ( ~ KEY                ),
+        .sw            (   lab_sw             ),
 
-        .led      (   lab_led            ),
+        .led           (   lab_led            ),
 
-        .abcdefgh (   abcdefgh           ),
-        .digit    (   digit              ),
+        .abcdefgh      (   abcdefgh           ),
+        .digit         (   digit              ),
 
-        .x        (   x                  ),
-        .y        (   y                  ),
+        .x             (   x                  ),
+        .y             (   y                  ),
 
-        .red      (   VGA_R              ),
-        .green    (   VGA_G              ),
-        .blue     (   VGA_B              ),
+        .red           (   VGA_R              ),
+        .green         (   VGA_G              ),
+        .blue          (   VGA_B              ),
+
+        .mic           (   mic                ),
+        .sound         (   sound              ),
 
         // TODO: .qsf file is not consistent with the reference file from the vendor
         // TODO: Find the correct file and fix the UART signals
 
-        .uart_rx  (                      ),
-        .uart_tx  (                      ),
+        .uart_rx       (                      ),
+        .uart_tx       (                      ),
 
-        .mic      (   mic                ),
-        .gpio     (   { GPIO_0, GPIO_1 } )
+        .gpio          (   { GPIO_0, GPIO_1 } )
     );
 
     //------------------------------------------------------------------------
@@ -214,22 +225,21 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz   ),
-            .PIXEL_MHZ   ( pixel_mhz )
+            .CLK_MHZ     ( clk_mhz     ),
+            .PIXEL_MHZ   ( pixel_mhz   )
         )
         i_vga
         (
-            .clk         ( clk       ),
-            .rst         ( rst       ),
-            .hsync       ( VGA_HS    ),
-            .vsync       ( VGA_VS    ),
-            .display_on  (           ),
-            .hpos        ( x10       ),
-            .vpos        ( y10       ),
-            .pixel_clk   ( VGA_CLK   )
+            .clk         ( clk         ),
+            .rst         ( rst         ),
+            .hsync       ( VGA_HS      ),
+            .vsync       ( VGA_VS      ),
+            .display_on  ( VGA_BLANK_N ),
+            .hpos        ( x10         ),
+            .vpos        ( y10         ),
+            .pixel_clk   ( VGA_CLK     )
         );
 
-        assign VGA_BLANK_N = 1'b1;
         assign VGA_SYNC_N  = 1'b0;
 
     `endif
@@ -262,8 +272,21 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-        // TODO
-
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz     )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
+            .mclk    ( GPIO_0 [33] ),  // JP1 pin 38
+            .bclk    ( GPIO_0 [31] ),  // JP1 pin 36
+            .lrclk   ( GPIO_0 [27] ),  // JP1 pin 32
+            .sdata   ( GPIO_0 [29] )   // JP1 pin 34
+        );                             // JP1 pin 30 - GND
+                                       // JP1 pin 29 - VCC 3.3V (30-45 mA)
     `endif
 
 endmodule

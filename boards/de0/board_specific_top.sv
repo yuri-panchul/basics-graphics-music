@@ -72,14 +72,14 @@ module board_specific_top
     
     // Graphics
 
-    wire                  display_on;
+    wire                   display_on;
 
-    wire [ w_x     - 1:0] x;
-    wire [ w_y     - 1:0] y;
+    wire [ w_x      - 1:0] x;
+    wire [ w_y      - 1:0] y;
 
-    wire [ w_red   - 1:0] red;
-    wire [ w_green - 1:0] green;
-    wire [ w_blue  - 1:0] blue;
+    wire [ w_red    - 1:0] red;
+    wire [ w_green  - 1:0] green;
+    wire [ w_blue   - 1:0] blue;
 
     assign VGA_R = display_on ? red   : '0;
     assign VGA_G = display_on ? green : '0;
@@ -87,8 +87,8 @@ module board_specific_top
 
     // Sound
 
-    wire [          23:0] mic;
-    wire [          15:0] sound;
+    wire [           23:0] mic;
+    wire [           15:0] sound;
 
     //------------------------------------------------------------------------
 
