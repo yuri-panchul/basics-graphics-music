@@ -102,48 +102,48 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       (   clk_mhz       ),
-        .w_key         (   w_key         ),
-        .w_sw          (   w_lab_sw      ),
-        .w_led         (   w_led         ),
-        .w_digit       (   w_digit       ),
-        .w_gpio        (   w_gpio        ),
+        .clk_mhz       (   clk_mhz            ),
+        .w_key         (   w_key              ),
+        .w_sw          (   w_lab_sw           ),
+        .w_led         (   w_led              ),
+        .w_digit       (   w_digit            ),
+        .w_gpio        (   w_gpio             ),
 
-        .screen_width  (   screen_width  ),
-        .screen_height (   screen_height ),
+        .screen_width  (   screen_width       ),
+        .screen_height (   screen_height      ),
 
-        .w_red         (   w_red         ),
-        .w_green       (   w_green       ),
-        .w_blue        (   w_blue        )
+        .w_red         (   w_red              ),
+        .w_green       (   w_green            ),
+        .w_blue        (   w_blue             )
     )
     i_lab_top
     (
-        .clk           (   clk           ),
-        .slow_clk      (   slow_clk      ),
-        .rst           (   rst           ),
+        .clk           (   clk                ),
+        .slow_clk      (   slow_clk           ),
+        .rst           (   rst                ),
 
-        .key           ( ~ KEY           ),
-        .sw            (   lab_sw        ),
+        .key           ( ~ KEY                ),
+        .sw            (   lab_sw             ),
 
-        .led           (   lab_led       ),
+        .led           (   lab_led            ),
 
-        .abcdefgh      (   abcdefgh      ),
-        .digit         (   digit         ),
+        .abcdefgh      (   abcdefgh           ),
+        .digit         (   digit              ),
 
-        .x             (   x             ),
-        .y             (   y             ),
+        .x             (   x                  ),
+        .y             (   y                  ),
 
-        .red           (   VGA_R         ),
-        .green         (   VGA_G         ),
-        .blue          (   VGA_B         ),
+        .red           (   VGA_R              ),
+        .green         (   VGA_G              ),
+        .blue          (   VGA_B              ),
 
-        .mic           (   mic           ),
-        .sound         (   sound         ),
+        .mic           (   mic                ),
+        .sound         (   sound              ),
 
-        .uart_rx       (   UART_RXD      ),
-        .uart_tx       (   UART_TXD      ),
+        .uart_rx       (   UART_RXD           ),
+        .uart_tx       (   UART_TXD           ),
 
-        .gpio          (   GPIO          )
+        .gpio          (   { GPIO_0, GPIO_1 } )
     );
 
     //------------------------------------------------------------------------
