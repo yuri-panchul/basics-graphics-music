@@ -48,8 +48,8 @@ module board_specific_top
     output [w_red    - 1:0] VGA_R,
     output [w_green  - 1:0] VGA_G,
     output [w_blue   - 1:0] VGA_B,
-    output                  VGA_BLANK_N,
-    output                  VGA_SYNC_N,
+    output                  VGA_BLANK,
+    output                  VGA_SYNC,
 
     input                   UART_RXD,
     output                  UART_TXD,
@@ -283,14 +283,13 @@ module board_specific_top
             .rst         ( rst       ),
             .hsync       ( VGA_HS    ),
             .vsync       ( VGA_VS    ),
-            .display_on  (           ),
+            .display_on  ( VGA_BLANK ),
             .hpos        ( x10       ),
             .vpos        ( y10       ),
             .pixel_clk   ( VGA_CLK   )
         );
 
-        assign VGA_BLANK_N = 1'b1;
-        assign VGA_SYNC_N  = 1'b0;
+        assign VGA_SYNC = 1'b0;
 
     `endif
 
