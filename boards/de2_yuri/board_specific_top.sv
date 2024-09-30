@@ -263,21 +263,21 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz ( clk_mhz  )
+            .clk_mhz ( clk_mhz    )
         )
         i_microphone
         (
-            .clk     ( clk      ),
-            .rst     ( rst      ),
-            .lr      ( GPIO [0] ),
-            .ws      ( GPIO [2] ),
-            .sck     ( GPIO [4] ),
-            .sd      ( GPIO [5] ),
-            .value   ( mic      )
+            .clk     ( clk        ),
+            .rst     ( rst        ),
+            .lr      ( GPIO_1 [0] ),
+            .ws      ( GPIO_1 [2] ),
+            .sck     ( GPIO_1 [4] ),
+            .sd      ( GPIO_1 [5] ),
+            .value   ( mic        )
         );
 
-        assign GPIO [1] = 1'b0;  // GND
-        assign GPIO [3] = 1'b1;  // VCC
+        assign GPIO_1 [1] = 1'b0;  // GND
+        assign GPIO_1 [3] = 1'b1;  // VCC
 
     `endif
 
@@ -287,17 +287,17 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz ( clk_mhz   )
+            .clk_mhz ( clk_mhz     )
         )
         inst_audio_out
         (
-            .clk     ( clk       ),
-            .reset   ( rst       ),
-            .data_in ( sound     ),
-            .mclk    ( GPIO [33] ),
-            .bclk    ( GPIO [31] ),
-            .lrclk   ( GPIO [27] ),
-            .sdata   ( GPIO [29] )
+            .clk     ( clk         ),
+            .reset   ( rst         ),
+            .data_in ( sound       ),
+            .mclk    ( GPIO_1 [33] ),
+            .bclk    ( GPIO_1 [31] ),
+            .lrclk   ( GPIO_1 [27] ),
+            .sdata   ( GPIO_1 [29] )
         );
 
         // VCC and GND for i2s_audio_out are on dedicated pins
