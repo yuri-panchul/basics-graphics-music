@@ -252,7 +252,7 @@ module board_specific_top
             .pixel_clk   ( VGA_CLK       )
         );
 
-        assign VGA_SYNC_N  = 1'b0;
+        assign VGA_SYNC_N = 1'b0;
 
     `endif
 
