@@ -64,7 +64,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_lab_led = 8;         // We will actually use LEDG [7:0]
+    localparam w_lab_led = 8,         // We will actually use LEDG [7:0]
                w_lab_sw  = w_sw - 1;  // One sw is used as a reset
 
     //------------------------------------------------------------------------
