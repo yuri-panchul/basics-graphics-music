@@ -42,8 +42,8 @@ module board_specific_top
     output                  Vsync,
 
     output [w_red    - 1:0] vgaRed,
-    output [w_blue   - 1:0] vgaBlue,
     output [w_green  - 1:0] vgaGreen,
+    output [w_blue   - 1:0] vgaBlue,
 
     input                   RsRx,
     output                  RsTx,
@@ -84,8 +84,8 @@ module board_specific_top
     wire [w_blue  - 1:0] blue;
 
     assign vgaRed   = display_on ? red   : '0;
-    assign vgaBlue  = display_on ? green : '0;
-    assign vgaGreen = display_on ? blue  : '0;
+    assign vgaGreen = display_on ? green : '0;
+    assign vgaBlue  = display_on ? blue  : '0;
 
     // Sound
 
