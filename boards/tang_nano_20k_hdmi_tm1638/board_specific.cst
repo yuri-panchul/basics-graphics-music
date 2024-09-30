@@ -58,7 +58,7 @@
 //  IO_LOC "UART_RXD"           31;  // Conflct with LCD_B[0]
 //  IO_LOC "UART_TXD"           30;  // Conflct with LCD_B[1]
 
-// SDIO pins for SD-cards 
+// SDIO pins for SD-cards
     IO_LOC "SD_CLK"             83;
     IO_LOC "SD_CMD"             82;
     IO_LOC "SD_DAT0"            84;
@@ -83,7 +83,7 @@
 //  IO_LOC "JOYSTICK_CS"        18;  // Conflict with LED[3]
 
 //  IO_LOC "JOYSTICK_CLK2"      52;  // Conflicts with EDID_CLK
-//  IO_LOC "JOYSTICK_MOSI2"     53;  // Conflicts with EDID_DAT 
+//  IO_LOC "JOYSTICK_MOSI2"     53;  // Conflicts with EDID_DAT
     IO_LOC "JOYSTICK_MISO2"     71;  // TM1638: sio_stb
     IO_LOC "JOYSTICK_CS2"       72;  // TM1638: sio_clk
 
@@ -94,7 +94,7 @@
 //  IO_LOC "SD_DAT1"            85;  // INMP441: i2s_sd
 
 // Extra GPIO for custom tasks
-    IO_LOC "GPIO[4]"            76;  
+    IO_LOC "GPIO[4]"            76;
 //  IO_LOC "SD_DAT2"            80;
 //  IO_LOC "WS2812"             79;
 //  IO_LOC "EDID_CLK"           53;
@@ -125,17 +125,17 @@
 // Pin conflicts:
 //
 // 17;        IO_LOC "JOYSTICK_CLK"
-// 17;        IO_LOC "LED[2]"     
+// 17;        IO_LOC "LED[2]"
 //
 // 18;        IO_LOC "JOYSTICK_CS"
-// 18;        IO_LOC "LED[3]"      
-// 
+// 18;        IO_LOC "LED[3]"
+//
 // 19;        IO_LOC "JOYSTICK_MISO"
 // 19;        IO_LOC "LED[4]"
-// 
+//
 // 20;        IO_LOC "JOYSTICK_MOSI"
 // 20;        IO_LOC "LED[5]"
-// 
+//
 // 30;        IO_LOC "LCD_B[1]"
 // 30;        IO_LOC "UART_TXD"
 //
@@ -144,7 +144,7 @@
 //
 // 33,34;     IO_LOC "O_TMDS_CLK_P"
 // 33;        IO_LOC "LCD_G[4]"
-// 
+//
 // 35,36;     IO_LOC "O_TMDS_DATA_P[0]"
 // 35;        IO_LOC "LCD_G[2]"
 //

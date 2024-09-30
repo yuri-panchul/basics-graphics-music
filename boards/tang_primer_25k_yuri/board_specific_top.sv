@@ -26,7 +26,7 @@ module board_specific_top
               screen_height = 480,
 
                 w_x           = $clog2 ( screen_width  ),
-                w_y           = $clog2 ( screen_height )                
+                w_y           = $clog2 ( screen_height )
 
                 // gpio 0..5 are reserved for INMP 441 I2S microphone.
                 // Odd gpio 17..27 are reserved I2S audio.
@@ -255,7 +255,7 @@ module board_specific_top
             .hpos        ( x10             ),
             .vpos        ( y10             ),
             .pixel_clk   ( pixel_clk       )
-        );    
+        );
 
         DVI_TX_Top i_DVI_TX_Top
         (
@@ -274,7 +274,7 @@ module board_specific_top
             .O_tmds_data_n (   tmds_d_n    )
         );
 
-  
+
     `endif
 
     //------------------------------------------------------------------------

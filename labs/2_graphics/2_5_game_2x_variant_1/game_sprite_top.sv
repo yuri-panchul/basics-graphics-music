@@ -107,7 +107,7 @@ module game_sprite_top
     #(
         .SPRITE_WIDTH          ( SPRITE_WIDTH          ),
         .SPRITE_HEIGHT         ( SPRITE_HEIGHT         ),
-  
+
         .ROW_0                 ( ROW_0                 ),
         .ROW_1                 ( ROW_1                 ),
         .ROW_2                 ( ROW_2                 ),

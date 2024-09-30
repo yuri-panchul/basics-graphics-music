@@ -29,7 +29,7 @@ module board_specific_top
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height ),
-            
+
               w_gpio_j7     = 36,
               w_gpio_p1     = 21,
               w_gpio_p2     = 21
@@ -159,7 +159,7 @@ module board_specific_top
 
     assign vga_red   =   GPIO_P1 [7  :  4];
     assign vga_green =   GPIO_P1 [11 :  8];
-    assign vga_blue  =   GPIO_P1 [15 : 12];   
+    assign vga_blue  =   GPIO_P1 [15 : 12];
 
     assign lab_gpio  =   GPIO_P2 [14 :  6];
 
@@ -208,7 +208,7 @@ module board_specific_top
             .value   ( mic          )
         );
 
-    `endif 
+    `endif
 
     //------------------------------------------------------------------------
 
