@@ -211,7 +211,7 @@ synthesize_for_fpga_xilinx ()
 {
     is_command_available_or_error vivado " from Xilinx package"
 
-    if ! vivado -mode batch -source fpga_project_synthesize.tcl |& tee -a "$log"
+    if ! vivado -mode batch -source fpga_project_synthesize.tcl 2>&1 | tee -a "$log"
     then
         grep -i -A 5 error "$log" 2>&1
         error "synthesis failed"
@@ -227,7 +227,7 @@ configure_fpga_xilinx ()
     [ -f fpga_project_configure.tcl ] \
         || error "cannot find a configuration script, most likely synthesis step was not run"
 
-    if ! vivado -mode batch -source fpga_project_configure.tcl |& tee -a "$log"
+    if ! vivado -mode batch -source fpga_project_configure.tcl 2>&1 | tee -a "$log"
     then
         grep -i -A 5 error "$log" 2>&1
         error "configuration failed"

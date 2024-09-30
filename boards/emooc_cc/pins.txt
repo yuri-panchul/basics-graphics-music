@@ -174,3 +174,24 @@ UART communication module
 -------------------------
 RX_In  F14 FPGA receives external data
 TX_Out F13 FPGA sends data to the outside
+
+Current board config:
+
+// VGA
+vga_vs = PIN_C6
+vga_hs = PIN_B6
+// R
+vga_red[3]    = PIN_A6
+vga_red[2]    = PIN_B7
+vga_red[1]    = PIN_A7
+vga_red[0]    = PIN_B8
+// G
+vga_green [3] = PIN_A8
+vga_green [2] = PIN_A9
+vga_green [1] = PIN_B9
+vga_green [0] = PIN_A11
+// B
+vga_blue [3]  = PIN_B11
+vga_blue [2]  = PIN_A12
+vga_blue [1]  = PIN_B12
+vga_blue [0]  = PIN_A13

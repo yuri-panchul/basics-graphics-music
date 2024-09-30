@@ -13,10 +13,10 @@ set_global_assignment   -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS
 set_location_assignment PIN_23  -to CLK
 set_location_assignment PIN_25  -to RESET
 
-set_location_assignment PIN_91  -to KEY[0]
-set_location_assignment PIN_90  -to KEY[1]
-set_location_assignment PIN_89  -to KEY[2]
-set_location_assignment PIN_88  -to KEY[3]
+set_location_assignment PIN_91  -to KEY_SW[0]
+set_location_assignment PIN_90  -to KEY_SW[1]
+set_location_assignment PIN_89  -to KEY_SW[2]
+set_location_assignment PIN_88  -to KEY_SW[3]
 
 set_location_assignment PIN_87  -to LED[0]
 set_location_assignment PIN_86  -to LED[1]

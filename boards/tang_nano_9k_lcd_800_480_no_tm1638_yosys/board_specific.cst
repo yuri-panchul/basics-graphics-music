@@ -1,0 +1,95 @@
+# The pin assignments
+# All I/O pins here are 3.3V compatible unless specified otherwise
+
+IO_LOC "CLK"                52;
+
+IO_LOC "KEY[0]"             4;
+IO_LOC "KEY[1]"             3;
+
+IO_LOC "LED[0]"             10;
+IO_LOC "LED[1]"             11;
+IO_LOC "LED[2]"             13;
+IO_LOC "LED[3]"             14;
+IO_LOC "LED[4]"             15;
+IO_LOC "LED[5]"             16;
+
+IO_LOC "LARGE_LCD_DE"       33;
+IO_LOC "LARGE_LCD_VS"       34;
+IO_LOC "LARGE_LCD_HS"       40;
+IO_LOC "LARGE_LCD_CK"       35;
+IO_LOC "LARGE_LCD_INIT"     63;
+IO_LOC "LARGE_LCD_BL"       86;
+
+IO_LOC "LARGE_LCD_R[3]"     75;
+IO_LOC "LARGE_LCD_R[4]"     74;
+IO_LOC "LARGE_LCD_R[5]"     73;
+IO_LOC "LARGE_LCD_R[6]"     72;
+IO_LOC "LARGE_LCD_R[7]"     71;
+
+IO_LOC "LARGE_LCD_G[2]"     70;
+IO_LOC "LARGE_LCD_G[3]"     69;
+IO_LOC "LARGE_LCD_G[4]"     68;
+IO_LOC "LARGE_LCD_G[5]"     57;
+IO_LOC "LARGE_LCD_G[6]"     56;
+IO_LOC "LARGE_LCD_G[7]"     55;
+
+IO_LOC "LARGE_LCD_B[3]"     54;
+IO_LOC "LARGE_LCD_B[4]"     53;
+IO_LOC "LARGE_LCD_B[5]"     51;
+IO_LOC "LARGE_LCD_B[6]"     42;
+IO_LOC "LARGE_LCD_B[7]"     41;
+
+IO_LOC "UART_RX"            18;
+IO_LOC "UART_TX"            17;
+
+# The following 4 pins (TF_CS, TF_MOSI, TF_SCLK, TF_MISO)
+# are used for INMP441 microphone
+# in basics-graphics-music labs
+
+IO_LOC "TF_CS"              38;  # inmp441: lr
+IO_LOC "TF_MOSI"            37;  # inmp441: ws
+IO_LOC "TF_SCLK"            36;  # inmp441: sck
+IO_LOC "TF_MISO"            39;  # inmp441: sd
+
+# The first 3 GPIO pins are used for TM1638 I/O module
+# which carries 8 LEDs, 8-digit 7-segment display and 8 keys
+
+IO_LOC "GPIO[0]"            25;  # tm1638: sio_data
+IO_LOC "GPIO[1]"            26;  # tm1638: sio_clk
+IO_LOC "GPIO[2]"            27;  # tm1638: sio_stb
+IO_LOC "GPIO[3]"            28;
+IO_LOC "GPIO[4]"            29;
+IO_LOC "GPIO[5]"            30;
+
+# The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
+# are used for the I2S audio output module PCM5102
+# in basics-graphics-music labs
+
+IO_LOC "SMALL_LCD_DATA"     77;  # pcm5102: sck   i2s_audio_out: mclk
+IO_LOC "SMALL_LCD_CLK"      76;  # pcm5102: bck   i2s_audio_out: bclk
+IO_LOC "SMALL_LCD_RESETN"   47;
+IO_LOC "SMALL_LCD_CS"       48;  # pcm5102: din   i2s_audio_out: sdata
+IO_LOC "SMALL_LCD_RS"       49;  # pcm5102: lrck  i2s_audio_out: lrclk
+
+# TMDS pins conflict with LARGE_LCD pins
+
+# IO_LOC "TMDS_CLK_P"       69,68;
+# IO_LOC "TMDS_D_P[0]"      71,70;
+# IO_LOC "TMDS_D_P[1]"      73,72;
+# IO_LOC "TMDS_D_P[2]"      75,74;
+
+IO_LOC "FLASH_CLK"          59;
+IO_LOC "FLASH_CSB"          60;
+IO_LOC "FLASH_MOSI"         61;
+IO_LOC "FLASH_MISO"         62;
+
+# The following pins are not used for the lab examples
+# because they are 1.8V compatible
+
+# IO_LOC "GPIO_1_8_V_UNUSED[0]" 85;
+# IO_LOC "GPIO_1_8_V_UNUSED[1]" 84;
+# IO_LOC "GPIO_1_8_V_UNUSED[2]" 83;
+# IO_LOC "GPIO_1_8_V_UNUSED[3]" 82;
+# IO_LOC "GPIO_1_8_V_UNUSED[4]" 81;
+# IO_LOC "GPIO_1_8_V_UNUSED[5]" 80;
+# IO_LOC "GPIO_1_8_V_UNUSED[6]" 79;

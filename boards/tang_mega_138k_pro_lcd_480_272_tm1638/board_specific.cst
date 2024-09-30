@@ -1,0 +1,94 @@
+# The pin assignments
+
+IO_LOC "CLK"           P16;
+
+IO_LOC "KEY[0]"        K16;
+IO_LOC "KEY[1]"        F15;
+IO_LOC "KEY[2]"        G15;
+IO_LOC "KEY[3]"        G16;
+
+IO_LOC "LED[0]"        J14;
+IO_LOC "LED[1]"        R26;
+IO_LOC "LED[2]"        L20;
+IO_LOC "LED[3]"        M25;
+IO_LOC "LED[4]"        N21;
+IO_LOC "LED[5]"        N23;
+
+IO_LOC "LCD_CLK"       H21;
+IO_LOC "LCD_EN"        A24;
+
+IO_LOC "LCD_R[0]"      K17;
+IO_LOC "LCD_R[1]"      J18;
+IO_LOC "LCD_R[2]"      H18;
+IO_LOC "LCD_R[3]"      G25;
+IO_LOC "LCD_R[4]"      J19;
+IO_LOC "LCD_R[5]"      H19;
+
+IO_LOC "LCD_G[0]"      G20;
+IO_LOC "LCD_G[1]"      G21;
+IO_LOC "LCD_G[2]"      G22;
+IO_LOC "LCD_G[3]"      F22;
+IO_LOC "LCD_G[4]"      K15;
+IO_LOC "LCD_G[5]"      J16;
+
+IO_LOC "LCD_B[0]"      M16;
+IO_LOC "LCD_B[1]"      M17;
+IO_LOC "LCD_B[2]"      F18;
+IO_LOC "LCD_B[3]"      F19;
+IO_LOC "LCD_B[4]"      G19;
+IO_LOC "LCD_B[5]"      F20;
+
+IO_LOC "TMDS_CLK_P_0"  Y22,Y23;
+IO_LOC "TMDS_D_P_0[0]" AB24,AC24;
+IO_LOC "TMDS_D_P_0[1]" V24,W24;
+IO_LOC "TMDS_D_P_0[2]" AA22,AA23;
+
+IO_LOC "TMDS_CLK_P_1"  K20,J20;
+IO_LOC "TMDS_D_P_1[0]" D19,C19;
+IO_LOC "TMDS_D_P_1[1]" M15,L15;
+IO_LOC "TMDS_D_P_1[2]" J25,J26;
+
+IO_LOC "UART2_RXD"     V16;
+IO_LOC "UART2_TXD"     U16;
+
+IO_LOC "PMOD_0[0]"     N18;  # Top
+IO_LOC "PMOD_0[1]"     N26;
+IO_LOC "PMOD_0[2]"     R16;
+IO_LOC "PMOD_0[3]"     R17;
+# GND
+# 3V3
+
+IO_LOC "PMOD_0[4]"     M26;
+IO_LOC "PMOD_0[5]"     N17;
+IO_LOC "PMOD_0[6]"     L24;
+IO_LOC "PMOD_0[7]"     T24;
+# GND
+# 3V3
+
+IO_LOC "PMOD_1[0]"     C24;  # Top
+IO_LOC "PMOD_1[1]"     E25;
+IO_LOC "PMOD_1[2]"     L17;
+IO_LOC "PMOD_1[3]"     H14;
+# GND
+# 3V3
+
+IO_LOC "PMOD_1[4]"     B24;
+IO_LOC "PMOD_1[5]"     D25;
+IO_LOC "PMOD_1[6]"     L18;
+IO_LOC "PMOD_1[7]"     H15;
+# GND
+# 3V3
+
+IO_LOC "PMOD_2[0]"     C21;  # Top
+IO_LOC "PMOD_2[1]"     B20;
+IO_LOC "PMOD_2[2]"     B19;
+IO_LOC "PMOD_2[3]"     A17;
+# GND
+# 3V3
+
+IO_LOC "PMOD_2[4]"     B21;
+IO_LOC "PMOD_2[5]"     A20;
+IO_LOC "PMOD_2[6]"     A19;
+IO_LOC "PMOD_2[7]"     A18;
+# GND
+# 3V3

@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -33,10 +33,10 @@ module board_specific_top
 
     wire clk = CLK;
 
-    localparam w_top_key = w_key - 1;  // One key is used as a reset
+    localparam w_lab_key = w_key - 1;  // One key is used as a reset
 
-    wire                   rst     = ~ KEY [w_top_key];
-    wire [w_top_key - 1:0] top_key = ~ KEY [w_top_key - 1:0];
+    wire                   rst     = ~ KEY [w_lab_key];
+    wire [w_lab_key - 1:0] lab_key = ~ KEY [w_lab_key - 1:0];
 
     //------------------------------------------------------------------------
 
@@ -60,22 +60,22 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    top
+    lab_top
     # (
         .clk_mhz ( clk_mhz   ),
-        .w_key   ( w_top_key ),
+        .w_key   ( w_lab_key ),
         .w_sw    ( w_sw      ),
         .w_led   ( w_led     ),
         .w_digit ( w_digit   ),
         .w_gpio  ( w_gpio    )
     )
-    i_top
+    i_lab_top
     (
         .clk      (   clk       ),
         .slow_clk (   slow_clk  ),
         .rst      (   rst       ),
 
-        .key      (   top_key   ),
+        .key      (   lab_key   ),
         .sw       ( ~ SW        ),
 
         .led      (   led       ),
@@ -110,15 +110,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver i_microphone
+    inmp441_mic_i2s_receiver
+    # (
+        .clk_mhz ( clk_mhz  )
+    )
+    i_microphone
     (
-        .clk   ( clk      ),
-        .rst   ( rst      ),
-        .lr    ( GPIO [0] ),
-        .ws    ( GPIO [2] ),
-        .sck   ( GPIO [4] ),
-        .sd    ( GPIO [5] ),
-        .value ( mic      )
+        .clk     ( clk      ),
+        .rst     ( rst      ),
+        .lr      ( GPIO [0] ),
+        .ws      ( GPIO [2] ),
+        .sck     ( GPIO [4] ),
+        .sd      ( GPIO [5] ),
+        .value   ( mic      )
     );
 
     assign GPIO [1] = 1'b0;

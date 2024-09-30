@@ -104,8 +104,8 @@ set_location_assignment PIN_55  -to GPIO[18]
 # CLK_IN_1 (see above)
 # CLK_IN_2 (see above)
 
-  set_location_assignment PIN_114  -to UART_RX
-# set_location_assignment PIN_113  -to UART_TX
+set_location_assignment PIN_114  -to UART_RX
+set_location_assignment PIN_113  -to UART_TX
 
 # If this signal is not commented out and is not used, it makes annoying sound
 # set_location_assignment PIN_141 -to BUZZER

@@ -57,8 +57,8 @@ set_location_assignment PIN_D3  -to VGA_OUT_B[2]
 set_location_assignment PIN_D4  -to VGA_OUT_B[1]
 set_location_assignment PIN_C3  -to VGA_OUT_B[0]
 
-  set_location_assignment PIN_M2  -to UART_RX
-# set_location_assignment PIN_N1  -to UART_TX
+set_location_assignment PIN_M2  -to UART_RX
+set_location_assignment PIN_N1  -to UART_TX
 
 # set_location_assignment PIN_C11 -to BUZZER
 

@@ -1,0 +1,188 @@
+set_global_assignment -name DEVICE 5CGXFC5C6F27C7
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+
+#-----------------------------------------------------------------------------
+
+set_instance_assignment -name IO_STANDARD LVDS          -to CLOCK_125_p
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50_B5B
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50_B6A
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to CLOCK_50_B7A
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to CLOCK_50_B8A
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CPU_RESET_n
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO[*]
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_CLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_DE
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_HS
+set_instance_assignment -name IO_STANDARD "1.2 V"       -to HDMI_TX_INT
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_VS
+
+set_instance_assignment -name IO_STANDARD "1.2 V"       -to HEX0[*]
+set_instance_assignment -name IO_STANDARD "1.2 V"       -to HEX1[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX2[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX3[*]
+
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to I2C_*
+
+set_instance_assignment -name IO_STANDARD "1.2 V"       -to KEY[*]
+
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to LEDG[*]
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to LEDR[*]
+
+set_instance_assignment -name IO_STANDARD "1.2 V"       -to SW[*]
+
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to UART_*
+
+#-----------------------------------------------------------------------------
+
+# set_location_assignment PIN_U12  -to CLOCK_125_p
+# set_location_assignment PIN_T13  -to CLOCK_50_B3B
+# set_location_assignment PIN_R20  -to CLOCK_50_B5B
+# set_location_assignment PIN_N20  -to CLOCK_50_B6A
+# set_location_assignment PIN_H12  -to CLOCK_50_B7A
+set_location_assignment PIN_M10  -to CLOCK_50_B8A
+
+# set_location_assignment PIN_L9   -to UART_TX
+set_location_assignment PIN_M9   -to UART_RX
+
+set_location_assignment PIN_P11  -to KEY[0]
+set_location_assignment PIN_P12  -to KEY[1]
+set_location_assignment PIN_Y15  -to KEY[2]
+set_location_assignment PIN_Y16  -to KEY[3]
+set_location_assignment PIN_AB24 -to CPU_RESET_n
+
+set_location_assignment PIN_AC9  -to SW[0]
+set_location_assignment PIN_AE10 -to SW[1]
+set_location_assignment PIN_AD13 -to SW[2]
+set_location_assignment PIN_AC8  -to SW[3]
+set_location_assignment PIN_W11  -to SW[4]
+set_location_assignment PIN_AB10 -to SW[5]
+set_location_assignment PIN_V10  -to SW[6]
+set_location_assignment PIN_AC10 -to SW[7]
+set_location_assignment PIN_Y11  -to SW[8]
+set_location_assignment PIN_AE19 -to SW[9]
+
+set_location_assignment PIN_F7   -to LEDR[0]
+set_location_assignment PIN_F6   -to LEDR[1]
+set_location_assignment PIN_G6   -to LEDR[2]
+set_location_assignment PIN_G7   -to LEDR[3]
+set_location_assignment PIN_J8   -to LEDR[4]
+set_location_assignment PIN_J7   -to LEDR[5]
+set_location_assignment PIN_K10  -to LEDR[6]
+set_location_assignment PIN_K8   -to LEDR[7]
+set_location_assignment PIN_H7   -to LEDR[8]
+set_location_assignment PIN_J10  -to LEDR[9]
+
+set_location_assignment PIN_L7   -to LEDG[0]
+set_location_assignment PIN_K6   -to LEDG[1]
+set_location_assignment PIN_D8   -to LEDG[2]
+set_location_assignment PIN_E9   -to LEDG[3]
+set_location_assignment PIN_A5   -to LEDG[4]
+set_location_assignment PIN_B6   -to LEDG[5]
+set_location_assignment PIN_H8   -to LEDG[6]
+set_location_assignment PIN_H9   -to LEDG[7]
+
+set_location_assignment PIN_Y25  -to HDMI_TX_CLK
+set_location_assignment PIN_V23  -to HDMI_TX_D[0]
+set_location_assignment PIN_AA26 -to HDMI_TX_D[1]
+set_location_assignment PIN_W25  -to HDMI_TX_D[2]
+set_location_assignment PIN_W26  -to HDMI_TX_D[3]
+set_location_assignment PIN_V24  -to HDMI_TX_D[4]
+set_location_assignment PIN_V25  -to HDMI_TX_D[5]
+set_location_assignment PIN_U24  -to HDMI_TX_D[6]
+set_location_assignment PIN_T23  -to HDMI_TX_D[7]
+set_location_assignment PIN_T24  -to HDMI_TX_D[8]
+set_location_assignment PIN_T26  -to HDMI_TX_D[9]
+set_location_assignment PIN_R23  -to HDMI_TX_D[10]
+set_location_assignment PIN_R25  -to HDMI_TX_D[11]
+set_location_assignment PIN_P22  -to HDMI_TX_D[12]
+set_location_assignment PIN_P23  -to HDMI_TX_D[13]
+set_location_assignment PIN_N25  -to HDMI_TX_D[14]
+set_location_assignment PIN_P26  -to HDMI_TX_D[15]
+set_location_assignment PIN_P21  -to HDMI_TX_D[16]
+set_location_assignment PIN_R24  -to HDMI_TX_D[17]
+set_location_assignment PIN_R26  -to HDMI_TX_D[18]
+set_location_assignment PIN_AB26 -to HDMI_TX_D[19]
+set_location_assignment PIN_AA24 -to HDMI_TX_D[20]
+set_location_assignment PIN_AB25 -to HDMI_TX_D[21]
+set_location_assignment PIN_AC25 -to HDMI_TX_D[22]
+set_location_assignment PIN_AD25 -to HDMI_TX_D[23]
+set_location_assignment PIN_Y26  -to HDMI_TX_DE
+set_location_assignment PIN_U26  -to HDMI_TX_HS
+set_location_assignment PIN_T12  -to HDMI_TX_INT
+set_location_assignment PIN_U25  -to HDMI_TX_VS
+
+set_location_assignment PIN_V19  -to HEX0[0]
+set_location_assignment PIN_V18  -to HEX0[1]
+set_location_assignment PIN_V17  -to HEX0[2]
+set_location_assignment PIN_W18  -to HEX0[3]
+set_location_assignment PIN_Y20  -to HEX0[4]
+set_location_assignment PIN_Y19  -to HEX0[5]
+set_location_assignment PIN_Y18  -to HEX0[6]
+set_location_assignment PIN_AA18 -to HEX1[0]
+set_location_assignment PIN_AD26 -to HEX1[1]
+set_location_assignment PIN_AB19 -to HEX1[2]
+set_location_assignment PIN_AE26 -to HEX1[3]
+set_location_assignment PIN_AE25 -to HEX1[4]
+set_location_assignment PIN_AC19 -to HEX1[5]
+set_location_assignment PIN_AF24 -to HEX1[6]
+set_location_assignment PIN_W20  -to HEX2[6]
+set_location_assignment PIN_W21  -to HEX2[5]
+set_location_assignment PIN_V20  -to HEX2[4]
+set_location_assignment PIN_V22  -to HEX2[3]
+set_location_assignment PIN_U20  -to HEX2[2]
+set_location_assignment PIN_AD6  -to HEX2[1]
+set_location_assignment PIN_AD7  -to HEX2[0]
+set_location_assignment PIN_AC22 -to HEX3[6]
+set_location_assignment PIN_AC23 -to HEX3[5]
+set_location_assignment PIN_AC24 -to HEX3[4]
+set_location_assignment PIN_AA22 -to HEX3[3]
+set_location_assignment PIN_AA23 -to HEX3[2]
+set_location_assignment PIN_Y23  -to HEX3[1]
+set_location_assignment PIN_Y24  -to HEX3[0]
+
+set_location_assignment PIN_B7   -to I2C_SCL
+set_location_assignment PIN_G11  -to I2C_SDA
+
+set_location_assignment PIN_T21  -to GPIO[0]
+set_location_assignment PIN_D26  -to GPIO[1]
+set_location_assignment PIN_K25  -to GPIO[2]
+set_location_assignment PIN_E26  -to GPIO[3]
+set_location_assignment PIN_K26  -to GPIO[4]
+set_location_assignment PIN_M26  -to GPIO[5]
+set_location_assignment PIN_M21  -to GPIO[6]
+set_location_assignment PIN_P20  -to GPIO[7]
+set_location_assignment PIN_T22  -to GPIO[8]
+set_location_assignment PIN_T19  -to GPIO[9]
+set_location_assignment PIN_U19  -to GPIO[10]
+set_location_assignment PIN_U22  -to GPIO[11]
+set_location_assignment PIN_P8   -to GPIO[12]
+set_location_assignment PIN_R8   -to GPIO[13]
+set_location_assignment PIN_R9   -to GPIO[14]
+set_location_assignment PIN_R10  -to GPIO[15]
+set_location_assignment PIN_F26  -to GPIO[16]
+set_location_assignment PIN_Y9   -to GPIO[17]
+set_location_assignment PIN_G26  -to GPIO[18]
+set_location_assignment PIN_Y8   -to GPIO[19]
+set_location_assignment PIN_AA7  -to GPIO[20]
+set_location_assignment PIN_AA6  -to GPIO[21]
+
+# These GPIO pins are shared with hex2 and hex3
+
+# set_location_assignment PIN_AD7  -to GPIO[22]
+# set_location_assignment PIN_AD6  -to GPIO[23]
+# set_location_assignment PIN_U20  -to GPIO[24]
+# set_location_assignment PIN_V22  -to GPIO[25]
+# set_location_assignment PIN_V20  -to GPIO[26]
+# set_location_assignment PIN_W21  -to GPIO[27]
+# set_location_assignment PIN_W20  -to GPIO[28]
+# set_location_assignment PIN_Y24  -to GPIO[29]
+# set_location_assignment PIN_Y23  -to GPIO[30]
+# set_location_assignment PIN_AA23 -to GPIO[31]
+# set_location_assignment PIN_AA22 -to GPIO[32]
+# set_location_assignment PIN_AC24 -to GPIO[33]
+# set_location_assignment PIN_AC23 -to GPIO[34]
+# set_location_assignment PIN_AC22 -to GPIO[35]

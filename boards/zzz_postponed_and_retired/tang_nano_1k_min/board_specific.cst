@@ -1,0 +1,20 @@
+// The physical constraints and pin assignments
+//
+// Device: GW1NZ-1
+// Part Number: GW1NZ-LV1QN48C6/I5
+// Board: Tang Nano 1K
+
+IO_LOC  "clk" 47;
+IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+IO_LOC  "key[1]" 44;
+IO_PORT "key[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+IO_LOC  "key[0]" 13;
+IO_PORT "key[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+IO_LOC  "led[2]" 11;
+IO_PORT "led[2]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
+IO_LOC  "led[1]" 10;
+IO_PORT "led[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
+IO_LOC  "led[0]" 9;
+IO_PORT "led[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
