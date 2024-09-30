@@ -8,7 +8,7 @@ module board_specific_top
 
               w_key         = 4,
               w_sw          = 18,
-              w_led         = 8,
+              w_led         = 27,
               w_digit       = 8,
               w_gpio        = 36,
 
@@ -31,7 +31,7 @@ module board_specific_top
     input  [w_key    - 1:0] KEY,
     input  [w_sw     - 1:0] SW,
 
-    output logic [    17:0] LEDR,
+    output logic [    17:0] LEDR,  // The last 8 LEDR are used like a 7SEG dp
     output logic [     8:0] LEDG,
 
     output logic [     6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE2-115
@@ -63,7 +63,8 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_lab_sw = w_sw - 1;  // One sw is used as a reset
+    localparam w_lab_led = 8,         // We will actually use LEDG [7:0]
+               w_lab_sw  = w_sw - 1;  // One sw is used as a reset
 
     //------------------------------------------------------------------------
 
@@ -73,7 +74,7 @@ module board_specific_top
     // Switches, LEDs
 
     wire [ w_lab_sw  - 1:0] lab_sw  = SW [w_lab_sw - 1:0];
-    wire [ w_led     - 1:0] lab_led;
+    wire [ w_lab_led - 1:0] lab_led;
 
     // A dynamic seven-segment display
 
@@ -104,7 +105,7 @@ module board_specific_top
         .clk_mhz       (   clk_mhz       ),
         .w_key         (   w_key         ),
         .w_sw          (   w_lab_sw      ),
-        .w_led         (   w_led         ),
+        .w_led         (   w_lab_led     ),
         .w_digit       (   w_digit       ),
         .w_gpio        (   w_gpio        ),
 
@@ -147,7 +148,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    assign LEDG = { { $bits (LEDG) - w_led { 1'b0 } }, lab_led };
+    assign LEDG = { { $bits (LEDG) - w_lab_led { 1'b0 } }, lab_led };
 
     //------------------------------------------------------------------------
 
