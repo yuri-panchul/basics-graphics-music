@@ -309,6 +309,7 @@ update_fpga_toolchain_var ()
         dk_dev_3c120n                    | \
         de0                              | \
         de1                              | \
+        de2_yuri                         | \
         de2                              )
 
             fpga_toolchain=quartus
