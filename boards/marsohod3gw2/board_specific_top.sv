@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "lab_specific_config.svh"
+`include "lab_specific_board_config.svh"
 
 module board_specific_top
 # (
@@ -8,7 +8,9 @@ module board_specific_top
                 w_sw    = 0,
                 w_led   = 8,  //native board LEDs
                 w_digit = 4,  //4 digits on 7seg add-on shield
-                w_gpio  = 0
+                w_gpio  = 0,
+				screen_width = 640,
+				screen_height = 480
 )
 (
 	input  CLK,
@@ -106,14 +108,36 @@ wire [w_led - 1:0]top_led;
 assign LED = top_led;
 
 //------------------------------------------------------------------------
-wire pixel_en;
+wire [9:0] x10;
+wire [9:0] y10;
 wire vsync;
 wire hsync;
 wire display_on;
+wire pixel_en;
+
+vga
+# (
+	.H_DISPLAY   ( screen_width  ),
+	.V_DISPLAY   ( screen_height ),
+	.CLK_MHZ     ( clk_mhz       )
+)
+i_vga
+(
+	.clk         ( CLK           ),
+	.rst         ( rst           ),
+	.hsync       ( hsync         ),
+	.vsync       ( vsync         ),
+	.display_on  ( display_on    ),
+	.hpos        ( x10           ),
+	.vpos        ( y10           ),
+	.pixel_clk   ( pixel_en      )
+);
+
 wire [7:0] red;
 wire [7:0] green;
 wire [7:0] blue;
 
+reg pixel_en_;
 reg vsync_;
 reg hsync_;
 reg display_on_;
@@ -122,7 +146,9 @@ reg [7:0] green_;
 reg [7:0] blue_;
 
 always @(posedge CLK)
-    if(pixel_en)
+begin
+	pixel_en_ <= pixel_en;
+    if(pixel_en_)
     begin
         display_on_ <= display_on;
         vsync_ <= vsync;
@@ -131,6 +157,7 @@ always @(posedge CLK)
         green_ <= green;
         blue_  <= blue;
     end
+end
 
 HDMI u_hdmi(
 	.clk_pixel( pixel_clk ),
@@ -148,7 +175,7 @@ HDMI u_hdmi(
 	);
 
 //------------------------------------------------------------------------
-top # (
+lab_top # (
         .clk_mhz ( clk_mhz   ),
         .w_key   ( w_key     ),  // The last key is used for a reset
         .w_sw    ( w_sw      ),
@@ -171,17 +198,14 @@ top # (
         .led        ( top_led    ),
 
         .abcdefgh   ( abcdefgh   ),
-        .digit      ( digit  ),
+        .digit      ( digit      ),
 
-        .vsync      ( vsync      ),
-        .hsync      ( hsync      ),
+        .x          ( x10        ),
+        .y          ( y10        ),
 
         .red        ( red        ),
         .green      ( green      ),
         .blue       ( blue       ),
-
-        .display_on ( display_on ),
-        .pixel_clk  ( pixel_en ),
 
         .uart_rx    ( UART_RX    ),
         .uart_tx    ( UART_TX    ),
