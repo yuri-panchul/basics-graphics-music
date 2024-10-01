@@ -29,7 +29,7 @@ module board_specific_top
     output [w_led       - 1:0] led,
     inout  [w_gpio      - 1:0] gpio_JE,
     
-    output [w_gpio      - 1:0] jb,
+    inout  [w_gpio      - 1:0] jb,
     output [w_gpio      - 1:0] jc,
     output [w_gpio      - 1:0] jd
 );
@@ -266,5 +266,26 @@ module board_specific_top
         );
 
     `endif
- 
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( clk_mhz  )
+        )
+        i_microphone
+        (
+            .clk     ( clk      ),
+            .rst     ( rst      ),
+            .lr      ( jb[6]    ),
+            .ws      ( jb[5]    ),
+            .sck     ( jb[4]    ),
+            .sd      ( jb[7]    ),
+            .value   ( mic      )
+        );
+
+
+    `endif 
 endmodule: board_specific_top
