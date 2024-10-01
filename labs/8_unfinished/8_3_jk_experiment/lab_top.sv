@@ -57,15 +57,44 @@ module lab_top
     inout        [w_gpio  - 1:0] gpio
 );
 
+/*
+wire clk2 = key [0];
+logic r;
+
+always @ (posedge clk2)
+   r <= sw [0];
+
+assign led [0] = r;
+*/
+
+/*
+logic r;
+
+always_latch
+   if (key [0])
+       r = sw [0];
+
+assign led [0] = r;
+*/
+
     jk_trigger_MasterSlave tr
     (
-        .clk (sw  [0]),
-        .j   (sw  [1]),
-        .k   (sw  [2]),
+        .clk (key [0]),
+        .j   (sw  [0]),
+        .k   (sw  [1]),
         .q   (led [0]),
         .q_n (led [1])
     );
 
+/*
+    sr_latch lat
+    (
+        .r   (sw  [0]),
+        .s   (sw  [1]),
+        .q   (led [0]),
+        .q_n (led [1])
+    );
+*/
 
 `ifdef UNDEFINED
 
