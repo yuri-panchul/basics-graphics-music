@@ -286,6 +286,6 @@ module board_specific_top
             .value   ( mic      )
         );
 
-
-    `endif 
+    `endif
+     
 endmodule: board_specific_top
