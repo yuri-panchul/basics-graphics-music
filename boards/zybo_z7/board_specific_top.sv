@@ -30,8 +30,8 @@ module board_specific_top
     inout  [w_gpio      - 1:0] gpio_JE,
     
     inout  [w_gpio      - 1:0] jb,
-    output [w_gpio      - 1:0] jc,
-    output [w_gpio      - 1:0] jd
+    inout  [w_gpio      - 1:0] jc,
+    inout  [w_gpio      - 1:0] jd
 );
 
     wire clk = clk_125;
