@@ -263,10 +263,10 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 
         cat "$board_dir/$fpga_board/project_process_config_01.json" > "$dir/impl/project_process_config.json"
 
-        printf '   \"%s\"\n'  "$(adj_path_for_gowin_win "$main_src_dir")"          >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\",\n'  "$(adj_path_for_gowin_win "$main_src_dir")"          >> "$dir/impl/project_process_config.json"
         printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$board_dir")/$fpga_board" >> "$dir/impl/project_process_config.json"
         printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$peripheral_dir")"        >> "$dir/impl/project_process_config.json"
-        printf '   \"%s\",\n' "$(adj_path_for_gowin_win "$lab_dir")/common"        >> "$dir/impl/project_process_config.json"
+        printf '   \"%s\"\n' "$(adj_path_for_gowin_win "$lab_dir")/common"        >> "$dir/impl/project_process_config.json"
 
         cat "$board_dir/$fpga_board/project_process_config_02.json" >> "$dir/impl/project_process_config.json"
     fi
