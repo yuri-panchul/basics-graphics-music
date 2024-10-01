@@ -154,14 +154,14 @@ module board_specific_top
     assign rst       = ~ KEY_N [w_key - 1  ];
     assign lab_key   = ~ KEY_N [w_key - 2:0];
 
-    assign vga_hsync =   GPIO_P1 [2];
-    assign vga_vsync =   GPIO_P1 [3];
+    assign GPIO_P1 [2]       = vga_hsync;
+    assign GPIO_P1 [3]       = vga_vsync;
 
-    assign vga_red   =   GPIO_P1 [7  :  4];
-    assign vga_green =   GPIO_P1 [11 :  8];
-    assign vga_blue  =   GPIO_P1 [15 : 12];
+    assign GPIO_P1 [7  :  4] = vga_red  ;
+    assign GPIO_P1 [11 :  8] = vga_green;
+    assign GPIO_P1 [15 : 12] = vga_blue ;
 
-    assign lab_gpio  =   GPIO_P2 [14 :  6];
+    assign GPIO_P2 [14 :  6] = lab_gpio;
 
     //------------------------------------------------------------------------
 
