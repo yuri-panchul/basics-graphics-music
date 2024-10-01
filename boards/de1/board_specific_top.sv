@@ -26,29 +26,29 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                   CLOCK_50,
+    input                      CLOCK_50,
 
-    input  [w_key    - 1:0] KEY,
-    input  [w_sw     - 1:0] SW,
-    output logic [     9:0] LEDR,
-    output logic [     7:0] LEDG,
+    input  [ w_key      - 1:0] KEY,
+    input  [ w_sw       - 1:0] SW,
+    output logic [        9:0] LEDR,
+    output logic [        7:0] LEDG,
 
-    output logic [     6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE1 board
-    output logic [     6:0] HEX1,
-    output logic [     6:0] HEX2,
-    output logic [     6:0] HEX3,
+    output logic [        6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE1 board
+    output logic [        6:0] HEX1,
+    output logic [        6:0] HEX2,
+    output logic [        6:0] HEX3,
 
-    output                  VGA_HS,
-    output                  VGA_VS,
-    output [w_red    - 1:0] VGA_R,
-    output [w_green  - 1:0] VGA_G,
-    output [w_blue   - 1:0] VGA_B,
+    output                     VGA_HS,
+    output                     VGA_VS,
+    output [ w_red      - 1:0] VGA_R,
+    output [ w_green    - 1:0] VGA_G,
+    output [ w_blue     - 1:0] VGA_B,
 
-    input                   UART_RXD,
-    output                  UART_TXD,
+    input                      UART_RXD,
+    output                     UART_TXD,
 
-    inout [w_gpio / 2 - 1:0] GPIO_0,
-    inout [w_gpio / 2 - 1:0] GPIO_1
+    inout  [ w_gpio / 2 - 1:0] GPIO_0,
+    inout  [ w_gpio / 2 - 1:0] GPIO_1
 );
 
     //------------------------------------------------------------------------
@@ -71,12 +71,18 @@ module board_specific_top
 
     // Graphics
 
+    wire                    display_on;
+
     wire [ w_x       - 1:0] x;
     wire [ w_y       - 1:0] y;
 
     wire [ w_red     - 1:0] red;
     wire [ w_green   - 1:0] green;
     wire [ w_blue    - 1:0] blue;
+
+    assign VGA_R = display_on ? red   : '0;
+    assign VGA_G = display_on ? green : '0;
+    assign VGA_B = display_on ? blue  : '0;
 
     // Microphone, sound output and UART
 
@@ -125,9 +131,9 @@ module board_specific_top
         .x             (   x                ),
         .y             (   y                ),
 
-        .red           (   VGA_R            ),
-        .green         (   VGA_G            ),
-        .blue          (   VGA_B            ),
+        .red           (   red              ),
+        .green         (   green            ),
+        .blue          (   blue             ),
 
         .mic           (   mic              ),
         .sound         (   sound            ),
@@ -219,14 +225,14 @@ module board_specific_top
         )
         i_vga
         (
-            .clk         ( clk    ),
-            .rst         ( rst    ),
-            .hsync       ( VGA_HS ),
-            .vsync       ( VGA_VS ),
-            .display_on  (        ),
-            .hpos        ( x10    ),
-            .vpos        ( y10    ),
-            .pixel_clk   (        )
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HS     ),
+            .vsync       ( VGA_VS     ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
         );
 
     `endif

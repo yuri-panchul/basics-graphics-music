@@ -1,16 +1,26 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-`undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
 module board_specific_top
 # (
-    parameter   clk_mhz = 27,
-                w_key   = 2,  // The last key is used for a reset
-                w_sw    = 3,
-                w_led   = 0,
-                w_digit = 0,
-                w_gpio  = 32
+    parameter clk_mhz       = 27,
+              pixel_mhz     = 25,
+
+              w_key         = 2,
+              w_sw          = 3,
+              w_led         = 0,
+              w_digit       = 0,
+              w_gpio        = 32,             // GPIO[5:0] reserved for mic
+
+              screen_width  = 640,
+              screen_height = 480,
+
+              w_red         = 4,
+              w_green       = 4,
+              w_blue        = 4,
+
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 )
 (
     input                       CLK,
@@ -68,14 +78,29 @@ module board_specific_top
 
     wire                      rst;
     wire  [              7:0] abcdefgh;
-    wire  [             23:0] mic;
 
-    wire                      VGA_HS;
-    wire                      VGA_VS;
+    // Graphics
 
-    wire  [              3:0] VGA_R;
-    wire  [              3:0] VGA_G;
-    wire  [              3:0] VGA_B;
+// Look1
+    wire                    display_on;
+
+    wire [ w_x       - 1:0] x;
+    wire [ w_y       - 1:0] y;
+
+    wire [ w_red     - 1:0] red;
+    wire [ w_green   - 1:0] green;
+    wire [ w_blue    - 1:0] blue;
+
+    wire                    VGA_HS;
+    wire                    VGA_VS;
+
+    wire [ w_red     - 1:0] VGA_R = display_on ? red   : '0;
+    wire [ w_green   - 1:0] VGA_G = display_on ? green : '0;
+    wire [ w_blue    - 1:0] VGA_B = display_on ? blue  : '0;
+// endLook1
+
+    wire  [           23:0] mic;
+
 
     //------------------------------------------------------------------------
 
@@ -109,12 +134,19 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz ( clk_mhz      ),
-        .w_key   ( w_lab_key    ),  // The last key is used for a reset
-        .w_sw    ( w_lab_sw     ),
-        .w_led   ( w_lab_led    ),
-        .w_digit ( w_lab_digit  ),
-        .w_gpio  ( w_gpio       )
+        .clk_mhz       (   clk_mhz            ),
+        .w_key         (   w_lab_key          ),  // The last key is used for a reset
+        .w_sw          (   w_lab_sw           ),
+        .w_led         (   w_lab_led          ),
+        .w_digit       (   w_lab_digit        ),
+        .w_gpio        (   w_gpio             ),
+
+        .screen_width  (   screen_width       ),
+        .screen_height (   screen_height      ),
+
+        .w_red         (   w_red              ),
+        .w_green       (   w_green            ),
+        .w_blue        (   w_blue             )
     )
     i_lab_top
     (
@@ -129,14 +161,14 @@ module board_specific_top
 
         .abcdefgh ( abcdefgh  ),
         .digit    ( lab_digit ),
+// Look2
+        .x        ( x         ),
+        .y        ( y         ),
 
-        .vsync    ( VGA_VS    ),
-        .hsync    ( VGA_HS    ),
-
-        .red      ( VGA_R     ),
-        .green    ( VGA_G     ),
-        .blue     ( VGA_B     ),
-
+        .red      ( red       ),
+        .green    ( green     ),
+        .blue     ( blue      ),
+// end of look2
         .uart_rx  ( UART_RX   ),
         .uart_tx  ( UART_TX   ),
 
@@ -178,6 +210,32 @@ module board_specific_top
     );
 
     //------------------------------------------------------------------------
+// look3
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz    ),
+            .PIXEL_MHZ   ( pixel_mhz  )
+        )
+        i_vga
+        (
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( VGA_HS     ),
+            .vsync       ( VGA_VS     ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
+        );
+
+    `endif
+// end of look3
+    //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver
     # (
@@ -195,7 +253,7 @@ module board_specific_top
     );
 
     //------------------------------------------------------------------------
-
+//Look4
     //assign GPIO_0= { VGA_B, VGA_R };
     //assign GPIO_1 = { VGA_HS, VGA_VS, 2'bz, VGA_G };
 

@@ -28,8 +28,8 @@ module board_specific_top
     input                clk,
     input  [w_key - 1:0] btn,
 
-    output               led0_b, 
-	output               led0_g,
+    output               led0_b,
+    output               led0_g,
     output               led0_r,
 
     output               led1_b,
@@ -105,48 +105,48 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       ( clk_mhz        ),
-        .w_key         ( w_lab_key      ),
-        .w_sw          ( w_lab_sw       ),
-        .w_led         ( w_lab_led      ),
-        .w_digit       ( w_lab_digit    ),
-        .w_gpio        ( 1 /* w_gpio  */       ),
+        .clk_mhz       ( clk_mhz         ),
+        .w_key         ( w_lab_key       ),
+        .w_sw          ( w_lab_sw        ),
+        .w_led         ( w_lab_led       ),
+        .w_digit       ( w_lab_digit     ),
+        .w_gpio        ( 1 /* w_gpio  */ ),
 
-        .screen_width  ( screen_width   ),
-        .screen_height ( screen_height  ),
+        .screen_width  ( screen_width    ),
+        .screen_height ( screen_height   ),
 
-        .w_red         ( w_red          ),
-        .w_green       ( w_green        ),
-        .w_blue        ( w_blue         )
+        .w_red         ( w_red           ),
+        .w_green       ( w_green         ),
+        .w_blue        ( w_blue          )
     )
     i_lab_top
     (
-        .clk           ( clk            ),
-        .slow_clk      ( slow_clk       ),
-        .rst           ( rst            ),
+        .clk           ( clk             ),
+        .slow_clk      ( slow_clk        ),
+        .rst           ( rst             ),
 
-        .key           ( lab_key        ),
-        .sw            ( lab_key        ),
+        .key           ( lab_key         ),
+        .sw            ( lab_key         ),
 
-        .led           ( lab_led        ),
+        .led           ( lab_led         ),
 
-        .abcdefgh      ( abcdefgh       ),
-        .digit         ( lab_digit      ),
+        .abcdefgh      ( abcdefgh        ),
+        .digit         ( lab_digit       ),
 
-        .x             (             ),
-        .y             (            ),
+        .x             (                 ),
+        .y             (                 ),
 
-        .red           (          ),
-        .green         (          ),
-        .blue          (          ),
+        .red           (                 ),
+        .green         (                 ),
+        .blue          (                 ),
 
-        .mic           (           ),
-        .sound         (           ),
+        .mic           (                 ),
+        .sound         (                 ),
 
-        .uart_rx       (     ),
-        .uart_tx       (       ),
+        .uart_rx       (                 ),
+        .uart_tx       (                 ),
 
-        .gpio          (                )
+        .gpio          (                 )
     );
 
     //------------------------------------------------------------------------
@@ -234,7 +234,7 @@ module board_specific_top
 
         assign JD [3] = 1'b0;  // GND
         assign JD [2] = 1'b1;  // VCC
-    
+
     `endif
 
     //------------------------------------------------------------------------

@@ -1,23 +1,23 @@
 # Intel Quartus Prime
 
-_"Intel Quartus Prime Lite Edition"_ is a free version of a software package 
+_"Intel Quartus Prime Lite Edition"_ is a free version of a software package
 designed to manage boards based on _Cyclone_, _Arria_ and _MAX_ chipset families.
 It is fully compatible with both [Windows](#Windows) and [Linux](#Linux).
 
 > There is no documented way to run it on macOS, but you can try
-using a virtual machine or Docker. No guarantees. If you do, 
+using a virtual machine or Docker. No guarantees. If you do,
 please share your experience.
 
 ## Windows
 
 **Important:** According to Intel, you may need up to _30 GB_ of free space for the installation.
 
-1. Download the 
+1. Download the
    [Intel® **Quartus**® Prime **Lite Edition** Design Software Version **23** for Windows](https://www.intel.com/content/www/us/en/products/details/fpga/development-tools/quartus-prime/resource.html)
    from Intel web site
-   * _"Installer (New!)"_ is the recommended option as it speeds up the installation process. 
-     In case you need additional help with an installer tool, 
-     check out the _"Installer Quick Video"_ link from the same page  
+   * _"Installer (New!)"_ is the recommended option as it speeds up the installation process.
+     In case you need additional help with an installer tool,
+     check out the _"Installer Quick Video"_ link from the same page
 2. Running an intaller tool will prompt you to download and install the required packages:
    * Required: _"Quartus Prime Lite Edition"_, _"Device"_ support files for your board
    * Recommended: _"Quartus Prime Help"_, _"Questa-Intel"_, _"Quartus Prime Programmer and Tools"_
@@ -58,32 +58,32 @@ Info: Running Quartus Prime Analysis & Synthesis
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off fpga_project -c fpga_project
 
 Error (20004): Your design targets the device family "MAX 10". The specified family is not a valid device family, is not installed, or is not supported in this version of the Quartus Prime software. If you restored a project from an archived version, your project was successfully restored, but you still must specify or install a supported device family.
-``` 
+```
 
 This error indicates that the device files (e.g. _"MAX 10"_) were not installed
 correctly. Follow the steps below to reinstall them manually:
 
 1. Uninstall the device files if installed
-   1. Open Window's Settings, and start an uninstaller for 
+   1. Open Window's Settings, and start an uninstaller for
       _"Quartus Prime Lite Edition"_
    1. Choose _"Individual components"_ and select a device file only (e.g. _"MAX 10 FPGA"_).
    1. Click _"Uninstall"_ to remove the files.
-1. To install the device files see the instructions below 
+1. To install the device files see the instructions below
 
 #### One of _Device_ files fails to download
 
-You may need to install a device file (e.g. _"MAX 10 FPGA"_) manually. 
+You may need to install a device file (e.g. _"MAX 10 FPGA"_) manually.
 Follow these steps:
 
 1. Open an _Individual Files_ tab on the Quartus download page from above and download a device file
    (e.g. _"MAX® 10 FPGA device support"_) in a `*.qdz` format
-1. Open _"Quartus (Quartus Prime) Lite Edition"_ and 
+1. Open _"Quartus (Quartus Prime) Lite Edition"_ and
    click menu _Tools > Install Devices..._.
-   You may get a dialog box asking you to run 
+   You may get a dialog box asking you to run
    _"Device Installer (Quartus Prime)"_ instead. Follow the instuction if
       prompted.
 1. Point the installer to your `Downloads` folder and choose to select
-   a device component to install (e.g. _"MAX 10 FPGA"_). 
+   a device component to install (e.g. _"MAX 10 FPGA"_).
 1. If you have run `06_choose_another_fpga_board.bash` already, you
    need to rerun it to pick the changes.
 

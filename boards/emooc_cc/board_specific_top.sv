@@ -29,28 +29,28 @@ module board_specific_top
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height ),
-            
+
               w_gpio_j7     = 36,
               w_gpio_p1     = 21,
               w_gpio_p2     = 21
 )
 (
-    input                           CLK,
+    input                        CLK,
 
-    input  [w_key         - 1:0]    KEY_N,
-    input  [w_sw          - 1:0]    SW,
+    input  [w_key         - 1:0] KEY_N,
+    input  [w_sw          - 1:0] SW,
 
-    output [w_led         - 1:0]    LED,
+    output [w_led         - 1:0] LED,
 
-    output [                7:0]    ABCDEFGH,
-    output [w_digit       - 1:0]    DIGIT_N,
+    output [                7:0] ABCDEFGH,
+    output [w_digit       - 1:0] DIGIT_N,
 
-    input                           UART_RX,
-    output                          UART_TX,
+    input                        UART_RX,
+    output                       UART_TX,
 
-    inout  [w_gpio_j7 + 3 - 1:3]    GPIO_J7,
-    inout  [w_gpio_p1 + 2 - 1:2]    GPIO_P1,
-    inout  [w_gpio_p2 + 2 - 1:2]    GPIO_P2
+    inout  [w_gpio_j7 + 3 - 1:3] GPIO_J7,
+    inout  [w_gpio_p1 + 2 - 1:2] GPIO_P1,
+    inout  [w_gpio_p2 + 2 - 1:2] GPIO_P2
 );
 
     //------------------------------------------------------------------------
@@ -159,7 +159,7 @@ module board_specific_top
 
     assign vga_red   =   GPIO_P1 [7  :  4];
     assign vga_green =   GPIO_P1 [11 :  8];
-    assign vga_blue  =   GPIO_P1 [15 : 12];   
+    assign vga_blue  =   GPIO_P1 [15 : 12];
 
     assign lab_gpio  =   GPIO_P2 [14 :  6];
 
@@ -177,25 +177,25 @@ module board_specific_top
         )
         i_vga
         (
-            .clk         ( clk          ),
-            .rst         ( rst          ),
-            .hsync       ( vga_hsync    ),
-            .vsync       ( vga_vsync    ),
-            .display_on  (              ),
-            .hpos        ( x10          ),
-            .vpos        ( y10          ),
-            .pixel_clk   (              )
+            .clk         ( clk       ),
+            .rst         ( rst       ),
+            .hsync       ( vga_hsync ),
+            .vsync       ( vga_vsync ),
+            .display_on  (           ),
+            .hpos        ( x10       ),
+            .vpos        ( y10       ),
+            .pixel_clk   (           )
         );
 
     `endif
 
- //------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz ( clk_mhz   )
+            .clk_mhz ( clk_mhz      )
         )
         i_microphone
         (
@@ -208,7 +208,7 @@ module board_specific_top
             .value   ( mic          )
         );
 
-    `endif 
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -216,7 +216,7 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz ( clk_mhz   )
+            .clk_mhz ( clk_mhz      )
         )
         inst_audio_out
         (
@@ -230,7 +230,5 @@ module board_specific_top
         );
 
     `endif
-
-    //------------------------------------------------------------------------
 
 endmodule

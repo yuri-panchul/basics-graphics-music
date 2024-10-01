@@ -322,7 +322,7 @@ module board_specific_top
                 .clkin   ( clk            )   //  27    MHz
             );
 
-	`elsif USE_LCD_480_272_ML6485
+        `elsif USE_LCD_480_272_ML6485
 
             wire lcd_module_clk;
 
@@ -345,7 +345,7 @@ module board_specific_top
 
         `ifdef USE_LCD_800_480
         lcd_800_480
-	`elsif USE_LCD_480_272_ML6485
+        `elsif USE_LCD_480_272_ML6485
         lcd_480_272_ml6485
         `else
         lcd_480_272

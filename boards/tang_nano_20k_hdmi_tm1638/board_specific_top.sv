@@ -22,7 +22,7 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 5,
 
-              // SiPeed claims to support 1280x720 resolution: https://github.com/sipeed/TangNano-20K-example?tab=readme-ov-file#hdmi 
+              // SiPeed claims to support 1280x720 resolution: https://github.com/sipeed/TangNano-20K-example?tab=readme-ov-file#hdmi
               // For some reason, only 640x480 was correctly detected by my monitor.
               screen_width  = 640,
               screen_height = 480,
@@ -83,7 +83,7 @@ module board_specific_top
     inout                        SD_DAT0,
     inout                        SD_DAT1,
     inout                        SD_DAT2,
-    inout                        SD_DAT3, 
+    inout                        SD_DAT3,
 
     // Ports for on-board I2S amplifier
     output                       HP_BCK,

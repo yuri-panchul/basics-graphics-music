@@ -82,7 +82,6 @@ module lab_top
     game_top
     # (
         .clk_mhz                           (clk_mhz                          ),
-        .pixel_mhz                         (pixel_mhz                        ),
         .screen_width                      (screen_width                     ),
         .screen_height                     (screen_height                    ),
         .strobe_to_update_xy_counter_width (strobe_to_update_xy_counter_width)

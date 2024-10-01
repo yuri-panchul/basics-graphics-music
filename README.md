@@ -25,12 +25,12 @@ You only need a few things to get started:
 
 1. Get [a compatible FPGA board](#compatible-hardware).
 2. Install [drivers and required software](#supported-boards).
-3. Download or checkout this repository on 
+3. Download or checkout this repository on
    [Windows](#Windows), [Linux](#Linux), or [macOS](#macOS).
 4. Run [`06_choose_another_fpga_board.bash`](./labs/1_basics/1_01_and_or_not_xor_de_morgan/06_choose_another_fpga_board.bash) to select your board.
 5. Run [`03_synthesize_for_fpga.bash`](./labs/1_basics/1_01_and_or_not_xor_de_morgan/03_synthesize_for_fpga.bash) to synthesize, place, and program your board all in one go.
 
-That's it! You're now running Verilog example code on real hardware. 
+That's it! You're now running Verilog example code on real hardware.
 Press buttons on the board and check for LEDs to light up accordingly.
 
 ## First time setup
@@ -39,7 +39,7 @@ Press buttons on the board and check for LEDs to light up accordingly.
 1. Optional: Configure _VSCode_:
    1. Install these extensions: _:wrench: TODO: Verilog extensions configuration_
    1. Recommended extensions: _GitHub Pull Requests_ and _GitHub Repositories_
-1. Checkout this GitHub repository. Check out 
+1. Checkout this GitHub repository. Check out
    [Git Cheat Sheet](./git_cheat_sheet.md) if you need additional help
    > Optionally, switch to a `new_graphics` branch to get access to
    the bleeding edge features.
@@ -47,17 +47,17 @@ Press buttons on the board and check for LEDs to light up accordingly.
     ```bash
     cd ./labs/1_basics/1_01_and_or_not_xor_de_morgan/
     ./06_choose_another_fpga_board.bash
-    ``` 
+    ```
     Type number corresponding to your board and press _Enter_.
-1. Synthesize, place and program the board using a 
+1. Synthesize, place and program the board using a
    [_Git Bash_](#Open-a-_Git-Bash_-terminal):
     ```bash
     cd ./labs/1_basics/1_01_and_or_not_xor_de_morgan/
     ./03_synthesize_for_fpga.bash
     ```
-    If all goes well, you should see the LEDs on your 
+    If all goes well, you should see the LEDs on your
     board light up according to the example.
-    
+
 As long as you do not change your hardware, you only need to
 run `03_synthesize_for_fpga.bash` script after the first time setup.
 
@@ -68,19 +68,19 @@ You're welcome to try at your own risk and peril.
 See [documentation](./docs/wsl.md).
 
 * Required: Download and install [Git for Windows](https://git-scm.com/download/win).
-  * :warning: We recommend on the _"Adjusting your PATH environment"_ step to select 
-    _"Use Git and optional Unix tools from the Windows Command Prompt"_.    
+  * :warning: We recommend on the _"Adjusting your PATH environment"_ step to select
+    _"Use Git and optional Unix tools from the Windows Command Prompt"_.
 * Required: Bash: Compatibility is only verified with Bash installed as part of the [Git for Windows](https://git-scm.com/download/win) package.
-* Recommended: Download and install 
+* Recommended: Download and install
       [VScode](https://apps.microsoft.com/detail/xp9khm4bk9fz7q)
 
-:warning: Examples and scripts can _only_ be run with a _Git Bash_ terminal. 
+:warning: Examples and scripts can _only_ be run with a _Git Bash_ terminal.
 There are mutliple different options to open it.
 Choose one that works best for you:
 
-* Open _Git Bash_ from the Start menu or from 
+* Open _Git Bash_ from the Start menu or from
   a right-click context menu in any folder (if you enabled it during installation).
-* Alternatively, you can use VSCode:  
+* Alternatively, you can use VSCode:
    * Optionally: Set it as a default in _Settings > Features > Terminal > Integrated > Default Profile > Windows > Git Bash_.
    * Open a new _Git Bash_ as a one-off
      by clikcing on the dropdown arrow next to the plus icon in the terminal panel and selecting _Git Bash_.
@@ -88,7 +88,7 @@ Choose one that works best for you:
 You can tell that it's a _Git Bash_ terminal if you see a prompt that looks like this:
 ```bash
 user@hostname MINGW64 /c/Users/user/Documents/basics-graphics-music/ (master)
-$ 
+$
 ```
 
 
@@ -106,7 +106,7 @@ You can use any terminal including built-in.
 No special stesps are required. You can use any terminal including built-in.
 
 * Optional: If you hit issues with `bash`, you may have a version older than
-  is currently supported. If so, you can use 
+  is currently supported. If so, you can use
   [Homebrew](https://brew.sh/)'s `bash` instead:
     ```bash
     brew install bash
@@ -171,8 +171,8 @@ Not all boards include everything on the same board. To compensate for this we u
 * `hdmi`: HDMI on-board output
 * `lcd_480_272`: [40-pin 480x272 LCD display](https://www.adafruit.com/product/1591)
 * `lcd_800_480`: [40-pin 800x480 LCD display](https://www.adafruit.com/product/1596)
-* `yosys`: The same hardware, but uses [Yosys](https://github.com/YosysHQ/yosys) open source toolchain instead of a proprietary one. 
- 
+* `yosys`: The same hardware, but uses [Yosys](https://github.com/YosysHQ/yosys) open source toolchain instead of a proprietary one.
+
 
 # Verilog Events Across the World
 

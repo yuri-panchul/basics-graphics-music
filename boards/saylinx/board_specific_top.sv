@@ -79,13 +79,13 @@ module board_specific_top
     wire [w_red   - 1:0] red;
     wire [w_green - 1:0] green;
     wire [w_blue  - 1:0] blue;
-    
+
     assign VGA_OUT_R = display_on ? red   : '0;
     assign VGA_OUT_G = display_on ? green : '0;
     assign VGA_OUT_B = display_on ? blue  : '0;
 
     // Sound
-    
+
     wire [         23:0] mic;
     wire [         15:0] sound;
 
@@ -218,7 +218,7 @@ module board_specific_top
             assign GPIO_0 [3] = 1'b1;  // VCC - R1
 
         `endif
-        
+
     `endif
 
     //------------------------------------------------------------------------

@@ -37,19 +37,19 @@ IO_LOC "TMDS_D_P_0[2]" K17,J17;
 
 #IO_LOC "UART2_RXD"     V16;
 #IO_LOC "UART2_TXD"     U16;
-  
+
                              #   1 -> mic.3V3
                              #   2 -> 3V3
                              #   3 -> mic.GND
                              #   4 -> GND
-IO_LOC "PMOD_0[6]"     R18;  #   5 -> 
-IO_LOC "PMOD_0[7]"     T18;  #   6 -> 
+IO_LOC "PMOD_0[6]"     R18;  #   5 ->
+IO_LOC "PMOD_0[7]"     T18;  #   6 ->
 IO_LOC "PMOD_0[4]"     P16;  #   7 -> mic.lr
-IO_LOC "PMOD_0[5]"     R17;  #   8 -> 
+IO_LOC "PMOD_0[5]"     R17;  #   8 ->
 IO_LOC "PMOD_0[2]"     T21;  #   9 -> mic.ws
-IO_LOC "PMOD_0[3]"     U21;  #  10 -> 
+IO_LOC "PMOD_0[3]"     U21;  #  10 ->
 IO_LOC "PMOD_0[0]"     P19;  #  11 -> mic.sck
-IO_LOC "PMOD_0[1]"     R19;  #  12 -> 
+IO_LOC "PMOD_0[1]"     R19;  #  12 ->
 
                              #   1 -> tm1638.3V3
                              #   2 -> audio_out.3V3

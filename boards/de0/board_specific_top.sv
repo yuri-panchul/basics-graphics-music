@@ -5,16 +5,16 @@ module board_specific_top
 # (
     parameter clk_mhz       = 50,
               pixel_mhz     = 25,
-              
+
               w_key         = 3,
               w_sw          = 10,  // One onboard SW is used as a reset
               w_led         = 10,
               w_digit       = 4,
               w_gpio        = 64,  // GPIO_0[7:2] reserved for mic
-              
+
               screen_width  = 640,
               screen_height = 480,
-              
+
               w_red         = 4,
               w_green       = 4,
               w_blue        = 4,
@@ -43,13 +43,13 @@ module board_specific_top
     output [ w_red    - 1:0] VGA_R,
     output [ w_green  - 1:0] VGA_G,
     output [ w_blue   - 1:0] VGA_B,
-    
+
     input                    UART_RTS,
     input                    UART_RXD,
 
     output                   UART_CTS,
     output                   UART_TXD,
-    
+
     inout  [          31:0]  GPIO0_D,
     inout  [          31:0]  GPIO1_D
 );
@@ -69,17 +69,17 @@ module board_specific_top
 
     wire [            7:0] abcdefgh;
     wire [ w_digit  - 1:0] digit;
-    
+
     // Graphics
 
-    wire                  display_on;
+    wire                   display_on;
 
-    wire [ w_x     - 1:0] x;
-    wire [ w_y     - 1:0] y;
+    wire [ w_x      - 1:0] x;
+    wire [ w_y      - 1:0] y;
 
-    wire [ w_red   - 1:0] red;
-    wire [ w_green - 1:0] green;
-    wire [ w_blue  - 1:0] blue;
+    wire [ w_red    - 1:0] red;
+    wire [ w_green  - 1:0] green;
+    wire [ w_blue   - 1:0] blue;
 
     assign VGA_R = display_on ? red   : '0;
     assign VGA_G = display_on ? green : '0;
@@ -87,8 +87,8 @@ module board_specific_top
 
     // Sound
 
-    wire [          23:0] mic;
-    wire [          15:0] sound;
+    wire [           23:0] mic;
+    wire [           15:0] sound;
 
     //------------------------------------------------------------------------
 
