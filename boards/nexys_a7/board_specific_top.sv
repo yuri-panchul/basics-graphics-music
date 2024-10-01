@@ -224,7 +224,7 @@ module board_specific_top
 
         assign JD [3] = 1'b0;  // GND
         assign JD [2] = 1'b1;  // VCC
-    
+
     `endif
 
     //------------------------------------------------------------------------

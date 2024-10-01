@@ -84,7 +84,7 @@ module board_specific_top
     inout                        SD_DAT0,
     inout                        SD_DAT1,
     inout                        SD_DAT2,
-    inout                        SD_DAT3, 
+    inout                        SD_DAT3,
 
     // Ports for on-board I2S amplifier
     output                       HP_BCK,

@@ -141,7 +141,7 @@ module game_sprite_display
 
     always_comb
         case (column_index)
-       
+
         4'd0:  ergb = row [63:60];
         4'd1:  ergb = row [59:56];
         4'd2:  ergb = row [55:52];

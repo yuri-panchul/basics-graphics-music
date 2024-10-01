@@ -24,7 +24,7 @@ module board_specific_top
                 w_red         = 4,
                 w_green       = 4,
                 w_blue        = 4,
-                
+
                 w_x           = $clog2 ( screen_width  ),
                 w_y           = $clog2 ( screen_height )
 )
@@ -195,7 +195,7 @@ module board_specific_top
     endgenerate
 
     //------------------------------------------------------------------------
-    
+
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
         tm1638_board_controller
         # (
@@ -215,20 +215,20 @@ module board_specific_top
             .sio_data ( GPIO [2]  )
         );
     `endif
-    
-    
+
+
     //------------------------------------------------------------------------
-    
+
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-    
+
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
-    
+
         vga
         # (
             .CLK_MHZ     ( clk_mhz     ),
             .PIXEL_MHZ   ( pixel_mhz   )
-        ) 
+        )
         i_vga
         (
             .clk         ( clk        ),
@@ -240,14 +240,14 @@ module board_specific_top
             .vpos        ( y10        ),
             .pixel_clk   (            )
         );
-    
+
     `endif
-    
-    
+
+
     //------------------------------------------------------------------------
-    
+
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
-    
+
         inmp441_mic_i2s_receiver
         # (
             .clk_mhz ( clk_mhz )
@@ -262,14 +262,14 @@ module board_specific_top
             .sd    ( GPIO [6] ),
             .value ( mic      )
         );
-    
+
     `endif
-    
-    
+
+
     //------------------------------------------------------------------------
-    
+
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
-    
+
         `ifdef HAVE_PCM5102
 
             i2s_audio_out
@@ -281,33 +281,33 @@ module board_specific_top
                 .clk     ( clk     ),
                 .reset   ( rst     ),
                 .data_in ( sound   ),
-        
+
                 .mclk    ( GPIO  [7] ),
                 .bclk    ( GPIO  [8] ),
                 .sdata   ( GPIO  [9] ),
                 .lrclk   ( GPIO [10] )
             );
-        
+
         `else
 
             i2s_audio_out
             # (
                 .clk_mhz ( clk_mhz )
-            ) 
+            )
             inst_pmod_amp3
             (
                 .clk     ( clk     ),
                 .reset   ( rst     ),
                 .data_in ( sound   ),
-        
+
                 .mclk    ( GPIO  [7] ),
                 .bclk    ( GPIO  [8] ),
                 .sdata   ( GPIO  [9] ),
                 .lrclk   ( GPIO [10] )
             );
-    
+
         `endif
-        
+
     `endif
-        
+
 endmodule

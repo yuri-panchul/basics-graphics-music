@@ -45,7 +45,7 @@ set_location_assignment PIN_U18  -to LEDG[4]
 set_location_assignment PIN_U17  -to LEDG[5]
 set_location_assignment PIN_AA20 -to LEDG[6]
 set_location_assignment PIN_Y18  -to LEDG[7]
-#set_location_assignment PIN_Y12  -to LEDG[8]
+set_location_assignment PIN_Y12  -to LEDG[8]
 
 set_location_assignment PIN_N25  -to SW[0]
 set_location_assignment PIN_N26  -to SW[1]

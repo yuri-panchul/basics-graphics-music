@@ -256,7 +256,7 @@ module game_top
     game_overlap
     #(
         .screen_width  ( screen_width  ),
-	.screen_height ( screen_height )
+        .screen_height ( screen_height )
     )
     overlap
     (

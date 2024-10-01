@@ -186,7 +186,7 @@ module board_specific_top
 
 
     //------------------------------------------------------------------------
-   
+
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
         tm1638_board_controller
         # (
@@ -206,7 +206,7 @@ module board_specific_top
             .sio_data ( GPIO [2]  )
         );
     `endif
-   
+
 
     //------------------------------------------------------------------------
 
@@ -259,11 +259,11 @@ module board_specific_top
                 .clk_mhz ( clk_mhz )
             )
             inst_pmod_amp3
-            (    
+            (
                 .clk     ( clk     ),
                 .reset   ( rst     ),
                 .data_in ( sound   ),
-                 
+
                 .mclk    ( GPIO  [7] ),
                 .bclk    ( GPIO  [8] ),
                 .sdata   ( GPIO  [9] ),

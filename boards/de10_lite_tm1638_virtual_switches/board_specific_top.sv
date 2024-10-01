@@ -45,7 +45,7 @@ module board_specific_top
     output [ w_blue    - 1:0] VGA_B,
 
     inout  [ w_gpio    - 1:0] GPIO,
-    
+
     output                    ARDUINO_RESET_N,
     inout  [ w_arduino - 1:0] ARDUINO_IO
 );

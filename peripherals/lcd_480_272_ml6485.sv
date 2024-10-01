@@ -37,18 +37,18 @@ module lcd_480_272_ml6485
 
     localparam      H_BackPorch = 16'd43;
     localparam      H_Pluse     = 16'd4;
-    localparam      WidthPixel  = 16'd480; 
+    localparam      WidthPixel  = 16'd480;
     localparam      H_FrontPorch= 16'd64;
 
     parameter       BarCount    = 16; // RGB565
     localparam      Width_bar   = WidthPixel / 16;
-     
-    localparam      PixelForHS  =   WidthPixel + H_BackPorch + H_FrontPorch;      
+
+    localparam      PixelForHS  =   WidthPixel + H_BackPorch + H_FrontPorch;
     localparam      LineForVS   =   HightPixel + V_BackPorch + V_FrontPorch;
 
     always @(  posedge PixelClk or negedge nRST  )begin
         if( !nRST ) begin
-            LineCount       <=  16'b0;    
+            LineCount       <=  16'b0;
             PixelCount      <=  16'b0;
             end
         else if(  PixelCount  ==  PixelForHS ) begin
@@ -92,46 +92,46 @@ module lcd_480_272_ml6485
 
     `ifdef COMMENTED_OUT
 
-    // assign  LCD_R   =   (PixelCount<200)? 5'b00000 : 
-    //                     (PixelCount<240 ? 5'b00001 :    
-    //                     (PixelCount<280 ? 5'b00010 :    
-    //                     (PixelCount<320 ? 5'b00100 :    
-    //                     (PixelCount<360 ? 5'b01000 :    
+    // assign  LCD_R   =   (PixelCount<200)? 5'b00000 :
+    //                     (PixelCount<240 ? 5'b00001 :
+    //                     (PixelCount<280 ? 5'b00010 :
+    //                     (PixelCount<320 ? 5'b00100 :
+    //                     (PixelCount<360 ? 5'b01000 :
     //                     (PixelCount<400 ? 5'b10000 :  5'b00000 )))));
 
-    // assign  LCD_G   =   (PixelCount<400)? 6'b000000 : 
-    //                     (PixelCount<440 ? 6'b000001 :    
-    //                     (PixelCount<480 ? 6'b000010 :    
-    //                     (PixelCount<520 ? 6'b000100 :    
-    //                     (PixelCount<560 ? 6'b001000 :    
-    //                     (PixelCount<600 ? 6'b010000 :  
+    // assign  LCD_G   =   (PixelCount<400)? 6'b000000 :
+    //                     (PixelCount<440 ? 6'b000001 :
+    //                     (PixelCount<480 ? 6'b000010 :
+    //                     (PixelCount<520 ? 6'b000100 :
+    //                     (PixelCount<560 ? 6'b001000 :
+    //                     (PixelCount<600 ? 6'b010000 :
     //                     (PixelCount<640 ? 6'b100000 : 6'b000000 ))))));
 
-    // assign  LCD_B   =   (PixelCount<640)? 5'b00000 : 
-    //                     (PixelCount<680 ? 5'b00001 :    
-    //                     (PixelCount<720 ? 5'b00010 :    
-    //                     (PixelCount<760 ? 5'b00100 :    
-    //                     (PixelCount<800 ? 5'b01000 :    
+    // assign  LCD_B   =   (PixelCount<640)? 5'b00000 :
+    //                     (PixelCount<680 ? 5'b00001 :
+    //                     (PixelCount<720 ? 5'b00010 :
+    //                     (PixelCount<760 ? 5'b00100 :
+    //                     (PixelCount<800 ? 5'b01000 :
     //                     (PixelCount<840 ? 5'b10000 :  5'b00000 )))));
 
-    assign  LCD_R   =   PixelCount < H_BackPorch + Width_bar *  0    ? 5'b00000 :  
-                        PixelCount < H_BackPorch + Width_bar *  1    ? 5'b00001 :    
-                        PixelCount < H_BackPorch + Width_bar *  2    ? 5'b00010 :    
-                        PixelCount < H_BackPorch + Width_bar *  3    ? 5'b00100 :    
-                        PixelCount < H_BackPorch + Width_bar *  4    ? 5'b01000 :    
-                        PixelCount < H_BackPorch + Width_bar *  5    ? 5'b10000 :  5'b00000 ;   
+    assign  LCD_R   =   PixelCount < H_BackPorch + Width_bar *  0    ? 5'b00000 :
+                        PixelCount < H_BackPorch + Width_bar *  1    ? 5'b00001 :
+                        PixelCount < H_BackPorch + Width_bar *  2    ? 5'b00010 :
+                        PixelCount < H_BackPorch + Width_bar *  3    ? 5'b00100 :
+                        PixelCount < H_BackPorch + Width_bar *  4    ? 5'b01000 :
+                        PixelCount < H_BackPorch + Width_bar *  5    ? 5'b10000 :  5'b00000 ;
 
-    assign  LCD_G   =   PixelCount < H_BackPorch + Width_bar *  6    ? 6'b000001 :    
-                        PixelCount < H_BackPorch + Width_bar *  7    ? 6'b000010 :    
-                        PixelCount < H_BackPorch + Width_bar *  8    ? 6'b000100 :    
-                        PixelCount < H_BackPorch + Width_bar *  9    ? 6'b001000 :    
-                        PixelCount < H_BackPorch + Width_bar *  10   ? 6'b010000 :  
+    assign  LCD_G   =   PixelCount < H_BackPorch + Width_bar *  6    ? 6'b000001 :
+                        PixelCount < H_BackPorch + Width_bar *  7    ? 6'b000010 :
+                        PixelCount < H_BackPorch + Width_bar *  8    ? 6'b000100 :
+                        PixelCount < H_BackPorch + Width_bar *  9    ? 6'b001000 :
+                        PixelCount < H_BackPorch + Width_bar *  10   ? 6'b010000 :
                         PixelCount < H_BackPorch + Width_bar *  11   ? 6'b100000 : 6'b000000 ;
 
-    assign  LCD_B   =   PixelCount < H_BackPorch + Width_bar *  12   ? 5'b00001 :    
-                        PixelCount < H_BackPorch + Width_bar *  13   ? 5'b00010 :    
-                        PixelCount < H_BackPorch + Width_bar *  14   ? 5'b00100 :    
-                        PixelCount < H_BackPorch + Width_bar *  15   ? 5'b01000 :    
+    assign  LCD_B   =   PixelCount < H_BackPorch + Width_bar *  12   ? 5'b00001 :
+                        PixelCount < H_BackPorch + Width_bar *  13   ? 5'b00010 :
+                        PixelCount < H_BackPorch + Width_bar *  14   ? 5'b00100 :
+                        PixelCount < H_BackPorch + Width_bar *  15   ? 5'b01000 :
                         PixelCount < H_BackPorch + Width_bar *  16   ? 5'b10000 :  5'b00000 ;
 
     `endif

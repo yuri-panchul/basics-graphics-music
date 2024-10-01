@@ -93,7 +93,7 @@ module board_specific_top
 
     wire                    VGA_HS;
     wire                    VGA_VS;
-    
+
     wire [ w_red     - 1:0] VGA_R = display_on ? red   : '0;
     wire [ w_green   - 1:0] VGA_G = display_on ? green : '0;
     wire [ w_blue    - 1:0] VGA_B = display_on ? blue  : '0;
