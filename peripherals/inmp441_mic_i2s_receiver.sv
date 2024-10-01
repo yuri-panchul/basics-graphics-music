@@ -23,7 +23,7 @@ module inmp441_mic_i2s_receiver
     logic clk_en;
 
     generate
-        if (clk_mhz == 100)
+        if (clk_mhz >= 100)
         begin : clk_100
             always_ff @ (posedge clk or posedge rst)
                 if (rst)
