@@ -321,7 +321,7 @@ module board_specific_top
 
         tm1638_board_controller
         # (
-            .clk_mhz   ( clk_mhz    ),
+            .clk_mhz   ( clk_mhz     )
         )
         i_ledkey
         (
