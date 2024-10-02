@@ -297,23 +297,23 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    tm1638_board_controller
-    # (
-        .clk_mhz  ( clk_mhz        ),
-        .w_digit  ( w_tm_digit     )
-    )
-    i_tm1638
-    (
-        .clk      ( clk            ),
-        .rst      ( rst            ),
-        .hgfedcba ( hgfedcba       ),
-        .digit    ( tm_digit       ),
-        .ledr     ( tm_led         ),
-        .keys     ( tm_key         ),
-        .sio_data ( GPIO [0]       ),
-        .sio_clk  ( GPIO [1]       ),
-        .sio_stb  ( GPIO [2]       )
-    );
+        tm1638_board_controller
+        # (
+            .clk_mhz  ( clk_mhz        ),
+            .w_digit  ( w_tm_digit     )
+        )
+        i_tm1638
+        (
+            .clk      ( clk            ),
+            .rst      ( rst            ),
+            .hgfedcba ( hgfedcba       ),
+            .digit    ( tm_digit       ),
+            .ledr     ( tm_led         ),
+            .keys     ( tm_key         ),
+            .sio_data ( GPIO [0]       ),
+            .sio_clk  ( GPIO [1]       ),
+            .sio_stb  ( GPIO [2]       )
+        );
 
     `endif
 
