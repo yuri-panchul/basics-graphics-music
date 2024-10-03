@@ -57,8 +57,8 @@ set_location_assignment PIN_54   -to VGA_RGB[2]
 
 # These EEPROM pins conflict with VGA and buzzer
 
-# set_location_assignment PIN_68   -to UART_TXD
-  set_location_assignment PIN_69   -to UART_RXD
+set_location_assignment PIN_68   -to UART_TXD
+set_location_assignment PIN_69   -to UART_RXD
 
 # set_location_assignment PIN_1    -to SCL
 # set_location_assignment PIN_2    -to SDA

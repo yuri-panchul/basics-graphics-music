@@ -121,7 +121,7 @@ module board_specific_top
         .w_red         (   w_red         ),
         .w_green       (   w_green       ),
         .w_blue        (   w_blue        )
-      )
+    )
     i_lab_top
     (
         .clk           (   clk           ),
