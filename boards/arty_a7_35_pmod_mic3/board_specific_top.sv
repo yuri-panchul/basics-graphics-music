@@ -24,7 +24,7 @@ module board_specific_top
 )
 (
     input                  CLK100MHZ,
-    input                  CPU_RESETN,
+    input                  ck_rst,
 
     input  [w_key  - 1:0]  btn,
 
@@ -70,6 +70,8 @@ module board_specific_top
     inout                  ck_io12,
     inout                  ck_io13,
 
+    inout [25:14]          dummy_ck_io25_14,
+
     inout                  ck_io26,
     inout                  ck_io27,
     inout                  ck_io28,
@@ -91,7 +93,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire clk =   CLK100MHZ;
-    wire rst = ~ CPU_RESETN;
+    wire rst = ~ ck_rst;
 
 
     //------------------------------------------------------------------------
@@ -124,39 +126,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
     wire [w_gpio    - 1:0] gpio;
-
-    assign gpio[0]  = ck_io0;
-    assign gpio[1]  = ck_io1;
-    assign gpio[2]  = ck_io2;
-    assign gpio[3]  = ck_io3;
-    assign gpio[4]  = ck_io4;
-    assign gpio[5]  = ck_io5;
-    assign gpio[6]  = ck_io6;
-    assign gpio[7]  = ck_io7;
-    assign gpio[8]  = ck_io8;
-    assign gpio[9]  = ck_io9;
-    assign gpio[10] = ck_io10;
-    assign gpio[11] = ck_io11;
-    assign gpio[12] = ck_io12;
-    assign gpio[13] = ck_io13;
-
-    assign gpio[26] = ck_io26;
-    assign gpio[27] = ck_io27;
-    assign gpio[28] = ck_io28;
-    assign gpio[29] = ck_io29;
-    assign gpio[30] = ck_io30;
-    assign gpio[31] = ck_io31;
-    assign gpio[32] = ck_io32;
-    assign gpio[33] = ck_io33;
-    assign gpio[34] = ck_io34;
-    assign gpio[35] = ck_io35;
-    assign gpio[36] = ck_io36;
-    assign gpio[37] = ck_io37;
-    assign gpio[38] = ck_io38;
-    assign gpio[39] = ck_io39;
-    assign gpio[40] = ck_io40;
-    assign gpio[41] = ck_io41;
-
     //------------------------------------------------------------------------
 
     wire [        3:0] KEY    = btn;
@@ -272,7 +241,41 @@ module board_specific_top
         .uart_tx  (uart_rxd_out),
 
         .mic      ( mic       ),
-        .gpio     ( gpio      )
+        .gpio     ( {    
+                    ck_io0,
+                    ck_io1,
+                    ck_io2,
+                    ck_io3,
+                    ck_io4,
+                    ck_io5,
+                    ck_io6,
+                    ck_io7,
+                    ck_io8,
+                    ck_io9,
+                    ck_io10,
+                    ck_io11,
+                    ck_io12,
+                    ck_io13,
+
+                    dummy_ck_io25_14,
+
+                    ck_io26,
+                    ck_io27,
+                    ck_io28,
+                    ck_io29,
+                    ck_io30,
+                    ck_io31,
+                    ck_io32,
+                    ck_io33,
+                    ck_io34,
+                    ck_io35,
+                    ck_io36,
+                    ck_io37,
+                    ck_io38,
+                    ck_io39,
+                    ck_io40,
+                    ck_io41     
+                   })
     );
 
     //------------------------------------------------------------------------
