@@ -4,7 +4,7 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 100,
-			  pixel_mhz     = 25,
+              pixel_mhz     = 25,
 			  
               w_key         = 4,
               w_sw          = 4,
@@ -12,8 +12,8 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 42,
 			  
-			  screen_width  = 640,
-			  screen_height = 480,
+              screen_width  = 640,
+              screen_height = 480,
 			  
               w_red         = 4,
               w_green       = 4,
@@ -48,7 +48,7 @@ module board_specific_top
     output                 led3_r,
 
     input                  uart_txd_in,
-	output                 uart_rxd_out,
+    output                 uart_rxd_out,
 
     inout  [7:0]           ja,
     inout  [7:0]           jb,  // VGA_B and VGA_R
@@ -116,7 +116,7 @@ module board_specific_top
 
     //------------------------------------------------------------------------
     
-	wire [w_x    - 1:0] x;
+    wire [w_x    - 1:0] x;
     wire [w_y    - 1:0] y;
 
     wire [       23:0] mic;
@@ -378,42 +378,43 @@ module board_specific_top
     `endif
 
     //------------------------------------------------------------------------
+    //TODO: Add Support for INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+    // `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-        i2s_audio_out
-        # (
-            .clk_mhz ( clk_mhz )
-        )
-        inst_pcm5102
-        (
-            .clk     ( clk     ),
-            .reset   ( rst     ),
-            .data_in ( sound   ),
+    //     i2s_audio_out
+    //     # (
+    //         .clk_mhz ( clk_mhz )
+    //     )
+    //     inst_pcm5102
+    //     (
+    //         .clk     ( clk     ),
+    //         .reset   ( rst     ),
+    //         .data_in (    ),
 
-            .mclk    ( jc [ 7]  ),
-            .bclk    ( jc [ 8]  ),
-            .sdata   ( jc [ 9]  ),
-            .lrclk   ( jc [10]  )
-        );
+    //         .mclk    (   ),
+    //         .bclk    (   ),
+    //         .sdata   (   ),
+    //         .lrclk   (   )
+    //     );
 
-        i2s_audio_out
-        # (
-            .clk_mhz ( clk_mhz )
-        )
-        inst_pmod_amp3
-        (
-            .clk     ( clk     ),
-            .reset   ( rst     ),
-            .data_in ( sound   ),
+    //     i2s_audio_out
+    //     # (
+    //         .clk_mhz ( clk_mhz )
+    //     )
+    //     inst_pmod_amp3
+    //     (
+    //         .clk     ( clk     ),
+    //         .reset   ( rst     ),
+    //         .data_in (    ),
 
-            .mclk    ( jb [9]  ),
-            .bclk    ( jb [4]  ),
-            .sdata   ( jb [2]  ),
-            .lrclk   ( jb [1]  )
-        );
+    //         .mclk    (   ),
+    //         .bclk    (   ),
+    //         .sdata   (   ),
+    //         .lrclk   (   )
+    //     );
 
-    `endif
+    // `endif
 
 
 endmodule
