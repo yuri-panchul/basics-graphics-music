@@ -26,8 +26,7 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
-              // Odd gpio 17..27 are reserved I2S audio.
-              // Odd gpio 29..37 are reserved for TM1638.
+              // PMOD_0 is used for I2S audio (bottom row) and TM1638 (top row).
 )
 (
     input                  CLK,
@@ -202,6 +201,44 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        wire vsync, hsync;
+
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( clk_mhz    ),
+            .PIXEL_MHZ   ( pixel_mhz  )
+        )
+        i_vga
+        (
+            .clk         ( clk        ),
+            .rst         ( rst        ),
+            .hsync       ( hsync      ),
+            .vsync       ( vsync      ),
+            .display_on  ( display_on ),
+            .hpos        ( x10        ),
+            .vpos        ( y10        ),
+            .pixel_clk   (            )
+        );
+
+        wire  [w_red   - 1:0] red_corrected   = display_on ? red   : '0;
+        wire  [w_green - 1:0] green_corrected = display_on ? green : '0;
+        wire  [w_blue  - 1:0] blue_corrected  = display_on ? blue  : '0;
+
+        // 4' () conversions are not needed for this configuration,
+        // but we put them here for clarity
+
+        assign PMOD_1 = { 4' ( green_corrected ), 2'b0, vsync, hsync    };
+        assign PMOD_2 = { 4' ( red_corrected   ), 4' ( blue_corrected ) };
+
+    `endif
+
+    //------------------------------------------------------------------------
+
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
         inmp441_mic_i2s_receiver
@@ -245,13 +282,5 @@ module board_specific_top
         );
 
     `endif
-
-    //------------------------------------------------------------------------
-/*
-    // Pmod VGA
-
-    assign pmod_1 = { green [7:4], 2'b0, vsync, hsync };
-    assign pmod_2 = { red   [7:4], blue [7:4] };
-*/
 
 endmodule
