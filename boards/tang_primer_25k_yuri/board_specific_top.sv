@@ -193,57 +193,61 @@ module board_specific_top
             .digit    ( tm_digit   ),
             .ledr     ( tm_led     ),
             .keys     ( tm_key     ),
-            .sio_data ( PMOD_0 [5] ),
-            .sio_clk  ( PMOD_0 [6] ),
-            .sio_stb  ( PMOD_0 [7] )
+            .sio_data ( PMOD_0 [1] ),
+            .sio_clk  ( PMOD_0 [2] ),
+            .sio_stb  ( PMOD_0 [3] )
         );
 
     `endif
-/*
-    //------------------------------------------------------------------------
-
-    inmp441_mic_i2s_receiver
-    # (
-        .clk_mhz ( clk_mhz    )
-    )
-    i_microphone
-    (
-        .clk     ( clk        ),
-        .rst     ( rst        ),
-        .lr      ( gpio   [0] ),
-        .ws      ( gpio   [2] ),
-        .sck     ( gpio   [4] ),
-        .sd      ( gpio   [5] ),
-        .value   ( mic        )
-    );
-
-    assign gpio [1] = 1'b0;  // GND
-    assign gpio [3] = 1'b1;  // VCC
 
     //------------------------------------------------------------------------
 
-    `ifndef ENABLE_DVI
+    `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-    i2s_audio_out
-    # (
-        .clk_mhz ( clk_mhz     )
-    )
-    inst_audio_out
-    (
-        .clk     ( clk       ),
-        .reset   ( rst       ),
-        .data_in ( sound     ),
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( clk_mhz    )
+        )
+        i_microphone
+        (
+            .clk     ( clk        ),
+            .rst     ( rst        ),
+            .lr      ( GPIO   [0] ),
+            .ws      ( GPIO   [2] ),
+            .sck     ( GPIO   [4] ),
+            .sd      ( GPIO   [5] ),
+            .value   ( mic        )
+        );
 
-        .mclk    ( pmod_0[4] ),
-        .bclk    ( pmod_0[5] ),
-        .sdata   ( pmod_0[6] ),
-        .lrclk   ( pmod_0[7] )
-    );
+        assign GPIO [1] = 1'b0;  // GND
+        assign GPIO [3] = 1'b1;  // VCC
 
     `endif
 
     //------------------------------------------------------------------------
 
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz    )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk        ),
+            .reset   ( rst        ),
+            .data_in ( sound      ),
+
+            .mclk    ( PMOD_0 [4] ),
+            .bclk    ( PMOD_0 [5] ),
+            .sdata   ( PMOD_0 [6] ),
+            .lrclk   ( PMOD_0 [7] )
+        );
+
+    `endif
+
+    //------------------------------------------------------------------------
+/*
     // Pmod VGA
 
     assign pmod_1 = { green [7:4], 2'b0, vsync, hsync };
