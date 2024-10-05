@@ -259,19 +259,19 @@ module board_specific_top
 
             DVI_TX_Top i_DVI_TX_Top
             (
-                .I_rst_n       ( ~ rst         ),
-                .I_serial_clk  (   vga_in_clk  ),
-                .I_rgb_clk     (   pixel_clk   ),
-                .I_rgb_vs      ( ~ vsync       ),
-                .I_rgb_hs      ( ~ hsync       ),
-                .I_rgb_de      (   display_on  ),
-                .I_rgb_r       (   red         ),
-                .I_rgb_g       (   green       ),
-                .I_rgb_b       (   blue        ),
-                .O_tmds_clk_p  (   tmds_clk_p  ),
-                .O_tmds_clk_n  (   tmds_clk_n  ),
-                .O_tmds_data_p (   tmds_d_p    ),
-                .O_tmds_data_n (   tmds_d_n    )
+                .I_rst_n       ( ~ rst          ),
+                .I_serial_clk  (   vga_in_clk   ),
+                .I_rgb_clk     (   pixel_clk    ),
+                .I_rgb_vs      ( ~ vsync        ),
+                .I_rgb_hs      ( ~ hsync        ),
+                .I_rgb_de      (   display_on   ),
+                .I_rgb_r       (   red          ),
+                .I_rgb_g       (   green        ),
+                .I_rgb_b       (   blue         ),
+                .O_tmds_clk_p  (   TMDS_1_CLK_P ),
+                .O_tmds_clk_n  (   TMDS_1_CLK_N ),
+                .O_tmds_data_p (   TMDS_1_D_P   ),
+                .O_tmds_data_n (   TMDS_1_D_N   )
             );
 
         `else  // Instead of DVI use VGA
