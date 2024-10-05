@@ -15,9 +15,15 @@ module board_specific_top
               w_digit       = 0,
               w_gpio        = 38,
 
-              w_red         = 4,
-              w_green       = 4,
-              w_blue        = 4,
+              `ifdef USE_PMOD_DVI
+                  w_red     = 8,
+                  w_green   = 8,
+                  w_blue    = 8,
+              `else
+                  w_red     = 4,
+                  w_green   = 4,
+                  w_blue    = 4,
+              `endif
 
               screen_width  = 640,
               screen_height = 480,
