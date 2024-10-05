@@ -38,20 +38,20 @@ module board_specific_top
 
     inout  [w_gpio - 1:0]  GPIO,
 
-    `ifdef ENABLE_DVIuytuytu
+    `ifdef ENABLE_DVI
 
-    output                 TMDS_CLK_N,
-    output                 TMDS_CLK_P,
-    output [         2:0]  TMDS_D_N,
-    output [         2:0]  TMDS_D_P,
+    output                 TMDS_1_CLK_N,
+    output                 TMDS_1_CLK_P,
+    output [         2:0]  TMDS_1_D_N,
+    output [         2:0]  TMDS_1_D_P,
 
     `else
 
-    inout  [         7:0]  PMOD_0,
+    inout  [         7:0]  PMOD_1,
 
     `endif
 
-    inout  [         7:0]  PMOD_1,
+    inout  [         7:0]  PMOD_0,
     inout  [         7:0]  PMOD_2
 );
 
@@ -225,15 +225,21 @@ module board_specific_top
             .pixel_clk   (            )
         );
 
-        wire  [w_red   - 1:0] red_corrected   = display_on ? red   : '0;
-        wire  [w_green - 1:0] green_corrected = display_on ? green : '0;
-        wire  [w_blue  - 1:0] blue_corrected  = display_on ? blue  : '0;
+        `ifdef USE_PMOD_DVI
 
-        // 4' () conversions are not needed for this configuration,
-        // but we put them here for clarity
+        `else  // Instead of DVI use VGA
 
-        assign PMOD_1 = { 4' ( green_corrected ), 2'b0, vsync, hsync    };
-        assign PMOD_2 = { 4' ( red_corrected   ), 4' ( blue_corrected ) };
+            wire  [w_red   - 1:0] red_corrected   = display_on ? red   : '0;
+            wire  [w_green - 1:0] green_corrected = display_on ? green : '0;
+            wire  [w_blue  - 1:0] blue_corrected  = display_on ? blue  : '0;
+
+            // 4' () conversions are not needed for this configuration,
+            // but we put them here for clarity
+
+            assign PMOD_1 = { 4' ( green_corrected ), 2'b0, vsync, hsync    };
+            assign PMOD_2 = { 4' ( red_corrected   ), 4' ( blue_corrected ) };
+
+        `endif
 
     `endif
 
