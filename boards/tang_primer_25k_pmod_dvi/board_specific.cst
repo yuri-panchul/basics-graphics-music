@@ -42,15 +42,6 @@ IO_LOC "GPIO[36]"   J10 ; IO_LOC "GPIO[37]" J11  // DIO
 
 //----------------------------------------------------------------------------
 
-// Pmod 0 on the left used as DVI
-
-// IO_LOC "TMDS_CLK_P"  H5,J5;
-// IO_LOC "TMDS_D_P[0]" H8,H7;
-// IO_LOC "TMDS_D_P[1]" G7,G8;
-// IO_LOC "TMDS_D_P[2]" F5,G5;
-
-//----------------------------------------------------------------------------
-
 // Pmod 0 on the left
 
 IO_LOC "PMOD_0[0]" F5  ;
@@ -69,21 +60,39 @@ IO_LOC "PMOD_0[7]" J5  ;
 
 //----------------------------------------------------------------------------
 
+// Pmod 0 on the left used as DVI
+
+// IO_LOC "TMDS_0_CLK_P"  H5,J5;
+// IO_LOC "TMDS_0_D_P[0]" H8,H7;
+// IO_LOC "TMDS_0_D_P[1]" G7,G8;
+// IO_LOC "TMDS_0_D_P[2]" F5,G5;
+
+//----------------------------------------------------------------------------
+
 // Pmod 1 in the middle
 
-IO_LOC "PMOD_1[0]" A11 ;
-IO_LOC "PMOD_1[1]" E11 ;
-IO_LOC "PMOD_1[2]" K11 ;
-IO_LOC "PMOD_1[3]" L5  ;
-// GND
-// 3V3
+// IO_LOC "PMOD_1[0]" A11 ;
+// IO_LOC "PMOD_1[1]" E11 ;
+// IO_LOC "PMOD_1[2]" K11 ;
+// IO_LOC "PMOD_1[3]" L5  ;
+// // GND
+// // 3V3
+//
+// IO_LOC "PMOD_1[4]" A10 ;
+// IO_LOC "PMOD_1[5]" E10 ;
+// IO_LOC "PMOD_1[6]" L11 ;
+// IO_LOC "PMOD_1[7]" K5  ;
+// // GND
+// // 3V3
 
-IO_LOC "PMOD_1[4]" A10 ;
-IO_LOC "PMOD_1[5]" E10 ;
-IO_LOC "PMOD_1[6]" L11 ;
-IO_LOC "PMOD_1[7]" K5  ;
-// GND
-// 3V3
+//----------------------------------------------------------------------------
+
+// Pmod 1 in the middle used as DVI
+
+IO_LOC "TMDS_1_CLK_P"  L5,K5;
+IO_LOC "TMDS_1_D_P[0]" K11,L11;
+IO_LOC "TMDS_1_D_P[1]" E11,E10;
+IO_LOC "TMDS_1_D_P[2]" A11,A10;
 
 //----------------------------------------------------------------------------
 
@@ -102,3 +111,12 @@ IO_LOC "PMOD_2[6]" B10 ;
 IO_LOC "PMOD_2[7]" C10 ;
 // GND
 // 3V3
+
+//----------------------------------------------------------------------------
+
+// Pmod 2 on the right used as DVI
+
+// IO_LOC "TMDS_2_CLK_P"  C11,C10;
+// IO_LOC "TMDS_2_D_P[0]" B11,B10;
+// IO_LOC "TMDS_2_D_P[1]" D11,D10;
+// IO_LOC "TMDS_2_D_P[2]" G11,G10;
