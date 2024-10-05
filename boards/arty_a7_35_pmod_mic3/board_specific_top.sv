@@ -330,9 +330,9 @@ module board_specific_top
         .digit     ( tm_digit   ),
         .ledr      ( tm_led     ),
         .keys      ( tm_key     ),
-        .sio_clk   ( gpio [40]  ),
-        .sio_stb   ( gpio [41]  ),
-        .sio_data  ( gpio [39]  )
+        .sio_clk   ( ck_io40    ),
+        .sio_stb   ( ck_io41    ),
+        .sio_data  ( ck_io39    )
     );
 
    //------------------------------------------------------------------------
