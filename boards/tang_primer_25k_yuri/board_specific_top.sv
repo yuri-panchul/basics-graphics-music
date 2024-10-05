@@ -9,9 +9,9 @@ module board_specific_top
               // We use sw as an alias to key on Tang Prime 25K,
               // either with or without TM1638
 
-              w_key         = 3,
+              w_key         = 2,
               w_sw          = 0,
-              w_led         = 3,
+              w_led         = 0,
               w_digit       = 0,
               w_gpio        = 38,
 
@@ -34,14 +34,12 @@ module board_specific_top
 
     input  [w_key  - 1:0]  KEY,
 
-    output [w_led  - 1:0]  LED,
-
     input                  UART_RX,
     output                 UART_TX,
 
     inout  [w_gpio - 1:0]  GPIO,
 
-    `ifdef ENABLE_DVI
+    `ifdef ENABLE_DVIuytuytu
 
     output                 TMDS_CLK_N,
     output                 TMDS_CLK_P,
@@ -68,34 +66,11 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
-        localparam w_lab_key   = w_tm_key,
-                   w_lab_led   = w_tm_led,
-                   w_lab_digit = w_tm_digit;
-
-    `else  // TM1638 module is not connected
-
-        // We create a dummy seven-segment digit
-        // to avoid errors in the labs with seven-segment display
-
-        localparam w_lab_key   = w_key,
-                   w_lab_led   = w_led,
-                   w_lab_digit = 1;  // w_digit;
-
-    `endif
-
-    //------------------------------------------------------------------------
-
     // Keys, LEDs, seven segment display
 
     wire  [w_tm_key    - 1:0] tm_key;
     wire  [w_tm_led    - 1:0] tm_led;
     wire  [w_tm_digit  - 1:0] tm_digit;
-
-    logic [w_lab_key   - 1:0] lab_key;
-    wire  [w_lab_led   - 1:0] lab_led;
-    wire  [w_lab_digit - 1:0] lab_digit;
 
     wire  [              7:0] abcdefgh;
 
@@ -117,43 +92,21 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    wire rst_on_power_up;
+    imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
 
-        wire rst_on_power_up;
-        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+    wire tm_rst;
 
-        wire rst = rst_on_power_up | (| (~ KEY));
+    // `define USE_KEY_0_AS_TM_RESET
 
-    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
-
-        wire rst_on_power_up;
-        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
-
-        wire rst = rst_on_power_up;
-
-    `else  // Reset using an on-board button
-
-        wire rst = ~ KEY [w_key - 1];
-
-    `endif
-
-    //------------------------------------------------------------------------
-
-    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
-        assign lab_key  = tm_key;
-
-        assign tm_led   = lab_led;
-        assign tm_digit = lab_digit;
-
-        assign LED      = w_led' (~ lab_led);
-
+    `ifdef USE_KEY_0_AS_TM_RESET
+        assign tm_rst  = rst_on_power_up | KEY [0];
     `else
-
-        assign lab_key = ~ KEY;
-        assign LED     = ~ lab_led;
-
+        assign tm_rst  = rst_on_power_up;
     `endif
+
+    wire                  rst     = tm_rst | tm_key [w_tm_key - 1];
+    wire [w_tm_key - 1:0] lab_key = tm_key | w_tm_key' (KEY);
 
     //------------------------------------------------------------------------
 
@@ -168,10 +121,10 @@ module board_specific_top
     # (
         .clk_mhz       ( clk_mhz       ),
 
-        .w_key         ( w_lab_key     ),
-        .w_sw          ( w_lab_key     ),
-        .w_led         ( w_lab_led     ),
-        .w_digit       ( w_lab_digit   ),
+        .w_key         ( w_tm_key      ),
+        .w_sw          ( w_tm_key      ),
+        .w_led         ( w_tm_led      ),
+        .w_digit       ( w_tm_digit    ),
         .w_gpio        ( w_gpio        ),
 
         .screen_width  ( screen_width  ),
@@ -190,10 +143,10 @@ module board_specific_top
         .key           ( lab_key       ),
         .sw            ( lab_key       ),
 
-        .led           ( lab_led       ),
+        .led           ( tm_led        ),
 
         .abcdefgh      ( abcdefgh      ),
-        .digit         ( lab_digit     ),
+        .digit         ( tm_digit      ),
 
         .x             ( x             ),
         .y             ( y             ),
@@ -229,24 +182,21 @@ module board_specific_top
 
         tm1638_board_controller
         # (
-            .clk_mhz  ( clk_mhz        ),
-            .w_digit  ( w_tm_digit     )
+            .clk_mhz  ( clk_mhz    ),
+            .w_digit  ( w_tm_digit )
         )
         i_tm1638
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .hgfedcba ( hgfedcba       ),
-            .digit    ( tm_digit       ),
-            .ledr     ( tm_led         ),
-            .keys     ( tm_key         ),
-            .sio_data ( GPIO [35]      ),
-            .sio_clk  ( GPIO [33]      ),
-            .sio_stb  ( GPIO [37]      )
+            .clk      ( clk        ),
+            .rst      ( tm_rst     ),
+            .hgfedcba ( hgfedcba   ),
+            .digit    ( tm_digit   ),
+            .ledr     ( tm_led     ),
+            .keys     ( tm_key     ),
+            .sio_data ( PMOD_0 [5] ),
+            .sio_clk  ( PMOD_0 [6] ),
+            .sio_stb  ( PMOD_0 [7] )
         );
-
-        assign GPIO [31] = 1'b0;
-        assign GPIO [29] = 1'b1;
 
     `endif
 /*
@@ -299,4 +249,5 @@ module board_specific_top
     assign pmod_1 = { green [7:4], 2'b0, vsync, hsync };
     assign pmod_2 = { red   [7:4], blue [7:4] };
 */
+
 endmodule
