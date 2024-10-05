@@ -1,91 +1,159 @@
-// TODO
-// Parameterize red, green, blue width
-// Create a variant of 25K with 7-segment, leds and buttons on pmod.
-
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-`define ENABLE_DVI
-
 module board_specific_top
 # (
-    parameter   clk_mhz   = 50,
-                pixel_mhz = 25,
-                w_key     = 2,
-                w_sw      = 0,
-                w_led     = 0,
-                w_digit   = 0,
+    parameter clk_mhz       = 50,
+              pixel_mhz     = 25,
 
-                w_red     = 8,
-                w_green   = 8,
-                w_blue    = 8,
+              // We use sw as an alias to key on Tang Prime 25K,
+              // either with or without TM1638
 
-                w_gpio    = 38,
+              w_key         = 3,
+              w_sw          = 0,
+              w_led         = 3,
+              w_digit       = 0,
+              w_gpio        = 38,
+
+              w_red         = 4,
+              w_green       = 4,
+              w_blue        = 4,
 
               screen_width  = 640,
               screen_height = 480,
 
-                w_x           = $clog2 ( screen_width  ),
-                w_y           = $clog2 ( screen_height )
+              w_x           = $clog2 ( screen_width  ),
+              w_y           = $clog2 ( screen_height )
 
-                // gpio 0..5 are reserved for INMP 441 I2S microphone.
-                // Odd gpio 17..27 are reserved I2S audio.
-                // Odd gpio 29..37 are reserved for TM1638.
+              // gpio 0..5 are reserved for INMP 441 I2S microphone.
+              // Odd gpio 17..27 are reserved I2S audio.
+              // Odd gpio 29..37 are reserved for TM1638.
 )
 (
-    input                  clk,
-    input  [w_key  - 1:0]  key,
+    input                  CLK,
 
-    input                  serial_rx,
-    output                 serial_tx,
+    input  [w_key  - 1:0]  KEY,
 
-    inout  [w_gpio - 1:0]  gpio,
+    output [w_led  - 1:0]  LED,
+
+    input                  UART_RX,
+    output                 UART_TX,
+
+    inout  [w_gpio - 1:0]  GPIO,
 
     `ifdef ENABLE_DVI
 
-    output                 tmds_clk_n,
-    output                 tmds_clk_p,
-    output [         2:0]  tmds_d_n,
-    output [         2:0]  tmds_d_p,
+    output                 TMDS_CLK_N,
+    output                 TMDS_CLK_P,
+    output [         2:0]  TMDS_D_N,
+    output [         2:0]  TMDS_D_P,
 
     `else
 
-    inout  [         7:0]  pmod_0,
+    inout  [         7:0]  PMOD_0,
 
     `endif
 
-    inout  [         7:0]  pmod_1,
-    inout  [         7:0]  pmod_2
+    inout  [         7:0]  PMOD_1,
+    inout  [         7:0]  PMOD_2
 );
 
-    //------------------------------------------------------------------------
-
-    localparam w_tm_key    = 8,
-               w_tm_led    = 8,
-               w_tm_digit  = 8;
+    wire clk = CLK;
 
     //------------------------------------------------------------------------
+
+    localparam w_tm_key   = 8,
+               w_tm_led   = 8,
+               w_tm_digit = 8;
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        localparam w_lab_key   = w_tm_key,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
+
+    `else  // TM1638 module is not connected
+
+        // We create a dummy seven-segment digit
+        // to avoid errors in the labs with seven-segment display
+
+        localparam w_lab_key   = w_key,
+                   w_lab_led   = w_led,
+                   w_lab_digit = 1;  // w_digit;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    // Keys, LEDs, seven segment display
 
     wire  [w_tm_key    - 1:0] tm_key;
-    wire                      rst = tm_key [w_tm_key - 1];
+    wire  [w_tm_led    - 1:0] tm_led;
+    wire  [w_tm_digit  - 1:0] tm_digit;
 
-    wire  [w_tm_led    - 1:0] led;
+    logic [w_lab_key   - 1:0] lab_key;
+    wire  [w_lab_led   - 1:0] lab_led;
+    wire  [w_lab_digit - 1:0] lab_digit;
 
     wire  [              7:0] abcdefgh;
-    wire  [w_tm_digit  - 1:0] digit;
+
+    // Graphics
+
+    wire                 display_on;
 
     wire  [w_x         - 1:0] x;
     wire  [w_y         - 1:0] y;
-
-    wire                      vsync;
-    wire                      hsync;
 
     wire  [w_red       - 1:0] red;
     wire  [w_green     - 1:0] green;
     wire  [w_blue      - 1:0] blue;
 
+    // Sound
+
     wire  [             23:0] mic;
     wire  [             15:0] sound;
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        wire rst_on_power_up;
+        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+
+        wire rst = rst_on_power_up | (| (~ KEY));
+
+    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+
+        wire rst_on_power_up;
+        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+
+        wire rst = rst_on_power_up;
+
+    `else  // Reset using an on-board button
+
+        wire rst = ~ KEY [w_key - 1];
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        assign lab_key  = tm_key;
+
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
+
+        assign LED      = w_led' (~ lab_led);
+
+    `else
+
+        assign lab_key = ~ KEY;
+        assign LED     = ~ lab_led;
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -98,48 +166,48 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz   ( clk_mhz    ),
+        .clk_mhz       ( clk_mhz       ),
 
-        .w_key     ( w_tm_key   ),
-        .w_sw      ( w_tm_key   ),
-        .w_led     ( w_tm_led   ),
-        .w_digit   ( w_tm_digit ),
+        .w_key         ( w_lab_key     ),
+        .w_sw          ( w_lab_key     ),
+        .w_led         ( w_lab_led     ),
+        .w_digit       ( w_lab_digit   ),
+        .w_gpio        ( w_gpio        ),
 
-        .w_red     ( w_red      ),
-        .w_green   ( w_green    ),
-        .w_blue    ( w_blue     ),
+        .screen_width  ( screen_width  ),
+        .screen_height ( screen_height ),
 
-        .w_gpio    ( w_gpio     )
+        .w_red         ( w_red         ),
+        .w_green       ( w_green       ),
+        .w_blue        ( w_blue        )
     )
     i_lab_top
     (
-        .clk       ( clk        ),
-        .slow_clk  ( slow_clk   ),
-        .rst       ( rst        ),
+        .clk           ( clk           ),
+        .slow_clk      ( slow_clk      ),
+        .rst           ( rst           ),
 
-        .key       ( tm_key     ),
-        .sw        ( tm_key     ),
+        .key           ( lab_key       ),
+        .sw            ( lab_key       ),
 
-        .led       ( led        ),
+        .led           ( lab_led       ),
 
-        .abcdefgh  ( abcdefgh   ),
-        .digit     ( digit      ),
+        .abcdefgh      ( abcdefgh      ),
+        .digit         ( lab_digit     ),
 
-        .x         ( x          ),
-        .y         ( y          ),
+        .x             ( x             ),
+        .y             ( y             ),
 
+        .red           ( red           ),
+        .green         ( green         ),
+        .blue          ( blue          ),
 
-        .red       ( red        ),
-        .green     ( green      ),
-        .blue      ( blue       ),
+        .uart_rx       ( UART_RX       ),
+        .uart_tx       ( UART_TX       ),
 
-        .uart_rx   ( serial_rx  ),
-        .uart_tx   ( serial_tx  ),
-
-        .mic       ( mic        ),
-        .sound     ( sound      ),
-
-        .gpio      ( gpio       )
+        .mic           ( mic           ),
+        .sound         ( sound         ),
+        .gpio          ( GPIO          )
     );
 
     //------------------------------------------------------------------------
@@ -155,6 +223,33 @@ module board_specific_top
         end
     endgenerate
 
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        tm1638_board_controller
+        # (
+            .clk_mhz  ( clk_mhz        ),
+            .w_digit  ( w_tm_digit     )
+        )
+        i_tm1638
+        (
+            .clk      ( clk            ),
+            .rst      ( rst            ),
+            .hgfedcba ( hgfedcba       ),
+            .digit    ( tm_digit       ),
+            .ledr     ( tm_led         ),
+            .keys     ( tm_key         ),
+            .sio_data ( GPIO [35]      ),
+            .sio_clk  ( GPIO [33]      ),
+            .sio_stb  ( GPIO [37]      )
+        );
+
+        assign GPIO [31] = 1'b0;
+        assign GPIO [29] = 1'b1;
+
+    `endif
+/*
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver
@@ -199,89 +294,9 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    tm1638_board_controller
-    # (
-        .clk_mhz ( clk_mhz    ),
-        .w_digit ( w_tm_digit )
-    )
-    i_tm1638
-    (
-        .clk        ( clk       ),
-        .rst        ( rst       ),
-        .hgfedcba   ( hgfedcba  ),
-        .digit      ( digit     ),
-        .ledr       ( led       ),
-        .keys       ( tm_key    ),
-        .sio_clk    ( gpio [35] ),
-        .sio_stb    ( gpio [33] ),
-        .sio_data   ( gpio [37] )
-    );
-
-    assign gpio [31] = 1'b0;
-    assign gpio [29] = 1'b1;
-
-    //------------------------------------------------------------------------
-
-    `ifdef ENABLE_DVI
-
-        localparam serial_clk_mhz = 125;
-
-        wire serial_clk;
-
-        Gowin_PLL i_gowin_pll(
-            .lock( ), //output lock
-            .clkout0(serial_clk), //output clkout0
-            .clkin(clk) //input clkin
-        );
-
-        //--------------------------------------------------------------------
-
-        wire hsync, vsync, display_on, pixel_clk;
-        wire [9:0] x10; assign x = x10;
-        wire [9:0] y10; assign y = y10;
-
-        vga
-        # (
-            .CLK_MHZ     ( serial_clk_mhz  ),
-            .PIXEL_MHZ   ( pixel_mhz       )
-        )
-        i_vga
-        (
-            .clk         ( serial_clk      ),
-            .rst         ( rst             ),
-            .hsync       ( hsync           ),
-            .vsync       ( vsync           ),
-            .display_on  ( display_on      ),
-            .hpos        ( x10             ),
-            .vpos        ( y10             ),
-            .pixel_clk   ( pixel_clk       )
-        );
-
-        DVI_TX_Top i_DVI_TX_Top
-        (
-            .I_rst_n       ( ~ rst         ),
-            .I_serial_clk  (   serial_clk  ),
-            .I_rgb_clk     (   pixel_clk   ),
-            .I_rgb_vs      ( ~ vsync       ),
-            .I_rgb_hs      ( ~ hsync       ),
-            .I_rgb_de      (   display_on  ),
-            .I_rgb_r       (   red         ),
-            .I_rgb_g       (   green       ),
-            .I_rgb_b       (   blue        ),
-            .O_tmds_clk_p  (   tmds_clk_p  ),
-            .O_tmds_clk_n  (   tmds_clk_n  ),
-            .O_tmds_data_p (   tmds_d_p    ),
-            .O_tmds_data_n (   tmds_d_n    )
-        );
-
-
-    `endif
-
-    //------------------------------------------------------------------------
-
     // Pmod VGA
 
     assign pmod_1 = { green [7:4], 2'b0, vsync, hsync };
     assign pmod_2 = { red   [7:4], blue [7:4] };
-
+*/
 endmodule
