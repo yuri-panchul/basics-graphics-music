@@ -38,7 +38,7 @@ module board_specific_top
 
     inout  [w_gpio - 1:0]  GPIO,
 
-    `ifdef ENABLE_DVI
+    `ifdef USE_PMOD_DVI
 
     output                 TMDS_1_CLK_N,
     output                 TMDS_1_CLK_P,
