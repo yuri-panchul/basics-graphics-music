@@ -149,15 +149,15 @@ Your contributions are welcome.
 | Lattice ECP5       | [OrangeCrab](https://github.com/orangecrab-fpga/orangecrab-hardware) | [`orangecrab_ecp5_yosys`](./boards/orangecrab_ecp5_yosys/) | [Yosys](./docs/Yosys.md)                           |
 | Lattice ECP5       | [Karnix](https://github.com/Fabmicro-LLC/Karnix_ASB-254) | [`karnix_ecp5_yosys`](./boards/karnix_ecp5_yosys/)   | [Yosys](./docs/Yosys.md)                           |
 | Lattice iCE40      | [Lattice iCE40-HX8K](https://www.latticesemi.com/Products/DevelopmentBoardsAndKits/iCE40HX8KBreakoutBoard.aspx) | [`ice40hx8k_evb_yosys`](./boards/ice40hx8k_evb_yosys/) | [Yosys](./docs/Yosys.md)                           |
-| Omdazz(?)          | Omdazz(?)           | [`omdazz`](./boards/omdazz/) <br/> [`omdazz_pmod_mic3`](./boards/omdazz_pmod_mic3/) |                                                    |
-| Rzrd(?)            | Rzrd(?)             | [`rzrd`](./boards/rzrd/) <br/> [`rzrd_pmod_mic3`](./boards/rzrd_pmod_mic3/) |                                                    |
+| Altera Cyclone IV  | Omdazz              | [`omdazz`](./boards/omdazz/) <br/> [`omdazz_pmod_mic3`](./boards/omdazz_pmod_mic3/) |  [Intel Quartus Prime Lite](./docs/IntelQuartus.md)                                                    |
+| Altera Cyclone IV  | Rzrd                | [`rzrd`](./boards/rzrd/) <br/> [`rzrd_pmod_mic3`](./boards/rzrd_pmod_mic3/) | [Intel Quartus Prime Lite](./docs/IntelQuartus.md)                                                   |
 | Xilinx Artix-7     | Arty A7             | [`arty_a7`](./boards/arty_a7/) <br/> [`arty_a7_pmod_mic3`](./boards/arty_a7_pmod_mic3/) | [Vivado](./docs/vivado_installation_guide/readme.md) |
 | Xilinx Artix-7     | Basys 3             | [`basys3`](./boards/basys3/)                         | [Vivado](./docs/vivado_installation_guide/readme.md) |
 | Xilinx Artix-7     | Nexys 4             | [`nexys4`](./boards/nexys4/)                         | [Vivado](./docs/vivado_installation_guide/readme.md) |
 | Xilinx Artix-7     | Nexys 4 DDR         | [`nexys4_ddr`](./boards/nexys4_ddr/)                 | [Vivado](./docs/vivado_installation_guide/readme.md) |
 | Xilinx Artix-7     | Nexys A7            | [`nexys_a7`](./boards/nexys_a7/)                     | [Vivado](./docs/vivado_installation_guide/readme.md) |
-| Xilinx Spartan 6   | Pisword S6          | [`piswords6`](./boards/piswords6/)                   |                                                    |
-| Xilinx Spartan 6   | Saylinx             | [`saylinx`](./boards/saylinx/) <br/> [`saylinx_pmod_mic3`](./boards/saylinx_pmod_mic3/) |                                                    |
+| Altera Cyclone IV  | Pisword S6          | [`piswords6`](./boards/piswords6/)                   | [Intel Quartus Prime Lite](./docs/IntelQuartus.md)   |
+| Altera Cyclone IV  | Saylinx             | [`saylinx`](./boards/saylinx/) <br/> [`saylinx_pmod_mic3`](./boards/saylinx_pmod_mic3/) |  [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
 | Xilinx Kintex 7    | [QMTech Kintex 7](https://github.com/carlosedp/QMTechBaseBoard) | [`qmtech_kintex_7`](./boards/qmtech_kintex_7/)       | [Vivado](./docs/vivado_installation_guide/readme.md) |
 | Xilinx Zynq-7000   | Zybo Z7             | [`zybo_z7`](./boards/zybo_z7/)                       | [Vivado](./docs/vivado_installation_guide/readme.md) |
 ### External hardware
