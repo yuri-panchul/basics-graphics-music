@@ -70,9 +70,11 @@ module lab_top
 
     //------------------------------------------------------------------------
     //
-    //  NOTE! Since Maker Faire examples are for absolute beginners,
-    //  we are using simplified, more relaxed Verilog style.
-    //  For example, "100" instead of "w_x' (100)" or  "screen_width / 2".
+    //  NOTE! Since the 9_maker_faire series of Verilog examples
+    //  is for absolute beginners,
+    //  we are using a simplified, more relaxed Verilog style
+    //  that may have many lint issues. For example,
+    //  we use "100" instead of "w_x' (100)" or "screen_width / 2".
     //
     //------------------------------------------------------------------------
 
