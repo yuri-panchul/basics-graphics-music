@@ -104,9 +104,7 @@ module lab_top
             & x < 150 + counter
             & y < 200 )
         begin
-            red   = 30;
-            green = 0;
-            blue  = 0;
+            red = 30;
         end
     end
 

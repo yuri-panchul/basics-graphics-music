@@ -91,11 +91,7 @@ module lab_top
             w = 50;
 
         if (x > 200 & y > 0 & x < 200 + w & y < 100)
-        begin
-            red   = 0;
             green = 30;
-            blue  = 0;
-        end
     end
 
 endmodule
