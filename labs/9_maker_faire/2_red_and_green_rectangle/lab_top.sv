@@ -69,6 +69,12 @@ module lab_top
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
+    //
+    //  NOTE! Since Maker Faire examples are for absolute beginners,
+    //  we are using simplified, more relaxed Verilog style.
+    //  For example, "100" instead of "w_x' (100)" or  "screen_width / 2".
+    //
+    //------------------------------------------------------------------------
 
     always_comb
     begin
