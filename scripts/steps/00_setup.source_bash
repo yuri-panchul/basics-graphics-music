@@ -332,6 +332,7 @@ update_fpga_toolchain_var ()
         rzrd*                            | \
         saylinx*                         | \
         step_max10                       | \
+        terasic_sockit                   | \
         zeowaa*                          )
 
             fpga_toolchain=quartus
