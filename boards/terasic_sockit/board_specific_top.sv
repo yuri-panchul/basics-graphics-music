@@ -28,7 +28,7 @@ module board_specific_top
 
     input  [w_key   - 1:0] KEY,
     input  [w_sw    - 1:0] SW,
-    output [w_led   - 1:0] LEDR,
+    output [w_led   - 1:0] LED,
 
     output [w_red   - 1:0] VGA_R,
     output [w_green - 1:0] VGA_G,
@@ -36,14 +36,14 @@ module board_specific_top
 
     output                 VGA_CLK,
     output                 VGA_HS,
-    output                 VGA_VS
+    output                 VGA_VS,
     output                 VGA_BLANK_n,
     output                 VGA_SYNC_n
 );
 
     //------------------------------------------------------------------------
 
-    wire clk = CLOCK_50;
+    wire clk = OSC_50_B3B;
     wire rst = ~ RESET_n;
 
     //------------------------------------------------------------------------
