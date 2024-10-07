@@ -93,7 +93,7 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 
     > "$dir/Makefile"
     echo "NAME = `basename $main_src_dir`" >> "$dir/Makefile"
-    echo "INC = $peripheral_dir:$lab_dir/common" >> "$dir/Makefile"
+    echo "INC = $main_src_dir:$peripheral_dir:$lab_dir/common" >> "$dir/Makefile"
     echo "BOARD = $fpga_board" >> "$dir/Makefile"
 
     for verilog_src_dir in  \
