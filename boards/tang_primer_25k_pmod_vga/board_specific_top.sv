@@ -13,13 +13,16 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 0,
               w_digit       = 0,
-              w_gpio        = 38,
 
               `ifdef USE_PMOD_DVI
+                  w_gpio    = 32,
+
                   w_red     = 8,
                   w_green   = 8,
                   w_blue    = 8,
               `else
+                  w_gpio    = 38,
+
                   w_red     = 4,
                   w_green   = 4,
                   w_blue    = 4,
@@ -46,22 +49,28 @@ module board_specific_top
 
     `ifdef USE_PMOD_DVI
 
-    output                 TMDS_1_CLK_N,
-    output                 TMDS_1_CLK_P,
-    output [         2:0]  TMDS_1_D_N,
-    output [         2:0]  TMDS_1_D_P,
+    output                 TMDS_0_CLK_N,
+    output                 TMDS_0_CLK_P,
+    output [         2:0]  TMDS_0_D_N,
+    output [         2:0]  TMDS_0_D_P,
+
+    // TMDS_1 conflict with TMDS_0
 
     `else
 
+    inout  [         7:0]  PMOD_0,
     inout  [         7:0]  PMOD_1,
 
     `endif
 
-    inout  [         7:0]  PMOD_0,
     inout  [         7:0]  PMOD_2
 );
 
     wire clk = CLK;
+
+    wire [7:0]  PMOD_0;
+    wire [7:0]  PMOD_1;
+    wire [7:0]  PMOD_2;
 
     //------------------------------------------------------------------------
 
@@ -198,9 +207,9 @@ module board_specific_top
             .digit    ( tm_digit   ),
             .ledr     ( tm_led     ),
             .keys     ( tm_key     ),
-            .sio_data ( PMOD_0 [1] ),
-            .sio_clk  ( PMOD_0 [2] ),
-            .sio_stb  ( PMOD_0 [3] )
+            .sio_data ( PMOD_2 [1] ),
+            .sio_clk  ( PMOD_2 [2] ),
+            .sio_stb  ( PMOD_2 [3] )
         );
 
     `endif
@@ -268,10 +277,10 @@ module board_specific_top
                 .I_rgb_r       (   red          ),
                 .I_rgb_g       (   green        ),
                 .I_rgb_b       (   blue         ),
-                .O_tmds_clk_p  (   TMDS_1_CLK_P ),
-                .O_tmds_clk_n  (   TMDS_1_CLK_N ),
-                .O_tmds_data_p (   TMDS_1_D_P   ),
-                .O_tmds_data_n (   TMDS_1_D_N   )
+                .O_tmds_clk_p  (   TMDS_0_CLK_P ),
+                .O_tmds_clk_n  (   TMDS_0_CLK_N ),
+                .O_tmds_data_p (   TMDS_0_D_P   ),
+                .O_tmds_data_n (   TMDS_0_D_N   )
             );
 
         `else  // Instead of DVI use VGA
@@ -283,7 +292,7 @@ module board_specific_top
             // 4' () conversions are not needed for this configuration,
             // but we put them here for clarity
 
-            assign PMOD_1 = { 4' ( green_corrected ), 2'b0, vsync, hsync    };
+            assign PMOD_2 = { 4' ( green_corrected ), 2'b0, vsync, hsync    };
             assign PMOD_2 = { 4' ( red_corrected   ), 4' ( blue_corrected ) };
 
         `endif
@@ -328,10 +337,10 @@ module board_specific_top
             .reset   ( rst        ),
             .data_in ( sound      ),
 
-            .mclk    ( PMOD_0 [4] ),
-            .bclk    ( PMOD_0 [5] ),
-            .sdata   ( PMOD_0 [6] ),
-            .lrclk   ( PMOD_0 [7] )
+            .mclk    ( PMOD_2 [4] ),
+            .bclk    ( PMOD_2 [5] ),
+            .sdata   ( PMOD_2 [6] ),
+            .lrclk   ( PMOD_2 [7] )
         );
 
     `endif

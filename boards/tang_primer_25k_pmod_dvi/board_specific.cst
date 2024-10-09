@@ -29,32 +29,41 @@ IO_LOC "GPIO[10]"   C2  ; IO_LOC "GPIO[11]" B2
 IO_LOC "GPIO[12]"   F1  ; IO_LOC "GPIO[13]" F2
 IO_LOC "GPIO[14]"   A1  ; IO_LOC "GPIO[15]" E1
 IO_LOC "GPIO[16]"   D1  ; IO_LOC "GPIO[17]" E3
+
 IO_LOC "GPIO[18]"   J2  ; IO_LOC "GPIO[19]" J1
 IO_LOC "GPIO[20]"   H4  ; IO_LOC "GPIO[21]" G4
 IO_LOC "GPIO[22]"   H2  ; IO_LOC "GPIO[23]" H1
 IO_LOC "GPIO[24]"   J7  ; IO_LOC "GPIO[25]" K7
+
 IO_LOC "GPIO[26]"   L8  ; IO_LOC "GPIO[27]" L7
-IO_LOC "GPIO[28]"   K10 ; IO_LOC "GPIO[29]" L10  // VCC
-IO_LOC "GPIO[30]"   K9  ; IO_LOC "GPIO[31]" L9   // GND
-IO_LOC "GPIO[32]"   K8  ; IO_LOC "GPIO[33]" J8   // STB
-IO_LOC "GPIO[34]"   F6  ; IO_LOC "GPIO[35]" F7   // CLK
-IO_LOC "GPIO[36]"   J10 ; IO_LOC "GPIO[37]" J11  // DIO
+IO_LOC "GPIO[28]"   K10 ; IO_LOC "GPIO[29]" L10
+
+// Conflicting pins for DVI configuration
+
+// IO_LOC "GPIO[30]"   K9  ; IO_LOC "GPIO[31]" L9
+// IO_LOC "GPIO[32]"   K8  ; IO_LOC "GPIO[33]" J8
+// IO_LOC "GPIO[34]"   F6  ; IO_LOC "GPIO[35]" F7
+
+// We have to replace indices for these pins
+
+// IO_LOC "GPIO[36]"   J10 ; IO_LOC "GPIO[37]" J11
+   IO_LOC "GPIO[30]"   J10 ; IO_LOC "GPIO[31]" J11
 
 //----------------------------------------------------------------------------
 
 // Pmod 0 on the left
 
-IO_LOC "PMOD_0[0]" F5  ;
-IO_LOC "PMOD_0[1]" G7  ;
-IO_LOC "PMOD_0[2]" H8  ;
-IO_LOC "PMOD_0[3]" H5  ;
+// IO_LOC "PMOD_0[0]" F5  ;
+// IO_LOC "PMOD_0[1]" G7  ;
+// IO_LOC "PMOD_0[2]" H8  ;
+// IO_LOC "PMOD_0[3]" H5  ;
 // GND
 // 3V3
 
-IO_LOC "PMOD_0[4]" G5  ;
-IO_LOC "PMOD_0[5]" G8  ;
-IO_LOC "PMOD_0[6]" H7  ;
-IO_LOC "PMOD_0[7]" J5  ;
+// IO_LOC "PMOD_0[4]" G5  ;
+// IO_LOC "PMOD_0[5]" G8  ;
+// IO_LOC "PMOD_0[6]" H7  ;
+// IO_LOC "PMOD_0[7]" J5  ;
 // GND
 // 3V3
 
@@ -62,37 +71,38 @@ IO_LOC "PMOD_0[7]" J5  ;
 
 // Pmod 0 on the left used as DVI
 
-// IO_LOC "TMDS_0_CLK_P"  H5,J5;
-// IO_LOC "TMDS_0_D_P[0]" H8,H7;
-// IO_LOC "TMDS_0_D_P[1]" G7,G8;
-// IO_LOC "TMDS_0_D_P[2]" F5,G5;
+IO_LOC "TMDS_0_CLK_P"  H5,J5;
+IO_LOC "TMDS_0_D_P[0]" H8,H7;
+IO_LOC "TMDS_0_D_P[1]" G7,G8;
+IO_LOC "TMDS_0_D_P[2]" F5,G5;
 
 //----------------------------------------------------------------------------
 
 // Pmod 1 in the middle
+// Not used because of a conflict with Pmod 0 used as DVI
 
 // IO_LOC "PMOD_1[0]" A11 ;
 // IO_LOC "PMOD_1[1]" E11 ;
 // IO_LOC "PMOD_1[2]" K11 ;
 // IO_LOC "PMOD_1[3]" L5  ;
-// // GND
-// // 3V3
-//
+// GND
+// 3V3
+
 // IO_LOC "PMOD_1[4]" A10 ;
 // IO_LOC "PMOD_1[5]" E10 ;
 // IO_LOC "PMOD_1[6]" L11 ;
 // IO_LOC "PMOD_1[7]" K5  ;
-// // GND
-// // 3V3
+// GND
+// 3V3
 
 //----------------------------------------------------------------------------
 
 // Pmod 1 in the middle used as DVI
 
-IO_LOC "TMDS_1_CLK_P"  L5,K5;
-IO_LOC "TMDS_1_D_P[0]" K11,L11;
-IO_LOC "TMDS_1_D_P[1]" E11,E10;
-IO_LOC "TMDS_1_D_P[2]" A11,A10;
+// IO_LOC "TMDS_1_CLK_P"  L5,K5;
+// IO_LOC "TMDS_1_D_P[0]" K11,L11;
+// IO_LOC "TMDS_1_D_P[1]" E11,E10;
+// IO_LOC "TMDS_1_D_P[2]" A11,A10;
 
 //----------------------------------------------------------------------------
 
