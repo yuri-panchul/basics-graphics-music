@@ -35,7 +35,7 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
-              // PMOD_0 is used for I2S audio (bottom row) and TM1638 (top row).
+              // PMOD_2 is used for I2S audio (bottom row) and TM1638 (top row).
 )
 (
     input                  CLK,
@@ -67,10 +67,6 @@ module board_specific_top
 );
 
     wire clk = CLK;
-
-    wire [7:0]  PMOD_0;
-    wire [7:0]  PMOD_1;
-    wire [7:0]  PMOD_2;
 
     //------------------------------------------------------------------------
 
@@ -292,8 +288,8 @@ module board_specific_top
             // 4' () conversions are not needed for this configuration,
             // but we put them here for clarity
 
-            assign PMOD_2 = { 4' ( green_corrected ), 2'b0, vsync, hsync    };
-            assign PMOD_2 = { 4' ( red_corrected   ), 4' ( blue_corrected ) };
+            assign PMOD_0 = { 4' ( green_corrected ), 2'b0, vsync, hsync    };
+            assign PMOD_1 = { 4' ( red_corrected   ), 4' ( blue_corrected ) };
 
         `endif
 
