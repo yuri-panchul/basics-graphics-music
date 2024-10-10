@@ -133,6 +133,11 @@ module board_specific_top
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
+    `elsif VIRTUAL_TM1638_BOARD_CONTROLLER_GRAPHICS
+        localparam w_lab_key   = w_key,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
+
     `else  // TM1638 module is not connected
 
         // We create a dummy seven-segment digit
@@ -203,6 +208,20 @@ module board_specific_top
 
         assign LED      = w_led' (~ lab_led);
 
+    `elsif VIRTUAL_TM1638_BOARD_CONTROLLER_GRAPHICS
+
+        `ifdef REVERSE_KEY
+            `SWAP_BITS (lab_key, ~ KEY);
+        `else
+            assign lab_key = ~ KEY;
+        `endif
+        assign tm_key  = lab_key;
+
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
+
+        assign LED      = w_led' (~ lab_led);
+
     `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         `ifdef REVERSE_KEY
@@ -263,10 +282,11 @@ module board_specific_top
 
         .x             ( x             ),
         .y             ( y             ),
-
+    `ifndef VIRTUAL_TM1638_BOARD_CONTROLLER_GRAPHICS
         .red           ( red           ),
         .green         ( green         ),
         .blue          ( blue          ),
+    `endif
 
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
@@ -313,6 +333,37 @@ module board_specific_top
             .sio_data ( GPIO [0]       ),
             .sio_clk  ( GPIO [1]       ),
             .sio_stb  ( GPIO [2]       )
+        );
+
+    `endif
+
+    `ifdef VIRTUAL_TM1638_BOARD_CONTROLLER_GRAPHICS
+
+        virtual_tm1638_shadow
+        # (
+            .clk_mhz  ( clk_mhz        ),
+            .w_digit  ( w_tm_digit     ),
+
+            .screen_width  ( screen_width ),
+            .screen_height ( screen_height ),
+
+            .w_red         ( w_red ),
+            .w_green       ( w_green ),
+            .w_blue        ( w_blue )
+        )
+        i_tm1638_shadow
+        (
+            .clk      ( clk           ),
+            .rst      ( rst           ),
+            .hgfedcba ( hgfedcba      ),
+            .digit    ( tm_digit      ),
+            .ledr     ( tm_led        ),
+            .keys     ( tm_key        ),
+            .x        ( x             ),
+            .y        ( y             ),
+            .red      (   red         ),
+            .green    (   green       ),
+            .blue     (   blue        )
         );
 
     `endif
