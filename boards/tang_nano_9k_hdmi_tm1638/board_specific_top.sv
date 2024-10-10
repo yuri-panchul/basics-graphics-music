@@ -355,7 +355,7 @@ module board_specific_top
         (
             .clk      ( clk           ),
             .rst      ( rst           ),
-            .hgfedcba ( hgfedcba      ),
+            .abcdefgh ( abcdefgh      ),
             .digit    ( tm_digit      ),
             .ledr     ( tm_led        ),
             .keys     ( tm_key        ),
