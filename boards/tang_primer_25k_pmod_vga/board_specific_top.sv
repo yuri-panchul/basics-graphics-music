@@ -3,36 +3,54 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz       = 50,
-              pixel_mhz     = 25,
+    parameter clk_mhz           = 50,
+              pixel_mhz         = 25,
 
               // We use sw as an alias to key on Tang Prime 25K,
               // either with or without TM1638
 
-              w_key         = 2,
-              w_sw          = 0,
-              w_led         = 0,
-              w_digit       = 0,
+              w_key             = 2,
+              w_sw              = 0,
+              w_led             = 0,
+              w_digit           = 0,
 
               `ifdef USE_PMOD_DVI
-                  w_gpio    = 32,
 
-                  w_red     = 8,
-                  w_green   = 8,
-                  w_blue    = 8,
-              `else
-                  w_gpio    = 38,
+                  w_gpio        = 32,
 
-                  w_red     = 4,
-                  w_green   = 4,
-                  w_blue    = 4,
+                  w_red         = 8,
+                  w_green       = 8,
+                  w_blue        = 8,
+
+                  screen_width  = 640,
+                  screen_height = 480,
+
+              `elif USE_HUB75E_LED_MATRIX
+
+                  w_gpio        = 38,
+
+                  w_red         = 2,
+                  w_green       = 2,
+                  w_blue        = 2,
+
+                  screen_width  = 64,
+                  screen_height = 64,
+
+              `else  // USE_PMOD_VGA
+
+                  w_gpio        = 38,
+
+                  w_red         = 4,
+                  w_green       = 4,
+                  w_blue        = 4,
+
+                  screen_width  = 640,
+                  screen_height = 480,
+
               `endif
 
-              screen_width  = 640,
-              screen_height = 480,
-
-              w_x           = $clog2 ( screen_width  ),
-              w_y           = $clog2 ( screen_height )
+              w_x               = $clog2 ( screen_width  ),
+              w_y               = $clog2 ( screen_height )
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
               // PMOD_2 is used for I2S audio (bottom row) and TM1638 (top row).
@@ -279,7 +297,36 @@ module board_specific_top
                 .O_tmds_data_n (   TMDS_0_D_N   )
             );
 
-        `else  // Instead of DVI use VGA
+        `elif USE_HUB75E_LED_MATRIX
+
+            hub75e_led_matrix
+            # (
+                .clk_mhz ( clk_mhz    )
+            )
+            i_led_matrix
+            (
+                .clk     ( clk        ),
+                .rst     ( rst        ),
+
+                .ck      ( PMOD_0 [6] ),
+                .oe      ( PMOD_0 [7] ),
+                .st      ( PMOD_0 [2] ),
+
+                .a       ( PMOD_0 [4] ),
+                .b       ( PMOD_0 [0] ),
+                .e       ( PMOD_1 [3] ),
+                .c       ( PMOD_0 [5] ),
+                .d       ( PMOD_0 [1] ),
+
+                .x       ( x          ),
+                .y       ( y          )
+            );
+
+            { PMOD_1 [6], PMOD_1 [4] } = red;
+            { PMOD_1 [2], PMOD_1 [0] } = green;
+            { PMOD_1 [7], PMOD_1 [5] } = blue;
+
+        `else  // PMOD_VGA
 
             wire  [w_red   - 1:0] red_corrected   = display_on ? red   : '0;
             wire  [w_green - 1:0] green_corrected = display_on ? green : '0;

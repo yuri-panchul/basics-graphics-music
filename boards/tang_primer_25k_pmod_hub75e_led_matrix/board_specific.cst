@@ -1,0 +1,122 @@
+// The physical constraints and pin assignments
+//
+// Device: GW5A-25A
+// Part Number: GW5A-LV25MG121NC1/I0
+// Board: Tang Primer 25K Dock
+
+IO_LOC "CLK"        E2;
+
+IO_LOC "KEY[0]"     H11;
+IO_LOC "KEY[1]"     H10;
+
+IO_PORT "KEY[0]" PULL_MODE=DOWN DRIVE=OFF BANK_VCCIO=3.3;
+IO_PORT "KEY[1]" PULL_MODE=DOWN DRIVE=OFF BANK_VCCIO=3.3;
+
+IO_LOC "UART_RX"    B3;
+IO_LOC "UART_TX"    C3;
+
+//----------------------------------------------------------------------------
+
+// GPIO in the top
+
+IO_LOC "GPIO[0]"    K2  ; IO_LOC "GPIO[1]"  K1
+IO_LOC "GPIO[2]"    L1  ; IO_LOC "GPIO[3]"  L2
+IO_LOC "GPIO[4]"    K4  ; IO_LOC "GPIO[5]"  J4
+IO_LOC "GPIO[6]"    G1  ; IO_LOC "GPIO[7]"  G2
+IO_LOC "GPIO[8]"    L3  ; IO_LOC "GPIO[9]"  L4
+//                  5V                      GND
+IO_LOC "GPIO[10]"   C2  ; IO_LOC "GPIO[11]" B2
+IO_LOC "GPIO[12]"   F1  ; IO_LOC "GPIO[13]" F2
+IO_LOC "GPIO[14]"   A1  ; IO_LOC "GPIO[15]" E1
+IO_LOC "GPIO[16]"   D1  ; IO_LOC "GPIO[17]" E3
+IO_LOC "GPIO[18]"   J2  ; IO_LOC "GPIO[19]" J1
+IO_LOC "GPIO[20]"   H4  ; IO_LOC "GPIO[21]" G4
+IO_LOC "GPIO[22]"   H2  ; IO_LOC "GPIO[23]" H1
+IO_LOC "GPIO[24]"   J7  ; IO_LOC "GPIO[25]" K7
+IO_LOC "GPIO[26]"   L8  ; IO_LOC "GPIO[27]" L7
+IO_LOC "GPIO[28]"   K10 ; IO_LOC "GPIO[29]" L10  // VCC
+IO_LOC "GPIO[30]"   K9  ; IO_LOC "GPIO[31]" L9   // GND
+IO_LOC "GPIO[32]"   K8  ; IO_LOC "GPIO[33]" J8   // STB
+IO_LOC "GPIO[34]"   F6  ; IO_LOC "GPIO[35]" F7   // CLK
+IO_LOC "GPIO[36]"   J10 ; IO_LOC "GPIO[37]" J11  // DIO
+
+//----------------------------------------------------------------------------
+
+// Pmod 0 on the left
+
+IO_LOC "PMOD_0[0]" F5  ;
+IO_LOC "PMOD_0[1]" G7  ;
+IO_LOC "PMOD_0[2]" H8  ;
+IO_LOC "PMOD_0[3]" H5  ;
+// GND
+// 3V3
+
+IO_LOC "PMOD_0[4]" G5  ;
+IO_LOC "PMOD_0[5]" G8  ;
+IO_LOC "PMOD_0[6]" H7  ;
+IO_LOC "PMOD_0[7]" J5  ;
+// GND
+// 3V3
+
+//----------------------------------------------------------------------------
+
+// Pmod 0 on the left used as DVI
+
+// IO_LOC "TMDS_0_CLK_P"  H5,J5;
+// IO_LOC "TMDS_0_D_P[0]" H8,H7;
+// IO_LOC "TMDS_0_D_P[1]" G7,G8;
+// IO_LOC "TMDS_0_D_P[2]" F5,G5;
+
+//----------------------------------------------------------------------------
+
+// Pmod 1 in the middle
+
+IO_LOC "PMOD_1[0]" A11 ;
+IO_LOC "PMOD_1[1]" E11 ;
+IO_LOC "PMOD_1[2]" K11 ;
+IO_LOC "PMOD_1[3]" L5  ;
+// GND
+// 3V3
+
+IO_LOC "PMOD_1[4]" A10 ;
+IO_LOC "PMOD_1[5]" E10 ;
+IO_LOC "PMOD_1[6]" L11 ;
+IO_LOC "PMOD_1[7]" K5  ;
+// GND
+// 3V3
+
+//----------------------------------------------------------------------------
+
+// Pmod 1 in the middle used as DVI
+
+// IO_LOC "TMDS_1_CLK_P"  L5,K5;
+// IO_LOC "TMDS_1_D_P[0]" K11,L11;
+// IO_LOC "TMDS_1_D_P[1]" E11,E10;
+// IO_LOC "TMDS_1_D_P[2]" A11,A10;
+
+//----------------------------------------------------------------------------
+
+// Pmod 2 on the right
+
+IO_LOC "PMOD_2[0]" G11 ;
+IO_LOC "PMOD_2[1]" D11 ;
+IO_LOC "PMOD_2[2]" B11 ;
+IO_LOC "PMOD_2[3]" C11 ;
+// GND
+// 3V3
+
+IO_LOC "PMOD_2[4]" G10 ;
+IO_LOC "PMOD_2[5]" D10 ;
+IO_LOC "PMOD_2[6]" B10 ;
+IO_LOC "PMOD_2[7]" C10 ;
+// GND
+// 3V3
+
+//----------------------------------------------------------------------------
+
+// Pmod 2 on the right used as DVI
+
+// IO_LOC "TMDS_2_CLK_P"  C11,C10;
+// IO_LOC "TMDS_2_D_P[0]" B11,B10;
+// IO_LOC "TMDS_2_D_P[1]" D11,D10;
+// IO_LOC "TMDS_2_D_P[2]" G11,G10;
