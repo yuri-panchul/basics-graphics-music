@@ -387,7 +387,7 @@ module board_specific_top
         wire inmp441_slow_clk;
 
         slow_clk_gen # (.fast_clk_mhz (serial_clk_mhz), .slow_clk_hz (50))
-        inpm441_slow_clk_gen (.slow_clk (inmp441_slow_clk), .*);
+        inpm441_slow_clk_gen (.clk(serial_clk), .rst(rst), .slow_clk (inmp441_slow_clk));
 
         inmp441_mic_i2s_receiver
         # (
