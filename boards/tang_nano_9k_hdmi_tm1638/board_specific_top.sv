@@ -230,6 +230,22 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    localparam serial_clk_mhz = 125;
+
+    wire serial_clk;
+
+    Gowin_rPLL i_Gowin_rPLL
+    (
+        .clkin  ( clk        ),
+        .clkout ( serial_clk ),
+        .lock   (            )
+    );
+
+    // Do we need to put serial_clk through BUFG?
+    // BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
+
+    //------------------------------------------------------------------------
+
     lab_top
     # (
         .clk_mhz       ( clk_mhz       ),
@@ -321,22 +337,6 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        localparam serial_clk_mhz = 125;
-
-        wire serial_clk;
-
-        Gowin_rPLL i_Gowin_rPLL
-        (
-            .clkin  ( clk        ),
-            .clkout ( serial_clk ),
-            .lock   (            )
-        );
-
-        // Do we need to put serial_clk through BUFG?
-        // BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
-
-        //--------------------------------------------------------------------
-
         wire hsync, vsync, display_on, pixel_clk;
 
         wire [9:0] x10; assign x = x10;
@@ -384,19 +384,24 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
+        wire inmp441_slow_clk;
+
+        slow_clk_gen # (.fast_clk_mhz (serial_clk_mhz), .slow_clk_hz (50))
+        inpm441_slow_clk_gen (.slow_clk (inmp441_slow_clk), .*);
+
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz  ( clk_mhz        )
+            .clk_mhz  ( 50                  )
         )
         i_microphone
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .lr       ( TF_CS          ),
-            .ws       ( TF_MOSI        ),
-            .sck      ( TF_SCLK        ),
-            .sd       ( TF_MISO        ),
-            .value    ( mic            )
+            .clk      ( inmp441_slow_clk    ),
+            .rst      ( rst                 ),
+            .lr       ( TF_CS               ),
+            .ws       ( TF_MOSI             ),
+            .sck      ( TF_SCLK             ),
+            .sd       ( TF_MISO             ),
+            .value    ( mic                 )
         );
 
     `endif
