@@ -326,6 +326,8 @@ module board_specific_top
                 .e       ()  // ( PMOD_1 [3] )
             );
 
+            // TODO
+
             assign PMOD_0 [4] = 1'b0;
             assign PMOD_0 [0] = 1'b0;
             assign PMOD_0 [5] = 1'b0;

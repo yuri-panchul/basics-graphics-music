@@ -124,6 +124,7 @@ module board_specific_top
 
     // Always use button on board for reset, otherwise the board would be
     // stuck on reset if tm1638 is not connected
+
     assign rst = ~ KEY [w_key - 1];
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -201,36 +202,36 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    wire [$left (abcdefgh):0] hgfedcba;
+        wire [$left (abcdefgh):0] hgfedcba;
 
-    generate
-        genvar i;
+        generate
+            genvar i;
 
-        for (i = 0; i < $bits (abcdefgh); i ++)
-        begin : abc
-            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-        end
-    endgenerate
+            for (i = 0; i < $bits (abcdefgh); i ++)
+            begin : abc
+                assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+            end
+        endgenerate
 
-    //------------------------------------------------------------------------
+        //--------------------------------------------------------------------
 
-    tm1638_board_controller
-    # (
-        .clk_mhz ( lab_mhz ),
-        .w_digit ( w_tm_digit )
-    )
-    i_tm1638
-    (
-        .clk        ( clk           ),
-        .rst        ( rst           ),
-        .hgfedcba   ( hgfedcba      ),
-        .digit      ( tm_digit      ),
-        .ledr       ( tm_led        ),
-        .keys       ( tm_key        ),
-        .sio_clk    ( GPIO_0[2]     ),
-        .sio_stb    ( GPIO_0[3]     ),
-        .sio_data   ( GPIO_0[1]     )
-    );
+        tm1638_board_controller
+        # (
+            .clk_mhz   ( lab_mhz    ),
+            .w_digit   ( w_tm_digit )
+        )
+        i_tm1638
+        (
+            .clk       ( clk        ),
+            .rst       ( rst        ),
+            .hgfedcba  ( hgfedcba   ),
+            .digit     ( tm_digit   ),
+            .ledr      ( tm_led     ),
+            .keys      ( tm_key     ),
+            .sio_clk   ( GPIO_0 [2] ),
+            .sio_stb   ( GPIO_0 [3] ),
+            .sio_data  ( GPIO_0 [1] )
+        );
 
     `endif
 
@@ -238,62 +239,63 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-    localparam serial_clk_mhz = 125;
+        localparam serial_clk_mhz = 125;
 
-    wire serial_clk;
+        wire serial_clk;
 
-    Gowin_rPLL i_Gowin_rPLL
-    (
-        .clkin  ( CLK        ), // 27 MHz
-        .clkout ( serial_clk ), // 126 MHz
-        .lock   (            )
-    );
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkin  ( CLK        ),  // 27 MHz
+            .clkout ( serial_clk ),  // 126 MHz
+            .lock   (            )
+        );
 
-    //--------------------------------------------------------------------
+        //----------------------------------------------------------------
 
-    wire hsync, vsync, display_on, pixel_clk, raw_pixel_clk;
+        wire hsync, vsync, display_on, pixel_clk, raw_pixel_clk;
 
-    wire [9:0] x10; assign x = x10;
-    wire [9:0] y10; assign y = y10;
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
 
-    vga
-    # (
-        .CLK_MHZ     ( serial_clk_mhz  ),
-        .PIXEL_MHZ   ( pixel_mhz       )
-    )
-    i_vga
-    (
-        .clk         ( serial_clk      ),
-        .rst         ( rst             ),
-        .hsync       ( hsync           ),
-        .vsync       ( vsync           ),
-        .display_on  ( display_on      ),
-        .hpos        ( x10             ),
-        .vpos        ( y10             ),
-        .pixel_clk   ( raw_pixel_clk   )
-    );
+        vga
+        # (
+            .CLK_MHZ     ( serial_clk_mhz ),
+            .PIXEL_MHZ   ( pixel_mhz      )
+        )
+        i_vga
+        (
+            .clk         ( serial_clk     ),
+            .rst         ( rst            ),
+            .hsync       ( hsync          ),
+            .vsync       ( vsync          ),
+            .display_on  ( display_on     ),
+            .hpos        ( x10            ),
+            .vpos        ( y10            ),
+            .pixel_clk   ( raw_pixel_clk  )
+        );
 
-    // Works without BUFG, but seems like a good practice
-    BUFG i_BUFG (.I (raw_pixel_clk), .O (pixel_clk));
+        // Works without BUFG, but seems like a good practice
 
-    //--------------------------------------------------------------------
+        BUFG i_BUFG (.I (raw_pixel_clk), .O (pixel_clk));
 
-    DVI_TX_Top i_DVI_TX_Top
-    (
-        .I_rst_n       ( ~ rst         ),
-        .I_serial_clk  (   serial_clk  ),
-        .I_rgb_clk     (   pixel_clk   ),
-        .I_rgb_vs      ( ~ vsync       ),
-        .I_rgb_hs      ( ~ hsync       ),
-        .I_rgb_de      (   display_on  ),
-        .I_rgb_r       (   red         ),
-        .I_rgb_g       (   green       ),
-        .I_rgb_b       (   blue        ),
-        .O_tmds_clk_p  (   TMDS_CLK_P  ),
-        .O_tmds_clk_n  (   TMDS_CLK_N  ),
-        .O_tmds_data_p (   TMDS_D_P    ),
-        .O_tmds_data_n (   TMDS_D_N    )
-    );
+        //----------------------------------------------------------------
+
+        DVI_TX_Top i_DVI_TX_Top
+        (
+            .I_rst_n        ( ~ rst         ),
+            .I_serial_clk   (   serial_clk  ),
+            .I_rgb_clk      (   pixel_clk   ),
+            .I_rgb_vs       ( ~ vsync       ),
+            .I_rgb_hs       ( ~ hsync       ),
+            .I_rgb_de       (   display_on  ),
+            .I_rgb_r        (   red         ),
+            .I_rgb_g        (   green       ),
+            .I_rgb_b        (   blue        ),
+            .O_tmds_clk_p   (   TMDS_CLK_P  ),
+            .O_tmds_clk_n   (   TMDS_CLK_N  ),
+            .O_tmds_data_p  (   TMDS_D_P    ),
+            .O_tmds_data_n  (   TMDS_D_N    )
+        );
 
     `endif
 
@@ -301,20 +303,20 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-    inmp441_mic_i2s_receiver
-    # (
-        .clk_mhz ( lab_mhz    )
-    )
-    i_microphone
-    (
-        .clk     ( clk        ),
-        .rst     ( rst        ),
-        .lr      ( GPIO_1 [1] ),
-        .ws      ( GPIO_1 [2] ),
-        .sck     ( GPIO_1 [3] ),
-        .sd      ( GPIO_1 [0] ),
-        .value   ( mic        )
-    );
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( lab_mhz    )
+        )
+        i_microphone
+        (
+            .clk     ( clk        ),
+            .rst     ( rst        ),
+            .lr      ( GPIO_1 [1] ),
+            .ws      ( GPIO_1 [2] ),
+            .sck     ( GPIO_1 [3] ),
+            .sd      ( GPIO_1 [0] ),
+            .value   ( mic        )
+        );
 
     `endif
 
