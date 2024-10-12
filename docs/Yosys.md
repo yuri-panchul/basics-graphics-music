@@ -1,6 +1,6 @@
 ## Using  OSS CAD Suite for Windows for lab works 
 
-1. Download windows wersion **OSS CAD Suite** oss-cad-suite-windows-x64-xxxxxx.exe
+1. Download windows version **OSS CAD Suite** oss-cad-suite-windows-x64-xxxxxx.exe
  from the https://github.com/YosysHQ/oss-cad-suite-build/releases
 2. Put  **OSS CAD Suite** into *C:\oss-cad-suite*
 3. Create *environment.sh* in the *C:\oss-cad-suite* directory 
