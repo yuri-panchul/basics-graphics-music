@@ -1,1 +1,1 @@
-`include "../nexys_a7/board_specific_top.sv"
+`include "../nexys_a7_100/board_specific_top.sv"
