@@ -9,41 +9,139 @@ module hub75e_led_matrix
               w_y           = $clog2 ( screen_height )
 )
 (
-    input              clk,
-    input              rst,
+    input                    clk,
+    input                    rst,
 
-    output logic       ck,
-    output             oe,
-    output             st,
+    output logic [w_x - 1:0] x,
+    output logic [w_y - 1:0] y,
 
-    output             a,
-    output             b,
-    output             e,
-    output             c,
-    output             d,
+    output logic             ck,
+    output logic             oe,
+    output logic             st,
 
-    output [w_x - 1:0] x,
-    output [w_y - 1:0] y
+    output logic             a,
+    output logic             b,
+    output logic             c,
+    output logic             d,
+    output logic             e
 );
+
+    assign oe = 1'b1;
+
+    //--------------------------------------------------------------
+
+    localparam w_cnt = 5;
+
+    logic [w_cnt - 1:0] cnt;
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
+            cnt <= '0;
+        else
+            cnt <= cnt + 1'b1;
+
+    wire en = (cnt == w_cnt' (1'b1));
+
+    //--------------------------------------------------------------
+
+    logic [1:0] state, state_r;
+    logic       burst, burst_r;
+    logic       latch;
+
+    logic [w_x - 1:0] x_r;
+    logic [w_y - 1:0] y_r;
+
+    //--------------------------------------------------------------
+
+    always_comb
+    begin
+        state = state_r;
+
+        burst = 1'b0;
+        latch = 1'b0;
+
+        x     = x_r;
+        y     = y_r;
+
+        case (state)
+
+        2'd0:
+        begin
+            if (x == screen_width - 1)
+            begin
+                state = 2'd1;
+                x     = '0;
+                burst = 1'b0;
+            end
+            else
+            begin
+                x ++;
+                burst = 1'b1;
+            end
+        end
+
+        2'd1:
+        begin
+            state = 2'd2;
+        end
+
+        2'd2:
+        begin
+            latch = 1'b1;
+            state = 2'd3;
+        end
+
+        2'd3:
+        begin
+            if (y == screen_height - 1)
+                y = '0;
+            else
+                y ++;
+
+            burst = 1'b1;
+            latch = 1'b0;
+            state = 2'd0;
+        end
+
+        endcase
+    end
+
+    //--------------------------------------------------------------
+
+    always_ff @ (posedge clk)
+        if (rst)
             ck <= 1'b0;
         else
-            ck <= ~ ck;
+            ck <= cnt [$left (cnt)] & burst_r;
 
-    // TODO
+    //--------------------------------------------------------------
 
-    assign oe = 1'b1;
-    assign st = 1'b1;
+    always_ff @ (posedge clk)
+    begin
+        if (rst)
+        begin
+            state_r <= '0;
+            burst_r <= 1'b1;
 
-    assign a  = 1'b1;
-    assign b  = 1'b1;
-    assign e  = 1'b1;
-    assign c  = 1'b1;
-    assign d  = 1'b1;
+            x_r     <= '0;
+            y_r     <= '0;
 
-    assign x  = 1'b1;
-    assign y  = 1'b1;
+            st      <= 1'b0;
+
+            { a, b, c, d, e } <= '0;
+        end
+        else if (en)
+        begin
+            state_r <= state;
+            burst_r <= burst;
+
+            x_r     <= x;
+            y_r     <= y;
+
+            st      <= latch;
+
+            { a, b, c, d, e } <= y;
+        end
+    end
 
 endmodule

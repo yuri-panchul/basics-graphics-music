@@ -308,23 +308,23 @@ module board_specific_top
                 .clk     ( clk        ),
                 .rst     ( rst        ),
 
+                .x       ( x          ),
+                .y       ( y          ),
+
                 .ck      ( PMOD_0 [6] ),
                 .oe      ( PMOD_0 [7] ),
                 .st      ( PMOD_0 [2] ),
 
                 .a       ( PMOD_0 [4] ),
                 .b       ( PMOD_0 [0] ),
-                .e       ( PMOD_1 [3] ),
                 .c       ( PMOD_0 [5] ),
                 .d       ( PMOD_0 [1] ),
-
-                .x       ( x          ),
-                .y       ( y          )
+                .e       ( PMOD_1 [3] )
             );
 
-            { PMOD_1 [6], PMOD_1 [4] } = red;
-            { PMOD_1 [2], PMOD_1 [0] } = green;
-            { PMOD_1 [7], PMOD_1 [5] } = blue;
+            { PMOD_1 [6], PMOD_1 [4] } = x [1:0]; // red;
+            { PMOD_1 [2], PMOD_1 [0] } = x [3:2]; // green;
+            { PMOD_1 [7], PMOD_1 [5] } = x [5:4]; // blue;
 
         `else  // PMOD_VGA
 
