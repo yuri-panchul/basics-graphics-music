@@ -70,7 +70,20 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [3:0] x4 = x [6:3];
+    wire [3:0] x4;
+
+    generate
+        if (w_x > 6)
+        begin : wide_x
+            assign x4 = x [6:3];
+        end
+        else
+        begin
+            assign x4 = x;
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
 
     logic [3:0] red_4, green_4, blue_4;
 
