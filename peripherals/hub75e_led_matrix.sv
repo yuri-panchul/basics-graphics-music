@@ -130,6 +130,7 @@ endmodule
 
 `ifdef LOCAL_TESTBENCH
 
+`ifndef YOSYS
 module tb_hub75e_led_matrix;
 
     logic clk;
@@ -162,5 +163,7 @@ module tb_hub75e_led_matrix;
     end
 
 endmodule
+
+`endif 
 
 `endif
