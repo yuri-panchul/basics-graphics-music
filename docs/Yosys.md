@@ -1,7 +1,7 @@
 ## Using  OSS CAD Suite for Windows for lab works 
 
-1. Extract OSS CAD Suit into C:\oss-cad-suite
-2. Create environment.sh in the C:\oss-cad-suite directory 
+1. Extract OSS CAD Suit into *C:\oss-cad-suite*
+2. Create *environment.sh* in the *C:\oss-cad-suite* directory 
 
    ```
    export YOSYSHQ_ROOT=/c/oss-cad-suite/
@@ -20,11 +20,11 @@
 
    export OPENFPGALOADER_SOJ_DIR=${YOSYSHQ_ROOT}share/openFPGALoader
    ```
-3. In git bash run
+3. In the Git bash run
    ```
    source /c/oss-cad-suite/environment.sh
    ```
-If you run yosys inside git bash you cant get 
+If you run yosys inside Git bash you cant get 
    ```
     /----------------------------------------------------------------------------\
     |  yosys -- Yosys Open SYnthesis Suite                                       |
