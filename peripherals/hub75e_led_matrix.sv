@@ -34,11 +34,11 @@ module hub75e_led_matrix
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            cnt <= '0;
+            cnt <= 1'b1;
         else
             cnt <= cnt + 1'b1;
 
-    wire en = (cnt == w_cnt' (1'b1));
+    wire en = (cnt == '0);
 
     //------------------------------------------------------------------------
 
@@ -55,24 +55,18 @@ module hub75e_led_matrix
 
         case (state)
 
-        3'd0:
-        begin
-            x_d     = 0;
-            state_d = 3'd1;
-        end
-
-        3'd1:
+        2'd0:
         begin
             x_d ++;
 
             if (x_d == screen_width - 1)
-                state_d = 3'd2;
+                state_d = 2'd1;
         end
 
-        3'd2, 3'd3:
+        2'd1, 2'd2:
             state_d ++;
 
-        3'd4:
+        2'd3:
         begin
             x_d = 0;
 
@@ -81,7 +75,7 @@ module hub75e_led_matrix
             else
                 y_d ++;
 
-            state_d = 3'd0;
+            state_d = 2'd0;
         end
 
         endcase
@@ -93,7 +87,7 @@ module hub75e_led_matrix
         if (rst)
             ck <= 1'b0;
         else
-            ck <= cnt [$left (cnt)] & (state == 3'd1);
+            ck <= cnt [$left (cnt)] & (state == 2'd0);
 
     //------------------------------------------------------------------------
 
@@ -104,7 +98,7 @@ module hub75e_led_matrix
             x     <= '0;
             y     <= '0;
 
-            oe    <= 1'b0;
+            oe    <= 1'b1;
             st    <= 1'b0;
         end
         else if (en)
@@ -113,8 +107,8 @@ module hub75e_led_matrix
             x     <= x_d;
             y     <= y_d;
 
-            oe    <= (state == 3'd1 | state == 3'd2);
-            st    <= (state == 3'd2);
+            oe    <= (state != 2'd2);
+            st    <= (state == 2'd1);
         end
 
     //------------------------------------------------------------------------
