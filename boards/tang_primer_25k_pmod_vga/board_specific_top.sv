@@ -25,7 +25,7 @@ module board_specific_top
                   screen_width  = 640,
                   screen_height = 480,
 
-              `elif USE_HUB75E_LED_MATRIX
+              `elsif USE_HUB75E_LED_MATRIX
 
                   w_gpio        = 38,
 
@@ -254,27 +254,31 @@ module board_specific_top
 
         //--------------------------------------------------------------------
 
-        wire hsync, vsync, display_on, pixel_clk;
+        `ifndef USE_HUB75E_LED_MATRIX
 
-        wire [9:0] x10; assign x = x10;
-        wire [9:0] y10; assign y = y10;
+            wire hsync, vsync, display_on, pixel_clk;
 
-        vga
-        # (
-            .CLK_MHZ     ( vga_in_clk_mhz ),
-            .PIXEL_MHZ   ( pixel_mhz      )
-        )
-        i_vga
-        (
-            .clk         ( vga_in_clk     ),
-            .rst         ( rst            ),
-            .hsync       ( hsync          ),
-            .vsync       ( vsync          ),
-            .display_on  ( display_on     ),
-            .hpos        ( x10            ),
-            .vpos        ( y10            ),
-            .pixel_clk   ( pixel_clk      )
-        );
+            wire [9:0] x10; assign x = x10;
+            wire [9:0] y10; assign y = y10;
+
+            vga
+            # (
+                .CLK_MHZ     ( vga_in_clk_mhz ),
+                .PIXEL_MHZ   ( pixel_mhz      )
+            )
+            i_vga
+            (
+                .clk         ( vga_in_clk     ),
+                .rst         ( rst            ),
+                .hsync       ( hsync          ),
+                .vsync       ( vsync          ),
+                .display_on  ( display_on     ),
+                .hpos        ( x10            ),
+                .vpos        ( y10            ),
+                .pixel_clk   ( pixel_clk      )
+            );
+
+        `endif
 
         //--------------------------------------------------------------------
 
@@ -297,7 +301,7 @@ module board_specific_top
                 .O_tmds_data_n (   TMDS_0_D_N   )
             );
 
-        `elif USE_HUB75E_LED_MATRIX
+        `elsif USE_HUB75E_LED_MATRIX
 
             hub75e_led_matrix
             # (
@@ -315,16 +319,22 @@ module board_specific_top
                 .oe      ( PMOD_0 [7] ),
                 .st      ( PMOD_0 [2] ),
 
-                .a       ( PMOD_0 [4] ),
-                .b       ( PMOD_0 [0] ),
-                .c       ( PMOD_0 [5] ),
-                .d       ( PMOD_0 [1] ),
-                .e       ( PMOD_1 [3] )
+                .a       (), // ( PMOD_0 [4] ),
+                .b       (), // ( PMOD_0 [0] ),
+                .c       (), // ( PMOD_0 [5] ),
+                .d       (), // ( PMOD_0 [1] ),
+                .e       ()  // ( PMOD_1 [3] )
             );
 
-            { PMOD_1 [6], PMOD_1 [4] } = x [1:0]; // red;
-            { PMOD_1 [2], PMOD_1 [0] } = x [3:2]; // green;
-            { PMOD_1 [7], PMOD_1 [5] } = x [5:4]; // blue;
+            assign PMOD_0 [4] = 1'b0;
+            assign PMOD_0 [0] = 1'b0;
+            assign PMOD_0 [5] = 1'b0;
+            assign PMOD_0 [1] = 1'b0;
+            assign PMOD_1 [3] = 1'b0;
+
+            assign { PMOD_1 [6], PMOD_1 [4] } = 2'b11; // x [1:0]; // red;
+            assign { PMOD_1 [2], PMOD_1 [0] } = 2'b00; // x [3:2]; // green;
+            assign { PMOD_1 [7], PMOD_1 [5] } = 2'b00; // x [5:4]; // blue;
 
         `else  // PMOD_VGA
 

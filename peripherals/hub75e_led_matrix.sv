@@ -93,7 +93,7 @@ module hub75e_led_matrix
         if (rst)
             ck <= 1'b0;
         else
-            ck <= cnt [$left (cnt)] & (state <= 3'd1);
+            ck <= cnt [$left (cnt)] & (state == 3'd1);
 
     //------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ module hub75e_led_matrix
             x     <= x_d;
             y     <= y_d;
 
-            oe    <= (state <= 3'd2);
+            oe    <= (state == 3'd1 | state == 3'd2);
             st    <= (state == 3'd2);
         end
 
@@ -126,7 +126,7 @@ endmodule
 
 //----------------------------------------------------------------------------
 
-`define LOCAL_TESTBENCH
+// `define LOCAL_TESTBENCH
 
 `ifdef LOCAL_TESTBENCH
 
