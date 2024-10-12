@@ -1,7 +1,9 @@
 ## Using  OSS CAD Suite for Windows for lab works 
 
-1. Extract **OSS CAD Suite** into *C:\oss-cad-suite*
-2. Create *environment.sh* in the *C:\oss-cad-suite* directory 
+1. Download windows wersion **OSS CAD Suite** oss-cad-suite-windows-x64-xxxxxx.exe
+ from the https://github.com/YosysHQ/oss-cad-suite-build/releases
+2. Extract **OSS CAD Suite** into *C:\oss-cad-suite*
+3. Create *environment.sh* in the *C:\oss-cad-suite* directory 
 
    ```
    export YOSYSHQ_ROOT=/c/oss-cad-suite/
@@ -20,7 +22,7 @@
 
    export OPENFPGALOADER_SOJ_DIR=${YOSYSHQ_ROOT}share/openFPGALoader
    ```
-3. Before runing scripts in the **Git bash** run
+4. Before runing scripts in the **Git bash** run
    ```
    source /c/oss-cad-suite/environment.sh
    ```
