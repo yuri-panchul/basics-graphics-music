@@ -75,11 +75,16 @@ setup_yosys ()
         echo "OK"
     fi
 
-    is_command_available_or_error netlistsvg "" "\n\nEither install it using 'sudo apt-get install npm && sudo npm install -g netlistsvg' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
+    if [ "$OSTYPE" != "cygwin" ] &&  [ "$OSTYPE" != "msys" ] ; then 
 
+        is_command_available_or_error netlistsvg "" "\n\nEither install it using 'sudo apt-get install npm && sudo npm install -g netlistsvg' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
+
+        is_command_available_or_error "xdot" "" "Either install it using 'sudo apt-get install xdot' or get it installed manually from repository: https://github.com/jbohren/xdot.git. Note: depends on Python!"
+    fi
+  
     is_command_available_or_error "make" "" "\n\nGNU make is not installed in the system. Either install it using 'sudo apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
 
-    is_command_available_or_error "xdot" "" "Either install it using 'sudo apt-get install xdot' or get it installed manually from repository: https://github.com/jbohren/xdot.git. Note: depends on Python!"
+
 
 ###    is_command_available_or_error "firefox" "" "\n\nFirefox is not installed in the system. It is used to display SVG graphics. Either install it using 'sudo apt-get install firefox' or get it installed manually from web site: https://www.mozilla.org/en-US/firefox/download/thanks/. Note: you may fake it by creating empty bash script with name 'firefox' in /usr/bin. ;-)"
 }
@@ -93,7 +98,9 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 
     > "$dir/Makefile"
     echo "NAME = `basename $main_src_dir`" >> "$dir/Makefile"
-    echo "INC = $main_src_dir:$peripheral_dir:$lab_dir/common" >> "$dir/Makefile"
+
+    echo "INC = $(adj_path_for_gowin_win "$main_src_dir"):$(adj_path_for_gowin_win "$peripheral_dir"):$(adj_path_for_gowin_win $lab_dir)/common" >> "$dir/Makefile"      
+
     echo "BOARD = $fpga_board" >> "$dir/Makefile"
 
     for verilog_src_dir in  \
