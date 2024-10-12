@@ -1,5 +1,3 @@
-# :wrench: TODO:
-
 ## Using  OSS CAD Suite for Windows for lab works 
 
 1. Extract OSS CAD Suit into C:\oss-cad-suite
