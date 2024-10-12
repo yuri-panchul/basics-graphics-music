@@ -28,7 +28,7 @@ module hub75e_led_matrix
 
     //------------------------------------------------------------------------
 
-    localparam w_cnt = 3;
+    localparam w_cnt = 1;
 
     logic [w_cnt - 1:0] cnt;
 
