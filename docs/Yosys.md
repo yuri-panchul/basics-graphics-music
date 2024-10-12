@@ -26,7 +26,7 @@
    ```
    source /c/oss-cad-suite/environment.sh
    ```
-If you try to run yosys inside **Git bash** you can get 
+**NOTE:** If you try to run yosys inside **Git bash** you can get 
    ```
     /----------------------------------------------------------------------------\
     |  yosys -- Yosys Open SYnthesis Suite                                       |
