@@ -28,7 +28,7 @@ module hub75e_led_matrix
 
     assign oe = 1'b1;
 
-    //--------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     localparam w_cnt = 5;
 
@@ -42,7 +42,7 @@ module hub75e_led_matrix
 
     wire en = (cnt == w_cnt' (1'b1));
 
-    //--------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     logic [1:0] state, state_r;
     logic       burst, burst_r;
@@ -51,7 +51,7 @@ module hub75e_led_matrix
     logic [w_x - 1:0] x_r;
     logic [w_y - 1:0] y_r;
 
-    //--------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     always_comb
     begin
@@ -106,7 +106,7 @@ module hub75e_led_matrix
         endcase
     end
 
-    //--------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     always_ff @ (posedge clk)
         if (rst)
@@ -114,7 +114,7 @@ module hub75e_led_matrix
         else
             ck <= cnt [$left (cnt)] & burst_r;
 
-    //--------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     always_ff @ (posedge clk)
     begin
@@ -145,3 +145,44 @@ module hub75e_led_matrix
     end
 
 endmodule
+
+//----------------------------------------------------------------------------
+
+`define LOCAL_TESTBENCH
+
+`ifdef LOCAL_TESTBENCH
+
+module tb_hub75e_led_matrix;
+
+    logic clk;
+    logic rst;
+
+    hub75e_led_matrix dut (.clk (clk), .rst (rst));
+
+    initial
+    begin
+        clk = 1'b0;
+
+        forever
+            # 5 clk = ~ clk;
+    end
+
+    initial
+    begin
+        rst <= 1'bx;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b1;
+        repeat (100) @ (posedge clk);
+        rst <= 1'b0;
+    end
+
+    initial
+    begin
+        $dumpvars;
+        repeat (1000) @ (posedge clk);
+        $finish;
+    end
+
+endmodule
+
+`endif
