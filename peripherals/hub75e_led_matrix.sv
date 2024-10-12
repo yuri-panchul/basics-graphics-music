@@ -26,11 +26,9 @@ module hub75e_led_matrix
     output logic             e
 );
 
-    assign oe = 1'b1;
-
     //------------------------------------------------------------------------
 
-    localparam w_cnt = 5;
+    localparam w_cnt = 3;
 
     logic [w_cnt - 1:0] cnt;
 
@@ -44,63 +42,46 @@ module hub75e_led_matrix
 
     //------------------------------------------------------------------------
 
-    logic [1:0] state, state_r;
-    logic       burst, burst_r;
-    logic       latch;
+    logic [2:0] state, state_d;
 
-    logic [w_x - 1:0] x_r;
-    logic [w_y - 1:0] y_r;
-
-    //------------------------------------------------------------------------
+    logic [w_x - 1:0] x_d;
+    logic [w_y - 1:0] y_d;
 
     always_comb
     begin
-        state = state_r;
-
-        burst = 1'b0;
-        latch = 1'b0;
-
-        x     = x_r;
-        y     = y_r;
+        state_d = state;
+        x_d     = x;
+        y_d     = y;
 
         case (state)
 
-        2'd0:
+        3'd0:
         begin
-            if (x == screen_width - 1)
-            begin
-                state = 2'd1;
-                x     = '0;
-                burst = 1'b0;
-            end
+            x_d     = 0;
+            state_d = 3'd1;
+        end
+
+        3'd1:
+        begin
+            x_d ++;
+
+            if (x_d == screen_width - 1)
+                state_d = 3'd2;
+        end
+
+        3'd2, 3'd3:
+            state_d ++;
+
+        3'd4:
+        begin
+            x_d = 0;
+
+            if (y_d == screen_height - 1)
+                y_d = '0;
             else
-            begin
-                x ++;
-                burst = 1'b1;
-            end
-        end
+                y_d ++;
 
-        2'd1:
-        begin
-            state = 2'd2;
-        end
-
-        2'd2:
-        begin
-            latch = 1'b1;
-            state = 2'd3;
-        end
-
-        2'd3:
-        begin
-            if (y == screen_height - 1)
-                y = '0;
-            else
-                y ++;
-
-            burst = 1'b1;
-            latch = 1'b0;
-            state = 2'd0;
+            state_d = 3'd0;
         end
 
         endcase
@@ -112,37 +93,35 @@ module hub75e_led_matrix
         if (rst)
             ck <= 1'b0;
         else
-            ck <= cnt [$left (cnt)] & burst_r;
+            ck <= cnt [$left (cnt)] & (state <= 3'd1);
+
+    //------------------------------------------------------------------------
+
+    always_ff @ (posedge clk or negedge rst)
+        if (rst)
+        begin
+            state <= '0;
+            x     <= '0;
+            y     <= '0;
+
+            oe    <= 1'b0;
+            st    <= 1'b0;
+        end
+        else if (en)
+        begin
+            state <= state_d;
+            x     <= x_d;
+            y     <= y_d;
+
+            oe    <= (state <= 3'd2);
+            st    <= (state == 3'd2);
+        end
+    end
 
     //------------------------------------------------------------------------
 
     always_ff @ (posedge clk)
-    begin
-        if (rst)
-        begin
-            state_r <= '0;
-            burst_r <= 1'b1;
-
-            x_r     <= '0;
-            y_r     <= '0;
-
-            st      <= 1'b0;
-
-            { a, b, c, d, e } <= '0;
-        end
-        else if (en)
-        begin
-            state_r <= state;
-            burst_r <= burst;
-
-            x_r     <= x;
-            y_r     <= y;
-
-            st      <= latch;
-
-            { a, b, c, d, e } <= y;
-        end
-    end
+        { a, b, c, d, e } <= y;
 
 endmodule
 
@@ -179,7 +158,7 @@ module tb_hub75e_led_matrix;
     initial
     begin
         $dumpvars;
-        repeat (1000) @ (posedge clk);
+        repeat (10000) @ (posedge clk);
         $finish;
     end
 
