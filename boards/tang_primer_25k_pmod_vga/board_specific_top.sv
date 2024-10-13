@@ -29,12 +29,12 @@ module board_specific_top
 
                   w_gpio        = 38,
 
-                  w_red         = 2,
-                  w_green       = 2,
-                  w_blue        = 2,
+                  w_red         = 1,
+                  w_green       = 1,
+                  w_blue        = 1,
 
                   screen_width  = 64,
-                  screen_height = 64,
+                  screen_height = 32,
 
               `else  // USE_PMOD_VGA
 
@@ -319,24 +319,25 @@ module board_specific_top
                 .oe      ( PMOD_0 [7] ),
                 .st      ( PMOD_0 [2] ),
 
-                .a       (), // ( PMOD_0 [4] ),
-                .b       (), // ( PMOD_0 [0] ),
-                .c       (), // ( PMOD_0 [5] ),
-                .d       (), // ( PMOD_0 [1] ),
-                .e       ()  // ( PMOD_1 [3] )
+                .a       ( PMOD_0 [4] ),
+                .b       ( PMOD_0 [0] ),
+                .c       ( PMOD_0 [5] ),
+                .d       ( PMOD_0 [1] ),
+                .e       ( PMOD_1 [3] )
             );
 
-            // TODO
+            // The screen will be duplicate;
+            // I leave building a true 64x64 LED matrix
+            // to a student project.
 
-            assign PMOD_0 [4] = 1'b1;
-            assign PMOD_0 [0] = 1'b0;
-            assign PMOD_0 [5] = 1'b0;
-            assign PMOD_0 [1] = 1'b0;
-            assign PMOD_1 [3] = 1'b0;
+            assign PMOD_1 [4] = red;
+            assign PMOD_1 [6] = red;
 
-            assign { PMOD_1 [6], PMOD_1 [4] } = 2'b00; // x [1:0]; // red;
-            assign { PMOD_1 [2], PMOD_1 [0] } = 2'b00; // x [3:2]; // green;
-            assign { PMOD_1 [7], PMOD_1 [5] } = 2'b10; // x [5:4]; // blue;
+            assign PMOD_1 [0] = green;
+            assign PMOD_1 [2] = green;
+
+            assign PMOD_1 [5] = blue;
+            assign PMOD_1 [7] = blue;
 
         `else  // PMOD_VGA
 

@@ -120,7 +120,7 @@ module hub75e_led_matrix
     //------------------------------------------------------------------------
 
     always_ff @ (posedge clk)
-        { a, b, c, d, e } <= y;
+        { e, d, c, b, a } <= y;
 
 endmodule
 
