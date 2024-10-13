@@ -42,7 +42,7 @@ module hub75e_led_matrix
 
     //------------------------------------------------------------------------
 
-    logic [2:0] state, state_d;
+    logic [3:0] state, state_d;
 
     logic [w_x - 1:0] x_d;
     logic [w_y - 1:0] y_d;
@@ -57,22 +57,13 @@ module hub75e_led_matrix
 
         3'd0:
         begin
-            x_d     = 0;
-            state_d = 3'd1;
-        end
-
-        3'd1:
-        begin
             x_d ++;
 
             if (x_d == screen_width - 1)
-                state_d = 3'd2;
+                state_d = 3'd1;
         end
 
-        3'd2, 3'd3,    3'd4, 3'd5, 3'd6:
-            state_d ++;
-
-        3'd7:
+        3'd15:
         begin
             x_d = 0;
 
@@ -84,16 +75,19 @@ module hub75e_led_matrix
             state_d = 3'd0;
         end
 
+        default:
+            state_d ++;
+
         endcase
     end
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @ (posedge clk)
         if (rst)
             ck <= 1'b0;
         else
-            ck <= cnt [$left (cnt)] & (state == 3'd1);
+            ck <= cnt [$left (cnt)] & (state <= 3'd1);
 
     //------------------------------------------------------------------------
 
@@ -104,7 +98,7 @@ module hub75e_led_matrix
             x     <= '0;
             y     <= '0;
 
-            oe    <= 1'b0;
+            oe    <= 1'b1;
             st    <= 1'b0;
         end
         else if (en)
@@ -113,7 +107,7 @@ module hub75e_led_matrix
             x     <= x_d;
             y     <= y_d;
 
-            oe    <= (state == 3'd1 | state == 3'd2         | state == 3'd3);
+            oe    <= (state <= 3'd3 | state == 3'd15);
             st    <= (state == 3'd2);
         end
 
@@ -126,11 +120,12 @@ endmodule
 
 //----------------------------------------------------------------------------
 
+`ifndef YOSYS
+
 // `define LOCAL_TESTBENCH
 
 `ifdef LOCAL_TESTBENCH
 
-`ifndef YOSYS
 module tb_hub75e_led_matrix;
 
     logic clk;
@@ -164,6 +159,5 @@ module tb_hub75e_led_matrix;
 
 endmodule
 
-`endif 
-
+`endif
 `endif
