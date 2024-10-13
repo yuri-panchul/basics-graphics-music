@@ -1,0 +1,2 @@
+`define FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+`include "../tang_primer_20k_dock_lcd_800_480_tm1638/board_specific_top.sv"

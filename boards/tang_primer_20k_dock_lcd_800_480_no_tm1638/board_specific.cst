@@ -1,0 +1,100 @@
+# The pin assignments
+
+# CLK
+IO_LOC "CLK"        H11;
+
+# LED
+# Commented 2-5 due to voltage bank conflict with HDMI pins
+IO_LOC "LED[5]"     L16;
+IO_LOC "LED[4]"     L14;
+IO_LOC "LED[3]"     N14;
+IO_LOC "LED[2]"     N16;
+IO_LOC "LED[1]"     A13;
+IO_LOC "LED[0]"     C13;
+
+# LCD
+IO_LOC "LCD_CLK"    R9;
+IO_LOC "LCD_DE"     E15;
+IO_LOC "LCD_HS"     A15;
+IO_LOC "LCD_VS"     D14;
+
+IO_LOC "LCD_R[0]"   L9;
+IO_LOC "LCD_R[1]"   N8;
+IO_LOC "LCD_R[2]"   N9;
+IO_LOC "LCD_R[3]"   N7;
+IO_LOC "LCD_R[4]"   N6;
+
+IO_LOC "LCD_G[0]"   D11;
+IO_LOC "LCD_G[1]"   A11;
+IO_LOC "LCD_G[2]"   B11;
+IO_LOC "LCD_G[3]"   P7;
+IO_LOC "LCD_G[4]"   R7;
+IO_LOC "LCD_G[5]"   D10;
+
+IO_LOC "LCD_B[0]"   B12;
+IO_LOC "LCD_B[1]"   C12;
+IO_LOC "LCD_B[2]"   B13;
+IO_LOC "LCD_B[3]"   A14;
+IO_LOC "LCD_B[4]"   B14;
+
+#IO_LOC "LCD_INIT"   C11;
+#IO_LOC "LCD_BL"     E10;
+
+# UART
+IO_LOC "UART_TX"    M11;
+IO_LOC "UART_RX"    T13;
+
+# SWITCH
+IO_LOC "SW[3]"      T5;
+IO_LOC "SW[2]"      T4;
+IO_LOC "SW[1]"      E8;
+IO_LOC "SW[0]"      E9;
+
+# KEY
+IO_LOC "KEY[4]"     C7;
+IO_LOC "KEY[3]"     D7;
+IO_LOC "KEY[2]"     T2;
+IO_LOC "KEY[1]"     T3;
+IO_LOC "KEY[0]"     T10;
+
+# HDMI
+#IO_LOC "TMDS_CLK_P"   G16,H15;
+#IO_LOC "TMDS_D_P[0]"  H14,H16;
+#IO_LOC "TMDS_D_P[1]"  J15,K16;
+#IO_LOC "TMDS_D_P[2]"  K14,K15;
+
+# GPIO
+# IO_LOC "GPIO_3[7]" N8;
+# IO_LOC "GPIO_3[6]" N7;
+# IO_LOC "GPIO_3[5]" D11;
+# IO_LOC "GPIO_3[4]" B11;
+# IO_LOC "GPIO_3[3]" L9;
+# IO_LOC "GPIO_3[2]" N9;
+# IO_LOC "GPIO_3[1]" N6;
+# IO_LOC "GPIO_3[0]" A11;
+#
+# IO_LOC "GPIO_2[7]" C12;
+# IO_LOC "GPIO_2[6]" A14;
+# IO_LOC "GPIO_2[5]" A15;
+# IO_LOC "GPIO_2[4]" E15;
+# IO_LOC "GPIO_2[3]" B12;
+# IO_LOC "GPIO_2[2]" B13;
+# IO_LOC "GPIO_2[1]" B14;
+# IO_LOC "GPIO_2[0]" D14;
+#
+# IO_LOC "GPIO_1[7]" J16;
+# IO_LOC "GPIO_1[6]" M15;
+# IO_LOC "GPIO_1[5]" R11;
+# IO_LOC "GPIO_1[4]" P11;
+# IO_LOC "GPIO_1[3]" J14;
+# IO_LOC "GPIO_1[2]" M14;
+# IO_LOC "GPIO_1[1]" T12;
+# IO_LOC "GPIO_1[0]" T11;
+#
+# IO_LOC "GPIO_0[7]" T9;
+# IO_LOC "GPIO_0[5]" R8;
+# IO_LOC "GPIO_0[4]" P6;
+IO_LOC "GPIO_0[3]"   P9;
+IO_LOC "GPIO_0[2]"   T8;
+IO_LOC "GPIO_0[1]"   T7;
+# IO_LOC "GPIO_0[0]" T6;
