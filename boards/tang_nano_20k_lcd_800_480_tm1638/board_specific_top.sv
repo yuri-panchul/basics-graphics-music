@@ -294,7 +294,7 @@ module board_specific_top
         (
             .CLK       (   lcd_module_clk ),
 
-            .PixelClk  (   LCD_CK         ),
+            .PixelClk  (   LCD_CLK        ),
             .nRST      ( ~ rst            ),
 
             .LCD_DE    (   LCD_DE         ),
