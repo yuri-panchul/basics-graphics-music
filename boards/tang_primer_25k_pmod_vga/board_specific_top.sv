@@ -1,6 +1,16 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
+`ifdef  USE_HUB75E_LED_MATRIX_64x32
+`define USE_HUB75E_LED_MATRIX
+`define HUB75E_LED_MATRIX_HEIGHT 32
+`endif
+
+`ifdef  USE_HUB75E_LED_MATRIX_64x64
+`define USE_HUB75E_LED_MATRIX
+`define HUB75E_LED_MATRIX_HEIGHT 64
+`endif
+
 module board_specific_top
 # (
     parameter clk_mhz           = 50,
@@ -34,7 +44,7 @@ module board_specific_top
                   w_blue        = 1,
 
                   screen_width  = 64,
-                  screen_height = 32,
+                  screen_height = `HUB75E_LED_MATRIX_HEIGHT,
 
               `else  // USE_PMOD_VGA
 
@@ -305,7 +315,9 @@ module board_specific_top
 
             hub75e_led_matrix
             # (
-                .clk_mhz ( clk_mhz    )
+                .clk_mhz       ( clk_mhz       ),
+                .screen_width  ( screen_width  ),
+                .screen_height ( screen_height )
             )
             i_led_matrix
             (
@@ -326,18 +338,37 @@ module board_specific_top
                 .e       ( PMOD_1 [3] )
             );
 
-            // The screen will be duplicate;
-            // I leave building a true 64x64 LED matrix
-            // to a student project.
+            `ifdef USE_HUB75E_LED_MATRIX_64x32
 
-            assign PMOD_1 [4] = red;
-            assign PMOD_1 [6] = red;
+                // The screen will be duplicate;
+                // I leave building a true 64x64 LED matrix
+                // to a student project.
 
-            assign PMOD_1 [0] = green;
-            assign PMOD_1 [2] = green;
+                assign PMOD_1 [4] = red;
+                assign PMOD_1 [6] = red;
 
-            assign PMOD_1 [5] = blue;
-            assign PMOD_1 [7] = blue;
+                assign PMOD_1 [0] = green;
+                assign PMOD_1 [2] = green;
+
+                assign PMOD_1 [5] = blue;
+                assign PMOD_1 [7] = blue;
+
+            `else
+
+                // The screen will be less bright
+
+                wire first_32_lines = (y [w_y - 1] == 1'b0);
+
+                assign PMOD_1 [4] = red   &   first_32_lines;
+                assign PMOD_1 [6] = red   & ~ first_32_lines;
+
+                assign PMOD_1 [0] = green &   first_32_lines;
+                assign PMOD_1 [2] = green & ~ first_32_lines;
+
+                assign PMOD_1 [5] = blue  &   first_32_lines;
+                assign PMOD_1 [7] = blue  & ~ first_32_lines;
+
+            `endif
 
         `else  // PMOD_VGA
 
