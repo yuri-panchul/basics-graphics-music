@@ -55,15 +55,15 @@ module hub75e_led_matrix
 
         case (state)
 
-        3'd0:
+        4'd0:
         begin
             x_d ++;
 
             if (x_d == screen_width - 1)
-                state_d = 3'd1;
+                state_d = 4'd1;
         end
 
-        3'd15:
+        4'd15:
         begin
             x_d = 0;
 
@@ -72,7 +72,7 @@ module hub75e_led_matrix
             else
                 y_d ++;
 
-            state_d = 3'd0;
+            state_d = 4'd0;
         end
 
         default:
@@ -87,7 +87,7 @@ module hub75e_led_matrix
         if (rst)
             ck <= 1'b0;
         else
-            ck <= cnt [$left (cnt)] & (state <= 3'd1);
+            ck <= cnt [$left (cnt)] & (state <= 4'd1);
 
     //------------------------------------------------------------------------
 
@@ -107,8 +107,8 @@ module hub75e_led_matrix
             x     <= x_d;
             y     <= y_d;
 
-            oe    <= (state <= 3'd3 | state == 3'd15);
-            st    <= (state == 3'd2);
+            oe    <= (state <= 4'd3 | state == 4'd15);
+            st    <= (state == 4'd2);
         end
 
     //------------------------------------------------------------------------
