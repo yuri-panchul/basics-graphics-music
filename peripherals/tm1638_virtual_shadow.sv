@@ -9,11 +9,7 @@ module virtual_tm1638_shadow
 # (
     parameter clk_mhz = 50,
               w_digit = 8,
-    //`ifdef USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE
-    //          w_keys = 16,
-    //`else
               w_keys = 8,
-    //`endif
 
               w_red         = 4,
               w_green       = 4,
@@ -39,9 +35,9 @@ module virtual_tm1638_shadow
     input        [w_x     - 1:0] x,
     input        [w_y     - 1:0] y,
 
-    output logic [w_red   - 1:0] red,
-    output logic [w_green - 1:0] green,
-    output logic [w_blue  - 1:0] blue
+    output logic inv_red,
+    output logic inv_green,
+    output logic inv_blue
 
 );
 
@@ -53,128 +49,121 @@ module virtual_tm1638_shadow
 
     localparam w_seg   = 8;
     localparam dispx   = 4*w_digit+1;
-    localparam dispy   = 7;
+    localparam dispy   = 8;  // 4 lines: leds, segments (5), keys, reserved for alignment
     localparam cellsx  = 8*w_digit+3;
-    localparam cellsy  = 15;
-    localparam clenx   = 8;  // screen_width / cellsx; // rounding low?
-    localparam cleny   = 8;  // screen_height / cellsy;
+    localparam cellsy  = 16;
+    localparam clenx   = 8;  // screen_width / cellsx;
+    localparam cleny   = clenx;
     localparam offsetx = (screen_width - clenx*cellsx)/2;
     localparam offsety = (screen_height - cleny*cellsy)/2;
 
     ////////////// TM1563 data /////////////////
+    //   --a--
+    //  |     |
+    //  f     b
+    //  |     |
+    //   --g--
+    //  |     |
+    //  e     c
+    //  |     |
+    //   --d--  h
 
     // HEX registered
-    logic [w_seg - 1:0] r_hex0,r_hex1,r_hex2,r_hex3,r_hex4,r_hex5,r_hex6,r_hex7;
+    logic [w_seg - 1:0] r_hex[w_digit];
 
     always @( posedge clk )
     begin
-        if (rst) begin
-            r_hex0 <= 'b0;
-            r_hex1 <= 'b0;
-            r_hex2 <= 'b0;
-            r_hex3 <= 'b0;
-            r_hex4 <= 'b0;
-            r_hex5 <= 'b0;
-            r_hex6 <= 'b0;
-            r_hex7 <= 'b0;
+        if (rst) begin   //hgfedcba
+            r_hex[0] <= 8'b00111111; // 0
+            r_hex[1] <= 8'b00000110; // 1
+            r_hex[2] <= 8'b01011011; // 2
+            r_hex[3] <= 8'b01001111; // 3
+            r_hex[4] <= 8'b01100110; // 4
+            r_hex[5] <= 8'b01101101; // 5
+            r_hex[6] <= 8'b01111101; // 6
+            r_hex[7] <= 8'b00000111; // 7
         end
         else
         begin
             case (digit)
-                'b00000001: r_hex0 <= abcdefgh;
-                'b00000010: r_hex1 <= abcdefgh;
-                'b00000100: r_hex2 <= abcdefgh;
-                'b00001000: r_hex3 <= abcdefgh;
-                'b00010000: r_hex4 <= abcdefgh;
-                'b00100000: r_hex5 <= abcdefgh;
-                'b01000000: r_hex6 <= abcdefgh;
-                'b10000000: r_hex7 <= abcdefgh;
+                'b00000001: r_hex[0] <= abcdefgh;
+                'b00000010: r_hex[1] <= abcdefgh;
+                'b00000100: r_hex[2] <= abcdefgh;
+                'b00001000: r_hex[3] <= abcdefgh;
+                'b00010000: r_hex[4] <= abcdefgh;
+                'b00100000: r_hex[5] <= abcdefgh;
+                'b01000000: r_hex[6] <= abcdefgh;
+                'b10000000: r_hex[7] <= abcdefgh;
             endcase
         end
     end
 
     // HEX combinational
-    wire [w_seg - 1:0] c_hex0,c_hex1,c_hex2,c_hex3,c_hex4,c_hex5,c_hex6,c_hex7;
+    wire [w_seg - 1:0] c_hex[w_digit];
 
-    assign c_hex0 = digit [0] ? abcdefgh : '0;
-    assign c_hex1 = digit [1] ? abcdefgh : '0;
-    assign c_hex2 = digit [2] ? abcdefgh : '0;
-    assign c_hex3 = digit [3] ? abcdefgh : '0;
-    assign c_hex4 = digit [4] ? abcdefgh : '0;
-    assign c_hex5 = digit [5] ? abcdefgh : '0;
-    assign c_hex6 = digit [6] ? abcdefgh : '0;
-    assign c_hex7 = digit [7] ? abcdefgh : '0;
+    assign c_hex[0] = digit [0] ? abcdefgh : '0;
+    assign c_hex[1] = digit [1] ? abcdefgh : '0;
+    assign c_hex[2] = digit [2] ? abcdefgh : '0;
+    assign c_hex[3] = digit [3] ? abcdefgh : '0;
+    assign c_hex[4] = digit [4] ? abcdefgh : '0;
+    assign c_hex[5] = digit [5] ? abcdefgh : '0;
+    assign c_hex[6] = digit [6] ? abcdefgh : '0;
+    assign c_hex[7] = digit [7] ? abcdefgh : '0;
 
     // Select combinational or registered HEX (blink or not)
-    wire [w_seg - 1:0] hex0,hex1,hex2,hex3,hex4,hex5,hex6,hex7;
+    wire [w_seg - 1:0] hex[w_digit];
 
-    assign hex0 = static_hex ? r_hex0 : c_hex0;
-    assign hex1 = static_hex ? r_hex1 : c_hex1;
-    assign hex2 = static_hex ? r_hex2 : c_hex2;
-    assign hex3 = static_hex ? r_hex3 : c_hex3;
-    assign hex4 = static_hex ? r_hex4 : c_hex4;
-    assign hex5 = static_hex ? r_hex5 : c_hex5;
-    assign hex6 = static_hex ? r_hex6 : c_hex6;
-    assign hex7 = static_hex ? r_hex7 : c_hex7;
+    assign hex[0] = static_hex ? r_hex[0] : c_hex[0];
+    assign hex[1] = static_hex ? r_hex[1] : c_hex[1];
+    assign hex[2] = static_hex ? r_hex[2] : c_hex[2];
+    assign hex[3] = static_hex ? r_hex[3] : c_hex[3];
+    assign hex[4] = static_hex ? r_hex[4] : c_hex[4];
+    assign hex[5] = static_hex ? r_hex[5] : c_hex[5];
+    assign hex[6] = static_hex ? r_hex[6] : c_hex[6];
+    assign hex[7] = static_hex ? r_hex[7] : c_hex[7];
 
-    logic disp [dispy][dispx];
-    wire a,b,c,d,e,f,g,h;
-    assign a = abcdefgh[0];
-    assign b = abcdefgh[1];
-    assign c = abcdefgh[2];
-    assign d = abcdefgh[3];
-    assign e = abcdefgh[4];
-    assign f = abcdefgh[5];
-    assign g = abcdefgh[6];
-    assign h = abcdefgh[7];
+    wire disp [dispx][dispy];
 
-    genvar i;
+    genvar i, k;
     generate
         for (i = 0; i < w_keys; i++) begin : keys_display
-            assign disp[dispy-1][i*4+0] = keys[i];
-            assign disp[dispy-1][i*4+1] = keys[i];
-            assign disp[dispy-1][i*4+2] = keys[i];
+            assign disp[i*4+1][dispy-2] = keys[i];
+            assign disp[i*4+2][dispy-2] = keys[i];
+            assign disp[i*4+3][dispy-2] = keys[i];
         end
         for (i = 0; i < $bits(ledr); i++) begin : leds_display
-            assign disp[0][i*4+0] = ledr[i];
-            assign disp[0][i*4+1] = ledr[i];
-            assign disp[0][i*4+2] = ledr[i];
+            assign disp[i*4+1][0] = ledr[i];
+            assign disp[i*4+2][0] = ledr[i];
+            assign disp[i*4+3][0] = ledr[i];
         end
-        /*      '{0,0,0,0},
-                '{0,0,a,0},
-                '{0,f,0,b},
-                '{0,0,g,0},
-                '{0,e,0,c},
-                '{0,0,d,0}};
-        */
         for (i = 0; i < w_digit; i++) begin : segments_display
-            assign disp[1][i*4+2] = a;
-            assign disp[2][i*4+1] = f;
-            assign disp[2][i*4+3] = b;
-            assign disp[3][i*4+2] = g;
-            assign disp[4][i*4+1] = e;
-            assign disp[4][i*4+3] = c;
-            assign disp[5][i*4+2] = d;
-            assign disp[5][i*4+4] = h;
+            assign disp[i*4+2][1] = hex[i][0]; // a     '{0,0,0,0},
+            assign disp[i*4+1][2] = hex[i][5]; // f     '{0,0,a,0},
+            assign disp[i*4+3][2] = hex[i][1]; // b     '{0,f,0,b},
+            assign disp[i*4+2][3] = hex[i][6]; // g     '{0,0,g,0},
+            assign disp[i*4+1][4] = hex[i][4]; // e     '{0,e,0,c},
+            assign disp[i*4+3][4] = hex[i][2]; // c     '{0,0,d,0,h}};
+            assign disp[i*4+2][5] = hex[i][3]; // d
+            assign disp[i*4+4][5] = hex[i][7]; // h
+        end
+        for (i = 1; i < dispx-1; i++) begin : underline_display
+            assign disp[i][dispy-1] = '1;
         end
     endgenerate
 
     logic [w_x-1:0] cx, dx; // cell and display x
     logic [w_y-1:0] cy, dy; // cell and display y
-    logic dv;
 
     always_comb
     begin
         cx = (x-offsetx) / clenx;
         cy = (y-offsety) / cleny;
-        dx = (cx>>2)+((cx+1)>>2); // 0123456789... => 000122234...
+        dx = (cx>>2)+((cx+1)>>2); // 0123456789ABC... => 000122234445...
         dy = (cy>>2)+((cy+1)>>2);
 
-        dv = (dx < dispx && dy < dispy)? disp[dy][dx] : 0;
-
-        red   = dv ? 255:0;
-        green = dv ? 255:0;
-        blue  = dv ? 255:0;
+        inv_red   = (dx < dispx && dy < dispy)? disp[dx][dy] : 0;
+        inv_green = dy==dispy-2 ? '0 : inv_red;
+        inv_blue  = dy==0 ? '0 : inv_red;
     end
 
 endmodule
