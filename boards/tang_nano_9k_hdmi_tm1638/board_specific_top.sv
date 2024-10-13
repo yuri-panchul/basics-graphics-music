@@ -5,9 +5,11 @@
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-`endif
-`ifdef FORCE_NO_INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-    `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+        `ifndef FORCE_NO_VIRTUAL_TM1638_USING_GRAPHICS
+            `define INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+        `endif
+    `endif
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
@@ -136,7 +138,12 @@ module board_specific_top
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
-    `elsif FORCE_NO_INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+    `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+        // Instantiate virtual tm1638
+        localparam w_lab_key   = w_key,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
+    `else
         // No need in TM1638 in any form
         // We create a dummy seven-segment digit
         // to avoid errors in the labs with seven-segment display
@@ -144,13 +151,6 @@ module board_specific_top
         localparam w_lab_key   = w_key,
                    w_lab_led   = w_led,
                    w_lab_digit = 1;  // w_digit;
-    `else  // Instantiate virtual tm1638
-        `ifndef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-            `define INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-        `endif
-        localparam w_lab_key   = w_key,
-                   w_lab_led   = w_tm_led,
-                   w_lab_digit = w_tm_digit;
     `endif
 
     //------------------------------------------------------------------------
@@ -215,8 +215,8 @@ module board_specific_top
 
         assign LED      = w_led' (~ lab_led);
 
-    `elsif INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-        // Virtual tm1638
+    `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+        // Virtual tm1638 - tm_keys are input, not output
 
         `ifdef REVERSE_KEY
             `SWAP_BITS (lab_key, ~ KEY);
@@ -230,7 +230,7 @@ module board_specific_top
 
         assign LED      = w_led' (~ lab_led);
 
-    `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `else  // no any form of TM1638
 
         `ifdef REVERSE_KEY
             `SWAP_BITS (lab_key, ~ KEY);
@@ -340,7 +340,7 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
     
-        `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+        `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
             virtual_tm1638_using_graphics
             # (
                 .clk_mhz  ( clk_mhz        ),

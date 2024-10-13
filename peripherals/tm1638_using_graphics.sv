@@ -45,7 +45,7 @@ module virtual_tm1638_using_graphics
 
     localparam w_seg   = 8;
     localparam dispx   = 4*w_digit+1;
-    localparam dispy   = 8;  // 4 lines: leds, segments (5), keys, reserved for alignment
+    localparam dispy   = 8;  // 4 lines: leds, segments (5), keys, separator (for alignment and power-on indication)
     localparam cellsx  = 8*w_digit+3;
     localparam cellsy  = 16;
     localparam clenx_s = $clog2(screen_width / cellsx)-1;
@@ -120,30 +120,30 @@ module virtual_tm1638_using_graphics
 
     wire disp [dispx][dispy];
 
-    genvar i, k;
+    genvar i;
     generate
-        for (i = 0; i < w_keys; i++) begin : keys_display
-            assign disp[i*4+1][dispy-2] = keys[i];
-            assign disp[i*4+2][dispy-2] = keys[i];
-            assign disp[i*4+3][dispy-2] = keys[i];
-        end
         for (i = 0; i < $bits(ledr); i++) begin : leds_display
-            assign disp[i*4+1][0] = ledr[i];
-            assign disp[i*4+2][0] = ledr[i];
-            assign disp[i*4+3][0] = ledr[i];
+            assign disp[(w_digit-1-i)*4+1][0] = ledr[i];
+            assign disp[(w_digit-1-i)*4+2][0] = ledr[i];
+            assign disp[(w_digit-1-i)*4+3][0] = ledr[i];
+        end
+        for (i = 1; i < dispx-1; i++) begin : separator_display
+            assign disp[i][1] = '1;
+        end
+        for (i = 0; i < w_keys; i++) begin : keys_display
+            assign disp[(w_digit-1-i)*4+1][2] = keys[i];
+            assign disp[(w_digit-1-i)*4+2][2] = keys[i];
+            assign disp[(w_digit-1-i)*4+3][2] = keys[i];
         end
         for (i = 0; i < w_digit; i++) begin : segments_display
-            assign disp[i*4+2][1] = hex[i][7]; // a     '{0,0,0,0},
-            assign disp[i*4+1][2] = hex[i][2]; // f     '{0,0,a,0},
-            assign disp[i*4+3][2] = hex[i][6]; // b     '{0,f,0,b},
-            assign disp[i*4+2][3] = hex[i][1]; // g     '{0,0,g,0},
-            assign disp[i*4+1][4] = hex[i][3]; // e     '{0,e,0,c},
-            assign disp[i*4+3][4] = hex[i][5]; // c     '{0,0,d,0,h}};
-            assign disp[i*4+2][5] = hex[i][4]; // d
-            assign disp[i*4+4][5] = hex[i][0]; // h
-        end
-        for (i = 1; i < dispx-1; i++) begin : underline_display
-            assign disp[i][dispy-1] = '1;
+            assign disp[(w_digit-1-i)*4+2][3] = hex[i][7]; // a     '{0,0,0,0},
+            assign disp[(w_digit-1-i)*4+1][4] = hex[i][2]; // f     '{0,0,a,0},
+            assign disp[(w_digit-1-i)*4+3][4] = hex[i][6]; // b     '{0,f,0,b},
+            assign disp[(w_digit-1-i)*4+2][5] = hex[i][1]; // g     '{0,0,g,0},
+            assign disp[(w_digit-1-i)*4+1][6] = hex[i][3]; // e     '{0,e,0,c},
+            assign disp[(w_digit-1-i)*4+3][6] = hex[i][5]; // c     '{0,0,d,0,h}};
+            assign disp[(w_digit-1-i)*4+2][7] = hex[i][4]; // d
+            assign disp[(w_digit-1-i)*4+4][7] = hex[i][0]; // h
         end
     endgenerate
 
@@ -158,7 +158,7 @@ module virtual_tm1638_using_graphics
         dy = (cy>>2)+((cy+1)>>2);
 
         red   = (dx < dispx && dy < dispy)? disp[dx][dy] : 0;
-        green = dy==dispy-2 ? '0 : red;
+        green = dy==2 ? '0 : red;
         blue  = dy==0 ? '0 : red;
     end
 
