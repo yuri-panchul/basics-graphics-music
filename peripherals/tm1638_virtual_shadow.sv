@@ -26,7 +26,7 @@ module virtual_tm1638_shadow
     input                         rst,
 
     // tm1638 inputs
-    input        [           0:7] abcdefgh,
+    input        [           7:0] abcdefgh,
     input        [ w_digit - 1:0] digit,
     input        [           7:0] ledr,
     input        [ w_keys  - 1:0] keys,
@@ -73,15 +73,15 @@ module virtual_tm1638_shadow
 
     always @( posedge clk )
     begin
-        if (rst) begin   //hgfedcba
-            r_hex[0] <= 8'b00111111; // 0
-            r_hex[1] <= 8'b00000110; // 1
-            r_hex[2] <= 8'b01011011; // 2
-            r_hex[3] <= 8'b01001111; // 3
+        if (rst) begin   //abcdefgh
+            r_hex[0] <= 8'b11111100; // 0
+            r_hex[1] <= 8'b01100000; // 1
+            r_hex[2] <= 8'b11011010; // 2
+            r_hex[3] <= 8'b11110010; // 3
             r_hex[4] <= 8'b01100110; // 4
-            r_hex[5] <= 8'b01101101; // 5
-            r_hex[6] <= 8'b01111101; // 6
-            r_hex[7] <= 8'b00000111; // 7
+            r_hex[5] <= 8'b10110110; // 5
+            r_hex[6] <= 8'b10111110; // 6
+            r_hex[7] <= 8'b11100000; // 7
         end
         else
         begin
@@ -137,14 +137,14 @@ module virtual_tm1638_shadow
             assign disp[i*4+3][0] = ledr[i];
         end
         for (i = 0; i < w_digit; i++) begin : segments_display
-            assign disp[i*4+2][1] = hex[i][0]; // a     '{0,0,0,0},
-            assign disp[i*4+1][2] = hex[i][5]; // f     '{0,0,a,0},
-            assign disp[i*4+3][2] = hex[i][1]; // b     '{0,f,0,b},
-            assign disp[i*4+2][3] = hex[i][6]; // g     '{0,0,g,0},
-            assign disp[i*4+1][4] = hex[i][4]; // e     '{0,e,0,c},
-            assign disp[i*4+3][4] = hex[i][2]; // c     '{0,0,d,0,h}};
-            assign disp[i*4+2][5] = hex[i][3]; // d
-            assign disp[i*4+4][5] = hex[i][7]; // h
+            assign disp[i*4+2][1] = hex[i][7]; // a     '{0,0,0,0},
+            assign disp[i*4+1][2] = hex[i][2]; // f     '{0,0,a,0},
+            assign disp[i*4+3][2] = hex[i][6]; // b     '{0,f,0,b},
+            assign disp[i*4+2][3] = hex[i][1]; // g     '{0,0,g,0},
+            assign disp[i*4+1][4] = hex[i][3]; // e     '{0,e,0,c},
+            assign disp[i*4+3][4] = hex[i][5]; // c     '{0,0,d,0,h}};
+            assign disp[i*4+2][5] = hex[i][4]; // d
+            assign disp[i*4+4][5] = hex[i][0]; // h
         end
         for (i = 1; i < dispx-1; i++) begin : underline_display
             assign disp[i][dispy-1] = '1;
