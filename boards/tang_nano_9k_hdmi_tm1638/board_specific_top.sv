@@ -230,22 +230,6 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam serial_clk_mhz = 125;
-
-    wire serial_clk;
-
-    Gowin_rPLL i_Gowin_rPLL
-    (
-        .clkin  ( clk        ),
-        .clkout ( serial_clk ),
-        .lock   (            )
-    );
-
-    // Do we need to put serial_clk through BUFG?
-    // BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
-
-    //------------------------------------------------------------------------
-
     lab_top
     # (
         .clk_mhz       ( clk_mhz       ),
@@ -313,29 +297,45 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    tm1638_board_controller
-    # (
-        .clk_mhz  ( clk_mhz        ),
-        .w_digit  ( w_tm_digit     )
-    )
-    i_tm1638
-    (
-        .clk      ( clk            ),
-        .rst      ( rst            ),
-        .hgfedcba ( hgfedcba       ),
-        .digit    ( tm_digit       ),
-        .ledr     ( tm_led         ),
-        .keys     ( tm_key         ),
-        .sio_data ( GPIO [0]       ),
-        .sio_clk  ( GPIO [1]       ),
-        .sio_stb  ( GPIO [2]       )
-    );
+        tm1638_board_controller
+        # (
+            .clk_mhz  ( clk_mhz        ),
+            .w_digit  ( w_tm_digit     )
+        )
+        i_tm1638
+        (
+            .clk      ( clk            ),
+            .rst      ( rst            ),
+            .hgfedcba ( hgfedcba       ),
+            .digit    ( tm_digit       ),
+            .ledr     ( tm_led         ),
+            .keys     ( tm_key         ),
+            .sio_data ( GPIO [0]       ),
+            .sio_clk  ( GPIO [1]       ),
+            .sio_stb  ( GPIO [2]       )
+        );
 
     `endif
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        localparam serial_clk_mhz = 125;
+
+        wire serial_clk;
+
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkin  ( clk        ),
+            .clkout ( serial_clk ),
+            .lock   (            )
+        );
+
+        // Do we need to put serial_clk through BUFG?
+        // BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
+
+        //--------------------------------------------------------------------
 
         wire hsync, vsync, display_on, pixel_clk;
 
@@ -384,24 +384,19 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-        wire inmp441_slow_clk;
-
-        slow_clk_gen # (.fast_clk_mhz (serial_clk_mhz), .slow_clk_hz (50))
-        inpm441_slow_clk_gen (.clk(serial_clk), .rst(rst), .slow_clk (inmp441_slow_clk));
-
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz  ( 50                  )
+            .clk_mhz  ( clk_mhz        )
         )
         i_microphone
         (
-            .clk      ( inmp441_slow_clk    ),
-            .rst      ( rst                 ),
-            .lr       ( TF_CS               ),
-            .ws       ( TF_MOSI             ),
-            .sck      ( TF_SCLK             ),
-            .sd       ( TF_MISO             ),
-            .value    ( mic                 )
+            .clk      ( clk            ),
+            .rst      ( rst            ),
+            .lr       ( TF_CS          ),
+            .ws       ( TF_MOSI        ),
+            .sck      ( TF_SCLK        ),
+            .sd       ( TF_MISO        ),
+            .value    ( mic            )
         );
 
     `endif
