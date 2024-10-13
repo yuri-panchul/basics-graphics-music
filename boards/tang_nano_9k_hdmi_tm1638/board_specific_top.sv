@@ -171,10 +171,10 @@ module board_specific_top
     wire  [w_red       - 1:0] lab_red;
     wire  [w_green     - 1:0] lab_green;
     wire  [w_blue      - 1:0] lab_blue;
-    wire  inv_red, inv_green, inv_blue;
-    wire  [w_red       - 1:0] red   =   lab_red ^ { w_red   { inv_red } };
-    wire  [w_green     - 1:0] green = lab_green ^ { w_green { inv_green } };
-    wire  [w_blue      - 1:0] blue  =  lab_blue ^ { w_blue  { inv_blue } };
+    wire  vtm_red, vtm_green, vtm_blue;
+    wire  [w_red       - 1:0] red   =   lab_red ^ { w_red   { vtm_red } };
+    wire  [w_green     - 1:0] green = lab_green ^ { w_green { vtm_green } };
+    wire  [w_blue      - 1:0] blue  =  lab_blue ^ { w_blue  { vtm_blue } };
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
@@ -341,19 +341,15 @@ module board_specific_top
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
     
         `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-            virtual_tm1638_shadow
+            virtual_tm1638_using_graphics
             # (
                 .clk_mhz  ( clk_mhz        ),
                 .w_digit  ( w_tm_digit     ),
 
                 .screen_width  ( screen_width ),
-                .screen_height ( screen_height ),
-
-                .w_red         ( w_red ),
-                .w_green       ( w_green ),
-                .w_blue        ( w_blue )
+                .screen_height ( screen_height )
             )
-            i_tm1638_shadow
+            i_tm1638_virtual
             (
                 .clk      ( clk           ),
                 .rst      ( rst           ),
@@ -363,9 +359,9 @@ module board_specific_top
                 .keys     ( tm_key        ),
                 .x        ( x             ),
                 .y        ( y             ),
-                .inv_red  ( inv_red       ),
-                .inv_green( inv_green     ),
-                .inv_blue ( inv_blue      )
+                .red      ( vtm_red       ),
+                .green    ( vtm_green     ),
+                .blue     ( vtm_blue      )
             );
 
         `endif

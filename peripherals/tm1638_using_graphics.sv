@@ -5,15 +5,11 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-module virtual_tm1638_shadow
+module virtual_tm1638_using_graphics
 # (
     parameter clk_mhz = 50,
               w_digit = 8,
               w_keys = 8,
-
-              w_red         = 4,
-              w_green       = 4,
-              w_blue        = 4,
 
               screen_width  = 640,
               screen_height = 480,
@@ -32,12 +28,12 @@ module virtual_tm1638_shadow
     input        [ w_keys  - 1:0] keys,
 
     // graphics
-    input        [w_x     - 1:0] x,
-    input        [w_y     - 1:0] y,
+    input        [w_x     - 1:0]  x,
+    input        [w_y     - 1:0]  y,
 
-    output logic inv_red,
-    output logic inv_green,
-    output logic inv_blue
+    output logic                  red,
+    output logic                  green,
+    output logic                  blue
 
 );
 
@@ -52,10 +48,10 @@ module virtual_tm1638_shadow
     localparam dispy   = 8;  // 4 lines: leds, segments (5), keys, reserved for alignment
     localparam cellsx  = 8*w_digit+3;
     localparam cellsy  = 16;
-    localparam clenx   = 8;  // screen_width / cellsx;
-    localparam cleny   = clenx;
-    localparam offsetx = (screen_width - clenx*cellsx)/2;
-    localparam offsety = (screen_height - cleny*cellsy)/2;
+    localparam clenx_s = $clog2(screen_width / cellsx)-1;
+    localparam cleny_s = clenx_s;
+    localparam offsetx = (screen_width - (1<<clenx_s)*cellsx)/2;
+    localparam offsety = (screen_height - (1<<cleny_s)*cellsy)/2;
 
     ////////////// TM1563 data /////////////////
     //   --a--
@@ -156,14 +152,14 @@ module virtual_tm1638_shadow
 
     always_comb
     begin
-        cx = (x-offsetx) / clenx;
-        cy = (y-offsety) / cleny;
+        cx = (x-offsetx) >> clenx_s;
+        cy = (y-offsety) >> cleny_s;
         dx = (cx>>2)+((cx+1)>>2); // 0123456789ABC... => 000122234445...
         dy = (cy>>2)+((cy+1)>>2);
 
-        inv_red   = (dx < dispx && dy < dispy)? disp[dx][dy] : 0;
-        inv_green = dy==dispy-2 ? '0 : inv_red;
-        inv_blue  = dy==0 ? '0 : inv_red;
+        red   = (dx < dispx && dy < dispy)? disp[dx][dy] : 0;
+        green = dy==dispy-2 ? '0 : red;
+        blue  = dy==0 ? '0 : red;
     end
 
 endmodule
