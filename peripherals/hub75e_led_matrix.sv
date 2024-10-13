@@ -69,10 +69,10 @@ module hub75e_led_matrix
                 state_d = 3'd2;
         end
 
-        3'd2, 3'd3:
+        3'd2, 3'd3,    3'd4, 3'd5, 3'd6:
             state_d ++;
 
-        3'd4:
+        3'd7:
         begin
             x_d = 0;
 
@@ -89,7 +89,7 @@ module hub75e_led_matrix
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk)
+    always_ff @ (posedge clk or posedge rst)
         if (rst)
             ck <= 1'b0;
         else
@@ -97,7 +97,7 @@ module hub75e_led_matrix
 
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or negedge rst)
+    always_ff @ (posedge clk or posedge rst)
         if (rst)
         begin
             state <= '0;
@@ -113,7 +113,7 @@ module hub75e_led_matrix
             x     <= x_d;
             y     <= y_d;
 
-            oe    <= (state == 3'd1 | state == 3'd2);
+            oe    <= (state == 3'd1 | state == 3'd2         | state == 3'd3);
             st    <= (state == 3'd2);
         end
 

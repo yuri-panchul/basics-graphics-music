@@ -328,15 +328,15 @@ module board_specific_top
 
             // TODO
 
-            assign PMOD_0 [4] = 1'b0;
+            assign PMOD_0 [4] = 1'b1;
             assign PMOD_0 [0] = 1'b0;
             assign PMOD_0 [5] = 1'b0;
             assign PMOD_0 [1] = 1'b0;
             assign PMOD_1 [3] = 1'b0;
 
-            assign { PMOD_1 [6], PMOD_1 [4] } = 2'b11; // x [1:0]; // red;
+            assign { PMOD_1 [6], PMOD_1 [4] } = 2'b00; // x [1:0]; // red;
             assign { PMOD_1 [2], PMOD_1 [0] } = 2'b00; // x [3:2]; // green;
-            assign { PMOD_1 [7], PMOD_1 [5] } = 2'b00; // x [5:4]; // blue;
+            assign { PMOD_1 [7], PMOD_1 [5] } = 2'b10; // x [5:4]; // blue;
 
         `else  // PMOD_VGA
 

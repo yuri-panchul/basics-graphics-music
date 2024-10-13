@@ -55,7 +55,12 @@ module board_specific_top
     output                      TMDS_CLK_N,
     output                      TMDS_CLK_P,
     output [              2:0]  TMDS_D_N,
-    output [              2:0]  TMDS_D_P
+    output [              2:0]  TMDS_D_P,
+
+    output                      PA_EN,
+    output                      HP_DIN,
+    output                      HP_WS,
+    output                      HP_BCK
 );
 
     //------------------------------------------------------------------------
@@ -105,6 +110,7 @@ module board_specific_top
     wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
+    wire  [             15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -195,6 +201,8 @@ module board_specific_top
         .uart_tx       ( UART_TX       ),
 
         .mic           ( mic           ),
+        .sound         ( sound         ),
+
         .gpio          (               )
     );
 
@@ -317,6 +325,59 @@ module board_specific_top
             .sd      ( GPIO_1 [0] ),
             .value   ( mic        )
         );
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        `ifdef NOT_WORKING
+
+        // For tang_primer_20k_dock DAC do not require mclk signal
+        // but it needs enable signal PA_EN
+
+        i2s_audio_out
+        # (
+            .clk_mhz  ( clk_mhz      )
+        )
+        inst_audio_out
+        (
+            .clk      ( clk          ),
+            .reset    ( rst          ),
+            .data_in  ( sound        ),
+            .mclk     (              ),
+            .bclk     ( HP_BCK       ),
+            .lrclk    ( HP_WS        ),
+            .sdata    ( HP_DIN       )
+        );
+
+        // Enable DAC
+        assign PA_EN = 1'b1;
+
+        `endif
+
+        `ifdef NOT_WORKING_2
+
+        // Second DAC before the first one is working
+
+        i2s_audio_out
+        # (
+            .clk_mhz ( clk_mhz    )
+        )
+        inst_audio_out
+        (
+            .clk     ( clk        ),
+            .reset   ( rst        ),
+            .data_in ( sound      ),
+
+            .mclk    ( GPIO_0 [0] ),
+            .bclk    ( GPIO_0 [1] ),
+            .sdata   ( GPIO_0 [2] ),
+            .lrclk   ( GPIO_0 [3] )
+        );
+
+        `endif
 
     `endif
 
