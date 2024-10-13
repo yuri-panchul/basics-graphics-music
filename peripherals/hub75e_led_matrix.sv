@@ -5,6 +5,8 @@ module hub75e_led_matrix
               screen_width  = 64,
               screen_height = 64,
 
+              brightness    = 1,
+
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
 )
@@ -42,7 +44,18 @@ module hub75e_led_matrix
 
     //------------------------------------------------------------------------
 
-    logic [3:0] state, state_d;
+    localparam w_state = brightness + 3;
+
+    localparam [w_state - 1:0]
+        state_0    = 0,
+        state_1    = 1,
+        state_2    = 2,
+        state_3    = 3,
+        state_last = w_state' (~ 0);
+
+    logic [w_state - 1:0] state, state_d;
+
+    //------------------------------------------------------------------------
 
     logic [w_x - 1:0] x_d;
     logic [w_y - 1:0] y_d;
@@ -55,15 +68,15 @@ module hub75e_led_matrix
 
         case (state)
 
-        4'd0:
+        state_0:
         begin
             x_d ++;
 
             if (x_d == screen_width - 1)
-                state_d = 4'd1;
+                state_d = state_1;
         end
 
-        4'd15:
+        state_last:
         begin
             x_d = 0;
 
@@ -72,7 +85,7 @@ module hub75e_led_matrix
             else
                 y_d ++;
 
-            state_d = 4'd0;
+            state_d = state_0;
         end
 
         default:
@@ -87,14 +100,14 @@ module hub75e_led_matrix
         if (rst)
             ck <= 1'b0;
         else
-            ck <= cnt [$left (cnt)] & (state <= 4'd1);
+            ck <= cnt [$left (cnt)] & (state <= state_1);
 
     //------------------------------------------------------------------------
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
         begin
-            state <= '0;
+            state <= state_0;
             x     <= '0;
             y     <= '0;
 
@@ -107,8 +120,8 @@ module hub75e_led_matrix
             x     <= x_d;
             y     <= y_d;
 
-            oe    <= (state <= 4'd3 | state == 4'd15);
-            st    <= (state == 4'd2);
+            oe    <= (state <= state_3 | state == state_last);
+            st    <= (state == state_2);
         end
 
     //------------------------------------------------------------------------

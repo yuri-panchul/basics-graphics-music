@@ -11,6 +11,12 @@
 `define HUB75E_LED_MATRIX_HEIGHT 64
 `endif
 
+`ifndef HUB75E_LED_MATRIX_BRIGHTNESS
+`define HUB75E_LED_MATRIX_BRIGHTNESS 1
+`endif
+
+//----------------------------------------------------------------------------
+
 module board_specific_top
 # (
     parameter clk_mhz           = 50,
@@ -65,6 +71,9 @@ module board_specific_top
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
               // PMOD_2 is used for I2S audio (bottom row) and TM1638 (top row).
 )
+
+//----------------------------------------------------------------------------
+
 (
     input                  CLK,
 
@@ -315,9 +324,10 @@ module board_specific_top
 
             hub75e_led_matrix
             # (
-                .clk_mhz       ( clk_mhz       ),
-                .screen_width  ( screen_width  ),
-                .screen_height ( screen_height )
+                .clk_mhz       ( clk_mhz                       ),
+                .screen_width  ( screen_width                  ),
+                .screen_height ( screen_height                 ),
+                .brightness    ( `HUB75E_LED_MATRIX_BRIGHTNESS )
             )
             i_led_matrix
             (
