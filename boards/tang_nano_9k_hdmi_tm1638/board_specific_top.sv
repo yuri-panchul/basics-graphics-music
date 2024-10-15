@@ -304,18 +304,18 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire [$left (abcdefgh):0] hgfedcba;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < $bits (abcdefgh); i ++)
+        begin : abc
+            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+        end
+    endgenerate
+
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
-        wire [$left (abcdefgh):0] hgfedcba;
-
-        generate
-            genvar i;
-
-            for (i = 0; i < $bits (abcdefgh); i ++)
-            begin : abc
-                assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-            end
-        endgenerate
 
         tm1638_board_controller
         # (
@@ -343,17 +343,15 @@ module board_specific_top
         `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
             virtual_tm1638_using_graphics
             # (
-                .clk_mhz  ( clk_mhz        ),
-                .w_digit  ( w_tm_digit     ),
-
-                .screen_width  ( screen_width ),
+                .w_digit       ( w_tm_digit    ),
+                .screen_width  ( screen_width  ),
                 .screen_height ( screen_height )
             )
             i_tm1638_virtual
             (
                 .clk      ( clk           ),
                 .rst      ( rst           ),
-                .abcdefgh ( abcdefgh      ),
+                .hgfedcba ( hgfedcba      ),
                 .digit    ( tm_digit      ),
                 .ledr     ( tm_led        ),
                 .keys     ( tm_key        ),
