@@ -103,7 +103,7 @@ module lab_top
                 dx <= dx - 1;
             else
                 dx <= dx + 1;
-                
+
             if (key [1])
                 dy <= dy - 1;
             else

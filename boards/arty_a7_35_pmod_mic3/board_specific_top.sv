@@ -5,20 +5,20 @@ module board_specific_top
 # (
     parameter clk_mhz       = 100,
               pixel_mhz     = 25,
-              
+
               w_key         = 4,
               w_sw          = 4,
               w_led         = 4,
               w_digit       = 0,
               w_gpio        = 42,
-              
+
               screen_width  = 640,
               screen_height = 480,
-              
+
               w_red         = 4,
               w_green       = 4,
               w_blue        = 4,
-              
+
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
 )
@@ -115,7 +115,7 @@ module board_specific_top
     assign led3_r = 1'b0;
 
     //------------------------------------------------------------------------
-    
+
     wire [w_x    - 1:0] x;
     wire [w_y    - 1:0] y;
 
@@ -229,9 +229,9 @@ module board_specific_top
 
         .abcdefgh ( abcdefgh  ),
         .digit    ( lab_digit ),
-        
+
         .x        ( x         ),
-        .y        ( y         ),        
+        .y        ( y         ),
 
         .red      ( jb [7:4]  ),
         .green    ( jc [7:4]  ),
@@ -241,7 +241,7 @@ module board_specific_top
         .uart_tx  (uart_rxd_out),
 
         .mic      ( mic       ),
-        .gpio     ( {    
+        .gpio     ( {
                     ck_io0,
                     ck_io1,
                     ck_io2,
@@ -274,7 +274,7 @@ module board_specific_top
                     ck_io38,
                     ck_io39,
                     ck_io40,
-                    ck_io41     
+                    ck_io41
                    })
     );
 

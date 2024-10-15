@@ -339,7 +339,7 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-    
+
         `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
             virtual_tm1638_using_graphics
             # (

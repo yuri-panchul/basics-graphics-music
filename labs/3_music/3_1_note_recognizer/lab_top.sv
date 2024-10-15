@@ -96,7 +96,7 @@ module lab_top
     `ifdef NOTE_PERIOD_COUNTING_AVERAGING_FILTER
 
     // It is enough for the counter to be 24 bit. Why?
-    
+
     logic [23:0] prev_mic;
     logic [23:0] counter;
     localparam int w_period_count = $clog2(440/4); // Measure 440 Hz note ~4 times a second
@@ -171,8 +171,8 @@ module lab_top
 
     //------------------------------------------------------------------------
     //
-    //  Exercise 2: Uncomment this instantation 
-    //  to see the value of the counter. 
+    //  Exercise 2: Uncomment this instantation
+    //  to see the value of the counter.
     //
     //------------------------------------------------------------------------
 
@@ -217,7 +217,7 @@ module lab_top
                freq_100_Fs = 36999, // 369.99 Hz for 'F#' note: https://en.wikipedia.org/wiki/F_(musical_note)
                freq_100_G  = 39200, // 392 Hz for 'G' note: https://en.wikipedia.org/wiki/G_(musical_note)
                freq_100_Gs = 41530, // 415.30 Hz for 'G#' note: https://en.wikipedia.org/wiki/G_(musical_note)
-               freq_100_A  = 44000, // 440 Hz for 'A' note: https://en.wikipedia.org/wiki/A_(musical_note) 
+               freq_100_A  = 44000, // 440 Hz for 'A' note: https://en.wikipedia.org/wiki/A_(musical_note)
                freq_100_As = 46616, // 466.16 Hz for 'A#' note: https://en.wikipedia.org/wiki/A_(musical_note)
                freq_100_B  = 49388; // 493.88 Hz for 'B' note: https://en.wikipedia.org/wiki/B_(musical_note)
     `else

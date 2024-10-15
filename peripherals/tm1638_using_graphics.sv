@@ -51,15 +51,15 @@ module virtual_tm1638_using_graphics
     tm1638_registers
     # (
         .w_digit  ( w_digit ),
-        .r_init   (   // hgfedcba             --a-- 
+        .r_init   (   // hgfedcba             --a--
                     '{8'b00111111, // 0      |     |
                       8'b00000110, // 1      f     b
                       8'b01011011, // 2      |     |
-                      8'b01001111, // 3       --g-- 
+                      8'b01001111, // 3       --g--
                       8'b01100110, // 4      |     |
                       8'b01101101, // 5      e     c
                       8'b01111101, // 6      |     |
-                      8'b00000111})// 7       --d-- 
+                      8'b00000111})// 7       --d--
     )
     i_tm1638_regs
     (
