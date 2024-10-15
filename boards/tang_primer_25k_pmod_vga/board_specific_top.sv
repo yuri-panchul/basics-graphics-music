@@ -1,16 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
 
-`ifdef  USE_HUB75E_LED_MATRIX_64x32
-`define USE_HUB75E_LED_MATRIX
-`define HUB75E_LED_MATRIX_HEIGHT 32
-`endif
-
-`ifdef  USE_HUB75E_LED_MATRIX_64x64
-`define USE_HUB75E_LED_MATRIX
-`define HUB75E_LED_MATRIX_HEIGHT 64
-`endif
-
 `ifndef HUB75E_LED_MATRIX_BRIGHTNESS
 `define HUB75E_LED_MATRIX_BRIGHTNESS 1
 `endif
@@ -50,7 +40,7 @@ module board_specific_top
                   w_blue        = 1,
 
                   screen_width  = 64,
-                  screen_height = `HUB75E_LED_MATRIX_HEIGHT,
+                  screen_height = 64,
 
               `else  // USE_PMOD_VGA
 
@@ -325,8 +315,14 @@ module board_specific_top
             hub75e_led_matrix
             # (
                 .clk_mhz       ( clk_mhz                       ),
+
                 .screen_width  ( screen_width                  ),
                 .screen_height ( screen_height                 ),
+
+                .w_red         ( w_red                         ),
+                .w_green       ( w_green                       ),
+                .w_blue        ( w_blue                        ),
+
                 .brightness    ( `HUB75E_LED_MATRIX_BRIGHTNESS )
             )
             i_led_matrix
@@ -337,6 +333,10 @@ module board_specific_top
                 .x       ( x          ),
                 .y       ( y          ),
 
+                .red     ( red        ),
+                .green   ( green      ),
+                .blue    ( blue       ),
+
                 .ck      ( PMOD_0 [6] ),
                 .oe      ( PMOD_0 [7] ),
                 .st      ( PMOD_0 [2] ),
@@ -345,40 +345,17 @@ module board_specific_top
                 .b       ( PMOD_0 [0] ),
                 .c       ( PMOD_0 [5] ),
                 .d       ( PMOD_0 [1] ),
-                .e       ( PMOD_1 [3] )
+                .e       ( PMOD_1 [3] ),
+
+                .r1      ( PMOD_1 [4] ),
+                .r2      ( PMOD_1 [6] ),
+
+                .g1      ( PMOD_1 [0] ),
+                .g2      ( PMOD_1 [2] ),
+
+                .b1      ( PMOD_1 [5] ),
+                .b2      ( PMOD_1 [7] )
             );
-
-            `ifdef USE_HUB75E_LED_MATRIX_64x32
-
-                // The screen will be duplicate;
-                // I leave building a true 64x64 LED matrix
-                // to a student project.
-
-                assign PMOD_1 [4] = red;
-                assign PMOD_1 [6] = red;
-
-                assign PMOD_1 [0] = green;
-                assign PMOD_1 [2] = green;
-
-                assign PMOD_1 [5] = blue;
-                assign PMOD_1 [7] = blue;
-
-            `else
-
-                // The screen will be less bright
-
-                wire first_32_lines = (y [w_y - 1] == 1'b0);
-
-                assign PMOD_1 [4] = red   &   first_32_lines;
-                assign PMOD_1 [6] = red   & ~ first_32_lines;
-
-                assign PMOD_1 [0] = green &   first_32_lines;
-                assign PMOD_1 [2] = green & ~ first_32_lines;
-
-                assign PMOD_1 [5] = blue  &   first_32_lines;
-                assign PMOD_1 [7] = blue  & ~ first_32_lines;
-
-            `endif
 
         `else  // PMOD_VGA
 
