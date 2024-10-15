@@ -1,3 +1,5 @@
+`ifdef UNDEFINED
+
 // The INMP441 microphone is a digital microphone that outputs I2S data.
 
 // This module receives the clock and outputs a 24-bit value.
@@ -95,3 +97,5 @@ module inmp441_mic_i2s_receiver
         end
 
 endmodule
+
+`endif
