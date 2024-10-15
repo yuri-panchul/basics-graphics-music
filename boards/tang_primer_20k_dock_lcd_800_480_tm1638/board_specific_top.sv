@@ -68,7 +68,7 @@ module board_specific_top
 );
 
     wire clk = CLK;
-	
+
     //------------------------------------------------------------------------
 
     localparam w_tm_key    = 8,
