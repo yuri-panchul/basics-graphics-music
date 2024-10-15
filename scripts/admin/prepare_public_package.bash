@@ -109,8 +109,8 @@ fi
 
 # For some reason "--exclude=\*.mk" does not work here
 
-exclude_space_ok="--exclude-dir=urgReport --exclude=*.xdc"
-exclude_tabs_ok="$exclude_space_ok --exclude=Makefile* --exclude=*.mk --exclude=*.vo --exclude=I2C_* --exclude=dvi_tx_tmp.v --exclude-dir=marsohod*"
+exclude_space_ok="--exclude-dir=urgReport --exclude=*.xdc --exclude-dir=marsohod*"
+exclude_tabs_ok="$exclude_space_ok --exclude=Makefile* --exclude=*.mk --exclude=*.vo --exclude=I2C_* --exclude=dvi_tx_tmp.v"
 
 if grep -rqI $exclude_tabs_ok $'\t' "$pkg_src_root"/*
 then
