@@ -1,5 +1,9 @@
 `include "config.svh"
 
+// Enable a period-averaging note filter instead of a time-based one
+`define NOTE_PERIOD_COUNTING_AVERAGING_FILTER
+
+
 module lab_top
 # (
     parameter  clk_mhz       = 50,
@@ -72,6 +76,7 @@ module lab_top
     //
     //  Exercise 1: Uncomment this instantation
     //  to see the value coming from the microphone (in hexadecimal).
+    //  Comment out a "The output to seven segment display" section below.
     //
     //------------------------------------------------------------------------
 
@@ -86,6 +91,50 @@ module lab_top
     //  Measuring frequency
     //
     //------------------------------------------------------------------------
+
+    // Filter out noise by averaging over several periods of the wave.
+    `ifdef NOTE_PERIOD_COUNTING_AVERAGING_FILTER
+
+    // It is enough for the counter to be 24 bit. Why?
+    
+    logic [23:0] prev_mic;
+    logic [23:0] counter;
+    localparam int w_period_count = $clog2(440/4); // Measure 440 Hz note ~4 times a second
+    logic [w_period_count - 1:0] period_counter; // average over several wave periods
+    logic [19:0] distance;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            prev_mic <= '0;
+            counter  <= '0;
+            period_counter <= '0;
+            distance <= '0;
+        end
+        else
+        begin
+            prev_mic <= mic;
+
+            // Crossing from negative to positive numbers
+
+            if (  prev_mic [$left ( prev_mic )] == 1'b1
+                & mic      [$left ( mic      )] == 1'b0 )
+            begin
+                period_counter = period_counter + 1'b1;
+                if (& period_counter)
+                begin
+                    distance <= counter / (1 << w_period_count); // estimate cycles per period
+                    counter <= '0;
+                end
+                else
+                    counter <= counter + 1'b1;
+            end
+            else if (counter != '1)  // To prevent overflow
+                counter <= counter + 1'b1;
+        end
+
+    // Filter out noise by checking note value over a period of time.
+    `else
 
     // It is enough for the counter to be 20 bit. Why?
 
@@ -110,33 +159,45 @@ module lab_top
                 & mic      [$left ( mic      )] == 1'b0 )
             begin
                distance <= counter;
-               counter  <= 20'h0;
+               counter  <= '0;
             end
-            else if (counter != ~ 20'h0)  // To prevent overflow
+            else if (counter != '1)  // To prevent overflow
             begin
-               counter <= counter + 20'h1;
+               counter <= counter + 1'b1;
             end
         end
 
+    `endif
+
     //------------------------------------------------------------------------
     //
-    //  Exercise 2: Uncomment this instantation
-    //  to see the value of the counter.
+    //  Exercise 2: Uncomment this instantation 
+    //  to see the value of the counter. 
     //
     //------------------------------------------------------------------------
 
     // seven_segment_display # (w_digit)
-    // i_7segment (.number (w_number' (counter)), .*);
+    // i_7segment (.number (w_number' (period_counter)), .*);
 
     //------------------------------------------------------------------------
     //
     //  Exercise 3: Uncomment this instantation
-    //  to see the period of the sound wave coming from the microphone.
+    //  to see the period of the sound wave in cycles coming from the microphone.
     //
     //------------------------------------------------------------------------
 
     // seven_segment_display # (w_digit)
-    // i_7segment (.number (w_number' (distance [19:4])), .*);
+    // i_7segment (.number (w_number' (distance)), .*);
+
+    //------------------------------------------------------------------------
+    //
+    //  Exercise 4: Uncomment this instantation
+    //  to see the frequency of the sound wave coming from the microphone.
+    //
+    //------------------------------------------------------------------------
+
+    // seven_segment_display # (w_digit)
+    // i_7segment (.number (w_number' (clk_mhz * 1000 * 1000 / distance)), .*);
 
     //------------------------------------------------------------------------
     //
@@ -146,18 +207,19 @@ module lab_top
 
     `ifdef USE_STANDARD_FREQUENCIES
 
-    localparam freq_100_C  = 26163,
-               freq_100_Cs = 27718,
-               freq_100_D  = 29366,
-               freq_100_Ds = 31113,
-               freq_100_E  = 32963,
-               freq_100_F  = 34923,
-               freq_100_Fs = 36999,
-               freq_100_G  = 39200,
-               freq_100_Gs = 41530,
-               freq_100_A  = 44000,
-               freq_100_As = 46616,
-               freq_100_B  = 49388;
+    // Standard note frequencies using A440 (Stuttgart pitch standard): https://en.wikipedia.org/wiki/A440_(pitch_standard)
+    localparam freq_100_C  = 26163, // 261.63 Hz for 'C' note: https://en.wikipedia.org/wiki/C_(musical_note)
+               freq_100_Cs = 27718, // 277.18 Hz for 'C#' note: https://en.wikipedia.org/wiki/C_(musical_note)
+               freq_100_D  = 29366, // 293.66 Hz for 'D' note: https://en.wikipedia.org/wiki/D_(musical_note)
+               freq_100_Ds = 31113, // 311.13 Hz for 'D#' note: https://en.wikipedia.org/wiki/D_(musical_note)
+               freq_100_E  = 32963, // 329.63 Hz for 'E' note: https://en.wikipedia.org/wiki/E_(musical_note)
+               freq_100_F  = 34923, // 349.23 Hz for 'F' note: https://en.wikipedia.org/wiki/F_(musical_note)
+               freq_100_Fs = 36999, // 369.99 Hz for 'F#' note: https://en.wikipedia.org/wiki/F_(musical_note)
+               freq_100_G  = 39200, // 392 Hz for 'G' note: https://en.wikipedia.org/wiki/G_(musical_note)
+               freq_100_Gs = 41530, // 415.30 Hz for 'G#' note: https://en.wikipedia.org/wiki/G_(musical_note)
+               freq_100_A  = 44000, // 440 Hz for 'A' note: https://en.wikipedia.org/wiki/A_(musical_note) 
+               freq_100_As = 46616, // 466.16 Hz for 'A#' note: https://en.wikipedia.org/wiki/A_(musical_note)
+               freq_100_B  = 49388; // 493.88 Hz for 'B' note: https://en.wikipedia.org/wiki/B_(musical_note)
     `else
 
     // Custom measured frequencies
@@ -179,13 +241,13 @@ module lab_top
     //------------------------------------------------------------------------
 
     function [19:0] high_distance (input [18:0] freq_100);
-       high_distance = clk_mhz * 1000 * 1000 / freq_100 * 103;
+       high_distance = clk_mhz * 1000 * 1000 * 103 / freq_100;
     endfunction
 
     //------------------------------------------------------------------------
 
     function [19:0] low_distance (input [18:0] freq_100);
-       low_distance = clk_mhz * 1000 * 1000 / freq_100 * 97;
+       low_distance = clk_mhz * 1000 * 1000 * 97 / freq_100;
     endfunction
 
     //------------------------------------------------------------------------
@@ -202,7 +264,8 @@ module lab_top
 
        check_freq =   check_freq_single_range (freq_100 * 4 , distance)
                     | check_freq_single_range (freq_100 * 2 , distance)
-                    | check_freq_single_range (freq_100     , distance);
+                    | check_freq_single_range (freq_100     , distance)
+                    | check_freq_single_range (freq_100 / 2 , distance);
 
     endfunction
 
@@ -260,24 +323,25 @@ module lab_top
         else
             d_note <= note;
 
-    logic  [19:0] t_cnt;           // Threshold counter
-    logic  [w_note - 1:0] t_note;  // Thresholded note
+    localparam int w_t_cnt = $clog2(clk_mhz * 1000 * 1000 / 10); // Filter ~N times a second
+    logic  [w_t_cnt - 1:0] f_cnt;         // Filter counter
+    logic  [w_note - 1:0] filtered_note;  // Filtered note
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            t_cnt <= 0;
+            f_cnt <= '0;
         else
             if (note == d_note)
-                t_cnt <= t_cnt + 1;
+                f_cnt <= f_cnt + 1'b1; // Increase the counter if note has not changed
             else
-                t_cnt <= 0;
+                f_cnt <= '0;
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-            t_note <= no_note;
+            filtered_note <= no_note;
         else
-            if (& t_cnt)
-                t_note <= d_note;
+            if (& f_cnt)
+                filtered_note <= d_note; // If the counter is full, update the filtered note
 
     //------------------------------------------------------------------------
     //
@@ -289,7 +353,7 @@ module lab_top
         if (rst)
             abcdefgh <= 8'b00000000;
         else
-            case (t_note)
+            case (filtered_note)
             C  : abcdefgh <= 8'b10011100;  // C   // abcdefgh
             Cs : abcdefgh <= 8'b10011101;  // C#
             D  : abcdefgh <= 8'b01111010;  // D   //   --a--
@@ -302,14 +366,14 @@ module lab_top
             A  : abcdefgh <= 8'b11101110;  // A   //  |     |
             As : abcdefgh <= 8'b11101111;  // A#  //   --d--  h
             B  : abcdefgh <= 8'b00111110;  // B
-            default : abcdefgh <= 8'b00000000;
+            default : abcdefgh <= 8'b00000000; // Invalid notes
             endcase
 
     assign digit = w_digit' (1);
 
     //------------------------------------------------------------------------
     //
-    //  Exercise 4: Replace filtered note with unfiltered note.
+    //  Exercise 5: Replace filtered note with unfiltered note.
     //  Do you see the difference?
     //
     //------------------------------------------------------------------------
