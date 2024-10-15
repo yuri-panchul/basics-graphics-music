@@ -5,6 +5,11 @@
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+        `ifndef FORCE_NO_VIRTUAL_TM1638_USING_GRAPHICS
+            `define INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+        `endif
+    `endif
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
@@ -133,15 +138,19 @@ module board_specific_top
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
-    `else  // TM1638 module is not connected
-
+    `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+        // Instantiate virtual tm1638
+        localparam w_lab_key   = w_key,
+                   w_lab_led   = w_tm_led,
+                   w_lab_digit = w_tm_digit;
+    `else
+        // No need in TM1638 in any form
         // We create a dummy seven-segment digit
         // to avoid errors in the labs with seven-segment display
 
         localparam w_lab_key   = w_key,
                    w_lab_led   = w_led,
                    w_lab_digit = 1;  // w_digit;
-
     `endif
 
     //------------------------------------------------------------------------
@@ -159,9 +168,13 @@ module board_specific_top
     wire  [w_x         - 1:0] x;
     wire  [w_y         - 1:0] y;
 
-    wire  [w_red       - 1:0] red;
-    wire  [w_green     - 1:0] green;
-    wire  [w_blue      - 1:0] blue;
+    wire  [w_red       - 1:0] lab_red;
+    wire  [w_green     - 1:0] lab_green;
+    wire  [w_blue      - 1:0] lab_blue;
+    wire  vtm_red, vtm_green, vtm_blue;
+    wire  [w_red       - 1:0] red   =   lab_red ^ { w_red   { vtm_red } };
+    wire  [w_green     - 1:0] green = lab_green ^ { w_green { vtm_green } };
+    wire  [w_blue      - 1:0] blue  =  lab_blue ^ { w_blue  { vtm_blue } };
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
@@ -196,14 +209,28 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
         assign lab_key  = tm_key;
 
+        assign LED      = w_led' (~ lab_led);
+
+    `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+        // Virtual tm1638 - tm_keys are input, not output
+
+        `ifdef REVERSE_KEY
+            `SWAP_BITS (lab_key, ~ KEY);
+        `else
+            assign lab_key = ~ KEY;
+        `endif
+
+        assign tm_key  = lab_key;
         assign tm_led   = lab_led;
         assign tm_digit = lab_digit;
 
         assign LED      = w_led' (~ lab_led);
 
-    `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `else  // no any form of TM1638
 
         `ifdef REVERSE_KEY
             `SWAP_BITS (lab_key, ~ KEY);
@@ -263,10 +290,9 @@ module board_specific_top
 
         .x             ( x             ),
         .y             ( y             ),
-
-        .red           ( red           ),
-        .green         ( green         ),
-        .blue          ( blue          ),
+        .red           ( lab_red       ),
+        .green         ( lab_green     ),
+        .blue          ( lab_blue      ),
 
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
@@ -280,22 +306,16 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    wire [$left (abcdefgh):0] hgfedcba;
+        wire [$left (abcdefgh):0] hgfedcba;
 
-    generate
-        genvar i;
+        generate
+            genvar i;
 
-        for (i = 0; i < $bits (abcdefgh); i ++)
-        begin : abc
-            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-        end
-    endgenerate
-
-    `endif
-
-    //------------------------------------------------------------------------
-
-    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+            for (i = 0; i < $bits (abcdefgh); i ++)
+            begin : abc
+                assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+            end
+        endgenerate
 
         tm1638_board_controller
         # (
@@ -314,12 +334,37 @@ module board_specific_top
             .sio_clk  ( GPIO [1]       ),
             .sio_stb  ( GPIO [2]       )
         );
-
     `endif
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+    
+        `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+            virtual_tm1638_using_graphics
+            # (
+                .clk_mhz  ( clk_mhz        ),
+                .w_digit  ( w_tm_digit     ),
+
+                .screen_width  ( screen_width ),
+                .screen_height ( screen_height )
+            )
+            i_tm1638_virtual
+            (
+                .clk      ( clk           ),
+                .rst      ( rst           ),
+                .abcdefgh ( abcdefgh      ),
+                .digit    ( tm_digit      ),
+                .ledr     ( tm_led        ),
+                .keys     ( tm_key        ),
+                .x        ( x             ),
+                .y        ( y             ),
+                .red      ( vtm_red       ),
+                .green    ( vtm_green     ),
+                .blue     ( vtm_blue      )
+            );
+
+        `endif
 
         localparam serial_clk_mhz = 125;
 
