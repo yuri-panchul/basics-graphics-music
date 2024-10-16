@@ -50,8 +50,10 @@ module tm1638_registers
     // HEX combinational
     wire [w_seg - 1:0] c_hex[w_digit];
 
+    genvar i;
+
     generate
-        for (genvar i = 0; i < w_digit; i++) begin : assign_registers
+        for (i = 0; i < w_digit; i++) begin : assign_registers
             assign c_hex[i] = digit [i] ? hgfedcba : '0;
             // Select combinational or registered HEX (blink or not)
             assign hex[i] = static_hex ? r_hex[i] : c_hex[i];
