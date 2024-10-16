@@ -6,6 +6,10 @@ script=$(basename "$0")
 source_script=${script/\.bash/.source_bash}
 dir_source_script=../scripts/steps/$source_script
 
+echo $script
+echo $source_script
+echo $dir_source_script
+
 for i in {1..3}
 do
     [ -f $dir_source_script ] && break

@@ -1,6 +1,6 @@
 `include "config.svh"
 
-`ifndef SIMULATION
+//`ifndef SIMULATION
 
 module lab_top
 # (
@@ -59,6 +59,18 @@ module lab_top
     inout        [w_gpio  - 1:0] gpio
 );
 
+localparam  baud_rate           = 115200;
+localparam  clk_frequency       = clk_mhz * 1000 * 1000;
+
+`ifndef SIMULATION
+    localparam  update_hz   = 4;
+    localparam timeout_in_seconds = 1;
+`else
+    localparam  update_hz   = 4000000;
+    localparam timeout_in_seconds = 10;
+`endif
+
+
     //------------------------------------------------------------------------
 
     // assign led        = '0;
@@ -72,56 +84,110 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire enable;
-    wire fsm_in, moore_fsm_out, mealy_fsm_out;
 
-    // Generate a strobe signal 3 times a second
+    wire       byte_valid;
+    wire [7:0] byte_data;
 
-    strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (3))
-    i_strobe_gen
-    (.strobe (enable), .*);
-
-    shift_reg # (.depth (w_led)) i_shift_reg
-    (
-        .en      (   enable ),
-        .seq_in  ( | key    ),
-        .seq_out (   fsm_in ),
-        .par_out (   led    ),
+    uart_receiver
+    # (
+        .clk_frequency ( clk_frequency ),
+        .baud_rate     ( baud_rate     )
+    )
+    receiver (
+        .reset        (  rst         ),
+        .rx           (  uart_rx     ),
         .*
     );
+   
+    wire        word_valid;
+    wire [31:0] word_address;
+    wire [31:0] word_data;
+   
+    wire        busy;
+    wire        error;
+   
+    
+    hex_parser
+    # (
+        .clk_frequency       ( clk_frequency      ),
+        .timeout_in_seconds  ( timeout_in_seconds )
+    )
+    parser
+    (
+        .clk            (   clk         ),
+        .reset          (   rst         ),
+        .in_valid       (   byte_valid  ),
+        .in_char        (   byte_data   ),
 
-    snail_moore_fsm i_moore_fsm
-        (.en (enable), .a (fsm_in), .y (moore_fsm_out), .*);
+        .out_valid      (   word_valid   ),
+        .out_address    (   word_address ),
+        .out_data       (   word_data    ),
 
-    snail_mealy_fsm i_mealy_fsm
-        (.en (enable), .a (fsm_in), .y (mealy_fsm_out), .*);
+        .busy,
+        .error
+    );
+   
+    assign led = ~ { byte_valid, word_valid, busy, error };
+   
+    logic [31:0] last_bytes;
+   
+    always @ (posedge clk or posedge rst)
+        if (rst)
+            last_bytes <= '0;
+        else if (byte_valid)
+            last_bytes <= { last_bytes [23:0], byte_data };
+   
+    logic [31:0] last_address;
+    logic [31:0] last_word;
+   
+    always @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            last_address <= '0;
+            last_word    <= '0;
+        end
+        else if (word_valid)
+        begin
+            last_address <= word_address;
+            last_word    <= word_data;
+        end
 
-    //------------------------------------------------------------------------
+logic [w_digit * 4 - 1:0] number;
+logic [w_digit     - 1:0] dots;
+   
+assign dots = '0;
 
-    //   --a--
-    //  |     |
-    //  f     b
-    //  |     |
-    //   --g--
-    //  |     |
-    //  e     c
-    //  |     |
-    //   --d--  h
+always_comb
+    case (key)
+    default: number = last_bytes   [15: 0];
+    4'b0111: number = last_bytes   [31:16];
 
-    always_comb
-    begin
-        case ({ mealy_fsm_out, moore_fsm_out })
-        2'b00: abcdefgh = 8'b0000_0000;
-        2'b01: abcdefgh = 8'b1100_0110;  // Moore only
-        2'b10: abcdefgh = 8'b0011_1010;  // Mealy only
-        2'b11: abcdefgh = 8'b1111_1110;
-        endcase
+    4'b1011: number = last_word    [31:16];
+    4'b1101: number = last_word    [15: 0];
+    4'b1110: number = last_address [15: 0];
 
-        digit = w_digit' (1);
-    end
-
-    // Exercise: Implement FSM for recognizing other sequence,
-    // for example 0101
+    4'b0011: number = word_data    [31:16];
+    4'b1001: number = word_data    [15: 0];
+    4'b1100: number = word_address [15: 0];
+    endcase
+   
+    seven_segment_display 
+    #(
+        .w_digit    (       w_digit     ),
+        .clk_mhz    (       clk_mhz     ),
+        .update_hz  (       update_hz   )
+    )
+    display(
+        .clk,
+        .rst,
+        .number,
+        .dots,
+        .abcdefgh,
+        .digit
+    );
+   
 
 endmodule
+
+
+//`endif

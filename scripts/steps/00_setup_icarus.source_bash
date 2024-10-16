@@ -56,6 +56,7 @@ run_icarus_verilog ()
 
     shopt -s nullglob
 
+    #iverilog -g2012 -s tb \
     iverilog -g2005-sv -s tb \
          -I ..      -I "$lab_dir/common" \
             ../*.sv    "$lab_dir/common"/*.sv \
@@ -104,5 +105,5 @@ run_icarus_verilog ()
         error 1 "don't know how to run GTKWave on your OS $OSTYPE"
     fi
 
-    $gtkwave dump.vcd $gtkwave_options
+   # $gtkwave dump.vcd $gtkwave_options
 }

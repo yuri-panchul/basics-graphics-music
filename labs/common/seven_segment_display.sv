@@ -81,7 +81,8 @@ module seven_segment_display
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             index <= '0;
-        else if (cnt[15:0] == 16'b0) // Perhaps a check is needed that w_cnt >= 16
+        //else if (cnt[15:0] == 16'b0) // Perhaps a check is needed that w_cnt >= 16
+        else if (cnt == '0) 
             index <= (index == w_index' (w_digit - 1) ?
                 w_index' (0) : index + 1'd1);
 

@@ -32,17 +32,19 @@ module inmp441_mic_i2s_receiver
     // For example: 
     //   clk 50 MHz -> 9 cycles -> sck clock at 2.777 Mhz, ws at 43.4 Khz
     //   clk 27 MHz -> 5 cycles -> sck clock at 2.7 Mhz, ws at 42.2 Khz 
-    localparam int sck_clock_divisor = $ceil(1.0 * clk_mhz / 3 / 2);
+    //localparam int sck_clock_divisor = $ceil(1.0 * clk_mhz / 3 / 2);
+    localparam int sck_clock_divisor = 8; // TODO: $ceil() не синтезируется;
+
     logic [$clog2(sck_clock_divisor) - 1:0] cnt; // Counter used to drive SCK 
     logic       sck_posedge; // Tracks SCK posedge 
     logic       sck_negedge; // Tracks SCK negedge 
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst) begin
             cnt <= '0;
             sck_posedge <= '0;
             sck_negedge <= '0;
-        else
+        end else begin
             if (cnt == sck_clock_divisor - 1'b1) // Every N cycles drive SCK up or down
             begin
                 sck <= ~ sck;
@@ -58,6 +60,7 @@ module inmp441_mic_i2s_receiver
                 sck_posedge <= '0;
                 sck_negedge <= '0;
             end
+        end
 
     //------------------------------------------------------------------------
 
