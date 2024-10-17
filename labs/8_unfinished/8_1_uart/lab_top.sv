@@ -80,7 +80,7 @@ localparam  clk_frequency       = clk_mhz * 1000 * 1000;
        assign green      = '0;
        assign blue       = '0;
        assign sound      = '0;
-       assign uart_tx    = '1;
+       //assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
 
@@ -94,11 +94,35 @@ localparam  clk_frequency       = clk_mhz * 1000 * 1000;
         .baud_rate     ( baud_rate     )
     )
     receiver (
+        .clk,
         .reset        (  rst         ),
         .rx           (  uart_rx     ),
-        .*
+        .byte_valid,
+        .byte_data
     );
-   
+
+    wire        tx_byte_ready;
+    wire        tx_byte_valid;
+    wire [7:0]  tx_byte_data;
+
+    uart_transmitter
+    # (
+        .clk_frequency ( clk_frequency ),
+        .baud_rate     ( baud_rate     )
+    )
+    transmitter (
+        .clk,
+        .reset          (  rst         ),
+        .tx             (  uart_tx     ),
+        .byte_ready     ( tx_byte_ready ),
+        .byte_valid     ( tx_byte_valid ),
+        .byte_data      ( tx_byte_data  )
+    );
+
+    assign tx_byte_valid = byte_valid;
+    assign tx_byte_data = byte_data;
+
+    
     wire        word_valid;
     wire [31:0] word_address;
     wire [31:0] word_data;

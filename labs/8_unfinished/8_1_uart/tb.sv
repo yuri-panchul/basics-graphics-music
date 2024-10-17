@@ -14,40 +14,33 @@ initial begin
 //   $dumpvars();
 end
   
-//   string	test_name[3:0]=
-//   {
-//    "test_3", 
-//    "test_2", 
-//    "test_1", 
-//    "test_0" 
-//   };
 string	test_name[3:0];
 int fd;
 int args;
 
   
 int 	            test_id=0;
-
-logic [15:0]        display_number;    
-logic [3:0]         ar_display_number[4];
-                                    
-                                    
-
 logic               test_passed=0;
 logic               test_stop=0;
 logic               test_timeout=0;
 
-
-
-
-//top #( .is_simulation(1) ) uut( .* );
+int                 test_uart_p1=0;
+int                 test_uart_p2=0;
 
 localparam clk_mhz = 50,
 w_key   = 4,
 w_sw    = 4,
 w_led   = 4,
 w_digit = 4,
-w_gpio  = 100;
+w_gpio  = 100,
+screen_width  = 640,
+screen_height = 480,
+w_x           = $clog2 ( screen_width  ),
+w_y           = $clog2 ( screen_height ),
+w_red         = 4,
+w_green       = 4,
+w_blue        = 4;
+
 
 //------------------------------------------------------------------------
 
@@ -59,7 +52,13 @@ logic [w_led   - 1:0]   led;
 logic [          7:0]   abcdefgh;
 logic [w_digit - 1:0]   digit;
 logic [w_gpio  - 1:0]   gpio;
-
+logic [w_x     - 1:0]   x;
+logic [w_y     - 1:0]   y;
+logic [w_red   - 1:0]   red;
+logic [w_green - 1:0]   green;
+logic [w_blue  - 1:0]   blue;
+logic [         23:0]   mic;
+logic [         15:0]   sound;
 logic                   uart_rx;
 logic                   uart_tx;
 
@@ -75,14 +74,12 @@ lab_top
     .w_sw          (   w_sw          ),
     .w_led         (   w_led         ),
     .w_digit       (   w_digit       ),
-    .w_gpio        (   w_gpio        )
-
-    // .screen_width  (   screen_width  ),
-    // .screen_height (   screen_height ),
-
-    // .w_red         (   w_red         ),
-    // .w_green       (   w_green       ),
-    // .w_blue        (   w_blue        )
+    .w_gpio        (   w_gpio        ),
+    .screen_width  (   screen_width  ),
+    .screen_height (   screen_height ),
+    .w_red         (   w_red         ),
+    .w_green       (   w_green       ),
+    .w_blue        (   w_blue        )
 )
 i_lab_top
 (
@@ -98,12 +95,11 @@ i_lab_top
     .abcdefgh      (   abcdefgh      ),
     .digit         (   digit         ),
 
-    // .x             (   x             ),
-    // .y             (   y             ),
-
-    // .red           (   red           ),
-    // .green         (   green         ),
-    // .blue          (   blue          ),
+    .x             (   x             ),
+    .y             (   y             ),
+    .red           (   red           ),
+    .green         (   green         ),
+    .blue          (   blue          ),
 
     .uart_rx       (   uart_rx       ),
     .uart_tx       (   uart_tx       ),
@@ -115,32 +111,23 @@ i_lab_top
 );
 
 
-
-assign ar_display_number[0] = display_number[3:0];
-assign ar_display_number[1] = display_number[7:4];
-assign ar_display_number[2] = display_number[11:8];
-assign ar_display_number[3] = display_number[15:12];
-
 // Main process  
 initial begin  
 
     args=-1;
 
-    test_name[0] = "test_0";
+    test_name[0] = "test_uart";
     test_name[1] = "test_1";
     test_name[2] = "test_2";
     test_name[3] = "test_3";
 
-    
     if( $value$plusargs( "test_id=%0d", args )) begin
         if( args>=0 && args<2 )
         test_id = args;
-
         $display( "args=%d  test_id=%d", args, test_id );
-
     end
 
-  $display("Hello, world! test_id=%d  name: %s  ", test_id, test_name[test_id]);
+  $display("test_id=%d  name: %s  ", test_id, test_name[test_id]);
 
   rst <= #1 1;
 
@@ -150,15 +137,13 @@ initial begin
   
   rst <= #1 0;
   
-  //@(posedge clk iff test_stop | test_timeout );
+  //@(posedge clk iff test_stop | test_timeout ); // this code don't work in the Icarus verilog
   for( int ii=0; ~(test_stop || test_timeout)  ; ii++ ) begin
     @(posedge clk);
   end
 
-
   #200;
 
-  //test_finish( test_id, test_name[test_id], test_passed, display_number[7:4] );
   test_finish( test_id, test_name[test_id], test_passed );
 
 end
@@ -177,29 +162,28 @@ initial begin
 
     @(negedge rst );
 
+    #200;
+
     case( test_id )
         0: begin
             // some action for test_id==0
             fork
-                //test_seq_p0();    
-                //test_seq_p1();    
-                //test_seq_p2();    
-                test_seq_uart_rx();
-            join_any
-           
-            // if( display_number[3:0]==4'b1111 )  
-            //     test_passed = 1;
+                //test_seq_key0();    
+                //test_seq_key1();    
+                //test_seq_uart_p0();
+                test_seq_uart_p1();
+                test_seq_uart_p2();
+            //join_any
+            join
+
+            if(     1==test_uart_p1 
+                 && 1==test_uart_p2
+              )
+                     test_passed = 1;
         end
 
         // 1: begin
         //     // some action for test_id==1
-        // end
-
-        // 1: begin
-        //     #50000000;
-        //     if( display_number[3:0]==4'b0110 )  
-        //         test_passed = 1;
-
         // end
 
     endcase    
@@ -208,13 +192,6 @@ initial begin
 end
   
 
-task test_init;
-
-    uart_rx <= 1;
-
-    key <= '0;
-
-endtask
 
 
 `include "tb_pkg.svh"
