@@ -423,6 +423,7 @@ configure_fpga_gowin_msys ()
 
     if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
         flash_method="-r 2"
+    fi
 
     "$gowin_prog_full_real_path"      \
         -d $fpga_board_for_programmer \
