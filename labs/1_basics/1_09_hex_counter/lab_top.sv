@@ -77,7 +77,7 @@ module lab_top
 
     logic [31:0] period;
 
-    localparam min_period = clk_mhz * 1000 * 1000 / 30,
+    localparam min_period = clk_mhz * 1000 * 1000 / 50,
                max_period = clk_mhz * 1000 * 1000 *  3;
 
     always_ff @ (posedge clk or posedge rst)
