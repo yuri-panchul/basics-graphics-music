@@ -42,7 +42,7 @@ set_property PACKAGE_PIN M3 [get_ports {SMG_Data[1]}]
 set_property PACKAGE_PIN J6 [get_ports {SMG_Data[2]}]
 set_property PACKAGE_PIN H5 [get_ports {SMG_Data[3]}]
 set_property PACKAGE_PIN G4 [get_ports {SMG_Data[4]}]
-set_property PACKAGE_PIN K6  [get_ports {SMG_Data[5]}]
+set_property PACKAGE_PIN K6 [get_ports {SMG_Data[5]}]
 set_property PACKAGE_PIN K3 [get_ports {SMG_Data[6]}]
 set_property PACKAGE_PIN H4 [get_ports {SMG_Data[7]}]
 

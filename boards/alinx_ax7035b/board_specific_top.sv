@@ -3,62 +3,59 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz       = 100,
+    parameter clk_mhz       = 50,
               pixel_mhz     = 25,
 
-              w_key         = 5,
-              w_sw          = 16,
-              w_led         = 16,
-              w_digit       = 4,
-              w_gpio        = 24,
+              w_key         = 4,
+              w_sw          = 0,
+              w_led         = 4,
+              w_digit       = 6,
+              w_gpio        = 68,
 
               screen_width  = 640,
               screen_height = 480,
 
-              w_red         = 4,
-              w_green       = 4,
-              w_blue        = 4,
+              w_red         = 8,
+              w_green       = 8,
+              w_blue        = 8,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                   clk,
+    input                   sys_clk,
+    input                   rst_n,
 
-    input                   btnC,
-    input                   btnU,
-    input                   btnL,
-    input                   btnR,
-    input                   btnD,
-
-    input  [w_sw     - 1:0] sw,
+    input  [w_key    - 1:0] key_in,
     output [w_led    - 1:0] led,
 
-    output [           6:0] seg,
-    output                  dp,
-    output [w_digit  - 1:0] an,
+    output [           7:0] SMG_Data,
+    output [w_digit  - 1:0] Scan_Sig,
 
-    output                  Hsync,
-    output                  Vsync,
+    output [                TMDS_clk_n
+    output [                TMDS_clk_p]
+    output [           2:0] TMDS_data_n,
+    output [           2:0] TMDS_data_p,
+    output [           0:0] HDMI_OEN,
 
-    output [w_red    - 1:0] vgaRed,
-    output [w_green  - 1:0] vgaGreen,
-    output [w_blue   - 1:0] vgaBlue,
+    input                   uart_rx,
+    output                  uart_tx
 
-    input                   RsRx,
-    output                  RsTx,
-
-    inout  [           7:0] JA,
-    inout  [           7:0] JB,
-    inout  [           7:0] JC
+    // TODO
+    // inout [w_gpio / 2 - 1:0] j9,
+    // inout [w_gpio / 2 - 1:0] j10
 );
 
-    //------------------------------------------------------------------------
+    assign led [0] = 0;
+    assign led [1] = 1;
+    assign led [2] = key_in [0];
+    assign led [3] = key_in [1];
 
-    localparam w_lab_sw   = w_sw - 1;  // One onboard SW is used as a reset
+    assign SMG_Data = 8'b0011_1010;
+    assign Scan_Sig = 6'b000_111;
 
-    wire                  rst    = sw [w_sw - 1];
-    wire [w_lab_sw - 1:0] lab_sw = sw [w_lab_sw - 1:0];
+
+`ifdef UNDEFINED
 
     //------------------------------------------------------------------------
 
@@ -234,5 +231,7 @@ module board_specific_top
         );
 
     `endif
+
+`endif
 
 endmodule
