@@ -1,5 +1,18 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
+
+`ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+`undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+`endif
+
+`ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+`undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+`endif
+
+`ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+`undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+`endif
 
 module board_specific_top
 # (
@@ -42,32 +55,32 @@ module board_specific_top
     output                  uart_tx
 
     // TODO
-    // inout [w_gpio / 2 - 1:0] j9,
-    // inout [w_gpio / 2 - 1:0] j10
+    // inout [3:36] j9,
+    // inout [3:36] j10
 );
 
-    assign led [0] = 0;
-    assign led [1] = 1;
-    assign led [2] = key_in [0];
-    assign led [3] = key_in [1];
+    // TODO
 
-    assign SMG_Data = 8'b0011_1010;
-    assign Scan_Sig = 6'b000_111;
-
-
-`ifdef UNDEFINED
+    wire [3:36] j9;
+    wire [3:36] j10;
 
     //------------------------------------------------------------------------
+
+    // Keys and LEDs
+
+    wire [w_key - 1:0] lab_key;
+    wire [w_led - 1:0] lab_led;
+
+    `SWAP_BITS ( lab_key , ~ key_in  );
+    `SWAP_BITS ( led     , ~ lab_led );
 
     // Seven-segment display
 
     wire [7:0] abcdefgh;
-    wire [7:0] digit;
+    wire [7:0] digit;     
 
-    assign { seg [0], seg [1], seg [2], seg [3],
-             seg [4], seg [5], seg [6], dp       } = ~ abcdefgh;
-
-    assign an = ~ digit;
+    `SWAP_BITS (SMG_Data, ~ abcdefgh);
+    assign Scan_Sig = ~ digit;
 
     // Graphics
 
@@ -80,9 +93,9 @@ module board_specific_top
     wire [w_green - 1:0] green;
     wire [w_blue  - 1:0] blue;
 
-    assign vgaRed   = display_on ? red   : '0;
-    assign vgaGreen = display_on ? green : '0;
-    assign vgaBlue  = display_on ? blue  : '0;
+    // REMOVE assign vgaRed   = display_on ? red   : '0;
+    // REMOVE assign vgaGreen = display_on ? green : '0;
+    // REMOVE assign vgaBlue  = display_on ? blue  : '0;
 
     // Sound
 
@@ -102,7 +115,7 @@ module board_specific_top
     # (
         .clk_mhz       ( clk_mhz        ),
         .w_key         ( w_key          ),
-        .w_sw          ( w_lab_sw       ),
+        .w_sw          ( w_key          ),
         .w_led         ( w_led          ),
         .w_digit       ( w_digit        ),
         .w_gpio        ( w_gpio         ),
@@ -120,8 +133,8 @@ module board_specific_top
         .slow_clk      ( slow_clk       ),
         .rst           ( rst            ),
 
-        .key           ( { btnD, btnU, btnL, btnC, btnR } ),
-        .sw            ( lab_sw         ),
+        .key           ( lab_key        ),
+        .sw            ( lab_key        ),
 
         .led           ( led            ),
 
@@ -138,10 +151,10 @@ module board_specific_top
         .mic           ( mic            ),
         .sound         ( sound          ),
 
-        .uart_rx       ( RsRx           ),
-        .uart_tx       ( RsTx           ),
+        .uart_rx       ( uart_rx        ),
+        .uart_tx       ( uart_tx        ),
 
-        .gpio          (                )
+        .gpio          ( { j9, j10 }    )
     );
 
     //------------------------------------------------------------------------
@@ -231,7 +244,5 @@ module board_specific_top
         );
 
     `endif
-
-`endif
 
 endmodule
