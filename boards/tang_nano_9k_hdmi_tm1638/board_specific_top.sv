@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
 
 //----------------------------------------------------------------------------
 
@@ -15,19 +16,6 @@
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 `define REVERSE_KEY
 `define REVERSE_LED
-
-//----------------------------------------------------------------------------
-
-`define SWAP_BITS(dst, src)                                      \
-                                                                 \
-    generate                                                     \
-        genvar dst``_i;                                          \
-                                                                 \
-        for (dst``_i = 0; dst``_i < $bits (dst); dst``_i ++)     \
-        begin : dst``_label                                      \
-            assign dst [dst``_i] = src [$left (dst) - dst``_i];  \
-        end                                                      \
-    endgenerate                                                  \
 
 //----------------------------------------------------------------------------
 

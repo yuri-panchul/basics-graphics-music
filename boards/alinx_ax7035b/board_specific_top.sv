@@ -32,11 +32,11 @@ module board_specific_top
     output [           7:0] SMG_Data,
     output [w_digit  - 1:0] Scan_Sig,
 
-    output [                TMDS_clk_n
-    output [                TMDS_clk_p]
-    output [           2:0] TMDS_data_n,
-    output [           2:0] TMDS_data_p,
-    output [           0:0] HDMI_OEN,
+//    output                  TMDS_clk_n,
+//    output                  TMDS_clk_p,
+//    output [           2:0] TMDS_data_n,
+//    output [           2:0] TMDS_data_p,
+//    output [           0:0] HDMI_OEN,
 
     input                   uart_rx,
     output                  uart_tx
