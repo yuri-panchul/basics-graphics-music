@@ -66,6 +66,11 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    // Clock and reset
+
+    wire clk =   sys_clk;
+    wire rst = ~ rst_n;
+
     // Keys and LEDs
 
     wire [w_key - 1:0] lab_key;
