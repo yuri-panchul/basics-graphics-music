@@ -136,7 +136,7 @@ module board_specific_top
         .key           ( lab_key        ),
         .sw            ( lab_key        ),
 
-        .led           ( led            ),
+        .led           ( lab_led        ),
 
         .abcdefgh      ( abcdefgh       ),
         .digit         ( digit          ),
