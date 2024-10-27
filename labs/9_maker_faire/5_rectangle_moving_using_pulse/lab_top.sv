@@ -108,8 +108,8 @@ module lab_top
         blue  = 0;
 
         if (  x > 100 + counter
-            & y > 100
             & x < 150 + counter
+            & y > 100
             & y < 200 )
         begin
             red = 30;
