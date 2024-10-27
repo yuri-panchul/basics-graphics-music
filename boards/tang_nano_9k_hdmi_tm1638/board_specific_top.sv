@@ -318,9 +318,9 @@ module board_specific_top
             .digit    ( tm_digit       ),
             .ledr     ( tm_led         ),
             .keys     ( tm_key         ),
-            .sio_data ( GPIO [0]       ),
-            .sio_clk  ( GPIO [1]       ),
-            .sio_stb  ( GPIO [2]       )
+            .sio_data ( GPIO [0]       ),   // DIO PIN 25
+            .sio_clk  ( GPIO [1]       ),   // CLK PIN 26
+            .sio_stb  ( GPIO [2]       )    // STB PIN 27
         );
     `endif
 
