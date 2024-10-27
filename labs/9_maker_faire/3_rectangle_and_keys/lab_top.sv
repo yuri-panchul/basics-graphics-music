@@ -86,19 +86,19 @@ module lab_top
         green = 0;
         blue  = 0;
 
-        if (x > 100 & y > 100 & x < 150 & y < 200)
+        if (x > 100 & x < 150 & y > 100 & y < 200)
         begin
             red   = key [0] ? 30 : 0;
             green = key [1] ? 30 : 0;
             blue  = key [2] ? 30 : 0;
         end
 
-        if (key [4])
+        if (key [3])
             w = 200;
         else
             w = 50;
 
-        if (x > 200 & y > 0 & x < 200 + w & y < 100)
+        if (x > 200 & x < 200 + w & y > 0 & y < 100)
             green = 30;
     end
 

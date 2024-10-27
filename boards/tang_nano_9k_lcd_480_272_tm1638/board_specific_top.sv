@@ -12,6 +12,8 @@
 `define REVERSE_KEY
 `define REVERSE_LED
 
+// `define MIRROR_LCD
+
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -211,8 +213,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef MIRROR_LCD
+
     wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
     wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -247,8 +253,17 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
+        `ifdef MIRROR_LCD
+
         .x             ( mirrored_x    ),
         .y             ( mirrored_y    ),
+
+        `else
+
+        .x             ( x             ),
+        .y             ( y             ),
+
+        `endif
 
         .red           ( LARGE_LCD_R   ),
         .green         ( LARGE_LCD_G   ),
