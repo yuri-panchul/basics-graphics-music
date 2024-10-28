@@ -105,19 +105,19 @@ localparam  clk_frequency       = clk_mhz * 1000 * 1000;
     wire        tx_byte_valid;
     wire [7:0]  tx_byte_data;
 
-    uart_transmitter
-    # (
-        .clk_frequency ( clk_frequency ),
-        .baud_rate     ( baud_rate     )
-    )
-    transmitter (
-        .clk,
-        .reset          (  rst         ),
-        .tx             (  uart_tx     ),
-        .byte_ready     ( tx_byte_ready ),
-        .byte_valid     ( tx_byte_valid ),
-        .byte_data      ( tx_byte_data  )
-    );
+    // uart_transmitter
+    // # (
+    //     .clk_frequency ( clk_frequency ),
+    //     .baud_rate     ( baud_rate     )
+    // )
+    // transmitter (
+    //     .clk,
+    //     .reset          (  rst         ),
+    //     .tx             (  uart_tx     ),
+    //     .byte_ready     ( tx_byte_ready ),
+    //     .byte_valid     ( tx_byte_valid ),
+    //     .byte_data      ( tx_byte_data  )
+    // );
 
     assign tx_byte_valid = byte_valid;
     assign tx_byte_data = byte_data;
@@ -192,7 +192,7 @@ always_comb
 
     4'b0011: number = word_data    [31:16];
     4'b1001: number = word_data    [15: 0];
-    4'b1100: number = word_address [15: 0];
+    4'b1100: number = 11 [15: 0];
     endcase
    
     seven_segment_display 

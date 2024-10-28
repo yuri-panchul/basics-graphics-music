@@ -63,7 +63,7 @@ localparam  baud_rate           = 115200;
 localparam  clk_frequency       = clk_mhz * 1000 * 1000;
 
 `ifndef SIMULATION
-    localparam  update_hz   = 400;
+    localparam  update_hz   = 1;
     localparam timeout_in_seconds = 1;
 `else
     localparam  update_hz   = 4000000;
@@ -105,19 +105,19 @@ localparam  clk_frequency       = clk_mhz * 1000 * 1000;
     wire        tx_byte_valid;
     wire [7:0]  tx_byte_data;
 
-    uart_transmitter
-    # (
-        .clk_frequency ( clk_frequency ),
-        .baud_rate     ( baud_rate     )
-    )
-    transmitter (
-        .clk,
-        .reset          (  rst         ),
-        .tx             (  uart_tx     ),
-        .byte_ready     ( tx_byte_ready ),
-        .byte_valid     ( tx_byte_valid ),
-        .byte_data      ( tx_byte_data  )
-    );
+    // uart_transmitter
+    // # (
+    //     .clk_frequency ( clk_frequency ),
+    //     .baud_rate     ( baud_rate     )
+    // )
+    // transmitter (
+    //     .clk,
+    //     .reset          (  rst         ),
+    //     .tx             (  uart_tx     ),
+    //     .byte_ready     ( tx_byte_ready ),
+    //     .byte_valid     ( tx_byte_valid ),
+    //     .byte_data      ( tx_byte_data  )
+    // );
 
     assign tx_byte_valid = byte_valid;
     assign tx_byte_data = byte_data;

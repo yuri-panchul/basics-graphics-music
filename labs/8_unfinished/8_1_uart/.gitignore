@@ -1,0 +1,4 @@
+*.sv
+*.svh
+log.txt
+run

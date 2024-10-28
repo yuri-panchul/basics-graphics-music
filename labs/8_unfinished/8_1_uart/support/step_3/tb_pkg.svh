@@ -52,8 +52,6 @@ endtask
 // ImitSimulate a button 0 press
 task test_seq_key0;
 
-    $display( "test_seq_key0() - start");
-
     for( int loop=1;  loop<1000; loop++ ) begin
 
         key[0] <= 1;    
@@ -63,14 +61,10 @@ task test_seq_key0;
 
     end
 
-    $display( "test_seq_key0() - complete");
-
 endtask
 
 // ImitSimulate a button 1 press
 task test_seq_key1;
-
-    $display( "test_seq_key1() - start");
 
     for( int loop=1;  loop<1000; loop++ ) begin        
 
@@ -81,7 +75,6 @@ task test_seq_key1;
 
     end
 
-    $display( "test_seq_key1() - complete");
 
 endtask
 

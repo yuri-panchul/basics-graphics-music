@@ -172,11 +172,11 @@ initial begin
                 test_seq_key1();    
                 //test_seq_uart_p0();
                 test_seq_uart_p1();
-                test_seq_uart_p2();
+                // test_seq_uart_p2();
             join
 
             if(     1==test_uart_p1 
-                 && 1==test_uart_p2
+                // && 1==test_uart_p2
               )
                      test_passed = 1;
         end

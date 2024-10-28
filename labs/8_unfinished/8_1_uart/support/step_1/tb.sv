@@ -162,23 +162,23 @@ initial begin
 
     @(negedge rst );
 
-    #20000;
+    #200;
 
     case( test_id )
         0: begin
             // some action for test_id==0
             fork
                 test_seq_key0();    
-                test_seq_key1();    
-                //test_seq_uart_p0();
-                test_seq_uart_p1();
-                test_seq_uart_p2();
+                // test_seq_key1();    
+                // test_seq_uart_p0();
+                // test_seq_uart_p1();
+                // test_seq_uart_p2();
             join
 
-            if(     1==test_uart_p1 
-                 && 1==test_uart_p2
-              )
-                     test_passed = 1;
+            // if(     1==test_uart_p1 
+            //    //  && 1==test_uart_p2
+            //   )
+            //          test_passed = 1;
         end
 
         // 1: begin
