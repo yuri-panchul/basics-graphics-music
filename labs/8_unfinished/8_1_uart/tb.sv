@@ -162,7 +162,7 @@ initial begin
 
     @(negedge rst );
 
-    #20000;
+    #200;
 
     case( test_id )
         0: begin

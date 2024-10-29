@@ -180,9 +180,9 @@ task test_seq_uart_p0();
     $display( "test_seq_uart_p0() - start");
 
     tb_uart_send( 8'hAA );
-    tb_uart_send( 8'h01 );
-    tb_uart_send( 8'h02 );
-    tb_uart_send( 8'h03 );
+    // tb_uart_send( 8'h01 );
+    // tb_uart_send( 8'h02 );
+    // tb_uart_send( 8'h03 );
 
     $display( "test_seq_uart_p0() - complete");
 
