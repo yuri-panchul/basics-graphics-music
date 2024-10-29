@@ -181,7 +181,7 @@ logic [w_digit     - 1:0] dots;
    
 assign dots = '0;
 
-always_comb
+always_comb begin : pr_case_number
     case (key)
     default: number = last_bytes   [15: 0];
     4'b0111: number = last_bytes   [31:16];
@@ -194,6 +194,7 @@ always_comb
     4'b1001: number = word_data    [15: 0];
     4'b1100: number = word_address [15: 0];
     endcase
+end
    
     seven_segment_display 
     #(
