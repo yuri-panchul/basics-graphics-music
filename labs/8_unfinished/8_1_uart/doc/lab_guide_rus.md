@@ -25,7 +25,7 @@
     * hex_parser.sv - декодирование данных
 4. Запустите моделирование проекта: ./10_simulate_rtl_icarus.bash
 
-В консоле должен быть вывод:
+В консоли должен быть вывод:
 
 ```
 test_id=          0  name: test_uart  
@@ -42,7 +42,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
     Возможно что из втроенного терминала Visual Studio Code программа не запустится, в этом случае надо использовать внешний терминал.
     Измените масштаб отображения что бы увидеть изменения сигнала key_0
     Вид программы GTKWave:
-![](./doc/gtkwave_1.png)
+![](./gtkwave_1.png)
 
     Контрольные вопросы:
 
@@ -53,7 +53,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
 8. В файле tb.sv раскомментируйте вызов test_seq_key1()
 9. Выполните моделирование: ./10_simulate_rtl_icarus.bash
 
-В консоле должен быть вывод:
+В консоли должен быть вывод:
 
 ```    
 test_id=          0  name: test_uart  
@@ -67,7 +67,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
 ```
 10. Обновите данные в программе GTKWave (надо нажать на кнопке Reload)
     Вид программы GTKWave:
-![](./doc/gtkwave_2.png)
+![](./gtkwave_2.png)
 
     Контрольные вопросы:
 
@@ -77,7 +77,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
 11. В файле tb.sv раскомментируйте вызов test_seq_uart_p0()
 12. Выполните моделирование: ./10_simulate_rtl_icarus.bash
 
-В консоле должен быть вывод:
+В консоли должен быть вывод:
 
 ```
 test_id=          0  name: test_uart  
@@ -94,7 +94,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
 
 13. Обновите данные в программе GTKWave (надо нажать на кнопке Reload)
     Вид программы GTKWave:
-![](./doc/gtkwave_3.png)
+![](./gtkwave_3.png)
 
     Контрольные вопросы:
 
@@ -109,7 +109,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
 16. Выполните моделирование: ./10_simulate_rtl_icarus.bash
 17. Обновите данные в программе GTKWave (надо нажать на кнопке Reload)
     Вид программы GTKWave:
-![](./doc/gtkwave_4.png)
+![](./gtkwave_4.png)
 
     Контрольные вопросы:
         17.1. Как именилось формирование сигнала uart_rx ?
@@ -122,7 +122,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
 
 20. Выполните моделирование: ./10_simulate_rtl_icarus.bash
 
-В консоле должен быть вывод:
+В консоли должен быть вывод:
 
 ```
 test_id=          0  name: test_uart  
@@ -142,7 +142,7 @@ test_id=0     test_name:       test_uart         TEST_PASSED
 
 21. Обновите данные в программе GTKWave (надо нажать на кнопке Reload)
     Вид программы GTKWave:
-![](./doc/gtkwave_6.png)
+![](./gtkwave_6.png)
 
     Контрольные вопросы:
         21.1. Какие условия используются для принятия решения о правильности выполнения теста ?
@@ -172,7 +172,7 @@ test_id=0     test_name:       test_uart         TEST_PASSED
     * число стоповых бит: 1
     * отключен аппаратный контроль скорости потока
 
-    Для систем на основе Linux можно использовать программу Minicom, порядок настройки программы приведён здесь: [Minicom_setup_rus](./minicom_setup_rus.md)
+    Для систем на основе Linux можно использовать программу Minicom, порядок настройки программы приведён здесь: [minicom_setup_rus](./minicom_setup_rus.md)
 
 26. Наберите в терминале последовательного порта  символы  1 2 3 4
 
@@ -188,7 +188,7 @@ test_id=0     test_name:       test_uart         TEST_PASSED
 
 30. Выполните моделирование: ./10_simulate_rtl_icarus.bash
 
-В консоле должен быть вывод:
+В консоли должен быть вывод:
 
 ```
 test_id=          0  name: test_uart  
@@ -221,7 +221,7 @@ test_id=0     test_name:       test_uart         TEST_FAILED *******
 31. В файле lab_top.sv раскомментируйте компонент uart_transmitter.
 30. Выполните моделирование: ./10_simulate_rtl_icarus.bash
 
-В консоле должен быть вывод:
+В консоли должен быть вывод:
 
 ```
 test_id=          0  name: test_uart  
@@ -252,7 +252,7 @@ test_id=0     test_name:       test_uart         TEST_PASSED
 
 31. Обновите данные в программе GTKWave (надо нажать на кнопке Reload)
     Вид программы GTKWave:
-![](./doc/gtkwave_7.png)
+![](./gtkwave_7.png)
 
     Контрольные вопросы:
         31.1. Почему сигнал uart_tx запаздывает относительно сигнала uart_rx ?
