@@ -14,7 +14,6 @@
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 `define REVERSE_KEY
-`define REVERSE_LED
 
 `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
@@ -183,13 +182,7 @@ module board_specific_top
             assign lab_key = ~ KEY;
         `endif
 
-        //--------------------------------------------------------------------
-
-        `ifdef REVERSE_LED
-            `SWAP_BITS (LED, ~ lab_led);
-        `else
-            assign LED = ~ lab_led;
-        `endif
+        assign LED = ~ lab_led;
 
     `endif  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
