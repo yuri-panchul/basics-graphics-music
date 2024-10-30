@@ -1,0 +1,8 @@
+# The pin assignments
+
+IO_LOC "CLK"     45;
+
+IO_LOC "KEY[0]"  15;
+IO_LOC "KEY[1]"  14;
+
+IO_LOC "LED"     10;
