@@ -16,6 +16,12 @@
 `define REVERSE_KEY
 `define REVERSE_LED
 
+`undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+`undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+`undef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+`undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+`undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
 //----------------------------------------------------------------------------
 
 `define SWAP_BITS(dst, src)                                      \
@@ -41,9 +47,9 @@ module board_specific_top
 
               w_key         = 2,
               w_sw          = 0,
-              w_led         = 6,
+              w_led         = 1,
               w_digit       = 0,
-              w_gpio        = 10,
+              w_gpio        = 1,
 
               screen_width  = 640,
               screen_height = 480,
@@ -56,70 +62,9 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                        CLK,
-
-    input  [w_key        - 1:0]  KEY,
-
-    output [w_led        - 1:0]  LED,
-
-    // Some LARGE_LCD pins share bank with TMDS pins
-    // which have different voltage requirements.
-    //
-    // However we can use LARGE_LCD_DE, VS, HS, CK,
-    // because they are assigned to a different bank.
-
-       output                    LARGE_LCD_DE,
-       output                    LARGE_LCD_VS,
-       output                    LARGE_LCD_HS,
-       output                    LARGE_LCD_CK,
-    // output                    LARGE_LCD_INIT,
-    // output                    LARGE_LCD_BL,
-
-    // output [            4:0]  LARGE_LCD_R,
-    // output [            5:0]  LARGE_LCD_G,
-    // output [            4:0]  LARGE_LCD_B,
-
-    input                        UART_RX,
-    output                       UART_TX,
-
-    // The following 4 pins (TF_CS, TF_MOSI, TF_SCLK, TF_MISO)
-    // are used for INMP441 microphone
-    // in basics-graphics-music labs
-
-    inout                        TF_CS,
-    inout                        TF_MOSI,
-    inout                        TF_SCLK,
-    inout                        TF_MISO,
-
-    inout  [w_gpio       - 1:0]  GPIO,
-
-    // The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
-    // share bank with TMDS pins
-    // which have different voltage requirements.
-    //
-    // It means we cannot use them
-    // for I2S audio output module PCM5102
-    // in basics-graphics-music labs
-    // when we use HDMI interface
-
-    // inout                     SMALL_LCD_CLK,
-    // inout                     SMALL_LCD_RESETN,
-    // inout                     SMALL_LCD_CS,
-    // inout                     SMALL_LCD_RS,
-    // inout                     SMALL_LCD_DATA,
-
-    output                       TMDS_CLK_N,
-    output                       TMDS_CLK_P,
-    output [               2:0]  TMDS_D_N,
-    output [               2:0]  TMDS_D_P
-
-    // This pins have bank conflict when used with HDMI
-
-    // ,
-    // output                    FLASH_CLK,
-    // output                    FLASH_CSB,
-    // output                    FLASH_MOSI,
-    // input                     FLASH_MISO
+    input                 CLK,
+    input  [w_key - 1:0]  KEY,
+    output                LED
 );
 
     wire clk = CLK;
@@ -294,12 +239,12 @@ module board_specific_top
         .green         ( lab_green     ),
         .blue          ( lab_blue      ),
 
-        .uart_rx       ( UART_RX       ),
-        .uart_tx       ( UART_TX       ),
+        .uart_rx       (               ),
+        .uart_tx       (               ),
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( GPIO          )
+        .gpio          (               )
     );
 
     //------------------------------------------------------------------------
