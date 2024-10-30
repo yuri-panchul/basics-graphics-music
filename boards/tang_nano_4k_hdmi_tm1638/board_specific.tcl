@@ -1,6 +1,6 @@
 # Synthesis and Place & Route settings
 
-set_device GW1NR-LV9QN88PC6/I5 -name GW1NR-9 -device_version C
+set_device GW1NSR-LV4CQN48PC6/I5 -name GW1NSR-4 -device_version C
 
 set_option -synthesis_tool gowinsynthesis
 set_option -output_base_name fpga_project
