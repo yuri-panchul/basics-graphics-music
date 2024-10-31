@@ -284,12 +284,6 @@ module board_specific_top
         wire [$left (abcdefgh):0] hgfedcba;
         `SWAP_BITS (hgfedcba, abcdefgh);
 
-    `endif
-
-    //------------------------------------------------------------------------
-
-    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
         tm1638_board_controller
         # (
             .clk_mhz  ( clk_mhz        ),

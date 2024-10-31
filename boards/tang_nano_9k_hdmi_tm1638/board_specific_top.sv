@@ -293,15 +293,9 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire [$left (abcdefgh):0] hgfedcba;
+    `SWAP_BITS (hgfedcba, abcdefgh);
 
-    generate
-        genvar i;
-
-        for (i = 0; i < $bits (abcdefgh); i ++)
-        begin : abc
-            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-        end
-    endgenerate
+    //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 

@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
 
 //----------------------------------------------------------------------------
 
@@ -20,19 +21,6 @@
 `undef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
 `undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 `undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
-
-//----------------------------------------------------------------------------
-
-`define SWAP_BITS(dst, src)                                      \
-                                                                 \
-    generate                                                     \
-        genvar dst``_i;                                          \
-                                                                 \
-        for (dst``_i = 0; dst``_i < $bits (dst); dst``_i ++)     \
-        begin : dst``_label                                      \
-            assign dst [dst``_i] = src [$left (dst) - dst``_i];  \
-        end                                                      \
-    endgenerate                                                  \
 
 //----------------------------------------------------------------------------
 
@@ -83,11 +71,14 @@ module board_specific_top
                    w_lab_digit = w_tm_digit;
 
     `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+
         // Instantiate virtual tm1638
+
         localparam w_lab_key   = w_key,
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
     `else
+
         // No need in TM1638 in any form
         // We create a dummy seven-segment digit
         // to avoid errors in the labs with seven-segment display
@@ -115,10 +106,12 @@ module board_specific_top
     wire  [w_red       - 1:0] lab_red;
     wire  [w_green     - 1:0] lab_green;
     wire  [w_blue      - 1:0] lab_blue;
+
     wire  vtm_red, vtm_green, vtm_blue;
-    wire  [w_red       - 1:0] red   =   lab_red ^ { w_red   { vtm_red } };
+
+    wire  [w_red       - 1:0] red   = lab_red   ^ { w_red   { vtm_red   } };
     wire  [w_green     - 1:0] green = lab_green ^ { w_green { vtm_green } };
-    wire  [w_blue      - 1:0] blue  =  lab_blue ^ { w_blue  { vtm_blue } };
+    wire  [w_blue      - 1:0] blue  = lab_blue  ^ { w_blue  { vtm_blue  } };
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
@@ -243,15 +236,9 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire [$left (abcdefgh):0] hgfedcba;
+    `SWAP_BITS (hgfedcba, abcdefgh);
 
-    generate
-        genvar i;
-
-        for (i = 0; i < $bits (abcdefgh); i ++)
-        begin : abc
-            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-        end
-    endgenerate
+    //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
