@@ -157,7 +157,7 @@ module board_specific_top
         assign tm_digit = lab_digit;
         assign lab_key  = tm_key;
 
-        assign LED      = w_led' (~ lab_led);
+        assign LED      = w_led' (lab_led);
 
     `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
         // Virtual tm1638 - tm_keys are input, not output
@@ -172,7 +172,7 @@ module board_specific_top
         assign tm_led   = lab_led;
         assign tm_digit = lab_digit;
 
-        assign LED      = w_led' (~ lab_led);
+        assign LED      = w_led' (lab_led);
 
     `else  // no any form of TM1638
 
@@ -182,7 +182,7 @@ module board_specific_top
             assign lab_key = ~ KEY;
         `endif
 
-        assign LED = ~ lab_led;
+        assign LED = lab_led;
 
     `endif  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
