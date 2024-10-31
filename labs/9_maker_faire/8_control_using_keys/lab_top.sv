@@ -121,16 +121,16 @@ module lab_top
         blue  = 0;
 
         if (  x > 100 + dx
-            & y > 100 + dy
             & x < 150 + dx
+            & y > 100 + dy
             & y < 200 + dy )
         begin
             red = 30;
         end
 
         if (  x > 100 + dx * 2
-            & y > 100 + dy
             & x < 150 + dx * 2
+            & y > 100 + dy
             & y < 200 + dy     )
         begin
             green = 30;
