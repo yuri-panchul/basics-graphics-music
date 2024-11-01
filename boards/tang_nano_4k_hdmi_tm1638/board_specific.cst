@@ -1,12 +1,17 @@
 # The pin assignments
 
-IO_LOC "CLK"        45;
+IO_LOC "CLK"          45;
 
-IO_LOC "KEY[0]"     15;
-IO_LOC "KEY[1]"     14;
+IO_LOC "KEY[0]"       15;
+IO_LOC "KEY[1]"       14;
 
-IO_LOC "LED"        10;
+IO_LOC "LED"          10;
 
-IO_LOC "FLASH_CLK"  1;   // TM1638 STB
-IO_LOC "FLASH_DI"   48;  // TM1638 CLK
-IO_LOC "FLASH_DO"   47;  // TM1638 DIO
+IO_LOC "FLASH_CLK"    1;   // TM1638 STB
+IO_LOC "FLASH_DI"     48;  // TM1638 CLK
+IO_LOC "FLASH_DO"     47;  // TM1638 DIO
+
+IO_LOC "TMDS_CLK_P"   28,27;
+IO_LOC "TMDS_D_P[0]"  30,29;
+IO_LOC "TMDS_D_P[1]"  32,31;
+IO_LOC "TMDS_D_P[2]"  35,34;

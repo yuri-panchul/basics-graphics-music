@@ -16,8 +16,6 @@
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 `define REVERSE_KEY
 
-`undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-`undef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
 `undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 `undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
@@ -54,7 +52,12 @@ module board_specific_top
 
     inout                 FLASH_CLK,  // TM1638 STB
     inout                 FLASH_DI,   // TM1638 CLK
-    inout                 FLASH_DO    // TM1638 DIO
+    inout                 FLASH_DO,   // TM1638 DIO
+
+    output                TMDS_CLK_N,
+    output                TMDS_CLK_P,
+    output [        2:0]  TMDS_D_N,
+    output [        2:0]  TMDS_D_P
 );
 
     wire clk = CLK;
