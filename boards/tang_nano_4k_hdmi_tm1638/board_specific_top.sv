@@ -16,7 +16,6 @@
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 `define REVERSE_KEY
 
-`undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 `undef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
 `undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
@@ -51,7 +50,12 @@ module board_specific_top
 (
     input                 CLK,
     input  [w_key - 1:0]  KEY,
-    output                LED
+    output                LED,
+
+    inout                 JTAG_TCK,
+    inout                 JTAG_TDO,  // TM1638 STB
+    inout                 JTAG_TDI,  // TM1638 CLK
+    inout                 JTAG_TMS   // TM1638 DIO
 );
 
     wire clk = CLK;
@@ -81,10 +85,11 @@ module board_specific_top
 
         // No need in TM1638 in any form
         // We create a dummy seven-segment digit
-        // to avoid errors in the labs with seven-segment display
+        // to avoid errors in the labs with seven-segment display,
+        // and extra dummy LED for the same purpose.
 
         localparam w_lab_key   = w_key,
-                   w_lab_led   = w_led,
+                   w_lab_led   = 2;  // w_led,
                    w_lab_digit = 1;  // w_digit;
     `endif
 
@@ -161,7 +166,7 @@ module board_specific_top
             assign lab_key = ~ KEY;
         `endif
 
-        assign tm_key  = lab_key;
+        assign tm_key   = lab_key;
         assign tm_led   = lab_led;
         assign tm_digit = lab_digit;
 
@@ -175,7 +180,7 @@ module board_specific_top
             assign lab_key = ~ KEY;
         `endif
 
-        assign LED = lab_led;
+        assign LED = w_led' (lab_led);
 
     `endif  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
@@ -244,20 +249,20 @@ module board_specific_top
 
         tm1638_board_controller
         # (
-            .clk_mhz  ( clk_mhz        ),
-            .w_digit  ( w_tm_digit     )
+            .clk_mhz  ( clk_mhz    ),
+            .w_digit  ( w_tm_digit )
         )
         i_tm1638
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .hgfedcba ( hgfedcba       ),
-            .digit    ( tm_digit       ),
-            .ledr     ( tm_led         ),
-            .keys     ( tm_key         ),
-            .sio_data ( GPIO [0]       ),
-            .sio_clk  ( GPIO [1]       ),
-            .sio_stb  ( GPIO [2]       )
+            .clk      ( clk        ),
+            .rst      ( rst        ),
+            .hgfedcba ( hgfedcba   ),
+            .digit    ( tm_digit   ),
+            .ledr     ( tm_led     ),
+            .keys     ( tm_key     ),
+            .sio_data ( JTAG_DIO   ),
+            .sio_clk  ( JTAG_CLK   ),
+            .sio_stb  ( JTAG_STB   )
         );
     `endif
 

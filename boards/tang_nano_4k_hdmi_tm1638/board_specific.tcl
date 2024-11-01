@@ -7,4 +7,4 @@ set_option -output_base_name fpga_project
 set_option -top_module board_specific_top
 set_option -verilog_std sysv2017
 
-set_option -use_done_as_gpio 1
+set_option -use_jtag_as_gpio 1
