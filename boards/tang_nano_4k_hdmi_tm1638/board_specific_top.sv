@@ -16,6 +16,8 @@
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 `define REVERSE_KEY
 
+// `define USE_EXTERNAL_SERIAL_CLOCK_FOR_DVI_HDMI_IP
+
 `undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 `undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
@@ -274,6 +276,7 @@ module board_specific_top
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
         `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+
             virtual_tm1638_using_graphics
             # (
                 .w_digit       ( w_tm_digit    ),
@@ -319,12 +322,12 @@ module board_specific_top
 
         vga
         # (
-            .CLK_MHZ     ( serial_clk_mhz  ),
+            .CLK_MHZ     ( /* serial_ */ clk_mhz  ),
             .PIXEL_MHZ   ( pixel_mhz       )
         )
         i_vga
         (
-            .clk         ( serial_clk      ),
+            .clk         ( /* serial_ */ clk      ),
             .rst         ( rst             ),
             .hsync       ( hsync           ),
             .vsync       ( vsync           ),
@@ -335,12 +338,30 @@ module board_specific_top
         );
 
         //--------------------------------------------------------------------
-
+/*
         DVI_TX_Top i_DVI_TX_Top
         (
             .I_rst_n       ( ~ rst         ),
             .I_serial_clk  (   serial_clk  ),
             .I_rgb_clk     (   pixel_clk   ),
+            .I_rgb_vs      ( ~ vsync       ),
+            .I_rgb_hs      ( ~ hsync       ),
+            .I_rgb_de      (   display_on  ),
+            .I_rgb_r       (   red         ),
+            .I_rgb_g       (   green       ),
+            .I_rgb_b       (   blue        ),
+            .O_tmds_clk_p  (   TMDS_CLK_P  ),
+            .O_tmds_clk_n  (   TMDS_CLK_N  ),
+            .O_tmds_data_p (   TMDS_D_P    ),
+            .O_tmds_data_n (   TMDS_D_N    )
+        );
+*/
+        //--------------------------------------------------------------------
+
+        DVI_TX_Top_Alt i_DVI_TX_Top_Alt
+        (
+            .I_rst_n       ( ~ rst         ),
+            .I_rgb_clk     (   /* pixel_ */ clk   ),
             .I_rgb_vs      ( ~ vsync       ),
             .I_rgb_hs      ( ~ hsync       ),
             .I_rgb_de      (   display_on  ),
