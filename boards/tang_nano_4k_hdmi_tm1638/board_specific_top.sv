@@ -301,11 +301,10 @@ module board_specific_top
 
         wire serial_clk;
 
-        Gowin_rPLL i_Gowin_rPLL
+        Gowin_PLLVR i_Gowin_PLLVR
         (
             .clkin  ( clk        ),
-            .clkout ( serial_clk ),
-            .lock   (            )
+            .clkout ( serial_clk )
         );
 
         // Do we need to put serial_clk through BUFG?
