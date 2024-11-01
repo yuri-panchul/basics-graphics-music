@@ -52,10 +52,9 @@ module board_specific_top
     input  [w_key - 1:0]  KEY,
     output                LED,
 
-    inout                 JTAG_TCK,
-    inout                 JTAG_TDO,  // TM1638 STB
-    inout                 JTAG_TDI,  // TM1638 CLK
-    inout                 JTAG_TMS   // TM1638 DIO
+    inout                 FLASH_CLK,  // TM1638 STB
+    inout                 FLASH_DI,   // TM1638 CLK
+    inout                 FLASH_DO    // TM1638 DIO
 );
 
     wire clk = CLK;
@@ -260,10 +259,11 @@ module board_specific_top
             .digit    ( tm_digit   ),
             .ledr     ( tm_led     ),
             .keys     ( tm_key     ),
-            .sio_data ( JTAG_DIO   ),
-            .sio_clk  ( JTAG_CLK   ),
-            .sio_stb  ( JTAG_STB   )
+            .sio_data ( FLASH_DO   ),
+            .sio_clk  ( FLASH_DI   ),
+            .sio_stb  ( FLASH_CLK  )
         );
+
     `endif
 
     //------------------------------------------------------------------------
