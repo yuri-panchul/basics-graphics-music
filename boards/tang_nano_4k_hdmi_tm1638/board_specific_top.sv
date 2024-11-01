@@ -26,7 +26,7 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 27,
-              pixel_mhz     = 25,
+              pixel_mhz     = 27,
 
               // We use sw as an alias to key on Tang Nano 9K,
               // either with or without TM1638
@@ -285,83 +285,51 @@ module board_specific_top
             )
             i_tm1638_virtual
             (
-                .clk      ( clk           ),
-                .rst      ( rst           ),
-                .hgfedcba ( hgfedcba      ),
-                .digit    ( tm_digit      ),
-                .ledr     ( tm_led        ),
-                .keys     ( tm_key        ),
-                .x        ( x             ),
-                .y        ( y             ),
-                .red      ( vtm_red       ),
-                .green    ( vtm_green     ),
-                .blue     ( vtm_blue      )
+                .clk           ( clk           ),
+                .rst           ( rst           ),
+                .hgfedcba      ( hgfedcba      ),
+                .digit         ( tm_digit      ),
+                .ledr          ( tm_led        ),
+                .keys          ( tm_key        ),
+                .x             ( x             ),
+                .y             ( y             ),
+                .red           ( vtm_red       ),
+                .green         ( vtm_green     ),
+                .blue          ( vtm_blue      )
             );
 
         `endif
 
-        localparam serial_clk_mhz = 125;
-
-        wire serial_clk;
-
-        Gowin_PLLVR i_Gowin_PLLVR
-        (
-            .clkin  ( clk        ),
-            .clkout ( serial_clk )
-        );
-
-        // Do we need to put serial_clk through BUFG?
-        // BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
-
         //--------------------------------------------------------------------
 
-        wire hsync, vsync, display_on, pixel_clk;
+        wire hsync, vsync, display_on;
 
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
         vga
         # (
-            .CLK_MHZ     ( /* serial_ */ clk_mhz  ),
-            .PIXEL_MHZ   ( pixel_mhz       )
+            .CLK_MHZ    ( clk_mhz    ),
+            .PIXEL_MHZ  ( pixel_mhz  )
         )
         i_vga
         (
-            .clk         ( /* serial_ */ clk      ),
-            .rst         ( rst             ),
-            .hsync       ( hsync           ),
-            .vsync       ( vsync           ),
-            .display_on  ( display_on      ),
-            .hpos        ( x10             ),
-            .vpos        ( y10             ),
-            .pixel_clk   ( pixel_clk       )
+            .clk        ( clk        ),
+            .rst        ( rst        ),
+            .hsync      ( hsync      ),
+            .vsync      ( vsync      ),
+            .display_on ( display_on ),
+            .hpos       ( x10        ),
+            .vpos       ( y10        ),
+            .pixel_clk  (            )
         );
 
         //--------------------------------------------------------------------
-/*
+
         DVI_TX_Top i_DVI_TX_Top
         (
             .I_rst_n       ( ~ rst         ),
-            .I_serial_clk  (   serial_clk  ),
-            .I_rgb_clk     (   pixel_clk   ),
-            .I_rgb_vs      ( ~ vsync       ),
-            .I_rgb_hs      ( ~ hsync       ),
-            .I_rgb_de      (   display_on  ),
-            .I_rgb_r       (   red         ),
-            .I_rgb_g       (   green       ),
-            .I_rgb_b       (   blue        ),
-            .O_tmds_clk_p  (   TMDS_CLK_P  ),
-            .O_tmds_clk_n  (   TMDS_CLK_N  ),
-            .O_tmds_data_p (   TMDS_D_P    ),
-            .O_tmds_data_n (   TMDS_D_N    )
-        );
-*/
-        //--------------------------------------------------------------------
-
-        DVI_TX_Top_Alt i_DVI_TX_Top_Alt
-        (
-            .I_rst_n       ( ~ rst         ),
-            .I_rgb_clk     (   /* pixel_ */ clk   ),
+            .I_rgb_clk     (   clk         ),
             .I_rgb_vs      ( ~ vsync       ),
             .I_rgb_hs      ( ~ hsync       ),
             .I_rgb_de      (   display_on  ),
@@ -382,17 +350,17 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz  ( clk_mhz        )
+            .clk_mhz  ( clk_mhz )
         )
         i_microphone
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .lr       ( TF_CS          ),
-            .ws       ( TF_MOSI        ),
-            .sck      ( TF_SCLK        ),
-            .sd       ( TF_MISO        ),
-            .value    ( mic            )
+            .clk      ( clk     ),
+            .rst      ( rst     ),
+            .lr       ( TF_CS   ),
+            .ws       ( TF_MOSI ),
+            .sck      ( TF_SCLK ),
+            .sd       ( TF_MISO ),
+            .value    ( mic     )
         );
 
     `endif
