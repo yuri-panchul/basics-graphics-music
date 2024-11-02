@@ -16,11 +16,6 @@
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 `define REVERSE_KEY
 
-// `define USE_EXTERNAL_SERIAL_CLOCK_FOR_DVI_HDMI_IP
-
-`undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
-`undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
-
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -35,7 +30,7 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 1,
               w_digit       = 0,
-              w_gpio        = 1,
+              w_gpio        = 2,
 
               screen_width  = 640,
               screen_height = 480,
@@ -52,14 +47,26 @@ module board_specific_top
     input  [w_key - 1:0]  KEY,
     output                LED,
 
-    inout                 FLASH_CLK,  // TM1638 STB
-    inout                 FLASH_DI,   // TM1638 CLK
-    inout                 FLASH_DO,   // TM1638 DIO
+    inout                 FLASH_CLK,   // TM1638 STB
+    inout                 FLASH_DI,    // TM1638 CLK
+    inout                 FLASH_DO,    // TM1638 DIO
 
     output                TMDS_CLK_N,
     output                TMDS_CLK_P,
     output [        2:0]  TMDS_D_N,
-    output [        2:0]  TMDS_D_P
+    output [        2:0]  TMDS_D_P,
+
+    inout                 FLASH_CS,    // INMP441 SCK
+    inout                 FLASH_WP,    // INMP441 WS
+    inout                 FLASH_HOLD,  // INMP441 L/R
+
+    inout                 CAM_SCL,     // GPIO[0]
+    inout                 CAM_SDA,     // GPIO[1]
+    inout                 DVP_VSYNC,   // PCM5102 LCK
+    inout                 DVP_HSYNC,   // PCM5102 DIN
+    inout                 DVP_PCLK,    // PCM5102 BCK
+    inout                 PIXDATA9,    // PCM5102 SCK
+    inout                 PIXDATA8     // INMP441 SD
 );
 
     wire clk = CLK;
@@ -239,7 +246,9 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          (               )
+
+        .gpio          ( { CAM_SDA,
+                           CAM_SCL  }  )
     );
 
     //------------------------------------------------------------------------
@@ -354,13 +363,13 @@ module board_specific_top
         )
         i_microphone
         (
-            .clk      ( clk     ),
-            .rst      ( rst     ),
-            .lr       ( TF_CS   ),
-            .ws       ( TF_MOSI ),
-            .sck      ( TF_SCLK ),
-            .sd       ( TF_MISO ),
-            .value    ( mic     )
+            .clk      ( clk        ),
+            .rst      ( rst        ),
+            .lr       ( FLASH_HOLD ),  // INMP441 L/R
+            .ws       ( FLASH_WP   ),  // INMP441 WS
+            .sck      ( FLASH_CS   ),  // INMP441 SCK
+            .sd       ( PIXDATA8   ),  // INMP441 SD
+            .value    ( mic        )
         );
 
     `endif
@@ -371,17 +380,17 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz  ( clk_mhz      )
+            .clk_mhz  ( clk_mhz   )
         )
         inst_audio_out
         (
-            .clk      ( clk          ),
-            .reset    ( rst          ),
-            .data_in  ( sound        ),
-            .mclk     ( LARGE_LCD_DE ),
-            .bclk     ( LARGE_LCD_VS ),
-            .lrclk    ( LARGE_LCD_HS ),
-            .sdata    ( LARGE_LCD_CK )
+            .clk      ( clk       ),
+            .reset    ( rst       ),
+            .data_in  ( sound     ),
+            .mclk     ( PIXDATA9  ),  // PCM5102 SCK
+            .bclk     ( DVP_PCLK  ),  //         BCK
+            .sdata    ( DVP_HSYNC ),  //         DIN
+            .lrclk    ( DVP_VSYNC )   //         LCK
         );
 
     `endif
