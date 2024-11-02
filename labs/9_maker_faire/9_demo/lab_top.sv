@@ -101,7 +101,7 @@ module lab_top
             & y > 100 + c     & y < 200 + c )
         begin
             red   = 30;
-            blue  = key [2] ? x : 0;
+            blue  = key [1] ? x : 0;
         end
 
         if ((x - c) ** 2 + y ** 2 < 100 ** 2)
@@ -115,7 +115,7 @@ module lab_top
     (
         .clk      ( clk      ),
         .rst      ( rst      ),
-        .number   ( c  ),
+        .number   ( c        ),
         .dots     ( 0        ),
         .abcdefgh ( abcdefgh ),
         .digit    ( digit    )
