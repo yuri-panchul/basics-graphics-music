@@ -43,26 +43,28 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 )
 (
-    input        CLK,
-    input        RST_N,
+    input         CLK,
+    input         RST_N,
 
-    input  [6:1] KEY,
-    input  [4:1] CKEY,
+    input  [ 6:1] KEY,
+    input  [ 4:1] CKEY,
 
-    output [8:1] LED,
+    output [ 8:1] LED,
 
-    output [7:0] DIG,
-    output [7:0] SEG,
+    output [ 7:0] DIG,
+    output [ 7:0] SEG,
 
-    input        RXD,
-    output       TXD,
+    input         RXD,
+    output        TXD,
 
-    output       VGA_HSYNC,
-    output       VGA_VSYNC,
+    output        VGA_HSYNC,
+    output        VGA_VSYNC,
 
-    output       VGA_R,
-    output       VGA_G,
-    output       VGA_B
+    output        VGA_R,
+    output        VGA_G,
+    output        VGA_B,
+
+    inout  [11:1] LCD
 );
 
     //------------------------------------------------------------------------
@@ -152,7 +154,11 @@ module board_specific_top
         .mic           (   mic           ),
         .sound         (   sound         ),
 
-        .gpio          (                 )  // TODO using LCD pins
+        `ifdef USE_LCD_AS_GPIO
+        .gpio          (   LCD           )
+        `else
+        .gpio          (                 )
+        `endif
     );
 
     //------------------------------------------------------------------------

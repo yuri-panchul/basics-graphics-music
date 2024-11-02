@@ -3,9 +3,9 @@
 # set_global_assignment -name DEVICE EPM240T100C5
   set_global_assignment -name DEVICE EPM570T100C5
 
-# Not sure if those are needed
-#
-# set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
+
+# Not sure if this is needed
 # set_global_assignment -name ENABLE_INIT_DONE_OUTPUT OFF
 
 # Clock, reset
@@ -84,7 +84,6 @@ set_location_assignment PIN_2   -to LCD[5]
 set_location_assignment PIN_1   -to LCD[6]
 set_location_assignment PIN_100 -to LCD[7]
 set_location_assignment PIN_99  -to LCD[8]
-
 set_location_assignment PIN_98  -to LCD[9]
 set_location_assignment PIN_97  -to LCD[10]
 set_location_assignment PIN_96  -to LCD[11]
