@@ -62,12 +62,12 @@ set_location_assignment PIN_77  -to SEG[7]
 
 # BEEP
 
-set_location_assignment PIN_73  -to BEEP
+# set_location_assignment PIN_73  -to BEEP
 
 # PS2
 
-set_location_assignment PIN_71  -to PS2_CLK
-set_location_assignment PIN_72  -to PS2_DAT
+# set_location_assignment PIN_71  -to PS2_CLK
+# set_location_assignment PIN_72  -to PS2_DAT
 
 # UART
 
@@ -90,22 +90,22 @@ set_location_assignment PIN_96  -to LCD[11]
 
 # AD
 
-set_location_assignment PIN_18  -to AD_CLK
-set_location_assignment PIN_20  -to AD_NCS
-set_location_assignment PIN_19  -to AD_DATA
+# set_location_assignment PIN_18  -to AD_CLK
+# set_location_assignment PIN_20  -to AD_NCS
+# set_location_assignment PIN_19  -to AD_DATA
 
 # DA
 
-set_location_assignment PIN_26  -to DA_CLK
-set_location_assignment PIN_27  -to DA_CS
-set_location_assignment PIN_21  -to DA_DIN
+# set_location_assignment PIN_26  -to DA_CLK
+# set_location_assignment PIN_27  -to DA_CS
+# set_location_assignment PIN_21  -to DA_DIN
 
 # Motor
 
-set_location_assignment PIN_33  -to MOTOR1
-set_location_assignment PIN_30  -to MOTOR2
-set_location_assignment PIN_29  -to MOTOR3
-set_location_assignment PIN_28  -to MOTOR4
+# set_location_assignment PIN_33  -to MOTOR1
+# set_location_assignment PIN_30  -to MOTOR2
+# set_location_assignment PIN_29  -to MOTOR3
+# set_location_assignment PIN_28  -to MOTOR4
 
 # VGA
 
@@ -117,14 +117,14 @@ set_location_assignment PIN_16  -to VGA_G
 
 # RTC
 
-set_location_assignment PIN_34  -to RTC_SDA
-set_location_assignment PIN_35  -to RTC_SCL
+# set_location_assignment PIN_34  -to RTC_SDA
+# set_location_assignment PIN_35  -to RTC_SCL
 
 # IIC
 
-set_location_assignment PIN_36  -to IIC_SDA
-set_location_assignment PIN_38  -to IIC_SCL
+# set_location_assignment PIN_36  -to IIC_SDA
+# set_location_assignment PIN_38  -to IIC_SCL
 
 # DS18b20
 
-set_location_assignment PIN_70  -to DS18B20
+# set_location_assignment PIN_70  -to DS18B20
