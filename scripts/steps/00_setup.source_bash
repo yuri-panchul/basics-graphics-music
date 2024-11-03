@@ -305,12 +305,13 @@ update_fpga_toolchain_var ()
             fpga_toolchain=yosys
         ;;
 
-        dk_dev_3c120n        | \
-        marsohod_mcy112      | \
-        marsohod_mcy316      | \
-        de0                  | \
-        de1                  | \
-        de2                  )
+        dk_dev_3c120n                        | \
+        marsohod_mcy112                      | \
+        marsohod_mcy316                      | \
+        de0                                  | \
+        de1                                  | \
+        de2                                  | \
+        omdazz_epm570_quartus_13_1_or_older  )
 
             fpga_toolchain=quartus
             use_old_version_of_quartus=1
