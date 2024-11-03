@@ -81,8 +81,9 @@ module lab_top
     wire       shield_speaker;
     wire       shield_pwm;
 
-    assign gpio [shield_gpio_base + 8 +: 2] = shield_led;
-    assign gpio [shield_gpio_base + 4 +: 2] = { shield_pwm, shield_speaker };
+    // Not applicable for Terasic DE10-Lite
+    // assign gpio [shield_gpio_base + 8 +: 2] = shield_led;
+    // assign gpio [shield_gpio_base + 4 +: 2] = { shield_pwm, shield_speaker };
 
     // assign shield_led     = geiger_input;
     // assign shield_speaker = | geiger_input;
