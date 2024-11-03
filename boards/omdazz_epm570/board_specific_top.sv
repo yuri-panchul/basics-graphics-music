@@ -52,7 +52,7 @@ module board_specific_top
     output [ 8:1] LED,
 
     output [ 7:0] DIG,
-    output [ 7:0] SEG,
+    output [ 0:7] SEG,
 
     input         RXD,
     output        TXD,
