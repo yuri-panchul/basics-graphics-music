@@ -15,43 +15,43 @@
 
 // Some LCD pins share bank with TMDS pins
 // which have different voltage requirements.
-// In this configuration they are commented out
 
-//  IO_LOC "LCD_CLK"            77;
-//  IO_LOC "LCD_DE"             48;
-//  IO_LOC "LCD_HS"             25;
-//  IO_LOC "LCD_VS"             26;
+    IO_LOC "LCD_CLK"            77;
+    IO_LOC "LCD_DE"             48;
+    IO_LOC "LCD_HS"             25;
+    IO_LOC "LCD_VS"             26;
 
-//  IO_LOC "LCD_R[0]"           42;
-//  IO_LOC "LCD_R[1]"           41;
-//  IO_LOC "LCD_R[2]"           49;
-//  IO_LOC "LCD_R[3]"           39;
-//  IO_LOC "LCD_R[4]"           38;
+    IO_LOC "LCD_R[0]"           42;
+    IO_LOC "LCD_R[1]"           41;
+    IO_LOC "LCD_R[2]"           49;
+    IO_LOC "LCD_R[3]"           39;
+    IO_LOC "LCD_R[4]"           38;
 
-//  IO_LOC "LCD_G[0]"           37;
-//  IO_LOC "LCD_G[1]"           36;
-//  IO_LOC "LCD_G[2]"           35;
-//  IO_LOC "LCD_G[3]"           34;
-//  IO_LOC "LCD_G[4]"           33;
-//  IO_LOC "LCD_G[5]"           32;
+    IO_LOC "LCD_G[0]"           37;
+    IO_LOC "LCD_G[1]"           36;
+    IO_LOC "LCD_G[2]"           35;
+    IO_LOC "LCD_G[3]"           34;
+    IO_LOC "LCD_G[4]"           33;
+    IO_LOC "LCD_G[5]"           32;
 
-//  IO_LOC "LCD_B[0]"           31;
-//  IO_LOC "LCD_B[1]"           30;
-//  IO_LOC "LCD_B[2]"           29;
-//  IO_LOC "LCD_B[3]"           28;
-//  IO_LOC "LCD_B[4]"           27;
+    IO_LOC "LCD_B[0]"           31;
+    IO_LOC "LCD_B[1]"           30;
+    IO_LOC "LCD_B[2]"           29;
+    IO_LOC "LCD_B[3]"           28;
+    IO_LOC "LCD_B[4]"           27;
 
 // TMDS pins conflict with LCD pins
+// In this configuration they are commented out
 
-    IO_LOC "O_TMDS_CLK_P"       33,34;
-    IO_LOC "O_TMDS_DATA_P[0]"   35,36;
-    IO_LOC "O_TMDS_DATA_P[1]"   37,38;
-    IO_LOC "O_TMDS_DATA_P[2]"   39,40;
+//  IO_LOC "O_TMDS_CLK_P"       33,34;
+//  IO_LOC "O_TMDS_DATA_P[0]"   35,36;
+//  IO_LOC "O_TMDS_DATA_P[1]"   37,38;
+//  IO_LOC "O_TMDS_DATA_P[2]"   39,40;
 
 // DVI I2C
 
-    IO_LOC "EDID_CLK"           53;
-    IO_LOC "EDID_DAT"           52;
+//  IO_LOC "EDID_CLK"           53;
+//  IO_LOC "EDID_DAT"           52;
 
 // UART to debugger
 

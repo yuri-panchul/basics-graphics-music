@@ -44,14 +44,14 @@ module board_specific_top
     // Some LCD pins share bank with TMDS pins
     // which have different voltage requirements.
 
-    // output                    LCD_DE,
-    // output                    LCD_VS,
-    // output                    LCD_HS,
-    // output                    LCD_CLK,
+    output                    LCD_DE,
+    output                    LCD_VS,
+    output                    LCD_HS,
+    output                    LCD_CLK,
 
-    // output [            4:0]  LCD_R,
-    // output [            5:0]  LCD_G,
-    // output [            4:0]  LCD_B,
+    output [            4:0]  LCD_R,
+    output [            5:0]  LCD_G,
+    output [            4:0]  LCD_B,
 
     input                        UART_RX,
     output                       UART_TX,
@@ -59,13 +59,14 @@ module board_specific_top
     inout  [w_gpio       - 1:0]  GPIO,
 
     // DVI ports
-    output                       O_TMDS_CLK_N,
-    output                       O_TMDS_CLK_P,
-    output [               2:0]  O_TMDS_DATA_N,
-    output [               2:0]  O_TMDS_DATA_P,
 
-    inout                        EDID_CLK,
-    inout                        EDID_DAT,
+    // output                       O_TMDS_CLK_N,
+    // output                       O_TMDS_CLK_P,
+    // output [               2:0]  O_TMDS_DATA_N,
+    // output [               2:0]  O_TMDS_DATA_P,
+
+    // inout                        EDID_CLK,
+    // inout                        EDID_DAT,
 
     // output                    JOYSTICK_CLK,
     // output                    JOYSTICK_MOSI,
@@ -94,6 +95,24 @@ module board_specific_top
     // On-board WS2812 RGB LED with a serial interface
     inout                        WS2812
 );
+
+    Gowin_rPLL Gowin_rPLL_9Mhz(
+        .clkout(LCD_CLK), // 9MHz
+        .clkin(CLK)   //27MHz
+    );
+
+        lcd_timing      lcd_timing_inst(
+                .PixelClk       (       LCD_CLK          ),
+                .nRST           (     ~ KEY [0]          ),
+
+                .LCD_DE         (       LCD_DE           ),
+
+                .LCD_B          (       LCD_B            ),
+                .LCD_G          (       LCD_G            ),
+                .LCD_R          (       LCD_R            )
+        );
+
+`ifdef UNDEFINED
 
     wire clk = CLK;
 
@@ -380,5 +399,7 @@ module board_specific_top
         assign PA_EN = 1'b1;
 
     `endif
+
+`endif
 
 endmodule
