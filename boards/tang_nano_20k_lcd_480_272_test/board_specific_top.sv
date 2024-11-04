@@ -112,6 +112,10 @@ module board_specific_top
                 .LCD_R          (       LCD_R            )
         );
 
+    assign LCD_VS = '0;
+    assign LCD_HS = '0;
+
+
 `ifdef UNDEFINED
 
     wire clk = CLK;
