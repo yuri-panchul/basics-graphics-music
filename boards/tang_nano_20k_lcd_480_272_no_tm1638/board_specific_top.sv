@@ -1,35 +1,47 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
 
 //----------------------------------------------------------------------------
+
+`define FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+`define REVERSE_KEY
+`define REVERSE_LED
 
 //----------------------------------------------------------------------------
 
 module board_specific_top
 # (
     parameter clk_mhz       = 27,
-              pixel_mhz     = 25,
+              pixel_mhz     = 9,
 
-              w_key         = 2,
+              w_key         = 2,  // The last key is used for a reset
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
               w_gpio        = 5,
 
-              // SiPeed claims to support 1280x720 resolution: https://github.com/sipeed/TangNano-20K-example?tab=readme-ov-file#hdmi
-              // For some reason, only 640x480 was correctly detected by my monitor.
-              screen_width  = 640,
+              `ifdef USE_LCD_800_480
+
+              screen_width  = 800,
               screen_height = 480,
-              // HDMI uses 8bit color depth
-              w_red         = 8,
-              w_green       = 8,
-              w_blue        = 8,
+
+              `else  // USE_LCD_480_272 or USE_LCD_480_272_ML6485
+
+              screen_width  = 480,
+              screen_height = 272,
+
+              `endif
+
+              w_red         = 5,
+              w_green       = 6,
+              w_blue        = 5,
 
               w_x           = $clog2 ( screen_width  ),
               w_y           = $clog2 ( screen_height )
@@ -43,15 +55,19 @@ module board_specific_top
 
     // Some LCD pins share bank with TMDS pins
     // which have different voltage requirements.
+    //
+    // However we can use LCD_CLK, DE, VS, HS, BL
+    // because they are assigned to a different bank.
 
-    output                    LCD_DE,
-    output                    LCD_VS,
-    output                    LCD_HS,
-    output                    LCD_CLK,
+    output                       LCD_CLK,
+    output                       LCD_DE,
+    output                       LCD_VS,
+    output                       LCD_HS,
+    output                       LCD_BL,
 
-    output [            4:0]  LCD_R,
-    output [            5:0]  LCD_G,
-    output [            4:0]  LCD_B,
+    output [7:7 + 1 - w_red   ]  LCD_R,
+    output [7:7 + 1 - w_green ]  LCD_G,
+    output [7:7 + 1 - w_blue  ]  LCD_B,
 
     input                        UART_RX,
     output                       UART_TX,
@@ -60,13 +76,13 @@ module board_specific_top
 
     // DVI ports
 
-    // output                       O_TMDS_CLK_N,
-    // output                       O_TMDS_CLK_P,
-    // output [               2:0]  O_TMDS_DATA_N,
-    // output [               2:0]  O_TMDS_DATA_P,
+    // output                    O_TMDS_CLK_N,
+    // output                    O_TMDS_CLK_P,
+    // output [            2:0]  O_TMDS_DATA_N,
+    // output [            2:0]  O_TMDS_DATA_P,
 
-    // inout                        EDID_CLK,
-    // inout                        EDID_DAT,
+    inout                        EDID_CLK,
+    inout                        EDID_DAT,
 
     // output                    JOYSTICK_CLK,
     // output                    JOYSTICK_MOSI,
@@ -96,28 +112,6 @@ module board_specific_top
     inout                        WS2812
 );
 
-    Gowin_rPLL Gowin_rPLL_9Mhz(
-        .clkout(LCD_CLK), // 9MHz
-        .clkin(CLK)   //27MHz
-    );
-
-        lcd_timing      lcd_timing_inst(
-                .PixelClk       (       LCD_CLK          ),
-                .nRST           (     ~ KEY [0]          ),
-
-                .LCD_DE         (       LCD_DE           ),
-
-                .LCD_B          (       LCD_B            ),
-                .LCD_G          (       LCD_G            ),
-                .LCD_R          (       LCD_R            )
-        );
-
-    assign LCD_VS = '0;
-    assign LCD_HS = '0;
-
-
-`ifdef UNDEFINED
-
     wire clk = CLK;
 
     //------------------------------------------------------------------------
@@ -131,16 +125,17 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         localparam w_lab_key   = w_tm_key,
-                   w_lab_sw    = w_sw,
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
-    `else                   // TM1638 module is not connected
+    `else  // TM1638 module is not connected
+
+        // We create a dummy seven-segment digit
+        // to avoid errors in the labs with seven-segment display
 
         localparam w_lab_key   = w_key,
-                   w_lab_sw    = w_sw,
                    w_lab_led   = w_led,
-                   w_lab_digit = w_digit;
+                   w_lab_digit = 1;  // w_digit;
 
     `endif
 
@@ -154,15 +149,10 @@ module board_specific_top
     wire  [w_lab_led   - 1:0] lab_led;
     wire  [w_lab_digit - 1:0] lab_digit;
 
-    wire                      rst;
     wire  [              7:0] abcdefgh;
 
     wire  [w_x         - 1:0] x;
     wire  [w_y         - 1:0] y;
-
-    wire  [w_red       - 1:0] red;
-    wire  [w_green     - 1:0] green;
-    wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
@@ -171,31 +161,56 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        assign rst      = tm_key [w_tm_key - 1];
-        assign lab_key  = tm_key [w_tm_key - 1:0];
+        wire rst_on_power_up;
+        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+
+        wire rst = rst_on_power_up | (| KEY);
+
+    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+
+        wire rst_on_power_up;
+        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+
+        wire rst = rst_on_power_up;
+
+    `else  // Reset using an on-board button
+
+        `ifdef REVERSE_KEY
+            wire rst = KEY [0];
+        `else
+            wire rst = KEY [w_key - 1];
+        `endif
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        assign lab_key  = tm_key;
 
         assign tm_led   = lab_led;
         assign tm_digit = lab_digit;
 
         assign LED      = w_led' (~ lab_led);
 
-    `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
+    `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        wire rst;
+        `ifdef REVERSE_KEY
+            `SWAP_BITS (lab_key, KEY);
+        `else
+            assign lab_key = KEY;
+        `endif
 
-        imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
+        //--------------------------------------------------------------------
 
-        assign lab_key  = ~ KEY [w_key - 1:0];
-        assign LED      = ~ lab_led;
-
-    `else  // TM1638 module is not connected and no reset initation
-
-        assign rst      = ~ KEY [w_key - 1];
-        assign lab_key  = ~ KEY [w_key - 1:0];
-
-        assign LED      = ~ lab_led;
-
+        `ifdef REVERSE_LED
+            `SWAP_BITS (LED, ~ lab_led);
+        `else
+            assign LED = ~ lab_led;
     `endif
+
+    `endif  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     //------------------------------------------------------------------------
 
@@ -206,11 +221,16 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
+    wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+
+    //------------------------------------------------------------------------
+
     lab_top
     # (
         .clk_mhz       ( clk_mhz       ),
 
-        .w_key         ( w_lab_key     ),  // The last key is used for a reset
+        .w_key         ( w_lab_key     ),
         .w_sw          ( w_lab_key     ),
         .w_led         ( w_lab_led     ),
         .w_digit       ( w_lab_digit   ),
@@ -237,19 +257,19 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
-        .x             ( x             ),
-        .y             ( y             ),
+        .x             ( mirrored_x    ),
+        .y             ( mirrored_y    ),
 
-        .red           ( red           ),
-        .green         ( green         ),
-        .blue          ( blue          ),
+        .red           ( LCD_R         ),
+        .green         ( LCD_G         ),
+        .blue          ( LCD_B         ),
 
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( gpio          )
+        .gpio          ( GPIO          )
     );
 
     //------------------------------------------------------------------------
@@ -257,15 +277,7 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
     wire [$left (abcdefgh):0] hgfedcba;
-
-    generate
-        genvar i;
-
-        for (i = 0; i < $bits (abcdefgh); i ++)
-        begin : abc
-            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-        end
-    endgenerate
+        `SWAP_BITS (hgfedcba, abcdefgh);
 
     `endif
 
@@ -297,62 +309,53 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        localparam serial_clk_mhz = 125;
+        `ifdef USE_LCD_800_480
 
-        wire serial_clk;
+        wire lcd_module_clk;
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkin  ( clk        ),
-            .clkout ( serial_clk ),
-            .lock   (            )
+            .clkout  ( lcd_module_clk ),  // 200    MHz
+            .clkoutd ( LCD_CLK        ),  //  33.33 MHz
+            .clkin   ( clk            )   //  27    MHz
         );
 
-        // Do we need to put serial_clk through BUFG?
-        // BUFG i_BUFG (.I (raw_serial_clk), .O (serial_clk));
+        `else  // Using 480x272
 
-        //--------------------------------------------------------------------
+            Gowin_rPLL i_Gowin_rPLL
+            (
+                .clkout ( LCD_CLK ),  //  9 MHz
+                .clkin  ( clk     )   // 27 MHz
+            );
 
-        wire hsync, vsync, display_on, pixel_clk;
+        `endif
 
-        wire [9:0] x10; assign x = x10;
-        wire [9:0] y10; assign y = y10;
-
-        vga
-        # (
-            .CLK_MHZ     ( serial_clk_mhz  ),
-            .PIXEL_MHZ   ( pixel_mhz       )
-        )
-        i_vga
+        `ifdef USE_LCD_800_480
+        lcd_800_480
+        `else
+        lcd_480_272
+        `endif
+        i_lcd
         (
-            .clk         ( serial_clk      ),
-            .rst         ( rst             ),
-            .hsync       ( hsync           ),
-            .vsync       ( vsync           ),
-            .display_on  ( display_on      ),
-            .hpos        ( x10             ),
-            .vpos        ( y10             ),
-            .pixel_clk   ( pixel_clk       )
+            `ifdef USE_LCD_800_480
+            .CLK       (   lcd_module_clk ),
+            `endif
+
+            .PixelClk  (   LCD_CLK        ),
+            .nRST      ( ~ rst            ),
+
+            .LCD_DE    (   LCD_DE         ),
+            .LCD_HSYNC (                  ),
+            .LCD_VSYNC (                  ),
+
+            .x         (   x              ),
+            .y         (   y              )
         );
 
-        //--------------------------------------------------------------------
+        assign LCD_HS = 1'b0;
+        assign LCD_VS = 1'b0;
 
-        DVI_TX_Top i_DVI_TX_Top
-        (
-            .I_rst_n       ( ~ rst           ),
-            .I_serial_clk  (   serial_clk    ),
-            .I_rgb_clk     (   pixel_clk     ),
-            .I_rgb_vs      ( ~ vsync         ),
-            .I_rgb_hs      ( ~ hsync         ),
-            .I_rgb_de      (   display_on    ),
-            .I_rgb_r       (   red           ),
-            .I_rgb_g       (   green         ),
-            .I_rgb_b       (   blue          ),
-            .O_tmds_clk_p  (   O_TMDS_CLK_P  ),
-            .O_tmds_clk_n  (   O_TMDS_CLK_N  ),
-            .O_tmds_data_p (   O_TMDS_DATA_P ),
-            .O_tmds_data_n (   O_TMDS_DATA_N )
-        );
+        assign LCD_BL = 1'b1;
 
     `endif
 
@@ -403,7 +406,5 @@ module board_specific_top
         assign PA_EN = 1'b1;
 
     `endif
-
-`endif
 
 endmodule
