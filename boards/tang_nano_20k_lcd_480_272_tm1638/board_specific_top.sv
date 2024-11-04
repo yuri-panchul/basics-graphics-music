@@ -64,7 +64,7 @@ module board_specific_top
 
     output [7:7 + 1 - w_red   ]  LCD_R,
     output [7:7 + 1 - w_green ]  LCD_G,
-    output [7:7 + 1 - w_blue  ]  LCD_B
+    output [7:7 + 1 - w_blue  ]  LCD_B,
 
     input                        UART_RX,
     output                       UART_TX,
