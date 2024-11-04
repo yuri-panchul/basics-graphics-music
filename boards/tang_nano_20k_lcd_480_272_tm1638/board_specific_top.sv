@@ -12,6 +12,8 @@
 `define REVERSE_KEY
 `define REVERSE_LED
 
+// `define MIRROR_LCD
+
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -19,7 +21,10 @@ module board_specific_top
     parameter clk_mhz       = 27,
               pixel_mhz     = 9,
 
-              w_key         = 2,  // The last key is used for a reset
+              // We use sw as an alias to key on Tang Nano 9K,
+              // either with or without TM1638
+
+              w_key         = 2,
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
@@ -50,12 +55,6 @@ module board_specific_top
     input  [w_key        - 1:0]  KEY,
 
     output [w_led        - 1:0]  LED,
-
-    // Some LCD pins share bank with TMDS pins
-    // which have different voltage requirements.
-    //
-    // However we can use LCD_CLK, DE, VS, HS, BL
-    // because they are assigned to a different bank.
 
     output                       LCD_CLK,
     output                       LCD_DE,
@@ -206,7 +205,7 @@ module board_specific_top
             `SWAP_BITS (LED, ~ lab_led);
         `else
             assign LED = ~ lab_led;
-    `endif
+        `endif
 
     `endif  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
@@ -219,8 +218,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef MIRROR_LCD
+
     wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
     wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -255,8 +258,17 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
+        `ifdef MIRROR_LCD
+
         .x             ( mirrored_x    ),
         .y             ( mirrored_y    ),
+
+        `else
+
+        .x             ( x             ),
+        .y             ( y             ),
+
+        `endif
 
         .red           ( LCD_R         ),
         .green         ( LCD_G         ),
@@ -274,32 +286,26 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    wire [$left (abcdefgh):0] hgfedcba;
+        wire [$left (abcdefgh):0] hgfedcba;
         `SWAP_BITS (hgfedcba, abcdefgh);
 
-    `endif
-
-    //------------------------------------------------------------------------
-
-    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
-    tm1638_board_controller
-    # (
-        .clk_mhz  ( clk_mhz        ),
-        .w_digit  ( w_tm_digit     )
-    )
-    i_tm1638
-    (
-        .clk      ( clk            ),
-        .rst      ( rst            ),
-        .hgfedcba ( hgfedcba       ),
-        .digit    ( tm_digit       ),
-        .ledr     ( tm_led         ),
-        .keys     ( tm_key         ),
-        .sio_data ( GPIO [0]       ),
-        .sio_clk  ( JOYSTICK_CS2   ),
-        .sio_stb  ( JOYSTICK_MISO2 )
-    );
+        tm1638_board_controller
+        # (
+            .clk_mhz  ( clk_mhz        ),
+            .w_digit  ( w_tm_digit     )
+        )
+        i_tm1638
+        (
+            .clk      ( clk            ),
+            .rst      ( rst            ),
+            .hgfedcba ( hgfedcba       ),
+            .digit    ( tm_digit       ),
+            .ledr     ( tm_led         ),
+            .keys     ( tm_key         ),
+            .sio_data ( GPIO [0]       ),
+            .sio_clk  ( JOYSTICK_CS2   ),
+            .sio_stb  ( JOYSTICK_MISO2 )
+        );
 
     `endif
 
@@ -309,27 +315,40 @@ module board_specific_top
 
         `ifdef USE_LCD_800_480
 
-        wire lcd_module_clk;
+            wire lcd_module_clk;
 
-        Gowin_rPLL i_Gowin_rPLL
-        (
-            .clkout  ( lcd_module_clk ),  // 200    MHz
-            .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-            .clkin   ( clk            )   //  27    MHz
-        );
+            Gowin_rPLL i_Gowin_rPLL
+            (
+                .clkout  ( lcd_module_clk ),  // 200    MHz
+                .clkoutd ( LCD_CLK        ),  //  33.33 MHz
+                .clkin   ( clk            )   //  27    MHz
+            );
+
+        `elsif USE_LCD_480_272_ML6485
+
+            wire lcd_module_clk;
+
+            Gowin_rPLL i_Gowin_rPLL
+            (
+                .clkout  ( lcd_module_clk ),  // 200    MHz
+                .clkoutd ( LCD_CLK        ),  //  33.33 MHz
+                .clkin   ( clk            )   //  27    MHz
+            );
 
         `else  // Using 480x272
 
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout ( LCD_CLK ),  //  9 MHz
-                .clkin  ( clk     )   // 27 MHz
+                .clkout  ( LCD_CLK        ),  //  9 MHz
+                .clkin   ( clk            )   // 27 MHz
             );
 
         `endif
 
         `ifdef USE_LCD_800_480
         lcd_800_480
+        `elsif USE_LCD_480_272_ML6485
+        lcd_480_272_ml6485
         `else
         lcd_480_272
         `endif
@@ -363,17 +382,17 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz  ( clk_mhz        )
+            .clk_mhz  ( clk_mhz  )
         )
         i_microphone
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .lr       ( GPIO[1]        ),
-            .ws       ( GPIO[2]        ),
-            .sck      ( GPIO[3]        ),
-            .sd       ( SD_DAT1        ),
-            .value    ( mic            )
+            .clk      ( clk      ),
+            .rst      ( rst      ),
+            .lr       ( GPIO [1] ),
+            .ws       ( GPIO [2] ),
+            .sck      ( GPIO [3] ),
+            .sd       ( SD_DAT1  ),
+            .value    ( mic      )
         );
 
     `endif
@@ -387,17 +406,17 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz  ( clk_mhz      )
+            .clk_mhz  ( clk_mhz )
         )
         inst_audio_out
         (
-            .clk      ( clk          ),
-            .reset    ( rst          ),
-            .data_in  ( sound        ),
-            .mclk     (              ),
-            .bclk     ( HP_BCK       ),
-            .lrclk    ( HP_WS        ),
-            .sdata    ( HP_DIN       )
+            .clk      ( clk     ),
+            .reset    ( rst     ),
+            .data_in  ( sound   ),
+            .mclk     (         ),
+            .bclk     ( HP_BCK  ),
+            .lrclk    ( HP_WS   ),
+            .sdata    ( HP_DIN  )
         );
 
         // Enable DAC
