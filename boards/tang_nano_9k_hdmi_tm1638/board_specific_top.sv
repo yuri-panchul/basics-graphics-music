@@ -417,10 +417,10 @@ module board_specific_top
         (
             .clk      ( clk            ),
             .rst      ( rst            ),
-            .lr       ( TF_CS          ),
-            .ws       ( TF_MOSI        ),
-            .sck      ( TF_SCLK        ),
-            .sd       ( TF_MISO        ),
+            .lr       ( TF_CS          ), // 38
+            .ws       ( TF_MOSI        ), // 37
+            .sck      ( TF_SCLK        ), // 36
+            .sd       ( TF_MISO        ), // 39
             .value    ( mic            )
         );
 

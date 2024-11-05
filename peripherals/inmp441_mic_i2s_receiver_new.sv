@@ -40,11 +40,11 @@ module inmp441_mic_i2s_receiver
     logic       sck_negedge; // Tracks SCK negedge
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst) begin
             cnt <= '0;
             sck_posedge <= '0;
             sck_negedge <= '0;
-        else
+        end else
             if (cnt == sck_clock_divisor - 1'b1) // Every N cycles drive SCK up or down
             begin
                 sck <= ~ sck;
