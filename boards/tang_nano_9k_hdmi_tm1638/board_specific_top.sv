@@ -17,6 +17,8 @@
 `define REVERSE_KEY
 `define REVERSE_LED
 
+
+//`define INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -428,6 +430,26 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
+        `undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        wire dac_out;
+
+        sigma_delta_dac 
+        #( .MSBI (   7 ), 
+           .INV  ( 1'b0 )
+         ) 
+        SD_DAC
+         ( .DACout( dac_out       ),  //Average Output feeding analog lowpass
+           .DACin ( sound[15 -:8] ),  //DAC input (excess 2**MSBI)
+           .CLK   ( clk           ),
+           .RESET ( rst           )
+         );
+        assign  LARGE_LCD_HS = dac_out;
+        assign  LARGE_LCD_CK = ~dac_out;
+
+    `endif
+
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
         i2s_audio_out
@@ -436,13 +458,13 @@ module board_specific_top
         )
         inst_audio_out
         (
-            .clk      ( clk          ),
-            .reset    ( rst          ),
-            .data_in  ( sound        ),
-            .mclk     ( LARGE_LCD_DE ),
-            .bclk     ( LARGE_LCD_VS ),
-            .lrclk    ( LARGE_LCD_HS ),
-            .sdata    ( LARGE_LCD_CK )
+            .clk      ( clk           ),
+            .reset    ( rst           ),
+            .data_in  ( sound         ),
+            .mclk     ( LARGE_LCD_DE  ),
+            .bclk     ( LARGE_LCD_VS  ),
+            .lrclk    ( LARGE_LCD_HS  ),
+            .sdata    ( LARGE_LCD_CK  )
         );
 
     `endif
