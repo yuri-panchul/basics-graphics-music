@@ -61,9 +61,13 @@ logic [         23:0]   mic;
 logic [         15:0]   sound;
 logic                   uart_rx;
 logic                   uart_tx;
+logic                   key_0;
+logic                   key_1;
 
 always #10 clk = ~clk;
 
+assign key_0 = key[0];
+assign key_1 = key[1];
 //------------------------------------------------------------------------
 
 lab_top

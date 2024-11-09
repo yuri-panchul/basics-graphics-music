@@ -35,5 +35,42 @@ then
 else
     # change device name /dev/ttyUSB0 for actual device in your system
     # Please set serial mode 115200, 8N1, flow control "None" and save the session as default
-    sudo minicom -D /dev/ttyUSB0 
+    #sudo minicom -D /dev/ttyUSB0 
+
+    if [ -e uart.conf ]
+    then
+
+        dev=$(<uart.conf)
+        echo $dev
+
+        dev_grp=$(stat -c "%G" $dev)
+        [ -n "${dev_grp-}" ] || error "Cannot determine the groups that owns $dev"
+
+        if ! id -nG | grep -qw $dev_grp
+        then
+            echo
+            echo "User \"$USER\" is not in \"$dev_grp\" group."  \
+                "Run: \"sudo usermod -a -G $dev_grp $USER\","   \
+                "then reboot and try again."                    \
+                "(On some systems it is sufficient"             \
+                "to logout and login instead of the reboot)."
+            echo
+            exit
+        else
+            echo run minicom
+            echo "minicom -D $dev &"
+            minicom -D $dev
+
+        fi
+
+
+    else
+        echo "Create file uart.conf and write the tty device name"
+        echo "Your system has UART:"
+        ls -1 /dev/ttyUSB*
+        echo 
+        echo "Create file uart.conf: echo /dev/ttyUSBx > uart.conf"
+        echo "instead /dev/ttyUSBx set your device"
+
+    fi
 fi

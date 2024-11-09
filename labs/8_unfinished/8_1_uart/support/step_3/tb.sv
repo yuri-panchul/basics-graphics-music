@@ -61,9 +61,13 @@ logic [         23:0]   mic;
 logic [         15:0]   sound;
 logic                   uart_rx;
 logic                   uart_tx;
+logic                   key_0;
+logic                   key_1;
 
 always #10 clk = ~clk;
 
+assign key_0 = key[0];
+assign key_1 = key[1];
 //------------------------------------------------------------------------
 
 lab_top
@@ -109,6 +113,7 @@ i_lab_top
 
     .gpio          (   gpio          )
 );
+
 
 
 // Main process  
@@ -162,7 +167,7 @@ initial begin
 
     @(negedge rst );
 
-    #200;
+    #20000;
 
     case( test_id )
         0: begin
@@ -173,7 +178,6 @@ initial begin
                 //test_seq_uart_p0();
                 test_seq_uart_p1();
                 test_seq_uart_p2();
-            //join_any
             join
 
             if(     1==test_uart_p1 
