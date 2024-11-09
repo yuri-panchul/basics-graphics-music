@@ -137,6 +137,8 @@ task tb_uart_receive(  output   byte  val  );
     wait_0 = 0;
     cnt_bit = 0;
 
+    // wait for uart_tx=1
+    // @(posedge clk iff uart_tx); // this code don't work in the Icarus verilog
     for( int ii=0; ~uart_tx  ; ii++ ) begin
         @(posedge clk);
     end
@@ -144,6 +146,8 @@ task tb_uart_receive(  output   byte  val  );
     wait_1 = 0;
     wait_0 = 1;
 
+    // wait for uart_tx=0 - start transfer
+    // @(posedge clk iff ~uart_tx); // this code don't work in the Icarus verilog
     for( int ii=0; uart_tx  ; ii++ ) begin
         @(posedge clk);
     end

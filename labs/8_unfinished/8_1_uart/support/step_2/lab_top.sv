@@ -63,7 +63,7 @@ localparam  baud_rate           = 115200;
 localparam  clk_frequency       = clk_mhz * 1000 * 1000;
 
 `ifndef SIMULATION
-    localparam  update_hz   = 400;
+    localparam  update_hz   = 1;
     localparam timeout_in_seconds = 1;
 `else
     localparam  update_hz   = 4000000;

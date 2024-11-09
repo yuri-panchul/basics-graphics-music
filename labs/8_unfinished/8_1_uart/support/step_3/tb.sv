@@ -115,9 +115,8 @@ i_lab_top
 );
 
 
-
 // Main process  
-initial begin  
+initial begin   : pr_main
 
     args=-1;
 
@@ -153,7 +152,7 @@ initial begin
 
 end
 
-initial begin
+initial begin   : pr_timeout
     #260000000;
     $display();
     $display( "***************************  TIMEMOUT  ****************************"  );
@@ -161,7 +160,7 @@ initial begin
     test_timeout = 1;
 end
 
-initial begin
+initial begin   : pr_test_case
 
     test_init();
 
@@ -173,8 +172,8 @@ initial begin
         0: begin
             // some action for test_id==0
             fork
-                //test_seq_key0();    
-                //test_seq_key1();    
+                test_seq_key0();    
+                test_seq_key1();    
                 //test_seq_uart_p0();
                 test_seq_uart_p1();
                 test_seq_uart_p2();

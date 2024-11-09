@@ -16,7 +16,9 @@ lappend all_signals tb.i_lab_top.last_address
 lappend all_signals tb.i_lab_top.last_word
 lappend all_signals tb.i_lab_top.word_data
 lappend all_signals tb.i_lab_top.word_address
+lappend all_signals tb.i_lab_top.word_valid
 lappend all_signals tb.i_lab_top.byte_valid
+lappend all_signals tb.i_lab_top.byte_data
 lappend all_signals tb.i_lab_top.number
 lappend all_signals tb.uart_rx
 lappend all_signals tb.i_lab_top.receiver.load_counter

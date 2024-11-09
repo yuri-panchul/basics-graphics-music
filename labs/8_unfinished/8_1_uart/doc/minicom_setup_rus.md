@@ -9,6 +9,8 @@ sudo minicom -D /dev/ttyUSB0
 
 ## Конфигурирование
 
+Конфигурацию надо проводить при вызове программы через sudo
+
 1. В терминале minicom нажмите  Ctrl+A, затем Z. Появится окно со списком команд
 ![](./minicom_1.png)
 
@@ -22,26 +24,41 @@ sudo minicom -D /dev/ttyUSB0
 * Bps/Par/Bits: 115200 8N1
 * Hardware Flow control: No
 * Software Flow control: No
-    
+
+Установленные параметры надо сохранить как параметры по умолчанию.
+
+* Нажмите ESC - будет выполнен возврат в окно настройки
+![](./minicom_4.png)
+
+
+##  Запуск через скрипт
+
 
 В каталоге лабораторной работы есть скрипт ./13_run_serial_terminal.bash
 
 Скрипт запускат программу в зависимости от типа операционной системы.
 
-Если имя порта отличается от /dev/ttyUSB0 то требуется скорректировать вызов программы minicom
+Для системы Linux скрипт проверяет два условния
+* Наличие файла uart.conf
+* Наличия пользователся в группе которая используется в устройстве 
 
-```
-if    [ "$OSTYPE" = "msys" ]  
-then
-    # COM_BOARD is session name
-    # The first time you run it, a configuration window will be displayed. 
-    # Please select the  mode "Serial", serial port number  which the board is connected, 
-    # serial mode 115200, 8N1, flow control "None" and save the session with the name "COM_BOARD"
-    # The port number can be determined through the device manager
-    putty -load COM_BOARD &
-else
-    # change device name /dev/ttyUSB0 for actual device in your system
-    # Please set serial mode 115200, 8N1, flow control "None" and save the session as default
-    sudo minicom -D /dev/ttyUSB0 
-fi
-```
+Для большинства систем именем устройства будет /dev/ttyUSB0 которое включено в группу dialout
+
+Файл uart.conf должен содержать одну строку с именем устройства выбранного последовательного порта.
+
+Создать файл можно командой:  echo /dev/ttyUSB0 > uart.conf
+
+Вместо "/dev/ttyUSB0" необходимо подставить имя устройства последовательного порта.
+
+Включение пользователя в группу выполняется командой: sudo usermod -a -G dialout $USER
+
+Команда требует привилегий sudo, вместо dialout необходимо подставить имя группы к которой принадлежит выбранное устройство последовательного порта.
+
+При несоблюдении этих условий скрпит не будет запускать программу minicom, на экран будет выдана краткая инструкция.
+
+Если условия выполняются, то будет запущена программа minicom.
+
+
+При настройке программы minicom необходимо отключить проверку аппаратной готовности иначе символы не будут передаваться в UART
+  * Hardware Flow control: No
+
