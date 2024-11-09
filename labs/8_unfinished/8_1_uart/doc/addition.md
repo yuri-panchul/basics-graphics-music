@@ -17,5 +17,5 @@ It is necessary to add a finite state machine that will analyze the input sequen
 Requirements:
 1. Transmit all received bytes to the UART
 2. Detect the key string "what is your name?" in the input sequence
-3. When a key string is detected, return the following in response: "I am <board name>"
+3. When a key string is detected, return the following in response: "I am \<board name\>"
 4. During the response, it is necessary to remember the received bytes and return them after the response is transmitted
