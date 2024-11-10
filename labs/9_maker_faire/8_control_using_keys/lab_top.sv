@@ -110,7 +110,7 @@ module lab_top
                 dy <= dy + 1;
         end
 
-    assign led = counter;
+    assign led = w_led' (dx);
 
     //------------------------------------------------------------------------
 
