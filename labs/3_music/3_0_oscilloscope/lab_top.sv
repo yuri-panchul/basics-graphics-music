@@ -79,18 +79,22 @@ module lab_top
     //  Oscilloscope
     //
     //------------------------------------------------------------------------
+    localparam                  mic_shift = 18 - w_y;
+    localparam signed [23:0]    mic_min =-((screen_height-4)<<mic_shift) / 2;
+    localparam signed [23:0]    mic_max = ((screen_height)<<mic_shift) / 2;
+    localparam signed [w_y-1:0] midy = screen_height / 2;
 
     // It is enough for the counter to be 20 bit. Why?
-
     logic        [23:0]    prev_mic;
+    wire  signed [23:0]    mics = ($signed(mic)<mic_min)? mic_min : (($signed(mic)>mic_max)? mic_max : mic);
     logic        [19:0]    counter;
     logic        [19:0]    distance;
     logic signed [w_y-1:0] bufy[screen_width/2];
     logic        [w_x-1:0] vldx;                        // validity of bufy elements
-    wire  signed [w_y-1:0] micy = {mic[23], (mic[23]?~&mic[22:16]:|mic[22:16])? ~{(w_y-1){$signed(mic[23])}} : mic[15-:w_y-1]};
+    wire  signed [w_y-1:0] micy = mics >>> mic_shift;
+    // Another way:        micy = {mic[23], (mic[23]?~&mic[22:16]:|mic[22:16])? ~{(w_y-1){$signed(mic[23])}} : mic[15-:w_y-1]};
     wire         [w_x-1:0] cntx = counter[19-:w_x];
     wire                   cntx_in_buf = cntx < screen_width / 2;
-    localparam logic signed [w_y-1:0] midy = screen_height / 2;
     
     // Excercise 1: Implement Zoom by x-axis with keys
     // Excercise 2: Optimize to reduce bits of bufy
