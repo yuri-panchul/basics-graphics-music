@@ -26,12 +26,12 @@ jobs:
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 21.1.1
-            boards: 40
+            boards: 43
             labs: 12345
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 13.0sp1
-            boards: 9 35
+            boards: 10 36
             labs: 12345
     steps:
       - name: Checkout
