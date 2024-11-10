@@ -292,8 +292,6 @@ module board_specific_top
 
         lcd_800_480 i_lcd
         (
-            .CLK       (   lcd_module_clk ),
-
             .PixelClk  (   LCD_CLK        ),
             .nRST      ( ~ rst            ),
 

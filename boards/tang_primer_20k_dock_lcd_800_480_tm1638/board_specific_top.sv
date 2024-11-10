@@ -68,6 +68,7 @@ module board_specific_top
 );
 
     wire clk = CLK;
+    wire mic_clk = LCD_CLK;
 
     //------------------------------------------------------------------------
 
@@ -241,7 +242,7 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk        ( clk           ),
+        .clk        ( mic_clk      ),
         .rst        ( rst           ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
@@ -269,8 +270,6 @@ module board_specific_top
 
         lcd_800_480 i_lcd
         (
-            .CLK       (   lcd_module_clk ),
-
             .PixelClk  (   LCD_CLK         ),
             .nRST      ( ~ rst            ),
 
@@ -297,7 +296,7 @@ module board_specific_top
     )
     i_microphone
     (
-        .clk     ( clk        ),
+        .clk     ( mic_clk    ),
         .rst     ( rst        ),
         .lr      ( GPIO_1 [1] ),
         .ws      ( GPIO_1 [2] ),

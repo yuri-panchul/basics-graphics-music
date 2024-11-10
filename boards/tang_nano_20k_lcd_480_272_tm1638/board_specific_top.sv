@@ -354,10 +354,6 @@ module board_specific_top
         `endif
         i_lcd
         (
-            `ifdef USE_LCD_800_480
-            .CLK       (   lcd_module_clk ),
-            `endif
-
             .PixelClk  (   LCD_CLK        ),
             .nRST      ( ~ rst            ),
 
