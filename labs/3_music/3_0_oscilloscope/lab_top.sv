@@ -59,14 +59,14 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    // assign led        = '0;
-    // assign abcdefgh   = '0;
-    // assign digit      = '0;
+    assign led        = '0;
+    assign abcdefgh   = '0;
+    assign digit      = '0;
     // assign red        = '0;
     // assign green      = '0;
     // assign blue       = '0;
-       assign sound      = '0;
-       assign uart_tx    = '1;
+    assign sound      = '0;
+    assign uart_tx    = '1;
     
     logic                   white;
     assign red   = {w_red  {white}};
@@ -79,19 +79,33 @@ module lab_top
     //  Oscilloscope
     //
     //------------------------------------------------------------------------
+    localparam                  mic_shift = 18 - w_y;
+    localparam signed [23:0]    mic_min =-((screen_height-4)<<mic_shift) / 2;
+    localparam signed [23:0]    mic_max = ((screen_height)<<mic_shift) / 2;
+    localparam signed [w_y-1:0] midy = screen_height / 2;
 
     // It is enough for the counter to be 20 bit. Why?
-
     logic        [23:0]    prev_mic;
+    wire  signed [23:0]    mics = ($signed(mic)<mic_min)? mic_min : (($signed(mic)>mic_max)? mic_max : mic);
     logic        [19:0]    counter;
     logic        [19:0]    distance;
     logic signed [w_y-1:0] bufy[screen_width/2];
-    wire  signed [w_y-1:0] micy = {mic[23], (mic[23]?~&mic[22:16]:|mic[22:16])? ~{(w_y-1){$signed(mic[23])}} : mic[15-:w_y-1]};
-    wire         [w_x-1:0] cnt  = counter[19-:w_x];
-    localparam logic signed [w_y-1:0] midy = screen_height/2;
+    logic        [w_x-1:0] vldx;                        // validity of bufy elements
+    wire  signed [w_y-1:0] micy = mics >>> mic_shift;
+    // Another way:        micy = {mic[23], (mic[23]?~&mic[22:16]:|mic[22:16])? ~{(w_y-1){$signed(mic[23])}} : mic[15-:w_y-1]};
+    wire         [w_x-1:0] cntx = counter[19-:w_x];
+    wire                   cntx_in_buf = cntx < screen_width / 2;
+    
+    // Excercise 1: Implement Zoom by x-axis with keys
+    // Excercise 2: Optimize to reduce bits of bufy
+    assign white = x < vldx                             // Design practice: Check if element of bufy is initialized
+            && (x>>2) <  (distance[19-:w_x])
+            && (y>>3) == (midy - bufy[(x>>2)])>>3       // draw bolder lines with shift by 3 bits
+            && x < screen_width && y < screen_height;   // do not draw outside the screen
 
-    always_comb
-        white = (x>>1) < (distance[19-:w_x]) && y == midy - bufy[(x>>1)] && x < screen_width && y < screen_height;
+    always_ff @ (posedge clk)                           // Design practice: Separate always_ff blocks with reset and without
+        if (cntx_in_buf)
+            bufy[cntx] <= micy;
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
@@ -99,11 +113,12 @@ module lab_top
             prev_mic <= '0;
             counter  <= '0;
             distance <= '0;
+            vldx     <= '0;
         end
         else
         begin
-            if (cnt < screen_width/2)
-                bufy[cnt] <= micy;
+            if (vldx < cntx)
+                vldx <= cntx;
 
             prev_mic <= mic;
 

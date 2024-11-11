@@ -48,7 +48,7 @@ module tm1638_registers
     // HEX registered
     logic [w_seg - 1:0] r_hex[w_digit];
 
-    always @( posedge clk )
+    always @( posedge clk or posedge rst)
     begin
         for (int i = 0; i < $bits (digit); i++)
             if (rst)
