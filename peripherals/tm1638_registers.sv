@@ -32,7 +32,7 @@ module tm1638_registers
     localparam static_hex = 1'b1;
 `endif
 
-    wire [w_seg - 1:0] init76543210[w_digit] =
+    wire [w_digit-1:0][w_seg - 1:0] init76543210 =
                       //hgfedcba             --a--
                     '{'b00111111, // 0      |     |
                       'b00000110, // 1      f     b
