@@ -2,7 +2,6 @@
 
 module lcd_800_480
 (
-    input                   CLK,
     input                   nRST,
 
     input                   PixelClk,

@@ -68,6 +68,7 @@ module board_specific_top
 );
 
     wire clk = CLK;
+    wire mic_clk = LCD_CLK;
 
     //------------------------------------------------------------------------
 
@@ -262,15 +263,13 @@ module board_specific_top
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkout  ( lcd_module_clk ),  // 200    MHz
-            .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-            .clkin   ( clk            )   //  27    MHz
+            .clkout  ( lcd_module_clk ),  //  391.5  MHz
+            .clkoutd ( LCD_CLK        ),  //  48.937 MHz
+            .clkin   ( clk            )   //  27     MHz
         );
 
         lcd_800_480 i_lcd
         (
-            .CLK       (   lcd_module_clk ),
-
             .PixelClk  (   LCD_CLK         ),
             .nRST      ( ~ rst            ),
 
@@ -297,7 +296,7 @@ module board_specific_top
     )
     i_microphone
     (
-        .clk     ( clk        ),
+        .clk     ( mic_clk    ),
         .rst     ( rst        ),
         .lr      ( GPIO_1 [1] ),
         .ws      ( GPIO_1 [2] ),
