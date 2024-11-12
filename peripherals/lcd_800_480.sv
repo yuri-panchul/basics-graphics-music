@@ -1,8 +1,8 @@
-// This module is created based on https://github.com/sipeed/TangNano-9K-example/lcd_led/src/VGAMod.v
+// This module is created based on https://github.com/sipeed/TangNano-9K-example/blob/main/lcd_led/src/VGAMod.v
 
 module lcd_800_480
 (
-    input                   CLK,
+    // input                CLK,  Modified for basic-graphics-music: not used
     input                   nRST,
 
     input                   PixelClk,
@@ -30,23 +30,23 @@ module lcd_800_480
     reg         [15:0]  PixelCount;
     reg         [15:0]  LineCount;
 
-    localparam      V_BackPorch = 16'd0; //6
+    localparam      V_BackPorch = 16'd0;  //6
     localparam      V_Pluse     = 16'd5;
     localparam      HightPixel  = 16'd480;
     localparam      V_FrontPorch= 16'd45; //62
 
-    localparam      H_BackPorch = 16'd182;     //NOTE: 高像素时钟时，增加这里的延迟，方便K210加入中断
+    localparam      H_BackPorch = 16'd182;  //NOTE: 高像素时钟时，增加这里的延迟，方便K210加入中断
     localparam      H_Pluse     = 16'd1;
     localparam      WidthPixel  = 16'd800;
     localparam      H_FrontPorch= 16'd210;
 
-    parameter       BarCount    = 16; // RGB565
+    parameter       BarCount    = 16;  // RGB565
     localparam      Width_bar   = WidthPixel / 16;
 
     localparam      PixelForHS  =   WidthPixel + H_BackPorch + H_FrontPorch;
     localparam      LineForVS   =   HightPixel + V_BackPorch + V_FrontPorch;
 
-    always @(  posedge PixelClk or negedge nRST  )begin
+    always @( posedge PixelClk or negedge nRST ) begin
         if( !nRST ) begin
             LineCount       <=  16'b0;
             PixelCount      <=  16'b0;
@@ -67,7 +67,7 @@ module lcd_800_480
     reg            [9:0]  Data_G;
     reg            [9:0]  Data_B;
 
-    always @(  posedge PixelClk or negedge nRST  )begin
+    always @( posedge PixelClk or negedge nRST ) begin
         if( !nRST ) begin
             Data_R <= 9'b0;
             Data_G <= 9'b0;
@@ -76,11 +76,11 @@ module lcd_800_480
     end
     //注意这里HSYNC和VSYNC负极性
     assign  LCD_HSYNC = (( PixelCount >= H_Pluse)&&( PixelCount <= (PixelForHS-H_FrontPorch))) ? 1'b0 : 1'b1;
-    //assign  LCD_VSYNC = ((( LineCount  >= 0 )&&( LineCount  <= (V_Pluse-1) )) ) ? 1'b1 : 1'b0;        //这里不减一的话，图片底部会往下拖尾？
+    //assign  LCD_VSYNC = ((( LineCount  >= 0 )&&( LineCount  <= (V_Pluse-1) )) ) ? 1'b1 : 1'b0;      //这里不减一的话，图片底部会往下拖尾？
     assign  LCD_VSYNC = ((( LineCount  >= V_Pluse )&&( LineCount  <= (LineForVS-0) )) ) ? 1'b0 : 1'b1;
     //assign  FIFO_RST  = (( PixelCount ==0)) ? 1'b1 : 1'b0;  //留给主机H_BackPorch的时间进入中断，发送数据
 
-    assign  LCD_DE = (  ( PixelCount >= H_BackPorch )&&
+    assign  LCD_DE = (  ( PixelCount >= H_BackPorch ) &&
                         ( PixelCount <= PixelForHS-H_FrontPorch ) &&
                         ( LineCount >= V_BackPorch ) &&
                         ( LineCount <= LineForVS-V_FrontPorch-1 ))  ? 1'b1 : 1'b0;

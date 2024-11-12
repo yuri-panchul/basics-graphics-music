@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
 
 //----------------------------------------------------------------------------
 
@@ -16,19 +17,8 @@
 `define REVERSE_KEY
 `define REVERSE_LED
 
-//----------------------------------------------------------------------------
 
-`define SWAP_BITS(dst, src)                                      \
-                                                                 \
-    generate                                                     \
-        genvar dst``_i;                                          \
-                                                                 \
-        for (dst``_i = 0; dst``_i < $bits (dst); dst``_i ++)     \
-        begin : dst``_label                                      \
-            assign dst [dst``_i] = src [$left (dst) - dst``_i];  \
-        end                                                      \
-    endgenerate                                                  \
-
+//`define INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -304,18 +294,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire [$left (abcdefgh):0] hgfedcba;
+    `SWAP_BITS (hgfedcba, abcdefgh);
+
+    //------------------------------------------------------------------------
+
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-
-        wire [$left (abcdefgh):0] hgfedcba;
-
-        generate
-            genvar i;
-
-            for (i = 0; i < $bits (abcdefgh); i ++)
-            begin : abc
-                assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-            end
-        endgenerate
 
         tm1638_board_controller
         # (
@@ -330,30 +314,28 @@ module board_specific_top
             .digit    ( tm_digit       ),
             .ledr     ( tm_led         ),
             .keys     ( tm_key         ),
-            .sio_data ( GPIO [0]       ),
-            .sio_clk  ( GPIO [1]       ),
-            .sio_stb  ( GPIO [2]       )
+            .sio_data ( GPIO [0]       ),   // DIO PIN 25
+            .sio_clk  ( GPIO [1]       ),   // CLK PIN 26
+            .sio_stb  ( GPIO [2]       )    // STB PIN 27
         );
     `endif
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-    
+
         `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
             virtual_tm1638_using_graphics
             # (
-                .clk_mhz  ( clk_mhz        ),
-                .w_digit  ( w_tm_digit     ),
-
-                .screen_width  ( screen_width ),
+                .w_digit       ( w_tm_digit    ),
+                .screen_width  ( screen_width  ),
                 .screen_height ( screen_height )
             )
             i_tm1638_virtual
             (
                 .clk      ( clk           ),
                 .rst      ( rst           ),
-                .abcdefgh ( abcdefgh      ),
+                .hgfedcba ( hgfedcba      ),
                 .digit    ( tm_digit      ),
                 .ledr     ( tm_led        ),
                 .keys     ( tm_key        ),
@@ -437,16 +419,36 @@ module board_specific_top
         (
             .clk      ( clk            ),
             .rst      ( rst            ),
-            .lr       ( TF_CS          ),
-            .ws       ( TF_MOSI        ),
-            .sck      ( TF_SCLK        ),
-            .sd       ( TF_MISO        ),
+            .lr       ( TF_CS          ), // 38
+            .ws       ( TF_MOSI        ), // 37
+            .sck      ( TF_SCLK        ), // 36
+            .sd       ( TF_MISO        ), // 39
             .value    ( mic            )
         );
 
     `endif
 
     //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
+        `undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        wire dac_out;
+
+        sigma_delta_dac 
+        #( .MSBI (   7 ), 
+           .INV  ( 1'b0 )
+         ) 
+        SD_DAC
+         ( .DACout( dac_out       ),  //Average Output feeding analog lowpass
+           .DACin ( sound[15 -:8] ),  //DAC input (excess 2**MSBI)
+           .CLK   ( clk           ),
+           .RESET ( rst           )
+         );
+        assign  LARGE_LCD_HS = dac_out;
+        assign  LARGE_LCD_CK = ~dac_out;
+
+    `endif
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
@@ -456,13 +458,13 @@ module board_specific_top
         )
         inst_audio_out
         (
-            .clk      ( clk          ),
-            .reset    ( rst          ),
-            .data_in  ( sound        ),
-            .mclk     ( LARGE_LCD_DE ),
-            .bclk     ( LARGE_LCD_VS ),
-            .lrclk    ( LARGE_LCD_HS ),
-            .sdata    ( LARGE_LCD_CK )
+            .clk      ( clk           ),
+            .reset    ( rst           ),
+            .data_in  ( sound         ),
+            .mclk     ( LARGE_LCD_DE  ),
+            .bclk     ( LARGE_LCD_VS  ),
+            .lrclk    ( LARGE_LCD_HS  ),
+            .sdata    ( LARGE_LCD_CK  )
         );
 
     `endif

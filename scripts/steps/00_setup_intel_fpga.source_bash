@@ -541,7 +541,7 @@ configure_fpga_quartus ()
 
         # Check the device name
 
-        if [ $device_name = 5CSE ] || [ $device_name = 5CSX ] || [ $device_name = 5CST ]
+        if [ $fpga_board = de10_nano ]
         then
             "$quartus_pgm_full_real_path" --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file@2"
         else

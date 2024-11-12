@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
 
 //----------------------------------------------------------------------------
 
@@ -11,18 +12,7 @@
 `define REVERSE_KEY
 `define REVERSE_LED
 
-//----------------------------------------------------------------------------
-
-`define SWAP_BITS(dst, src)                                      \
-                                                                 \
-    generate                                                     \
-        genvar dst``_i;                                          \
-                                                                 \
-        for (dst``_i = 0; dst``_i < $bits (dst); dst``_i ++)     \
-        begin : dst``_label                                      \
-            assign dst [dst``_i] = src [$left (dst) - dst``_i];  \
-        end                                                      \
-    endgenerate                                                  \
+// `define MIRROR_LCD
 
 //----------------------------------------------------------------------------
 
@@ -223,8 +213,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef MIRROR_LCD
+
     wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
     wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -259,8 +253,17 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
+        `ifdef MIRROR_LCD
+
         .x             ( mirrored_x    ),
         .y             ( mirrored_y    ),
+
+        `else
+
+        .x             ( x             ),
+        .y             ( y             ),
+
+        `endif
 
         .red           ( LARGE_LCD_R   ),
         .green         ( LARGE_LCD_G   ),
@@ -280,12 +283,6 @@ module board_specific_top
 
         wire [$left (abcdefgh):0] hgfedcba;
         `SWAP_BITS (hgfedcba, abcdefgh);
-
-    `endif
-
-    //------------------------------------------------------------------------
-
-    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         tm1638_board_controller
         # (
@@ -352,10 +349,6 @@ module board_specific_top
         `endif
         i_lcd
         (
-            `ifdef USE_LCD_800_480
-            .CLK       (   lcd_module_clk ),
-            `endif
-
             .PixelClk  (   LARGE_LCD_CK   ),
             .nRST      ( ~ rst            ),
 

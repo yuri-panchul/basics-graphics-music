@@ -103,14 +103,14 @@ module lab_top
                 dx <= dx - 1;
             else
                 dx <= dx + 1;
-                
+
             if (key [1])
                 dy <= dy - 1;
             else
                 dy <= dy + 1;
         end
 
-    assign led = counter;
+    assign led = w_led' (dx);
 
     //------------------------------------------------------------------------
 
@@ -121,16 +121,16 @@ module lab_top
         blue  = 0;
 
         if (  x > 100 + dx
-            & y > 100 + dy
             & x < 150 + dx
+            & y > 100 + dy
             & y < 200 + dy )
         begin
             red = 30;
         end
 
         if (  x > 100 + dx * 2
-            & y > 100 + dy
             & x < 150 + dx * 2
+            & y > 100 + dy
             & y < 200 + dy     )
         begin
             green = 30;

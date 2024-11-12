@@ -418,14 +418,11 @@ configure_fpga_gowin_msys ()
 
     #-------------------------------------------------------------------------
 
-    if [ ]
-    then
-        read -n 1 -r -p "Would you like to choose a flash method ? S-SRAM E-Embedded Flash [s/E] "
-        printf "\n"
+    read -n 1 -r -p "Would you like to choose a flash method ? Try SRAM if flush does not work. S-SRAM E-Embedded Flash [s/E] "
+    printf "\n"
 
-        if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
-            flash_method="-r 2"
-        fi
+    if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
+        flash_method="-r 2"
     fi
 
     "$gowin_prog_full_real_path"      \

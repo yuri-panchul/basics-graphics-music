@@ -1,9 +1,9 @@
-## Using  OSS CAD Suite for Windows for lab works 
+## Using  OSS CAD Suite for Windows for lab works
 
 1. Download windows version **OSS CAD Suite** oss-cad-suite-windows-x64-xxxxxx.exe
  from the https://github.com/YosysHQ/oss-cad-suite-build/releases
 2. Put  **OSS CAD Suite** into *C:\oss-cad-suite* directory
-3. Create *environment.sh* in the *C:\oss-cad-suite* directory 
+3. Create *environment.sh* in the *C:\oss-cad-suite* directory
 
    ```
    export YOSYSHQ_ROOT=/c/oss-cad-suite/
@@ -26,7 +26,7 @@
    ```
    source /c/oss-cad-suite/environment.sh
    ```
-**NOTE:** If you try to run yosys inside **Git bash** you can get 
+**NOTE:** If you try to run yosys inside **Git bash** you can get
    ```
     /----------------------------------------------------------------------------\
     |  yosys -- Yosys Open SYnthesis Suite                                       |

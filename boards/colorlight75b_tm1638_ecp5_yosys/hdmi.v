@@ -2,12 +2,12 @@
 
 ////////////////////////////////////////////////////////////////////////
 module hdmi (
-	input pixclk,  // 25 MHz
-	input clk_TMDS, // 250 MHz
-	input HSYNC, VSYNC, DRAW,
-	input [7:0] R, G, B,
-	output [2:0] TMDSp, TMDSn,
-	output TMDSp_clock, TMDSn_clock
+    input pixclk,  // 25 MHz
+    input clk_TMDS, // 250 MHz
+    input HSYNC, VSYNC, DRAW,
+    input [7:0] R, G, B,
+    output [2:0] TMDSp, TMDSn,
+    output TMDSp_clock, TMDSn_clock
   );
 
 ////////////////////////////////////////////////////////////////////////
@@ -38,10 +38,10 @@ always @(posedge clk_TMDS) TMDS_shift_load <= (TMDS_mod10==4'd9);
 
 always @(posedge clk_TMDS)
 begin
-	TMDS_shift_red   <= TMDS_shift_load ? TMDS_red   : TMDS_shift_red  [9:1];
-	TMDS_shift_green <= TMDS_shift_load ? TMDS_green : TMDS_shift_green[9:1];
-	TMDS_shift_blue  <= TMDS_shift_load ? TMDS_blue  : TMDS_shift_blue [9:1];	
-	TMDS_mod10 <= (TMDS_mod10==4'd9) ? 4'd0 : TMDS_mod10+4'd1;
+    TMDS_shift_red   <= TMDS_shift_load ? TMDS_red   : TMDS_shift_red  [9:1];
+    TMDS_shift_green <= TMDS_shift_load ? TMDS_green : TMDS_shift_green[9:1];
+    TMDS_shift_blue  <= TMDS_shift_load ? TMDS_blue  : TMDS_shift_blue [9:1];    
+    TMDS_mod10 <= (TMDS_mod10==4'd9) ? 4'd0 : TMDS_mod10+4'd1;
 end
 
 OBUFDS OBUFDS_red  (.I(TMDS_shift_red  [0]), .O(TMDSp[2]), .OB(TMDSn[2]));
@@ -53,11 +53,11 @@ endmodule
 
 ////////////////////////////////////////////////////////////////////////
 module TMDS_encoder(
-	input clk,
-	input [7:0] VD,  // video data (red, green or blue)
-	input [1:0] CD,  // control data
-	input VDE,  // video data enable, to choose between CD (when VDE=0) and VD (when VDE=1)
-	output reg [9:0] TMDS = 0
+    input clk,
+    input [7:0] VD,  // video data (red, green or blue)
+    input [1:0] CD,  // control data
+    input VDE,  // video data enable, to choose between CD (when VDE=0) and VD (when VDE=1)
+    output reg [9:0] TMDS = 0
 );
 
 wire [3:0] Nb1s = VD[0] + VD[1] + VD[2] + VD[3] + VD[4] + VD[5] + VD[6] + VD[7];
@@ -82,9 +82,9 @@ endmodule
 
 ////////////////////////////////////////////////////////////////////////
 module OBUFDS(
-	input I, // input
-	output O, // positive output
-	output OB // negative output
+    input I, // input
+    output O, // positive output
+    output OB // negative output
 );
 
 assign O = I;

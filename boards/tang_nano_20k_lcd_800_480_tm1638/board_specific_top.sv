@@ -13,8 +13,8 @@
 
 module board_specific_top
 # (
-    parameter clk_mhz       = 27,
-              pixel_mhz     = 25,
+    parameter clk_mhz       = 27, // CLK
+              pixel_mhz     = 49, // LCD_CLK
 
               w_key         = 2,  // The last key is used for a reset
               w_sw          = 0,
@@ -281,19 +281,17 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire lcd_module_clk;
+        wire high_clk;
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkout  ( lcd_module_clk ),  // 200    MHz
-            .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-            .clkin   ( clk            )   //  27    MHz
+            .clkout  ( high_clk       ),  //  391.5  MHz
+            .clkoutd ( LCD_CLK        ),  //  48.938 MHz
+            .clkin   ( clk            )   //  27     MHz
         );
 
         lcd_800_480 i_lcd
         (
-            .CLK       (   lcd_module_clk ),
-
             .PixelClk  (   LCD_CLK        ),
             .nRST      ( ~ rst            ),
 

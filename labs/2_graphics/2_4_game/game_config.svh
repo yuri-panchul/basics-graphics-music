@@ -2,7 +2,7 @@
 `define GAME_CONFIG_SVH
 
 `include "config.svh"
-`define FORCE_NO_VIRTUAL_TM1638_USING_GRAPHICS
+
 `define GAME_RGB_WIDTH       3
 
 `ifndef GAME_MASTER_FSM_MODULE

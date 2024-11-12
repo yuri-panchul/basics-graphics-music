@@ -161,7 +161,7 @@ module board_specific_top
     assign GPIO_P1 [11 :  8] = vga_green;  // PIN_A11, B9, A9, A8
     assign GPIO_P1 [15 : 12] = vga_blue ;  // PIN_A13, B12, A12, B11
 
-    assign GPIO_P2 [14 :  6] = lab_gpio;   // 
+    assign GPIO_P2 [14 :  6] = lab_gpio;   //
 
     //------------------------------------------------------------------------
 
