@@ -11,8 +11,8 @@
 
 module board_specific_top
 # (
-    parameter   clk_mhz       = 27,
-                pixel_mhz     = 25,
+    parameter   clk_mhz       = 27, // CLK
+                pixel_mhz     = 49, // LCD_CLK lab_clk lab_mhz
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
@@ -52,11 +52,6 @@ module board_specific_top
     output [            5:0]     LCD_G,
     output [            4:0]     LCD_B,
 
-    //output                      TMDS_CLK_N,
-    //output                      TMDS_CLK_P,
-    //output [              2:0]  TMDS_D_N,
-    //output [              2:0]  TMDS_D_P
-
     inout  [w_gpio / 4  - 1:0]  GPIO_0,
     inout  [w_gpio / 4  - 1:0]  GPIO_1,
     inout  [w_gpio / 4  - 1:0]  GPIO_2,
@@ -67,8 +62,14 @@ module board_specific_top
 
 );
 
-    wire clk = CLK;
-    wire mic_clk = LCD_CLK;
+        wire high_clk;
+
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkout  ( high_clk       ),  //  391.5  MHz
+            .clkoutd ( LCD_CLK        ),  //  48.938 MHz
+            .clkin   ( CLK            )   //  27     MHz
+        );
 
     //------------------------------------------------------------------------
 
@@ -122,11 +123,12 @@ module board_specific_top
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
         localparam lab_mhz = pixel_mhz;
+        assign     lab_clk = LCD_CLK;
 
     `else
 
         localparam lab_mhz = clk_mhz;
-        assign     clk     = CLK;
+        assign     lab_clk = CLK;
 
     `endif
 
@@ -157,8 +159,8 @@ module board_specific_top
 
     wire slow_clk;
 
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    slow_clk_gen # (.fast_clk_mhz (lab_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .clk (lab_clk), .rst (rst));
 
     //------------------------------------------------------------------------
 
@@ -187,7 +189,7 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk           ( clk           ),
+        .clk           ( lab_clk       ),
         .slow_clk      ( slow_clk      ),
         .rst           ( rst           ),
 
@@ -242,7 +244,7 @@ module board_specific_top
     )
     i_tm1638
     (
-        .clk        ( clk           ),
+        .clk        ( lab_clk       ),
         .rst        ( rst           ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
@@ -259,18 +261,9 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire lcd_module_clk;
-
-        Gowin_rPLL i_Gowin_rPLL
-        (
-            .clkout  ( lcd_module_clk ),  //  391.5  MHz
-            .clkoutd ( LCD_CLK        ),  //  48.937 MHz
-            .clkin   ( clk            )   //  27     MHz
-        );
-
         lcd_800_480 i_lcd
         (
-            .PixelClk  (   LCD_CLK         ),
+            .PixelClk  (   lab_clk        ),
             .nRST      ( ~ rst            ),
 
             .LCD_DE    (   LCD_DE         ),
@@ -296,7 +289,7 @@ module board_specific_top
     )
     i_microphone
     (
-        .clk     ( mic_clk    ),
+        .clk     ( lab_clk    ),
         .rst     ( rst        ),
         .lr      ( GPIO_1 [1] ),
         .ws      ( GPIO_1 [2] ),
