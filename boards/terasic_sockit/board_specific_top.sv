@@ -68,7 +68,7 @@ module board_specific_top
         .w_key         ( w_key           ),
         .w_sw          ( w_sw            ),
         .w_led         ( w_led           ),
-        .w_digit       ( 1 /* w_digit */ ),
+        .w_digit       ( 2 /* w_digit */ ),
         .w_gpio        ( 1 /* w_gpio  */ ),
 
         .screen_width  ( screen_width    ),

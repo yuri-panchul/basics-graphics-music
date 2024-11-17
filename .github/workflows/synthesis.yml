@@ -25,13 +25,12 @@ jobs:
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 21.1.1
-            # TODO: terasic_sockit
-            boards: rzrd_pmod_mic3 omdazz
+            boards: rzrd_pmod_mic3 terasic_sockit
             labs: 12345
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 17.1
-            boards: de10_lite de2_115
+            boards: de10_lite de2_115 omdazz
             labs: 12345
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
