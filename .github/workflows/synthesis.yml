@@ -25,18 +25,18 @@ jobs:
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 21.1.1
-            boards: de10_lite terasic_sockit
+            boards: terasic_sockit
             labs: 12345
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 17.1
-            boards: de2_115 omdazz
+            boards: de10_lite omdazz
             labs: 12345
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 13.0sp1
             # TODO: omdazz_epm570_quartus_13_1_or_older
-            boards: de0 rzrd_pmod_mic3
+            boards: de2_115 de0 rzrd_pmod_mic3
             labs: 12345
     steps:
       - name: Checkout
