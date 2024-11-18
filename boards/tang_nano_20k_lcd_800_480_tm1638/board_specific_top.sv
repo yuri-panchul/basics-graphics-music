@@ -7,14 +7,18 @@
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 `endif
 
+`ifdef FORCE_NO_INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+   `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+`endif
+
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
 
 //----------------------------------------------------------------------------
 
 module board_specific_top
 # (
-    parameter clk_mhz       = 27, // CLK
-              pixel_mhz     = 49, // LCD_CLK
+    parameter clk_mhz       = 48, // audio_clk - lab_clk lab_mhz
+              pixel_mhz     = 32, // LCD_CLK   - lab_clk lab_mhz
 
               w_key         = 2,  // The last key is used for a reset
               w_sw          = 0,
@@ -97,6 +101,16 @@ module board_specific_top
 );
 
     wire clk = CLK;
+    wire high_clk;
+    wire audio_clk;
+
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkout   ( high_clk       ),  //  96 MHz
+            .clkoutd  ( audio_clk      ),  //  48 MHz
+            .clkoutd3 ( LCD_CLK        ),  //  32 MHz
+            .clkin    ( CLK            )   //  27 MHz
+        );
 
     //------------------------------------------------------------------------
 
@@ -147,6 +161,20 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        localparam lab_mhz = pixel_mhz;
+        assign     lab_clk = LCD_CLK;
+
+    `else
+
+        localparam lab_mhz = clk_mhz;
+        assign     lab_clk = audio_clk;
+
+    `endif
+
+    //------------------------------------------------------------------------
+
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         assign rst      = tm_key [w_tm_key - 1];
@@ -158,8 +186,6 @@ module board_specific_top
         assign LED      = w_led' (~ lab_led);
 
     `elsif IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
-
-        wire rst;
 
         imitate_reset_on_power_up i_imitate_reset_on_power_up (clk, rst);
 
@@ -179,8 +205,8 @@ module board_specific_top
 
     wire slow_clk;
 
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    slow_clk_gen # (.fast_clk_mhz (lab_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .clk (lab_clk), .rst (rst));
 
     //------------------------------------------------------------------------
 
@@ -191,7 +217,7 @@ module board_specific_top
 
     lab_top
     # (
-        .clk_mhz       ( clk_mhz       ),
+        .clk_mhz       ( lab_mhz       ),
 
         .w_key         ( w_lab_key     ),  // The last key is used for a reset
         .w_sw          ( w_lab_key     ),
@@ -208,7 +234,7 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk           ( clk           ),
+        .clk           ( ~ lab_clk     ),  // Inverted, fewer artifacts on LCD > 36 MHz
         .slow_clk      ( slow_clk      ),
         .rst           ( rst           ),
 
@@ -258,12 +284,12 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .clk_mhz  ( clk_mhz        ),
+        .clk_mhz  ( lab_mhz        ),
         .w_digit  ( w_tm_digit     )
     )
     i_tm1638
     (
-        .clk      ( clk            ),
+        .clk      ( lab_clk        ),
         .rst      ( rst            ),
         .hgfedcba ( hgfedcba       ),
         .digit    ( tm_digit       ),
@@ -281,18 +307,9 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire high_clk;
-
-        Gowin_rPLL i_Gowin_rPLL
-        (
-            .clkout  ( high_clk       ),  //  391.5  MHz
-            .clkoutd ( LCD_CLK        ),  //  48.938 MHz
-            .clkin   ( clk            )   //  27     MHz
-        );
-
         lcd_800_480 i_lcd
         (
-            .PixelClk  (   LCD_CLK        ),
+            .PixelClk  (   lab_clk        ),
             .nRST      ( ~ rst            ),
 
             .LCD_DE    (   LCD_DE         ),
@@ -303,9 +320,6 @@ module board_specific_top
             .y         (   y              )
         );
 
-        assign LCD_INIT = 1'b0;
-        assign LCD_BL   = 1'b0;
-
     `endif
 
     //------------------------------------------------------------------------
@@ -314,11 +328,11 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz  ( clk_mhz        )
+            .clk_mhz  ( lab_mhz        )
         )
         i_microphone
         (
-            .clk      ( clk            ),
+            .clk      ( lab_clk        ),
             .rst      ( rst            ),
             .lr       ( GPIO[1]        ),
             .ws       ( GPIO[2]        ),
@@ -338,11 +352,11 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz  ( clk_mhz      )
+            .clk_mhz  ( lab_mhz      )
         )
         inst_audio_out
         (
-            .clk      ( clk          ),
+            .clk      ( lab_clk      ),
             .reset    ( rst          ),
             .data_in  ( sound        ),
             .mclk     (              ),
