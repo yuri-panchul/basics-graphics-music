@@ -52,6 +52,16 @@ module board_specific_top
     output                  VGA_BLANK_N,
     output                  VGA_SYNC_N,
 
+    inout                   AUD_ADCLRCK,
+    input                   AUD_ADCDAT,
+    inout                   AUD_BCLK,
+    inout                   AUD_DACLRCK,
+    output                  AUD_DACDAT,
+    output                  AUD_XCK,
+
+    output                  I2C_SCLK,
+    inout                   I2C_SDAT,
+
     input                   UART_RTS,
     input                   UART_RXD,
 
@@ -229,8 +239,6 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire display_on;
-
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
@@ -285,22 +293,48 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        wire mclk;
+        wire bclk;
+        wire lrclk;
+        wire i2s_dac_data;
+
         i2s_audio_out
         # (
             .clk_mhz ( clk_mhz   )
         )
         inst_audio_out
         (
-            .clk     ( clk       ),
-            .reset   ( rst       ),
-            .data_in ( sound     ),
-            .mclk    ( GPIO [33] ),
-            .bclk    ( GPIO [31] ),
-            .lrclk   ( GPIO [27] ),
-            .sdata   ( GPIO [29] )
+            .clk     ( clk          ),
+            .reset   ( rst          ),
+            .data_in ( sound        ),
+            .mclk    ( mclk         ),
+            .bclk    ( bclk         ),
+            .lrclk   ( lrclk        ),
+            .sdata   ( i2s_dac_data )
         );
 
+        assign GPIO [33] = mclk;
+        assign GPIO [31] = bclk;
+        assign GPIO [27] = lrclk;
+        assign GPIO [29] = i2s_dac_data;
+
         // VCC and GND for i2s_audio_out are on dedicated pins
+
+        // DE2-115 onboard audio codec: WM8731
+        // The audio codec interface
+        assign AUD_XCK     = mclk;
+        assign AUD_BCLK    = bclk;
+        assign AUD_DACLRCK = lrclk;
+        assign AUD_DACDAT  = i2s_dac_data;
+
+        // The audio codec configuration
+        I2C_AUDIO_Config i_i2c_codec_conf (
+            .iCLK    (clk),
+            .iRST_N  (~rst),
+            .I2C_SCLK(I2C_SCLK),
+            .I2C_SDAT(I2C_SDAT),
+            .READY   ()
+        );
 
     `endif
 
