@@ -92,6 +92,7 @@ module board_specific_top
     output                       JOYSTICK_CS2,
 
     // SD card ports
+
     output                       SD_CLK,
     output                       SD_CMD,
     inout                        SD_DAT0,
@@ -100,12 +101,14 @@ module board_specific_top
     inout                        SD_DAT3,
 
     // Ports for on-board I2S amplifier
+
     output                       HP_BCK,
     output                       HP_DIN,
     output                       HP_WS,
     output                       PA_EN,
 
     // On-board WS2812 RGB LED with a serial interface
+
     inout                        WS2812
 );
 
@@ -315,32 +318,28 @@ module board_specific_top
 
         `ifdef USE_LCD_800_480
 
-            wire lcd_module_clk;
-
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout  ( lcd_module_clk ),  // 200    MHz
-                .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-                .clkin   ( clk            )   //  27    MHz
+                .clkout  (         ),  // 200    MHz
+                .clkoutd ( LCD_CLK ),  //  33.33 MHz
+                .clkin   ( clk     )   //  27    MHz
             );
 
         `elsif USE_LCD_480_272_ML6485
 
-            wire lcd_module_clk;
-
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout  ( lcd_module_clk ),  // 200    MHz
-                .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-                .clkin   ( clk            )   //  27    MHz
+                .clkout  (         ),  // 200    MHz
+                .clkoutd ( LCD_CLK ),  //  33.33 MHz
+                .clkin   ( clk     )   //  27    MHz
             );
 
         `else  // Using 480x272
 
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout  ( LCD_CLK        ),  //  9 MHz
-                .clkin   ( clk            )   // 27 MHz
+                .clkout  ( LCD_CLK ),  //  9 MHz
+                .clkin   ( clk     )   // 27 MHz
             );
 
         `endif
@@ -354,15 +353,15 @@ module board_specific_top
         `endif
         i_lcd
         (
-            .PixelClk  (   LCD_CLK        ),
-            .nRST      ( ~ rst            ),
+            .PixelClk  (   LCD_CLK ),
+            .nRST      ( ~ rst     ),
 
-            .LCD_DE    (   LCD_DE         ),
-            .LCD_HSYNC (                  ),
-            .LCD_VSYNC (                  ),
+            .LCD_DE    (   LCD_DE  ),
+            .LCD_HSYNC (           ),
+            .LCD_VSYNC (           ),
 
-            .x         (   x              ),
-            .y         (   y              )
+            .x         (   x       ),
+            .y         (   y       )
         );
 
         assign LCD_HS = 1'b0;
