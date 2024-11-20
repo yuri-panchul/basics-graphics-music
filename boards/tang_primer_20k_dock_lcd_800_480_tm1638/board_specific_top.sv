@@ -73,12 +73,11 @@ module board_specific_top
 
 );
 
-        wire high_clk;
         wire audio_clk;
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkout   ( high_clk       ),  //  96 MHz
+            .clkout   (                ),  //  96 MHz
             .clkoutd  ( audio_clk      ),  //  48 MHz
             .clkoutd3 ( LCD_CLK        ),  //  32 MHz
             .clkin    ( CLK            )   //  27 MHz
@@ -330,7 +329,7 @@ module board_specific_top
     i2s_audio_out
     # (
         .clk_mhz  ( lab_mhz    ),
-        .in_res   ( 31         )
+        .align_right ( 1'b1    )
     )
     inst_audio_out
     (

@@ -6,8 +6,9 @@
 
 module i2s_audio_out
 # (
-    parameter clk_mhz = 50,
-              in_res  = 16        // sound samples resolution, see tone_table.svh
+    parameter clk_mhz     = 50,
+              in_res      = 16,  // sound samples resolution, see tone_table.svh
+              align_right = 0
 )
 (
     input                 clk,
@@ -19,9 +20,9 @@ module i2s_audio_out
     output                sdata
 );
 
-    localparam MCLK_DIV = $clog2 (clk_mhz * 1000 / 12500);  // = 2  MCLK  - 12.5 MHz
-    localparam BCLK_DIV = $clog2 (clk_mhz * 1000 / 3125 );  // = 4  BCLK  - 3.125 MHz serial clock - for a 48 KHz Sample Rate
-    localparam CLK_DIV  = $clog2 (clk_mhz * 1000 / 50   );  // = 10 LRCLK - 50 KHz, the slowest clock
+    localparam MCLK_DIV = $clog2 (clk_mhz * 1000 / 12500);  // = MCLK  - 12.5 MHz
+    localparam BCLK_DIV = $clog2 (clk_mhz * 1000 / 3125 );  // = BCLK  - 3.125 MHz serial clock - for a 48 KHz Sample Rate
+    localparam CLK_DIV  = $clog2 (clk_mhz * 1000 / 50   );  // = LRCLK - 50 KHz, the slowest clock
 
     logic  [CLK_DIV - 1:0] clk_div;
     logic  [         31:0] shift;
@@ -43,10 +44,17 @@ module i2s_audio_out
             shift <= 0;
         else
         begin
-            if (clk_div [CLK_DIV - 2:0] == 'd15)        // 'd15 Data front position (MSB) regarding LRCLK or WS position
-                shift [31 -: in_res] <= data_in;       // Put the data starting with the highest bytes, on the left side
-            else if (clk_div [BCLK_DIV - 1:0] == 'd15)  // 'd15 Data end position (LSB) regarding LRCK or WS position
+            if (clk_div [CLK_DIV - 2:0] == { BCLK_DIV { 1'b1 } })       // 'd15 Data front position (MSB) regarding LRCLK or WS position
+            begin
+                if (align_right)
+                    shift [1  +: in_res] <= 31' (data_in);              // Put the data on the right side
+                else
+                    shift [31 -: in_res] <= 32' (data_in);              // Put the data starting with the highest bytes, on the left side
+            end
+            else if (clk_div [BCLK_DIV - 1:0] == { BCLK_DIV { 1'b1 } }) // 'd15 Data end position (LSB) regarding LRCK or WS position
+            begin
                 shift <= shift << 1;
+            end
         end
 
 endmodule
