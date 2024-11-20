@@ -16,6 +16,10 @@ module tb;
     logic [3:0] key;
     logic [7:0] sw;
 
+
+    logic [7:0] sine_table [0:255];
+    logic [7:0] sine_ptr;
+
     //------------------------------------------------------------------------
 
     lab_top
@@ -63,12 +67,14 @@ module tb;
             $dumpvars;
         `endif
         key[3:1] = '0;
+        sine_ptr = '0;
+        $readmemh("../sine_table.txt", sine_table);
 
-        repeat (32)
+        repeat (512)
         begin
              # 10
-             sw  <= $urandom ();
-             key[0] <= $urandom ();
+             sw  <= sine_table[sine_ptr];
+             sine_ptr <= sine_ptr + 1;
         end
 
         $finish;
