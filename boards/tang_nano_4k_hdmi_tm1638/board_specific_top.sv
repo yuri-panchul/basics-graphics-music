@@ -100,7 +100,7 @@ module board_specific_top
         // and extra dummy LED for the same purpose.
 
         localparam w_lab_key   = w_key,
-                   w_lab_led   = 2;  // w_led,
+                   w_lab_led   = 2,  // w_led,
                    w_lab_digit = 1;  // w_digit;
     `endif
 
