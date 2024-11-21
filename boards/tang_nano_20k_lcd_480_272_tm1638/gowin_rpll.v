@@ -1,11 +1,11 @@
-//Copyright (C)2014-2023 Gowin Semiconductor Corporation.
+//Copyright (C)2014-2022 Gowin Semiconductor Corporation.
 //All rights reserved.
 //File Title: IP file
-//GOWIN Version: V1.9.9 Beta-4 Education
-//Part Number: GW2A-LV18PG256C8/I7
-//Device: GW2A-18
+//GOWIN Version: V1.9.8.10
+//Part Number: GW2AR-LV18QN88C8/I7
+//Device: GW2AR-18
 //Device Version: C
-//Created Time: Sun Nov  3 19:06:31 2024
+//Created Time: Mon Apr 03 23:07:49 2023
 
 module Gowin_rPLL (clkout, clkin);
 
@@ -59,6 +59,6 @@ defparam rpll_inst.CLKOUTD_BYPASS = "false";
 defparam rpll_inst.DYN_SDIV_SEL = 2;
 defparam rpll_inst.CLKOUTD_SRC = "CLKOUT";
 defparam rpll_inst.CLKOUTD3_SRC = "CLKOUT";
-defparam rpll_inst.DEVICE = "GW2A-18C";
+defparam rpll_inst.DEVICE = "GW2AR-18C";
 
 endmodule //Gowin_rPLL
