@@ -19,7 +19,12 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 27,
+
+              `ifdef USE_LCD_800_480
+              pixel_mhz     = 33,  // This parameter is not used
+              `else // 480_272
               pixel_mhz     = 9,
+              `endif
 
               // We use sw as an alias to key on Tang Nano 9K,
               // either with or without TM1638
@@ -316,33 +321,12 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        `ifdef USE_LCD_800_480
-
-            Gowin_rPLL i_Gowin_rPLL
-            (
-                .clkout  (         ),  // 200    MHz
-                .clkoutd ( LCD_CLK ),  //  33.33 MHz
-                .clkin   ( clk     )   //  27    MHz
-            );
-
-        `elsif USE_LCD_480_272_ML6485
-
-            Gowin_rPLL i_Gowin_rPLL
-            (
-                .clkout  (         ),  // 200    MHz
-                .clkoutd ( LCD_CLK ),  //  33.33 MHz
-                .clkin   ( clk     )   //  27    MHz
-            );
-
-        `else  // Using 480x272
-
-            Gowin_rPLL i_Gowin_rPLL
-            (
-                .clkout  ( LCD_CLK ),  //  9 MHz
-                .clkin   ( clk     )   // 27 MHz
-            );
-
-        `endif
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkout ( LCD_CLK ),  //   9    MHz for 480x272
+                                  //  33.33 MHz for 800x480
+            .clkin  ( clk     )   //  27    MHz
+        );
 
         `ifdef USE_LCD_800_480
         lcd_800_480
