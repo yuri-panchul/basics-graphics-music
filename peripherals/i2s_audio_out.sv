@@ -7,8 +7,8 @@
 module i2s_audio_out
 # (
     parameter clk_mhz     = 50,
-              in_res      = 16,  // sound samples resolution, see tone_table.svh
-              align_right = 0    // For I2S =0. For PT8211 DAC (Least Significant Bit Justified) =1.
+              in_res      = 16,  // Sound samples resolution, see tone_table.svh
+              align_right = 0    // For I2S = 0. For PT8211 DAC (Least Significant Bit Justified) = 1.
 )
 (
     input                 clk,
@@ -20,9 +20,9 @@ module i2s_audio_out
     output                sdata
 );
 
-    localparam MCLK_DIV = $clog2 (clk_mhz * 1000 / 12500);  // = MCLK  - 12.5 MHz
-    localparam BCLK_DIV = $clog2 (clk_mhz * 1000 / 3125 );  // = BCLK  - 3.125 MHz serial clock - for a 48 KHz Sample Rate
-    localparam CLK_DIV  = $clog2 (clk_mhz * 1000 / 50   );  // = LRCLK - 50 KHz, the slowest clock
+    localparam MCLK_DIV = $clog2 (clk_mhz * 1000 / 12500);  // MCLK 12.288 MHz master clock
+    localparam BCLK_DIV = $clog2 (clk_mhz * 1000 / 3072);   // BCLK  3.072 MHz serial clock for a 48 KHz Sample Rate
+    localparam CLK_DIV  = $clog2 (clk_mhz * 1000 / 53  );   // LRCLK    48 KHz sampling rate for each channel
 
     logic  [CLK_DIV - 1:0] clk_div;
     logic  [         31:0] shift;
@@ -33,25 +33,28 @@ module i2s_audio_out
         else
             clk_div <= clk_div + 1'b1;
 
-    assign mclk  = clk_div [ MCLK_DIV - 1];
-    assign bclk  = clk_div [ BCLK_DIV - 1];
-    assign lrclk = clk_div [ CLK_DIV  - 1];
+    if (MCLK_DIV)
+        assign mclk  = clk_div [MCLK_DIV - 1];
+    else
+        assign mclk  = clk_div [0];
+    assign bclk  = clk_div [BCLK_DIV - 1];
+    assign lrclk = clk_div [CLK_DIV  - 1];
 
-    assign sdata = shift   [           31];
+    assign sdata = shift   [          31];
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
             shift <= 0;
         else
         begin
-            if (clk_div [CLK_DIV - 2:0] == { BCLK_DIV { 1'b1 } })       // 'd15 Data front position (MSB) regarding LRCLK or WS position
+            if (clk_div [CLK_DIV - 2:0] == { BCLK_DIV { 1'b1 } })       // 'b1111 Data front position (MSB) regarding LRCLK or WS position
             begin
                 if (align_right)
                     shift [1  +: in_res] <= 31' (data_in);              // Put the data on the right side
                 else
                     shift [31 -: in_res] <= 32' (data_in);              // Put the data starting with the highest bytes, on the left side
             end
-            else if (clk_div [BCLK_DIV - 1:0] == { BCLK_DIV { 1'b1 } }) // 'd15 Data end position (LSB) regarding LRCK or WS position
+            else if (clk_div [BCLK_DIV - 1:0] == { BCLK_DIV { 1'b1 } }) // 'b1111 Data end position (LSB) regarding LRCK or WS position
             begin
                 shift <= shift << 1;
             end
