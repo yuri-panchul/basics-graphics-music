@@ -9,9 +9,9 @@
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
-`define REVERSE_KEY
-`define REVERSE_LED
 
+// `define REVERSE_KEY
+// `define REVERSE_LED
 // `define MIRROR_LCD
 
 //----------------------------------------------------------------------------
