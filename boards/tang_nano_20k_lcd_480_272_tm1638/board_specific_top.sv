@@ -130,6 +130,7 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
@@ -139,6 +140,7 @@ module board_specific_top
         // to avoid errors in the labs with seven-segment display
 
         localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
                    w_lab_led   = w_led,
                    w_lab_digit = 1;  // w_digit;
 
