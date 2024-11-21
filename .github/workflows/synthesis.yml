@@ -10,7 +10,6 @@ on:
 
 env:
   USER: root
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
   linux-testing:
@@ -26,12 +25,18 @@ jobs:
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 21.1.1
-            boards: 43
+            boards: terasic_sockit
+            labs: 12345
+          - tool: quartus
+            imagerepo: ghcr.io/raetro/quartus
+            imagever: 17.1
+            boards: de10_lite omdazz
             labs: 12345
           - tool: quartus
             imagerepo: ghcr.io/raetro/quartus
             imagever: 13.0sp1
-            boards: 10 36
+            # TODO: omdazz_epm570_quartus_13_1_or_older
+            boards: de2_115 de0 rzrd_pmod_mic3
             labs: 12345
     steps:
       - name: Checkout
@@ -45,7 +50,7 @@ jobs:
           set -ex; cd *${GITHUB_SHA}
           echo >scripts/steps/04_configure_fpga.source_bash # disable programmator
           for b in ${{ matrix.boards }}; do
-            echo -e "$b\ny\n" | ./check_setup_and_choose_fpga_board.bash
+            echo "$b" > fpga_board_selection
             for x in labs/[${{ matrix.labs }}]_*/*_*_*/03_synthesize_for_fpga.bash; do
                 pushd `dirname $x`
                 echo | ./`basename $x`
