@@ -6,6 +6,11 @@
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+        `ifndef FORCE_NO_VIRTUAL_TM1638_USING_GRAPHICS
+            `define INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+        `endif
+    `endif
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
@@ -150,9 +155,15 @@ module board_specific_top
     wire  [w_x         - 1:0] x;
     wire  [w_y         - 1:0] y;
 
-    wire  [w_red       - 1:0] red;
-    wire  [w_green     - 1:0] green;
-    wire  [w_blue      - 1:0] blue;
+    wire  [w_red       - 1:0] lab_red;
+    wire  [w_green     - 1:0] lab_green;
+    wire  [w_blue      - 1:0] lab_blue;
+
+    wire  vtm_red, vtm_green, vtm_blue;
+
+    wire  [w_red       - 1:0] red   = lab_red   ^ { w_red   { vtm_red   } };
+    wire  [w_green     - 1:0] green = lab_green ^ { w_green { vtm_green } };
+    wire  [w_blue      - 1:0] blue  = lab_blue  ^ { w_blue  { vtm_blue  } };
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
@@ -188,13 +199,28 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         assign lab_key  = tm_key;
-
         assign tm_led   = lab_led;
         assign tm_digit = lab_digit;
 
         assign LED      = w_led' (~ lab_led);
 
-    `else  // `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+
+        // Virtual tm1638 - tm_keys are input, not output
+
+        `ifdef REVERSE_KEY
+            `SWAP_BITS (lab_key, ~ KEY);
+        `else
+            assign lab_key = ~ KEY;
+        `endif
+
+        assign tm_key   = lab_key;
+        assign tm_led   = lab_led;
+        assign tm_digit = lab_digit;
+
+        assign LED      = w_led' (~ lab_led);
+
+    `else  // no any form of TM1638
 
         `ifdef REVERSE_KEY
             `SWAP_BITS (lab_key, KEY);
@@ -255,9 +281,9 @@ module board_specific_top
         .x             ( x             ),
         .y             ( y             ),
 
-        .red           ( red           ),
-        .green         ( green         ),
-        .blue          ( blue          ),
+        .red           ( lab_red       ),
+        .green         ( lab_green     ),
+        .blue          ( lab_blue      ),
 
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
@@ -269,10 +295,13 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    wire [$left (abcdefgh):0] hgfedcba;
+    `SWAP_BITS (hgfedcba, abcdefgh);
+
+    //------------------------------------------------------------------------
+
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        wire [$left (abcdefgh):0] hgfedcba;
-        `SWAP_BITS (hgfedcba, abcdefgh);
 
         tm1638_board_controller
         # (
@@ -297,6 +326,33 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+
+            virtual_tm1638_using_graphics
+            # (
+                .w_digit       ( w_tm_digit    ),
+                .screen_width  ( screen_width  ),
+                .screen_height ( screen_height )
+            )
+            i_tm1638_virtual
+            (
+                .clk           ( clk           ),
+                .rst           ( rst           ),
+                .hgfedcba      ( hgfedcba      ),
+                .digit         ( tm_digit      ),
+                .ledr          ( tm_led        ),
+                .keys          ( tm_key        ),
+                .x             ( x             ),
+                .y             ( y             ),
+                .red           ( vtm_red       ),
+                .green         ( vtm_green     ),
+                .blue          ( vtm_blue      )
+            );
+
+        `endif
+
+        //--------------------------------------------------------------------
 
         localparam serial_clk_mhz = 125;
 
