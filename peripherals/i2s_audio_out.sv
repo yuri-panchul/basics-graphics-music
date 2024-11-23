@@ -4,9 +4,9 @@
 
 module i2s_audio_out
 # (
-    parameter clk_mhz     = 6'd50,
-              in_res      = 5'd16, // Sound samples resolution, see tone_table.svh
-              align_right = 1'b0   // For I2S = 0. For PT8211 DAC (Least Significant Bit Justified) = 1.
+    parameter clk_mhz     = 50,
+              in_res              = 16,  // Sound samples resolution, see tone_table.svh
+              align_right        = 0     // For I2S = 0. For PT8211 DAC (Least Significant Bit Justified) = 1.
 )
 (
     input                 clk,
@@ -33,25 +33,28 @@ module i2s_audio_out
         else
             clk_div <= clk_div + 1'b1;
 
-    assign mclk  = clk_div [ MCLK_DIV - 1];
-    assign bclk  = clk_div [ BCLK_DIV - 1];
-    assign lrclk = clk_div [ CLK_DIV  - 1];
+    if (MCLK_BIT)
+        assign mclk  = clk_div [MCLK_BIT - 1];
+    else
+        assign mclk  = clk_div [0];
+    assign bclk  = clk_div [BCLK_BIT  - 1];
+    assign lrclk = clk_div [LRCLK_BIT - 1];
 
-    assign sdata = shift   [           31];
+    assign sdata = shift   [          31];
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
             shift <= 1'b0;
         else
         begin
-            if (clk_div [CLK_DIV - 2:0] == { BCLK_DIV { 1'b1 } })       // 'd15 Data front position (MSB) regarding LRCLK or WS position
+            if (clk_div [LRCLK_BIT - 2:0] == { BCLK_BIT { 1'b1 } })     // 'b1111 Data front position (MSB) regarding LRCLK or WS position
             begin
                 if (align_right)
                     shift [1  +: in_res] <= 31' (data_in);              // Put the data on the right side
                 else
                     shift [31 -: in_res] <= 32' (data_in);              // Put the data starting with the highest bytes, on the left side
             end
-            else if (clk_div [BCLK_DIV - 1:0] == { BCLK_DIV { 1'b1 } }) // 'd15 Data end position (LSB) regarding LRCK or WS position
+            else if (clk_div [BCLK_BIT - 1:0] == { BCLK_BIT { 1'b1 } }) // 'b1111 Data end position (LSB) regarding LRCK or WS position
             begin
                 shift <= shift << 1'b1;
             end
