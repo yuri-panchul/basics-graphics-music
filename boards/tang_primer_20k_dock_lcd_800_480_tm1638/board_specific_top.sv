@@ -202,7 +202,7 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk           ( lab_clk       ),  // Inverted, fewer artifacts on LCD > 36 MHz
+        .clk           ( lab_clk       ),
         .slow_clk      ( slow_clk      ),
         .rst           ( rst           ),
 
