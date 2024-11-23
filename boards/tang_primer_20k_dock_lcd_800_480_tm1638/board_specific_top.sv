@@ -327,7 +327,7 @@ module board_specific_top
     i2s_audio_out
     # (
         .clk_mhz  ( lab_mhz    ),
-        .align_right ( 1'b1    )
+        .in_res   ( 31         )
     )
     inst_audio_out
     (
