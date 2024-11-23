@@ -9,6 +9,7 @@ module i2s_audio_out
     parameter clk_mhz     = 50,
               in_res      = 16,   // Sound samples resolution, see tone_table.svh
               align_right = 1'b0  // For I2S = 0. For PT8211 DAC (Least Significant Bit Justified) = 1.
+              offset_by_one_cycle = 1'b1  // For I2S = 1. For Left Justified Audio Data Format = 0.
 )
 (
     input                 clk,
@@ -37,13 +38,13 @@ module i2s_audio_out
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
-            clk_div <= 1'b0;
+            clk_div <= '0;
         else
             clk_div <= clk_div + 1'b1;
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
-            shift <= 1'b0;
+            shift <= '0;
         else
         begin
             if (clk_div [LRCLK_BIT - 2:0] == { BCLK_BIT { 1'b1 } })     // 'b1111 Data front position (MSB) regarding LRCLK or WS position
@@ -55,7 +56,7 @@ module i2s_audio_out
             end
             else if (clk_div [BCLK_BIT - 1:0] == { BCLK_BIT { 1'b1 } }) // 'b1111 Data end position (LSB) regarding LRCK or WS position
             begin
-                shift <= shift << 1;
+                shift <= shift << 1'b1;
             end
         end
 
