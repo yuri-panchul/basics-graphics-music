@@ -1,9 +1,9 @@
-// The pin assignments
+# The pin assignments
 
-// CLK
+# CLK
 IO_LOC "CLK"        H11;
 
-// LED
+# LED
 IO_LOC "LED[5]"     L16;
 IO_LOC "LED[4]"     L14;
 IO_LOC "LED[3]"     N14;
@@ -11,7 +11,7 @@ IO_LOC "LED[2]"     N16;
 IO_LOC "LED[1]"     A13;
 IO_LOC "LED[0]"     C13;
 
-// LCD
+# LCD
 IO_LOC "LCD_CLK"    R9;
 IO_LOC "LCD_DE"     E15;
 IO_LOC "LCD_HS"     A15;
@@ -36,45 +36,45 @@ IO_LOC "LCD_B[2]"   B13;
 IO_LOC "LCD_B[3]"   A14;
 IO_LOC "LCD_B[4]"   B14;
 
-// IO_LOC "LCD_INIT"   C11;
-// IO_LOC "LCD_BL"     E10;
+# IO_LOC "LCD_INIT"   C11;
+# IO_LOC "LCD_BL"     E10;
 
-// UART
+# UART
 IO_LOC "UART_TX"    M11;
 IO_LOC "UART_RX"    T13;
 
-// SWITCH
+# SWITCH
 IO_LOC "SW[3]"      T5;
 IO_LOC "SW[2]"      T4;
 IO_LOC "SW[1]"      E8;
 IO_LOC "SW[0]"      E9;
 
-// KEY
+# KEY
 IO_LOC "KEY[4]"     C7;
 IO_LOC "KEY[3]"     D7;
 IO_LOC "KEY[2]"     T2;
 IO_LOC "KEY[1]"     T3;
 IO_LOC "KEY[0]"     T10;
 
-// GPIO
-// TM1638
+# GPIO
+# TM1638
 IO_LOC "GPIO_0[3]"   P9;  // TM1638 sio_stb
 IO_LOC "GPIO_0[2]"   T8;  // TM1638 sio_clk
 IO_LOC "GPIO_0[1]"   T7;  // TM1638 sio_data
 
-// Microphone single
+# Microphone single
 IO_LOC "GPIO_1[3]"   T6;  // MIC_BCK  sck
 IO_LOC "GPIO_1[2]"   P6;  // MIC_WS   ws
 IO_LOC "GPIO_1[0]"   P8;  // MIC_DAT0 sd
 IO_LOC "GPIO_1[1]"   T12; //          lr
 
-// On-board sound DAC
+# On-board sound DAC
 IO_LOC "PA_EN"   R16;
 IO_LOC "HP_DIN"  P15;
 IO_LOC "HP_WS"   P16;
 IO_LOC "HP_BCK"  N15;
 
-// External sound DAC
+# External sound DAC
 IO_LOC "DIN"     M15;
 IO_LOC "SCK"     M14;
 IO_LOC "LRCK"    J16;
