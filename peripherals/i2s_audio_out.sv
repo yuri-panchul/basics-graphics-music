@@ -8,7 +8,7 @@ module i2s_audio_out
 # (
     parameter clk_mhz     = 50,
               in_res      = 16,   // Sound samples resolution, see tone_table.svh
-              align_right = 1'b0  // For I2S = 0. For PT8211 DAC (Least Significant Bit Justified) = 1.
+              align_right = 1'b0,  // For I2S = 0. For PT8211 DAC (Least Significant Bit Justified) = 1.
               offset_by_one_cycle = 1'b1  // For I2S = 1. For Left Justified Audio Data Format = 0.
 )
 (
