@@ -18,7 +18,7 @@ freqs = {
     'B'  : 493.88,
 }
 
-Fs = 48000
+Fs = 96000
 usage = f"usage:\n{argv[0]} [--freq freq_in_hz | --note C|Cs|D|Ds|E|F|Fs|G|Gs|A|As|B] bit_width"
 
 
@@ -52,8 +52,8 @@ if note is None:
 else:
     print(f"module lut_{note}")
 print("(")
-print(f"    input        [ 7:0] x,")
-print(f"    output       [ 7:0] x_max,")
+print(f"    input        [ 8:0] x,")
+print(f"    output       [ 8:0] x_max,")
 print(f"    output logic [15:0] y")
 print(");")
 print("")
