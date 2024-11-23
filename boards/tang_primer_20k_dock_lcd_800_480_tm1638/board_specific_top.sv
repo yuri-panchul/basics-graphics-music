@@ -11,8 +11,8 @@
 
 module board_specific_top
 # (
-    parameter   clk_mhz       = 48, // audio_clk - lab_clk lab_mhz
-                pixel_mhz     = 32, // LCD_CLK   - lab_clk lab_mhz
+    parameter   clk_mhz       = 27, // CLK - lab_clk lab_mhz
+                pixel_mhz     = 32, // LCD_CLK - lab_clk lab_mhz
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
@@ -73,12 +73,10 @@ module board_specific_top
 
 );
 
-        wire audio_clk;
-
         Gowin_rPLL i_Gowin_rPLL
         (
             .clkout   (                ),  //  96 MHz
-            .clkoutd  ( audio_clk      ),  //  48 MHz
+            .clkoutd  (                ),  //  48 MHz
             .clkoutd3 ( LCD_CLK        ),  //  32 MHz
             .clkin    ( CLK            )   //  27 MHz
         );
@@ -142,7 +140,7 @@ module board_specific_top
     `else
 
         localparam lab_mhz = clk_mhz;
-        assign     lab_clk = audio_clk;
+        assign     lab_clk = CLK;
         assign     LCD_BL  = 1'b0;
 
     `endif
@@ -204,7 +202,7 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk           ( ~ lab_clk     ),  // Inverted, fewer artifacts on LCD > 36 MHz
+        .clk           (  lab_clk     ),  // Inverted, fewer artifacts on LCD > 36 MHz
         .slow_clk      ( slow_clk      ),
         .rst           ( rst           ),
 
