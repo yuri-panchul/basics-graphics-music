@@ -20,25 +20,26 @@
     IO_LOC "LCD_DE"             48;
     IO_LOC "LCD_HS"             25;
     IO_LOC "LCD_VS"             26;
+    IO_LOC "LCD_BL"             49;
 
-    IO_LOC "LCD_R[0]"           42;
-    IO_LOC "LCD_R[1]"           41;
-    IO_LOC "LCD_R[2]"           49;
-    IO_LOC "LCD_R[3]"           39;
-    IO_LOC "LCD_R[4]"           38;
+    IO_LOC "LCD_R[3]"           42;
+    IO_LOC "LCD_R[4]"           41;
+    IO_LOC "LCD_R[5]"           40;
+    IO_LOC "LCD_R[6]"           39;
+    IO_LOC "LCD_R[7]"           38;
 
-    IO_LOC "LCD_G[0]"           37;
-    IO_LOC "LCD_G[1]"           36;
-    IO_LOC "LCD_G[2]"           35;
-    IO_LOC "LCD_G[3]"           34;
-    IO_LOC "LCD_G[4]"           33;
-    IO_LOC "LCD_G[5]"           32;
+    IO_LOC "LCD_G[2]"           37;
+    IO_LOC "LCD_G[3]"           36;
+    IO_LOC "LCD_G[4]"           35;
+    IO_LOC "LCD_G[5]"           34;
+    IO_LOC "LCD_G[6]"           33;
+    IO_LOC "LCD_G[7]"           32;
 
-    IO_LOC "LCD_B[0]"           31;
-    IO_LOC "LCD_B[1]"           30;
-    IO_LOC "LCD_B[2]"           29;
-    IO_LOC "LCD_B[3]"           28;
-    IO_LOC "LCD_B[4]"           27;
+    IO_LOC "LCD_B[3]"           31;
+    IO_LOC "LCD_B[4]"           30;
+    IO_LOC "LCD_B[5]"           29;
+    IO_LOC "LCD_B[6]"           28;
+    IO_LOC "LCD_B[7]"           27;
 
 // TMDS pins conflict with LCD pins
 // In this configuration they are commented out

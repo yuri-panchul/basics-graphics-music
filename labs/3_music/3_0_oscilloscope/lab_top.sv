@@ -98,7 +98,7 @@ module lab_top
     
     // Excercise 1: Implement Zoom by x-axis with keys
     // Excercise 2: Optimize to reduce bits of bufy
-    assign white = x < vldx                             // Design practice: Check if element of bufy is initialized
+    assign white = x <= vldx                            // Design practice: Check if element of bufy is initialized
             && (x>>2) <  (distance[19-:w_x])
             && (y>>3) == (midy - bufy[(x>>2)])>>3       // draw bolder lines with shift by 3 bits
             && x < screen_width && y < screen_height;   // do not draw outside the screen

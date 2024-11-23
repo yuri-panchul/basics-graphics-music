@@ -9,9 +9,9 @@
 `endif
 
 `define IMITATE_RESET_ON_POWER_UP_FOR_TWO_BUTTON_CONFIGURATION
-`define REVERSE_KEY
-`define REVERSE_LED
 
+// `define REVERSE_KEY
+// `define REVERSE_LED
 // `define MIRROR_LCD
 
 //----------------------------------------------------------------------------
@@ -19,7 +19,12 @@
 module board_specific_top
 # (
     parameter clk_mhz       = 27,
+
+              `ifdef USE_LCD_800_480
+              pixel_mhz     = 33,  // This parameter is not used
+              `else // 480_272
               pixel_mhz     = 9,
+              `endif
 
               // We use sw as an alias to key on Tang Nano 9K,
               // either with or without TM1638
@@ -92,6 +97,7 @@ module board_specific_top
     output                       JOYSTICK_CS2,
 
     // SD card ports
+
     output                       SD_CLK,
     output                       SD_CMD,
     inout                        SD_DAT0,
@@ -100,12 +106,14 @@ module board_specific_top
     inout                        SD_DAT3,
 
     // Ports for on-board I2S amplifier
+
     output                       HP_BCK,
     output                       HP_DIN,
     output                       HP_WS,
     output                       PA_EN,
 
     // On-board WS2812 RGB LED with a serial interface
+
     inout                        WS2812
 );
 
@@ -122,6 +130,7 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         localparam w_lab_key   = w_tm_key,
+                   w_lab_sw    = w_sw,
                    w_lab_led   = w_tm_led,
                    w_lab_digit = w_tm_digit;
 
@@ -131,6 +140,7 @@ module board_specific_top
         // to avoid errors in the labs with seven-segment display
 
         localparam w_lab_key   = w_key,
+                   w_lab_sw    = w_sw,
                    w_lab_led   = w_led,
                    w_lab_digit = 1;  // w_digit;
 
@@ -313,37 +323,12 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        `ifdef USE_LCD_800_480
-
-            wire lcd_module_clk;
-
-            Gowin_rPLL i_Gowin_rPLL
-            (
-                .clkout  ( lcd_module_clk ),  // 200    MHz
-                .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-                .clkin   ( clk            )   //  27    MHz
-            );
-
-        `elsif USE_LCD_480_272_ML6485
-
-            wire lcd_module_clk;
-
-            Gowin_rPLL i_Gowin_rPLL
-            (
-                .clkout  ( lcd_module_clk ),  // 200    MHz
-                .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-                .clkin   ( clk            )   //  27    MHz
-            );
-
-        `else  // Using 480x272
-
-            Gowin_rPLL i_Gowin_rPLL
-            (
-                .clkout  ( LCD_CLK        ),  //  9 MHz
-                .clkin   ( clk            )   // 27 MHz
-            );
-
-        `endif
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkout ( LCD_CLK ),  //   9    MHz for 480x272
+                                  //  33.33 MHz for 800x480
+            .clkin  ( clk     )   //  27    MHz
+        );
 
         `ifdef USE_LCD_800_480
         lcd_800_480
@@ -354,15 +339,15 @@ module board_specific_top
         `endif
         i_lcd
         (
-            .PixelClk  (   LCD_CLK        ),
-            .nRST      ( ~ rst            ),
+            .PixelClk  (   LCD_CLK ),
+            .nRST      ( ~ rst     ),
 
-            .LCD_DE    (   LCD_DE         ),
-            .LCD_HSYNC (                  ),
-            .LCD_VSYNC (                  ),
+            .LCD_DE    (   LCD_DE  ),
+            .LCD_HSYNC (           ),
+            .LCD_VSYNC (           ),
 
-            .x         (   x              ),
-            .y         (   y              )
+            .x         (   x       ),
+            .y         (   y       )
         );
 
         assign LCD_HS = 1'b0;

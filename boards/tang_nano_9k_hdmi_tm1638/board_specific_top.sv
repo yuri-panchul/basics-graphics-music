@@ -17,8 +17,8 @@
 `define REVERSE_KEY
 `define REVERSE_LED
 
-
 //`define INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
+
 //----------------------------------------------------------------------------
 
 module board_specific_top
@@ -161,10 +161,12 @@ module board_specific_top
     wire  [w_red       - 1:0] lab_red;
     wire  [w_green     - 1:0] lab_green;
     wire  [w_blue      - 1:0] lab_blue;
+
     wire  vtm_red, vtm_green, vtm_blue;
-    wire  [w_red       - 1:0] red   =   lab_red ^ { w_red   { vtm_red } };
+
+    wire  [w_red       - 1:0] red   = lab_red   ^ { w_red   { vtm_red   } };
     wire  [w_green     - 1:0] green = lab_green ^ { w_green { vtm_green } };
-    wire  [w_blue      - 1:0] blue  =  lab_blue ^ { w_blue  { vtm_blue } };
+    wire  [w_blue      - 1:0] blue  = lab_blue  ^ { w_blue  { vtm_blue  } };
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
@@ -206,6 +208,7 @@ module board_specific_top
         assign LED      = w_led' (~ lab_led);
 
     `elsif INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+
         // Virtual tm1638 - tm_keys are input, not output
 
         `ifdef REVERSE_KEY
@@ -214,7 +217,7 @@ module board_specific_top
             assign lab_key = ~ KEY;
         `endif
 
-        assign tm_key  = lab_key;
+        assign tm_key   = lab_key;
         assign tm_led   = lab_led;
         assign tm_digit = lab_digit;
 
@@ -303,20 +306,20 @@ module board_specific_top
 
         tm1638_board_controller
         # (
-            .clk_mhz  ( clk_mhz        ),
-            .w_digit  ( w_tm_digit     )
+            .clk_mhz  ( clk_mhz    ),
+            .w_digit  ( w_tm_digit )
         )
         i_tm1638
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .hgfedcba ( hgfedcba       ),
-            .digit    ( tm_digit       ),
-            .ledr     ( tm_led         ),
-            .keys     ( tm_key         ),
-            .sio_data ( GPIO [0]       ),   // DIO PIN 25
-            .sio_clk  ( GPIO [1]       ),   // CLK PIN 26
-            .sio_stb  ( GPIO [2]       )    // STB PIN 27
+            .clk      ( clk        ),
+            .rst      ( rst        ),
+            .hgfedcba ( hgfedcba   ),
+            .digit    ( tm_digit   ),
+            .ledr     ( tm_led     ),
+            .keys     ( tm_key     ),
+            .sio_data ( GPIO [0]   ),  // DIO PIN 25
+            .sio_clk  ( GPIO [1]   ),  // CLK PIN 26
+            .sio_stb  ( GPIO [2]   )   // STB PIN 27
         );
     `endif
 
@@ -325,6 +328,7 @@ module board_specific_top
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
         `ifdef INSTANTIATE_VIRTUAL_TM1638_USING_GRAPHICS
+
             virtual_tm1638_using_graphics
             # (
                 .w_digit       ( w_tm_digit    ),
@@ -333,20 +337,22 @@ module board_specific_top
             )
             i_tm1638_virtual
             (
-                .clk      ( clk           ),
-                .rst      ( rst           ),
-                .hgfedcba ( hgfedcba      ),
-                .digit    ( tm_digit      ),
-                .ledr     ( tm_led        ),
-                .keys     ( tm_key        ),
-                .x        ( x             ),
-                .y        ( y             ),
-                .red      ( vtm_red       ),
-                .green    ( vtm_green     ),
-                .blue     ( vtm_blue      )
+                .clk           ( clk           ),
+                .rst           ( rst           ),
+                .hgfedcba      ( hgfedcba      ),
+                .digit         ( tm_digit      ),
+                .ledr          ( tm_led        ),
+                .keys          ( tm_key        ),
+                .x             ( x             ),
+                .y             ( y             ),
+                .red           ( vtm_red       ),
+                .green         ( vtm_green     ),
+                .blue          ( vtm_blue      )
             );
 
         `endif
+
+        //--------------------------------------------------------------------
 
         localparam serial_clk_mhz = 125;
 
@@ -413,17 +419,17 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz  ( clk_mhz        )
+            .clk_mhz  ( clk_mhz )
         )
         i_microphone
         (
-            .clk      ( clk            ),
-            .rst      ( rst            ),
-            .lr       ( TF_CS          ), // 38
-            .ws       ( TF_MOSI        ), // 37
-            .sck      ( TF_SCLK        ), // 36
-            .sd       ( TF_MISO        ), // 39
-            .value    ( mic            )
+            .clk      ( clk     ),
+            .rst      ( rst     ),
+            .lr       ( TF_CS   ),  // 38
+            .ws       ( TF_MOSI ),  // 37
+            .sck      ( TF_SCLK ),  // 36
+            .sd       ( TF_MISO ),  // 39
+            .value    ( mic     )
         );
 
     `endif
@@ -431,24 +437,30 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
+
         `undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
         wire dac_out;
 
-        sigma_delta_dac 
-        #( .MSBI (   7 ), 
-           .INV  ( 1'b0 )
-         ) 
+        sigma_delta_dac
+        #(
+            .MSBI (   7  ),
+            .INV  ( 1'b0 )
+        )
         SD_DAC
-         ( .DACout( dac_out       ),  //Average Output feeding analog lowpass
-           .DACin ( sound[15 -:8] ),  //DAC input (excess 2**MSBI)
-           .CLK   ( clk           ),
-           .RESET ( rst           )
-         );
-        assign  LARGE_LCD_HS = dac_out;
-        assign  LARGE_LCD_CK = ~dac_out;
+        (
+            .DACout ( dac_out        ),  // Average Output feeding analog lowpass
+            .DACin  ( sound [15 -:8] ),  // DAC input (excess 2**MSBI)
+            .CLK    ( clk            ),
+            .RESET  ( rst            )
+        );
+
+        assign LARGE_LCD_HS =   dac_out;
+        assign LARGE_LCD_CK = ~ dac_out;
 
     `endif
+
+    //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 

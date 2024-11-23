@@ -310,32 +310,28 @@ module board_specific_top
 
         `ifdef USE_LCD_800_480
 
-            wire lcd_module_clk;
-
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout  ( lcd_module_clk ),  // 200    MHz
-                .clkoutd ( LARGE_LCD_CK   ),  //  33.33 MHz
-                .clkin   ( clk            )   //  27    MHz
+                .clkout  (              ),  // 200    MHz
+                .clkoutd ( LARGE_LCD_CK ),  //  33.33 MHz
+                .clkin   ( clk          )   //  27    MHz
             );
 
         `elsif USE_LCD_480_272_ML6485
 
-            wire lcd_module_clk;
-
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout  ( lcd_module_clk ),  // 200    MHz
-                .clkoutd ( LARGE_LCD_CK   ),  //  33.33 MHz
-                .clkin   ( clk            )   //  27    MHz
+                .clkout  (              ),  // 200    MHz
+                .clkoutd ( LARGE_LCD_CK ),  //  33.33 MHz
+                .clkin   ( clk          )   //  27    MHz
             );
 
         `else  // Using 480x272
 
             Gowin_rPLL i_Gowin_rPLL
             (
-                .clkout  ( LARGE_LCD_CK   ),  //  9 MHz
-                .clkin   ( clk            )   // 27 MHz
+                .clkout  ( LARGE_LCD_CK ),  //  9 MHz
+                .clkin   ( clk          )   // 27 MHz
             );
 
         `endif
