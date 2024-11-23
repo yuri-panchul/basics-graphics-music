@@ -97,7 +97,7 @@ IO_PORT "GPIO_1[0]" PULL_MODE=DOWN;
 IO_LOC "GPIO_2[1]"   P9;  // MIC_LED_CLK
 IO_LOC "GPIO_2[0]"   T9;  // WS2812-DAT */
 
-// They are used for HDMI
+// HDMI
 /* IO_LOC "TMDS_CLK_P"   G16,H15;
 IO_LOC "TMDS_D_P[0]"  H14,H16;
 IO_LOC "TMDS_D_P[1]"  J15,K16;

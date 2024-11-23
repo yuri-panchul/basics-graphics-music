@@ -1,4 +1,6 @@
-// For PCM5102A. If the board has pins FLT, DMP, FMT and XMT, then pin XMT should be connected to 3.3v,
+
+// For PCM5102A. If the board has pins FLT, DMP, FMT and XMT,
+// then pin XMT should be connected to 3.3v,
 // rest of them (optionally) to the ground. Pin FMT to the ground (I2S mode)!
 // For Digilent Pmod AMP3 jumper JP3 is loaded (I2S mode)!
 
@@ -20,16 +22,16 @@ module i2s_audio_out
 
 // Standard frequencies are 12.288 MHz, 3.072 MHz and 48 KHz. 
 // We are using frequencies somewhat higher but with the same relationship 256:64:1
-    localparam MCLK_BIT   =  $clog2 (clk_mhz - 3'd4) - 3'd4;
-    localparam BCLK_BIT   =  MCLK_BIT + 3'd2;
-    localparam LRCLK_BIT  =  BCLK_BIT + 3'd6;
+    localparam MCLK_BIT   =  $clog2 (clk_mhz) - 4;
+    localparam BCLK_BIT   =  MCLK_BIT + 2;
+    localparam LRCLK_BIT  =  BCLK_BIT + 6;
 
     logic  [LRCLK_BIT - 1:0] clk_div;
     logic  [           31:0] shift;
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
-            clk_div <= 1'b0;
+            clk_div <= 0;
         else
             clk_div <= clk_div + 1'b1;
 
@@ -44,7 +46,7 @@ module i2s_audio_out
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
-            shift <= 1'b0;
+            shift <= 0;
         else
         begin
             if (clk_div [LRCLK_BIT - 2:0] == { BCLK_BIT { 1'b1 } })     // 'b1111 Data front position (MSB) regarding LRCLK or WS position
@@ -56,7 +58,7 @@ module i2s_audio_out
             end
             else if (clk_div [BCLK_BIT - 1:0] == { BCLK_BIT { 1'b1 } }) // 'b1111 Data end position (LSB) regarding LRCK or WS position
             begin
-                shift <= shift << 1'b1;
+                shift <= shift << 1;
             end
         end
 
