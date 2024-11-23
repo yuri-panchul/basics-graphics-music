@@ -68,9 +68,9 @@
     IO_LOC "SD_DAT3"            81;
 
 // Onboard I2S audio
-    IO_LOC "HP_BCK"             56;  // DAC_BCLK MAX98357A
-    IO_LOC "HP_DIN"             54;  // DAC_DIN  MAX98357A
-    IO_LOC "HP_WS"              55;  // DAC_LRCK MAX98357A
+    IO_LOC "HP_BCK"             56;  // DAC_BCLK
+    IO_LOC "HP_DIN"             54;  // DAC_DIN
+    IO_LOC "HP_WS"              55;  // DAC_LRCK
     IO_LOC "PA_EN"              51;  // For audio, should be assigned 1
 
 // On-board WS2812 RGB LED with a serial interface

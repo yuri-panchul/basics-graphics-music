@@ -29,7 +29,7 @@ module board_specific_top
                 w_green       = 6,
                 w_blue        = 5,
 
-                w_x = $clog2 ( screen_width  ),
+                w_x = $clog2 ( screen_width ),
                 w_y = $clog2 ( screen_height )
 )
 (
@@ -47,11 +47,10 @@ module board_specific_top
     output                      LCD_VS,
     output                      LCD_HS,
     output                      LCD_CLK,
-    output                      LCD_BL,
 
-    output [              4:0]  LCD_R,
-    output [              5:0]  LCD_G,
-    output [              4:0]  LCD_B,
+    output [            4:0]    LCD_R,
+    output [            5:0]    LCD_G,
+    output [            4:0]    LCD_B,
 
     inout  [w_gpio / 4  - 1:0]  GPIO_0,
     inout  [w_gpio / 4  - 1:0]  GPIO_1,
@@ -135,7 +134,6 @@ module board_specific_top
 
         localparam lab_mhz = pixel_mhz;
         assign     lab_clk = LCD_CLK;
-        assign     LCD_BL  = ~ rst;
 
     `else
 
@@ -253,7 +251,7 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .clk_mhz ( lab_mhz    ),
+        .clk_mhz ( lab_mhz ),
         .w_digit ( w_tm_digit )
     )
     i_tm1638
@@ -287,6 +285,9 @@ module board_specific_top
             .x         (   x              ),
             .y         (   y              )
         );
+
+        assign LCD_INIT = 1'b0;
+        assign LCD_BL   = 1'b0;
 
     `endif
 

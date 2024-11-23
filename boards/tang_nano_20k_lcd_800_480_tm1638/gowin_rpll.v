@@ -39,7 +39,7 @@ rPLL rpll_inst (
 
 defparam rpll_inst.FCLKIN = "27";
 defparam rpll_inst.DYN_IDIV_SEL = "false";
-defparam rpll_inst.IDIV_SEL = 8;
+defparam rpll_inst.IDIV_SEL = 1;
 defparam rpll_inst.DYN_FBDIV_SEL = "false";
 defparam rpll_inst.FBDIV_SEL = 10;
 defparam rpll_inst.DYN_ODIV_SEL = "false";
@@ -55,7 +55,7 @@ defparam rpll_inst.CLKFB_SEL = "internal";
 defparam rpll_inst.CLKOUT_BYPASS = "false";
 defparam rpll_inst.CLKOUTP_BYPASS = "false";
 defparam rpll_inst.CLKOUTD_BYPASS = "false";
-defparam rpll_inst.DYN_SDIV_SEL = 2;
+defparam rpll_inst.DYN_SDIV_SEL = 8;
 defparam rpll_inst.CLKOUTD_SRC = "CLKOUT";
 defparam rpll_inst.CLKOUTD3_SRC = "CLKOUT";
 defparam rpll_inst.DEVICE = "GW2AR-18C";

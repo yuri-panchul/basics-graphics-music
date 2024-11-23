@@ -16,7 +16,6 @@ IO_LOC "LCD_CLK"    R9;
 IO_LOC "LCD_DE"     E15;
 IO_LOC "LCD_HS"     A15;
 IO_LOC "LCD_VS"     D14;
-IO_LOC "LCD_BL"     E10;
 
 IO_LOC "LCD_R[0]"   L9;
 IO_LOC "LCD_R[1]"   N8;
@@ -36,6 +35,9 @@ IO_LOC "LCD_B[1]"   C12;
 IO_LOC "LCD_B[2]"   B13;
 IO_LOC "LCD_B[3]"   A14;
 IO_LOC "LCD_B[4]"   B14;
+
+// IO_LOC "LCD_INIT"   C11;
+// IO_LOC "LCD_BL"     E10;
 
 // UART
 IO_LOC "UART_TX"    M11;
@@ -64,7 +66,6 @@ IO_LOC "GPIO_0[1]"   T7;  // TM1638 sio_data
 IO_LOC "GPIO_1[3]"   T6;  // MIC_BCK  sck
 IO_LOC "GPIO_1[2]"   P6;  // MIC_WS   ws
 IO_LOC "GPIO_1[0]"   P8;  // MIC_DAT0 sd
-IO_PORT "GPIO_1[0]" PULL_MODE=DOWN;
 IO_LOC "GPIO_1[1]"   T12; //          lr
 
 // On-board sound DAC
@@ -85,15 +86,11 @@ IO_LOC "GPIO_0[2]"   T11; // TM1638 sio_clk
 IO_LOC "GPIO_0[1]"   R11; // TM1638 sio_data
 IO_LOC "GPIO_1[1]"   T12; //          lr
 IO_LOC "GPIO_1[6]"   T7;  // MIC_DAT3 sd_3
-IO_PORT "GPIO_1[6]" PULL_MODE=DOWN;
 IO_LOC "GPIO_1[5]"   R8;  // MIC_DAT2 sd_2
-IO_PORT "GPIO_1[5]" PULL_MODE=DOWN;
 IO_LOC "GPIO_1[4]"   T8;  // MIC_DAT1 sd_1
-IO_PORT "GPIO_1[4]" PULL_MODE=DOWN;
 IO_LOC "GPIO_1[3]"   T6;  // MIC_BCK  sck
 IO_LOC "GPIO_1[2]"   P6;  // MIC_WS   ws
 IO_LOC "GPIO_1[0]"   P8;  // MIC_DAT0 sd
-IO_PORT "GPIO_1[0]" PULL_MODE=DOWN;
 IO_LOC "GPIO_2[1]"   P9;  // MIC_LED_CLK
 IO_LOC "GPIO_2[0]"   T9;  // WS2812-DAT */
 
