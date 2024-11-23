@@ -317,7 +317,7 @@ module board_specific_top
 
     // Onboard PT8211 DAC Tang Primer 20k dock board
 
-    /* About the parameter align_right. Shifting the data to the right. 
+    /* About the parameter i2s_audio_out .in_res(31). Shifting the data to the right. 
     PT8211 DAC requires Japanese or called LSB (Least Significant Bit Justified) 
     data format (LSB data at the end of the packet). With respect to I2C shifted 
     to the right by 1 bit, this will be 15 bits. The width of the data bus in the 
