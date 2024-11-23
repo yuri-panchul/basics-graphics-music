@@ -4,6 +4,7 @@
 IO_LOC "CLK"        H11;
 
 # LED
+# Commented 2-5 due to voltage bank conflict with HDMI pins
 IO_LOC "LED[5]"     L16;
 IO_LOC "LED[4]"     L14;
 IO_LOC "LED[3]"     N14;
@@ -36,8 +37,8 @@ IO_LOC "LCD_B[2]"   B13;
 IO_LOC "LCD_B[3]"   A14;
 IO_LOC "LCD_B[4]"   B14;
 
-# IO_LOC "LCD_INIT"   C11;
-# IO_LOC "LCD_BL"     E10;
+#IO_LOC "LCD_INIT"   C11;
+#IO_LOC "LCD_BL"     E10;
 
 # UART
 IO_LOC "UART_TX"    M11;

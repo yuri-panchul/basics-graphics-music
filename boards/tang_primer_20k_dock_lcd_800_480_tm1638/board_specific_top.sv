@@ -43,32 +43,22 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
-    output                      LCD_DE,
-    output                      LCD_VS,
-    output                      LCD_HS,
-    output                      LCD_CLK,
+    output                       LCD_DE,
+    output                       LCD_VS,
+    output                       LCD_HS,
+    output                       LCD_CLK,
 
-    output [            4:0]    LCD_R,
-    output [            5:0]    LCD_G,
-    output [            4:0]    LCD_B,
+    output [            4:0]     LCD_R,
+    output [            5:0]     LCD_G,
+    output [            4:0]     LCD_B,
 
     inout  [w_gpio / 4  - 1:0]  GPIO_0,
     inout  [w_gpio / 4  - 1:0]  GPIO_1,
     inout  [w_gpio / 4  - 1:0]  GPIO_2,
     inout  [w_gpio / 4  - 1:0]  GPIO_3,
 
-    inout                       EDID_CLK,
-    inout                       EDID_DAT,
-
-    output                      PA_EN,
-    output                      HP_DIN,
-    output                      HP_WS,
-    output                      HP_BCK,
-
-    output                      SCK,
-    output                      BCK,
-    output                      LRCK,
-    output                      DIN
+    inout                        EDID_CLK,
+    inout                        EDID_DAT
 
 );
 
@@ -126,7 +116,6 @@ module board_specific_top
     wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
-    wire  [             15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -228,7 +217,6 @@ module board_specific_top
         .uart_tx       ( UART_TX       ),
 
         .mic           ( mic           ),
-        .sound         ( sound         ),
         .gpio          (               )
     );
 
@@ -308,61 +296,6 @@ module board_specific_top
         .sck     ( GPIO_1 [3] ),
         .sd      ( GPIO_1 [0] ),
         .value   ( mic        )
-    );
-
-    `endif
-
-    //--------------------------------------------------------------------
-
-    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
-
-    // Onboard PT8211 DAC Tang Primer 20k dock board
-
-    /* About the parameter i2s_audio_out .in_res(31). Shifting the data to the right. 
-    PT8211 DAC requires Japanese or called LSB (Least Significant Bit Justified) 
-    data format (LSB data at the end of the packet). With respect to I2C shifted 
-    to the right by 1 bit, this will be 15 bits. The width of the data bus in the 
-    driver i2s_audio_out.sv It is used to determine the distance between the first 
-    bit configured for I2S operation (shifted 1 bit to the right) and LSB data. */
-
-    i2s_audio_out
-    # (
-        .clk_mhz  ( lab_mhz    ),
-        .in_res   ( 31         )
-    )
-    inst_audio_out
-    (
-        .clk      ( lab_clk    ),
-        .reset    ( rst        ),
-        .data_in  ( sound      ),
-        .mclk     (            ),
-        .bclk     ( HP_BCK     ),
-        .lrclk    ( HP_WS      ),
-        .sdata    ( HP_DIN     )
-    );
-
-    // Enable DAC
-
-    // For Tang Primer 20k dock DAC do not require mclk signal
-    // but it needs enable signal PA_EN
-
-    assign PA_EN = 1'b1;
-
-    // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
-
-    i2s_audio_out
-    # (
-        .clk_mhz  ( lab_mhz    )
-    )
-    inst_ext_audio_out
-    (
-        .clk      ( lab_clk    ),
-        .reset    ( rst        ),
-        .data_in  ( sound      ),
-        .mclk     ( SCK        ),
-        .bclk     ( BCK        ),
-        .sdata    ( DIN        ),
-        .lrclk    ( LRCK       )
     );
 
     `endif
