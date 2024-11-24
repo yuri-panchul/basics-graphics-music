@@ -14,21 +14,21 @@ module tone_sel
     input  [note_width - 1:0] note,
     output    [y_width - 1:0] y
 );
-
-    localparam CLK_DIV = $clog2 (clk_mhz * 1000 / 50); // i2s LRCLK - 50 KHz, the slowest clock
+    localparam CLK_DIV  =  4'd10;
+    localparam CLK_STEP = int' (7'd100 / clk_mhz); // Tuning tone_table.svh to the frequency of the board
 
     wire   [y_width - 1:0] tone_y [11:0];
-    wire             [7:0] tone_x;
-    wire             [7:0] tone_x_max [11:0];
+    wire             [8:0] tone_x;
+    wire             [8:0] tone_x_max [11:0];
 
     logic  [CLK_DIV - 1:0] clk_div;
 
-    logic           [ 7:0] x;      // Current sample
-    wire            [ 7:0] x_max;  // Last sample in a period
+    logic           [ 8:0] x;      // Current sample
+    wire            [ 8:0] x_max;  // Last sample in a period
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
-            clk_div <= 0;
+            clk_div <= 1'b0;
         else
             clk_div <= clk_div + 1'b1;
 
@@ -36,11 +36,11 @@ module tone_sel
         if (reset)
             x <= 0;
         else if (clk_div == 'b1)        // i2s_audio_out.lrclk up and down - send one sample for L and R audio channels
-            x <= (x == x_max) ? 8'b0 : x + 8'b1;
+            x <= (x >= x_max) ? 9'b0 : (x + CLK_STEP);
 
     assign tone_x = x << octave;
-    assign x_max = (note < 8'd12) ? (tone_x_max [note] >> octave) : 8'b0;
-    assign y = (note < 8'd12) ? (tone_y [note]) : 8'b0;
+    assign x_max = (note < 8'd12) ? (tone_x_max [note] >> octave) : 9'b0;
+    assign y = (note < 8'd12) ? (tone_y [note]) : 16'b0;
 
     lut_C  lut_C  ( .x(tone_x), .y(tone_y [0] ), .x_max(tone_x_max [0] ));
     lut_Cs lut_Cs ( .x(tone_x), .y(tone_y [1] ), .x_max(tone_x_max [1] ));
