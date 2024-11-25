@@ -76,7 +76,6 @@ module board_specific_top
         Gowin_rPLL i_Gowin_rPLL
         (
             .clkout   (                ),  //  96 MHz
-            .clkoutd  (                ),  //  48 MHz
             .clkoutd3 ( LCD_CLK        ),  //  32 MHz
             .clkin    ( CLK            )   //  27 MHz
         );

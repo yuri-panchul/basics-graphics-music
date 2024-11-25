@@ -23,9 +23,10 @@ module i2s_audio_out
 
 // Standard frequencies are 12.288 MHz, 3.072 MHz and 48 KHz. 
 // We are using frequencies somewhat higher but with the same relationship 256:64:1
-    localparam MCLK_BIT   =  $clog2 ( clk_mhz - 'd4 ) - 'd4; // clk_mhz range (12-19) (20-35) (36-67) (68-131)
-    localparam BCLK_BIT   =  MCLK_BIT + 'd2;
-    localparam LRCLK_BIT  =  BCLK_BIT + 'd6;
+    localparam MCLK_BIT   =  $clog2 ( clk_mhz - 4 ) - 4; // clk_mhz range (12-19) (20-35) (36-67) (68-131)
+    localparam BCLK_BIT   =  MCLK_BIT + 2;
+    localparam LRCLK_BIT  =  BCLK_BIT + 6;
+    localparam CLK_DIV_DATA_OFFSET = { BCLK_BIT { 1'b1 } };
 
     logic  [LRCLK_BIT - 1:0] clk_div;
     logic  [           31:0] shift;
@@ -40,7 +41,7 @@ module i2s_audio_out
         if ( reset )
             clk_div <= '0;
         else
-            clk_div <= clk_div + 'b1;
+            clk_div <= clk_div + 1'b1;
 
     always_ff @ ( posedge clk or posedge reset )
         if ( reset )
@@ -58,7 +59,7 @@ module i2s_audio_out
                 end
                 else
                 begin
-                    if      ( clk_div [LRCLK_BIT - 2:0] == 'b1 ) 
+                    if      ( clk_div [LRCLK_BIT - 2:0] == { { LRCLK_BIT - 2 { 1'b0 } }, 1'b1 } ) 
                               shift   [0     +: in_res] <= 32' ( data_in ); // Put the data on the right side of the LRCLK or WS, align_right
                     else if ( clk_div [BCLK_BIT  - 1:0] == '1  )
                               shift   <= shift << 1'b1;
@@ -66,10 +67,10 @@ module i2s_audio_out
             end
             else
             begin
-                if      ( clk_div [LRCLK_BIT - 2:0] == { BCLK_BIT { 1'b1 } } ) // Data front position (MSB) regarding LRCLK position + 1 bit
-                            shift [31    -: in_res] <= 32' ( data_in );        // Put the data starting with the highest bytes, on the left side
-                else if ( clk_div [BCLK_BIT  - 1:0] == { BCLK_BIT { 1'b1 } } ) // Data end position (LSB) regarding LRCLK position + 1 + in_res
-                            shift <= shift << 1'b1;                            // Serial shift on the left side
+                if      ( clk_div [LRCLK_BIT - 2:0] == CLK_DIV_DATA_OFFSET ) // Data front position (MSB) regarding LRCLK position + 1 bit
+                            shift [31    -: in_res] <= 32' ( data_in );      // Put the data starting with the highest bytes, on the left side
+                else if ( clk_div [BCLK_BIT  - 1:0] == CLK_DIV_DATA_OFFSET ) // Data end position (LSB) regarding LRCLK position + 1 + in_res
+                            shift <= shift << 1'b1;                          // Serial shift on the left side
             end
         end
 

@@ -5,17 +5,17 @@
 //Part Number: GW2A-LV18PG256C8/I7
 //Device: GW2A-18
 //Device Version: C
-//Created Time: Wed Nov 20 14:46:35 2024
+//Created Time: Tue Nov 26 00:11:08 2024
 
-module Gowin_rPLL (clkout, clkoutd, clkoutd3, clkin);
+module Gowin_rPLL (clkout, clkoutd3, clkin);
 
 output clkout;
-output clkoutd;
 output clkoutd3;
 input clkin;
 
 wire lock_o;
 wire clkoutp_o;
+wire clkoutd_o;
 wire gw_gnd;
 
 assign gw_gnd = 1'b0;
@@ -24,7 +24,7 @@ rPLL rpll_inst (
     .CLKOUT(clkout),
     .LOCK(lock_o),
     .CLKOUTP(clkoutp_o),
-    .CLKOUTD(clkoutd),
+    .CLKOUTD(clkoutd_o),
     .CLKOUTD3(clkoutd3),
     .RESET(gw_gnd),
     .RESET_P(gw_gnd),
