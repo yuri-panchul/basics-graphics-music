@@ -5,17 +5,17 @@
 //Part Number: GW2A-LV18PG256C8/I7
 //Device: GW2A-18
 //Device Version: C
-//Created Time: Tue Nov 26 00:11:08 2024
+//Created Time: Tue Nov 26 00:40:54 2024
 
-module Gowin_rPLL (clkout, clkoutd3, clkin);
+module Gowin_rPLL (clkout, clkin);
 
 output clkout;
-output clkoutd3;
 input clkin;
 
 wire lock_o;
 wire clkoutp_o;
 wire clkoutd_o;
+wire clkoutd3_o;
 wire gw_gnd;
 
 assign gw_gnd = 1'b0;
@@ -25,7 +25,7 @@ rPLL rpll_inst (
     .LOCK(lock_o),
     .CLKOUTP(clkoutp_o),
     .CLKOUTD(clkoutd_o),
-    .CLKOUTD3(clkoutd3),
+    .CLKOUTD3(clkoutd3_o),
     .RESET(gw_gnd),
     .RESET_P(gw_gnd),
     .CLKIN(clkin),
@@ -42,11 +42,11 @@ defparam rpll_inst.FCLKIN = "27";
 defparam rpll_inst.DYN_IDIV_SEL = "false";
 defparam rpll_inst.IDIV_SEL = 8;
 defparam rpll_inst.DYN_FBDIV_SEL = "false";
-defparam rpll_inst.FBDIV_SEL = 31;
+defparam rpll_inst.FBDIV_SEL = 10;
 defparam rpll_inst.DYN_ODIV_SEL = "false";
-defparam rpll_inst.ODIV_SEL = 8;
+defparam rpll_inst.ODIV_SEL = 16;
 defparam rpll_inst.PSDA_SEL = "0000";
-defparam rpll_inst.DYN_DA_EN = "false";
+defparam rpll_inst.DYN_DA_EN = "true";
 defparam rpll_inst.DUTYDA_SEL = "1000";
 defparam rpll_inst.CLKOUT_FT_DIR = 1'b1;
 defparam rpll_inst.CLKOUTP_FT_DIR = 1'b1;

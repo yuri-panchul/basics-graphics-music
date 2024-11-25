@@ -12,7 +12,7 @@
 module board_specific_top
 # (
     parameter   clk_mhz       = 27, // CLK - lab_clk lab_mhz
-                pixel_mhz     = 32, // LCD_CLK - lab_clk lab_mhz
+                pixel_mhz     = 33, // LCD_CLK - lab_clk lab_mhz
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
@@ -75,9 +75,8 @@ module board_specific_top
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkout   (                ),  //  96 MHz
-            .clkoutd3 ( LCD_CLK        ),  //  32 MHz
-            .clkin    ( CLK            )   //  27 MHz
+            .clkout   ( LCD_CLK ),  //  33 MHz
+            .clkin    ( CLK     )   //  27 MHz
         );
 
     //------------------------------------------------------------------------
