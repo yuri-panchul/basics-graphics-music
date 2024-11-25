@@ -326,8 +326,9 @@ module board_specific_top
 
     i2s_audio_out
     # (
-        .clk_mhz  ( lab_mhz    ),
-        .align_right ( 1'b1    )
+        .clk_mhz             ( lab_mhz    ),
+        .align_right         ( 1'b1       ),
+        .offset_by_one_cycle ( 1'b0       )
     )
     inst_audio_out
     (
@@ -351,7 +352,9 @@ module board_specific_top
 
     i2s_audio_out
     # (
-        .clk_mhz  ( lab_mhz    )
+        .clk_mhz             ( lab_mhz    ),
+        .align_right         ( 1'b0       ),
+        .offset_by_one_cycle ( 1'b1       )
     )
     inst_ext_audio_out
     (
