@@ -13,7 +13,6 @@ module board_specific_top
               w_gpio        = 36,
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
-              // Odd gpio .. are reserved I2S audio.
 
               screen_width  = 640,
               screen_height = 480,
@@ -293,42 +292,25 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-        wire mclk;
-        wire bclk;
-        wire lrclk;
-        wire i2s_dac_data;
-
+        // DE2-115 onboard audio codec: WM8731
         i2s_audio_out
         # (
             .clk_mhz ( clk_mhz   )
         )
-        inst_audio_out
+        i_audio_out
         (
             .clk     ( clk          ),
             .reset   ( rst          ),
             .data_in ( sound        ),
-            .mclk    ( mclk         ),
-            .bclk    ( bclk         ),
-            .lrclk   ( lrclk        ),
-            .sdata   ( i2s_dac_data )
+            .mclk    ( AUD_XCK      ),
+            .bclk    ( AUD_BCLK     ),
+            .lrclk   ( AUD_DACLRCK  ),
+            .sdata   ( AUD_DACDAT   )
         );
 
-        assign GPIO [33] = mclk;
-        assign GPIO [31] = bclk;
-        assign GPIO [27] = lrclk;
-        assign GPIO [29] = i2s_dac_data;
-
-        // VCC and GND for i2s_audio_out are on dedicated pins
-
-        // DE2-115 onboard audio codec: WM8731
-        // The audio codec interface
-        assign AUD_XCK     = mclk;
-        assign AUD_BCLK    = bclk;
-        assign AUD_DACLRCK = lrclk;
-        assign AUD_DACDAT  = i2s_dac_data;
-
         // The audio codec configuration
-        I2C_AUDIO_Config i_i2c_codec_conf (
+        I2C_AUDIO_Config
+        i_i2c_codec_conf (
             .iCLK    (clk),
             .iRST_N  (~rst),
             .I2C_SCLK(I2C_SCLK),
