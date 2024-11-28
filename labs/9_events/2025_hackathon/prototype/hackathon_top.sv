@@ -1,16 +1,20 @@
 // Board configuration: tang_nano_9k_lcd_480_272_tm1638_hackathon
+// This module uses few parameterization and relaxed typing rules
 
 module hackathon_top
 (
     input  logic       clock,
     input  logic       reset,
 
-    output logic [9:0] strobe_hz,
-    input  logic       strobe,
-
-    input        [7:0] key,
+    input  logic [7:0] key,
     output logic [7:0] led,
-    output logic [7:0] number,
+
+    // A dynamic seven-segment display
+
+    output logic [7:0] abcdefgh,
+    output logic [7:0] digit,
+
+    // LCD screen interface
 
     input  logic [8:0] x,
     input  logic [8:0] y,
@@ -20,16 +24,18 @@ module hackathon_top
     output logic [4:0] blue
 );
 
+    logic pulse;
+
+    strobe_gen # (.clk_mhz (27), .strobe_hz (30))
+    i_strobe_gen (clock, reset, pulse);
+
     logic [7:0] counter;
 
     always_ff @ (posedge clock)
         if (reset)
             counter <= 0;
-        else if (strobe)
+        else if (pulse)
             counter <= counter + 1 + key [0] - key [1];
-
-    assign led    = counter;
-    assign number = counter;
 
     always_comb
     begin
@@ -48,5 +54,17 @@ module hackathon_top
         if (x * y > 100 ** 2)
             green = 10;
     end
+
+    assign led = counter;
+
+    seven_segment_display # (.w_digit (8)) i_7segment
+    (
+        .clk      ( clock    ),
+        .rst      ( reset    ),
+        .number   ( counter  ),
+        .dots     ( 0        ),
+        .abcdefgh ( abcdefgh ),
+        .digit    ( digit    )
+    );
 
 endmodule

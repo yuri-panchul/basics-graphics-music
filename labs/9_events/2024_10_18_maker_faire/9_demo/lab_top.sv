@@ -122,5 +122,3 @@ module lab_top
     );
 
 endmodule
-
-

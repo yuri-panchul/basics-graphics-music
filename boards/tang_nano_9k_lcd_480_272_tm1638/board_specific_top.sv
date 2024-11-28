@@ -224,22 +224,16 @@ module board_specific_top
 
     `ifdef USE_HACKATHON_TOP
 
-        wire [9:0] ht_strobe_hz;
-        wire       ht_strobe;
-
-        wire [7:0] ht_number;
-
         hackathon_top i_hackathon_top
         (
             .clock         ( clk           ),
             .reset         ( rst           ),
 
-            .strobe_hz     ( ht_strobe_hz  ),
-            .strobe        ( ht_strobe     ),
-
             .key           ( lab_key       ),
             .led           ( lab_led       ),
-            .number        ( ht_number     ),
+
+            .abcdefgh      ( abcdefgh      ),
+            .digit         ( lab_digit     ),
 
             .x             ( x             ),
             .y             ( y             ),
