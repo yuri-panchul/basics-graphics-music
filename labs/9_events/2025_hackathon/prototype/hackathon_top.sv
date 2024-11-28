@@ -35,14 +35,14 @@ module hackathon_top
     begin
         red = 0; green = 0; blue = 0;
 
-        if (  x > 100 + c * 2 & x < 150 + c * 2
-            & y > 100 + c     & y < 200 + c )
+        if (  x > 100 + counter * 2 & x < 150 + counter * 2
+            & y > 100 + counter     & y < 200 + counter )
         begin
             red   = 30;
             blue  = key [1] ? x : 0;
         end
 
-        if ((x - c) ** 2 + y ** 2 < 100 ** 2)
+        if ((x - counter) ** 2 + y ** 2 < 100 ** 2)
             blue = 30;
 
         if (x * y > 100 ** 2)
