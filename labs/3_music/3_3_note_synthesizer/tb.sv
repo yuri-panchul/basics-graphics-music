@@ -1,6 +1,6 @@
 `include "config.svh"
 
-module testbench;
+module tb;
 
     localparam clk_mhz = 1,
                w_key   = 4,
