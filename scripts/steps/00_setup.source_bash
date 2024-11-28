@@ -385,12 +385,33 @@ fpga_board_setup ()
         return
     fi
 
+    #-------------------------------------------------------------------------
+
+    hackathon_top=../hackathon_top.sv
+
+    if [ -f "$hackathon_top" ]
+    then
+        fpga_board=$(grep -o '^// Board configuration: [[:alnum:]_]*$' "$hackathon_top" \
+            | sed 's|// Board configuration: ||' || true)
+
+        if [ -n "$fpga_board" ]
+        then
+            update_fpga_toolchain_var
+            return
+        fi
+    fi
+
+    #-------------------------------------------------------------------------
+
     select_file="$package_dir/fpga_board_selection"
 
     current_board_message=
 
     if [ -f "$select_file" ]
     then
+        # Consider making it more simple
+        # fpga_board=$(grep -m 1 -o '^[[:alnum:]_]*$' "$select_file" || true)
+
         fpga_board=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
         select_file_contents=$(cat "$select_file")
 

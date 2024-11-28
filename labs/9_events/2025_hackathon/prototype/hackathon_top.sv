@@ -1,5 +1,4 @@
-// This module assumes the configuration with Tang Nano 9K board,
-// LCD 480x272 and TM1638 interface module.
+// Board configuration: tang_nano_9k_lcd_480_272_tm1638_hackathon
 
 module hackathon_top
 (
