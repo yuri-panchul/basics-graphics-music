@@ -222,60 +222,91 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    lab_top
-    # (
-        .clk_mhz       ( clk_mhz       ),
+    `ifdef USE_HACKATHON_TOP
 
-        .w_key         ( w_lab_key     ),
-        .w_sw          ( w_lab_key     ),
-        .w_led         ( w_lab_led     ),
-        .w_digit       ( w_lab_digit   ),
-        .w_gpio        ( w_gpio        ),
+        wire [9:0] ht_strobe_hz;
+        wire       ht_strobe;
 
-        .screen_width  ( screen_width  ),
-        .screen_height ( screen_height ),
+        wire [7:0] ht_number;
 
-        .w_red         ( w_red         ),
-        .w_green       ( w_green       ),
-        .w_blue        ( w_blue        )
-    )
-    i_lab_top
-    (
-        .clk           ( clk           ),
-        .slow_clk      ( slow_clk      ),
-        .rst           ( rst           ),
+        hackathon_top i_hackathon_top
+        (
+            .clock         ( clk           ),
+            .reset         ( rst           ),
 
-        .key           ( lab_key       ),
-        .sw            ( lab_key       ),
+            .strobe_hz     ( ht_strobe_hz  ),
+            .strobe        ( ht_strobe     ),
 
-        .led           ( lab_led       ),
+            .key           ( lab_key       ),
+            .led           ( lab_led       ),
+            .number        ( ht_number     ),
 
-        .abcdefgh      ( abcdefgh      ),
-        .digit         ( lab_digit     ),
+            .x             ( x             ),
+            .y             ( y             ),
 
-        `ifdef MIRROR_LCD
+            .red           ( LARGE_LCD_R   ),
+            .green         ( LARGE_LCD_G   ),
+            .blue          ( LARGE_LCD_B   )
+        );
 
-        .x             ( mirrored_x    ),
-        .y             ( mirrored_y    ),
+    `else
 
-        `else
+        lab_top
+        # (
+            .clk_mhz       ( clk_mhz       ),
 
-        .x             ( x             ),
-        .y             ( y             ),
+            .w_key         ( w_lab_key     ),
+            .w_sw          ( w_lab_key     ),
+            .w_led         ( w_lab_led     ),
+            .w_digit       ( w_lab_digit   ),
+            .w_gpio        ( w_gpio        ),
 
-        `endif
+            .screen_width  ( screen_width  ),
+            .screen_height ( screen_height ),
 
-        .red           ( LARGE_LCD_R   ),
-        .green         ( LARGE_LCD_G   ),
-        .blue          ( LARGE_LCD_B   ),
+            .w_red         ( w_red         ),
+            .w_green       ( w_green       ),
+            .w_blue        ( w_blue        )
+        )
+        i_lab_top
+        (
+            .clk           ( clk           ),
+            .slow_clk      ( slow_clk      ),
+            .rst           ( rst           ),
 
-        .uart_rx       ( UART_RX       ),
-        .uart_tx       ( UART_TX       ),
+            .key           ( lab_key       ),
+            .sw            ( lab_key       ),
 
-        .mic           ( mic           ),
-        .sound         ( sound         ),
-        .gpio          ( GPIO          )
-    );
+            .led           ( lab_led       ),
+
+            .abcdefgh      ( abcdefgh      ),
+            .digit         ( lab_digit     ),
+
+            `ifdef MIRROR_LCD
+
+            .x             ( mirrored_x    ),
+            .y             ( mirrored_y    ),
+
+            `else
+
+            .x             ( x             ),
+            .y             ( y             ),
+
+            `endif
+
+            .red           ( LARGE_LCD_R   ),
+            .green         ( LARGE_LCD_G   ),
+            .blue          ( LARGE_LCD_B   ),
+
+            .uart_rx       ( UART_RX       ),
+            .uart_tx       ( UART_TX       ),
+
+            .mic           ( mic           ),
+            .sound         ( sound         ),
+            .gpio          ( GPIO          )
+        );
+
+    `endif
 
     //------------------------------------------------------------------------
 
