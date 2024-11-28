@@ -12,7 +12,7 @@
 module board_specific_top
 # (
     parameter   clk_mhz       = 27, // CLK - lab_clk lab_mhz
-                pixel_mhz     = 32, // LCD_CLK - lab_clk lab_mhz
+                pixel_mhz     = 33, // LCD_CLK - lab_clk lab_mhz
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
@@ -75,10 +75,8 @@ module board_specific_top
 
         Gowin_rPLL i_Gowin_rPLL
         (
-            .clkout   (                ),  //  96 MHz
-            .clkoutd  (                ),  //  48 MHz
-            .clkoutd3 ( LCD_CLK        ),  //  32 MHz
-            .clkin    ( CLK            )   //  27 MHz
+            .clkout   ( LCD_CLK ),  //  33 MHz
+            .clkin    ( CLK     )   //  27 MHz
         );
 
     //------------------------------------------------------------------------
@@ -326,8 +324,9 @@ module board_specific_top
 
     i2s_audio_out
     # (
-        .clk_mhz  ( lab_mhz    ),
-        .align_right ( 1'b1    )
+        .clk_mhz             ( lab_mhz    ),
+        .align_right         ( 1'b1       ),
+        .offset_by_one_cycle ( 1'b0       )
     )
     inst_audio_out
     (
@@ -351,7 +350,9 @@ module board_specific_top
 
     i2s_audio_out
     # (
-        .clk_mhz  ( lab_mhz    )
+        .clk_mhz             ( lab_mhz    ),
+        .align_right         ( 1'b0       ),
+        .offset_by_one_cycle ( 1'b1       )
     )
     inst_ext_audio_out
     (

@@ -18,11 +18,9 @@ freqs = {
     'B'  : 493.88,
 }
 
-Fs = 96000
-usage = f"usage:\n{argv[0]} [--freq freq_in_hz | --note C|Cs|D|Ds|E|F|Fs|G|Gs|A|As|B] bit_width"
+usage = f"usage:\n{argv[0]} [--freq freq_in_hz | --note C|Cs|D|Ds|E|F|Fs|G|Gs|A|As|B] bit_width sampling_rate freq_in_hz volume 15-10_bit"
 
-
-if len(argv) != 4:
+if len(argv) != 6:
     exit(usage)
 
 if argv[1] == '--freq':
@@ -34,23 +32,25 @@ elif argv[1] == '--note':
 else:
     exit(usage)
 
+vol = int(argv[5])
+Fs = int(argv[4])
 w = int(argv[3])
-A = 2**(w - 1) - 1
+A = 2**vol - 1
 
-N = floor(Fs / F)
+N = floor((Fs / F / 4) + 1)
 x_max = N - 1
 x_width = x_max.bit_length()
 y_width = w
 
 ts = [t for t in range(N)]
-xs = [round(A * sin(2 * pi * t / N)) for t in ts]
+xs = [round(A * sin(pi * t / N / 2)) for t in ts]
 
-print("// y(t) = sin(2*pi*F*t), F={0}Hz, Fs={1}Hz, {2}-bit".format(F, Fs, w))
+print("// y(t) = sin(pi*F*t/2), F={0}Hz, Fs={1}Hz, {2}-bit".format(F, Fs, w))
 print("")
 if note is None:
-    print("module lut")
+    print("module table")
 else:
-    print(f"module lut_{note}")
+    print(f"module table_{Fs}_{note}")
 print("(")
 print(f"    input        [ 8:0] x,")
 print(f"    output       [ 8:0] x_max,")
