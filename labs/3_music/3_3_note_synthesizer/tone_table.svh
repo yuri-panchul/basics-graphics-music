@@ -1,4 +1,4 @@
-// y(t) = sin(pi*F*t/2), F=261.63Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=261.63Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_C
 (
@@ -63,7 +63,7 @@ module table_48828_C
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=277.18Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=277.18Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_Cs
 (
@@ -126,7 +126,7 @@ module table_48828_Cs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=293.66Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=293.66Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_D
 (
@@ -186,7 +186,7 @@ module table_48828_D
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=311.13Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=311.13Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_Ds
 (
@@ -244,7 +244,7 @@ module table_48828_Ds
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=329.63Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=329.63Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_E
 (
@@ -300,7 +300,7 @@ module table_48828_E
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=349.23Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=349.23Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_F
 (
@@ -353,7 +353,7 @@ module table_48828_F
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=369.99Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=369.99Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_Fs
 (
@@ -404,7 +404,7 @@ module table_48828_Fs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=392.0Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=392.0Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_G
 (
@@ -454,7 +454,7 @@ module table_48828_G
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=415.3Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=415.3Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_Gs
 (
@@ -502,7 +502,7 @@ module table_48828_Gs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=440.0Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=440.0Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_A
 (
@@ -548,7 +548,7 @@ module table_48828_A
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=466.16Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=466.16Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_As
 (
@@ -593,7 +593,7 @@ module table_48828_As
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=493.88Hz, Fs=48828Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=493.88Hz, Fs=48828Hz, 16-bit, Volume 14/15 bit
 
 module table_48828_B
 (
@@ -636,7 +636,7 @@ module table_48828_B
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=261.63Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=261.63Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_C
 (
@@ -716,7 +716,7 @@ module table_64453_C
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=277.18Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=277.18Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_Cs
 (
@@ -793,7 +793,7 @@ module table_64453_Cs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=293.66Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=293.66Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_D
 (
@@ -866,7 +866,7 @@ module table_64453_D
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=311.13Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=311.13Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_Ds
 (
@@ -936,7 +936,7 @@ module table_64453_Ds
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=329.63Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=329.63Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_E
 (
@@ -1003,7 +1003,7 @@ module table_64453_E
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=349.23Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=349.23Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_F
 (
@@ -1068,7 +1068,7 @@ module table_64453_F
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=369.99Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=369.99Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_Fs
 (
@@ -1130,7 +1130,7 @@ module table_64453_Fs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=392.0Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=392.0Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_G
 (
@@ -1190,7 +1190,7 @@ module table_64453_G
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=415.3Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=415.3Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_Gs
 (
@@ -1247,7 +1247,7 @@ module table_64453_Gs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=440.0Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=440.0Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_A
 (
@@ -1302,7 +1302,7 @@ module table_64453_A
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=466.16Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=466.16Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_As
 (
@@ -1355,7 +1355,7 @@ module table_64453_As
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=493.88Hz, Fs=64453Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=493.88Hz, Fs=64453Hz, 16-bit, Volume 14/15 bit
 
 module table_64453_B
 (
@@ -1406,7 +1406,7 @@ module table_64453_B
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=261.63Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=261.63Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_C
 (
@@ -1475,7 +1475,7 @@ module table_52734_C
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=277.18Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=277.18Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_Cs
 (
@@ -1541,7 +1541,7 @@ module table_52734_Cs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=293.66Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=293.66Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_D
 (
@@ -1604,7 +1604,7 @@ module table_52734_D
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=311.13Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=311.13Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_Ds
 (
@@ -1665,7 +1665,7 @@ module table_52734_Ds
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=329.63Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=329.63Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_E
 (
@@ -1723,7 +1723,7 @@ module table_52734_E
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=349.23Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=349.23Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_F
 (
@@ -1779,7 +1779,7 @@ module table_52734_F
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=369.99Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=369.99Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_Fs
 (
@@ -1833,7 +1833,7 @@ module table_52734_Fs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=392.0Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=392.0Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_G
 (
@@ -1885,7 +1885,7 @@ module table_52734_G
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=415.3Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=415.3Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_Gs
 (
@@ -1935,7 +1935,7 @@ module table_52734_Gs
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=440.0Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=440.0Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_A
 (
@@ -1983,7 +1983,7 @@ module table_52734_A
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=466.16Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=466.16Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_As
 (
@@ -2030,7 +2030,7 @@ module table_52734_As
 
 endmodule
 
-// y(t) = sin(pi*F*t/2), F=493.88Hz, Fs=52734Hz, 16-bit
+// y(t) = sin(pi*F*t/2), F=493.88Hz, Fs=52734Hz, 16-bit, Volume 14/15 bit
 
 module table_52734_B
 (

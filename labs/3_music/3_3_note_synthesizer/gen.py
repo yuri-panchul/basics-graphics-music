@@ -45,7 +45,7 @@ y_width = w
 ts = [t for t in range(N)]
 xs = [round(A * sin(pi * t / N / 2)) for t in ts]
 
-print("// y(t) = sin(pi*F*t/2), F={0}Hz, Fs={1}Hz, {2}-bit".format(F, Fs, w))
+print("// y(t) = sin(pi*F*t/2), F={0}Hz, Fs={1}Hz, {2}-bit, Volume {3}/15 bit".format(F, Fs, w, vol))
 print("")
 if note is None:
     print("module table")
