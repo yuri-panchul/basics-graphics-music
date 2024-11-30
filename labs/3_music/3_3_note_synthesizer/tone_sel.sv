@@ -29,7 +29,7 @@ module tone_sel
     logic  [y_width - 1:0] y_mod;
 
     always_ff @ (posedge clk or posedge reset)
-        if (reset)
+        if (reset) 
             clk_div <= '0;
         else
             clk_div <= clk_div + 1'b1;
@@ -38,16 +38,16 @@ module tone_sel
         if (reset)
             x <= 9'b1;
         else if (clk_div == CLK_DIV_DATA_OFFSET ) // One sample for L and R audio channels
-            x <= (quadrant [0] & (x > 1'b0)) ? (x - 1'b1) : (x + 1'b1);
+            x <= (quadrant [0] & (x > 1'b0) | (x >= x_max)) ? (x - 1'b1) : (x + 1'b1);
 
-    always_ff @ (negedge clk or posedge reset)
+    always_ff @ (posedge clk or posedge reset)
         if (reset)
             quadrant <= 2'b0;
         else if ((clk_div == CLK_DIV_DATA_OFFSET ) & ((x == x_max) | (x == 9'b0)))
             quadrant <= quadrant + 1'b1;
 
     assign tone_x = x << octave;
-    assign x_max = (note < 8'd12) ? (tone_x_max [note] >> octave) : 9'b0;
+    assign x_max = (note < 8'd12) ? (tone_x_max [note] >> octave) : 9'b1;
     assign y_mod = (note < 8'd12) ? (tone_y [note]) : 16'b0;
     assign y     = (quadrant [1]) ? (~y_mod + 1) : y_mod;
 
