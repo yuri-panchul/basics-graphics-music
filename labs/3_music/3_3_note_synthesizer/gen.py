@@ -37,7 +37,7 @@ Fs = int(argv[4])
 w = int(argv[3])
 A = 2**vol - 1
 
-N = floor((Fs / F / 4) + 1)
+N = floor((Fs / F / 4) + 2)
 x_max = N - 1
 x_width = x_max.bit_length()
 y_width = w
