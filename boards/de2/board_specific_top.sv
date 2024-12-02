@@ -13,7 +13,6 @@ module board_specific_top
               w_gpio        = 72,
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
-              // Odd gpio .. are reserved I2S audio.
 
               screen_width  = 640,
               screen_height = 480,
@@ -34,7 +33,7 @@ module board_specific_top
     output logic [      17:0] LEDR,  // The last 8 LEDR are used like a 7SEG dp
     output logic [       8:0] LEDG,
 
-    output logic [       6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE2-115
+    output logic [       6:0] HEX0,  // HEX[7] aka dp are not connected to FPGA at DE2
     output logic [       6:0] HEX1,
     output logic [       6:0] HEX2,
     output logic [       6:0] HEX3,
@@ -51,6 +50,16 @@ module board_specific_top
     output [w_blue     - 1:0] VGA_B,
     output                    VGA_BLANK,
     output                    VGA_SYNC,
+
+    output                    AUD_ADCLRCK,
+    input                     AUD_ADCDAT,
+    inout                     AUD_BCLK,
+    inout                     AUD_DACLRCK,
+    output                    AUD_DACDAT,
+    output                    AUD_XCK,
+
+    output                    I2C_SCLK,
+    inout                     I2C_SDAT,
 
     input                     UART_RTS,
     input                     UART_RXD,
@@ -286,22 +295,31 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        // DE2 onboard audio codec: WM8731
         i2s_audio_out
         # (
-            .clk_mhz ( clk_mhz     )
+            .clk_mhz ( clk_mhz      )
         )
-        inst_audio_out
+        i_audio_out
         (
-            .clk     ( clk         ),
-            .reset   ( rst         ),
-            .data_in ( sound       ),
-            .mclk    ( GPIO_1 [33] ),
-            .bclk    ( GPIO_1 [31] ),
-            .lrclk   ( GPIO_1 [27] ),
-            .sdata   ( GPIO_1 [29] )
+            .clk     ( clk          ),
+            .reset   ( rst          ),
+            .data_in ( sound        ),
+            .mclk    ( AUD_XCK      ),
+            .bclk    ( AUD_BCLK     ),
+            .lrclk   ( AUD_DACLRCK  ),
+            .sdata   ( AUD_DACDAT   )
         );
 
-        // VCC and GND for i2s_audio_out are on dedicated pins
+        // The audio codec configuration
+        I2C_AUDIO_Config
+        i_i2c_codec_conf (
+            .iCLK    (clk),
+            .iRST_N  (~rst),
+            .I2C_SCLK(I2C_SCLK),
+            .I2C_SDAT(I2C_SDAT),
+            .READY   ()
+        );
 
     `endif
 
