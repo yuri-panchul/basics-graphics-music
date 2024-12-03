@@ -96,6 +96,16 @@ set_location_assignment PIN_D11 -to VGA_B[1]
 set_location_assignment PIN_A10 -to VGA_B[2]
 set_location_assignment PIN_B10 -to VGA_B[3]
 
+set_location_assignment PIN_A6 -to AUD_ADCLRCK
+set_location_assignment PIN_B6 -to AUD_ADCDAT
+set_location_assignment PIN_A5 -to AUD_DACLRCK
+set_location_assignment PIN_B5 -to AUD_DACDAT
+set_location_assignment PIN_B4 -to AUD_XCK
+set_location_assignment PIN_A4 -to AUD_BCLK
+
+set_location_assignment PIN_A3 -to I2C_SCLK
+set_location_assignment PIN_B3 -to I2C_SDAT
+
 set_location_assignment PIN_A13 -to GPIO_0[0]
 set_location_assignment PIN_B13 -to GPIO_0[1]
 set_location_assignment PIN_A14 -to GPIO_0[2]
