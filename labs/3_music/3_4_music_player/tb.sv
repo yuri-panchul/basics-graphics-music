@@ -2,9 +2,9 @@
 
 module tb;
 
-    localparam clk_mhz = 1,
+    localparam clk_mhz = 50,
                w_key   = 4,
-               w_sw    = 8,
+               w_sw    = 4,
                w_led   = 8,
                w_digit = 8,
                w_gpio  = 100;
@@ -60,7 +60,7 @@ module tb;
     //------------------------------------------------------------------------
 
     always_comb
-        key = { {w_key - 1{1'b0}} , ~ rst};
+        key = { {(w_key - 1){1'b0}} , ~ rst};
 
     initial
     begin
@@ -69,7 +69,7 @@ module tb;
             $dumpvars;
         `endif
 
-        #100000
+        #400000
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;
