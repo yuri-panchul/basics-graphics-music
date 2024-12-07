@@ -129,6 +129,7 @@ module lab_top
             8'b11101110 : mic_note <= w_key' (  9 );  // A   //  |     |
             8'b11101111 : mic_note <= w_key' ( 10 );  // A#  //   --d--  h
             8'b00111110 : mic_note <= w_key' ( 11 );  // B
+            8'b00000010 :                          ;  // Previous note
             endcase
 
     //------------------------------------------------------------------------
@@ -157,25 +158,31 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic [w_key - 1:0] out_note;
+    logic [w_key - 1:0] out_note, next_out_note;
 
-    wire [w_key - 1:0] next_out_note
-        =     out_note < w_key' (8)
-            ? out_note + w_key' (4)
-            : out_note - w_key' (8);
+    always_comb
+    begin
+        next_out_note = mic_note;
+
+        case (cnt)
+
+        2'd1:  next_out_note
+                  = out_note < w_key' (8)
+                  ? out_note + w_key' (4)
+                  : out_note - w_key' (8);
+
+        2'd2:  next_out_note
+                  = out_note < w_key' (9)
+                  ? out_note + w_key' (3)
+                  : out_note - w_key' (9);
+        endcase
+    end
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
-        begin
             out_note <= '0;
-        end
         else if (enable)
-        begin
-            if (cnt == '0)
-                out_note <= mic_note;
-            else
-                out_note <= next_out_note;
-        end
+            out_note <= next_out_note;
 
     //------------------------------------------------------------------------
 
