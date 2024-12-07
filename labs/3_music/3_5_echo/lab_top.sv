@@ -116,7 +116,7 @@ module lab_top
         if (rst)
             intern_key <= '0;
         else
-            case (abcdefgh)
+            case (intern_abcdefgh)
             8'b10011100 : intern_key <=  w_key' (  0 );  // C   // abcdefgh
             8'b10011101 : intern_key <=  w_key' (  1 );  // C#
             8'b01111010 : intern_key <=  w_key' (  2 );  // D   //   --a--
