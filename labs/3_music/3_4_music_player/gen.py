@@ -35,7 +35,7 @@ else:
 vol = int(argv[5])
 Fs = int(argv[4])
 w = int(argv[3])
-A = 2**vol - 1
+A = 2**vol - 2
 
 N = floor(Fs / (F * 4) + (1 / 2))
 x_max = N
@@ -43,7 +43,7 @@ x_width = x_max.bit_length()
 y_width = w
 
 ts = [t for t in range(N + 1)]
-xs = [round(A * sin(pi * t / (N * 2)) + (1 / 2)) for t in ts]
+xs = [floor(A * sin(pi * t / (N * 2)) + (1 / 2)) for t in ts]
 
 print("// y(t) = sin((1/4)*2*pi*t*(F/Fs)), F={0}Hz, Fs={1}Hz, {2}-bit, Volume {3}/15 bit".format(F, Fs, w, vol))
 print("")
