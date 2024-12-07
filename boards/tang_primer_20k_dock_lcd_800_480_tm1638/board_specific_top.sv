@@ -9,10 +9,12 @@
    `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 `endif
 
+// `define MIRROR_LCD
+
 module board_specific_top
 # (
-    parameter   clk_mhz       = 27, // CLK - lab_clk lab_mhz
-                pixel_mhz     = 33, // LCD_CLK - lab_clk lab_mhz
+    parameter   clk_mhz       = 27, // CLK
+                pixel_mhz     = 33, // LCD_CLK
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
@@ -30,7 +32,9 @@ module board_specific_top
                 w_blue        = 5,
 
                 w_x = $clog2 ( screen_width  ),
-                w_y = $clog2 ( screen_height )
+                w_y = $clog2 ( screen_height ),
+
+                w_sound       = 16
 )
 (
     input                       CLK,
@@ -125,7 +129,7 @@ module board_specific_top
     wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
-    wire  [             15:0] sound;
+    wire  [w_sound     - 1:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -175,9 +179,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    // Mirrored LCD
-    //wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
-    //wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+    `ifdef MIRROR_LCD
+
+    wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
+    wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -196,7 +203,9 @@ module board_specific_top
 
         .w_red         ( w_red         ),
         .w_green       ( w_green       ),
-        .w_blue        ( w_blue        )
+        .w_blue        ( w_blue        ),
+
+        .w_sound       ( w_sound       )
     )
     i_lab_top
     (
@@ -212,13 +221,17 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
-      // Normal LCD
+        `ifdef MIRROR_LCD
+
+        .x             ( mirrored_x    ),
+        .y             ( mirrored_y    ),
+
+        `else
+
         .x             ( x             ),
         .y             ( y             ),
 
-      // Mirrored LCD
-      //.x             ( mirrored_x    ),
-      //.y             ( mirrored_y    ),
+        `endif
 
         .red           ( LCD_R         ),
         .green         ( LCD_G         ),
@@ -313,19 +326,14 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-    // Onboard PT8211 DAC Tang Primer 20k dock board
-
-    /* About the parameter align_right. Shifting the data to the right. 
-    PT8211 DAC requires Japanese or called LSB (Least Significant Bit Justified) 
-    data format (LSB data at the end of the packet). With respect to I2C shifted 
-    to the right by 1 bit, this will be 15 bits. The width of the data bus in the 
-    driver i2s_audio_out.sv It is used to determine the distance between the first 
-    bit configured for I2S operation (shifted 1 bit to the right) and LSB data. */
+    // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
+    // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but it needs enable signal PA_EN
 
     i2s_audio_out
     # (
         .clk_mhz             ( lab_mhz    ),
-        .align_right         ( 1'b1       ),
+        .in_res              ( w_sound    ),
+        .align_right         ( 1'b1       ), // PT8211 DAC data format
         .offset_by_one_cycle ( 1'b0       )
     )
     inst_audio_out
@@ -340,10 +348,6 @@ module board_specific_top
     );
 
     // Enable DAC
-
-    // For Tang Primer 20k dock DAC do not require mclk signal
-    // but it needs enable signal PA_EN
-
     assign PA_EN = 1'b1;
 
     // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
@@ -351,6 +355,7 @@ module board_specific_top
     i2s_audio_out
     # (
         .clk_mhz             ( lab_mhz    ),
+        .in_res              ( w_sound    ),
         .align_right         ( 1'b0       ),
         .offset_by_one_cycle ( 1'b1       )
     )
