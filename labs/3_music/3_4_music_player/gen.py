@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from sys import argv
-from math import sin, pi, floor
+from math import sin, pi
 
 freqs = {
     'C'  : 261.63,
@@ -35,15 +35,15 @@ else:
 vol = int(argv[5])
 Fs = int(argv[4])
 w = int(argv[3])
-A = 2**vol - 2
+A = 2**vol - 3224
 
-N = floor(Fs / (F * 4) + (1 / 2))
+N = int(Fs / (F * 4) + (1 / 2))
 x_max = N
 x_width = x_max.bit_length()
 y_width = w
 
 ts = [t for t in range(N + 1)]
-xs = [floor(A * sin(pi * t / (N * 2)) + (1 / 2)) for t in ts]
+xs = [int(A * sin(pi * t / (N * 2)) + (1 / 2)) for t in ts]
 
 print("// y(t) = sin((1/4)*2*pi*t*(F/Fs)), F={0}Hz, Fs={1}Hz, {2}-bit, Volume {3}/15 bit".format(F, Fs, w, vol))
 print("")
