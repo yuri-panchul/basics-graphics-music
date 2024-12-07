@@ -5,7 +5,7 @@ $PY3 --version || PY3=python
 
 WIDTH=${1:-16}
 
-VOLUME=${2:-14}
+VOLUME=${2:-15}
 
 rm -f tone_table.svh
 
