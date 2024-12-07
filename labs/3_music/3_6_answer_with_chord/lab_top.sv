@@ -116,7 +116,7 @@ module lab_top
         if (rst)
             mic_note <= '0;
         else
-            case (intern_abcdefgh)
+            case (mic_abcdefgh)
             8'b10011100 : mic_note <= w_key' (  0 );  // C   // abcdefgh
             8'b10011101 : mic_note <= w_key' (  1 );  // C#
             8'b01111010 : mic_note <= w_key' (  2 );  // D   //   --a--
