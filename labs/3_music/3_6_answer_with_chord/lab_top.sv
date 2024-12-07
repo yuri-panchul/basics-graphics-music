@@ -59,75 +59,123 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [7:0] intern_abcdefgh;
+    wire [7:0] mic_abcdefgh;
 
     //------------------------------------------------------------------------
 
     lab_top_3_1_note_recognizer
     # (
-        .clk_mhz       ( clk_mhz         ),
-        .w_key         ( w_key           ),
-        .w_sw          ( w_sw            ),
-        .w_led         ( w_led           ),
-        .w_digit       ( w_digit         ),
-        .w_gpio        ( w_gpio          ),
+        .clk_mhz       ( clk_mhz       ),
+        .w_key         ( w_key         ),
+        .w_sw          ( w_sw          ),
+        .w_led         ( w_led         ),
+        .w_digit       ( w_digit       ),
+        .w_gpio        ( w_gpio        ),
 
-        .screen_width  ( screen_width    ),
-        .screen_height ( screen_height   ),
+        .screen_width  ( screen_width  ),
+        .screen_height ( screen_height ),
 
-        .w_red         ( w_red           ),
-        .w_green       ( w_green         ),
-        .w_blue        ( w_blue          )
+        .w_red         ( w_red         ),
+        .w_green       ( w_green       ),
+        .w_blue        ( w_blue        )
     )
     i_lab_top_3_1_note_recognizer
     (
-        .clk           ( clk             ),
-        .slow_clk      (                 ),
-        .rst           ( rst             ),
+        .clk           ( clk           ),
+        .slow_clk      (               ),
+        .rst           ( rst           ),
 
-        .key           ( '0              ),
-        .sw            ( '0              ),
-        .led           (                 ),
+        .key           ( '0            ),
+        .sw            ( '0            ),
+        .led           (               ),
 
-        .abcdefgh      ( intern_abcdefgh ),
-        .digit         (                 ),
+        .abcdefgh      ( mic_abcdefgh  ),
+        .digit         (               ),
 
-        .x             (                 ),
-        .y             (                 ),
+        .x             (               ),
+        .y             (               ),
 
-        .red           (                 ),
-        .green         (                 ),
-        .blue          (                 ),
+        .red           (               ),
+        .green         (               ),
+        .blue          (               ),
 
-        .mic           ( mic             ),
-        .sound         (                 ),
+        .mic           ( mic           ),
+        .sound         (               ),
 
-        .uart_rx       (                 ),
-        .uart_tx       (                 ),
+        .uart_rx       (               ),
+        .uart_tx       (               ),
 
-        .gpio          (                 ),
+        .gpio          (               ),
     );
 
     //------------------------------------------------------------------------
 
-    logic [w_key - 1:0] intern_key;
+    logic [w_key - 1:0] mic_note;
 
-    always_comb
-        case (intern_abcdefgh)
-        8'b10011100 : intern_key = w_key' (  1 );  // C   // abcdefgh
-        8'b10011101 : intern_key = w_key' (  2 );  // C#
-        8'b01111010 : intern_key = w_key' (  3 );  // D   //   --a--
-        8'b01111011 : intern_key = w_key' (  4 );  // D#  //  |     |
-        8'b10011110 : intern_key = w_key' (  5 );  // E   //  f     b
-        8'b10001110 : intern_key = w_key' (  6 );  // F   //  |     |
-        8'b10001111 : intern_key = w_key' (  7 );  // F#  //   --g--
-        8'b10111100 : intern_key = w_key' (  8 );  // G   //  |     |
-        8'b10111101 : intern_key = w_key' (  9 );  // G#  //  e     c
-        8'b11101110 : intern_key = w_key' ( 10 );  // A   //  |     |
-        8'b11101111 : intern_key = w_key' ( 11 );  // A#  //   --d--  h
-        8'b00111110 : intern_key = w_key' ( 12 );  // B
-        default     : intern_key = w_key' (  0 );
-        endcase
+    always @ (posedge clk)
+        if (rst)
+            mic_note <= '0;
+        else
+            case (intern_abcdefgh)
+            8'b10011100 : mic_note <= w_key' (  0 );  // C   // abcdefgh
+            8'b10011101 : mic_note <= w_key' (  1 );  // C#
+            8'b01111010 : mic_note <= w_key' (  2 );  // D   //   --a--
+            8'b01111011 : mic_note <= w_key' (  3 );  // D#  //  |     |
+            8'b10011110 : mic_note <= w_key' (  4 );  // E   //  f     b
+            8'b10001110 : mic_note <= w_key' (  5 );  // F   //  |     |
+            8'b10001111 : mic_note <= w_key' (  6 );  // F#  //   --g--
+            8'b10111100 : mic_note <= w_key' (  7 );  // G   //  |     |
+            8'b10111101 : mic_note <= w_key' (  8 );  // G#  //  e     c
+            8'b11101110 : mic_note <= w_key' (  9 );  // A   //  |     |
+            8'b11101111 : mic_note <= w_key' ( 10 );  // A#  //   --d--  h
+            8'b00111110 : mic_note <= w_key' ( 11 );  // B
+            endcase
+
+    //------------------------------------------------------------------------
+
+    logic enable;
+
+    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (1))
+    i_strobe_gen (clk, rst, enable);
+
+    //------------------------------------------------------------------------
+
+    logic [1:0] cnt;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            cnt <= '0;
+        end
+        else if (enable)
+        begin
+            if (cnt == 2'd2)
+                cnt <= '0;
+            else
+                cnt <= cnt + 1'd1;
+        end
+
+    //------------------------------------------------------------------------
+
+    logic [w_key - 1:0] out_note;
+
+    wire [w_key - 1:0] next_out_note
+        =     out_note < w_key' (8)
+            ? out_note + w_key' (4)
+            : out_note - w_key' (8);
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            out_note <= '0;
+        end
+        else if (enable)
+        begin
+            if (cnt == '0)
+                out_note <= mic_note;
+            else
+                out_note <= next_out_note;
+        end
 
     //------------------------------------------------------------------------
 
@@ -153,7 +201,7 @@ module lab_top
         .slow_clk      (               ),
         .rst           ( rst           ),
 
-        .key           ( intern_key    ),
+        .key           ( out_note      ),
         .sw            ( '0            ),
         .led           (               ),
 

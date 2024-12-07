@@ -117,18 +117,18 @@ module lab_top
             intern_key <= '0;
         else
             case (intern_abcdefgh)
-            8'b10011100 : intern_key <=  w_key' (  0 );  // C   // abcdefgh
-            8'b10011101 : intern_key <=  w_key' (  1 );  // C#
-            8'b01111010 : intern_key <=  w_key' (  2 );  // D   //   --a--
-            8'b01111011 : intern_key <=  w_key' (  3 );  // D#  //  |     |
-            8'b10011110 : intern_key <=  w_key' (  4 );  // E   //  f     b
-            8'b10001110 : intern_key <=  w_key' (  5 );  // F   //  |     |
-            8'b10001111 : intern_key <=  w_key' (  6 );  // F#  //   --g--
-            8'b10111100 : intern_key <=  w_key' (  7 );  // G   //  |     |
-            8'b10111101 : intern_key <=  w_key' (  8 );  // G#  //  e     c
-            8'b11101110 : intern_key <=  w_key' (  9 );  // A   //  |     |
-            8'b11101111 : intern_key <=  w_key' ( 10 );  // A#  //   --d--  h
-            8'b00111110 : intern_key <=  w_key' ( 11 );  // B
+            8'b10011100 : intern_key <= w_key' (  0 );  // C   // abcdefgh
+            8'b10011101 : intern_key <= w_key' (  1 );  // C#
+            8'b01111010 : intern_key <= w_key' (  2 );  // D   //   --a--
+            8'b01111011 : intern_key <= w_key' (  3 );  // D#  //  |     |
+            8'b10011110 : intern_key <= w_key' (  4 );  // E   //  f     b
+            8'b10001110 : intern_key <= w_key' (  5 );  // F   //  |     |
+            8'b10001111 : intern_key <= w_key' (  6 );  // F#  //   --g--
+            8'b10111100 : intern_key <= w_key' (  7 );  // G   //  |     |
+            8'b10111101 : intern_key <= w_key' (  8 );  // G#  //  e     c
+            8'b11101110 : intern_key <= w_key' (  9 );  // A   //  |     |
+            8'b11101111 : intern_key <= w_key' ( 10 );  // A#  //   --d--  h
+            8'b00111110 : intern_key <= w_key' ( 11 );  // B
             endcase
 
     //------------------------------------------------------------------------
