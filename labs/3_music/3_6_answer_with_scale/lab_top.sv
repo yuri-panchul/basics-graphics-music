@@ -110,29 +110,30 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire mic_on = (mic_abcdefgh != 8'b00000010);
-
+    logic mic_on;
     logic [w_key - 1:0] mic_note;
 
-    always @ (posedge clk)
-        if (rst)
-            mic_note <= '0;
-        else
-            case (mic_abcdefgh)
-            8'b10011100 : mic_note <= w_key' (  0 );  // C   // abcdefgh
-            8'b10011101 : mic_note <= w_key' (  1 );  // C#
-            8'b01111010 : mic_note <= w_key' (  2 );  // D   //   --a--
-            8'b01111011 : mic_note <= w_key' (  3 );  // D#  //  |     |
-            8'b10011110 : mic_note <= w_key' (  4 );  // E   //  f     b
-            8'b10001110 : mic_note <= w_key' (  5 );  // F   //  |     |
-            8'b10001111 : mic_note <= w_key' (  6 );  // F#  //   --g--
-            8'b10111100 : mic_note <= w_key' (  7 );  // G   //  |     |
-            8'b10111101 : mic_note <= w_key' (  8 );  // G#  //  e     c
-            8'b11101110 : mic_note <= w_key' (  9 );  // A   //  |     |
-            8'b11101111 : mic_note <= w_key' ( 10 );  // A#  //   --d--  h
-            8'b00111110 : mic_note <= w_key' ( 11 );  // B
-            8'b00000010 :                          ;  // Previous note
-            endcase
+    always_comb
+    begin
+        mic_on   = 1'b1;
+        mic_note = '0;  // 'x
+
+        case (mic_abcdefgh)
+        8'b10011100 : mic_note = w_key' (  0 );  // C   // abcdefgh
+        8'b10011101 : mic_note = w_key' (  1 );  // C#
+        8'b01111010 : mic_note = w_key' (  2 );  // D   //   --a--
+        8'b01111011 : mic_note = w_key' (  3 );  // D#  //  |     |
+        8'b10011110 : mic_note = w_key' (  4 );  // E   //  f     b
+        8'b10001110 : mic_note = w_key' (  5 );  // F   //  |     |
+        8'b10001111 : mic_note = w_key' (  6 );  // F#  //   --g--
+        8'b10111100 : mic_note = w_key' (  7 );  // G   //  |     |
+        8'b10111101 : mic_note = w_key' (  8 );  // G#  //  e     c
+        8'b11101110 : mic_note = w_key' (  9 );  // A   //  |     |
+        8'b11101111 : mic_note = w_key' ( 10 );  // A#  //   --d--  h
+        8'b00111110 : mic_note = w_key' ( 11 );  // B
+        default     : mic_on   = 1'b0;           // Not recognized
+        endcase
+    end
 
     //------------------------------------------------------------------------
 
@@ -144,33 +145,19 @@ module lab_top
     //------------------------------------------------------------------------
 
     logic [2:0] cnt;
-
-    always_ff @ (posedge clk or posedge rst)
-        if (rst)
-            cnt <= '0;
-        else if (mic_on)
-            cnt <= '0;
-        else if (enable)
-            cnt <= cnt + 1'd1;
-
-    //------------------------------------------------------------------------
-
     logic [w_key - 1:0] out_note, next_out_note;
 
     always_comb
-    begin
-        next_out_note = mic_note;
-
         case (cnt)
 
-        3'd1, 3'd2, 3'd4, 3'd5, 3'd6:
+        3'd0, 3'd1, 3'd3, 3'd4, 3'd5:  // Tone
 
             next_out_note
                = out_note < w_key' (10)
                ? out_note + w_key' ( 2)
                : out_note - w_key' (10);
 
-        3'd3, 3'd7:
+        default:  // 3'd2, 3'd6        // Half-tone
 
             next_out_note
                = out_note < w_key' (11)
@@ -178,13 +165,29 @@ module lab_top
                :            w_key' ( 0);
 
         endcase
-    end
+
+    //------------------------------------------------------------------------
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
+        begin
+            cnt      <= '0;
             out_note <= '0;
+        end
+        else if (mic_on)
+        begin
+            cnt      <= '0;
+            out_note <= mic_note;
+        end
         else if (enable)
+        begin
+            if (cnt == 3'd6)
+                cnt <= '0;
+            else
+                cnt <= cnt + 1'd1;
+
             out_note <= next_out_note;
+        end
 
     //------------------------------------------------------------------------
 
