@@ -82,49 +82,49 @@ module lab_top
 
     audio_square inst_square
     (
-      .clk_i (clk),
-      .rst_i (rst),
-      .freq_i (generator_freq),
+      .clk_i         (clk),
+      .rst_i         (rst),
+      .freq_i        (generator_freq),
       .sample_data_o (sample_data_square)
     );
 
     audio_saw inst_saw
     (
-      .clk_i (clk),
-      .rst_i (rst),
-      .freq_i (generator_freq),
+      .clk_i         (clk),
+      .rst_i         (rst),
+      .freq_i        (generator_freq),
       .sample_data_o (sample_data_saw)
     );
 
     audio_saw_inv inst_saw_inv
     (
-      .clk_i (clk),
-      .rst_i (rst),
-      .freq_i (generator_freq),
+      .clk_i         (clk),
+      .rst_i         (rst),
+      .freq_i        (generator_freq),
       .sample_data_o (sample_data_saw_inv)
     );
 
     audio_triangle inst_triangle
     (
-      .clk_i (clk),
-      .rst_i (rst),
-      .freq_i (generator_freq),
+      .clk_i         (clk),
+      .rst_i         (rst),
+      .freq_i        (generator_freq),
       .sample_data_o (sample_data_triangle)
     );
 
     audio_sine inst_sine
     (
-      .clk_i (clk),
-      .rst_i (rst),
-      .freq_i (generator_freq),
+      .clk_i         (clk),
+      .rst_i         (rst),
+      .freq_i        (generator_freq),
       .sample_data_o (sample_data_sine)
     );
 
     audio_noise inst_noise
     (
-      .clk_i (clk),
-      .rst_i (rst),
-      .freq_i (generator_freq),
+      .clk_i         (clk),
+      .rst_i         (rst),
+      .freq_i        (generator_freq),
       .sample_data_o (sample_data_noise)
     );
 

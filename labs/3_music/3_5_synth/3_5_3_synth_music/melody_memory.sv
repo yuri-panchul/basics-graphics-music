@@ -10,35 +10,28 @@ module melody_memory #(
   output logic       enable_o
 );
 
+    // We use 1/8 part of beat as a unit to track time in this design 
     localparam TPB = (CLK_MHZ * 30) * (1_000_000 / BPM);
 
     `include "music_imperial_march.svh"
 
-    logic          [$clog2(TPB)-1:0] tick_cnt;
-    logic                      [3:0] bit_cnt;
-    logic [$clog2(MEMORY_DEPTH)-1:0] quant_cnt;
+    logic          [$clog2(TPB)-1:0] tick_cnt_ff;
+    logic                      [3:0] bit_cnt_ff;
+    logic [$clog2(MEMORY_DEPTH)-1:0] quant_cnt_ff;
 
     logic [3:0] bits_to_switch;
-
-    logic [3:0] note;
-    logic [1:0] octave;
-    logic       enable;
 
     // pending quant driver
     always_ff @( posedge clk_i ) begin
       if ( rst_i ) begin
-        quant_cnt <= 'b0;
+        quant_cnt_ff <= 'b0;
       end
       else begin
-        enable         <= melody_rom [10];
-        bits_to_switch <= melody_rom [9:6];
-        note           <= melody_rom [ 5:2];
-        octave         <= melody_rom [ 1:0];
-        if ( bit_cnt >= bits_to_switch ) begin
-          quant_cnt <= quant_cnt + 'b1;
+        if ( bit_cnt_ff >= bits_to_switch ) begin
+          quant_cnt_ff <= quant_cnt_ff + 'b1;
         end
-        else if ( quant_cnt >= MEMORY_DEPTH ) begin
-          quant_cnt <= 'b0;
+        else if ( quant_cnt_ff >= MEMORY_DEPTH ) begin
+          quant_cnt_ff <= 'b0;
         end
       end
     end
@@ -46,14 +39,14 @@ module melody_memory #(
     // bit counter driver
     always_ff @( posedge clk_i ) begin
       if ( rst_i ) begin
-        bit_cnt <= 'b0;
+        bit_cnt_ff <= 'b0;
       end
       else begin
-        if ( bit_cnt >= bits_to_switch ) begin
-          bit_cnt <= 'b0;
+        if ( bit_cnt_ff >= bits_to_switch ) begin
+          bit_cnt_ff <= 'b0;
         end
-        else if ( tick_cnt >= TPB ) begin
-          bit_cnt <= bit_cnt + 'b1;
+        else if ( tick_cnt_ff >= TPB ) begin
+          bit_cnt_ff <= bit_cnt_ff + 'b1;
         end
       end
     end
@@ -61,20 +54,21 @@ module melody_memory #(
     // tick counter driver
     always_ff @( posedge clk_i ) begin
       if ( rst_i ) begin
-        tick_cnt <= 'b0;
+        tick_cnt_ff <= 'b0;
       end
       else begin
-        if ( tick_cnt >= TPB ) begin
-          tick_cnt <= 'b0;
+        if ( tick_cnt_ff >= TPB ) begin
+          tick_cnt_ff <= 'b0;
         end
         else begin
-          tick_cnt <= tick_cnt + 'b1;
+          tick_cnt_ff <= tick_cnt_ff + 'b1;
         end
       end
     end
 
-    assign note_o = note;
-    assign octave_o = octave;
-    assign enable_o = enable;
+    assign enable_o       = melody_rom [10];
+    assign bits_to_switch = melody_rom [9:6];
+    assign note_o         = melody_rom [5:2];
+    assign octave_o       = melody_rom [1:0];
 
 endmodule
