@@ -14,8 +14,8 @@ do make.do
 
 или выберите в Vivado `tb_mod_frequency` как Top Level.
 
-![Alt text](../../img/image-6.jpg)
-![Alt text](../../img/image-7.png)
+![Alt text](../img/image-6.jpg)
+![Alt text](../img/image-7.png)
 
 
 В показанном примере частота генератора синусоидального сигнала модулируется выходом из генератора сигнала треугольной формы.
