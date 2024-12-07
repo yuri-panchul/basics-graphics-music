@@ -110,6 +110,8 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    wire mic_on = (mic_abcdefgh != 8'b00000010);
+
     logic [w_key - 1:0] mic_note;
 
     always @ (posedge clk)
@@ -145,6 +147,8 @@ module lab_top
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
+            cnt <= '0;
+        else if (mic_on)
             cnt <= '0;
         else if (enable)
             cnt <= cnt + 1'd1;
