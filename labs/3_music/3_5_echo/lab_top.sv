@@ -105,7 +105,7 @@ module lab_top
         .uart_rx       (                 ),
         .uart_tx       (                 ),
 
-        .gpio          (                 ),
+        .gpio          (                 )
     );
 
     //------------------------------------------------------------------------
@@ -175,7 +175,7 @@ module lab_top
         .uart_rx       (               ),
         .uart_tx       (               ),
 
-        .gpio          (               ),
+        .gpio          (               )
     );
 
 endmodule
