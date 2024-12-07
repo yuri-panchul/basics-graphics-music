@@ -2,18 +2,7 @@
 
 # Амплитудная модуляция
 
-Демонстрация амплитудной модуляции находится в папке `audio_synth_practice/5_modulation/2_amplitude_modulation`.
-
-## Запуск примера
-
-Чтобы запустить пример, выполните в консоли Modelsim/Questa:
-```
-cd audio_synth_practice/5_modulation/2_amplitude_modulation
-do make.do
-```
-
-или выберите в Vivado `tb_mod_amplitude` как Top Level.
-
+Демонстрация амплитудной модуляции находится в файле `mod_amplitude.sv`.
 
 ## Описание примера
 
@@ -29,7 +18,7 @@ do make.do
 
   audio_triangle i_ampl_mod(
     .clk_i         (clk_i),
-    .rstn_i        (rstn_i),
+    .rst_i         (rst_i),
     .freq_i        (ampl_mod_freq),
     .sample_data_o (amplitude)
   );

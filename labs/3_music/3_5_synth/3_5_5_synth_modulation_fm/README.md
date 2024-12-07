@@ -2,17 +2,8 @@
 
 # Частотная модуляция
 
-Демонстрация частотной модуляции находится в папке `audio_synth_practice/5_modulation/1_frequency_modulation`.
+Демонстрация частотной модуляции находится в файле `mod_frequency.sv`.
 
-## Запуск примера
-
-Чтобы запустить пример, выполните в консоли Modelsim/Questa:
-```
-cd audio_synth_practice/5_modulation/1_frequency_modulation
-do make.do
-```
-
-или выберите в Vivado `tb_mod_frequency` как Top Level.
 
 ![Alt text](../img/image-6.jpg)
 ![Alt text](../img/image-7.png)
@@ -28,7 +19,7 @@ do make.do
 
   audio_triangle i_freq_mod(
     .clk_i         (clk_i),
-    .rstn_i        (rstn_i),
+    .rst_i         (rst_i),
     .freq_i        (modulation_freq),
     .sample_data_o (modulation_data)
   );
@@ -43,7 +34,7 @@ do make.do
 
   audio_sine i_carrier(
     .clk_i         (clk_i),
-    .rstn_i        (rstn_i),
+    .rst_i         (rst_i),
     .freq_i        (carrier_freq),
     .sample_data_o (sample_data)
   );

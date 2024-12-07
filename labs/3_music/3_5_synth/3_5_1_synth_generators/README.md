@@ -29,8 +29,8 @@
 
   assign freq_counter_next = freq_counter_ff + freq_i;
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       freq_counter_ff <= '0;
     else
       freq_counter_ff <= freq_counter_next;
@@ -38,8 +38,8 @@
 
   logic freq_msb_dly_ff;
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       freq_msb_dly_ff <= '0;
     else
       freq_msb_dly_ff <= freq_counter_ff[FREQ_CNT_WIDTH-1];
@@ -62,8 +62,8 @@
   // Square signal generation
   logic [7:0] square_ff;
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       square_ff <= '0;
     else if (freq_ofl)
       square_ff <= square_ff + 1;
@@ -92,8 +92,8 @@ freq_i=round((2^27*F)/(f_mhz * 1000000))-1
   // Saw signal generation
   logic [7:0] saw_ff;
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       saw_ff <= '0;
     else if (freq_ofl)
       saw_ff <= saw_ff + 1;
@@ -116,8 +116,8 @@ freq_i=round((2^27*F)/(f_mhz * 1000000))-1
   // Saw signal generation
   logic [7:0] saw_inv_ff;
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       saw_inv_ff <= '1;
     else if (freq_ofl)
       saw_inv_ff <= saw_inv_ff - 1;
@@ -142,8 +142,8 @@ freq_i=round((2^27*F)/(f_mhz * 1000000))-1
 ```verilog
   logic [7:0] saw_ff;
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       saw_ff <= '0;
     else if (freq_ofl)
       saw_ff <= saw_ff + 1;
@@ -154,8 +154,8 @@ freq_i=round((2^27*F)/(f_mhz * 1000000))-1
 ```verilog
   logic [7:0] saw_inv_ff;
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       saw_inv_ff <= '1;
     else if (freq_ofl)
       saw_inv_ff <= saw_inv_ff - 1;
@@ -169,8 +169,8 @@ freq_i=round((2^27*F)/(f_mhz * 1000000))-1
   assign saw_select_en = freq_ofl & (saw_ff == 8'hff);
 
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       saw_select_ff <= '0;
     else if (saw_select_en)
       saw_select_ff <= ~saw_select_ff;
@@ -239,8 +239,8 @@ freq_i=round((2^27*F)/(f_mhz * 1000000))-1
   assign noise_shiftreg_next = {noise_shiftreg_ff[21:0],
                                (noise_shiftreg_ff[22] ^ noise_shiftreg_ff[17])};
 
-  always_ff @(posedge clk_i or negedge rstn_i) begin
-    if (~rstn_i)
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i)
       noise_shiftreg_ff <= NOISE_SHREG_INIT;
     else if (freq_ofl)
       noise_shiftreg_ff <= noise_shiftreg_next;
