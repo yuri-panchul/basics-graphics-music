@@ -159,14 +159,14 @@ module lab_top
 
         case (cnt)
 
-        2'd1, 2'd2, 2'd4, 2'd5, 2'd6:
+        3'd1, 3'd2, 3'd4, 3'd5, 3'd6:
 
             next_out_note
                = out_note < w_key' (10)
                ? out_note + w_key' ( 2)
                : out_note - w_key' (10);
 
-        2'd3, 2'd7:
+        3'd3, 3'd7:
 
             next_out_note
                = out_note < w_key' (11)
