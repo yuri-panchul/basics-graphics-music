@@ -1,0 +1,5 @@
+*.sv
+*.svh
+log.txt
+run
+uart.conf
