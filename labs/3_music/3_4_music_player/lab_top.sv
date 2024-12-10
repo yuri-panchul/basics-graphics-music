@@ -17,9 +17,7 @@ module lab_top
                w_blue        = 4,
 
                w_x           = $clog2 ( screen_width  ),
-               w_y           = $clog2 ( screen_height ),
-
-               w_sound       = 16
+               w_y           = $clog2 ( screen_height )
 )
 (
     input                        clk,
@@ -49,7 +47,7 @@ module lab_top
     // Microphone, sound output and UART
 
     input        [         23:0] mic,
-    output       [w_sound - 1:0] sound,
+    output       [         15:0] sound,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -72,18 +70,18 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire            [2:0] octave = 3'b0;
-    wire  [w_key   - 1:0] note   = key;
-
-    assign led  = note;
+    logic  [2:0] octave;
+    logic  [3:0] note;
 
     //------------------------------------------------------------------------
 
+    /*
+     * TODO: Exercise 1:
+     * Decrease sound level.
+     */
     tone_sel
     # (
-        .clk_mhz    (clk_mhz),
-        .note_width (w_key  ),
-        .y_width    (w_sound)
+        .clk_mhz (clk_mhz)
     )
     wave_gen
     (
@@ -95,6 +93,171 @@ module lab_top
     );
 
     //------------------------------------------------------------------------
+
+    /*
+     * TODO: Exercise 2:
+     * Change (increase/decrease) music speed.
+     */
+    logic [23:0] clk_div;
+
+    always @ (posedge clk or posedge rst)
+        if (rst)
+            clk_div <= 0;
+        else
+            clk_div <= clk_div + 1;
+
+    logic  [5:0] note_cnt;
+
+    always @ (posedge clk or posedge rst)
+        if (rst)
+            note_cnt <= 0;
+        else
+            if (&clk_div && note != silence)
+                note_cnt <= note_cnt + 1;
+
+    //------------------------------------------------------------------------
+
+    localparam [3:0] C  = 4'd0,
+                     Cs = 4'd1,
+                     D  = 4'd2,
+                     Ds = 4'd3,
+                     E  = 4'd4,
+                     F  = 4'd5,
+                     Fs = 4'd6,
+                     G  = 4'd7,
+                     Gs = 4'd8,
+                     A  = 4'd9,
+                     As = 4'd10,
+                     B  = 4'd11;
+
+    localparam [3:0] Df = Cs, Ef = Ds, Gf = Fs, Af = Gs, Bf = As;
+
+    localparam [3:0] silence = 4'd12;
+
+    /*
+     * TODO: Exercise 3:
+     * Add another soundtrack.
+     */
+
+    always_comb
+        case (note_cnt)
+        0:  { octave, note } = { 3'b1, E  };
+        1:  { octave, note } = { 3'b1, Ds };
+        2:  { octave, note } = { 3'b1, E  };
+        3:  { octave, note } = { 3'b1, Ds };
+        4:  { octave, note } = { 3'b1, E  };
+
+        5:  { octave, note } = { 3'b0, B  };
+        6:  { octave, note } = { 3'b1, D  };
+        7:  { octave, note } = { 3'b1, C  };
+        8:  { octave, note } = { 3'b0, A  };
+        9:  { octave, note } = { 3'b0, A  };
+
+        10: { octave, note } = { 3'b0, C  };
+        11: { octave, note } = { 3'b0, E  };
+        12: { octave, note } = { 3'b0, A  };
+        13: { octave, note } = { 3'b0, B  };
+        14: { octave, note } = { 3'b0, B  };
+
+        15: { octave, note } = { 3'b0, E  };
+        16: { octave, note } = { 3'b0, Gs };
+        17: { octave, note } = { 3'b0, B  };
+        18: { octave, note } = { 3'b1, C  };
+        19: { octave, note } = { 3'b1, C  };
+
+        20: { octave, note } = { 3'b1, E  };
+        21: { octave, note } = { 3'b1, Ds };
+        22: { octave, note } = { 3'b1, E  };
+        23: { octave, note } = { 3'b1, Ds };
+        24: { octave, note } = { 3'b1, E  };
+
+        25: { octave, note } = { 3'b0, B  };
+        26: { octave, note } = { 3'b1, D  };
+        27: { octave, note } = { 3'b1, C  };
+        28: { octave, note } = { 3'b0, A  };
+        29: { octave, note } = { 3'b0, A  };
+
+        30: { octave, note } = { 3'b0, C  };
+        31: { octave, note } = { 3'b0, E  };
+        32: { octave, note } = { 3'b0, A  };
+        33: { octave, note } = { 3'b0, B  };
+        34: { octave, note } = { 3'b0, B  };
+
+        35: { octave, note } = { 3'b0, E  };
+        36: { octave, note } = { 3'b1, C  };
+        37: { octave, note } = { 3'b0, B  };
+        38: { octave, note } = { 3'b0, A  };
+        39: { octave, note } = { 3'b0, A  };
+
+        40: { octave, note } = { 3'b0, B  };
+        41: { octave, note } = { 3'b1, C  };
+        42: { octave, note } = { 3'b1, D  };
+        43: { octave, note } = { 3'b1, E  };
+        44: { octave, note } = { 3'b1, E  };
+        45: { octave, note } = { 3'b1, E  };
+
+        46: { octave, note } = { 3'b0, G  };
+        47: { octave, note } = { 3'b1, F  };
+        48: { octave, note } = { 3'b1, E  };
+        49: { octave, note } = { 3'b1, D  };
+        50: { octave, note } = { 3'b1, D  };
+        51: { octave, note } = { 3'b1, D  };
+
+        52: { octave, note } = { 3'b0, F  };
+        53: { octave, note } = { 3'b1, E  };
+        54: { octave, note } = { 3'b1, D  };
+        55: { octave, note } = { 3'b1, C  };
+        56: { octave, note } = { 3'b1, C  };
+        57: { octave, note } = { 3'b1, C  };
+
+        58: { octave, note } = { 3'b0, E  };
+        59: { octave, note } = { 3'b1, D  };
+        60: { octave, note } = { 3'b1, C  };
+        61: { octave, note } = { 3'b0, B  };
+
+        default: { octave, note } = { 3'b0, silence };
+        endcase
+
+//    always_comb
+//        case (note_cnt)
+//        0:  { octave, note } = { 3'b0, G   };
+//        1:  { octave, note } = { 3'b1, C   };
+//        2:  { octave, note } = { 3'b1, Ef  };
+//
+//        3:  { octave, note } = { 3'b1, D   };
+//        4:  { octave, note } = { 3'b1, C   };
+//        5:  { octave, note } = { 3'b1, Ef  };
+//        6:  { octave, note } = { 3'b1, C   };
+//        7:  { octave, note } = { 3'b1, D   };
+//        8:  { octave, note } = { 3'b1, C   };
+//        9:  { octave, note } = { 3'b0, Af  };
+//        10: { octave, note } = { 3'b0, Bf  };
+//
+//        11: { octave, note } = { 3'b0, G   };
+//        12: { octave, note } = { 3'b0, G   };
+//        13: { octave, note } = { 3'b0, G   };
+//        13: { octave, note } = { 3'b0, G   };
+//
+//        14: { octave, note } = { 3'b1, C   };
+//        15: { octave, note } = { 3'b1, Ef  };
+//        16: { octave, note } = { 3'b1, D   };
+//        17: { octave, note } = { 3'b1, C   };
+//        18: { octave, note } = { 3'b1, Ef  };
+//        19: { octave, note } = { 3'b1, C   };
+//        20: { octave, note } = { 3'b1, D   };
+//
+//        21: { octave, note } = { 3'b1, C   };
+//        22: { octave, note } = { 3'b0, G   };
+//        23: { octave, note } = { 3'b0, Gf  };
+//        24: { octave, note } = { 3'b0, F   };
+//        25: { octave, note } = { 3'b0, F   };
+//        26: { octave, note } = { 3'b0, F   };
+//        default: { octave, note } = { 3'b0, silence };
+//        endcase
+
+    //------------------------------------------------------------------------
+
+    assign led  = { {(w_led - $left (octave)){1'b0}}, octave };
 
     assign digit = { {(w_digit - 1){1'b0}}, 1'b1};
 
