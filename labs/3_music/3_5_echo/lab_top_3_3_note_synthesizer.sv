@@ -17,9 +17,7 @@ module lab_top_3_3_note_synthesizer
                w_blue        = 4,
 
                w_x           = $clog2 ( screen_width  ),
-               w_y           = $clog2 ( screen_height ),
-
-               w_sound       = 16
+               w_y           = $clog2 ( screen_height )
 )
 (
     input                        clk,
@@ -49,7 +47,7 @@ module lab_top_3_3_note_synthesizer
     // Microphone, sound output and UART
 
     input        [         23:0] mic,
-    output       [w_sound - 1:0] sound,
+    output       [         15:0] sound,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -82,8 +80,7 @@ module lab_top_3_3_note_synthesizer
     tone_sel
     # (
         .clk_mhz    (clk_mhz),
-        .note_width (w_key  ),
-        .y_width    (w_sound)
+        .note_width (w_key)
     )
     wave_gen
     (
