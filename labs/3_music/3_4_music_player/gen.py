@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from sys import argv
 from math import sin, pi
@@ -37,13 +37,11 @@ Fs = int(argv[4])
 w = int(argv[3])
 A = (2**(w-1)-3276)*vol/100
 
-N = int(Fs/(F*4)+(1/2))
+N = int(Fs/(F*4)+0.5)
 x_max = N
-x_width = x_max.bit_length()
-y_width = w
 
 ts = [t for t in range(N+1)]
-xs = [int(A*sin(pi*t/(N*2))+(1/2)) for t in ts]
+xs = [int(A*sin(pi*t/(N*2))+0.5) for t in ts]
 
 print(f"// y(t) = sin((1/4)*2*pi*t*(F/Fs)), F={F}Hz, Fs={Fs}Hz, {w}-bit, Volume {vol}%")
 print("")
