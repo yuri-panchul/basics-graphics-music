@@ -12,7 +12,7 @@ module tone_sel
     input                     reset,
     input               [2:0] octave,
     input  [note_width - 1:0] note,
-    output [y_width    - 1:0] y
+    output    [y_width - 1:0] y
 );
     localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4; // clk_mhz range (12-19) (20-35) (36-67) (68-131)
     localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 2 { 1'b0 } }, 1'b1 };
