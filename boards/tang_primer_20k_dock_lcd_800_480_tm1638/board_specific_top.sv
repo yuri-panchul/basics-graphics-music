@@ -203,9 +203,9 @@ module board_specific_top
 
         .w_red         ( w_red         ),
         .w_green       ( w_green       ),
-        .w_blue        ( w_blue        ),
+        .w_blue        ( w_blue        )   //,
 
-        .w_sound       ( w_sound       )
+//        .w_sound       ( w_sound       )
     )
     i_lab_top
     (

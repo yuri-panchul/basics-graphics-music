@@ -7,8 +7,7 @@ module tb;
                w_sw    = 4,
                w_led   = 8,
                w_digit = 8,
-               w_gpio  = 100,
-               w_sound = 16;
+               w_gpio  = 100;
 
     //------------------------------------------------------------------------
 
@@ -26,8 +25,7 @@ module tb;
         .w_sw    ( w_sw    ),
         .w_led   ( w_led   ),
         .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  ),
-        .w_sound ( w_sound )
+        .w_gpio  ( w_gpio  )
     )
     i_lab_top
     (
