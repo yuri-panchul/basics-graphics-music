@@ -18,7 +18,7 @@ freqs = {
     'B'  : 493.88,
 }
 
-usage = f"usage:\n{argv[0]} [--freq freq_in_hz | --note C|Cs|D|Ds|E|F|Fs|G|Gs|A|As|B] [bit_width] [sampling_rate_freq_in_hz] [volume_%]"
+usage = f"usage:\n{argv[0]} [--freq freq_in_hz | --note C|Cs|D|Ds|E|F|Fs|G|Gs|A|As|B] bit_width sampling_rate_freq_in_hz volume_%"
 
 if len(argv) != 6:
     exit(usage)
