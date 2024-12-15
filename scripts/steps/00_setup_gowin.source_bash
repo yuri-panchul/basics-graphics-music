@@ -141,9 +141,10 @@ gowin_try_install_dir ()
 
 gowin_setup_ide ()
 {
-    [ "$OSTYPE" = "linux-gnu" ] ||
-    [ "$OSTYPE" = "cygwin"    ] ||
-    [ "$OSTYPE" = "msys"      ] ||
+    [  "$OSTYPE" = "linux-gnu" ]  ||
+    [  "$OSTYPE" = "cygwin"    ]  ||
+    [  "$OSTYPE" = "msys"      ]  ||
+    [[ "$OSTYPE" = "darwin"*   ]] ||
     return
 
     #-------------------------------------------------------------------------
@@ -173,7 +174,8 @@ gowin_setup_ide ()
 
     gowin_try_install_dir "${GOWIN_HOME-}"
 
-    if [ "$OSTYPE" = "linux-gnu" ]
+    if [  "$OSTYPE" = "linux-gnu"  ] ||
+       [[ "$OSTYPE" = "darwin"*   ]]
     then
         gowin_try_install_dir "$HOME"
         gowin_try_install_dir /opt
