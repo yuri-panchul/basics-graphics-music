@@ -206,8 +206,8 @@ gowin_setup_ide ()
 
     if [[ "$OSTYPE" = "darwin"* ]]
     then
-        export DYLD_FRAMEWORK_PATH="${DYLD_FRAMEWORK_PATH:+$DYLD_FRAMEWORK_PATH:}$GOWIN_VERSION_DIR/lib"
-        export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH:+$DYLD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/lib"
+        export DYLD_FRAMEWORK_PATH="${DYLD_FRAMEWORK_PATH:+$DYLD_FRAMEWORK_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
+        export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH:+$DYLD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
     fi
 }
 
@@ -315,18 +315,19 @@ synthesize_for_fpga_gowin ()
 
 configure_fpga_gowin ()
 {
-    if [ "$OSTYPE" = "msys"   ] ||
-       [ "$OSTYPE" = "cygwin" ]
+    if [  "$OSTYPE" = "msys"     ] ||
+       [  "$OSTYPE" = "cygwin"   ] ||
+       [[ "$OSTYPE" = "darwin"* ]]
     then
-        configure_fpga_gowin_msys
+        configure_fpga_gowin_proprietary
     else
-        configure_fpga_gowin_all
+        configure_fpga_gowin_openfpga
     fi
 }
 
 #-----------------------------------------------------------------------------
 
-configure_fpga_gowin_msys ()
+configure_fpga_gowin_proprietary ()
 {
     is_command_available_or_error "$gowin_prog_full_real_path"  \
         " tool programmer_cli ($gowin_prog_full_real_path) is not installed on system\n You can download and install Gowin EDA https://www.gowinsemi.com/en/support/home/"
@@ -463,7 +464,7 @@ configure_fpga_gowin_msys ()
 
 #-----------------------------------------------------------------------------
 
-configure_fpga_gowin_all ()
+configure_fpga_gowin_openfpga ()
 {
     is_command_available_or_error openFPGALoader \
         " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
