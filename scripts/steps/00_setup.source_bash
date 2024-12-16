@@ -106,10 +106,13 @@ error ()
 {
     info error: $*
 
-    if    [ "$OSTYPE"         = "linux-gnu" ]  \
-       || [ "$OSTYPE"         = "cygwin"    ]  \
-       || [ "$OSTYPE"         = "msys"      ]  \
-       || [ ${OSTYPE/[0-9]*/} = "darwin"    ]
+    # Alternative way to check for MacOS:
+    # [ ${OSTYPE/[0-9]*/} = "darwin" ]
+ 
+    if    [  "$OSTYPE" = "linux-gnu" ]  \
+       || [  "$OSTYPE" = "cygwin"    ]  \
+       || [  "$OSTYPE" = "msys"      ]  \
+       || [[ "$OSTYPE" = "darwin"*   ]]
     then
         read -n 1 -p "Press any key "
     fi
@@ -424,7 +427,13 @@ fpga_board_setup ()
 
     #-------------------------------------------------------------------------
 
-    available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
+    # TODO: Remove else after testing on Linux and Windows
+
+    if [[ "$OSTYPE" = "darwin"*   ]] ; then
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % -L 1 basename '%' | sort | tr "\r\n" " ")
+    else
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
+    fi
 
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
