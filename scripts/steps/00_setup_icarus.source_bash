@@ -89,8 +89,8 @@ run_icarus_verilog ()
        || [ "$OSTYPE" = "msys"      ]
     then
         gtkwave=gtkwave
-    elif [ ${OSTYPE/[0-9]*/} = "darwin" ]
-    # elif [[ "$OSTYPE" = "darwin"* ]]  # Alternative way
+
+    elif [[ "$OSTYPE" = "darwin"* ]]
     then
         # For some reason the following way of opening the application
         # under Mac does not read the script file:
