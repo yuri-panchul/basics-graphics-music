@@ -95,8 +95,8 @@ module board_specific_top
     assign M_CLK   = 1'b0;
     assign M_LRSEL = 1'b0;
 
-    assign AUD_PWM = 1'b0;
-    assign AUD_SD  = 1'b0;
+    //assign AUD_PWM = 1'b0;
+    assign AUD_SD  = 1'b1;
 
     //------------------------------------------------------------------------
 
@@ -262,6 +262,24 @@ module board_specific_top
             .sdata   ( JB [2]  ),
             .lrclk   ( JB [1]  )
         );
+
+        logic sound_pwm;
+
+        audio_pwm
+        # (
+            .data_w (8)
+        )
+        inst_nexys_pwm
+        (
+            .clk_i  ( clk     ),
+            .rst_i  ( rst     ),
+
+            .data_i ( sound [15:8]  ),
+            .pwm_o  ( sound_pwm )
+        );
+
+        // Actual audio output driver ( from board datasheet: 1'b0 for 0 V and HighZ for 3.3 V )
+        assign AUD_PWM = (sound_pwm) ? 'Z : '0;
 
     `endif
 
