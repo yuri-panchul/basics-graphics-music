@@ -154,6 +154,8 @@ is_command_available_or_error_and_install ()
 
     if [ "$OSTYPE" = "linux-gnu" ]; then
         how_to_install=". To install, run either: \"sudo apt-get install $package\" or \"sudo yum install $package\". If it does not work, google the instructions."
+    elif [[ "$OSTYPE" = "darwin"* ]]; then
+        how_to_install=". To install, run: \"brew install $package\". If it does not work, google the instructions."
     else
         how_to_install=
     fi
