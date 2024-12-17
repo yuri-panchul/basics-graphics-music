@@ -1,0 +1,11 @@
+. "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source_bash"
+
+#if [ -f $questa_script ] ; then
+#    run_questa
+#else
+#    run_icarus_verilog
+#fi
+
+run_icarus_verilog_without_gtkwave
+
+

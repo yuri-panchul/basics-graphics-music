@@ -44,7 +44,7 @@ set_location_assignment PIN_106 -to VGA_R
 set_location_assignment PIN_105 -to VGA_G
 set_location_assignment PIN_104 -to VGA_B
 
-# set_location_assignment PIN_114 -to UART_TXD
+set_location_assignment PIN_114 -to UART_TXD
 set_location_assignment PIN_115 -to UART_RXD
 
 set_location_assignment PIN_64 -to PSEUDO_GPIO_USING_SDRAM_PINS[0]
