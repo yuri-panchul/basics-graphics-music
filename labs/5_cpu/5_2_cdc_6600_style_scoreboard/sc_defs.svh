@@ -1,3 +1,5 @@
+`ifdef UNDEFINED
+
 //
 //  CDC-6600-style scoreboard
 //  A minimalistic example aimed to demonstrate a computer architecture idea
@@ -92,3 +94,5 @@ function [w_ins - 1:0] make_ins_rrr (op_e op, reg_idx_t rd, rs0, rs1);
 endfunction
 
 `endif  // `ifndef SC_DEF_SVH
+
+`endif
