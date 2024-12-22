@@ -89,17 +89,24 @@ run_icarus_verilog ()
        || [ "$OSTYPE" = "msys"      ]
     then
         gtkwave=gtkwave
-    elif [ ${OSTYPE/[0-9]*/} = "darwin" ]
-    # elif [[ "$OSTYPE" = "darwin"* ]]  # Alternative way
-    then
-        # For some reason the following way of opening the application
-        # under Mac does not read the script file:
-        #
-        # open -a gtkwave dump.vcd --args --script $PWD/gtkwave.tcl
-        #
-        # This way works:
 
-        gtkwave=/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin
+    elif [[ "$OSTYPE" = "darwin"* ]]
+    then
+        if [ $(uname -m) = arm64 ]
+        then
+            is_command_available_or_error_and_install surfer
+
+            gtkwave=surfer
+        else
+            # For some reason the following way of opening the application
+            # under Mac does not read the script file:
+            #
+            # open -a gtkwave dump.vcd --args --script $PWD/gtkwave.tcl
+            #
+            # This way works:
+
+            gtkwave=/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin
+        fi
     else
         error 1 "don't know how to run GTKWave on your OS $OSTYPE"
     fi

@@ -141,10 +141,14 @@ gowin_try_install_dir ()
 
 gowin_setup_ide ()
 {
-    [ "$OSTYPE" = "linux-gnu" ] ||
-    [ "$OSTYPE" = "cygwin"    ] ||
-    [ "$OSTYPE" = "msys"      ] ||
-    return
+    if ! (   [  "$OSTYPE" = "linux-gnu" ]  ||
+             [  "$OSTYPE" = "cygwin"    ]  ||
+             [  "$OSTYPE" = "msys"      ]  ||
+           ( [[ "$OSTYPE" = "darwin"*   ]] && [ $(uname -m) = arm64 ] ) )
+    then
+        error "Gowin IDE is not working on your platform (Mac x64?)"
+        return
+    fi
 
     #-------------------------------------------------------------------------
 
@@ -173,7 +177,8 @@ gowin_setup_ide ()
 
     gowin_try_install_dir "${GOWIN_HOME-}"
 
-    if [ "$OSTYPE" = "linux-gnu" ]
+    if [  "$OSTYPE" = "linux-gnu"  ] ||
+       [[ "$OSTYPE" = "darwin"*   ]]
     then
         gowin_try_install_dir "$HOME"
         gowin_try_install_dir /opt
@@ -201,6 +206,12 @@ gowin_setup_ide ()
               " to specify the version subtree location,"              \
               "such as 'GOWIN_VERSION_DIR=/home/verilog/gowin/0.99'."
     fi
+
+    if [[ "$OSTYPE" = "darwin"* ]]
+    then
+        export DYLD_FRAMEWORK_PATH="${DYLD_FRAMEWORK_PATH:+$DYLD_FRAMEWORK_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
+        export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH:+$DYLD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
+    fi
 }
 
 #-----------------------------------------------------------------------------
@@ -218,11 +229,22 @@ setup_run_directory_for_fpga_synthesis_gowin ()
         "$peripheral_dir"         \
         "$lab_dir/common"
     do
-        $find_to_run  \
-            "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-            -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
-            -printf "add_file -type verilog %p\n"  \
-            >> "$dir/fpga_project.tcl"
+        # TODO: Remove else after testing on Linux and Windows
+
+        if [[ "$OSTYPE" = "darwin"* ]]
+        then
+            $find_to_run  \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
+                | xargs -L 1 -I % echo "add_file -type verilog %"  \
+                >> "$dir/fpga_project.tcl"
+        else
+            $find_to_run  \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
+                -printf "add_file -type verilog %p\n"  \
+                >> "$dir/fpga_project.tcl"
+        fi
     done
 
     echo "add_file -type cst $(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.cst" >> "$dir/fpga_project.tcl"
@@ -240,11 +262,22 @@ setup_run_directory_for_fpga_synthesis_gowin ()
             "$peripheral_dir"         \
             "$lab_dir/common"
         do
-            $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-                -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
-                -printf "        <File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n"  \
-                >> "$dir/fpga_project.gprj"
+            # TODO: Remove else after testing on Linux and Windows
+
+            if [[ "$OSTYPE" = "darwin"* ]]
+            then
+                $find_to_run  \
+                    "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                    -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
+                    | xargs -L 1 -I % echo "        <File path=\"%\" type=\"file.verilog\" enable=\"1\"/>"  \
+                    >> "$dir/fpga_project.gprj"
+            else
+                $find_to_run  \
+                    "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                    -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
+                    -printf "        <File path=\"%p\" type=\"file.verilog\" enable=\"1\"/>\n"  \
+                    >> "$dir/fpga_project.gprj"
+            fi
         done
 
         echo "        <File path=\"$(adj_path_for_gowin_win "$board_dir")/$fpga_board/board_specific.cst\" type=\"file.cst\" enable=\"1\"/>" >> "$dir/fpga_project.gprj"
@@ -285,18 +318,19 @@ synthesize_for_fpga_gowin ()
 
 configure_fpga_gowin ()
 {
-    if [ "$OSTYPE" = "msys"   ] ||
-       [ "$OSTYPE" = "cygwin" ]
+    if [  "$OSTYPE" = "msys"     ] ||
+       [  "$OSTYPE" = "cygwin"   ] ||
+       [[ "$OSTYPE" = "darwin"* ]]
     then
-        configure_fpga_gowin_msys
+        configure_fpga_gowin_proprietary
     else
-        configure_fpga_gowin_all
+        configure_fpga_gowin_openfpga
     fi
 }
 
 #-----------------------------------------------------------------------------
 
-configure_fpga_gowin_msys ()
+configure_fpga_gowin_proprietary ()
 {
     is_command_available_or_error "$gowin_prog_full_real_path"  \
         " tool programmer_cli ($gowin_prog_full_real_path) is not installed on system\n You can download and install Gowin EDA https://www.gowinsemi.com/en/support/home/"
@@ -433,7 +467,7 @@ configure_fpga_gowin_msys ()
 
 #-----------------------------------------------------------------------------
 
-configure_fpga_gowin_all ()
+configure_fpga_gowin_openfpga ()
 {
     is_command_available_or_error openFPGALoader \
         " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
