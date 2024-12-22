@@ -141,10 +141,10 @@ gowin_try_install_dir ()
 
 gowin_setup_ide ()
 {
-    if ! ( [  "$OSTYPE" = "linux-gnu" ]  ||
-           [  "$OSTYPE" = "cygwin"    ]  ||
-           [  "$OSTYPE" = "msys"      ]  ||
-           [[ "$OSTYPE" = "darwin"*   ]] && [ $(uname -m) = arm64 ] )
+    if ! (   [  "$OSTYPE" = "linux-gnu" ]  ||
+             [  "$OSTYPE" = "cygwin"    ]  ||
+             [  "$OSTYPE" = "msys"      ]  ||
+           ( [[ "$OSTYPE" = "darwin"*   ]] && [ $(uname -m) = arm64 ] ) )
     then
         error "Gowin IDE is not working on your platform (Mac x64?)"
         return
