@@ -11,6 +11,8 @@
 //      Digital Circuit Synthesis School
 //
 
+`ifdef UNDEFINED
+
 `include "sc_defs.svh"
 
 module sc_top
@@ -82,3 +84,5 @@ begin
 end
 
 endmodule
+
+`endif
