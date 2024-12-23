@@ -273,7 +273,7 @@ module lab_top
     // No 5. The story of love
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst || |key)
             states [0] <= 0;
         else
             case (states [0])
@@ -297,7 +297,7 @@ module lab_top
     // No 8. Godfather
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst || |key)
             states [1] <= 0;
         else
             case (states [1])
@@ -321,7 +321,7 @@ module lab_top
     // No 1. Gangsters Song
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst || |key)
             states [2] <= 0;
         else
             case (states [2])
@@ -347,7 +347,7 @@ module lab_top
     // No 4. Fly away on the wings of wind
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst || |key)
             states [0] <= 0;
         else
             case (states [0])
@@ -371,7 +371,7 @@ module lab_top
     // No 2. Winged Swing
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst || |key)
             states [1] <= 0;
         else
             case (states [1])
@@ -395,7 +395,7 @@ module lab_top
     // No 3. Yesterday by Beatles
 
     always_ff @ (posedge clk or posedge rst)
-        if (rst)
+        if (rst || |key)
             states [2] <= 0;
         else
             case (states [2])
