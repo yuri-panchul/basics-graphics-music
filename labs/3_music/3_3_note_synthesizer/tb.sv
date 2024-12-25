@@ -2,6 +2,11 @@
 
 module tb;
 
+    timeunit      1ns;
+    timeprecision 1ps;
+
+    //------------------------------------------------------------------------
+
     localparam clk_mhz = 50,
                w_key   = 4,
                w_sw    = 4,
@@ -10,8 +15,7 @@ module tb;
                w_sound = 16,
                w_gpio  = 100;
 
-    // Based on timescale is 1 ns / 1 ps
-    localparam clk_period = (1_000_000_000 / 1_000_000) / clk_mhz;
+    localparam clk_period = 20ns;
 
     //------------------------------------------------------------------------
 
@@ -115,7 +119,7 @@ module tb;
 
         // Based on timescale is 1 ns / 1 ps
 
-        # 1_000_000
+        # 0.001s
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;

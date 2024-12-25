@@ -111,5 +111,14 @@ run_icarus_verilog ()
         error 1 "don't know how to run GTKWave on your OS $OSTYPE"
     fi
 
-    $gtkwave dump.vcd $gtkwave_options
+    command="$gtkwave dump.vcd $gtkwave_options"
+
+    if [  "$OSTYPE" = "linux-gnu"  ] ||
+       [[ "$OSTYPE" = "darwin"*   ]]
+    then
+        // $command &
+        $command
+    else
+        $command
+    fi
 }
