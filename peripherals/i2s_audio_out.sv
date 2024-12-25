@@ -95,10 +95,12 @@ module i2s_audio_out
         end
         else
         begin
-            if (clk_div [LRCLK_BIT - 2:0]
-                ==
-                { { LRCLK_BIT - BCLK_BIT - 1 { ~ offset_by_one_cycle } },
-                  { BCLK_BIT                 {   1'b1                } } } )
+            if ( clk_div [LRCLK_BIT - 2:0]
+                 ==
+                 { { LRCLK_BIT - BCLK_BIT - 1
+                         { ~ 1' (offset_by_one_cycle) } },
+
+                   { BCLK_BIT { 1'b1 } } } )
             begin
                 shift <= data_aligned;
             end
