@@ -59,8 +59,7 @@ module tb;
 
     //------------------------------------------------------------------------
 
-    always_comb
-        key = { {(w_key - 1){1'b0}} , ~ rst};
+    assign key = w_key' (1);
 
     initial
     begin
