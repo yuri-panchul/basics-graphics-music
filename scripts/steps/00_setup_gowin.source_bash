@@ -207,6 +207,11 @@ gowin_setup_ide ()
               "such as 'GOWIN_VERSION_DIR=/home/verilog/gowin/0.99'."
     fi
 
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/x86_64-linux-gnu/libfreetype.so"
+    fi
+
     if [[ "$OSTYPE" = "darwin"* ]]
     then
         export DYLD_FRAMEWORK_PATH="${DYLD_FRAMEWORK_PATH:+$DYLD_FRAMEWORK_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
