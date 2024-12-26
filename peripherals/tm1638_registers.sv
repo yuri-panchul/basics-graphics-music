@@ -27,9 +27,9 @@ module tm1638_registers
 );
 
 `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
-    localparam static_hex = 1'b0;
+    localparam static_hex = 0;
 `else
-    localparam static_hex = 1'b1;
+    localparam static_hex = 1;
 `endif
 
     wire [0:w_digit-1][w_seg - 1:0] init76543210 =
@@ -49,22 +49,24 @@ module tm1638_registers
     // HEX registered
     logic [w_seg - 1:0] r_hex[w_digit];
 
-    always @( posedge clk or posedge rst)
-    begin
-        for (int i = 0; i < $bits (digit); i++)
-            if (rst)
-                if (r_init)
-                    r_hex[i] <= init76543210[i];
-                else
-                    r_hex[i] <= 'b0;
-            else if (digit == 'b1<<i)
+    genvar i;
+
+    generate
+
+        for (i = 0; i < w_digit; i++)
+        begin : gen_r_hex
+
+            always @( posedge clk or posedge rst)
+                if (rst)
+                    r_hex[i] <= r_init ? init76543210[i] : '0;
+                else if (digit [i])
                     r_hex[i] <= hgfedcba;
-    end
+        end
+
+    endgenerate
 
     // HEX combinational
     wire [w_seg - 1:0] c_hex[w_digit];
-
-    genvar i;
 
     generate
         for (i = 0; i < w_digit; i++) begin : assign_registers
