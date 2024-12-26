@@ -209,7 +209,9 @@ gowin_setup_ide ()
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
-        export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/x86_64-linux-gnu/libfreetype.so"
+        shopt -s nullglob
+        export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD }$(echo /usr/lib/x86_64-linux-gnu/libfreetype.so*)"
+        shopt -u nullglob
     fi
 
     if [[ "$OSTYPE" = "darwin"* ]]
