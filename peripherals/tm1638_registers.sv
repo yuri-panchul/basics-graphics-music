@@ -23,7 +23,7 @@ module tm1638_registers
     input                         rst,
     input        [ w_seg   - 1:0] hgfedcba,
     input        [ w_digit - 1:0] digit,
-    output       [ w_seg   - 1:0] hex[w_digit]
+    output [w_digit - 1:0][ w_seg   - 1:0] hex
 );
 
 `ifdef EMULATE_DYNAMIC_7SEG_ON_STATIC_WITHOUT_STICKY_FLOPS
@@ -32,9 +32,10 @@ module tm1638_registers
     localparam static_hex = 1'b1;
 `endif
 
-    wire [w_digit-1:0][w_seg - 1:0] init76543210 =
+    wire [0:w_digit-1][w_seg - 1:0] init76543210 =
+
                       //hgfedcba             --a--
-                    '{'b00111111, // 0      |     |
+                     {'b00111111, // 0      |     |
                       'b00000110, // 1      f     b
                       'b01011011, // 2      |     |
                       'b01001111, // 3       --g--
