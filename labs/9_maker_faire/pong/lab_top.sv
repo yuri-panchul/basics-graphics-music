@@ -1,112 +1,134 @@
 /*
- * Copyright (c) 2024 Tiny Tapeout LTD
- * SPDX-License-Identifier: Apache-2.0
- * Author: Uri Shaked
- */
-/*
- * Ping-pong game by Allen Baker (botbakery.net)
+ * Pong game by Allen Baker (botbakery.net)
  * 
  * Controls:
- * Player 1: 1 = up, 2 = down
- * Player 2: 6 = up, 7 = down
+ * Player 1: Key 0 = up, Key 1 = down
+ * Player 2: Key 2 = up, Key 3 = down
  */
 
-`default_nettype none
+`include "config.svh"
 
-module tt_um_vga_example (input wire [7:0]  ui_in, // Dedicated inputs
-			  output wire [7:0] uo_out, // Dedicated outputs
-			  input wire [7:0]  uio_in, // IOs: Input path
-			  output wire [7:0] uio_out, // IOs: Output path
-			  output wire [7:0] uio_oe, // IOs: Enable path (active high: 0=input, 1=output)
-			  input wire	    ena, // always 1 when the design is powered, so you can ignore it
-			  input wire	    clk, // clock
-			  input wire	    rst_n     // reset_n - low to reset
-			  );
+module lab_top
+# (
+    parameter  clk_mhz       = 50,
+               w_key         = 4,
+               w_sw          = 8,
+               w_led         = 8,
+               w_digit       = 8,
+               w_gpio        = 100,
 
-   // VGA signals
-   wire					    hsync;
-   wire					    vsync;
-   reg [1:0]				    R;
-   reg [1:0]				    G;
-   reg [1:0]				    B;
-   wire					    video_active;
-   wire [9:0]				    pix_x;
-   wire [9:0]				    pix_y;
+               screen_width  = 640,
+               screen_height = 480,
 
-   // Configuration
+               w_red         = 4,
+               w_green       = 4,
+               w_blue        = 4,
 
-   // TinyVGA PMOD
-   assign uo_out  = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
+               w_x           = $clog2 ( screen_width  ),
+               w_y           = $clog2 ( screen_height )
+)
+(
+    input                        clk,
+    input                        slow_clk,
+    input                        rst,
 
-   // Unused outputs assigned to 0.
-   assign uio_out = 0;
-   assign uio_oe  = 0;
+    // Keys, switches, LEDs
 
-   // Suppress unused signals warning
-   wire					    _unused_ok = &{ena, ui_in[5:3], ui_in[0], uio_in};
+    input        [w_key   - 1:0] key,
+    input        [w_sw    - 1:0] sw,
+    output logic [w_led   - 1:0] led,
 
-   hvsync_generator vga_sync_gen (.clk(clk),
-				  .reset(~rst_n),
-				  .hsync(hsync),
-				  .vsync(vsync),
-				  .display_on(video_active),
-				  .hpos(pix_x),
-				  .vpos(pix_y)
-				  );
+    // A dynamic seven-segment display
 
-   parameter				    lcd_width = 640;
-   parameter				    lcd_height = 480;
+    output logic [          7:0] abcdefgh,
+    output logic [w_digit - 1:0] digit,
 
-   parameter				    player_width = 30;
-   parameter				    player_height = 80;
-   parameter				    player_init_offset = (lcd_height / 2) - (player_height / 2);
+    // Graphics
+
+    input        [w_x     - 1:0] x,
+    input        [w_y     - 1:0] y,
+
+    output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue,
+
+    // Microphone, sound output and UART
+
+    input        [         23:0] mic,
+    output       [         15:0] sound,
+
+    input                        uart_rx,
+    output                       uart_tx,
+
+    // General-purpose Input/Output
+
+    inout        [w_gpio  - 1:0] gpio
+);
+
+   assign abcdefgh = 8'd0;
+   assign digit = 8'd0;
+
+   wire [w_x-1:0]			 pix_x;
+   wire [w_y-1:0]			 pix_y;
+   assign pix_x = x;
+   assign pix_y = y;
+
+   reg [w_red-1:0]			 R;
+   reg [w_green-1:0]			 G;
+   reg [w_blue-1:0]			 B;
+   assign red = R;
+   assign green = G;
+   assign blue = B;
+
+   assign sound = 16'd0;
+
+   assign led = {w_led{1'b0}};
+
+   assign uart_tx = 1'b0;
+
+   logic				 pulse;
+   strobe_gen
+     # (
+        .clk_mhz   ( clk_mhz ),
+        .strobe_hz ( 30      )
+	)
+   i_strobe_gen (clk, rst, pulse);
+
+   localparam				 lcd_width = screen_width;
+   localparam				 lcd_height = screen_height;
+
+   localparam				 player_width = 30;
+   localparam				 player_height = 80;
+   localparam				 player_init_offset = (lcd_height / 2) - (player_height / 2);
    
-   parameter				    p1_left_bound = 0;
-   parameter				    p1_right_bound = player_width;
-   parameter				    p1_upper_bound = 0;
-   parameter				    p1_lower_bound = player_height;
+   localparam				 p1_left_bound = 0;
+   localparam				 p1_right_bound = player_width;
+   localparam				 p1_upper_bound = 0;
+   localparam				 p1_lower_bound = player_height;
 
-   parameter				    p2_left_bound = lcd_width - player_width;
-   parameter				    p2_right_bound = lcd_width;
-   parameter				    p2_upper_bound = 0;
-   parameter				    p2_lower_bound = player_height;
+   localparam				 p2_left_bound = lcd_width - player_width;
+   localparam				 p2_right_bound = lcd_width;
+   localparam				 p2_upper_bound = 0;
+   localparam				 p2_lower_bound = player_height;
 
-   parameter				    ball_width = 20;
-   parameter				    ball_height = 20;
-   parameter				    ball_x_init = (lcd_width / 2) - (ball_width / 2);
-   parameter				    ball_y_init = (lcd_height / 2) + (ball_height / 2);
+   localparam				 ball_width = 20;
+   localparam				 ball_height = 20;
+   localparam				 ball_x_init = (lcd_width / 2) - (ball_width / 2);
+   localparam				 ball_y_init = (lcd_height / 2) + (ball_height / 2);
 
-   parameter				    player_speed = 15;
-   parameter				    ball_speed = 7;
+   localparam				 player_speed = 15;
+   localparam				 ball_speed = 7;
 
-   logic [9:0]				    p1_offset;
-   logic [9:0]				    p2_offset;
-   logic [9:0]				    ball_x_offset;
-   logic [9:0]				    ball_y_offset;
-   logic				    ball_x_fwd;
-   logic				    ball_y_fwd;
+   logic [w_y-1:0]			 p1_offset;
+   logic [w_y-1:0]			 p2_offset;
+   logic [w_x-1:0]			 ball_x_offset;
+   logic [w_y-1:0]			 ball_y_offset;
+   logic				 ball_x_fwd;
+   logic				 ball_y_fwd;
 
-   // Slow clock
-   logic slow_clk;
-   logic [17:0] slow_clk_cnt;
-   always_ff @(posedge clk or negedge rst_n)
-     begin
-	if (~rst_n)
-	  begin
-	     slow_clk <= 0;
-	     slow_clk_cnt <= 0;
-	  end
-	else
-	  begin
-	     slow_clk_cnt <= slow_clk_cnt + 1;
-	     if (!slow_clk_cnt)
-	       slow_clk <= ~slow_clk;
-	  end // else: !if(~rst_n)
-     end // always_ff @ (posedge clk or negedge rst_n)
-
-   function logic [9:0] get_player_offset(input up,
-					  input down,
-					  input [9:0] current_offset);
+   function logic [w_y-1:0] get_player_offset(input up,
+					      input	      down,
+					      input [w_y-1:0] current_offset);
       if (down)
 	begin
 	   if (current_offset < (lcd_height - player_height))
@@ -125,7 +147,7 @@ module tt_um_vga_example (input wire [7:0]  ui_in, // Dedicated inputs
 	get_player_offset = current_offset;
    endfunction // get_player_offset
 
-   function logic [9:0] get_ball_x_offset(input [9:0] current_offset);
+   function logic [w_x-1:0] get_ball_x_offset(input [9:0] current_offset);
       if (ball_x_fwd)
 	begin
 	   if (current_offset < (lcd_width - ball_width))
@@ -142,7 +164,7 @@ module tt_um_vga_example (input wire [7:0]  ui_in, // Dedicated inputs
 	end
    endfunction // get_ball_x_offset
 
-   function logic [9:0] get_ball_y_offset(input [9:0] current_offset);
+   function logic [w_y-1:0] get_ball_y_offset(input [9:0] current_offset);
       if (ball_y_fwd)
 	begin
 	   if (current_offset < (lcd_height - ball_height))
@@ -175,9 +197,9 @@ module tt_um_vga_example (input wire [7:0]  ui_in, // Dedicated inputs
 		    (pix_x < (ball_x_offset + ball_width)) &&
 		    (pix_y > ball_y_offset) &&
 		    (pix_y < (ball_y_offset + ball_width));
-   always_ff @(posedge slow_clk or negedge rst_n)
+   always_ff @(posedge slow_clk or posedge rst)
      begin
-        if (~rst_n)
+        if (rst)
 	  begin
 	     p1_offset <= player_init_offset;
 	     p2_offset <= player_init_offset;
@@ -189,8 +211,8 @@ module tt_um_vga_example (input wire [7:0]  ui_in, // Dedicated inputs
 	else
 	  begin
 
-	     p1_offset <= get_player_offset(ui_in[1], ui_in[2], p1_offset);
-	     p2_offset <= get_player_offset(ui_in[6], ui_in[7], p2_offset);
+	     p1_offset <= get_player_offset(key[0], key[1], p1_offset);
+	     p2_offset <= get_player_offset(key[2], key[3], p2_offset);
 	     ball_x_offset <= get_ball_x_offset(ball_x_offset);
 	     ball_y_offset <= get_ball_y_offset(ball_y_offset);
 
@@ -236,26 +258,26 @@ module tt_um_vga_example (input wire [7:0]  ui_in, // Dedicated inputs
 	  end
      end
    
-   always_ff @(posedge clk or negedge rst_n)
+   always_ff @(posedge clk or posedge rst)
      begin
-        if (~rst_n)
+        if (rst)
 	  begin
 	     R <= 0;
 	     G <= 0;
 	     B <= 0;
 	  end
-        else
+        else if (pulse)
 	  begin
 	     R <= 0;
 	     G <= 0;
 	     B <= 0;
-	     if (video_active && (at_p1 || at_p2 || at_ball))
+	     if (at_p1 || at_p2 || at_ball)
 	       begin
-		  R <= 2'b11;
-		  G <= 2'b11;
-		  B <= 2'b11;
+		  R <= {w_red{1'b1}};
+		  G <= {w_green{1'b1}};
+		  B <= {w_blue{1'b1}};
 	       end
 	  end
      end
 
-endmodule
+endmodule // lab_top
