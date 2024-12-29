@@ -32,6 +32,7 @@ module hackathon_top
     //     10100  5-bit number because of carry
     //
     //     led [4:0] means { led [4], led [3], led [2], led [1], led [0] }
+    //     This construct is called a "bit slice".
 
     assign led [4:0] = key [7:4] + key [3:0];
 
