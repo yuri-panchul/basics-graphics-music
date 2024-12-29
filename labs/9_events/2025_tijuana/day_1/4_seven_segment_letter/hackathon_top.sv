@@ -23,7 +23,6 @@ module hackathon_top
     output logic [5:0] green,
     output logic [4:0] blue
 );
-
     //   --a--       --1--
     //  |     |     |      
     //  f     b     1     0
@@ -37,7 +36,7 @@ module hackathon_top
     typedef enum bit [7:0]
     {
         //         abcd efgh
-        F     = 8'b1000_1110,
+        F     = 8'b1000_1110,  // This means "8-bit binary number"
         P     = 8'b1100_1110,
         G     = 8'b1011_1100,
         A     = 8'b1110_1110,
@@ -61,7 +60,7 @@ module hackathon_top
     seven_seg_encoding_e letter;
 
     always_comb
-      case (4' (key))
+      case (key)
       4'b1000: letter = F;
       4'b0100: letter = P;
       4'b0010: letter = G;
