@@ -26,4 +26,22 @@ module hackathon_top
 
     assign led [0] = key [0] & key [1];
 
+    // Exercise 1: Change the code above.
+    // Assign to led [0] the result of OR operation (|).
+
+    wire a = key [2];  // Note a new construct - wire
+    wire b = key [3];
+
+    assign led [1] = a ^ b; // XOR - eXclusive OR
+
+    // Exercise 2: Create an illustration to De Morgan's laws:
+    //
+    // ~ (a & b) == ~ a | ~ b
+    // ~ (a | b) == ~ a & ~ b
+
+    assign led [2] = ~ (a &   b);
+    assign led [3] = ~  a | ~ b;  // The same as led [2]
+    assign led [4] = ~ (a |   b);
+    assign led [5] = ~  a & ~ b;  // The same as led [5]
+
 endmodule
