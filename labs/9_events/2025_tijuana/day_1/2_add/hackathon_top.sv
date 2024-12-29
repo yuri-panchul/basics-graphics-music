@@ -24,6 +24,35 @@ module hackathon_top
     output logic [4:0] blue
 );
 
-    assign led = key [7:4] + key [3:0];
+    // Adding two 4-bit numbers results in 5-bit number
+    //
+    //      1010
+    //    + 1011
+    //    ------
+    //     10100  5-bit number because of carry
+    //
+    //     led [4:0] means { led [4], led [3], led [2], led [1], led [0] }
+
+    assign led [4:0] = key [7:4] + key [3:0];
+
+    // Doing arithmetics using logical operations
+    //
+    //    0      0      1      1   key [4]
+    //  + 0    + 1    + 0    + 1   key [0]
+    //  ---    ---    ---    ---
+    //    0      1      1     10
+    //                        ||
+    //                        |+-- led [6]
+    //                        +--- led [7]
+    //
+    // https://es.wikipedia.org/wiki/Sistema_binario
+
+    // Exercise: Check that the following code
+    // is the same as:
+    //
+    // assign led [7:6] = key [4] + key [0];
+
+    assign led [7] = key [4] & key [0];
+    assign led [6] = key [4] ^ key [0];
 
 endmodule

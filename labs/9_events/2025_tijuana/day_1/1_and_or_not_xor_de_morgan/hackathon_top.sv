@@ -38,6 +38,8 @@ module hackathon_top
     //
     // ~ (a & b) == ~ a | ~ b
     // ~ (a | b) == ~ a & ~ b
+    //
+    // https://es.wikipedia.org/wiki/Leyes_de_De_Morgan
 
     assign led [2] = ~ (a &   b);
     assign led [3] = ~  a | ~ b;  // The same as led [2]
