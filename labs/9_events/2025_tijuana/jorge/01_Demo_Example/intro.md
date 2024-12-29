@@ -1,4 +1,4 @@
-Demo Example
+~Demo Example
 
 Show how to run the examples in this repository
 Describe the structure of the overall repo
