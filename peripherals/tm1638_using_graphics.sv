@@ -46,7 +46,7 @@ module virtual_tm1638_using_graphics
     localparam offsetx = (screen_width  - (1<<clenx_s)*cellsx)/2;
     localparam offsety = (screen_height - (1<<cleny_s)*cellsy)/2;
 
-    wire [w_seg - 1:0] hex[w_digit];
+    wire [w_digit - 1:0][w_seg - 1:0] hex;
 
     tm1638_registers
     # (

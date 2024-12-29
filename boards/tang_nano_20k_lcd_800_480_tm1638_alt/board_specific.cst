@@ -1,0 +1,154 @@
+// The pin assignments
+// All I/O pins here are 3.3V compatible unless specified otherwise
+
+    IO_LOC "CLK"                4;
+
+    IO_LOC "KEY[0]"             88;
+    IO_LOC "KEY[1]"             87;
+
+    IO_LOC "LED[0]"             15;
+    IO_LOC "LED[1]"             16;
+    IO_LOC "LED[2]"             17;
+    IO_LOC "LED[3]"             18;
+    IO_LOC "LED[4]"             19;
+    IO_LOC "LED[5]"             20;
+
+// Some LCD pins share bank with TMDS pins
+// which have different voltage requirements.
+
+    IO_LOC "LCD_CLK"            77;
+    IO_LOC "LCD_DE"             48;
+    IO_LOC "LCD_HS"             25;
+    IO_LOC "LCD_VS"             26;
+
+    IO_LOC "LCD_R[0]"           42;
+    IO_LOC "LCD_R[1]"           41;
+    IO_LOC "LCD_R[2]"           49;
+    IO_LOC "LCD_R[3]"           39;
+    IO_LOC "LCD_R[4]"           38;
+
+    IO_LOC "LCD_G[0]"           37;
+    IO_LOC "LCD_G[1]"           36;
+    IO_LOC "LCD_G[2]"           35;
+    IO_LOC "LCD_G[3]"           34;
+    IO_LOC "LCD_G[4]"           33;
+    IO_LOC "LCD_G[5]"           32;
+
+    IO_LOC "LCD_B[0]"           31;
+    IO_LOC "LCD_B[1]"           30;
+    IO_LOC "LCD_B[2]"           29;
+    IO_LOC "LCD_B[3]"           28;
+    IO_LOC "LCD_B[4]"           27;
+
+// TMDS pins conflict with LCD pins
+// In this configuration they are commented out
+//  IO_LOC "O_TMDS_CLK_P"       33,34;
+//  IO_LOC "O_TMDS_DATA_P[0]"   35,36;
+//  IO_LOC "O_TMDS_DATA_P[1]"   37,38;
+//  IO_LOC "O_TMDS_DATA_P[2]"   39,40;
+
+// DVI I2C
+    IO_LOC "EDID_CLK"           53;
+    IO_LOC "EDID_DAT"           52;
+
+// UART to debugger
+    IO_LOC "UART_TX"            70;
+    IO_LOC "UART_RX"            69;
+
+//  IO_LOC "UART_RXD"           31;  // Conflct with LCD_B[0]
+//  IO_LOC "UART_TXD"           30;  // Conflct with LCD_B[1]
+
+// SDIO pins for SD-cards
+    IO_LOC "SD_CLK"             83;
+    IO_LOC "SD_CMD"             82;
+    IO_LOC "SD_DAT0"            84;
+    IO_LOC "SD_DAT1"            85;  // Used for inmp441 sd
+    IO_LOC "SD_DAT2"            80;
+    IO_LOC "SD_DAT3"            81;
+
+// Onboard I2S audio
+    IO_LOC "HP_BCK"             56;  // DAC_BCLK
+    IO_LOC "HP_DIN"             54;  // DAC_DIN
+    IO_LOC "HP_WS"              55;  // DAC_LRCK
+    IO_LOC "PA_EN"              51;  // For audio, should be assigned 1
+
+// On-board WS2812 RGB LED with a serial interface
+    IO_LOC "WS2812"             79;
+
+// GPIO for external modules
+
+//  IO_LOC "JOYSTICK_CLK"       17;  // Conflict with LED[2]
+//  IO_LOC "JOYSTICK_MOSI"      20;  // Conflict with LED[5]
+//  IO_LOC "JOYSTICK_MISO"      19;  // Conflict with LED[4]
+//  IO_LOC "JOYSTICK_CS"        18;  // Conflict with LED[3]
+
+//  IO_LOC "JOYSTICK_CLK2"      52;  // Conflicts with EDID_CLK
+//  IO_LOC "JOYSTICK_MOSI2"     53;  // Conflicts with EDID_DAT
+    IO_LOC "JOYSTICK_MISO2"     71;  // TM1638: sio_stb
+    IO_LOC "JOYSTICK_CS2"       72;  // TM1638: sio_clk
+
+    IO_LOC "GPIO[0]"            86;  // TM1638:  sio_data
+    IO_LOC "GPIO[1]"            73;  // INMP441: i2s_lr
+    IO_LOC "GPIO[2]"            74;  // INMP441: i2s_ws
+    IO_LOC "GPIO[3]"            75;  // INMP441: i2s_sck
+//  IO_LOC "SD_DAT1"            85;  // INMP441: i2s_sd
+
+// Extra GPIO for custom tasks
+    IO_LOC "GPIO[4]"            76;
+//  IO_LOC "SD_DAT2"            80;
+//  IO_LOC "WS2812"             79;
+//  IO_LOC "EDID_CLK"           53;
+//  IO_LOC "EDID_DAT"           52;
+
+
+// TM1638 occupy:
+//
+// 86 GPIO[0]             - tm1638: sio_data
+// 72 JOYSTICK_CS2        - tm1638: sio_clk
+// 71 JOYSTICK_MISO2      - tm1638: sio_stb
+
+// INMP 441 occupy:
+//
+// 73 GPIO[1]             - inmp441: lr
+// 74 GPIO[2]             - inmp441: ws
+// 75 GPIO[3]             - inmp441: sck
+// 85 SD_DAT1             - inmp441: sd
+
+// Extra pins for GPIO:
+//
+// 76 GCLKC_1             - gpio[0]
+// 80 SD_DAT2             - gpio[1]
+// Consider 79 / 2812_DIN
+// Consider 53 / EDID_CLK
+// Consider 52 / EDID_DAT
+
+// Pin conflicts:
+//
+// 17;        IO_LOC "JOYSTICK_CLK"
+// 17;        IO_LOC "LED[2]"
+//
+// 18;        IO_LOC "JOYSTICK_CS"
+// 18;        IO_LOC "LED[3]"
+//
+// 19;        IO_LOC "JOYSTICK_MISO"
+// 19;        IO_LOC "LED[4]"
+//
+// 20;        IO_LOC "JOYSTICK_MOSI"
+// 20;        IO_LOC "LED[5]"
+//
+// 30;        IO_LOC "LCD_B[1]"
+// 30;        IO_LOC "UART_TXD"
+//
+// 31;        IO_LOC "LCD_B[0]"
+// 31;        IO_LOC "UART_RXD"
+//
+// 33,34;     IO_LOC "O_TMDS_CLK_P"
+// 33;        IO_LOC "LCD_G[4]"
+//
+// 35,36;     IO_LOC "O_TMDS_DATA_P[0]"
+// 35;        IO_LOC "LCD_G[2]"
+//
+// 37,38;     IO_LOC "O_TMDS_DATA_P[1]"
+// 37;        IO_LOC "LCD_G[0]"
+//
+// 39,40;     IO_LOC "O_TMDS_DATA_P[2]"

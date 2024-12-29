@@ -78,7 +78,7 @@ module lab_top
     assign led [0] = result;
 
     assign led [1] = key [0] ^ key [1];
-    //assign led [2] = a ^ b;
+    // assign led [2] = a ^ b;
 
     //------------------------------------------------------------------------
 

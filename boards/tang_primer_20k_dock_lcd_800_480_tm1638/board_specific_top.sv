@@ -9,10 +9,12 @@
    `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 `endif
 
+// `define MIRROR_LCD
+
 module board_specific_top
 # (
-    parameter   clk_mhz       = 27,
-                pixel_mhz     = 25,
+    parameter   clk_mhz       = 27, // CLK
+                pixel_mhz     = 33, // LCD_CLK
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
@@ -29,8 +31,10 @@ module board_specific_top
                 w_green       = 6,
                 w_blue        = 5,
 
-                w_x = $clog2 ( screen_width ),
-                w_y = $clog2 ( screen_height )
+                w_x = $clog2 ( screen_width  ),
+                w_y = $clog2 ( screen_height ),
+
+                w_sound       = 16
 )
 (
     input                       CLK,
@@ -43,31 +47,41 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
-    output                       LCD_DE,
-    output                       LCD_VS,
-    output                       LCD_HS,
-    output                       LCD_CLK,
+    output                      LCD_DE,
+    output                      LCD_VS,
+    output                      LCD_HS,
+    output                      LCD_CLK,
+    output                      LCD_BL,
 
-    output [            4:0]     LCD_R,
-    output [            5:0]     LCD_G,
-    output [            4:0]     LCD_B,
-
-    //output                      TMDS_CLK_N,
-    //output                      TMDS_CLK_P,
-    //output [              2:0]  TMDS_D_N,
-    //output [              2:0]  TMDS_D_P
+    output [              4:0]  LCD_R,
+    output [              5:0]  LCD_G,
+    output [              4:0]  LCD_B,
 
     inout  [w_gpio / 4  - 1:0]  GPIO_0,
     inout  [w_gpio / 4  - 1:0]  GPIO_1,
     inout  [w_gpio / 4  - 1:0]  GPIO_2,
     inout  [w_gpio / 4  - 1:0]  GPIO_3,
 
-    inout                        EDID_CLK,
-    inout                        EDID_DAT
+    inout                       EDID_CLK,
+    inout                       EDID_DAT,
+
+    output                      PA_EN,
+    output                      HP_DIN,
+    output                      HP_WS,
+    output                      HP_BCK,
+
+    output                      SCK,
+    output                      BCK,
+    output                      LRCK,
+    output                      DIN
 
 );
 
-    wire clk = CLK;
+        Gowin_rPLL i_Gowin_rPLL
+        (
+            .clkout   ( LCD_CLK ),  //  33 MHz
+            .clkin    ( CLK     )   //  27 MHz
+        );
 
     //------------------------------------------------------------------------
 
@@ -115,17 +129,21 @@ module board_specific_top
     wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
+    wire  [w_sound     - 1:0] sound;
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
         localparam lab_mhz = pixel_mhz;
+        assign     lab_clk = LCD_CLK;
+        assign     LCD_BL  = ~ rst;
 
     `else
 
         localparam lab_mhz = clk_mhz;
-        assign     clk     = CLK;
+        assign     lab_clk = CLK;
+        assign     LCD_BL  = 1'b0;
 
     `endif
 
@@ -156,14 +174,17 @@ module board_specific_top
 
     wire slow_clk;
 
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    slow_clk_gen # (.fast_clk_mhz (lab_mhz), .slow_clk_hz (1))
+    i_slow_clk_gen (.slow_clk (slow_clk), .clk (lab_clk), .rst (rst));
 
     //------------------------------------------------------------------------
 
-    // Mirrored LCD
-    //wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
-    //wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+    `ifdef MIRROR_LCD
+
+    wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
+    wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
+
+    `endif
 
     //------------------------------------------------------------------------
 
@@ -182,11 +203,13 @@ module board_specific_top
 
         .w_red         ( w_red         ),
         .w_green       ( w_green       ),
-        .w_blue        ( w_blue        )
+        .w_blue        ( w_blue        )   //,
+
+//        .w_sound       ( w_sound       )
     )
     i_lab_top
     (
-        .clk           ( clk           ),
+        .clk           ( lab_clk       ),
         .slow_clk      ( slow_clk      ),
         .rst           ( rst           ),
 
@@ -198,13 +221,17 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
-      // Normal LCD
+        `ifdef MIRROR_LCD
+
+        .x             ( mirrored_x    ),
+        .y             ( mirrored_y    ),
+
+        `else
+
         .x             ( x             ),
         .y             ( y             ),
 
-      // Mirrored LCD
-      //.x             ( mirrored_x    ),
-      //.y             ( mirrored_y    ),
+        `endif
 
         .red           ( LCD_R         ),
         .green         ( LCD_G         ),
@@ -214,6 +241,7 @@ module board_specific_top
         .uart_tx       ( UART_TX       ),
 
         .mic           ( mic           ),
+        .sound         ( sound         ),
         .gpio          (               )
     );
 
@@ -236,12 +264,12 @@ module board_specific_top
 
     tm1638_board_controller
     # (
-        .clk_mhz ( lab_mhz ),
+        .clk_mhz ( lab_mhz    ),
         .w_digit ( w_tm_digit )
     )
     i_tm1638
     (
-        .clk        ( clk           ),
+        .clk        ( lab_clk       ),
         .rst        ( rst           ),
         .hgfedcba   ( hgfedcba      ),
         .digit      ( tm_digit      ),
@@ -258,20 +286,9 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire lcd_module_clk;
-
-        Gowin_rPLL i_Gowin_rPLL
-        (
-            .clkout  ( lcd_module_clk ),  // 200    MHz
-            .clkoutd ( LCD_CLK        ),  //  33.33 MHz
-            .clkin   ( clk            )   //  27    MHz
-        );
-
         lcd_800_480 i_lcd
         (
-            .CLK       (   lcd_module_clk ),
-
-            .PixelClk  (   LCD_CLK         ),
+            .PixelClk  (   lab_clk        ),
             .nRST      ( ~ rst            ),
 
             .LCD_DE    (   LCD_DE         ),
@@ -281,9 +298,6 @@ module board_specific_top
             .x         (   x              ),
             .y         (   y              )
         );
-
-        assign LCD_INIT = 1'b0;
-        assign LCD_BL   = 1'b0;
 
     `endif
 
@@ -297,13 +311,63 @@ module board_specific_top
     )
     i_microphone
     (
-        .clk     ( clk        ),
+        .clk     ( lab_clk    ),
         .rst     ( rst        ),
         .lr      ( GPIO_1 [1] ),
         .ws      ( GPIO_1 [2] ),
         .sck     ( GPIO_1 [3] ),
         .sd      ( GPIO_1 [0] ),
         .value   ( mic        )
+    );
+
+    `endif
+
+    //--------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+    // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
+    // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but LPA4809 needs enable signal PA_EN
+
+    i2s_audio_out
+    # (
+        .clk_mhz             ( lab_mhz    ),
+        .in_res              ( w_sound    ),
+        .align_right         ( 1'b1       ), // PT8211 DAC data format
+        .offset_by_one_cycle ( 1'b0       )
+    )
+    inst_audio_out
+    (
+        .clk      ( lab_clk    ),
+        .reset    ( rst        ),
+        .data_in  ( sound      ),
+        .mclk     (            ),
+        .bclk     ( HP_BCK     ),
+        .lrclk    ( HP_WS      ),
+        .sdata    ( HP_DIN     )
+    );
+
+    // Enable DAC
+    assign PA_EN = 1'b1;
+
+    // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
+
+    i2s_audio_out
+    # (
+        .clk_mhz             ( lab_mhz    ),
+        .in_res              ( w_sound    ),
+        .align_right         ( 1'b0       ),
+        .offset_by_one_cycle ( 1'b1       )
+    )
+    inst_ext_audio_out
+    (
+        .clk      ( lab_clk    ),
+        .reset    ( rst        ),
+        .data_in  ( sound      ),
+        .mclk     ( SCK        ),
+        .bclk     ( BCK        ),
+        .sdata    ( DIN        ),
+        .lrclk    ( LRCK       )
     );
 
     `endif

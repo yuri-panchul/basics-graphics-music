@@ -117,7 +117,7 @@ module tm1638_board_controller
     );
 
     ////////////// TM1563 data /////////////////
-    wire [w_seg - 1:0] hex[w_digit];
+    wire [w_digit -1:0][w_seg - 1:0] hex;
 
     tm1638_registers
     # (

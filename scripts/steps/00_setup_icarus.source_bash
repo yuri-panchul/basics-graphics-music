@@ -57,8 +57,8 @@ run_icarus_verilog ()
     shopt -s nullglob
 
     iverilog -g2005-sv -s tb \
-         -I ..      -I "$lab_dir/common" \
-            ../*.sv    "$lab_dir/common"/*.sv \
+         -I .. -I "$lab_dir/common" -I "$package_dir/peripherals" \
+            ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv \
             ../*.v \
         2>&1 | tee "$log"
 
@@ -89,20 +89,36 @@ run_icarus_verilog ()
        || [ "$OSTYPE" = "msys"      ]
     then
         gtkwave=gtkwave
-    elif [ ${OSTYPE/[0-9]*/} = "darwin" ]
-    # elif [[ "$OSTYPE" = "darwin"* ]]  # Alternative way
-    then
-        # For some reason the following way of opening the application
-        # under Mac does not read the script file:
-        #
-        # open -a gtkwave dump.vcd --args --script $PWD/gtkwave.tcl
-        #
-        # This way works:
 
-        gtkwave=/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin
+    elif [[ "$OSTYPE" = "darwin"* ]]
+    then
+        if [ $(uname -m) = arm64 ]
+        then
+            is_command_available_or_error_and_install surfer
+
+            gtkwave=surfer
+        else
+            # For some reason the following way of opening the application
+            # under Mac does not read the script file:
+            #
+            # open -a gtkwave dump.vcd --args --script $PWD/gtkwave.tcl
+            #
+            # This way works:
+
+            gtkwave=/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin
+        fi
     else
         error 1 "don't know how to run GTKWave on your OS $OSTYPE"
     fi
 
-    $gtkwave dump.vcd $gtkwave_options
+    command="$gtkwave dump.vcd $gtkwave_options"
+
+    if [  "$OSTYPE" = "linux-gnu"  ] ||
+       [[ "$OSTYPE" = "darwin"*   ]]
+    then
+        // $command &
+        $command
+    else
+        $command
+    fi
 }

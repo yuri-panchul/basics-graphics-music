@@ -275,6 +275,8 @@ module lab_top
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             states [0] <= 0;
+        else if (|key)
+            states [0] <= 0;
         else
             case (states [0])
              0: if ( t_note == Bf ) states [0] <=  1;
@@ -299,6 +301,8 @@ module lab_top
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             states [1] <= 0;
+        else if (|key)
+            states [1] <= 0;
         else
             case (states [1])
              0: if ( t_note == G  ) states [1] <=  1;
@@ -322,6 +326,8 @@ module lab_top
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
+            states [2] <= 0;
+        else if (|key)
             states [2] <= 0;
         else
             case (states [2])
@@ -349,6 +355,8 @@ module lab_top
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             states [0] <= 0;
+        else if (|key)
+            states [0] <= 0;
         else
             case (states [0])
              0: if ( t_note == G  ) states [0] <=  1;
@@ -373,6 +381,8 @@ module lab_top
     always_ff @ (posedge clk or posedge rst)
         if (rst)
             states [1] <= 0;
+        else if (|key)
+            states [1] <= 0;
         else
             case (states [1])
              0: if ( t_note == A  ) states [1] <=  1;
@@ -396,6 +406,8 @@ module lab_top
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)
+            states [2] <= 0;
+        else if (|key)
             states [2] <= 0;
         else
             case (states [2])
@@ -478,7 +490,7 @@ module lab_top
                 A  : abcdefgh <= 8'b11101110;  // A   //  |     |
                 As : abcdefgh <= 8'b11101111;  // A#  //   --d--  h
                 B  : abcdefgh <= 8'b00111110;  // B
-                default : abcdefgh <= 8'b00000000;
+                default : abcdefgh <= 8'b00000010;
                 endcase
             else if (i_digit < n_fsms)
                 case (states [n_fsms - 1 - i_digit])

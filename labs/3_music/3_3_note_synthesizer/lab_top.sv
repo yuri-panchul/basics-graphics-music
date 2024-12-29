@@ -17,7 +17,9 @@ module lab_top
                w_blue        = 4,
 
                w_x           = $clog2 ( screen_width  ),
-               w_y           = $clog2 ( screen_height )
+               w_y           = $clog2 ( screen_height ),
+
+               w_sound       = 16
 )
 (
     input                        clk,
@@ -47,7 +49,7 @@ module lab_top
     // Microphone, sound output and UART
 
     input        [         23:0] mic,
-    output       [         15:0] sound,
+    output       [w_sound - 1:0] sound,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -80,7 +82,8 @@ module lab_top
     tone_sel
     # (
         .clk_mhz    (clk_mhz),
-        .note_width (w_key)
+        .note_width (w_key  ),
+        .y_width    (w_sound)
     )
     wave_gen
     (

@@ -1,2 +1,3 @@
 `define FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+//`define INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
 `include "../tang_nano_9k_hdmi_tm1638/board_specific_top.sv"

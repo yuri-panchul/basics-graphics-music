@@ -1,0 +1,49 @@
+# The pin assignments
+
+IO_LOC "CLK"          45
+
+IO_LOC "KEY[0]"       15
+IO_LOC "KEY[1]"       14
+
+IO_LOC "LED"          10
+
+IO_LOC "FLASH_CLK"    1   // TM1638 STB
+IO_LOC "FLASH_DI"     48  // TM1638 CLK
+IO_LOC "FLASH_DO"     47  // TM1638 DIO
+
+IO_LOC "TMDS_CLK_P"   28,27
+IO_LOC "TMDS_D_P[0]"  30,29
+IO_LOC "TMDS_D_P[1]"  32,31
+IO_LOC "TMDS_D_P[2]"  35,34
+
+IO_LOC "FLASH_CS"     2   // INMP441 SCK
+IO_LOC "FLASH_WP"     8   // INMP441 WS
+IO_LOC "FLASH_HOLD"   9   // INMP441 L/R
+
+IO_LOC "CAM_SCL"      44  // GPIO[0]
+IO_LOC "CAM_SDA"      46  // GPIO[1]
+IO_LOC "DVP_VSYNC"    43  // PCM5102 LCK
+IO_LOC "DVP_HSYNC"    42  // PCM5102 DIN
+IO_LOC "DVP_PCLK"     41  // PCM5102 BCK
+IO_LOC "PIXDATA9"     40  // PCM5102 SCK
+IO_LOC "PIXDATA8"     39  // INMP441 SD
+
+// 1.8V bank
+//
+// IO_LOC "DVP_XCLK"     33
+// IO_LOC "PIXDATA6"     16
+// IO_LOC "PIN13"        13
+// IO_LOC "PIXDATA2"     17
+// IO_LOC "PIXDATA5"     18
+// IO_LOC "PIXDATA3"     19
+// IO_LOC "PIXDATA4"     20
+// IO_LOC "PIXDATA1"     21
+// IO_LOC "PIXDATA0"     22
+// IO_LOC "PIXDATA7"     23
+
+// The dedicated JTAG pins
+//
+// IO_LOC "JTAG_TCK"     7
+// IO_LOC "JTAG_TDO"     4
+// IO_LOC "JTAG_TDI"     3
+// IO_LOC "JTAG_TMS"     6

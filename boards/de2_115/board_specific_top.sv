@@ -13,7 +13,6 @@ module board_specific_top
               w_gpio        = 36,
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
-              // Odd gpio .. are reserved I2S audio.
 
               screen_width  = 640,
               screen_height = 480,
@@ -51,6 +50,16 @@ module board_specific_top
     output [w_blue   - 1:0] VGA_B,
     output                  VGA_BLANK_N,
     output                  VGA_SYNC_N,
+
+    inout                   AUD_ADCLRCK,
+    input                   AUD_ADCDAT,
+    inout                   AUD_BCLK,
+    inout                   AUD_DACLRCK,
+    output                  AUD_DACDAT,
+    output                  AUD_XCK,
+
+    output                  I2C_SCLK,
+    inout                   I2C_SDAT,
 
     input                   UART_RTS,
     input                   UART_RXD,
@@ -229,8 +238,6 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire display_on;
-
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
@@ -285,22 +292,31 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        // DE2-115 onboard audio codec: WM8731
         i2s_audio_out
         # (
             .clk_mhz ( clk_mhz   )
         )
-        inst_audio_out
+        i_audio_out
         (
-            .clk     ( clk       ),
-            .reset   ( rst       ),
-            .data_in ( sound     ),
-            .mclk    ( GPIO [33] ),
-            .bclk    ( GPIO [31] ),
-            .lrclk   ( GPIO [27] ),
-            .sdata   ( GPIO [29] )
+            .clk     ( clk          ),
+            .reset   ( rst          ),
+            .data_in ( sound        ),
+            .mclk    ( AUD_XCK      ),
+            .bclk    ( AUD_BCLK     ),
+            .lrclk   ( AUD_DACLRCK  ),
+            .sdata   ( AUD_DACDAT   )
         );
 
-        // VCC and GND for i2s_audio_out are on dedicated pins
+        // The audio codec configuration
+        I2C_AUDIO_Config
+        i_i2c_codec_conf (
+            .iCLK    (clk),
+            .iRST_N  (~rst),
+            .I2C_SCLK(I2C_SCLK),
+            .I2C_SDAT(I2C_SDAT),
+            .READY   ()
+        );
 
     `endif
 

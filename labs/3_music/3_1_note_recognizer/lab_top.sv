@@ -302,7 +302,7 @@ module lab_top
             A  : abcdefgh <= 8'b11101110;  // A   //  |     |
             As : abcdefgh <= 8'b11101111;  // A#  //   --d--  h
             B  : abcdefgh <= 8'b00111110;  // B
-            default : abcdefgh <= 8'b00000000;
+            default : abcdefgh <= 8'b00000010;
             endcase
 
     assign digit = w_digit' (1);

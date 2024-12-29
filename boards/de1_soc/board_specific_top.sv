@@ -47,6 +47,16 @@ module board_specific_top
     output                  VGA_BLANK_N,
     output                  VGA_SYNC_N,
 
+    inout                   AUD_ADCLRCK,
+    input                   AUD_ADCDAT,
+    inout                   AUD_BCLK,
+    inout                   AUD_DACLRCK,
+    output                  AUD_DACDAT,
+    output                  AUD_XCK,
+
+    output                  FPGA_I2C_SCLK,
+    inout                   FPGA_I2C_SDAT,
+
     inout  [        35:0]   GPIO_0,
     inout  [        35:0]   GPIO_1
 );
@@ -272,21 +282,32 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        // DE1-SoC onboard audio codec: WM8731
         i2s_audio_out
         # (
-            .clk_mhz ( clk_mhz     )
+            .clk_mhz ( clk_mhz      )
         )
-        inst_audio_out
+        i_audio_out
         (
-            .clk     ( clk         ),
-            .reset   ( rst         ),
-            .data_in ( sound       ),
-            .mclk    ( GPIO_0 [33] ),  // JP1 pin 38
-            .bclk    ( GPIO_0 [31] ),  // JP1 pin 36
-            .lrclk   ( GPIO_0 [27] ),  // JP1 pin 32
-            .sdata   ( GPIO_0 [29] )   // JP1 pin 34
-        );                             // JP1 pin 30 - GND
-                                       // JP1 pin 29 - VCC 3.3V (30-45 mA)
+            .clk     ( clk          ),
+            .reset   ( rst          ),
+            .data_in ( sound        ),
+            .mclk    ( AUD_XCK      ),
+            .bclk    ( AUD_BCLK     ),
+            .lrclk   ( AUD_DACLRCK  ),
+            .sdata   ( AUD_DACDAT   )
+        );
+
+        // The audio codec configuration
+        I2C_AUDIO_Config
+        i_i2c_codec_conf (
+            .iCLK    (clk),
+            .iRST_N  (~rst),
+            .I2C_SCLK(FPGA_I2C_SCLK),
+            .I2C_SDAT(FPGA_I2C_SDAT),
+            .READY   ()
+        );
+
     `endif
 
 endmodule

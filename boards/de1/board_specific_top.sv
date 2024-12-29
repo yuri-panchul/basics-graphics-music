@@ -13,7 +13,6 @@ module board_specific_top
               w_gpio        = 72,        // GPIO_1[5:0] reserved for mic
 
               // gpio 0..5 are reserved for INMP 441 I2S microphone.
-              // Odd gpio .. are reserved I2S audio.
 
               screen_width  = 640,
               screen_height = 480,
@@ -43,6 +42,16 @@ module board_specific_top
     output [ w_red      - 1:0] VGA_R,
     output [ w_green    - 1:0] VGA_G,
     output [ w_blue     - 1:0] VGA_B,
+
+    output                     AUD_ADCLRCK,
+    input                      AUD_ADCDAT,
+    inout                      AUD_BCLK,
+    output                     AUD_DACLRCK,
+    output                     AUD_DACDAT,
+    output                     AUD_XCK,
+
+    output                     I2C_SCLK,
+    inout                      I2C_SDAT,
 
     input                      UART_RXD,
     output                     UART_TXD,
@@ -266,19 +275,30 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        // DE1 onboard audio codec: WM8731
         i2s_audio_out
         # (
-            .clk_mhz ( clk_mhz     )
+            .clk_mhz ( clk_mhz      )
         )
-        inst_audio_out
+        i_audio_out
         (
-            .clk     ( clk         ),
-            .reset   ( rst         ),
-            .data_in ( sound       ),
-            .mclk    ( GPIO_1 [33] ),
-            .bclk    ( GPIO_1 [31] ),
-            .lrclk   ( GPIO_1 [27] ),
-            .sdata   ( GPIO_1 [29] )
+            .clk     ( clk          ),
+            .reset   ( rst          ),
+            .data_in ( sound        ),
+            .mclk    ( AUD_XCK      ),
+            .bclk    ( AUD_BCLK     ),
+            .lrclk   ( AUD_DACLRCK  ),
+            .sdata   ( AUD_DACDAT   )
+        );
+
+        // The audio codec configuration
+        I2C_AUDIO_Config
+        i_i2c_codec_conf (
+            .iCLK    (clk),
+            .iRST_N  (~rst),
+            .I2C_SCLK(I2C_SCLK),
+            .I2C_SDAT(I2C_SDAT),
+            .READY   ()
         );
 
     `endif

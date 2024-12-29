@@ -106,10 +106,13 @@ error ()
 {
     info error: $*
 
-    if    [ "$OSTYPE"         = "linux-gnu" ]  \
-       || [ "$OSTYPE"         = "cygwin"    ]  \
-       || [ "$OSTYPE"         = "msys"      ]  \
-       || [ ${OSTYPE/[0-9]*/} = "darwin"    ]
+    # Alternative way to check for MacOS:
+    # [ ${OSTYPE/[0-9]*/} = "darwin" ]
+ 
+    if    [  "$OSTYPE" = "linux-gnu" ]  \
+       || [  "$OSTYPE" = "cygwin"    ]  \
+       || [  "$OSTYPE" = "msys"      ]  \
+       || [[ "$OSTYPE" = "darwin"*   ]]
     then
         read -n 1 -p "Press any key "
     fi
@@ -151,6 +154,8 @@ is_command_available_or_error_and_install ()
 
     if [ "$OSTYPE" = "linux-gnu" ]; then
         how_to_install=". To install, run either: \"sudo apt-get install $package\" or \"sudo yum install $package\". If it does not work, google the instructions."
+    elif [[ "$OSTYPE" = "darwin"* ]]; then
+        how_to_install=". To install, run: \"brew install $package\". If it does not work, google the instructions."
     else
         how_to_install=
     fi
@@ -305,12 +310,13 @@ update_fpga_toolchain_var ()
             fpga_toolchain=yosys
         ;;
 
-        dk_dev_3c120n        | \
-        marsohod_mcy112      | \
-        marsohod_mcy316      | \
-        de0                  | \
-        de1                  | \
-        de2                  )
+        dk_dev_3c120n                        | \
+        marsohod_mcy112                      | \
+        marsohod_mcy316                      | \
+        de0                                  | \
+        de1                                  | \
+        de2                                  | \
+        omdazz_epm570_quartus_13_1_or_older  )
 
             fpga_toolchain=quartus
             use_old_version_of_quartus=1
@@ -384,12 +390,33 @@ fpga_board_setup ()
         return
     fi
 
+    #-------------------------------------------------------------------------
+
+    hackathon_top=../hackathon_top.sv
+
+    if [ -f "$hackathon_top" ]
+    then
+        fpga_board=$(grep -o '^// Board configuration: [[:alnum:]_]*$' "$hackathon_top" \
+            | sed 's|// Board configuration: ||' || true)
+
+        if [ -n "$fpga_board" ]
+        then
+            update_fpga_toolchain_var
+            return
+        fi
+    fi
+
+    #-------------------------------------------------------------------------
+
     select_file="$package_dir/fpga_board_selection"
 
     current_board_message=
 
     if [ -f "$select_file" ]
     then
+        # Consider making it more simple
+        # fpga_board=$(grep -m 1 -o '^[[:alnum:]_]*$' "$select_file" || true)
+
         fpga_board=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
         select_file_contents=$(cat "$select_file")
 
@@ -402,7 +429,13 @@ fpga_board_setup ()
 
     #-------------------------------------------------------------------------
 
-    available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
+    # TODO: Remove else after testing on Linux and Windows
+
+    if [[ "$OSTYPE" = "darwin"*   ]] ; then
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % -L 1 basename '%' | sort | tr "\r\n" " ")
+    else
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
+    fi
 
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]

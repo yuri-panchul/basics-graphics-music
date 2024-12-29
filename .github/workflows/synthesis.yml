@@ -1,0 +1,59 @@
+name: Synthesis check
+
+on:
+  pull_request:
+    branches: [main]
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+env:
+  USER: root
+
+jobs:
+  linux-testing:
+    name: ${{ matrix.tool }}_${{ matrix.imagever }}
+    runs-on: ['ubuntu-latest']
+    container:
+      image: ${{ matrix.imagerepo }}:${{ matrix.imagever }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - tool: quartus
+            imagerepo: ghcr.io/raetro/quartus
+            imagever: 21.1.1
+            boards: terasic_sockit
+            labs: 12345
+          - tool: quartus
+            imagerepo: ghcr.io/raetro/quartus
+            imagever: 17.1
+            boards: de10_lite omdazz
+            labs: 12345
+          - tool: quartus
+            imagerepo: ghcr.io/raetro/quartus
+            imagever: 13.0sp1
+            # TODO: omdazz_epm570_quartus_13_1_or_older
+            boards: de2_115 de0 rzrd_pmod_mic3
+            labs: 12345
+    steps:
+      - name: Checkout
+        run: |
+          # Avoid https://github.com/actions/checkout/issues/1590
+          curl -L -o archive.tar.gz https://github.com/${GITHUB_REPOSITORY}/archive/${GITHUB_SHA}.tar.gz
+          tar xvf archive.tar.gz; env; pwd; ls *${GITHUB_SHA}
+      - name: Synthesis
+        shell: bash
+        run: |
+          set -ex; cd *${GITHUB_SHA}
+          echo >scripts/steps/04_configure_fpga.source_bash # disable programmator
+          for b in ${{ matrix.boards }}; do
+            echo "$b" > fpga_board_selection
+            for x in labs/[${{ matrix.labs }}]_*/*_*_*/03_synthesize_for_fpga.bash; do
+                pushd `dirname $x`
+                echo | ./`basename $x`
+                popd
+            done
+          done
