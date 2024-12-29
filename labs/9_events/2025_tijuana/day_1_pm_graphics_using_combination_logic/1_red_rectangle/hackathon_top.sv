@@ -30,8 +30,24 @@ module hackathon_top
         green = 0;
         blue  = 0;
 
-        if (x > 100 & x < 150 & y > 100 & y < 200)
-            red = 30;
+        if (x > 100 & x < 200 & y > 150 & y < 200)
+            red = 31;
+
+        // 31 is the maximum 5-bit number, 5'b11111
+
+        // Exercise 1: Uncomment the code for a green rectangle
+        // that overlaps red rectangle
+
+        if (x > 150 & x < 250 & y > 200 & y < 250)
+            green = 63;
+
+        // 63 is the maximum 6-bit number, 6'b111111
+
+        // Exercise 2: Add a blue rectangle
+        // that overlaps both rectangles
+
+        if (x > 200 & x < 300 & y > 250)
+            blue = 31;
     end
 
 endmodule
