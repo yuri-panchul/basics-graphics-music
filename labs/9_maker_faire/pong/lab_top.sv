@@ -116,8 +116,8 @@ module lab_top
    localparam				 ball_x_init = (lcd_width / 2) - (ball_width / 2);
    localparam				 ball_y_init = (lcd_height / 2) + (ball_height / 2);
 
-   localparam				 player_speed = 15;
-   localparam				 ball_speed = 7;
+   localparam [w_y-1:0]			 player_speed = 'd15;
+   localparam [w_y-1:0]			 ball_speed = 'd7;
 
    logic [w_y-1:0]			 p1_offset;
    logic [w_y-1:0]			 p2_offset;
@@ -147,7 +147,7 @@ module lab_top
 	get_player_offset = current_offset;
    endfunction // get_player_offset
 
-   function logic [w_x-1:0] get_ball_x_offset(input [9:0] current_offset);
+   function logic [w_x-1:0] get_ball_x_offset(input [w_x-1:0] current_offset);
       if (ball_x_fwd)
 	begin
 	   if (current_offset < (lcd_width - ball_width))
@@ -164,7 +164,7 @@ module lab_top
 	end
    endfunction // get_ball_x_offset
 
-   function logic [w_y-1:0] get_ball_y_offset(input [9:0] current_offset);
+   function logic [w_y-1:0] get_ball_y_offset(input [w_y-1:0] current_offset);
       if (ball_y_fwd)
 	begin
 	   if (current_offset < (lcd_height - ball_height))
