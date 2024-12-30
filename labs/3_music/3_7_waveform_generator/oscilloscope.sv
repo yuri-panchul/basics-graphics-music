@@ -82,7 +82,7 @@ module oscilloscope
     localparam                  mic_shift = 24 - w_y;
     localparam signed [23:0]    mic_min =-((screen_height-4)<<mic_shift) / 2;
     localparam signed [23:0]    mic_max = ((screen_height)<<mic_shift) / 2;
-    localparam signed [w_y-1:0] midy = screen_height / 2;
+    localparam signed [w_y-1:0] midy = screen_height / 2 - 4;
 
     // It is enough for the counter to be 20 bit. Why?
     logic        [23:0]    prev_mic;
