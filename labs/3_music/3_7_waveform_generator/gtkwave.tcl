@@ -22,6 +22,13 @@ lappend all_signals tb.sdata
 set num_added [ gtkwave::addSignalsFromList $all_signals ]
 
 gtkwave::/Time/Zoom/Zoom_Full
-gtkwave::/Edit/Highlight_All
+
+gtkwave::highlightSignalsFromList "tb.sound\[15:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Signed_Decimal
+gtkwave::/Edit/Insert_Analog_Height_Extension
+gtkwave::/Edit/Insert_Analog_Height_Extension
+gtkwave::/Edit/Insert_Analog_Height_Extension
+gtkwave::/Edit/Insert_Analog_Height_Extension
+gtkwave::/Edit/Insert_Analog_Height_Extension
+gtkwave::/Edit/UnHighlight_All
