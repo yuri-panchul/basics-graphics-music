@@ -72,12 +72,13 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire            [2:0] octave = 3'b0;
-    wire  [w_key   - 1:0] waveform   = key;
+    wire [        2:0] octave   = 3'b0;
+    wire [w_key - 1:0] waveform = key;
 
-    assign led  = waveform;
+    assign             led      = waveform;
+    assign             digit    = w_digit' (1);
 
-    wire [23:0] sound_24 = { sound [15:0], { 8 { 1'b0 } } };
+    wire [23:0]        sound_24 = { sound [15:0], 8'b0 };
 
     //------------------------------------------------------------------------
 
@@ -107,7 +108,6 @@ module lab_top
         .w_sw          ( w_key         ),
         .w_led         ( w_led         ),
         .w_digit       ( w_digit       ),
-        .w_gpio        ( w_gpio        ),
 
         .screen_width  ( screen_width  ),
         .screen_height ( screen_height ),
@@ -130,8 +130,6 @@ module lab_top
     );
 
     //------------------------------------------------------------------------
-
-    assign digit = { {(w_digit - 1){1'b0}}, 1'b1};
 
     always_ff @ (posedge clk or posedge rst)
         if (rst)

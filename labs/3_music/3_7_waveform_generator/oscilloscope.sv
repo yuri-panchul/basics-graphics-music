@@ -7,7 +7,6 @@ module oscilloscope
                w_sw          = 8,
                w_led         = 8,
                w_digit       = 8,
-               w_gpio        = 100,
 
                screen_width  = 640,
                screen_height = 480,
@@ -44,30 +43,14 @@ module oscilloscope
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
 
-    // Microphone, sound output and UART
+    // Microphone
 
-    input        [         23:0] mic,
-    output       [         15:0] sound,
+    input        [         23:0] mic
 
-    input                        uart_rx,
-    output                       uart_tx,
-
-    // General-purpose Input/Output
-
-    inout        [w_gpio  - 1:0] gpio
 );
 
     //------------------------------------------------------------------------
 
-    assign led        = '0;
-    assign abcdefgh   = '0;
-    assign digit      = '0;
-    // assign red        = '0;
-    // assign green      = '0;
-    // assign blue       = '0;
-    assign sound      = '0;
-    assign uart_tx    = '1;
-    
     logic                   white;
     assign red   = {w_red  {white}};
     assign green = {w_green{white}};
