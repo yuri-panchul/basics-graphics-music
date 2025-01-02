@@ -78,24 +78,24 @@ module lab_top
     assign             led      = waveform;
     assign             digit    = w_digit' (1);
 
-    wire [23:0]        sound_24 = { sound [15:0], 8'b0 };
+    wire [       23:0] sound_24 = { sound [15:0], 8'b0 };
 
     //------------------------------------------------------------------------
 
     waveform_sel
     # (
-        .clk_mhz        (clk_mhz),
-        .waveform_width (w_key  ),
-        .y_width        (w_sound)
+        .clk_mhz        (clk_mhz       ),
+        .waveform_width (w_key         ),
+        .y_width        (w_sound       )
     )
     waveform_gen
     (
-        .clk       ( clk       ),
-        .reset     ( rst       ),
-        .octave    ( octave    ),
-        .waveform  ( waveform  ),
+        .clk            ( clk          ),
+        .reset          ( rst          ),
+        .octave         ( octave       ),
+        .waveform       ( waveform     ),
 
-        .y         ( sound     )
+        .y              ( sound        )
     );
 
     //------------------------------------------------------------------------
@@ -118,15 +118,15 @@ module lab_top
     )
     i_oscilloscope
     (
-        .clk       ( clk       ),
-        .rst       ( rst       ),
-        .key       ( waveform  ),
-        .x         ( x         ),
-        .y         ( y         ),
-        .red       ( red       ),
-        .green     ( green     ),
-        .blue      ( blue      ),
-        .mic       ( sound_24  )
+        .clk           ( clk           ),
+        .rst           ( rst           ),
+        .key           ( waveform      ),
+        .x             ( x             ),
+        .y             ( y             ),
+        .red           ( red           ),
+        .green         ( green         ),
+        .blue          ( blue          ),
+        .mic           ( sound_24      )
     );
 
     //------------------------------------------------------------------------
@@ -146,8 +146,7 @@ module lab_top
                                                     //  |     |
                                                     //  e     c
                                                     //  |     |
-                                                    //   --d--  h
-            default: abcdefgh <= 'b00000000;
+            default: abcdefgh <= 'b00000000;        //   --d--  h
             endcase
 
 endmodule
