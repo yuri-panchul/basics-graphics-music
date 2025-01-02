@@ -470,6 +470,9 @@ configure_fpga_gowin_proprietary ()
         -d $fpga_board_for_programmer \
         $flash_method                 \
         --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
+
+    # TODO: Put check for error in WSL
+    # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
 }
 
 #-----------------------------------------------------------------------------
@@ -516,6 +519,9 @@ configure_fpga_gowin_openfpga ()
     #-------------------------------------------------------------------------
 
     openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs
+
+    # TODO: Put check for error in WSL
+    # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
 }
 
 #-----------------------------------------------------------------------------
