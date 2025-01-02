@@ -1,23 +1,26 @@
-
-module waveform_sel
+module waveform_gen
 # (
-    parameter clk_mhz    = 50,
-              y_width    = 16,         // sound samples resolution, see tone_table.svh
+    parameter clk_mhz        = 50,
+              y_width        = 16, // sound samples resolution
               waveform_width = 4
 )
 (
     input                         clk,
     input                         reset,
-    input                   [2:0] octave,
+    input  [                 2:0] octave,
     input  [waveform_width - 1:0] waveform,
     output [y_width        - 1:0] y
 );
-    localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4; // clk_mhz range (12-19) (20-35) (36-67) (68-131)
+
+    // We are grouping together clk_mhz ranges of
+    // (12-19), (20-35), (36-67), (68-131).
+
+    localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4;
     localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 2 { 1'b0 } }, 1'b1 };
     
-    wire   [y_width - 1:0] tone_y [11:0];
+    wire   [y_width - 1:0] tone_y     [4:0];
     wire             [8:0] tone_x;
-    wire             [8:0] tone_x_max [11:0];
+    wire             [8:0] tone_x_max [4:0];
 
     logic  [CLK_BIT - 1:0] clk_div;
     logic  [          1:0] quadrant; // Quadrant (quarter period)
@@ -45,13 +48,17 @@ module waveform_sel
             quadrant <= quadrant + 1'b1;
 
     assign tone_x = x << octave;
-    assign x_max = (waveform [0] || waveform [1] || waveform [2]) ? (tone_x_max [waveform] >> octave) : 9'b1;
-    assign y_mod = (waveform [0] || waveform [1] || waveform [2]) ? (tone_y [waveform]) : 16'b0;
-    assign y     = (quadrant [1]) ? (~y_mod + 1) : y_mod;
+    assign x_max = (waveform [0] || waveform [1] || waveform [2]) ?
+                                (tone_x_max [waveform] >> octave) :  9'b1;
+    assign y_mod = (waveform [0] || waveform [1] || waveform [2]) ?
+                                (tone_y     [waveform]          ) : 16'b0;
+    assign y     = (quadrant [1]) ? (~y_mod + 1'b1) : y_mod;
 
 generate
 
-//table_sampling_rate sampling_rate = clk_mhz / 512 (< 36 mhz) / 1024 (36-67 mhz) / 2048 (> 67 mhz)
+//table_sampling_rate sampling_rate = clk_mhz / 512  ( < 36 mhz)
+//                                  = clk_mhz / 1024 (36-67 mhz)
+//                                  = clk_mhz / 2048 ( > 67 mhz)
 
     if (clk_mhz == 33)
     begin : clk_mhz_33
@@ -66,7 +73,7 @@ generate
     table_52734_Q  table_52734_Q  ( .x(tone_x), .y(tone_y [4] ), .x_max(tone_x_max [4] ));
     end
     else
-    begin : clk_mhz_50    
+    begin : clk_mhz_50
     table_48828_S  table_48828_S  ( .x(tone_x), .y(tone_y [1] ), .x_max(tone_x_max [1] ));
     table_48828_T  table_48828_T  ( .x(tone_x), .y(tone_y [2] ), .x_max(tone_x_max [2] ));
     table_48828_Q  table_48828_Q  ( .x(tone_x), .y(tone_y [4] ), .x_max(tone_x_max [4] ));

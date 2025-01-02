@@ -78,17 +78,15 @@ module lab_top
     assign             led      = waveform;
     assign             digit    = w_digit' (1);
 
-    wire [       23:0] sound_24 = { sound [15:0], 8'b0 };
-
     //------------------------------------------------------------------------
 
-    waveform_sel
+    waveform_gen
     # (
         .clk_mhz        (clk_mhz       ),
         .waveform_width (w_key         ),
         .y_width        (w_sound       )
     )
-    waveform_gen
+    i_waveform_gen
     (
         .clk            ( clk          ),
         .reset          ( rst          ),
@@ -104,14 +102,8 @@ module lab_top
     # (
         .clk_mhz       ( clk_mhz       ),
 
-        .w_key         ( w_key         ),
-        .w_sw          ( w_key         ),
-        .w_led         ( w_led         ),
-        .w_digit       ( w_digit       ),
-
         .screen_width  ( screen_width  ),
         .screen_height ( screen_height ),
-
         .w_red         ( w_red         ),
         .w_green       ( w_green       ),
         .w_blue        ( w_blue        )
@@ -120,13 +112,13 @@ module lab_top
     (
         .clk           ( clk           ),
         .rst           ( rst           ),
-        .key           ( waveform      ),
         .x             ( x             ),
         .y             ( y             ),
         .red           ( red           ),
         .green         ( green         ),
         .blue          ( blue          ),
-        .mic           ( sound_24      )
+
+        .mic           ( sound         )
     );
 
     //------------------------------------------------------------------------
