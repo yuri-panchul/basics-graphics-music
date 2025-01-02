@@ -548,6 +548,9 @@ configure_fpga_quartus ()
             "$quartus_pgm_full_real_path" --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"
         fi
     else
+        # TODO: Put check for error in WSL
+        # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
+
         error "cannot detect a USB-Blaster cable connected"  \
               "for $fpga_board FPGA board"
     fi
