@@ -1,0 +1,18 @@
+load_file ./run/dump.vcd
+
+variable_add tb.clk
+variable_add tb.rst
+variable_add tb.key
+variable_add tb.sound
+
+variable_add tb.i_i2s_audio_out.clk_mhz
+variable_add tb.i_i2s_audio_out.in_res
+variable_add tb.i_i2s_audio_out.align_right
+variable_add tb.i_i2s_audio_out.offset_by_one_cycle
+variable_add tb.i_i2s_audio_out.shift
+variable_add tb.i_i2s_audio_out.data_aligned
+
+variable_add tb.mclk
+variable_add tb.bclk
+variable_add tb.lrclk
+variable_add tb.sdata
