@@ -87,8 +87,6 @@ module i2s_audio_out
         else
             clk_div <= clk_div + 1'd1;
 
-    wire offset_by_one_cycle_bit = offset_by_one_cycle;
-
     always_ff @ (posedge clk or posedge reset)
     begin
         if (reset)
@@ -100,7 +98,7 @@ module i2s_audio_out
             if ( clk_div [LRCLK_BIT - 2:0]
                  ==
                  { { LRCLK_BIT - BCLK_BIT - 1
-                         { ~ offset_by_one_cycle_bit } },
+                         { ! offset_by_one_cycle } },
 
                    { BCLK_BIT { 1'b1 } } } )
             begin

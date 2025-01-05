@@ -53,7 +53,7 @@ module tone_sel
     assign tone_x = x << octave;
     assign x_max = (note < 8'd12) ? (tone_x_max [note] >> octave) : 9'b1;
     assign y_mod = (note < 8'd12) ? (tone_y [note]) : 16'b0;
-    assign y     = (quadrant [1]) ? (~y_mod + 1) : y_mod;
+    assign y     = (quadrant [1]) ? (~y_mod + 1'b1) : y_mod;
 
 generate
 
