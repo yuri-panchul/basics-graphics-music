@@ -6,7 +6,7 @@ script=$(basename "$0")
 source_script=${script/\.bash/.source_bash}
 dir_source_script=../scripts/steps/$source_script
 
-for i in {1..3}
+for i in {1..5}
 do
     [ -f $dir_source_script ] && break
     dir_source_script=../$dir_source_script
