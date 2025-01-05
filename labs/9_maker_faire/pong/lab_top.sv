@@ -2,8 +2,8 @@
  * Pong game by Allen Baker (botbakery.net)
  * 
  * Controls:
- * Player 1: Key 0 = up, Key 1 = down
- * Player 2: Key 2 = up, Key 3 = down
+ * Player 1 (left): SW1 = down, SW2 = up
+ * Player 2 (right): SW7 = down, SW8 = up
  */
 
 `include "config.svh"
@@ -73,9 +73,9 @@ module lab_top
    assign pix_x = x;
    assign pix_y = y;
 
-   reg [w_red-1:0]			 R;
-   reg [w_green-1:0]			 G;
-   reg [w_blue-1:0]			 B;
+   logic [w_red-1:0]			 R;
+   logic [w_green-1:0]			 G;
+   logic [w_blue-1:0]			 B;
    assign red = R;
    assign green = G;
    assign blue = B;
@@ -197,7 +197,7 @@ module lab_top
 		    (pix_x < (ball_x_offset + ball_width)) &&
 		    (pix_y > ball_y_offset) &&
 		    (pix_y < (ball_y_offset + ball_width));
-   always_ff @(posedge slow_clk or posedge rst)
+   always_ff @(posedge clk or posedge rst)
      begin
         if (rst)
 	  begin
@@ -208,11 +208,11 @@ module lab_top
 	     ball_x_fwd <= 1;
 	     ball_y_fwd <= 1;
 	  end
-	else
+	else if (pulse)
 	  begin
 
-	     p1_offset <= get_player_offset(key[0], key[1], p1_offset);
-	     p2_offset <= get_player_offset(key[2], key[3], p2_offset);
+	     p1_offset <= get_player_offset(key[6], key[7], p1_offset);
+	     p2_offset <= get_player_offset(key[0], key[1], p2_offset);
 	     ball_x_offset <= get_ball_x_offset(ball_x_offset);
 	     ball_y_offset <= get_ball_y_offset(ball_y_offset);
 
@@ -258,25 +258,19 @@ module lab_top
 	  end
      end
    
-   always_ff @(posedge clk or posedge rst)
+   always_comb
      begin
-        if (rst)
+	if (at_p1 || at_p2 || at_ball)
 	  begin
-	     R <= 0;
-	     G <= 0;
-	     B <= 0;
+	     R = {w_red{1'b1}};
+	     G = {w_green{1'b1}};
+	     B = {w_blue{1'b1}};
 	  end
-        else if (pulse)
+	else
 	  begin
-	     R <= 0;
-	     G <= 0;
-	     B <= 0;
-	     if (at_p1 || at_p2 || at_ball)
-	       begin
-		  R <= {w_red{1'b1}};
-		  G <= {w_green{1'b1}};
-		  B <= {w_blue{1'b1}};
-	       end
+	     R = 0;
+	     G = 0;
+	     B = 0;
 	  end
      end
 
