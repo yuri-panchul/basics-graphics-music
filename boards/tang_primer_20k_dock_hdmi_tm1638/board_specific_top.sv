@@ -356,7 +356,7 @@ module board_specific_top
         .align_right         ( 1'b1       ), // PT8211 DAC data format
         .offset_by_one_cycle ( 1'b0       )
     )
-    inst_audio_out
+    i_audio_out
     (
         .clk      ( clk        ),
         .reset    ( rst        ),
@@ -379,7 +379,7 @@ module board_specific_top
         .align_right         ( 1'b0       ),
         .offset_by_one_cycle ( 1'b1       )
     )
-    inst_ext_audio_out
+    i_ext_audio_out
     (
         .clk      ( clk        ),
         .reset    ( rst        ),

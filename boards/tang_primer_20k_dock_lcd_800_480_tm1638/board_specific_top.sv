@@ -118,8 +118,6 @@ module board_specific_top
     wire  [w_lab_led   - 1:0] lab_led;
     wire  [w_lab_digit - 1:0] lab_digit;
 
-    logic [0:12] [31:0]       data_rgb;
-
     wire                      rst;
     wire  [              7:0] abcdefgh;
 
@@ -349,7 +347,7 @@ module board_specific_top
         .align_right         ( 1'b1       ), // PT8211 DAC data format
         .offset_by_one_cycle ( 1'b0       )
     )
-    inst_audio_out
+    i_audio_out
     (
         .clk      ( lab_clk    ),
         .reset    ( rst        ),
@@ -372,7 +370,7 @@ module board_specific_top
         .align_right         ( 1'b0       ),
         .offset_by_one_cycle ( 1'b1       )
     )
-    inst_ext_audio_out
+    i_ext_audio_out
     (
         .clk      ( lab_clk    ),
         .reset    ( rst        ),
