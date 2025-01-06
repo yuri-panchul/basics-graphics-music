@@ -1,89 +1,144 @@
 # The pin assignments
 
 # CLK
-IO_LOC "CLK"       H11;
-
+IO_LOC "CLK"         H11;
 
 # LED
-# Commented due to voltage bank conflict with HDMI pins
-# IO_LOC "LED[5]"    L16;
-# IO_LOC "LED[4]"    L14;
-# IO_LOC "LED[3]"    N14;
-# IO_LOC "LED[2]"    N16;
-IO_LOC "LED[1]"    A13;
-IO_LOC "LED[0]"    C13;
+IO_LOC "LED[5]"      L16;
+IO_LOC "LED[4]"      L14;
+IO_LOC "LED[3]"      N14;
+IO_LOC "LED[2]"      N16;
+IO_LOC "LED[1]"      A13;
+IO_LOC "LED[0]"      C13;
 
+IO_PORT "LED[5]"     IO_TYPE=LVCMOS33;
+IO_PORT "LED[4]"     IO_TYPE=LVCMOS33;
+IO_PORT "LED[3]"     IO_TYPE=LVCMOS33;
+IO_PORT "LED[2]"     IO_TYPE=LVCMOS33;
 
 # UART
-IO_LOC "UART_TX"   M11;
-IO_LOC "UART_RX"   T13;
-
+IO_LOC "UART_TX"     M11;
+IO_LOC "UART_RX"     T13;
 
 # SWITCH
-IO_LOC "SW[3]"     T5;
-IO_LOC "SW[2]"     T4;
-IO_LOC "SW[1]"     E8;
-IO_LOC "SW[0]"     E9;
-
+IO_LOC "SW[3]"       T5;
+IO_LOC "SW[2]"       T4;
+IO_LOC "SW[1]"       E8;
+IO_LOC "SW[0]"       E9;
 
 # KEY
-IO_LOC "KEY[4]"    C7;
-IO_LOC "KEY[3]"    D7;
-IO_LOC "KEY[2]"    T2;
-IO_LOC "KEY[1]"    T3;
-IO_LOC "KEY[0]"    T10;
+IO_LOC "KEY[4]"      C7;
+IO_LOC "KEY[3]"      D7;
+IO_LOC "KEY[2]"      T2;
+IO_LOC "KEY[1]"      T3;
+IO_LOC "KEY[0]"      T10;
 
 # HDMI
-IO_LOC "TMDS_CLK_P"   G16,H15;
-IO_LOC "TMDS_D_P[0]"  H14,H16;
-IO_LOC "TMDS_D_P[1]"  J15,K16;
-IO_LOC "TMDS_D_P[2]"  K14,K15;
+IO_LOC "TMDS_CLK_P"  G16,H15;
+IO_LOC "TMDS_D_P[0]" H14,H16;
+IO_LOC "TMDS_D_P[1]" J15,K16;
+IO_LOC "TMDS_D_P[2]" K14,K15;
 
 # GPIO
-# IO_LOC "GPIO_3[7]" N8;
-# IO_LOC "GPIO_3[6]" N7;
-# IO_LOC "GPIO_3[5]" D11;
-# IO_LOC "GPIO_3[4]" B11;
-# IO_LOC "GPIO_3[3]" L9;
-# IO_LOC "GPIO_3[2]" N9;
-# IO_LOC "GPIO_3[1]" N6;
-# IO_LOC "GPIO_3[0]" A11;
-#
-# IO_LOC "GPIO_2[7]" C12;
-# IO_LOC "GPIO_2[6]" A14;
-# IO_LOC "GPIO_2[5]" A15;
-# IO_LOC "GPIO_2[4]" E15;
-# IO_LOC "GPIO_2[3]" B12;
-# IO_LOC "GPIO_2[2]" B13;
-# IO_LOC "GPIO_2[1]" B14;
-# IO_LOC "GPIO_2[0]" D14;
-#
-# IO_LOC "GPIO_1[7]" J16;
-# IO_LOC "GPIO_1[6]" M15;
-# IO_LOC "GPIO_1[5]" R11;
-# IO_LOC "GPIO_1[4]" P11;
-# IO_LOC "GPIO_1[3]" J14;
-# IO_LOC "GPIO_1[2]" M14;
-# IO_LOC "GPIO_1[1]" T12;
-# IO_LOC "GPIO_1[0]" T11;
-#
-# IO_LOC "GPIO_0[7]" T9;
-# IO_LOC "GPIO_0[6]" P8;
-# IO_LOC "GPIO_0[5]" R8;
-# IO_LOC "GPIO_0[4]" P6;
-IO_LOC "GPIO_0[3]" P9;
-IO_LOC "GPIO_0[2]" T8;
-IO_LOC "GPIO_0[1]" T7;
-# IO_LOC "GPIO_0[0]" T6;
+IO_LOC "GPIO_3[7]"   N8;
+IO_LOC "GPIO_3[6]"   N7;
+IO_LOC "GPIO_3[5]"   D11;
+IO_LOC "GPIO_3[4]"   B11;
+IO_LOC "GPIO_3[3]"   L9;
+IO_LOC "GPIO_3[2]"   N9;
+IO_LOC "GPIO_3[1]"   N6;
+IO_LOC "GPIO_3[0]"   A11;
+
+IO_LOC "GPIO_2[7]"   C12;
+IO_LOC "GPIO_2[6]"   A14;
+IO_LOC "GPIO_2[5]"   A15;
+IO_LOC "GPIO_2[4]"   E15;
+IO_LOC "GPIO_2[3]"   B12;
+IO_LOC "GPIO_2[2]"   B13;
+IO_LOC "GPIO_2[1]"   B14;
+IO_LOC "GPIO_2[0]"   D14;
+IO_PORT "GPIO_2[4]"  IO_TYPE=LVCMOS33;
+IO_PORT "GPIO_2[0]"  IO_TYPE=LVCMOS33;
+
+IO_LOC "GPIO_1[7]"   P9;
+IO_LOC "GPIO_1[6]"   T8;
+IO_LOC "GPIO_1[4]"   P11;
+
+IO_LOC "GPIO_0[5]"   R8;
+IO_LOC "GPIO_0[0]"   T6;
+
+// Microphone single in Pmod 4
+IO_LOC "GPIO_1[2]"   T9;  // MIC_WS
+IO_LOC "GPIO_1[1]"   P8;  // MIC_LR
+IO_LOC "GPIO_1[3]"   T7;  // MIC_BCK  sck
+IO_LOC "GPIO_1[0]"   P6;  // MIC_DAT0 sd
+IO_PORT "GPIO_1[0]" PULL_MODE=DOWN;
+
+# IO_LOC "GPIO_1[5]"   T7;
+# IO_LOC "GPIO_0[7]"   T9;
+# IO_LOC "GPIO_0[6]"   P8;
+# IO_LOC "GPIO_0[4]"   P6;
+
+// External sound DAC in Pmod 3
+IO_LOC "DIN"         M14;
+IO_LOC "SCK"         T11;
+IO_LOC "LRCK"        J14;
+IO_LOC "BCK"         T12;
+IO_PORT "DIN"        IO_TYPE=LVCMOS33;
+IO_PORT "LRCK"       IO_TYPE=LVCMOS33;
+
+# IO_LOC "GPIO_1[3]"   J14;
+# IO_LOC "GPIO_1[2]"   M14;
+# IO_LOC "GPIO_1[1]"   T12;
+# IO_LOC "GPIO_1[0]"   T11;
+# IO_PORT "GPIO_1[3]"  IO_TYPE=LVCMOS33;
+# IO_PORT "GPIO_1[2]"  IO_TYPE=LVCMOS33;
+
+// TM1638 in Pmod 3
+IO_LOC "GPIO_0[3]"   J16; // TM1638 sio_stb
+IO_LOC "GPIO_0[2]"   M15; // TM1638 sio_clk
+IO_LOC "GPIO_0[1]"   R11; // TM1638 sio_data
+IO_PORT "GPIO_0[3]"  IO_TYPE=LVCMOS33;
+IO_PORT "GPIO_0[2]"  IO_TYPE=LVCMOS33;
+
+# IO_LOC "GPIO_1[7]"   J16;
+# IO_LOC "GPIO_1[6]"   M15;
+# IO_LOC "GPIO_1[5]"   R11;
+# IO_PORT "GPIO_1[7]"  IO_TYPE=LVCMOS33;
+# IO_PORT "GPIO_1[6]"  IO_TYPE=LVCMOS33;
 
 // On-board sound DAC
+IO_LOC "PA_EN"       R16;
+IO_LOC "HP_DIN"      P15;
+IO_LOC "HP_WS"       P16;
+IO_LOC "HP_BCK"      N15;
+IO_PORT "PA_EN"      IO_TYPE=LVCMOS33;
+IO_PORT "HP_DIN"     IO_TYPE=LVCMOS33;
+IO_PORT "HP_WS"      IO_TYPE=LVCMOS33;
+IO_PORT "HP_BCK"     IO_TYPE=LVCMOS33;
 
-IO_LOC "PA_EN"  R16;
-IO_LOC "HP_DIN" P15;
-IO_LOC "HP_WS"  P16;
-IO_LOC "HP_BCK" N15;
+// Sipeed R6+1 Microphone Array Board in GPIO connector
+/* IO_LOC "WS2812-DAT"  T9;  // WS2812-DAT  12 SK9822 LED
+IO_LOC "MIC_LED_CLK" P9;  // MIC_LED_CLK 12 SK9822 LED
+IO_LOC "GPIO_1[0]"   P8;  // MIC_DAT0 sd   mic 0 1
+IO_PORT "GPIO_1[0]" PULL_MODE=DOWN;
+IO_LOC "GPIO_1[4]"   T8;  // MIC_DAT1 sd_1 mic 2 3
+IO_PORT "GPIO_1[4]" PULL_MODE=DOWN;
+IO_LOC "GPIO_1[5]"   R8;  // MIC_DAT2 sd_2 mic 4 5
+IO_PORT "GPIO_1[5]" PULL_MODE=DOWN;
+IO_LOC "GPIO_1[6]"   T7;  // MIC_DAT3 sd_3 mic x C
+IO_PORT "GPIO_1[6]" PULL_MODE=DOWN;
+IO_LOC "GPIO_1[3]"   T6;  // MIC_BCK  sck
+IO_LOC "GPIO_1[2]"   P6;  // MIC_WS   ws */
 
-IO_PORT "PA_EN" IO_TYPE=LVCMOS33;
-IO_PORT "HP_DIN" IO_TYPE=LVCMOS33;
-IO_PORT "HP_WS" IO_TYPE=LVCMOS33;
-IO_PORT "HP_BCK" IO_TYPE=LVCMOS33;
+// Microphone single in Mic Array 6+1 connector
+/* IO_LOC "GPIO_1[3]"   T6;  // MIC_BCK  sck
+IO_LOC "GPIO_1[2]"   P6;  // MIC_WS
+IO_LOC "GPIO_1[0]"   P8;  // MIC_DAT0 sd
+IO_PORT "GPIO_1[0]" PULL_MODE=DOWN;
+IO_LOC "GPIO_1[1]"   P11; // MIC_LR */
+
+// TM1638 in Pmod 4
+/* IO_LOC "GPIO_0[3]"   P9;  // TM1638 sio_stb
+IO_LOC "GPIO_0[2]"   T8;  // TM1638 sio_clk
+IO_LOC "GPIO_0[1]"   T7;  // TM1638 sio_data */

@@ -79,8 +79,8 @@ IO_LOC "GPIO_0[2]"   M15; // TM1638 sio_clk
 IO_LOC "GPIO_0[1]"   R11; // TM1638 sio_data
 
 // Sipeed R6+1 Microphone Array Board in GPIO connector
-/* IO_LOC "GPIO_2[0]"   T9;  // WS2812-DAT  12 SK9822 LED
-IO_LOC "GPIO_2[1]"   P9;  // MIC_LED_CLK 12 SK9822 LED
+/* IO_LOC "WS2812-DAT"  T9;  // WS2812-DAT  12 SK9822 LED
+IO_LOC "MIC_LED_CLK" P9;  // MIC_LED_CLK 12 SK9822 LED
 IO_LOC "GPIO_1[0]"   P8;  // MIC_DAT0 sd   mic 0 1
 IO_PORT "GPIO_1[0]" PULL_MODE=DOWN;
 IO_LOC "GPIO_1[4]"   T8;  // MIC_DAT1 sd_1 mic 2 3
