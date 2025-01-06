@@ -36,7 +36,13 @@ module tm1638_board_controller
     `endif
     output                        sio_clk,
     output logic                  sio_stb,
+    `ifdef SPLIT_TM1638_DIO_INOUT_SIGNAL
+    input                         sio_data_in,
+    output                        sio_data_out,
+    output                        sio_data_out_en
+    `else
     inout                         sio_data
+    `endif
 );
 
     localparam
@@ -92,8 +98,15 @@ module tm1638_board_controller
     end
 
     ////////////// TM1563 dio //////////////////
+
+    `ifdef SPLIT_TM1638_DIO_INOUT_SIGNAL
+    assign dio_in          = sio_data_in;
+    assign sio_data_out    = dio_out;
+    assign sio_data_out_en = tm_rw;
+    `else
     assign sio_data = tm_rw ? dio_out : 'z;
     assign dio_in   = sio_data;
+    `endif
 
     tm1638_sio
     # (
