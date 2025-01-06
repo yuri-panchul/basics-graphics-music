@@ -19,7 +19,7 @@ module board_specific_top
 
                 w_led         = 6,
 
-                w_digit       = 0,
+                w_digit       = 1,
                 w_gpio        = 32,
 
                 screen_width  = 640,
