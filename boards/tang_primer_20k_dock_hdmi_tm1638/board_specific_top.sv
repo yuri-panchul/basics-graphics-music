@@ -239,9 +239,9 @@ module board_specific_top
             .digit     ( tm_digit   ),
             .ledr      ( tm_led     ),
             .keys      ( tm_key     ),
-            .sio_clk   ( GPIO_0[2]  ),
-            .sio_stb   ( GPIO_0[3]  ),
-            .sio_data  ( GPIO_0[1]  )
+            .sio_clk   ( GPIO_1[2]  ),
+            .sio_stb   ( GPIO_1[3]  ),
+            .sio_data  ( GPIO_1[1]  )
         );
 
     `endif
@@ -322,12 +322,23 @@ module board_specific_top
         (
             .clk     ( clk        ),
             .rst     ( rst        ),
-            .lr      ( GPIO_1 [1] ),
-            .ws      ( GPIO_1 [2] ),
-            .sck     ( GPIO_1 [3] ),
-            .sd      ( GPIO_1 [0] ),
+            .lr      ( GPIO_0 [2] ),
+            .ws      ( GPIO_0 [3] ),
+            .sck     ( GPIO_0 [1] ),
+            .sd      ( GPIO_0 [0] ),
             .value   ( mic        )
         );
+
+    // Sipeed R6+1 Microphone Array Board in GPIO connector
+    /*(
+        .clk     ( clk        ),
+        .rst     ( rst        ),
+        .lr      (            ),
+        .ws      ( GPIO_0 [0] ),
+        .sck     ( GPIO_0 [4] ),
+        .sd      ( GPIO_0 [2] ),
+        .value   ( mic        )
+    ); */
 
     `endif
 
@@ -373,10 +384,10 @@ module board_specific_top
         .clk      ( clk        ),
         .reset    ( rst        ),
         .data_in  ( sound      ),
-        .mclk     ( SCK        ),
-        .bclk     ( BCK        ),
-        .sdata    ( DIN        ),
-        .lrclk    ( LRCK       )
+        .mclk     ( GPIO_1[4]  ),
+        .bclk     ( GPIO_1[5]  ),
+        .sdata    ( GPIO_1[6]  ),
+        .lrclk    ( GPIO_1[7]  )
     );
 
     `endif
