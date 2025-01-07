@@ -58,12 +58,7 @@ module board_specific_top
     output                      PA_EN,
     output                      HP_DIN,
     output                      HP_WS,
-    output                      HP_BCK,
-
-    output                      SCK,
-    output                      BCK,
-    output                      LRCK,
-    output                      DIN
+    output                      HP_BCK
 );
 
     //------------------------------------------------------------------------
@@ -261,7 +256,7 @@ module board_specific_top
             .lock   (            )
         );
 
-        //----------------------------------------------------------------
+        //--------------------------------------------------------------------
 
         wire hsync, vsync, display_on, pixel_clk, raw_pixel_clk;
 
@@ -289,7 +284,7 @@ module board_specific_top
 
         BUFG i_BUFG (.I (raw_pixel_clk), .O (pixel_clk));
 
-        //----------------------------------------------------------------
+        //--------------------------------------------------------------------
 
         DVI_TX_Top i_DVI_TX_Top
         (
@@ -310,7 +305,7 @@ module board_specific_top
 
     `endif
 
-    //--------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
@@ -329,66 +324,56 @@ module board_specific_top
             .value   ( mic        )
         );
 
-    // Sipeed R6+1 Microphone Array Board in GPIO connector
-    /*(
-        .clk     ( clk        ),
-        .rst     ( rst        ),
-        .lr      (            ),
-        .ws      ( GPIO_0 [0] ),
-        .sck     ( GPIO_0 [4] ),
-        .sd      ( GPIO_0 [2] ),
-        .value   ( mic        )
-    ); */
-
     `endif
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-    // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
-    // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but LPA4809 needs enable signal PA_EN
+        // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
+        // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but 
+        // on-board amplifier LPA4809 needs enable signal PA_EN
 
-    i2s_audio_out
-    # (
-        .clk_mhz             ( lab_mhz    ),
-        .in_res              ( w_sound    ),
-        .align_right         ( 1'b1       ), // PT8211 DAC data format
-        .offset_by_one_cycle ( 1'b0       )
-    )
-    i_audio_out
-    (
-        .clk      ( clk        ),
-        .reset    ( rst        ),
-        .data_in  ( sound      ),
-        .mclk     (            ),
-        .bclk     ( HP_BCK     ),
-        .lrclk    ( HP_WS      ),
-        .sdata    ( HP_DIN     )
-    );
+        i2s_audio_out
+        # (
+            .clk_mhz             ( lab_mhz    ),
+            .in_res              ( w_sound    ),
+            .align_right         ( 1'b1       ), // PT8211 DAC data format
+            .offset_by_one_cycle ( 1'b0       )
+        )
+        i_audio_out
+        (
+            .clk                 ( clk        ),
+            .reset               ( rst        ),
+            .data_in             ( sound      ),
+            .mclk                (            ),
+            .bclk                ( HP_BCK     ),
+            .lrclk               ( HP_WS      ),
+            .sdata               ( HP_DIN     )
+        );
 
-    // Enable DAC
-    assign PA_EN = 1'b1;
+        // Enable DAC
+        assign PA_EN = 1'b1;
 
-    // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
+        // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
 
-    i2s_audio_out
-    # (
-        .clk_mhz             ( lab_mhz    ),
-        .in_res              ( w_sound    ),
-        .align_right         ( 1'b0       ),
-        .offset_by_one_cycle ( 1'b1       )
-    )
-    i_ext_audio_out
-    (
-        .clk      ( clk        ),
-        .reset    ( rst        ),
-        .data_in  ( sound      ),
-        .mclk     ( GPIO_1[4]  ),
-        .bclk     ( GPIO_1[5]  ),
-        .sdata    ( GPIO_1[6]  ),
-        .lrclk    ( GPIO_1[7]  )
-    );
+        i2s_audio_out
+        # (
+            .clk_mhz             ( lab_mhz    ),
+            .in_res              ( w_sound    ),
+            .align_right         ( 1'b0       ),
+            .offset_by_one_cycle ( 1'b1       )
+        )
+        i_ext_audio_out
+        (
+            .clk                 ( clk        ),
+            .reset               ( rst        ),
+            .data_in             ( sound      ),
+            .mclk                ( GPIO_1[4]  ),
+            .bclk                ( GPIO_1[5]  ),
+            .lrclk               ( GPIO_1[7]  ),
+            .sdata               ( GPIO_1[6]  )
+        );
 
     `endif
 
