@@ -54,6 +54,13 @@ IO_LOC  "KEY[2]"      T2;
 IO_LOC  "KEY[1]"      T3;
 IO_LOC  "KEY[0]"      T10;
 
+// GPIO
+IO_LOC  "GPIO_1[0]"   P11;
+IO_LOC  "GPIO_0[7]"   P9;
+IO_LOC  "GPIO_0[6]"   T8;
+IO_LOC  "GPIO_0[5]"   R8;
+IO_LOC  "GPIO_0[4]"   T6;
+
 // Microphone in Pmod 0
 IO_LOC  "GPIO_0[3]"   T9;  // ws
 IO_LOC  "GPIO_0[2]"   P8;  // lr
