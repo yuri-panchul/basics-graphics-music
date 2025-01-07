@@ -24,6 +24,7 @@ module tb;
     logic [w_key   - 1:0] key;
     logic [w_sw    - 1:0] sw;
     logic [w_sound - 1:0] sound;
+    logic [2          :0] waveform;
 
     //------------------------------------------------------------------------
 
@@ -100,6 +101,18 @@ module tb;
 
     initial
     begin
+        waveform = 1'd1;
+
+        repeat (2)
+            # 0.0023s waveform = waveform << 1;
+    end
+
+    assign key = w_key' (waveform);
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
         rst <= 'bx;
         repeat (2) @ (posedge clk);
         rst <= 1;
@@ -109,8 +122,6 @@ module tb;
 
     //------------------------------------------------------------------------
 
-    assign key = w_key' (1);
-
     initial
     begin
         `ifdef __ICARUS__
@@ -119,7 +130,7 @@ module tb;
 
         // Based on timescale is 1 ns / 1 ps
 
-        # 0.0015s
+        # 0.00685s
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;

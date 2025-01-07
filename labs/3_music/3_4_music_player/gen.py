@@ -61,7 +61,7 @@ print("    always_comb")
 print("        case (x)")
 for t in ts:
     x = xs[t] & (2**w-1)
-    print(f"        {t}: y = {w}'b{x:0{w}b};")
+    print(f"        %2d: y = {w}'b{x:0{w}b};" % t)
 print(f"        default: y = {w}'b0;")
 print("        endcase")
 print("")

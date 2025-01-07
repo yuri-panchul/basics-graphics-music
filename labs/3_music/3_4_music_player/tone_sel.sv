@@ -1,10 +1,10 @@
-// pre-generated with gen_tone_table.sh specify sampling_rate hz and volume 15-10 bit
+// pre-generated with gen_tone_table.sh specify sampling_rate hz and volume
 `include "tone_table.svh"
 
 module tone_sel
 # (
     parameter clk_mhz    = 50,
-              y_width    = 16,         // sound samples resolution, see tone_table.svh
+              y_width    = 16, // sound samples resolution, see tone_table.svh
               note_width = 4
 )
 (
@@ -14,7 +14,11 @@ module tone_sel
     input  [note_width - 1:0] note,
     output [y_width    - 1:0] y
 );
-    localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4; // clk_mhz range (12-19) (20-35) (36-67) (68-131)
+
+    // We are grouping together clk_mhz ranges of
+    // (12-19), (20-35), (36-67), (68-131).
+
+    localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4;
     localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 2 { 1'b0 } }, 1'b1 };
     
     wire   [y_width - 1:0] tone_y [11:0];
@@ -49,11 +53,13 @@ module tone_sel
     assign tone_x = x << octave;
     assign x_max = (note < 8'd12) ? (tone_x_max [note] >> octave) : 9'b1;
     assign y_mod = (note < 8'd12) ? (tone_y [note]) : 16'b0;
-    assign y     = (quadrant [1]) ? (~y_mod + 1) : y_mod;
+    assign y     = (quadrant [1]) ? (~y_mod + 1'b1) : y_mod;
 
 generate
 
-//table_sampling_rate_C sampling_rate = clk_mhz / 512 (< 36 mhz) / 1024 (36-67 mhz) / 2048 (> 67 mhz)
+//table_sampling_rate_C sampling_rate = clk_mhz / 512  ( < 36 mhz)
+//                                    = clk_mhz / 1024 (36-67 mhz)
+//                                    = clk_mhz / 2048 ( > 67 mhz)
 
     if (clk_mhz == 33)
     begin : clk_mhz_33

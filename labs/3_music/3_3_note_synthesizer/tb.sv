@@ -119,7 +119,7 @@ module tb;
 
         // Based on timescale is 1 ns / 1 ps
 
-        # 0.001s
+        # 0.0035s
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;

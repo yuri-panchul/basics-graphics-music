@@ -30,13 +30,5 @@ gtkwave::/Edit/Insert_Analog_Height_Extension
 gtkwave::/Edit/Insert_Analog_Height_Extension
 gtkwave::/Edit/Insert_Analog_Height_Extension
 gtkwave::/Edit/Insert_Analog_Height_Extension
-gtkwave::/Edit/UnHighlight_All
-
-gtkwave::highlightSignalsFromList "tb.i_i2s_audio_out.data_aligned\[31:0\]"
-gtkwave::/Edit/Data_Format/Analog/Step
-gtkwave::/Edit/Data_Format/Signed_Decimal
-gtkwave::/Edit/Insert_Analog_Height_Extension
-gtkwave::/Edit/Insert_Analog_Height_Extension
-gtkwave::/Edit/Insert_Analog_Height_Extension
 gtkwave::/Edit/Insert_Analog_Height_Extension
 gtkwave::/Edit/UnHighlight_All

@@ -17,13 +17,9 @@ module board_specific_top
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
 
-                `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-                w_led         = 2,  // High bits of LED conflict with HDMI pins
-                `else
                 w_led         = 6,
-                `endif
 
-                w_digit       = 0,
+                w_digit       = 1,
                 w_gpio        = 32,
 
                 screen_width  = 640,
@@ -34,7 +30,9 @@ module board_specific_top
                 w_blue        = 8,
 
                 w_x = $clog2 ( screen_width ),
-                w_y = $clog2 ( screen_height )
+                w_y = $clog2 ( screen_height ),
+
+                w_sound       = 16
 )
 (
     input                       CLK,
@@ -60,7 +58,12 @@ module board_specific_top
     output                      PA_EN,
     output                      HP_DIN,
     output                      HP_WS,
-    output                      HP_BCK
+    output                      HP_BCK,
+
+    output                      SCK,
+    output                      BCK,
+    output                      LRCK,
+    output                      DIN
 );
 
     //------------------------------------------------------------------------
@@ -236,9 +239,9 @@ module board_specific_top
             .digit     ( tm_digit   ),
             .ledr      ( tm_led     ),
             .keys      ( tm_key     ),
-            .sio_clk   ( GPIO_0 [2] ),
-            .sio_stb   ( GPIO_0 [3] ),
-            .sio_data  ( GPIO_0 [1] )
+            .sio_clk   ( GPIO_1[2]  ),
+            .sio_stb   ( GPIO_1[3]  ),
+            .sio_data  ( GPIO_1[1]  )
         );
 
     `endif
@@ -319,12 +322,23 @@ module board_specific_top
         (
             .clk     ( clk        ),
             .rst     ( rst        ),
-            .lr      ( GPIO_1 [1] ),
-            .ws      ( GPIO_1 [2] ),
-            .sck     ( GPIO_1 [3] ),
-            .sd      ( GPIO_1 [0] ),
+            .lr      ( GPIO_0 [2] ),
+            .ws      ( GPIO_0 [3] ),
+            .sck     ( GPIO_0 [1] ),
+            .sd      ( GPIO_0 [0] ),
             .value   ( mic        )
         );
+
+    // Sipeed R6+1 Microphone Array Board in GPIO connector
+    /*(
+        .clk     ( clk        ),
+        .rst     ( rst        ),
+        .lr      (            ),
+        .ws      ( GPIO_0 [0] ),
+        .sck     ( GPIO_0 [4] ),
+        .sd      ( GPIO_0 [2] ),
+        .value   ( mic        )
+    ); */
 
     `endif
 
@@ -332,52 +346,49 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-        `ifdef NOT_WORKING
+    // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
+    // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but LPA4809 needs enable signal PA_EN
 
-        // For tang_primer_20k_dock DAC do not require mclk signal
-        // but it needs enable signal PA_EN
+    i2s_audio_out
+    # (
+        .clk_mhz             ( lab_mhz    ),
+        .in_res              ( w_sound    ),
+        .align_right         ( 1'b1       ), // PT8211 DAC data format
+        .offset_by_one_cycle ( 1'b0       )
+    )
+    i_audio_out
+    (
+        .clk      ( clk        ),
+        .reset    ( rst        ),
+        .data_in  ( sound      ),
+        .mclk     (            ),
+        .bclk     ( HP_BCK     ),
+        .lrclk    ( HP_WS      ),
+        .sdata    ( HP_DIN     )
+    );
 
-        i2s_audio_out
-        # (
-            .clk_mhz  ( clk_mhz      )
-        )
-        inst_audio_out
-        (
-            .clk      ( clk          ),
-            .reset    ( rst          ),
-            .data_in  ( sound        ),
-            .mclk     (              ),
-            .bclk     ( HP_BCK       ),
-            .lrclk    ( HP_WS        ),
-            .sdata    ( HP_DIN       )
-        );
+    // Enable DAC
+    assign PA_EN = 1'b1;
 
-        // Enable DAC
-        assign PA_EN = 1'b1;
+    // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
 
-        `endif
-
-        `ifdef NOT_WORKING_2
-
-        // Second DAC before the first one is working
-
-        i2s_audio_out
-        # (
-            .clk_mhz ( clk_mhz    )
-        )
-        inst_audio_out
-        (
-            .clk     ( clk        ),
-            .reset   ( rst        ),
-            .data_in ( sound      ),
-
-            .mclk    ( GPIO_0 [0] ),
-            .bclk    ( GPIO_0 [1] ),
-            .sdata   ( GPIO_0 [2] ),
-            .lrclk   ( GPIO_0 [3] )
-        );
-
-        `endif
+    i2s_audio_out
+    # (
+        .clk_mhz             ( lab_mhz    ),
+        .in_res              ( w_sound    ),
+        .align_right         ( 1'b0       ),
+        .offset_by_one_cycle ( 1'b1       )
+    )
+    i_ext_audio_out
+    (
+        .clk      ( clk        ),
+        .reset    ( rst        ),
+        .data_in  ( sound      ),
+        .mclk     ( GPIO_1[4]  ),
+        .bclk     ( GPIO_1[5]  ),
+        .sdata    ( GPIO_1[6]  ),
+        .lrclk    ( GPIO_1[7]  )
+    );
 
     `endif
 
