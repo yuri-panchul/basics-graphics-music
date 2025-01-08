@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -209,34 +210,24 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         wire [$left (abcdefgh):0] hgfedcba;
-
-        generate
-            genvar i;
-
-            for (i = 0; i < $bits (abcdefgh); i ++)
-            begin : abc
-                assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-            end
-        endgenerate
-
-        //--------------------------------------------------------------------
+        `SWAP_BITS (hgfedcba, abcdefgh);
 
         tm1638_board_controller
         # (
-            .clk_mhz   ( lab_mhz    ),
-            .w_digit   ( w_tm_digit )
+            .clk_mhz   ( lab_mhz     ),
+            .w_digit   ( w_tm_digit  )
         )
         i_tm1638
         (
-            .clk       ( clk        ),
-            .rst       ( rst        ),
-            .hgfedcba  ( hgfedcba   ),
-            .digit     ( tm_digit   ),
-            .ledr      ( tm_led     ),
-            .keys      ( tm_key     ),
-            .sio_clk   ( GPIO_1[2]  ),
-            .sio_stb   ( GPIO_1[3]  ),
-            .sio_data  ( GPIO_1[1]  )
+            .clk       ( clk         ),
+            .rst       ( rst         ),
+            .hgfedcba  ( hgfedcba    ),
+            .digit     ( tm_digit    ),
+            .ledr      ( tm_led      ),
+            .keys      ( tm_key      ),
+            .sio_clk   ( GPIO_1[2]   ),
+            .sio_stb   ( GPIO_1[3]   ),
+            .sio_data  ( GPIO_1[1]   )
         );
 
     `endif
