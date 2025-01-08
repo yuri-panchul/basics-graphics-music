@@ -68,13 +68,7 @@ module board_specific_top
     output                      PA_EN,
     output                      HP_DIN,
     output                      HP_WS,
-    output                      HP_BCK,
-
-    output                      SCK,
-    output                      BCK,
-    output                      LRCK,
-    output                      DIN
-
+    output                      HP_BCK
 );
 
         Gowin_rPLL i_Gowin_rPLL
@@ -249,36 +243,36 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-    wire [$left (abcdefgh):0] hgfedcba;
+        wire [$left (abcdefgh):0] hgfedcba;
 
-    generate
-        genvar i;
+        generate
+            genvar i;
 
-        for (i = 0; i < $bits (abcdefgh); i ++)
-        begin : abc
-            assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-        end
-    endgenerate
+            for (i = 0; i < $bits (abcdefgh); i ++)
+            begin : abc
+                assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
+            end
+        endgenerate
 
-    //------------------------------------------------------------------------
+        //--------------------------------------------------------------------
 
-    tm1638_board_controller
-    # (
-        .clk_mhz ( lab_mhz    ),
-        .w_digit ( w_tm_digit )
-    )
-    i_tm1638
-    (
-        .clk        ( lab_clk       ),
-        .rst        ( rst           ),
-        .hgfedcba   ( hgfedcba      ),
-        .digit      ( tm_digit      ),
-        .ledr       ( tm_led        ),
-        .keys       ( tm_key        ),
-        .sio_clk    ( GPIO_1[2]     ),
-        .sio_stb    ( GPIO_1[3]     ),
-        .sio_data   ( GPIO_1[1]     )
-    );
+        tm1638_board_controller
+        # (
+            .clk_mhz    ( lab_mhz     ),
+            .w_digit    ( w_tm_digit  )
+        )
+        i_tm1638
+        (
+            .clk        ( lab_clk     ),
+            .rst        ( rst         ),
+            .hgfedcba   ( hgfedcba    ),
+            .digit      ( tm_digit    ),
+            .ledr       ( tm_led      ),
+            .keys       ( tm_key      ),
+            .sio_clk    ( GPIO_1[2]   ),
+            .sio_stb    ( GPIO_1[3]   ),
+            .sio_data   ( GPIO_1[1]   )
+        );
 
     `endif
 
@@ -288,98 +282,88 @@ module board_specific_top
 
         lcd_800_480 i_lcd
         (
-            .PixelClk  (   lab_clk        ),
-            .nRST      ( ~ rst            ),
+            .PixelClk   (   lab_clk   ),
+            .nRST       ( ~ rst       ),
 
-            .LCD_DE    (   LCD_DE         ),
-            .LCD_HSYNC (   LCD_HS         ),
-            .LCD_VSYNC (   LCD_VS         ),
+            .LCD_DE     (   LCD_DE    ),
+            .LCD_HSYNC  (   LCD_HS    ),
+            .LCD_VSYNC  (   LCD_VS    ),
 
-            .x         (   x              ),
-            .y         (   y              )
+            .x          (   x         ),
+            .y          (   y         )
         );
 
     `endif
 
-    //--------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-    inmp441_mic_i2s_receiver
-    # (
-        .clk_mhz ( lab_mhz    )
-    )
-    i_microphone
-    (
-        .clk     ( lab_clk    ),
-        .rst     ( rst        ),
-        .lr      ( GPIO_0 [2] ),
-        .ws      ( GPIO_0 [3] ),
-        .sck     ( GPIO_0 [1] ),
-        .sd      ( GPIO_0 [0] ),
-        .value   ( mic        )
-    );
-
-    // Sipeed R6+1 Microphone Array Board in GPIO connector
-    /*(
-        .clk     ( clk        ),
-        .rst     ( rst        ),
-        .lr      (            ),
-        .ws      ( GPIO_0 [0] ),
-        .sck     ( GPIO_0 [4] ),
-        .sd      ( GPIO_0 [2] ),
-        .value   ( mic        )
-    ); */
+        inmp441_mic_i2s_receiver
+        # (
+            .clk_mhz ( lab_mhz    )
+        )
+        i_microphone
+        (
+            .clk     ( lab_clk    ),
+            .rst     ( rst        ),
+            .lr      ( GPIO_0 [2] ),
+            .ws      ( GPIO_0 [3] ),
+            .sck     ( GPIO_0 [1] ),
+            .sd      ( GPIO_0 [0] ),
+            .value   ( mic        )
+        );
 
     `endif
 
-    //--------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
-    // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
-    // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but LPA4809 needs enable signal PA_EN
+        // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
+        // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but 
+        // on-board amplifier LPA4809 needs enable signal PA_EN
 
-    i2s_audio_out
-    # (
-        .clk_mhz             ( lab_mhz    ),
-        .in_res              ( w_sound    ),
-        .align_right         ( 1'b1       ), // PT8211 DAC data format
-        .offset_by_one_cycle ( 1'b0       )
-    )
-    i_audio_out
-    (
-        .clk      ( lab_clk    ),
-        .reset    ( rst        ),
-        .data_in  ( sound      ),
-        .mclk     (            ),
-        .bclk     ( HP_BCK     ),
-        .lrclk    ( HP_WS      ),
-        .sdata    ( HP_DIN     )
-    );
+        i2s_audio_out
+        # (
+            .clk_mhz             ( lab_mhz    ),
+            .in_res              ( w_sound    ),
+            .align_right         ( 1'b1       ), // PT8211 DAC data format
+            .offset_by_one_cycle ( 1'b0       )
+        )
+        i_audio_out
+        (
+            .clk                 ( lab_clk    ),
+            .reset               ( rst        ),
+            .data_in             ( sound      ),
+            .mclk                (            ),
+            .bclk                ( HP_BCK     ),
+            .lrclk               ( HP_WS      ),
+            .sdata               ( HP_DIN     )
+        );
 
-    // Enable DAC
-    assign PA_EN = 1'b1;
+        // Enable DAC
+        assign PA_EN = 1'b1;
 
-    // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
+        // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
 
-    i2s_audio_out
-    # (
-        .clk_mhz             ( lab_mhz    ),
-        .in_res              ( w_sound    ),
-        .align_right         ( 1'b0       ),
-        .offset_by_one_cycle ( 1'b1       )
-    )
-    i_ext_audio_out
-    (
-        .clk      ( lab_clk    ),
-        .reset    ( rst        ),
-        .data_in  ( sound      ),
-        .mclk     ( GPIO_1[4]  ),
-        .bclk     ( GPIO_1[5]  ),
-        .sdata    ( GPIO_1[6]  ),
-        .lrclk    ( GPIO_1[7]  )
-    );
+        i2s_audio_out
+        # (
+            .clk_mhz             ( lab_mhz    ),
+            .in_res              ( w_sound    ),
+            .align_right         ( 1'b0       ),
+            .offset_by_one_cycle ( 1'b1       )
+        )
+        i_ext_audio_out
+        (
+            .clk                 ( lab_clk    ),
+            .reset               ( rst        ),
+            .data_in             ( sound      ),
+            .mclk                ( GPIO_1[4]  ),
+            .bclk                ( GPIO_1[5]  ),
+            .lrclk               ( GPIO_1[7]  ),
+            .sdata               ( GPIO_1[6]  )
+        );
 
     `endif
 

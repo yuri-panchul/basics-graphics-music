@@ -54,50 +54,33 @@ IO_LOC  "KEY[2]"      T2;
 IO_LOC  "KEY[1]"      T3;
 IO_LOC  "KEY[0]"      T10;
 
+// GPIO
+IO_LOC  "GPIO_1[0]"   P11;
+IO_LOC  "GPIO_0[7]"   P9;
+IO_LOC  "GPIO_0[6]"   T8;
+IO_LOC  "GPIO_0[5]"   R8;
+IO_LOC  "GPIO_0[4]"   T6;
+
+// Microphone in Pmod 0
+IO_LOC  "GPIO_0[3]"   T9;  // ws
+IO_LOC  "GPIO_0[2]"   P8;  // lr
+IO_LOC  "GPIO_0[1]"   T7;  // sck
+IO_LOC  "GPIO_0[0]"   P6;  // sd
+IO_PORT "GPIO_0[0]"   PULL_MODE=DOWN;
+
 // On-board sound DAC
 IO_LOC  "PA_EN"       R16;
 IO_LOC  "HP_DIN"      P15;
 IO_LOC  "HP_WS"       P16;
 IO_LOC  "HP_BCK"      N15;
 
-// Microphone single in Pmod 0
-IO_LOC  "GPIO_0[3]"   T9;  // MIC_WS
-IO_LOC  "GPIO_0[2]"   P8;  // MIC_LR
-IO_LOC  "GPIO_0[1]"   T7;  // MIC_BCK  sck
-IO_LOC  "GPIO_0[0]"   P6;  // MIC_DAT0 sd
-IO_PORT "GPIO_0[0]"   PULL_MODE=DOWN;
-
 // External sound DAC in Pmod 1
-IO_LOC  "GPIO_1[7]"   J14; // LRCK
-IO_LOC  "GPIO_1[6]"   M14; // DIN
-IO_LOC  "GPIO_1[5]"   T12; // BCK
-IO_LOC  "GPIO_1[4]"   T11; // SCK
+IO_LOC  "GPIO_1[7]"   J14; // lrck
+IO_LOC  "GPIO_1[6]"   M14; // din
+IO_LOC  "GPIO_1[5]"   T12; // bck
+IO_LOC  "GPIO_1[4]"   T11; // sck
 
 // TM1638 in Pmod 1
 IO_LOC  "GPIO_1[3]"   J16; // TM1638 sio_stb
 IO_LOC  "GPIO_1[2]"   M15; // TM1638 sio_clk
 IO_LOC  "GPIO_1[1]"   R11; // TM1638 sio_data
-
-// Sipeed R6+1 Microphone Array Board in GPIO connector
-/* IO_LOC  "GPIO_0[3]"   T9;  // WS2812-DAT  12 SK9822 LED
-IO_LOC  "GPIO_0[7]"   P9;  // MIC_LED_CLK 12 SK9822 LED
-IO_LOC  "GPIO_0[2]"   P8;  // MIC_DAT0 sd   mic 0 1
-IO_PORT "GPIO_0[2]"   PULL_MODE=DOWN;
-IO_LOC  "GPIO_0[6]"   T8;  // MIC_DAT1 sd_1 mic 2 3
-IO_PORT "GPIO_0[6]"   PULL_MODE=DOWN;
-IO_LOC  "GPIO_0[5]"   R8;  // MIC_DAT2 sd_2 mic 4 5
-IO_PORT "GPIO_0[5]"   PULL_MODE=DOWN;
-IO_LOC  "GPIO_0[1]"   T7;  // MIC_DAT3 sd_3 mic x C
-IO_PORT "GPIO_0[1]"   PULL_MODE=DOWN;
-IO_LOC  "GPIO_0[4]"   T6;  // MIC_BCK  sck
-IO_LOC  "GPIO_0[0]"   P6;  // MIC_WS   ws */
-
-// PulseView Logic Analyzer in Pmod 0 
-/*                      T6;  //  -0-
-                      P6;  //  -1-
-                      R8;  //  -2-
-                      T7;  //  -3-
-                      T8;  //  -4-
-                      P8;  //  -5-
-                      P9;  //  -6-
-                      T9;  //  -7- */
