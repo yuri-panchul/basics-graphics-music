@@ -1,6 +1,6 @@
 `include "config.svh"
 
-module a_plus_b_using_fifos
+module a_plus_b_using_wrapped_fifos
 # (
     parameter width = 8, depth = 10
 )

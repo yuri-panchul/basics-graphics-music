@@ -27,7 +27,7 @@ module tb
     // DUT instantiation
 
 
-    a_plus_b_using_fifos
+    a_plus_b_using_wrapped_fifos
     # (.width (width), .depth (depth))
     dut (.*);
 
