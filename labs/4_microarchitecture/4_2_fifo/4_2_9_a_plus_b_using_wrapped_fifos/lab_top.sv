@@ -176,7 +176,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    a_plus_b_using_fifos
+    a_plus_b_using_wrapped_fifos
     # (.width (width), .depth (depth))
     a_plus_b (.clk (slow_clk), .*);
 
