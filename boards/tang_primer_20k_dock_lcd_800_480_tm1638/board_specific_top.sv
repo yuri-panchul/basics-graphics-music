@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`include "swap_bits.svh"
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -244,17 +245,7 @@ module board_specific_top
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
         wire [$left (abcdefgh):0] hgfedcba;
-
-        generate
-            genvar i;
-
-            for (i = 0; i < $bits (abcdefgh); i ++)
-            begin : abc
-                assign hgfedcba [i] = abcdefgh [$left (abcdefgh) - i];
-            end
-        endgenerate
-
-        //--------------------------------------------------------------------
+        `SWAP_BITS (hgfedcba, abcdefgh);
 
         tm1638_board_controller
         # (
