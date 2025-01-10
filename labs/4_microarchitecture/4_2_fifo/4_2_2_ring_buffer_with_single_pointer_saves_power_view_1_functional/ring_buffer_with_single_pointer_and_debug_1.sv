@@ -66,15 +66,15 @@ module ring_buffer_with_single_pointer_and_debug_1
     always_comb
     begin
         for (int i = 0; i < depth; i ++)
-            if (rd_ptr + i < depth)
+            if (ptr + i < depth)
             begin
-                debug_valid [i] = valid [rd_ptr + i];
-                debug_data  [i] = data  [rd_ptr + i];
+                debug_valid [i] = valid [ptr + i];
+                debug_data  [i] = data  [ptr + i];
             end
             else
             begin
-                debug_valid [i] = valid [rd_ptr + i - depth];
-                debug_data  [i] = data  [rd_ptr + i - depth];
+                debug_valid [i] = valid [ptr + i - depth];
+                debug_data  [i] = data  [ptr + i - depth];
             end
     end
 
