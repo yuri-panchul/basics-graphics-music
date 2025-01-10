@@ -12,8 +12,8 @@ module ring_buffer_with_single_pointer_and_debug_1
     output               out_valid,
     output [width - 1:0] out_data,
 
-    output [depth - 1:0]              debug_valid,
-    output [depth - 1:0][width - 1:0] debug_data
+    output logic [depth - 1:0]              debug_valid,
+    output logic [depth - 1:0][width - 1:0] debug_data
 );
 
     //------------------------------------------------------------------------
@@ -52,20 +52,10 @@ module ring_buffer_with_single_pointer_and_debug_1
     // TODO: Add logic to generate debug signals
     // START_SOLUTION
 
-    assign debug_valid = valid;
-
-    generate
-        genvar i;
-
-        for (i = 0; i < depth; i ++)
-        begin : gen
-            assign debug_data [i] = data [i];
-        end
-    endgenerate
-
     always_comb
     begin
         for (int i = 0; i < depth; i ++)
+        begin
             if (ptr + i < depth)
             begin
                 debug_valid [i] = valid [ptr + i];
@@ -76,6 +66,7 @@ module ring_buffer_with_single_pointer_and_debug_1
                 debug_valid [i] = valid [ptr + i - depth];
                 debug_data  [i] = data  [ptr + i - depth];
             end
+        end
     end
 
     // END_SOLUTION
