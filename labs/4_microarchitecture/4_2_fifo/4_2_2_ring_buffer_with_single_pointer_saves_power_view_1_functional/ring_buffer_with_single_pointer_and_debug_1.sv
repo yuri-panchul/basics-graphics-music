@@ -1,4 +1,4 @@
-module shift_register_with_valid_and_debug
+module ring_buffer_with_single_pointer_and_debug_1
 # (
     parameter width = 256, depth = 10
 )
@@ -16,6 +16,21 @@ module shift_register_with_valid_and_debug
     output [depth - 1:0][width - 1:0] debug_data
 );
 
+    //------------------------------------------------------------------------
+
+    localparam pointer_width = $clog2 (depth);
+    localparam [pointer_width - 1:0] max_ptr = pointer_width' (depth - 1);
+
+    logic [pointer_width - 1:0] ptr;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+            ptr <= '0;
+        else
+            ptr <= ptr == max_ptr ? '0 : ptr + 1'b1;
+
+    //------------------------------------------------------------------------
+
     logic [depth - 1:0] valid;
     logic [width - 1:0] data [0: depth - 1];
 
@@ -23,18 +38,14 @@ module shift_register_with_valid_and_debug
         if (rst)
             valid <= '0;
         else
-            valid <= { valid [$left (valid) - 1:0], in_valid };
+            valid [ptr] <= in_valid;
 
     always_ff @ (posedge clk)
-    begin
-        data [0] <= in_data;
+        if (in_valid)
+            data [ptr] <= in_data;
 
-        for (int i = 1; i < depth; i ++)
-            data [i] <= data [i - 1];
-    end
-
-    assign out_valid = valid [depth - 1];
-    assign out_data  = data  [depth - 1];
+    assign out_valid = valid [ptr];
+    assign out_data  = data  [ptr];
 
     //------------------------------------------------------------------------
 
@@ -51,6 +62,21 @@ module shift_register_with_valid_and_debug
             assign debug_data [i] = data [i];
         end
     endgenerate
+
+    always_comb
+    begin
+        for (int i = 0; i < depth; i ++)
+            if (rd_ptr + i < depth)
+            begin
+                debug_valid [i] = valid [rd_ptr + i];
+                debug_data  [i] = data  [rd_ptr + i];
+            end
+            else
+            begin
+                debug_valid [i] = valid [rd_ptr + i - depth];
+                debug_data  [i] = data  [rd_ptr + i - depth];
+            end
+    end
 
     // END_SOLUTION
 
