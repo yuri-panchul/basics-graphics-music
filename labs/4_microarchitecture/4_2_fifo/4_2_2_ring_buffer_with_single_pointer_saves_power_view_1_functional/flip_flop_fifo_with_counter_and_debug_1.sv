@@ -2,7 +2,7 @@
 
 `include "config.svh"
 
-module flip_flop_fifo_with_counter_and_debug_1
+module ring_buffer_with_single_pointer_and_debug_1
 # (
     parameter width = 8, depth = 10
 )
