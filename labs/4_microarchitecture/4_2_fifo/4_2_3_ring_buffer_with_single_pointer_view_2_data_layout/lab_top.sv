@@ -80,6 +80,15 @@ module lab_top
     wire               out_valid;
     wire [width - 1:0] out_data;
 
+    //------------------------------------------------------------------------
+
+    wire [31:0] debug_ptr;
+
+    wire [$clog2 (depth) - 1:0] rw_ptr
+        = debug_ptr [ 0 +: $clog2 (depth)];
+
+    wire [w_digit - 1:0] dots_from_ptr
+        =   (w_digit' (1) << (depth - 1 - rw_ptr));
 
     wire [depth - 1:0]              debug_valid;
     wire [depth - 1:0][width - 1:0] debug_data;
@@ -162,7 +171,7 @@ module lab_top
     (
         .clk      (clk),
         .number   (debug_data_mirrored),
-        .dots     ('0),
+        .dots     (dots_from_ptr),
         .abcdefgh (abcdefgh_pre),
         .digit    (digit),
         .*
@@ -174,7 +183,7 @@ module lab_top
 
     always_comb
         if ((digit & debug_valid_mirrored) == '0)
-            abcdefgh = sign_empty_entry;
+            abcdefgh = sign_empty_entry | abcdefgh_pre [0];
         else
             abcdefgh = abcdefgh_pre;
 
