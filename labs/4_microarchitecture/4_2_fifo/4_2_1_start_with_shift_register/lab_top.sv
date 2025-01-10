@@ -152,7 +152,7 @@ module lab_top
         .width (width),
         .depth (depth)
     )
-    i_fifo (.clk (slow_clk), .*);
+    i_shift_register (.clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 

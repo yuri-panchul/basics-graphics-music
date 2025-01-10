@@ -72,56 +72,60 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    localparam fifo_width = 4, fifo_depth = w_digit;
+    localparam width = 4, depth = w_digit;
 
-    wire [fifo_width - 1:0] write_data;
-    wire [fifo_width - 1:0] read_data;
-    wire empty, full;
+    wire               in_valid = | key;  // Any key is pressed
+    wire [width - 1:0] in_data;
 
-    wire push = ~ full  & key [1];
-    wire pop  = ~ empty & key [0];
+    wire               out_valid;
+    wire [width - 1:0] out_data;
 
-    // With this implementation of FIFO
-    // we can actually push into a full FIFO
-    // if we are performing pop in the same cycle.
-    //
-    // However we are not going to do this
-    // because we assume that the logic that pushes
-    // is separated from the logic that pops.
-    //
-    // wire push = (~ full | pop) & key [1];
 
-    wire [fifo_depth - 1:0]                   debug_valid;
-    wire [fifo_depth - 1:0][fifo_width - 1:0] debug_data;
+    wire [depth - 1:0]              debug_valid;
+    wire [depth - 1:0][width - 1:0] debug_data;
+
+    wire [depth - 1:0]              debug_valid_mirrored;
+    wire [depth - 1:0][width - 1:0] debug_data_mirrored;
+
+    generate
+        genvar i;
+
+        for (i = 0; i < depth; i++)
+        begin : gen
+            assign debug_valid_mirrored [i] = debug_valid [depth - 1 - i];
+            assign debug_data_mirrored  [i] = debug_data  [depth - 1 - i];
+        end
+
+    endgenerate
 
     //------------------------------------------------------------------------
 
     `ifdef __ICARUS__
 
-        logic [fifo_width - 1:0] write_data_const_array [0:2 ** fifo_width - 1];
+        logic [width - 1:0] in_data_const_array [0:2 ** width - 1];
 
-        assign write_data_const_array [ 0] = 4'h2;
-        assign write_data_const_array [ 1] = 4'h6;
-        assign write_data_const_array [ 2] = 4'hd;
-        assign write_data_const_array [ 3] = 4'hb;
-        assign write_data_const_array [ 4] = 4'h7;
-        assign write_data_const_array [ 5] = 4'he;
-        assign write_data_const_array [ 6] = 4'hc;
-        assign write_data_const_array [ 7] = 4'h4;
-        assign write_data_const_array [ 8] = 4'h1;
-        assign write_data_const_array [ 9] = 4'h0;
-        assign write_data_const_array [10] = 4'h9;
-        assign write_data_const_array [11] = 4'ha;
-        assign write_data_const_array [12] = 4'hf;
-        assign write_data_const_array [13] = 4'h5;
-        assign write_data_const_array [14] = 4'h8;
-        assign write_data_const_array [15] = 4'h3;
+        assign in_data_const_array [ 0] = 4'h2;
+        assign in_data_const_array [ 1] = 4'h6;
+        assign in_data_const_array [ 2] = 4'hd;
+        assign in_data_const_array [ 3] = 4'hb;
+        assign in_data_const_array [ 4] = 4'h7;
+        assign in_data_const_array [ 5] = 4'he;
+        assign in_data_const_array [ 6] = 4'hc;
+        assign in_data_const_array [ 7] = 4'h4;
+        assign in_data_const_array [ 8] = 4'h1;
+        assign in_data_const_array [ 9] = 4'h0;
+        assign in_data_const_array [10] = 4'h9;
+        assign in_data_const_array [11] = 4'ha;
+        assign in_data_const_array [12] = 4'hf;
+        assign in_data_const_array [13] = 4'h5;
+        assign in_data_const_array [14] = 4'h8;
+        assign in_data_const_array [15] = 4'h3;
 
     `else
 
         // New SystemVerilog syntax for array assignment
 
-        wire [fifo_width - 1:0] write_data_const_array [0:2 ** fifo_width - 1]
+        wire [width - 1:0] in_data_const_array [0:2 ** width - 1]
             = '{ 4'h2, 4'h6, 4'hd, 4'hb, 4'h7, 4'he, 4'hc, 4'h4,
                  4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
 
@@ -129,26 +133,26 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [fifo_width - 1:0] write_data_index;
+    wire [width - 1:0] in_data_index;
 
-    counter_with_enable # (fifo_width) i_counter
+    counter_with_enable # (width) i_counter
     (
         .clk    (slow_clk),
-        .enable (push),
-        .cnt    (write_data_index),
+        .enable (in_valid),
+        .cnt    (in_data_index),
         .*
     );
 
-    assign write_data = write_data_const_array [write_data_index];
+    assign in_data = in_data_const_array [in_data_index];
 
     //------------------------------------------------------------------------
 
-    flip_flop_fifo_with_counter_and_debug_1
+    ring_buffer_with_single_pointer_and_debug_1
     # (
-        .width (fifo_width),
-        .depth (fifo_depth)
+        .width (width),
+        .depth (depth)
     )
-    i_fifo (.clk (slow_clk), .*);
+    i_ring_buffer (.clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
@@ -157,20 +161,19 @@ module lab_top
     seven_segment_display # (w_digit) i_display
     (
         .clk      (clk),
-        .number   (debug_data),
-        .dots     ({ w_digit { full } }),
+        .number   (debug_data_mirrored),
+        .dots     ('0),
         .abcdefgh (abcdefgh_pre),
         .digit    (digit),
         .*
     );
 
-    localparam sign_empty_head  = 8'b11110000,
-               sign_empty_entry = 8'b10010000;
+    //------------------------------------------------------------------------
+
+    localparam sign_empty_entry = 8'b00000000;
 
     always_comb
-        if (digit == w_digit' (1) & empty)
-            abcdefgh = sign_empty_head;
-        else if ((digit & debug_valid) == '0)
+        if ((digit & debug_valid_mirrored) == '0)
             abcdefgh = sign_empty_entry;
         else
             abcdefgh = abcdefgh_pre;
