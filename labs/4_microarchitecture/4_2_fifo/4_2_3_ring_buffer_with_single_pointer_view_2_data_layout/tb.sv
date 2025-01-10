@@ -2,40 +2,30 @@
 
 module tb;
 
-    localparam fifo_width = 8,
-               fifo_depth = 5,
-               allow_push_when_full_with_pop = 1;
+    localparam width = 8, depth = 5;
 
     //------------------------------------------------------------------------
 
-    logic                    clk;
-    logic                    rst;
-    logic                    push;
-    logic                    pop;
-    logic [fifo_width - 1:0] write_data;
-    wire  [fifo_width - 1:0] read_data;
-    wire                     empty;
-    wire                     full;
+    logic               clk;
+    logic               rst;
 
-    logic [fifo_depth - 1:0]                   debug_valid;
-    logic [fifo_depth - 1:0][fifo_width - 1:0] debug_data;
+    logic               in_valid;
+    logic [width - 1:0] in_data;
+
+    logic               out_valid;
+    logic [width - 1:0] out_data;
+
+    logic [depth - 1:0]              debug_valid;
+    logic [depth - 1:0][width - 1:0] debug_data;
 
     //------------------------------------------------------------------------
 
-    flip_flop_fifo_empty_full_optimized_and_debug_2
+    ring_buffer_with_single_pointer_and_debug_2
     # (
-        .width (fifo_width),
-        .depth (fifo_depth)
+        .width (width),
+        .depth (depth)
     )
-    rtl (.*);
-
-    fifo_monitor
-    # (
-        .width (fifo_width),
-        .depth (fifo_depth),
-        .allow_push_when_full_with_pop (allow_push_when_full_with_pop)
-    )
-    monitor (.*);
+    ring_buffer_with_single_pointer (.*);
 
     //------------------------------------------------------------------------
 
@@ -56,108 +46,39 @@ module tb;
         //--------------------------------------------------------------------
         // Initialization
 
-        push <= '0;
-        pop  <= '0;
+        in_valid <= '0;
 
         //--------------------------------------------------------------------
         // Reset
 
-        repeat (3) @ (posedge clk);
-        rst <= '1;
-        repeat (3) @ (posedge clk);
+        # 3 rst <= '1;
+        repeat (5) @ (posedge clk);
         rst <= '0;
 
         //--------------------------------------------------------------------
-
-        $display ("*** Fill and empty");
-
-        push <= '1;
-
-        for (int i = 0; i < fifo_depth; i ++)
-        begin
-            write_data <= i * 16 + i;
-            @ (posedge clk);
-        end
-
-        push <= '0;
-        pop  <= '1;
-
-        repeat (fifo_depth)
-            @ (posedge clk);
-
-        pop  <= '0;
-        repeat (2) @ (posedge clk);
-
-        //--------------------------------------------------------------------
-
-        $display ("*** Fill half and run back-to-back, then empty");
-
-        push <= '1;
-
-        for (int i = 0; i < fifo_depth / 2; i ++)
-        begin
-            write_data <= i * 16 + i;
-            @ (posedge clk);
-        end
-
-        pop <= '1;
-
-        repeat (5)
-            for (int i = 0; i < fifo_depth; i ++)
-            begin
-                write_data <= i * 16 + i;
-                @ (posedge clk);
-            end
-
-        push <= '0;
-
-        do
-        begin
-            @ (posedge clk);
-            # 1;  // This delay is necessary because of combinational logic after ff
-        end
-        while (~ empty);
-
-        pop <= '0;
-        repeat (2) @ (posedge clk);
-
-        //--------------------------------------------------------------------
-
-        $display ("*** Randomized test");
-
-        repeat (5) @ (posedge clk);
+        // Random stimuli
 
         repeat (100)
         begin
+            in_valid <= $urandom ();
+            in_data  <= $urandom ();
+
             @ (posedge clk);
-            # 1  // This delay is necessary because of combinational logic after ff
 
-            pop  <= '0;
-            push <= '0;
+            $write (".");
 
-            if (  allow_push_when_full_with_pop
-                & full
-                & $urandom_range (1, 100) <= 40 )
-            begin
-                pop  <= '1;
-                push <= '1;
+            if (in_valid)
+                $write (" in: %h", in_data);
+            else if (out_valid)
+                $write ("       ");
 
-                write_data <= $urandom;
-            end
+            if (out_valid)
+                $write (" out: %h", out_data);
 
-            if (~ empty & $urandom_range (1, 100) <= 50)
-                pop <= '1;
-
-            if (~ full & $urandom_range (1, 100) <= 60)
-            begin
-                push <= '1;
-                write_data <= $urandom;
-            end
+            $display;
         end
 
         //--------------------------------------------------------------------
-
-        $display;
         $finish;
     end
 
