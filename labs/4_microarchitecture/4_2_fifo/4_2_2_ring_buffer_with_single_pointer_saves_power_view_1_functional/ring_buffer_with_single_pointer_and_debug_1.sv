@@ -56,15 +56,15 @@ module ring_buffer_with_single_pointer_and_debug_1
     begin
         for (int i = 0; i < depth; i ++)
         begin
-            if (ptr + i < depth)
+            if (ptr >= i + 1)
             begin
-                debug_valid [i] = valid [ptr + i];
-                debug_data  [i] = data  [ptr + i];
+                debug_valid [i] = valid [ptr - i - 1];
+                debug_data  [i] = data  [ptr - i - 1];
             end
             else
             begin
-                debug_valid [i] = valid [ptr + i - depth];
-                debug_data  [i] = data  [ptr + i - depth];
+                debug_valid [i] = valid [ptr + depth - i - 1];
+                debug_data  [i] = data  [ptr + depth - i - 1];
             end
         end
     end
