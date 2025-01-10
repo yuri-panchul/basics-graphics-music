@@ -6,7 +6,7 @@ module seven_segment_display
 # (
     parameter w_digit   = 2,
     parameter clk_mhz   = 50,
-    parameter update_hz = 4 // Looks like a sane default
+    parameter update_hz = 120  // The default of 4 is too low for FIFO lab // Looks like a sane default
 )
 (
     input  clk,
