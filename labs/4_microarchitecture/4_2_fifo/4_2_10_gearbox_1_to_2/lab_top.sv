@@ -76,18 +76,14 @@ module lab_top
 
     // Upstream
 
-    // Either of two leftmost keys is pressed
-
     wire                   up_vld = key [1];
     wire                   up_rdy;
     wire [    width - 1:0] up_data;
 
     // Downstream
 
-    // Two rightmost keys are not pressed - rdy is ON by default
-
     wire                   down_vld;
-    wire                   down_rdy = key [0];
+    wire                   down_rdy = ~ key [0]; // Ready is ON by default
     wire [2 * width - 1:0] down_data;
 
     //------------------------------------------------------------------------
