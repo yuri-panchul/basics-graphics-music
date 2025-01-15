@@ -43,8 +43,9 @@ Based on a rough estimation of 1:10 D-flip-flop and logic gates ratio in a typic
 
 This step is straightforward. I generated two GitHub repos from eFabless templates: 
 
-https://github.com/yuri-panchul/caravel_user_mini_experiment is generated from https://github.com/efabless/caravel_user_mini
-https://github.com/yuri-panchul/caravel_user_project_experiment is generated https://github.com/efabless/caravel_user_project
+* https://github.com/yuri-panchul/caravel_user_mini_experiment is generated from https://github.com/efabless/caravel_user_mini
+
+* https://github.com/yuri-panchul/caravel_user_project_experiment is generated https://github.com/efabless/caravel_user_project
 
 ### 4.3. Step 2. Setup
 
@@ -60,7 +61,7 @@ See Appendix A. Ubuntu setup commands for more details.
 ## Appendix A. Ubuntu setup commands
 
 ```bash
-sudo apt install make
+sudo apt install make git
 sudo apt-get install python3-pip -y
 
 https://docs.docker.com/engine/install/ubuntu/
@@ -85,5 +86,9 @@ sudo systemctl enable docker
 sudo gpasswd -a $USER docker
 
 sudo apt install python3.12-venv
+
+cd ~/projects
+git clone https://github.com/yuri-panchul/caravel_user_mini_experiment
+cd caravel_user_mini_experiment
 make setup
 ```
