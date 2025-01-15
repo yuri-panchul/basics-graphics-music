@@ -26,35 +26,35 @@ The alternative to Open Lane is to use Synopsys or Cadence licenses, but they ar
 The alternative to the Caravel harness is to use TinyTapeout. While Tiny Tapeout is web-based and is easier from the installation point of view, it offers less area and fewer GPIO pins for each project. TinyTapeout also does not have an easy option to connect the design to a RISC-V housekeeping core available in Caravel. Cost-wise, TinyTapeout is more affordable for an individual student: $50 per tile of ~1000 ASIC standard cells, up to 16 tiles per project, plus a $200 development board. However, TinyTapeout infrastructure does not allow a group of students to build a larger project.
 
 
-# 4. The Evaluation
+## 4. The Evaluation
 
 Let's evaluate how robust the combination of Caravel and Open Lane is to start such training.
 
-## 4.1. Step 1. The capacity estimation
+### 4.1. Step 1. The capacity estimation
 
 Caravel-Mini is four times smaller than full Caravel and is less expensive, $3.5K versus $10K. Since Tiny Tapeout uses Caravel Infrastructure and has 512 tiles, we can roughly estimate that full Caravel accommodates ~512K standard cells and Caravel-Mini accommodates ~128K standard cells. This makes Caravel ~2.5 times more cost-efficient area-wise than TinyTapeout, and Caravel-Mini ~1.8 times more cost-efficient area-wise than TinyTapeout. Which is expected, this is similar to the difference in wholesale versus retail.
 
 Based on a rough estimation of 1:10 D-flip-flop and logic gates ratio in a typical ASIC design and a knowledge of industrial MIPS CPU cores in the past, we can guess that Caravel can accommodate a mid-range industrial CPU core such as MIPS 24K used in WiFi routers and capable of running Linux. Caravel-Mini can probably accommodate only microcontroller cores such as various MIPS 4K or Cortex M derivatives and their RISC-V equivalents. TinyTapeout, with its limits up to 16 tiles or ~16K standard cells, can be used only for simplified educational CPU cores such as schoolRISCV.
 
-## 4.2. Step 2. Generating the baseline projects from the templates
+### 4.2. Step 2. Generating the baseline projects from the templates
 
 This step is straightforward. I generated two GitHub repos from eFabless templates: 
 
 https://github.com/yuri-panchul/caravel_user_mini_experiment is generated from https://github.com/efabless/caravel_user_mini
 https://github.com/yuri-panchul/caravel_user_project_experiment is generated https://github.com/efabless/caravel_user_project
 
-## 4.3. Step 2. Setup
+### 4.3. Step 2. Setup
 
 I did the setup on 5 platforms: Ubuntu 24.04 LTS, Lubuntu 24.04 LTS, Simply Linux 10.4, Windows 11 with WSL (Windows Subsystem Linux) Ubuntu and MacOS on Apple Silicon (Mac Mini 4).
 
-### 4.3.1. Setup on Ubuntu 24.04 LTS
+#### 4.3.1. Setup on Ubuntu 24.04 LTS
 
 First, three dependencies were missing: make, python3-pip and docker. I installed the first two using apt-get and docker using the instruction from https://docs.docker.com/engine/install/ubuntu .
 However it was not sufficient; I also had to use systemctl and gpasswd commands. Finally, I had to install a Python virtual environment using “sudo apt install python3.12-venv”. After this, “make setup” worked.
 
 See Appendix A. Ubuntu setup commands for more details.
 
-### Appendix A. Ubuntu setup commands
+## Appendix A. Ubuntu setup commands
 
 ```bash
 sudo apt install make
