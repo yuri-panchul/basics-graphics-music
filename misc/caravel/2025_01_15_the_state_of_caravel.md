@@ -47,6 +47,8 @@ This step is straightforward. I generated two GitHub repos from eFabless templat
 
 * https://github.com/yuri-panchul/caravel_user_project_experiment is generated https://github.com/efabless/caravel_user_project
 
+This happened on December 23, 2024 using the latest version.
+
 ### 4.3. Step 2. Setup
 
 I did the setup on 5 platforms: Ubuntu 24.04 LTS, Lubuntu 24.04 LTS, Simply Linux 10.4, Windows 11 with WSL (Windows Subsystem Linux) Ubuntu and MacOS on Apple Silicon (Mac Mini 4).
@@ -56,6 +58,24 @@ I did the setup on 5 platforms: Ubuntu 24.04 LTS, Lubuntu 24.04 LTS, Simply Linu
 First, three dependencies were missing: make, python3-pip and docker. I installed the first two using apt-get and docker using the instruction from https://docs.docker.com/engine/install/ubuntu .
 However it was not sufficient; I also had to use systemctl and gpasswd commands. Finally, I had to install a Python virtual environment using “sudo apt install python3.12-venv”. After this, “make setup” worked.
 
+#### 4.3.2. Setup on MacOS Sequoia 15.2, Apple Silicon, Mac Mini 4
+
+This setup was relatively smooth: I had to install Docker following internet instructions for Docker for Mac, clone repositories and run ‘make setup’. The only bump was I had to install Python’s click package in a virtual environment:
+
+```bash
+cd ~/projects
+git clone https://github.com/yuri-panchul/caravel_user_mini_experiment
+cd caravel_user_mini_experiment
+make setup
+# Failure
+
+source venv/bin/activate
+python3 -m pip install click
+make setup
+
+# Success
+```
+
 See Appendix A. Ubuntu setup commands for more details.
 
 ## Appendix A. Ubuntu setup commands
@@ -64,7 +84,7 @@ See Appendix A. Ubuntu setup commands for more details.
 sudo apt install make git
 sudo apt-get install python3-pip -y
 
-https://docs.docker.com/engine/install/ubuntu/
+# Using instruction from https://docs.docker.com/engine/install/ubuntu/
 
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -81,12 +101,52 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo docker run hello-world
 
+# end of https://docs.docker.com/engine/install/ubuntu/
+
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo gpasswd -a $USER docker
 
 sudo apt install python3.12-venv
 
+cd ~/projects
+git clone https://github.com/yuri-panchul/caravel_user_mini_experiment
+cd caravel_user_mini_experiment
+make setup
+```
+
+## Appendix B. Commands used to setup under Lubuntu 24.04 LTS
+
+```bash
+sudo apt install git
+git clone https://github.com/yuri-panchul/caravel_user_mini_experiment.git
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt install -y build-essential python3 python3-venv python3-pip make git
+sudo apt-get install docker.io
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add the repository to Apt sources:
+echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo docker run hello-world
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+sudo reboot # REBOOT!
+
+docker run hello-world
+
+# ...
 cd ~/projects
 git clone https://github.com/yuri-panchul/caravel_user_mini_experiment
 cd caravel_user_mini_experiment
