@@ -13,18 +13,21 @@ This is usually done in FPGA labs, however FPGA timing and utilization are diffe
 
 The presumed usage scenario is:
 
-We get a group of students who do Verilog simulation exercises using systemverilog-homework exercises and FPGA labs using basics-graphics-music (BGM) repository.
-At some point, the students create their own designs using the BGM framework that isolates the students from FPGA vendor-specific details. Once a student’s design works on an FPGA board, the student can transfer his board-independent modules into a modified Caravel infrastructure.
-The group can pack 15-30 designs into one Caravel or Caravel-Mini, depending on the required area and the costs. Glue logic, together with a housekeeping RISC-V core, can activate only one design at a time.
-Alternatively, instead of making individual designs, the student team can work on a larger project, such as a mid-range CPU core with caches and MMU. In this way, the students can learn how to cooperate in a setting similar to an industrial team.
-While working on a Caravel-based project, a student may re-engineer his pipelines to meet area and timing budgets. Eventually, the whole group will do a tapeout and get their chip manufactured in a few months.
+1. We get a group of students who do Verilog simulation exercises using systemverilog-homework exercises and FPGA labs using basics-graphics-music (BGM) repository.
+
+2. At some point, the students create their own designs using the BGM framework that isolates the students from FPGA vendor-specific details. Once a student’s design works on an FPGA board, the student can transfer his board-independent modules into a modified Caravel infrastructure.
+
+3. The group can pack 15-30 designs into one Caravel or Caravel-Mini, depending on the required area and the costs. Glue logic, together with a housekeeping RISC-V core, can activate only one design at a time.
+
+4. Alternatively, instead of making individual designs, the student team can work on a larger project, such as a mid-range CPU core with caches and MMU. In this way, the students can learn how to cooperate in a setting similar to an industrial team.
+
+5. While working on a Caravel-based project, a student may re-engineer his pipelines to meet area and timing budgets. Eventually, the whole group will do a tapeout and get their chip manufactured in a few months.
 
 ## 3. The Alternatives
 
 The alternative to Open Lane is to use Synopsys or Cadence licenses, but they are not available to everybody.
 
 The alternative to the Caravel harness is to use TinyTapeout. While Tiny Tapeout is web-based and is easier from the installation point of view, it offers less area and fewer GPIO pins for each project. TinyTapeout also does not have an easy option to connect the design to a RISC-V housekeeping core available in Caravel. Cost-wise, TinyTapeout is more affordable for an individual student: $50 per tile of ~1000 ASIC standard cells, up to 16 tiles per project, plus a $200 development board. However, TinyTapeout infrastructure does not allow a group of students to build a larger project.
-
 
 ## 4. The Evaluation
 
