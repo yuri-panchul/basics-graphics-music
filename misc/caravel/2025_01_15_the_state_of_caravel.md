@@ -58,7 +58,17 @@ I did the setup on 5 platforms: Ubuntu 24.04 LTS, Lubuntu 24.04 LTS, Simply Linu
 First, three dependencies were missing: make, python3-pip and docker. I installed the first two using apt-get and docker using the instruction from https://docs.docker.com/engine/install/ubuntu .
 However it was not sufficient; I also had to use systemctl and gpasswd commands. Finally, I had to install a Python virtual environment using “sudo apt install python3.12-venv”. After this, “make setup” worked.
 
-#### 4.3.2. Setup on MacOS Sequoia 15.2, Apple Silicon, Mac Mini 4
+See *Appendix A. Ubuntu setup commands* for more details.
+
+#### 4.3.2. Setup on Lubuntu 24.04 LTS
+
+Setup on Lubuntu was similar to Ubuntu, I don't remember the difference, but maybe there were less bumps. See *Appendix B. Commands used to setup under Lubuntu 24.04 LTS* for more details.
+
+#### 4.3.3. Setup on Simply Linux 10.4
+
+Setup on Simply Linux worked without any problems, but this was probably due to the fact that I already had Open Lane up and running on my Simply Linux installation which was prepared by Anton Midyukov, a maintainer of Simply Linux distribution.
+
+#### 4.3.4. Setup on MacOS Sequoia 15.2, Apple Silicon, Mac Mini 4
 
 This setup was relatively smooth: I had to install Docker following internet instructions for Docker for Mac, clone repositories and run ‘make setup’. The only bump was I had to install Python’s click package in a virtual environment:
 
@@ -76,7 +86,20 @@ make setup
 # Success
 ```
 
-See Appendix A. Ubuntu setup commands for more details.
+#### 4.3.5. Setup on Windows 11 with WSL (Windows Subsystem Linux) Ubuntu
+
+Similarly to MacOS, I had to install Docker following internet instructions for Docker for Windows, then install a specific version of Python and Python’s click package in a virtual environment:
+
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install docker-ce
+sudo apt install python3.10-venv
+sudo apt install python3-pip
+pip install click
+```
+
+I don't remember whether I had to use Python virtual environment.
 
 ## Appendix A. Ubuntu setup commands
 
