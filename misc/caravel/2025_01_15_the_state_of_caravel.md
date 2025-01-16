@@ -99,7 +99,11 @@ sudo apt install python3-pip
 pip install click
 ```
 
-I don't remember whether I had to use Python virtual environment.
+Unlike stand-alone Ubuntu and MacOS, WSL Ubuntu under Windows 11 does not require to activate the virtual environment explicitly, at least I don't see such activation in my log. This is a strange inconsistency.
+
+#### 4.3.6. The bottom line
+
+
 
 ## Appendix A. Ubuntu setup commands
 
