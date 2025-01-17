@@ -126,6 +126,8 @@ module sinus
     logic      [15:0] y_max7;
     logic      [15:0] y_max8;
 
+    // Shifting to right >> 1 is equivalent to dividing by 2
+
     assign yt_inv = (MAX - yt);         // inverted
     assign yt1    = (yt  >> 1) - (yt >> 6);
     assign yt2    = (yt  >> 1) + (yt >> 3);
@@ -148,7 +150,6 @@ module sinus
     // nonlinear sine converter. This converter provides a
     // decreasing transmission ratio as the level of the triangle
     // moves toward the two extremes. Accuracy of the sine is 1%.
-
 
     assign ys = (yt > (MAX >> 1)) ?
                ((yt > (MAX - y_max5)) ? // negative half-wave
