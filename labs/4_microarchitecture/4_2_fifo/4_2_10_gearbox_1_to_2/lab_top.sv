@@ -154,12 +154,12 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    localparam sign_empty_entry = 8'b0000_0000;
+    localparam sign_nothing = 8'b0000_0000;
 
     always_comb 
         if (       digit [2]
             | ( (| digit [1:0]) & ~ down_vld ))
-            abcdefgh = sign_empty_entry;
+            abcdefgh = sign_nothing;
         else
             abcdefgh = abcdefgh_pre;
     

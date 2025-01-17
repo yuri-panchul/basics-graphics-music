@@ -1,164 +1,280 @@
 `include "config.svh"
 
-module tb;
+module tb
+# (
+  parameter width = 8
+);
 
-    localparam fifo_width = 8,
-               fifo_depth = 5,
-               allow_push_when_full_with_pop = 1;
+  //--------------------------------------------------------------------------
+  // Signals to drive Device Under Test - DUT
+
+  logic clk;
+  logic rst;
+
+  // Upstream
+
+  logic                   up_vld;
+  wire                    up_rdy;
+  logic [    width - 1:0] up_data;
+
+  // Downstream
+
+  wire                    down_vld;
+  logic                   down_rdy;
+  wire  [2 * width - 1:0] down_data;
+
+  //--------------------------------------------------------------------------
+  // DUT instantiation
+
+  gearbox_1_to_2 # (.width (width)) dut (.*);
+
+  //--------------------------------------------------------------------------
+  // Driving clock
+
+  initial
+  begin
+    clk = '1;
+    forever #5 clk = ~ clk;
+  end
+
+  initial
+  begin
+    repeat (10000) @ (posedge clk);
+    $display ("Timeout!");
+    $finish;
+  end
+
+  //--------------------------------------------------------------------------
+  // Driving reset and control signals
+
+  initial
+  begin
+    `ifdef __ICARUS__
+      $dumpvars;
+    `endif
+
+    //------------------------------------------------------------------------
+    // Force overrides: you can use it for the initial debug
+
+    // force down_rdy = 1'b1;
+
+    //------------------------------------------------------------------------
+    // Initialization
+
+    up_vld   <= 1'b0;
+    down_rdy <= 1'b0;
+
+    //------------------------------------------------------------------------
+    // Reset
+
+    repeat (3) @ (posedge clk);
+    rst <= '1;
+    repeat (3) @ (posedge clk);
+    rst <= '0;
 
     //------------------------------------------------------------------------
 
-    logic                    clk;
-    logic                    rst;
-    logic                    push;
-    logic                    pop;
-    logic [fifo_width - 1:0] write_data;
-    wire  [fifo_width - 1:0] read_data;
-    wire                     empty;
-    wire                     full;
+    $display ("*** Run back-to-back");
 
-    logic [fifo_depth - 1:0]                   debug_valid;
-    logic [fifo_depth - 1:0][fifo_width - 1:0] debug_data;
+    up_vld   <= 1'b1;
+    down_rdy <= 1'b1;
 
-    //------------------------------------------------------------------------
+    repeat (10) @ (posedge clk);
 
-    flip_flop_fifo_empty_full_optimized_and_debug_2
-    # (
-        .width (fifo_width),
-        .depth (fifo_depth)
-    )
-    rtl (.*);
+    $display ("*** Random up_vld and down_rdy");
 
-    fifo_monitor
-    # (
-        .width (fifo_width),
-        .depth (fifo_depth),
-        .allow_push_when_full_with_pop (allow_push_when_full_with_pop)
-    )
-    monitor (.*);
-
-    //------------------------------------------------------------------------
-
-    initial
+    repeat (50)
     begin
-        clk = '0;
-        forever #5 clk = ~ clk;
+      if (~ up_vld | up_rdy)
+        up_vld <= $urandom ();
+
+      down_rdy <= $urandom ();
+
+      @ (posedge clk);
     end
 
+    $display ("*** Draining the pipeline: up_vld=0, down_rdy=1");
+
+    down_rdy <= 1'b1;
+
+    while (up_vld & ~ up_rdy)  // Need to keep up_vld until up_rdy
+      @ (posedge clk);
+
+    up_vld <= 1'b0;
+
+    repeat (10) @ (posedge clk);
+
     //------------------------------------------------------------------------
 
-    initial
+    $finish;
+  end
+
+  //--------------------------------------------------------------------------
+  // Driving data
+
+  always @ (posedge clk)
+    if (rst)
+      up_data <= "A";
+    else if (up_vld & up_rdy)
+      up_data <= $urandom_range ("A", "Z");
+
+  //--------------------------------------------------------------------------
+  // Logging
+
+  int unsigned cycle = 0;
+
+  always @ (posedge clk)
+  begin
+    $write ("time %7d cycle %5d", $time, cycle ++);
+
+    if ( rst      ) $write ( " rst"      ); else $write ( "    "      );
+
+    if ( up_vld   ) $write ( " up_vld"   ); else $write ( "       "   );
+    if ( up_rdy   ) $write ( " up_rdy"   ); else $write ( "       "   );
+
+    if (up_vld & up_rdy)
+      $write (" %s", up_data);
+    else
+      $write ("  ");
+
+    if ( down_vld ) $write ( " down_vld" ); else $write ( "         " );
+    if ( down_rdy ) $write ( " down_rdy" ); else $write ( "         " );
+
+    if (down_vld & down_rdy)
+      $write (" %s", down_data);
+    else
+      $write ("   ");
+
+    $display;
+  end
+
+  //--------------------------------------------------------------------------
+  // Modeling and checking
+
+  // TODO:
+  //
+  // Write the code that verifies the gearbox is working.
+  // You can use the following testbench as an example:
+  //
+  // boards/omdazz/06_pipelines/26_pow_5_pipelined/tb.sv
+  //
+  // An idea how to check the gearbox:
+  //
+  //   1. Create a SystemVerilog queue [$] to trace the data.
+  //   This queue can be 'width' bit wide.
+  //
+  //   2. Every time the upstream transfer happens (up_vld & up_rdy),
+  //   push up_data into the queue.
+  //
+  //   3. Every time the downstream transfer occurs (down_vld & down_rdy),
+  //   first check that the queue contains at least two items,
+  //   then compare those two items with down_data,
+  //   and finally, pop the items from the queue.
+  //
+  //   4. At the end of the simulation (the 'final' block),
+  //   check the queue is empty.
+  //   If not, dump the contents of the queue to the log.
+
+  // START_SOLUTION
+
+  logic [    width - 1:0] queue [$];
+  logic [2 * width - 1:0] down_data_expected;
+
+  // Additional signals to have the comparison on the waveform
+
+  logic comparison_moment;
+  logic [2 * width - 1:0] down_data_compared;
+
+  logic was_reset = 0;
+
+  always @ (posedge clk)
+  begin
+    comparison_moment = '0;
+
+    if (rst)
     begin
-        `ifdef __ICARUS__
-            $dumpvars;
-        `endif
-
-        //--------------------------------------------------------------------
-        // Initialization
-
-        push <= '0;
-        pop  <= '0;
-
-        //--------------------------------------------------------------------
-        // Reset
-
-        repeat (3) @ (posedge clk);
-        rst <= '1;
-        repeat (3) @ (posedge clk);
-        rst <= '0;
-
-        //--------------------------------------------------------------------
-
-        $display ("*** Fill and empty");
-
-        push <= '1;
-
-        for (int i = 0; i < fifo_depth; i ++)
-        begin
-            write_data <= i * 16 + i;
-            @ (posedge clk);
-        end
-
-        push <= '0;
-        pop  <= '1;
-
-        repeat (fifo_depth)
-            @ (posedge clk);
-
-        pop  <= '0;
-        repeat (2) @ (posedge clk);
-
-        //--------------------------------------------------------------------
-
-        $display ("*** Fill half and run back-to-back, then empty");
-
-        push <= '1;
-
-        for (int i = 0; i < fifo_depth / 2; i ++)
-        begin
-            write_data <= i * 16 + i;
-            @ (posedge clk);
-        end
-
-        pop <= '1;
-
-        repeat (5)
-            for (int i = 0; i < fifo_depth; i ++)
-            begin
-                write_data <= i * 16 + i;
-                @ (posedge clk);
-            end
-
-        push <= '0;
-
-        do
-        begin
-            @ (posedge clk);
-            # 1;  // This delay is necessary because of combinational logic after ff
-        end
-        while (~ empty);
-
-        pop <= '0;
-        repeat (2) @ (posedge clk);
-
-        //--------------------------------------------------------------------
-
-        $display ("*** Randomized test");
-
-        repeat (5) @ (posedge clk);
-
-        repeat (100)
-        begin
-            @ (posedge clk);
-            # 1  // This delay is necessary because of combinational logic after ff
-
-            pop  <= '0;
-            push <= '0;
-
-            if (  allow_push_when_full_with_pop
-                & full
-                & $urandom_range (1, 100) <= 40 )
-            begin
-                pop  <= '1;
-                push <= '1;
-
-                write_data <= $urandom;
-            end
-
-            if (~ empty & $urandom_range (1, 100) <= 50)
-                pop <= '1;
-
-            if (~ full & $urandom_range (1, 100) <= 60)
-            begin
-                push <= '1;
-                write_data <= $urandom;
-            end
-        end
-
-        //--------------------------------------------------------------------
-
-        $display;
-        $finish;
+      queue = {};
+      was_reset = 1;
     end
+    else if (was_reset)
+    begin
+      if (up_vld & up_rdy)
+        queue.push_back (up_data);
+
+      if (down_vld & down_rdy)
+      begin
+        if (queue.size () < 2)
+        begin
+          $display ("ERROR: unexpected downstream data %s", down_data);
+        end
+        else
+        begin
+          `ifdef __ICARUS__
+            // Some version of Icarus has a bug, and this is a workaround
+            down_data_expected = { queue [0], queue [1] };
+            queue.delete (0);
+            queue.delete (0);
+          `else
+            down_data_expected = { queue.pop_front (), queue.pop_front () };
+          `endif
+
+          if (down_data !== down_data_expected)
+            $display ("ERROR: downstream data mismatch. Expected %s, actual %s",
+              down_data_expected, down_data);
+
+          // Additional assignments to have the comparison on the waveform
+
+          comparison_moment  <= '1;
+          down_data_compared <= down_data;
+        end
+      end
+    end
+  end
+
+  //----------------------------------------------------------------------
+
+  final
+  begin
+    if (queue.size () != 0)
+    begin
+      $write ("ERROR: data is left sitting in the model queue:");
+
+      for (int i = 0; i < queue.size (); i ++)
+        $write (" %s", queue [queue.size () - i - 1]);
+
+      $display;
+    end
+  end
+
+  // END_SOLUTION
+
+  //----------------------------------------------------------------------
+  // Performance counters
+
+  logic [32:0] n_cycles, up_cnt, down_cnt;
+
+  always @ (posedge clk)
+    if (rst)
+    begin
+      n_cycles <= '0;
+      up_cnt   <= '0;
+      down_cnt <= '0;
+    end
+    else
+    begin
+      n_cycles <= n_cycles + 1'd1;
+
+      if (up_vld & up_rdy)
+        up_cnt <= up_cnt + 1'd1;
+
+      if (down_vld & down_rdy)
+        down_cnt <= down_cnt + 1'd1;
+    end
+
+  //----------------------------------------------------------------------
+
+  final
+    $display ("\n\nnumber of transfers : up %0d down %0d per %0d cycles",
+      up_cnt, down_cnt, n_cycles);
 
 endmodule
