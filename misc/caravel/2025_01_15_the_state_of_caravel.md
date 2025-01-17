@@ -1,7 +1,7 @@
 # The State of Caravel: the First Look
 Yuri Panchul, 2025.1.15
 
-## 1. Caravel as a tool to train balancing microarchitecture and timing
+## 1. Caravel as a tool to train balancing microarchitecture, area and timing
 
 Before joining an electronic company, a student who aims to become an RTL engineer - should be trained in developing pipelined designs. Not just a traditional 5-stage pipelined CPU, but pipelined data processing used in networking chips, GPUs and ML accelerators.
 
@@ -121,10 +121,11 @@ This command was successfully completed on all platforms: Ubuntu, Lubuntu, Simpl
 
 It generated a GDSII file together with the reports, which are sufficient to train the students in tuning their microarchitecture against the area and timing budgets:
 
-
-
-
-
+1. **1-synthesis.AREA_0.stat.rpt** - area report.
+2. **33-rcx_sta.summary.rpt** - slack and other Static Timing Analysis (STA) summary.
+3. **33-rcx_sta.max.rpt** - timing path details / setup.
+4. **33-rcx_sta.min.rpt** - timing path details / hold.
+5. **33-rcx_sta.power.rpt** - power estimation (not sure how it estimates switching power though).
 
 ## Appendix A.1. Ubuntu setup commands
 
