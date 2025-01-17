@@ -103,7 +103,11 @@ Unlike stand-alone Ubuntu and MacOS, WSL Ubuntu under Windows 11 does not requir
 
 #### 4.3.6. The bottom line
 
+It is still unclear to me why Open Lane and Caravel need Docker. All this software is just a set of file-to-file conversion programs, albeit sophisticated. They don’t use networking, drivers for exotic devices or some special services from the operating system. Xilinx Vivado, Altera Quartus, Gowin IDE - none of this software needs Docker. For me, Docker is just an additional hassle when installing a system of this kind.
 
+First, I thought Docker was needed to fix the Python versioning. I am aware that Python has chaos in versioning so I do understand the need for Python virtual environments. But what is the need to have both Docker and Python virtual environments?
+
+In any case, as we can see, even Docker does not save from installation bumps like “click” package here and there.
 
 ## Appendix A. Ubuntu setup commands
 
