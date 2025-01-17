@@ -2,4 +2,4 @@
 
 set -Eeuo pipefail  # See the meaning in scripts/README.md
 
-surfer --command-file surfer.txt
+surfer --command-file surfer.scr
