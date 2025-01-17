@@ -140,7 +140,8 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [7:0] abcdefgh_pre;
+    wire [          7:0] abcdefgh_pre;
+    wire [w_digit - 1:0] digit_pre;
 
     seven_segment_display # (w_digit) i_display
     (
@@ -148,7 +149,7 @@ module lab_top
         .number   ({ up_data, 4'b0, down_data }),
         .dots     ({ up_vld,  3'b0}),
         .abcdefgh (abcdefgh_pre),
-        .digit    (digit),
+        .digit    (digit_pre),
         .*
     );
 
@@ -162,8 +163,10 @@ module lab_top
             abcdefgh = sign_nothing;
         else
             abcdefgh = abcdefgh_pre;
-    
-    assign led = { up_vld, up_rdy, down_vld, down_rdy };
+
+    assign digit = w_digit' (digit_pre & 4'b1111);
+
+    assign led = w_led' ({ slow_clk, up_vld, up_rdy, down_vld, down_rdy });
 
 endmodule
 
