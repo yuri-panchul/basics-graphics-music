@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail  # See the meaning in scripts/README.md
+set -Eeuo pipefail  # See the meaning in scripts/README.md 1
 
 script=$(basename "$0")
 source_script=${script/\.bash/.source_bash}
