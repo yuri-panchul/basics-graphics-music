@@ -12,6 +12,8 @@ module ring_buffer_with_single_pointer_and_debug_2
     output               out_valid,
     output [width - 1:0] out_data,
 
+    output [       31:0]              debug_ptr,
+
     output [depth - 1:0]              debug_valid,
     output [depth - 1:0][width - 1:0] debug_data
 );
@@ -51,6 +53,8 @@ module ring_buffer_with_single_pointer_and_debug_2
 
     // TODO: Add logic to generate debug signals
     // START_SOLUTION
+
+    assign debug_ptr [15:0] = 16' (ptr);
 
     assign debug_valid = valid;
 
