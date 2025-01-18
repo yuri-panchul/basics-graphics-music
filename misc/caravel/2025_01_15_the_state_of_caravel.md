@@ -127,6 +127,9 @@ It generated a GDSII file together with the reports, which are sufficient to tra
 4. **33-rcx_sta.min.rpt** - timing path details / hold.
 5. **33-rcx_sta.power.rpt** - power estimation (not sure how it estimates switching power though).
 
+
+
+
 ## Appendix A.1. Ubuntu setup commands
 
 ```bash
@@ -450,4 +453,90 @@ Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
 ----------------------------------------------------------------
 Total                  2.71e-04   3.38e-04   1.06e-07   6.09e-04 100.0%
                           44.5%      55.5%       0.0%
+```
+
+## Appendix C.1. Unsuccessful log for `make_user_project_wrapper` under Lubuntu LTS 24.04
+
+```
+make -C openlane user_project_wrapper
+make[1]: Entering directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
+/home/verilog/projects/caravel_user_project_experiment/venv/bin/volare enable 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc
+Version 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc enabled for the sky130 PDK.
+# user_project_wrapper
+mkdir -p ./user_project_wrapper/runs/24_12_28_10_34 
+rm -rf ./user_project_wrapper/runs/user_project_wrapper
+ln -s $(realpath ./user_project_wrapper/runs/24_12_28_10_34) ./user_project_wrapper/runs/user_project_wrapper
+docker run -it -u $(id -u $USER):$(id -g $USER) -v $(realpath /home/verilog/projects/caravel_user_project_experiment/..):$(realpath /home/verilog/projects/caravel_user_project_experiment/..) -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel -v /home/verilog/.ipm:/home/verilog/.ipm -v /home/verilog/projects/caravel_user_project_experiment/dependencies/openlane_src:/openlane -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper -e PDK_ROOT=/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -e PDK=sky130A -e MISMATCHES_OK=1 -e CARAVEL_ROOT=/home/verilog/projects/caravel_user_project_experiment/caravel -e OPENLANE_RUN_TAG=24_12_28_10_34 -e MCW_ROOT=/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper  \
+	efabless/openlane:2023.07.19-1 sh -c "flow.tcl -design $(realpath ./user_project_wrapper) -save_path $(realpath ..) -save -tag 24_12_28_10_34 -overwrite -ignore_mismatches"
+OpenLane 30ee1388932eb55a89ad84ee43997bfe3a386421
+All rights reserved. (c) 2020-2022 Efabless Corporation and contributors.
+Available under the Apache License, version 2.0. See the LICENSE file for more details.
+
+[36m[INFO]: Using configuration in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/config.json'...[39m
+[36m[INFO]: PDK Root: /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks[39m
+[36m[INFO]: Process Design Kit: sky130A[39m
+[36m[INFO]: Standard Cell Library: sky130_fd_sc_hd[39m
+[36m[INFO]: Optimization Standard Cell Library: sky130_fd_sc_hd[39m
+[36m[INFO]: Run Directory: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34[39m
+[36m[INFO]: Saving runtime environment...[39m
+[36m[INFO]: Preparing LEF files for the nom corner...[39m
+[36m[INFO]: Preparing LEF files for the min corner...[39m
+[36m[INFO]: Preparing LEF files for the max corner...[39m
+[STEP 1]
+[36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/logs/synthesis/1-synthesis.log)...[39m
+[31m[ERROR]: during executing yosys script /openlane/scripts/yosys/elaborate.tcl[39m
+[31m[ERROR]: Log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/logs/synthesis/1-synthesis.log[39m
+[31m[ERROR]: Last 10 lines:
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Liberty frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../lib/user_proj_example.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../verilog/gl/user_proj_example.v
+child killed: kill signal
+[39m
+[31m[ERROR]: Creating issue reproducible...[39m
+[36m[INFO]: Saving runtime environment...[39m
+OpenLane TCL Issue Packager
+
+EFABLESS CORPORATION AND ALL AUTHORS OF THE OPENLANE PROJECT SHALL NOT BE HELD
+LIABLE FOR ANY LEAKS THAT MAY OCCUR TO ANY PROPRIETARY DATA AS A RESULT OF USING
+THIS SCRIPT. THIS SCRIPT IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND.
+
+BY USING THIS SCRIPT, YOU ACKNOWLEDGE THAT YOU FULLY UNDERSTAND THIS DISCLAIMER
+AND ALL IT ENTAILS.
+
+Parsing config file(s)…
+Setting up /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/issue_reproducible…
+Done.
+[36m[INFO]: Reproducible packaged: Please tarball and upload '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/issue_reproducible' if you're going to submit an issue.[39m
+[31m[ERROR]: Step 1 (synthesis) failed with error:
+-code 1 -level 0 -errorcode NONE -errorinfo {
+    while executing
+"throw_error"
+    (procedure "run_tcl_script" line 219)
+    invoked from within
+"run_tcl_script -tool yosys -no_consume {*}$args"
+    (procedure "run_yosys_script" line 2)
+    invoked from within
+"run_yosys_script $::env(SYNTH_SCRIPT) -indexed_log $arg_values(-indexed_log)"
+    (procedure "run_yosys" line 44)
+    invoked from within
+"run_yosys -indexed_log $log"
+    (procedure "run_synthesis" line 13)
+    invoked from within
+"run_synthesis"} -errorline 1[39m
+[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/results/final'...[39m
+[36m[INFO]: Generating final set of reports...[39m
+[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/reports/manufacturability.rpt'.[39m
+[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/reports/metrics.csv'.[39m
+[36m[INFO]: Saving runtime environment...[39m
+[31m[ERROR]: Flow failed.[39m
+make[1]: *** [Makefile:80: user_project_wrapper] Error 255
+make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
+make: *** [Makefile:126: user_project_wrapper] Error 2
 ```
