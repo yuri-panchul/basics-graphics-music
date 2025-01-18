@@ -89,30 +89,30 @@ module lab_top
 
     `ifdef __ICARUS__
 
-        logic [width - 1:0] write_data_const_array [0:2 ** width - 1];
+        logic [width - 1:0] up_data_const_array [0:2 ** width - 1];
 
-        assign write_data_const_array [ 0] = 4'h2;
-        assign write_data_const_array [ 1] = 4'h6;
-        assign write_data_const_array [ 2] = 4'hd;
-        assign write_data_const_array [ 3] = 4'hb;
-        assign write_data_const_array [ 4] = 4'h7;
-        assign write_data_const_array [ 5] = 4'he;
-        assign write_data_const_array [ 6] = 4'hc;
-        assign write_data_const_array [ 7] = 4'h4;
-        assign write_data_const_array [ 8] = 4'h1;
-        assign write_data_const_array [ 9] = 4'h0;
-        assign write_data_const_array [10] = 4'h9;
-        assign write_data_const_array [11] = 4'ha;
-        assign write_data_const_array [12] = 4'hf;
-        assign write_data_const_array [13] = 4'h5;
-        assign write_data_const_array [14] = 4'h8;
-        assign write_data_const_array [15] = 4'h3;
+        assign up_data_const_array [ 0] = 4'h2;
+        assign up_data_const_array [ 1] = 4'h6;
+        assign up_data_const_array [ 2] = 4'hd;
+        assign up_data_const_array [ 3] = 4'hb;
+        assign up_data_const_array [ 4] = 4'h7;
+        assign up_data_const_array [ 5] = 4'he;
+        assign up_data_const_array [ 6] = 4'hc;
+        assign up_data_const_array [ 7] = 4'h4;
+        assign up_data_const_array [ 8] = 4'h1;
+        assign up_data_const_array [ 9] = 4'h0;
+        assign up_data_const_array [10] = 4'h9;
+        assign up_data_const_array [11] = 4'ha;
+        assign up_data_const_array [12] = 4'hf;
+        assign up_data_const_array [13] = 4'h5;
+        assign up_data_const_array [14] = 4'h8;
+        assign up_data_const_array [15] = 4'h3;
 
     `else
 
         // New SystemVerilog syntax for array assignment
 
-        wire [width - 1:0] write_data_const_array [0:2 ** width - 1]
+        wire [width - 1:0] up_data_const_array [0:2 ** width - 1]
             = '{ 4'h2, 4'h6, 4'hd, 4'hb, 4'h7, 4'he, 4'hc, 4'h4,
                  4'h1, 4'h0, 4'h9, 4'ha, 4'hf, 4'h5, 4'h8, 4'h3 };
 
@@ -120,19 +120,19 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [width - 1:0] write_data_index;
+    wire [width - 1:0] up_data_index;
 
     counter_with_enable # (width) i_counter
     (
         .clk    (slow_clk),
         .enable (up_vld & up_rdy),
-        .cnt    (write_data_index),
+        .cnt    (up_data_index),
         .*
     );
 
     assign up_data
-        = { write_data_const_array [write_data_index    ],
-            write_data_const_array [write_data_index ^ 2]  };
+        = { up_data_const_array [up_data_index    ],
+            up_data_const_array [up_data_index ^ 2]  };
 
     //------------------------------------------------------------------------
 
