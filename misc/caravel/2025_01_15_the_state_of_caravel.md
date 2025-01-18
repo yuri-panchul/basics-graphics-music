@@ -1,6 +1,15 @@
 # The State of Caravel: the First Look
 Yuri Panchul, 2025.1.15
 
+This text is a mix of my thoughts on using Caravel and Open Lane together with a report on my first attempt to do the following:
+
+1. Setup on 5 platforms: three Linux distributions, Windows and MacOS.
+2. Running RTL-to-GDSII flow for eFabless examples.
+3. Running RTL and gate-level simulation for eFabless examples.
+4. Working with chipIgnite evaluation board.
+
+I am trying to instruct people how to workaround various issues and get to the finish line in doing their project.
+
 ## 1. Caravel as a tool to train balancing microarchitecture, area and timing
 
 Before joining an electronic company, a student who aims to become an RTL engineer - should be trained in developing pipelined designs. Not just a traditional 5-stage pipelined CPU, but pipelined data processing used in networking chips, GPUs and ML accelerators.
