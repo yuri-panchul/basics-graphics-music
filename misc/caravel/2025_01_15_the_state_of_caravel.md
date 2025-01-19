@@ -165,7 +165,7 @@ Two runs on Lubuntu were not successfull, but this was probably due to the exter
 
 2. Run low on memory - the command hanged on a computer with 4 gigabyte of RAM after step 25.
 
-Run on Simply Linux 10.4 also failed - see for details *Appendix C.2. Log for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*.
+Run on Simply Linux 10.4 also failed - see for details *Appendix C.2. Log 1 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*, and  *Appendix C.3. Log 2 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*.
 
 ## Appendix A.1. Ubuntu setup commands
 
@@ -472,9 +472,9 @@ Fanout     Cap    Slew   Delay    Time   Description
 
 ## Appendix B.5. A fragment of **33-rcx_sta.power.rpt** report: power estimation
 
-```
 Leakage power is proportional to area, but it is not clear to me how Open Lane computes switching power without stimulus of some sort. Is it propagating some switching from I/O pins, or does it assume some default switching?
 
+```
 ===========================================================================
  report_power
 ============================================================================
