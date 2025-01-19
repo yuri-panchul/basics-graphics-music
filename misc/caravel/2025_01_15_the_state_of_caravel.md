@@ -1,3 +1,5 @@
+![The State of Caravel: the First Look](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/caravel/header.png)
+
 # The State of Caravel: the First Look
 Yuri Panchul, 2025.1.15
 
@@ -8,7 +10,7 @@ This text is a mix of my thoughts on using Caravel and Open Lane together with a
 3. Running RTL and gate-level simulation for eFabless examples.
 4. Working with chipIgnite evaluation board.
 
-I am trying to instruct people how to workaround various issues and get to the finish line in doing their project.
+Let's start by defining a specific area where Caravel can be useful.
 
 ## 1. Caravel as a tool to train balancing microarchitecture, area and timing
 
