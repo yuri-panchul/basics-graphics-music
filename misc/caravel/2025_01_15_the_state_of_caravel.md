@@ -1,3 +1,5 @@
+![The State of Caravel: the First Look](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/1_header.png)
+
 # The State of Caravel: the First Look
 Yuri Panchul, 2025.1.15
 
@@ -8,7 +10,7 @@ This text is a mix of my thoughts on using Caravel and Open Lane together with a
 3. Running RTL and gate-level simulation for eFabless examples.
 4. Working with chipIgnite evaluation board.
 
-I am trying to instruct people how to workaround various issues and get to the finish line in doing their project.
+Let's start by defining a specific area where Caravel can be useful.
 
 ## 1. Caravel as a tool to train balancing microarchitecture, area and timing
 
@@ -75,7 +77,14 @@ Setup on Lubuntu was similar to Ubuntu, I don't remember the difference, but may
 
 #### 4.3.3. Setup on Simply Linux 10.4
 
-Setup on Simply Linux worked without any problems, but this was probably due to the fact that I already had Open Lane up and running on my Simply Linux installation which was prepared by Anton Midyukov, a maintainer of Simply Linux distribution.
+Setup on Simply Linux did not ask for Docker or virtual environments, but this was probably due to the fact that I already had Open Lane up and running on my Simply Linux installation which was prepared by Anton Midyukov, a maintainer of Simply Linux distribution.
+
+On one of Simply Linux systems I had to install *pyyaml*:
+
+```bash
+sudo apt-get install pip
+python3 -m pip install pyyaml
+```
 
 #### 4.3.4. Setup on MacOS Sequoia 15.2, Apple Silicon, Mac Mini 4
 
@@ -136,8 +145,27 @@ It generated a GDSII file together with the reports, which are sufficient to tra
 4. **33-rcx_sta.min.rpt** - timing path details / hold.
 5. **33-rcx_sta.power.rpt** - power estimation (not sure how it estimates switching power though).
 
+However, I found that STA reports on different platforms differ. While this difference may not be significant or might be caused by some Open Lane checkin between the installations, it should be investigated. It might be an artifact of some Python or C sort function or a real bug, but whatever it is, it would be better from the user's perspective to make the results on all platforms identical.
 
+Specifically, *33-rcx_sta.max.rpt* and *33-rcx_sta.min.rpt* reports generated on MacOS differ from the same reports generated on Lubuntu:
 
+![tkdiff STA reports for Caravel-Mini between Lubuntu and MacOS](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/2_tkdiff_hold_sta.png)
+
+#### 4.4.2. Running RTL-to-GDSII flow for the example included in regular (not Mini) Caravel
+
+```bash
+make user_project_wrapper
+```
+
+This command was successfully completed on Ubuntu, MacOS and Windows WSL. However I was not able to find the area report, which is a critical issue.
+
+Two runs on Lubuntu were not successfull, but this was probably due to the external factors:
+
+1. Run low on disk space - see for details *Appendix C.1. Log for unsuccessful run 'make user_project_wrapper' under Lubuntu LTS 24.04*. It was not clear from the error message that the disk space is an issue.
+
+2. Run low on memory - the command hanged on a computer with 4 gigabyte of RAM after step 25.
+
+Run on Simply Linux 10.4 also failed - see for details *Appendix C.2. Log 1 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*, and  *Appendix C.3. Log 2 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*.
 
 ## Appendix A.1. Ubuntu setup commands
 
@@ -444,9 +472,9 @@ Fanout     Cap    Slew   Delay    Time   Description
 
 ## Appendix B.5. A fragment of **33-rcx_sta.power.rpt** report: power estimation
 
-```
 Leakage power is proportional to area, but it is not clear to me how Open Lane computes switching power without stimulus of some sort. Is it propagating some switching from I/O pins, or does it assume some default switching?
 
+```
 ===========================================================================
  report_power
 ============================================================================
@@ -464,7 +492,13 @@ Total                  2.71e-04   3.38e-04   1.06e-07   6.09e-04 100.0%
                           44.5%      55.5%       0.0%
 ```
 
-## Appendix C.1. Unsuccessful log for `make_user_project_wrapper` under Lubuntu LTS 24.04
+## Appendix C.1. Log for unsuccessful run 'make user_project_wrapper' under Lubuntu LTS 24.04
+
+This run probably suffered from low disk space, but it is not clear from the error message.
+
+```
+make user_project_wrapper
+```
 
 ```
 make -C openlane user_project_wrapper
@@ -545,6 +579,128 @@ Done.
 [36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/reports/metrics.csv'.[39m
 [36m[INFO]: Saving runtime environment...[39m
 [31m[ERROR]: Flow failed.[39m
+make[1]: *** [Makefile:80: user_project_wrapper] Error 255
+make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
+make: *** [Makefile:126: user_project_wrapper] Error 2
+```
+
+## Appendix C.2. Log 1 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4
+
+```
+make user_project_wrapper
+```
+
+```
+. . . . . . . . . . . . . . .
+[STEP 1]
+[36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/logs/synthesis/1-synthesis.log)...[39m
+[31m[ERROR]: during executing yosys script /openlane/scripts/yosys/elaborate.tcl[39m
+[31m[ERROR]: Log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/logs/synthesis/1-synthesis.log[39m
+[31m[ERROR]: Last 10 lines:
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Liberty frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../lib/user_proj_example.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../verilog/gl/user_proj_example.v
+child killed: kill signal
+[39m
+[31m[ERROR]: Creating issue reproducible...[39m
+[36m[INFO]: Saving runtime environment...[39m
+OpenLane TCL Issue Packager
+
+EFABLESS CORPORATION AND ALL AUTHORS OF THE OPENLANE PROJECT SHALL NOT BE HELD
+LIABLE FOR ANY LEAKS THAT MAY OCCUR TO ANY PROPRIETARY DATA AS A RESULT OF USING
+THIS SCRIPT. THIS SCRIPT IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND.
+
+BY USING THIS SCRIPT, YOU ACKNOWLEDGE THAT YOU FULLY UNDERSTAND THIS DISCLAIMER
+AND ALL IT ENTAILS.
+
+Parsing config file(s)…
+Setting up /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/issue_reproducible…
+Done.
+[36m[INFO]: Reproducible packaged: Please tarball and upload '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/issue_reproducible' if you're going to submit an issue.[39m
+[31m[ERROR]: Step 1 (synthesis) failed with error:
+-code 1 -level 0 -errorcode NONE -errorinfo {
+    while executing
+"throw_error"
+    (procedure "run_tcl_script" line 219)
+    invoked from within
+"run_tcl_script -tool yosys -no_consume {*}$args"
+    (procedure "run_yosys_script" line 2)
+    invoked from within
+"run_yosys_script $::env(SYNTH_SCRIPT) -indexed_log $arg_values(-indexed_log)"
+    (procedure "run_yosys" line 44)
+    invoked from within
+"run_yosys -indexed_log $log"
+    (procedure "run_synthesis" line 13)
+    invoked from within
+"run_synthesis"} -errorline 1[39m
+[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/results/final'...[39m
+[36m[INFO]: Generating final set of reports...[39m
+[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/reports/manufacturability.rpt'.[39m
+[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/reports/metrics.csv'.[39m
+[36m[INFO]: Saving runtime environment...[39m
+[31m[ERROR]: Flow failed.[39m
+make[1]: *** [Makefile:80: user_project_wrapper] Error 255
+make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
+make: *** [Makefile:126: user_project_wrapper] Error 2
+```
+
+## Appendix C.3. Log 2 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4
+
+```
+make user_project_wrapper
+```
+
+```
+. . . . . . . . . . . . . . .
+[STEP 25]
+[36m[INFO]: Running XOR on the layouts using KLayout (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log)...[39m
+[31m[ERROR]: during executing: "klayout -b -r /openlane/scripts/klayout/xor.drc -rd a=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.gds -rd b=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.klayout.gds -rd jobs=1 -rd rdb_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.xml -rd ignore=81/14 -rd rpt_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.rpt |& tee /dev/null /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log"[39m
+[31m[ERROR]: Exit code: 1[39m
+[31m[ERROR]: Last 10 lines:
+    Elapsed: 0.010s  Memory: 2169.00M
+--- Running XOR for layer 67/44 ---
+"input" in: xor.drc:94
+    Polygons (raw): 7749766 (flat)  3222 (hierarchical)
+    Elapsed: 0.000s  Memory: 2169.00M
+"input" in: xor.drc:94
+    Polygons (raw): 15497204 (flat)  4116 (hierarchical)
+    Elapsed: 0.000s  Memory: 2169.00M
+"^" in: xor.drc:94
+child killed: kill signal
+[39m
+[31m[ERROR]: Step 25 (gds_klayout) failed with error:
+-code 1 -level 0 -errorcode NONE -errorinfo {
+    while executing
+"throw_error"
+    (procedure "try_exec" line 17)
+    invoked from within
+"try_exec klayout  -b  -r $::env(SCRIPTS_DIR)/klayout/xor.drc  -rd a=$arg_values(-layout1)  -rd b=$arg_values(-layout2)  -rd jobs=$::env(KLAYOUT_XOR_TH..."
+    (procedure "run_klayout_gds_xor" line 23)
+    invoked from within
+"run_klayout_gds_xor"
+    (procedure "run_klayout_step" line 6)
+    invoked from within
+"run_klayout_step"} -errorline 1[39m
+[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/final'...[39m
+[36m[INFO]: Generating final set of reports...[39m
+[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/manufacturability.rpt'.[39m
+[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/metrics.csv'.[39m
+[36m[INFO]: Saving runtime environment...[39m
+[31m[ERROR]: Flow failed.[39m
+[36m[INFO]: The failure may have been because of the following warnings:[39m
+[WARNING]: Module sky130_fd_sc_hd__fill_1 blackboxed during sta
+[WARNING]: Module sky130_ef_sc_hd__decap_12 blackboxed during sta
+[WARNING]: Module sky130_fd_sc_hd__fill_2 blackboxed during sta
+[WARNING]: Module sky130_fd_sc_hd__tapvpwrvgnd_1 blackboxed during sta
+[WARNING]: VSRC_LOC_FILES is not defined. The IR drop analysis will run, but the values may be inaccurate.
+
 make[1]: *** [Makefile:80: user_project_wrapper] Error 255
 make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
 make: *** [Makefile:126: user_project_wrapper] Error 2
