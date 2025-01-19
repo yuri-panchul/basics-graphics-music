@@ -1,4 +1,4 @@
-![The State of Caravel: the First Look](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/caravel/header.png)
+![The State of Caravel: the First Look](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/header.png)
 
 # The State of Caravel: the First Look
 Yuri Panchul, 2025.1.15
