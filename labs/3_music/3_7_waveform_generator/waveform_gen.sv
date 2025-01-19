@@ -8,7 +8,7 @@ module waveform_gen
     input                         clk,
     input                         reset,
     input  [                 2:0] octave,
-    input  [waveform_width - 1:0] waveform,
+    input  [                 3:0] waveform,
     output [y_width        - 1:0] y
 );
 

@@ -10,7 +10,7 @@ module waveform_gen
     input                         clk,
     input                         reset,
     input  [                 2:0] octave,
-    input  [waveform_width - 1:0] waveform, // waveform type
+    input  [                 3:0] waveform, // waveform type
     output [y_width        - 1:0] y
 );
 
