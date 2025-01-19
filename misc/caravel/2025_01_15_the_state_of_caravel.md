@@ -1,4 +1,4 @@
-![The State of Caravel: the First Look](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/header.png)
+![The State of Caravel: the First Look](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/1_header.png)
 
 # The State of Caravel: the First Look
 Yuri Panchul, 2025.1.15
@@ -138,8 +138,11 @@ It generated a GDSII file together with the reports, which are sufficient to tra
 4. **33-rcx_sta.min.rpt** - timing path details / hold.
 5. **33-rcx_sta.power.rpt** - power estimation (not sure how it estimates switching power though).
 
+However, I found that STA reports on different platforms differ. While this difference may not be significant or might be caused by some Open Lane checkin between the installations, it should be investigated. It might be an artifact of some Python or C sort function or a real bug, but whatever it is, it would be better from the user's perspective to make the results on all platforms identical.
 
+Specifically, *33-rcx_sta.max.rpt* and *33-rcx_sta.min.rpt* reports generated on MacOS differ from the same reports generated on Lubuntu:
 
+![tkdiff STA reports for Caravel-Mini between Lubuntu and MacOS](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/2_tkdiff_hold_sta.png)
 
 ## Appendix A.1. Ubuntu setup commands
 
