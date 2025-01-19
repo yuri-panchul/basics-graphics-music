@@ -77,7 +77,14 @@ Setup on Lubuntu was similar to Ubuntu, I don't remember the difference, but may
 
 #### 4.3.3. Setup on Simply Linux 10.4
 
-Setup on Simply Linux worked without any problems, but this was probably due to the fact that I already had Open Lane up and running on my Simply Linux installation which was prepared by Anton Midyukov, a maintainer of Simply Linux distribution.
+Setup on Simply Linux did not ask for Docker or virtual environments, but this was probably due to the fact that I already had Open Lane up and running on my Simply Linux installation which was prepared by Anton Midyukov, a maintainer of Simply Linux distribution.
+
+On one of Simply Linux systems I had to install *pyyaml*:
+
+```bash
+sudo apt-get install pip
+python3 -m pip install pyyaml
+```
 
 #### 4.3.4. Setup on MacOS Sequoia 15.2, Apple Silicon, Mac Mini 4
 
