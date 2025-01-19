@@ -591,30 +591,7 @@ make user_project_wrapper
 ```
 
 ```
-make -C openlane user_project_wrapper
-make[1]: Entering directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
-/home/verilog/projects/caravel_user_project_experiment/venv/bin/volare enable 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc
-Version 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc enabled for the sky130 PDK.
-# user_project_wrapper
-mkdir -p ./user_project_wrapper/runs/24_12_28_19_26 
-rm -rf ./user_project_wrapper/runs/user_project_wrapper
-ln -s $(realpath ./user_project_wrapper/runs/24_12_28_19_26) ./user_project_wrapper/runs/user_project_wrapper
-docker run -it -u $(id -u $USER):$(id -g $USER) -v $(realpath /home/verilog/projects/caravel_user_project_experiment/..):$(realpath /home/verilog/projects/caravel_user_project_experiment/..) -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel -v /home/verilog/.ipm:/home/verilog/.ipm -v /home/verilog/projects/caravel_user_project_experiment/dependencies/openlane_src:/openlane -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper -e PDK_ROOT=/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -e PDK=sky130A -e MISMATCHES_OK=1 -e CARAVEL_ROOT=/home/verilog/projects/caravel_user_project_experiment/caravel -e OPENLANE_RUN_TAG=24_12_28_19_26 -e MCW_ROOT=/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper  \
-	efabless/openlane:2023.07.19-1 sh -c "flow.tcl -design $(realpath ./user_project_wrapper) -save_path $(realpath ..) -save -tag 24_12_28_19_26 -overwrite -ignore_mismatches"
-OpenLane 30ee1388932eb55a89ad84ee43997bfe3a386421
-All rights reserved. (c) 2020-2022 Efabless Corporation and contributors.
-Available under the Apache License, version 2.0. See the LICENSE file for more details.
-
-[36m[INFO]: Using configuration in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/config.json'...[39m
-[36m[INFO]: PDK Root: /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks[39m
-[36m[INFO]: Process Design Kit: sky130A[39m
-[36m[INFO]: Standard Cell Library: sky130_fd_sc_hd[39m
-[36m[INFO]: Optimization Standard Cell Library: sky130_fd_sc_hd[39m
-[36m[INFO]: Run Directory: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26[39m
-[36m[INFO]: Saving runtime environment...[39m
-[36m[INFO]: Preparing LEF files for the nom corner...[39m
-[36m[INFO]: Preparing LEF files for the min corner...[39m
-[36m[INFO]: Preparing LEF files for the max corner...[39m
+. . . . . . . . . . . . . . .
 [STEP 1]
 [36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/logs/synthesis/1-synthesis.log)...[39m
 [31m[ERROR]: during executing yosys script /openlane/scripts/yosys/elaborate.tcl[39m
@@ -681,95 +658,7 @@ make user_project_wrapper
 ```
 
 ```
-make -C openlane user_project_wrapper
-make[1]: Entering directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
-/home/verilog/projects/caravel_user_project_experiment/venv/bin/volare enable 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc
-Version 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc enabled for the sky130 PDK.
-# user_project_wrapper
-mkdir -p ./user_project_wrapper/runs/25_01_18_20_44 
-rm -rf ./user_project_wrapper/runs/user_project_wrapper
-ln -s $(realpath ./user_project_wrapper/runs/25_01_18_20_44) ./user_project_wrapper/runs/user_project_wrapper
-docker run -it -u $(id -u $USER):$(id -g $USER) -v $(realpath /home/verilog/projects/caravel_user_project_experiment/..):$(realpath /home/verilog/projects/caravel_user_project_experiment/..) -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel -v /home/verilog/.ipm:/home/verilog/.ipm -v /home/verilog/projects/caravel_user_project_experiment/dependencies/openlane_src:/openlane -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper -e PDK_ROOT=/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -e PDK=sky130A -e MISMATCHES_OK=1 -e CARAVEL_ROOT=/home/verilog/projects/caravel_user_project_experiment/caravel -e OPENLANE_RUN_TAG=25_01_18_20_44 -e MCW_ROOT=/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper  \
-	efabless/openlane:2023.07.19-1 sh -c "flow.tcl -design $(realpath ./user_project_wrapper) -save_path $(realpath ..) -save -tag 25_01_18_20_44 -overwrite -ignore_mismatches"
-OpenLane 30ee1388932eb55a89ad84ee43997bfe3a386421
-All rights reserved. (c) 2020-2022 Efabless Corporation and contributors.
-Available under the Apache License, version 2.0. See the LICENSE file for more details.
-
-[36m[INFO]: Using configuration in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/config.json'...[39m
-[36m[INFO]: PDK Root: /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks[39m
-[36m[INFO]: Process Design Kit: sky130A[39m
-[36m[INFO]: Standard Cell Library: sky130_fd_sc_hd[39m
-[36m[INFO]: Optimization Standard Cell Library: sky130_fd_sc_hd[39m
-[36m[INFO]: Run Directory: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44[39m
-[36m[INFO]: Saving runtime environment...[39m
-[36m[INFO]: Preparing LEF files for the nom corner...[39m
-[36m[INFO]: Preparing LEF files for the min corner...[39m
-[36m[INFO]: Preparing LEF files for the max corner...[39m
-[STEP 1]
-[36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/synthesis/1-synthesis.log)...[39m
-[STEP 2]
-[36m[INFO]: Running Single-Corner Static Timing Analysis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/synthesis/2-sta.log)...[39m
-[36m[INFO]: Creating a netlist with power/ground pins.[39m
-[STEP 3]
-[36m[INFO]: Running Initial Floorplanning (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/floorplan/3-initial_fp.log)...[39m
-[36m[INFO]: Floorplanned with width 2908.58 and height 3497.92.[39m
-[STEP 4]
-[36m[INFO]: Running IO Placement...[39m
-[36m[INFO]: Applying DEF template...[39m
-[STEP 5]
-[36m[INFO]: Performing Manual Macro Placement (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/placement/5-macro_placement.log)...[39m
-[36m[INFO]: Power planning with power {vccd1 vccd2 vdda1 vdda2} and ground {vssd1 vssd2 vssa1 vssa2}...[39m
-[STEP 6]
-[36m[INFO]: Generating PDN (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/floorplan/6-pdn.log)...[39m
-[STEP 7]
-[36m[INFO]: Performing Random Global Placement (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/placement/7-global.log)...[39m
-[36m[INFO]: Skipping Placement Resizer Design Optimizations.[39m
-[STEP 8]
-[36m[INFO]: Running Detailed Placement (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/placement/8-detailed.log)...[39m
-[STEP 9]
-[36m[INFO]: Running Single-Corner Static Timing Analysis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/placement/9-dpl_sta.log)...[39m
-[36m[INFO]: Skipping Placement Resizer Timing Optimizations.[39m
-[36m[INFO]: Skipping Global Routing Resizer Design Optimizations.[39m
-[36m[INFO]: Skipping Global Routing Resizer Timing Optimizations.[39m
-[STEP 10]
-[36m[INFO]: Running Global Routing (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/routing/10-global.log)...[39m
-[STEP 11]
-[36m[INFO]: Writing Verilog (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/routing/10-global_write_netlist.log)...[39m
-[STEP 12]
-[36m[INFO]: Running Single-Corner Static Timing Analysis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/routing/12-grt_sta.log)...[39m
-[STEP 13]
-[36m[INFO]: Running Detailed Routing (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/routing/13-detailed.log)...[39m
-[36m[INFO]: No DRC violations after detailed routing.[39m
-[STEP 14]
-[36m[INFO]: Checking Wire Lengths (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/routing/14-wire_lengths.log)...[39m
-[STEP 15]
-[36m[INFO]: Running SPEF Extraction at the min process corner (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/15-parasitics_extraction.min.log)...[39m
-[STEP 16]
-[36m[INFO]: Running Multi-Corner Static Timing Analysis at the min process corner (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/16-rcx_mcsta.min.log)...[39m
-[STEP 17]
-[36m[INFO]: Running SPEF Extraction at the max process corner (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/17-parasitics_extraction.max.log)...[39m
-[STEP 18]
-[36m[INFO]: Running Multi-Corner Static Timing Analysis at the max process corner (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/18-rcx_mcsta.max.log)...[39m
-[STEP 19]
-[36m[INFO]: Running SPEF Extraction at the nom process corner (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/19-parasitics_extraction.nom.log)...[39m
-[STEP 20]
-[36m[INFO]: Running Multi-Corner Static Timing Analysis at the nom process corner (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/20-rcx_mcsta.nom.log)...[39m
-[STEP 21]
-[36m[INFO]: Running Single-Corner Static Timing Analysis at the nom process corner (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/21-rcx_sta.log)...[39m
-[33m[WARNING]: Module sky130_fd_sc_hd__fill_1 blackboxed during sta[39m
-[33m[WARNING]: Module sky130_ef_sc_hd__decap_12 blackboxed during sta[39m
-[33m[WARNING]: Module sky130_fd_sc_hd__fill_2 blackboxed during sta[39m
-[33m[WARNING]: Module sky130_fd_sc_hd__tapvpwrvgnd_1 blackboxed during sta[39m
-[STEP 22]
-[36m[INFO]: Creating IR Drop Report (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/22-irdrop.log)...[39m
-[33m[WARNING]: VSRC_LOC_FILES is not defined. The IR drop analysis will run, but the values may be inaccurate.[39m
-[STEP 23]
-[36m[INFO]: Running Magic to generate various views...[39m
-[36m[INFO]: Streaming out GDSII with Magic (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/23-gdsii.log)...[39m
-[36m[INFO]: Generating MAGLEF views...[39m
-[36m[INFO]: Generating lef with Magic (/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/23-lef.log)...[39m
-[STEP 24]
-[36m[INFO]: Streaming out GDSII with KLayout (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/24-gdsii-klayout.log)...[39m
+. . . . . . . . . . . . . . .
 [STEP 25]
 [36m[INFO]: Running XOR on the layouts using KLayout (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log)...[39m
 [31m[ERROR]: during executing: "klayout -b -r /openlane/scripts/klayout/xor.drc -rd a=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.gds -rd b=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.klayout.gds -rd jobs=1 -rd rdb_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.xml -rd ignore=81/14 -rd rpt_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.rpt |& tee /dev/null /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log"[39m
