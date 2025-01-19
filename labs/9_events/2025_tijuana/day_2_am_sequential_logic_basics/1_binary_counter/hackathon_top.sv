@@ -33,7 +33,7 @@ module hackathon_top
     always_ff @ (posedge clock)
         if (reset)
             counter <= 0;
-        else if (key)
+        else
             counter <= counter + 1;
 
     assign led = counter [31:24];  // Try to put [23:16] here
@@ -56,7 +56,7 @@ module hackathon_top
 
     /*
 
-    wire k = | key;
+    wire k = | key;  // Any key is on
 
     logic k_previous;
 
@@ -66,7 +66,7 @@ module hackathon_top
         else
             k_previous <= k;
 
-    wire k_pressed = ~ k & k_previous;
+    wire k_pressed = k & ~ k_previous;
 
     always_ff @ (posedge clock)
         if (reset)
