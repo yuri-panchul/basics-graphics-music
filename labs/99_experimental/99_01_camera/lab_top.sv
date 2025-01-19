@@ -1,12 +1,15 @@
 `include "config.svh"
 
-typedef enum {ov5640_rgb565_1024_768,
-              ov7640_rgb565_640_480} cameras_t;
+typedef enum {ov2640_rgb565_1024_768,
+              ov5640_rgb565_480_272,
+              ov5640_rgb565_800_480,
+              ov5640_rgb565_1024_768,
+              ov7670_rgb565_640_480} cameras_t;
 
 module lab_top
 # (
     parameter           clk_mhz        = 50,
-	 parameter cameras_t cam            = ov7640_rgb565_640_480
+	 parameter cameras_t cam            = ov7670_rgb565_640_480
 )
 (
    input                       clk,
@@ -54,24 +57,43 @@ i2c_config i2c_config_m0(
 );
 
 generate
-if(cam==ov5640_rgb565_1024_768) begin: b1
-//configure look-up table
-lut_ov5640_rgb565_1024_768 lut_ov5640_rgb565_1024_768_m0(
-	.lut_index                  (lut_index                ),
-	.lut_data                   (lut_data                 ),
-	.i2c_addr_2byte             (i2c_addr_2byte           )
-);
-//assign pdata_o = {write_data[4:0],write_data[10:5],write_data[15:11]};
-end: b1
-else begin: b2
-//configure look-up table
-lut_ov7640_rgb565_640_480 lut_ov7640_rgb565_640_480_m0(
-	.lut_index                  (lut_index                ),
-	.lut_data                   (lut_data                 ),
-	.i2c_addr_2byte             (i2c_addr_2byte           )
-);
-//assign pdata_o = {write_data[15:11],write_data[10:5],write_data[4:0]};
-end: b2
+case(cam)
+    ov2640_rgb565_1024_768: begin: b1
+        lut_ov2640_rgb565_1024_768 lut_ov2640_rgb565_1024_768_m0(
+            .lut_index                  (lut_index                ),
+            .lut_data                   (lut_data                 ),
+            .i2c_addr_2byte             (i2c_addr_2byte           )
+        );
+    end: b1
+    ov5640_rgb565_480_272: begin: b2
+        lut_ov5640_rgb565_480_272 lut_ov5640_rgb565_480_272_m0(
+            .lut_index                  (lut_index                ),
+            .lut_data                   (lut_data                 ),
+            .i2c_addr_2byte             (i2c_addr_2byte           )
+        );
+    end: b2
+    ov5640_rgb565_800_480: begin: b3
+        lut_ov5640_rgb565_800_480 lut_ov5640_rgb565_800_480_m0(
+            .lut_index                  (lut_index                ),
+            .lut_data                   (lut_data                 ),
+            .i2c_addr_2byte             (i2c_addr_2byte           )
+        );
+    end: b3
+    ov5640_rgb565_1024_768: begin: b4
+        lut_ov5640_rgb565_1024_768 lut_ov5640_rgb565_1024_768_m0(
+            .lut_index                  (lut_index                ),
+            .lut_data                   (lut_data                 ),
+            .i2c_addr_2byte             (i2c_addr_2byte           )
+        );
+    end: b4
+    default: begin: b99
+        lut_ov7670_rgb565_640_480 lut_ov7670_rgb565_640_480_m0(
+            .lut_index                  (lut_index                ),
+            .lut_data                   (lut_data                 ),
+            .i2c_addr_2byte             (i2c_addr_2byte           )
+        );
+    end: b99
+endcase
 endgenerate
 
 //CMOS sensor 8bit data is converted to 16bit data

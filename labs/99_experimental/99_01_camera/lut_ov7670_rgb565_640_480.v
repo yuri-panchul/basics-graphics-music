@@ -1,4 +1,4 @@
-module lut_ov7640_rgb565_640_480(
+module lut_ov7670_rgb565_640_480(
 	input[9:0]             lut_index,   //Look-up table address
 	output reg[31:0]       lut_data,     //Device address (8bit I2C address), register address, register data
 	output i2c_addr_2byte

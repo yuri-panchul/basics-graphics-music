@@ -70,7 +70,7 @@ wire	sys_rst_n;		//global reset
 system_ctrl	u_system_ctrl
 (
 	.clk				   (CLOCK),			//global clock  50MHZ
-	.rst_n				(rst_n),		//external reset
+	.rst_n				(RESET),		//external reset
 	
 	.sys_rst_n			(sys_rst_n),	//global reset
 	.clk_c0				(clk_vga),		//25MHz
@@ -81,7 +81,7 @@ system_ctrl	u_system_ctrl
 lab_top 
 # ( 
   .clk_mhz( 25               ),
-  .cam    ( ov7640_rgb565_640_480 )
+  .cam    ( ov7670_rgb565_640_480 )
 )
 mylab
 (
@@ -95,7 +95,7 @@ mylab
 	 .cmos_vsync( CMOS_VSYNC      ),        //cmos vsync
 	 .cmos_href ( CMOS_HREF       ),        //cmos hsync refrence,data valid
 	 .cmos_pclk ( CMOS_PCLK       ),        //cmos pxiel clock
-    .cmos_xclk ( CMOS_XCLK       ),        //cmos externl clock 
+    .cmos_xclk (), //( CMOS_XCLK       ),        //cmos externl clock 
 	 .cmos_db   ( CMOS_DB         ),        //cmos data
 	 .cmos_rst_n(                 ),        //cmos reset 
 	 .cmos_pwdn (                 ),        //cmos power down
@@ -135,7 +135,9 @@ assign	led_data = I2C_RDATA;				//diaplay I2C_RDATA
 //-----------------------------------------------               
 wire			frame_valid;		//data valid, or address restart
 wire	[7:0]	cmos_fps_data;		//cmos frame rate
-/*CMOS_Capture	u_CMOS_Capture
+wire			Config_Done  = 1'b1;
+
+CMOS_Capture	u_CMOS_Capture
 (
 	//Global Clock
 	.iCLK				(clk_vga),		//25MHz
@@ -159,7 +161,7 @@ wire	[7:0]	cmos_fps_data;		//cmos frame rate
 	.CMOS_VALID			(frame_valid),		//Data Enable
 	.CMOS_FPS_DATA		()//(cmos_fps_data)		//cmos frame rate
 );
-*/
+
 
 //Seg7_lut	u7	(	cmos_fps_data[7:4],	oSEG7	);	//fsp rate
 //Seg7_lut	u6	(	cmos_fps_data[3:0],	oSEG6	);	//fps rate
@@ -219,18 +221,18 @@ sdram_vga_top	u_sdram_vga_top
 	.lcd_blue			(VGAD[4:0]),			//lcd blue data
 	
 	//user interface
-	.clk_write			(cmos_16bit_clk),			//fifo write clock
+	/*.clk_write			(cmos_16bit_clk),			//fifo write clock
 	.sys_we				(cmos_16bit_wr),			//fifo write enable
-	.sys_data_in		(cmos_16bit_data),		//fifo data input
+	.sys_data_in		(cmos_16bit_data),		//fifo data input*/
 
-	/*.clk_write			(clk_vga),			//fifo write clock
+	.clk_write			(clk_vga),			//fifo write clock
 	.sys_we				(sys_we),			//fifo write enable
-	.sys_data_in		(sys_data_in),		//fifo data input*/
+	.sys_data_in		(sys_data_in),		//fifo data input
 
 	
 	.sdram_init_done	(sdram_init_done),	//sdram init done
-//	.frame_valid		(frame_valid)		//frame valid
-	.frame_valid		(cmos_16bit_wr)
+	.frame_valid		(frame_valid)		//frame valid
+//	.frame_valid		(cmos_16bit_wr)
 );
 
 
