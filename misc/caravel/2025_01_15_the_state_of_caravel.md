@@ -469,7 +469,11 @@ Total                  2.71e-04   3.38e-04   1.06e-07   6.09e-04 100.0%
                           44.5%      55.5%       0.0%
 ```
 
-## Appendix C.1. Unsuccessful log for `make_user_project_wrapper` under Lubuntu LTS 24.04
+## Appendix C.1. Unsuccessful log for 'make user_project_wrapper' under Lubuntu LTS 24.04
+
+```
+make user_project_wrapper
+```
 
 ```
 make -C openlane user_project_wrapper
