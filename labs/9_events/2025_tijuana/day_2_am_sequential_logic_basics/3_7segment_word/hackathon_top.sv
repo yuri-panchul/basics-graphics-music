@@ -26,28 +26,13 @@ module hackathon_top
 
     //------------------------------------------------------------------------
 
-    logic [31:0] counter;
-
-    always_ff @ (posedge clock)
-        if (reset)
-            counter <= 0;
-        else
-            counter <= counter + 1;
-
-    wire enable = (counter [16:0] == 0);
-    // Find the number [N:0] so that your eyes cannot see LEDs moving
-
-    //------------------------------------------------------------------------
-
     logic [7:0] shift_reg;
 
     always_ff @ (posedge clock)
       if (reset)
         shift_reg <= 1;
-      else if (enable)
+      else
         shift_reg <= { shift_reg [0], shift_reg [7:1] };
-
-    assign led = shift_reg;
 
     //------------------------------------------------------------------------
 
@@ -85,14 +70,8 @@ module hackathon_top
     assign abcdefgh = letter;
     assign digit    = shift_reg;
 
-    // Exercise 1: Increase the frequency of enable signal
-    // to the level your eyes see the letters as a solid word
-    // without any blinking. What is the threshold of such frequency?
+    // Exercise 1: Put your name or another word to the display.
 
-    // Exercise 2: Put your name or another word to the display.
-
-    // Exercise 3: Comment out the "default" clause from the "case" statement
-    // in the "always" block,and re-synthesize the example.
-    // Are you getting any warnings or errors? Try to explain why.
+    // Exercise 2: Make the word slowly moving across the display.
 
 endmodule
