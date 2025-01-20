@@ -889,8 +889,6 @@ make_cocotb-verify-all-gl
 ```
 
 ```
-`make_cocotb-verify-all-gl` target was mentioned in Caravel documentation, specifically [https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md) but it did not go well:
-
 Error:  Default value 13'hXXXX is not a 4-digit hex number; skipping
 Step 2:  Modify top-level layouts to use the specified defaults.
 Traceback (most recent call last):
