@@ -1,0 +1,7 @@
+variable_add tb.clk
+variable_add tb.rst
+variable_add tb.cpu.pc
+variable_add tb.imAddr
+variable_add tb.imData
+variable_add tb.regAddr
+variable_add tb.regData
