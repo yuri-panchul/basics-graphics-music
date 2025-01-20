@@ -24,6 +24,9 @@ module hackathon_top
     output logic [4:0] blue
 );
 
+    logic [8:0] x1;
+    logic [8:0] y1;
+
     always_comb
     begin
         red   = 0;
@@ -45,6 +48,8 @@ module hackathon_top
 
         // Exercise 1: Uncomment the code for a green rectangle
         // that overlaps red rectangle
+        
+/*
         if (key[1]) 
             begin 
                 if (x > 250 & x < 450 & y > 20 & y < 70)
@@ -55,6 +60,12 @@ module hackathon_top
                 if (x > 150 & x < 350 & y > 70 & y < 120)
                     green = 63;
             end 
+*/
+        x1 = x + key [1] * 100;
+        y1 = y + key [1] * 50;
+        
+        if (x + key[1] * 100 > 250 & x < 450 & y > 20 & y < 70)
+            green = 63;
 
         // 63 is the maximum 6-bit number, 6'b111111
 

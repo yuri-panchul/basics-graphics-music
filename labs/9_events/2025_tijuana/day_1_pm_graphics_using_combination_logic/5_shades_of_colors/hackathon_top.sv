@@ -58,7 +58,7 @@ module hackathon_top
 
         // Exercise 2: Add a blue rectangle
         // that overlaps both rectangles
-
+/*
         if (x > 310 & x < 465 & y > 0 & y < 300)
           if(key[2]) 
                 begin
@@ -68,6 +68,8 @@ module hackathon_top
                 begin        
                     blue = 31;
                 end
+*/
+        blue =16 + x * 10;
     end
 
 endmodule
