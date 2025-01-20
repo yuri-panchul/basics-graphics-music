@@ -215,8 +215,21 @@ Now we have an issue with Simply Linux 10.4 which has a package for 64-bit RISC-
 
 #### 4.5.3. Verification results
 
+Before running Caravel-Mini tests in Lubuntu, I did `make setup-cocotb`. This command run without problems.
+
+Then I looked into `caravel_user_mini_experiment/verilog/dv/cocotb/counter_tests` directory, found several tests and run the following:
+
+```bash
+make cocotb-verify-counter_la-rtl       2>&1 | tee zzz_make_cocotb-verify-counter_la-rtl
+make cocotb-verify-counter_la_clk-rtl   2>&1 | tee zzz_make_cocotb-verify-counter_la_clk
+make cocotb-verify-counter_la_reset-rtl 2>&1 | tee zzz_make_cocotb-verify-counter_la_reset
+make cocotb-verify-counter_wb-rtl       2>&1 | tee zzz_make_cocotb-verify-counter_wb
+```
+
+Everything failed. The failure logs are in *Appendix D.1. cocotb-based verification run logs for Caraven-Mini on Lubuntu.*
 
 
+HERE
 
 ## Appendix A.1. Ubuntu setup commands
 
@@ -755,4 +768,84 @@ child killed: kill signal
 make[1]: *** [Makefile:80: user_project_wrapper] Error 255
 make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
 make: *** [Makefile:126: user_project_wrapper] Error 2
+```
+
+## Appendix D.2. cocotb-based verification run logs for Caraven-Mini on Lubuntu.
+
+```bash
+make cocotb-verify-counter_la_clk
+```
+
+```
+export CARAVEL_ROOT=/home/verilog/projects/caravel_user_mini_experiment/caravel && export MPW_TAG=2024.09.12-1 && make -f /home/verilog/projects/caravel_user_mini_experiment/caravel/Makefile cocotb-verify-counter_la_clk-rtl
+make[1]: Entering directory '/home/verilog/projects/caravel_user_mini_experiment'
+make[1]: *** No rule to make target 'cocotb-verify-counter_la_clk-rtl'.  Stop.
+make[1]: Leaving directory '/home/verilog/projects/caravel_user_mini_experiment'
+make: *** [Makefile:99: cocotb-verify-counter_la_clk-rtl] Error 2
+zzz_make_cocotb-verify-counter_la_reset
+Run tag: run_28_Dec_10_04_20_27 
+docker.io/efabless/dv:cocotb
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+/home/verilog/projects/caravel_user_mini_experiment/verilog/dv/cocotb/sim/run_28_Dec_10_04_20_27/RTL-compilation/sim.vvp: Unable to open input file.
+[91mError[0m: Fail to compile the verilog code for more info refer to [96m/home/verilog/projects/caravel_user_mini_experiment/verilog/dv/cocotb/sim/run_28_Dec_10_04_20_27/RTL-compilation/compilation.log[0m
+check update for docker image efabless/dv:cocotb.
+Start running test: [94m RTL-counter_la_reset [0m
+[96mCompiling as sim.vvp not found[0m
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                              
+┃ Total                ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                              
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                              
+│ 1                    │ 0      │ 1             │ 0             │ 0:00:04.16 │        │         │                                              
+│                      │        │               │               │            │        │         │                                              
+│ Test                 │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                              
+│ RTL-counter_la_reset │ done   │ 10:04:21(Sat) │ 10:04:25(Sat) │ 0:00:03.98 │ failed │ unknown │                                              
+└──────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                              
+```
+
+```bash
+make cocotb-verify-counter_la-rtl
+```
+
+```
+Run tag: run_28_Dec_10_04_13_42 
+docker.io/efabless/dv:cocotb
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+/home/verilog/projects/caravel_user_mini_experiment/verilog/dv/cocotb/sim/run_28_Dec_10_04_13_42/RTL-compilation/sim.vvp: Unable to open input file.
+[91mError[0m: Fail to compile the verilog code for more info refer to [96m/home/verilog/projects/caravel_user_mini_experiment/verilog/dv/cocotb/sim/run_28_Dec_10_04_13_42/RTL-compilation/compilation.log[0m
+check update for docker image efabless/dv:cocotb.
+Start running test: [94m RTL-counter_la [0m
+[96mCompiling as sim.vvp not found[0m
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                                    
+┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                                    
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                                    
+│ 1              │ 0      │ 1             │ 0             │ 0:00:04.09 │        │         │                                                    
+│                │        │               │               │            │        │         │                                                    
+│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                                    
+│ RTL-counter_la │ done   │ 10:04:14(Sat) │ 10:04:18(Sat) │ 0:00:03.90 │ failed │ unknown │                                                    
+└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                                    
+```
+
+```bash
+make make_cocotb-verify-counter_wb
+```
+
+```
+Run tag: run_28_Dec_10_04_26_23 
+docker.io/efabless/dv:cocotb
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+/home/verilog/projects/caravel_user_mini_experiment/verilog/dv/cocotb/sim/run_28_Dec_10_04_26_23/RTL-compilation/sim.vvp: Unable to open input file.
+[91mError[0m: Fail to compile the verilog code for more info refer to [96m/home/verilog/projects/caravel_user_mini_experiment/verilog/dv/cocotb/sim/run_28_Dec_10_04_26_23/RTL-compilation/compilation.log[0m
+check update for docker image efabless/dv:cocotb.
+Start running test: [94m RTL-counter_wb [0m
+[96mCompiling as sim.vvp not found[0m
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                                    
+┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                                    
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                                    
+│ 1              │ 0      │ 1             │ 0             │ 0:00:04.21 │        │         │                                                    
+│                │        │               │               │            │        │         │                                                    
+│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                                    
+│ RTL-counter_wb │ done   │ 10:04:27(Sat) │ 10:04:31(Sat) │ 0:00:04.03 │ failed │ unknown │                                                    
+└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                                    
 ```
