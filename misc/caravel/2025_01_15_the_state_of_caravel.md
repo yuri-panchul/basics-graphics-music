@@ -261,6 +261,40 @@ This result was also consistent for all platforms.
 
 For the details see *Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.*
 
+### 4.6. Step 6. Running other make targets
+
+Since Caravel user project documentation, specifically
+[docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md),
+mentioned other make targets, I run them, but most runs resulted in errors.
+I don't need them for my purposes, for example I can get STA data from a regular run rather then from `make caravel-sta`,
+however I think if something does not work, it should be either debugged or removed from documentation.
+
+#### 4.6.1. `make caravel-sta` does not like an array of instances in gate-level Verilog
+
+Specifically right now `make caravel-sta` generates the following error message:
+
+```
+...
+Error: /home/verilog/projects/caravel_user_project_experiment/caravel/verilog/gl/housekeeping.v line 155456, syntax error, unexpected '[', expecting '('
+make[1]: *** [/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/timing.mk:244: caravel-timing-typ-max] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: *** [/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/timing.mk:244: caravel-timing-typ-min] Error 1
+make[1]: *** [/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/timing.mk:244: caravel-timing-typ-nom] Error 1
+make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts'
+make: *** [Makefile:426: caravel-sta] Error 2
+```
+
+and the root cause is the following syntax:
+
+```
+...
+  sky130_ef_sc_hd__decap_12 decap_12[1815:0] (.VGND(VGND),
+    .VNB(VGND),
+    .VPB(VPWR),
+    .VPWR(VPWR));
+```
+
+
 HERE
 
 ## Appendix A.1. Ubuntu setup commands
