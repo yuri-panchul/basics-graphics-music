@@ -157,15 +157,17 @@ Specifically, *33-rcx_sta.max.rpt* and *33-rcx_sta.min.rpt* reports generated on
 make user_project_wrapper
 ```
 
-This command was successfully completed on Ubuntu, MacOS and Windows WSL. However I was not able to find the area report, which is a critical issue.
+This command was completed successfully on the first try on Ubuntu, MacOS and Windows WSL. However I was not able to find the area report, which is a critical issue.
 
-Two runs on Lubuntu were not successfull, but this was probably due to the external factors:
+Two runs on Lubuntu were not successful, but this was probably due to external factors:
 
 1. Run low on disk space - see for details *Appendix C.1. Log for unsuccessful run 'make user_project_wrapper' under Lubuntu LTS 24.04*. It was not clear from the error message that the disk space is an issue.
 
-2. Run low on memory - the command hanged on a computer with 4 gigabyte of RAM after step 25.
+2. Run low on memory - the command hangs on a computer with 4 gigabytes of RAM after step 25.
 
-Run on Simply Linux 10.4 also failed - see for details *Appendix C.2. Log 1 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*, and  *Appendix C.3. Log 2 for unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*.
+The third try, on a computer with 8 GB of memory, was successful. This means that Open Lane / Caravel infrastructure cannot gracefully detect and report insufficient resource conditions with a meaningful error message.
+
+Run on Simply Linux 10.4 failed - see for details *Appendix C.2. Log 1 for an unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*, and *Appendix C.3. Log 2 for an unsuccessful run 'make user_project_wrapper' under Simply Linux 10.4*.
 
 ## Appendix A.1. Ubuntu setup commands
 
