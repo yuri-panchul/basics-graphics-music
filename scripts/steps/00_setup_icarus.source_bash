@@ -124,6 +124,14 @@ run_icarus_verilog ()
             is_command_available_or_error_and_install surfer
 
             gtkwave=surfer
+
+    gtkwave_script=../surfer.scr
+
+    gtkwave_options=
+
+    if [ -f $gtkwave_script ]; then
+        gtkwave_options="--command-file $gtkwave_script"
+    fi
         else
             # For some reason the following way of opening the application
             # under Mac does not read the script file:
