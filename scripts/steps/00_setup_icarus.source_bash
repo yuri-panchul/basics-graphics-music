@@ -84,12 +84,13 @@ run_icarus_verilog ()
         gtkwave_options="--script $gtkwave_script"
     fi
 
-    if    [ "$OSTYPE" = "linux-gnu" ]  \
-       || [ "$OSTYPE" = "cygwin"    ]  
+    if    [ "$OSTYPE" = "linux-gnu" ]
+
     then
         gtkwave=gtkwave
 
-    elif  [ "$OSTYPE" = "msys"      ]
+    elif  [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
     then
         if is_command_available surfer ; then
 
