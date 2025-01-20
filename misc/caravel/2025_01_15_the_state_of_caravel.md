@@ -217,6 +217,8 @@ Now we have an issue with Simply Linux 10.4 which has a package for 64-bit RISC-
 
 Before running Caravel-Mini tests in Lubuntu, I did `make setup-cocotb`. This command run without problems.
 
+##### 4.5.3.1. Caravel-Mini RTL verification results
+
 Then I looked into `caravel_user_mini_experiment/verilog/dv/cocotb/counter_tests` directory, found several tests and run the following:
 
 ```bash
@@ -227,7 +229,31 @@ make cocotb-verify-counter_wb-rtl       2>&1 | tee zzz_make_cocotb-verify-counte
 ```
 
 Everything failed. The failure logs are in *Appendix D.1. cocotb-based verification run logs for Caraven-Mini on Lubuntu.*
+I got the same results running verification under other platforms.
 
+##### 4.5.3.2. The regular Caravel RTL verification results
+
+The regular Caravel RTL test run went better. One test ended in timeout, all other tests ran successfully:
+
+```bash
+make cocotb-verify-all-rtl 2>&1 | tee zzz_cocotb-verify-all-rtl
+```
+
+```
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Total                ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃            ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━┩
+│ 4                    │ 3      │ 1             │ 0             │ 0:02:52.13 │        │            │
+│                      │        │               │               │            │        │            │
+│ Test                 │ status │ start         │ end           │ duration   │ p/f    │ seed       │
+│ RTL-counter_la       │ done   │ 14:17:01(Mon) │ 14:17:50(Mon) │ 0:00:49.57 │ passed │ 1737411426 │
+│ RTL-counter_wb       │ done   │ 14:17:50(Mon) │ 14:18:09(Mon) │ 0:00:18.89 │ failed │ 1737411473 │
+│ RTL-counter_la_reset │ done   │ 14:18:09(Mon) │ 14:19:07(Mon) │ 0:00:57.95 │ passed │ 1737411491 │
+│ RTL-counter_la_clk   │ done   │ 14:19:07(Mon) │ 14:19:52(Mon) │ 0:00:45.38 │ passed │ 1737411549 │
+└──────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴────────────┘
+```
+
+This result was also consistent for all platforms.
 
 HERE
 
