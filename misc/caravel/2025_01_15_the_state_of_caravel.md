@@ -217,6 +217,8 @@ Now we have an issue with Simply Linux 10.4 which has a package for 64-bit RISC-
 
 Before running Caravel-Mini tests in Lubuntu, I did `make setup-cocotb`. This command run without problems.
 
+##### 4.5.3.1. Caravel-Mini RTL verification results
+
 Then I looked into `caravel_user_mini_experiment/verilog/dv/cocotb/counter_tests` directory, found several tests and run the following:
 
 ```bash
@@ -226,7 +228,70 @@ make cocotb-verify-counter_la_reset-rtl 2>&1 | tee zzz_make_cocotb-verify-counte
 make cocotb-verify-counter_wb-rtl       2>&1 | tee zzz_make_cocotb-verify-counter_wb
 ```
 
-Everything failed. The failure logs are in *Appendix D.1. cocotb-based verification run logs for Caraven-Mini on Lubuntu.*
+Everything failed. The failure logs are in *Appendix D.1. cocotb-based RTL verification run logs for Caraven-Mini on Lubuntu.*
+I got the same results running verification under other platforms.
+
+##### 4.5.3.2. The regular Caravel RTL verification results
+
+The regular Caravel RTL test run went better. One test ended in timeout, all other tests ran successfully:
+
+```bash
+make cocotb-verify-all-rtl 2>&1 | tee zzz_cocotb-verify-all-rtl
+```
+
+```
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Total                ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃            ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━┩
+│ 4                    │ 3      │ 1             │ 0             │ 0:02:52.13 │        │            │
+│                      │        │               │               │            │        │            │
+│ Test                 │ status │ start         │ end           │ duration   │ p/f    │ seed       │
+│ RTL-counter_la       │ done   │ 14:17:01(Mon) │ 14:17:50(Mon) │ 0:00:49.57 │ passed │ 1737411426 │
+│ RTL-counter_wb       │ done   │ 14:17:50(Mon) │ 14:18:09(Mon) │ 0:00:18.89 │ failed │ 1737411473 │
+│ RTL-counter_la_reset │ done   │ 14:18:09(Mon) │ 14:19:07(Mon) │ 0:00:57.95 │ passed │ 1737411491 │
+│ RTL-counter_la_clk   │ done   │ 14:19:07(Mon) │ 14:19:52(Mon) │ 0:00:45.38 │ passed │ 1737411549 │
+└──────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴────────────┘
+```
+
+This result was also consistent for all platforms.
+
+##### 4.5.3.3. The regular Caravel gate-level verification results
+
+`make_cocotb-verify-all-gl` target was mentioned in Caravel documentation, specifically [https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md) but it failed with a compilation error.
+
+TA data from a regular run rather than from make caravel-sta. However, I think if something does not work, it should be either debugged or removed from documentation.
+
+
+For the details see *Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.*
+
+### 4.6. Step 6. Running other make targets
+
+Since Caravel user project documentation, specifically [docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md), mentioned other make targets, I ran them, but most runs resulted in errors. I don't need them for my purposes, for example I can get STA data from a regular run rather than from `make caravel-sta`. However I think if something does not work, it should be either debugged or removed from documentation.
+
+#### 4.6.1. `make caravel-sta` does not like an array of instances in gate-level Verilog
+
+Specifically right now `make caravel-sta` generates the following error message:
+
+```
+...
+Error: /home/verilog/projects/caravel_user_project_experiment/caravel/verilog/gl/housekeeping.v line 155456, syntax error, unexpected '[', expecting '('
+make[1]: *** [/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/timing.mk:244: caravel-timing-typ-max] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: *** [/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/timing.mk:244: caravel-timing-typ-min] Error 1
+make[1]: *** [/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/timing.mk:244: caravel-timing-typ-nom] Error 1
+make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts'
+make: *** [Makefile:426: caravel-sta] Error 2
+```
+
+and the root cause is the following syntax:
+
+```
+...
+  sky130_ef_sc_hd__decap_12 decap_12[1815:0] (.VGND(VGND),
+    .VNB(VGND),
+    .VPB(VPWR),
+    .VPWR(VPWR));
+```
 
 
 HERE
@@ -770,7 +835,7 @@ make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experime
 make: *** [Makefile:126: user_project_wrapper] Error 2
 ```
 
-## Appendix D.2. cocotb-based verification run logs for Caraven-Mini on Lubuntu.
+## Appendix D.1. cocotb-based RTL verification run logs for Caraven-Mini on Lubuntu.
 
 ```bash
 make cocotb-verify-counter_la_clk
@@ -848,4 +913,56 @@ Start running test: [94m RTL-counter_wb [0m
 │ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                                    
 │ RTL-counter_wb │ done   │ 10:04:27(Sat) │ 10:04:31(Sat) │ 0:00:04.03 │ failed │ unknown │                                                    
 └────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                                    
+```
+
+## Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.
+
+```bash
+make_cocotb-verify-all-gl
+```
+
+```
+Error:  Default value 13'hXXXX is not a 4-digit hex number; skipping
+Step 2:  Modify top-level layouts to use the specified defaults.
+Traceback (most recent call last):
+  File "/home/verilog/projects/caravel_user_project_experiment/caravel/scripts/gen_gpio_defaults.py", line 342, in <module>
+    with open(caravel_path + '/mag/caravel_core.mag', 'r') as ifile:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/verilog/projects/caravel_user_project_experiment/caravel/mag/caravel_core.mag'
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/sim.vvp: Unable to open input file.
+[91mError[0m: Fail to compile the verilog code for more info refer to [96m/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/compilation.log[0m
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/sim.vvp: Unable to open input file.
+[91mError[0m: Fail to compile the verilog code for more info refer to [96m/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/compilation.log[0m
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/sim.vvp: Unable to open input file.
+[91mError[0m: Fail to compile the verilog code for more info refer to [96m/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/compilation.log[0m
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/sim.vvp: Unable to open input file.
+[91mError[0m: Fail to compile the verilog code for more info refer to [96m/home/verilog/projects/caravel_user_project_experiment/verilog/dv/cocotb/sim/run_28_Dec_11_53_34_98/GL-compilation/compilation.log[0m
+check update for docker image efabless/dv:cocotb.
+Start running test: [94m GL-counter_wb [0m
+[96mCompiling as sim.vvp not found[0m
+Start running test: [94m GL-counter_la [0m
+[96mCompiling as sim.vvp not found[0m
+Start running test: [94m GL-counter_la_reset [0m
+[96mCompiling as sim.vvp not found[0m
+Start running test: [94m GL-counter_la_clk [0m
+[96mCompiling as sim.vvp not found[0m
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Total               ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ 4                   │ 0      │ 4             │ 0             │ 0:01:13.46 │        │         │
+│                     │        │               │               │            │        │         │
+│ Test                │ status │ start         │ end           │ duration   │ p/f    │ seed    │
+│ GL-counter_wb       │ done   │ 11:53:36(Sat) │ 11:53:54(Sat) │ 0:00:18.17 │ failed │ unknown │
+│ GL-counter_la       │ done   │ 11:53:54(Sat) │ 11:54:13(Sat) │ 0:00:18.33 │ failed │ unknown │
+│ GL-counter_la_reset │ done   │ 11:54:13(Sat) │ 11:54:31(Sat) │ 0:00:18.16 │ failed │ unknown │
+│ GL-counter_la_clk   │ done   │ 11:54:31(Sat) │ 11:54:49(Sat) │ 0:00:17.98 │ failed │ unknown │
+└─────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
