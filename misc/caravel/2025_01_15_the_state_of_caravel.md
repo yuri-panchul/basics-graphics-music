@@ -293,8 +293,20 @@ and the root cause is the following syntax:
     .VPWR(VPWR));
 ```
 
+#### 4.6.2. Other target errors
+
+
 
 HERE
+
+[verilog@host-15 blink]$ make clean flash
+rm -f *.elf *.hex *.bin *.vvp *.vcd
+#/usr/local/bin/riscv32-unknown-elf-gcc -O0 -march=rv32i -Wl,-Bstatic,-T,../sections.lds,--strip-debug -ffreestanding -nostdlib -o blink.elf ../start.s ../print_io.c blink.c
+/usr/local/bin/riscv64-unknown-elf-gcc -I../ -I../generated/ -O0 -mabi=ilp32 -march=rv32i -D__vexriscv__ -Wl,-Bstatic,-T,../sections.lds,--strip-debug -ffreestanding -nostdlib -o blink.elf ../crt0_vex.S ../isr.c ../stub.c blink.c
+make: /usr/local/bin/riscv64-unknown-elf-gcc: No such file or directory
+make: *** [Makefile:24: blink.elf] Error 127
+
+
 
 ## Appendix A.1. Ubuntu setup commands
 
@@ -965,4 +977,154 @@ Start running test: [94m GL-counter_la_clk [0m
 │ GL-counter_la_reset │ done   │ 11:54:13(Sat) │ 11:54:31(Sat) │ 0:00:18.16 │ failed │ unknown │
 │ GL-counter_la_clk   │ done   │ 11:54:31(Sat) │ 11:54:49(Sat) │ 0:00:17.98 │ failed │ unknown │
 └─────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
+```
+
+## Appendix E.1. Error on Lubuntu when running `make create-spef-mapping`
+
+```
+docker run \
+	--rm \
+	-u $(id -u $USER):$(id -g $USER) \
+	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
+	-v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
+	-v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
+	-v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+	-w /home/verilog/projects/caravel_user_project_experiment \
+	efabless/timing-scripts:latest \
+	python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py \
+		-i ./verilog/gl/user_project_wrapper.v \
+		-o ./env/spef-mapping.tcl \
+		--pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A \
+		--macro-parent chip_core/mprj \
+		--project-root "/home/verilog/projects/caravel_user_project_experiment"
+2024-12-28 19:58:27,529 | generate_spef_mapping | INFO | using project_root /home/verilog/projects/caravel_user_project_experiment
+2024-12-28 19:58:27,529 | generate_spef_mapping | INFO | getting pdk macros ..
+2024-12-28 19:58:28,655 | generate_spef_mapping | INFO | parsing netlist ./verilog/gl/user_project_wrapper.v ..
+2024-12-28 19:58:28,889 | generate_spef_mapping | INFO | comparing macros against pdk macros ..
+2024-12-28 19:58:28,890 | generate_spef_mapping | INFO | found netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v for macro user_proj_example
+2024-12-28 19:58:28,890 | generate_spef_mapping | INFO | parsing netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v ..
+2024-12-28 19:59:08,249 | verilog_parser | ERROR | 
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+. . . . . . . . . . . . . . . . . . . .
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.27+3 (git sha1 b58664d4417, gcc 12.2.1 -O2 -fexceptions -fstack-protector-strong -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection -fPIC -Os)
+
+[TCL: yosys -import] Command name collision: found pre-existing command `cd' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v
+
+Traceback (most recent call last):
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py", line 120, in <module>
+    main()
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py", line 64, in main
+    for mapping in run(input, project_root, pdk_macros, logger, macro_parent):
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py", line 99, in run
+    mappings += run(
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py", line 73, in run
+    parsed = VerilogParser(input, logger)
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/verilog_parser.py", line 11, in __init__
+    self.yosys_to_json()
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/verilog_parser.py", line 31, in yosys_to_json
+    f = open("./tmp.json")
+FileNotFoundError: [Errno 2] No such file or directory: './tmp.json'
+make: *** [Makefile:382: create-spef-mapping] Error 1
+```
+
+## Appendix E.2. Error on Lubuntu when running `make extract-parasitics`
+
+```
+docker run \
+	--rm \
+	-u $(id -u $USER):$(id -g $USER) \
+	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
+	-v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
+	-v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
+	-v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+	-w /home/verilog/projects/caravel_user_project_experiment \
+	efabless/timing-scripts:latest \
+	python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
+		-i ./verilog/gl/user_project_wrapper.v \
+		-o ./tmp-macros-list \
+		--project-root "/home/verilog/projects/caravel_user_project_experiment" \
+		--pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
+Unable to find image 'efabless/timing-scripts:latest' locally
+latest: Pulling from efabless/timing-scripts
+c7bef7d09442: Pulling fs layer
+61b8fbdf0b15: Pulling fs layer
+c7bef7d09442: Verifying Checksum
+c7bef7d09442: Download complete
+61b8fbdf0b15: Verifying Checksum
+61b8fbdf0b15: Download complete
+c7bef7d09442: Pull complete
+61b8fbdf0b15: Pull complete
+Digest: sha256:08cc210cbe5e9f529a663aaca975c3cf4666defb5637d0d7d3d8e88d84162b81
+Status: Downloaded newer image for efabless/timing-scripts:latest
+2024-12-28 19:56:59,011 |      get_macros |   INFO | getting pdk macros..
+2024-12-28 19:57:00,624 |      get_macros |   INFO | parsing netlist ./verilog/gl/user_project_wrapper.v ..
+2024-12-28 19:57:00,713 |      get_macros |   INFO | comparing macros against pdk macros ..
+2024-12-28 19:57:00,714 |      get_macros |   INFO | found netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v for macro user_proj_example
+2024-12-28 19:57:00,715 |      get_macros |   INFO | parsing netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v ..
+2024-12-28 19:57:39,978 |  verilog_parser |  ERROR | 
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+. . . . . . . . . . . . . . . . . . . .
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.27+3 (git sha1 b58664d4417, gcc 12.2.1 -O2 -fexceptions -fstack-protector-strong -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection -fPIC -Os)
+
+[TCL: yosys -import] Command name collision: found pre-existing command `cd' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v
+
+Traceback (most recent call last):
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py", line 121, in <module>
+    main()
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py", line 71, in main
+    for macro in run(input, project_root, pdk_macros, logger, macro_parent):
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py", line 106, in run
+    macros += run(
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py", line 78, in run
+    parsed = VerilogParser(input, logger)
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/verilog_parser.py", line 11, in __init__
+    self.yosys_to_json()
+  File "/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/verilog_parser.py", line 31, in yosys_to_json
+    f = open("./tmp.json")
+FileNotFoundError: [Errno 2] No such file or directory: './tmp.json'
+make: *** [Makefile:402: extract-parasitics] Error 1
 ```
