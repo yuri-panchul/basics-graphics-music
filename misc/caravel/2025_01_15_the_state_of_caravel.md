@@ -1,7 +1,7 @@
 ![The State of Caravel: the First Look](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/1_header.png)
 
 # The State of Caravel: the First Look
-Yuri Panchul, 2025.1.15
+Yuri Panchul, 2025.01.20
 
 This text is a mix of my thoughts on using Caravel and Open Lane together with a report on my first attempt to do the following:
 
@@ -979,7 +979,7 @@ Start running test: [94m GL-counter_la_clk [0m
 └─────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
 
-## Appendix E.1. Error on Lubuntu when running `make create-spef-mapping`
+## Appendix E.1. Error on Lubuntu when running `make create-spef-mapping` for full Caravel
 
 ```
 docker run \
@@ -1049,7 +1049,7 @@ FileNotFoundError: [Errno 2] No such file or directory: './tmp.json'
 make: *** [Makefile:382: create-spef-mapping] Error 1
 ```
 
-## Appendix E.2. Error on Lubuntu when running `make extract-parasitics`
+## Appendix E.2. Error on Lubuntu when running `make extract-parasitics` for full Caravel
 
 ```
 docker run \
@@ -1127,4 +1127,43 @@ Traceback (most recent call last):
     f = open("./tmp.json")
 FileNotFoundError: [Errno 2] No such file or directory: './tmp.json'
 make: *** [Makefile:402: extract-parasitics] Error 1
+```
+
+## Appendix E.3. Error on MacOS when running `make extract-parasitics` for full Caravel
+
+```
+docker run \
+		--rm \
+		-u $(id -u $USER):$(id -g $USER) \
+		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks \
+		-v /Users/yuri_panchul/projects/caravel_user_project_experiment:/Users/yuri_panchul/projects/caravel_user_project_experiment \
+		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/caravel:/Users/yuri_panchul/projects/caravel_user_project_experiment/caravel \
+		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper:/Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+		-w /Users/yuri_panchul/projects/caravel_user_project_experiment \
+		efabless/timing-scripts:latest \
+		python3 /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
+			-i ./verilog/gl/user_project_wrapper.v \
+			-o ./tmp-macros-list \
+			--project-root "/Users/yuri_panchul/projects/caravel_user_project_experiment" \
+			--pdk-path /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
+Unable to find image 'efabless/timing-scripts:latest' locally
+latest: Pulling from efabless/timing-scripts
+61b8fbdf0b15: Pulling fs layer
+c7bef7d09442: Pulling fs layer
+c7bef7d09442: Download complete
+61b8fbdf0b15: Download complete
+Digest: sha256:08cc210cbe5e9f529a663aaca975c3cf4666defb5637d0d7d3d8e88d84162b81
+Status: Downloaded newer image for efabless/timing-scripts:latest
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+2024-12-28 01:14:41,712 |      get_macros |   INFO | getting pdk macros..
+2024-12-28 01:14:41,877 |      get_macros |   INFO | parsing netlist ./verilog/gl/user_project_wrapper.v ..
+2024-12-28 01:14:41,948 |      get_macros |   INFO | comparing macros against pdk macros ..
+2024-12-28 01:14:41,949 |      get_macros |   INFO | found netlist /Users/yuri_panchul/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v for macro user_proj_example
+2024-12-28 01:14:41,949 |      get_macros |   INFO | parsing netlist /Users/yuri_panchul/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v ..
+2024-12-28 01:15:36,452 |      get_macros |   INFO | comparing macros against pdk macros ..
+2024-12-28 01:15:41,813 |      get_macros |   INFO | done.
+xargs: command line cannot be assembled, too long
+make: *** [extract-parasitics] Error 1
+
 ```
