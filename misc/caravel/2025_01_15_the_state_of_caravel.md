@@ -259,15 +259,14 @@ This result was also consistent for all platforms.
 
 `make_cocotb-verify-all-gl` target was mentioned in Caravel documentation, specifically [https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md) but it failed with a compilation error.
 
+TA data from a regular run rather than from make caravel-sta. However, I think if something does not work, it should be either debugged or removed from documentation.
+
+
 For the details see *Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.*
 
 ### 4.6. Step 6. Running other make targets
 
-Since Caravel user project documentation, specifically
-[docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md),
-mentioned other make targets, I run them, but most runs resulted in errors.
-I don't need them for my purposes, for example I can get STA data from a regular run rather then from `make caravel-sta`,
-however I think if something does not work, it should be either debugged or removed from documentation.
+Since Caravel user project documentation, specifically [docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md), mentioned other make targets, I ran them, but most runs resulted in errors. I don't need them for my purposes, for example I can get STA data from a regular run rather than from `make caravel-sta`. However I think if something does not work, it should be either debugged or removed from documentation.
 
 #### 4.6.1. `make caravel-sta` does not like an array of instances in gate-level Verilog
 
