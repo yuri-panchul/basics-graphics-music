@@ -295,9 +295,18 @@ and the root cause is the following syntax:
 
 #### 4.6.2. Other target errors
 
+See the following logs:
+
+1. Appendix E.1. Error on Lubuntu when running `make create-spef-mapping` for full Caravel
+2. Appendix E.2. Error on Lubuntu when running `make extract-parasitics` for full Caravel
+3. Appendix E.3. Error on MacOS when running `make extract-parasitics` for full Caravel
+
+Note that the following scenario pass without issues for full Caravel:
+
+4. MacOS, `make create-spef-mapping`
+5. Windows WSL, both `make create-spef-mapping` and `make extract-parasitics`
 
 
-HERE
 
 [verilog@host-15 blink]$ make clean flash
 rm -f *.elf *.hex *.bin *.vvp *.vcd
