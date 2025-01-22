@@ -67,8 +67,7 @@ I did the setup on 5 platforms: Ubuntu 24.04 LTS, Lubuntu 24.04 LTS, Simply Linu
 
 #### 4.3.1. Setup on Ubuntu 24.04 LTS
 
-First, three dependencies were missing: make, python3-pip and docker. I installed the first two using apt-get and docker using the instruction from https://docs.docker.com/engine/install/ubuntu .
-However it was not sufficient; I also had to use systemctl and gpasswd commands. Finally, I had to install a Python virtual environment using “sudo apt install python3.12-venv”. After this, “make setup” worked.
+First, three dependencies were missing: make, python3-pip and docker. I installed the first two using apt-get and docker using the instruction from https://docs.docker.com/engine/install/ubuntu. However it was not sufficient; I also had to use systemctl and gpasswd commands. Finally, I had to install a Python virtual environment using “sudo apt install python3.12-venv”. After this, “make setup” worked.
 
 See *Appendix A.1. Ubuntu setup commands* for more details.
 
@@ -229,8 +228,7 @@ make cocotb-verify-counter_la_reset-rtl 2>&1 | tee zzz_make_cocotb-verify-counte
 make cocotb-verify-counter_wb-rtl       2>&1 | tee zzz_make_cocotb-verify-counter_wb
 ```
 
-Everything failed. The failure logs are in *Appendix D.1. cocotb-based RTL verification run logs for Caraven-Mini on Lubuntu.*
-I got the same results running verification under other platforms.
+Everything failed. The failure logs are in *Appendix D.1. cocotb-based RTL verification run logs for Caraven-Mini on Lubuntu*. I got the same results running verification under other platforms.
 
 ##### 4.5.3.2. The regular Caravel RTL verification results
 
@@ -261,7 +259,6 @@ This result was also consistent for all platforms.
 `make_cocotb-verify-all-gl` target was mentioned in Caravel documentation, specifically [https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md) but it failed with a compilation error.
 
 TA data from a regular run rather than from make caravel-sta. However, I think if something does not work, it should be either debugged or removed from documentation.
-
 
 For the details see *Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.*
 
@@ -319,23 +316,17 @@ https://youtube.com/shorts/i3fwfOEqwTQ?si=ilHzPXiuD4drYarJ
 
 #### 4.7.2. Getting the board documentation
 
-Before doing any experiments I got the documentation called [Efabless Caravel “harness” SoC](https://caravel-harness.readthedocs.io/en/latest/index.html).
-The document is a relatively easy read, it outlines the registers you can set in a C program running on a housekeeping RISC-V core.
-If you have ever worked with microcontrollers and used embedded ARM, MIPS or RISC-V toolchains, there is nothing unexpected here.
+Before doing any experiments I got the documentation called [Efabless Caravel “harness” SoC](https://caravel-harness.readthedocs.io/en/latest/index.html). The document is a relatively easy read, it outlines the registers you can set in a C program running on a housekeeping RISC-V core. If you have ever worked with microcontrollers and used embedded ARM, MIPS or RISC-V toolchains, there is nothing unexpected here.
 
-The fact that this board is programmable in C allows to add the exercises with this board to an embedded programming class.
-The students can try hardware-software interfaces at the barebone level.
+The fact that this board is programmable in C allows to add the exercises with this board to an embedded programming class. The students can try hardware-software interfaces at the barebone level.
 
 #### 4.7.3. Running a precompiled test
 
-You don't need to install the RISC-V toolchain to check the board is working.
-You can clone a GitHub repo [efabless/caravel_board](https://github.com/efabless/caravel_board)
-and use the precompiled elf executables to run a blinking light example.
+You don't need to install the RISC-V toolchain to check the board is working. You can clone a GitHub repo [efabless/caravel_board](https://github.com/efabless/caravel_board) and use the precompiled elf executables to run a blinking light example.
 
 ##### 4.7.3.1 Blinking light on Simply Linux
 
-The commands in README.md file in the repo use incorrect path, probably they forgot to update the README.md file.
-However the following worked right away:
+The commands in README.md file in the repo use incorrect path, probably they forgot to update the README.md file. However the following worked right away:
 
 ```bash
 git clone https://github.com/efabless/caravel_board.git
@@ -344,8 +335,7 @@ pip3 install pyftdi
 make flash
 ```
 
-`pyftdi` is a Python package that works with a chip from FTDI, Future Technology Devices International Limited, a well-known company in Scotland.
-eFabless uses this chip to program the housekeeping CPU on the board via a micro-USB cable coming from a PC.
+`pyftdi` is a Python package that works with a chip from FTDI, Future Technology Devices International Limited, a well-known company in Scotland. eFabless uses this chip to program the housekeeping CPU on the board via a micro-USB cable coming from a PC.
 
 ##### 4.7.3.2 Blinking light on Ubuntu and Lubuntu
 
@@ -496,48 +486,25 @@ make: *** [Makefile:24: blink.elf] Error 127
 
 ### 5.1. Hackathons in Mexico and Armenia
 
-Why am I doing this independent evaluation? Because I want to integrate Tiny
-Tapeout and eFabless Caravel into [Verilog
-Meetups](https://verilog-meetup.com) in Silicon Valley as well as some
-coming international hackathons, one in Mexico on February 14-15 and another
-in Armenia on March 13-14. The general format is outlined in *Chapter 2. The
-Usage Scenario*, as well as in [Between Physics and Programming: a Workshop
-on a Hardware Description Language SystemVerilog used to design the silicon
-chips](https://verilog-meetup.com/2024/10/23/between-physics-and-programming).
+Why am I doing this independent evaluation? Because I want to integrate Tiny Tapeout and eFabless Caravel into [Verilog Meetups](https://verilog-meetup.com) in Silicon Valley as well as some coming international hackathons, one in Mexico on February 14-15 and another in Armenia on March 13-14. The general format is outlined in *Chapter 2. The Usage Scenario*, as well as in [Between Physics and Programming: a Workshop on a Hardware Description Language SystemVerilog used to design the silicon chips](https://verilog-meetup.com/2024/10/23/between-physics-and-programming).
 
-For the event in Mexico we have a reasonably working variant of the Tiny Tapeout template,
-[https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup](https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup).
+For the event in Mexico we have a reasonably working variant of the Tiny Tapeout template, [https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup](https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup).
 
-For the event in Armenia I want to prepare a template based on Caravel-Mini.
-The good news is that the basic flow is kind of working:
+For the event in Armenia I want to prepare a template based on Caravel-Mini. The good news is that the basic flow is kind of working:
 
-1. I can run RTL-to-GDSII on Lubuntu, get GDSII files, the area and timing
-reports. Open Lane is not as robust as Synopsys and Cadence, plus I read it
-has some issues with memory inferencing, but I can live with that.
+1. I can run RTL-to-GDSII on Lubuntu, get GDSII files, the area and timing reports. Open Lane is not as robust as Synopsys and Cadence, plus I read it has some issues with memory inferencing, but I can live with that.
 
-2. I can install the RISC-V toolchain and build some custom C programs that
-control the design in Caravel-Mini SoC.
+2. I can install the RISC-V toolchain and build some custom C programs that control the design in Caravel-Mini SoC.
 
 3. I can plug the board into a computer's USB port and program it with my executable.
 
-I don't like how the RTL verification is organized but I can do this part
-outside the Caravel framework. The only thing I need to do urgently is to
-create some glue Verilog code to put all the student designs under one
-Caravel-Mini wrapper. In a similar way to Tiny Tapeout, but without
-hardening each student's design individually. Let them learn teamwork, just
-what we have in electronic companies.
+I don't like how the RTL verification is organized but I can do this part outside the Caravel framework. The only thing I need to do urgently is to create some glue Verilog code to put all the student designs under one Caravel-Mini wrapper. In a similar way to Tiny Tapeout, but without hardening each student's design individually. Let them learn teamwork, just what we have in electronic companies.
 
-After this exercise I can make 30 bootable SSDs with Lubuntu and our variant
-of Caravel-Mini infrastructure, get some Gowin FPGA boards for the first
-part of the hackathon, drive to San Francisco International, then fly to
-Yerevan, Armenia to test it as a pilot project. If the Verilog glue code
-part does not work for some reason, my fall-back plan is Tiny Tapeout.
+After this exercise I can make 30 bootable SSDs with Lubuntu and our variant of Caravel-Mini infrastructure, get some Gowin FPGA boards for the first part of the hackathon, drive to San Francisco International, then fly to Yerevan, Armenia to test it as a pilot project. If the Verilog glue code part does not work for some reason, my fall-back plan is Tiny Tapeout.
 
 ### 5.2. Updating the materials
 
-Based on the outcome of hackathons in Mexico and Armenia,
-we plan to solidify all the materials to clone this event in other places.
-There is interest in ASIC and FPGA in many other places, even Nepal, Kenya and Bangladesh.
+Based on the outcome of hackathons in Mexico and Armenia, we plan to solidify all the materials to clone this event in other places. There is interest in ASIC and FPGA in many other places, even Nepal, Kenya and Bangladesh.
 
 Some examples of the previous materials:
 
@@ -547,8 +514,7 @@ Some examples of the previous materials:
 
 3. [Slides from a seminar in hardware AI accelerators in Moscow back in 2021](https://bit.ly/startupvillage2021panchul)
 
-We plan to create videos in Mexico similar to the Verilog Meetup in LA but will all the practical training details.
-Here is a short promotional video from the seminar in LA:
+We plan to create videos in Mexico similar to the Verilog Meetup in LA but will all the practical training details. Here is a short promotional video from the seminar in LA:
 
 https://youtu.be/tyAGoEJCG14
 
