@@ -306,6 +306,110 @@ Note that the following scenario pass without issues for full Caravel:
 4. MacOS, `make create-spef-mapping`
 5. Windows WSL, both `make create-spef-mapping` and `make extract-parasitics`
 
+### 4.7. Step 7. Working with chipIgnite demo / evaluation / development board
+
+#### 4.7.1. Getting the board and soldering the header
+
+I got a chipIgnite Demo Board for $120 from the [eFabless store](https://store.efabless.com/products/chipignite-demo-board). The board included a daughter card with a Caravel chip manufactured with a counter example.  The platform included a housekeeping RISC-V core with a Wishbone interface to the design, Logic Analyzer wires and GPIO.
+
+I soldered headers to the board and made a [post on social media](https://www.linkedin.com/feed/update/urn:li:activity:7282395612354945025/) with the following video.
+
+https://youtube.com/shorts/i3fwfOEqwTQ?si=ilHzPXiuD4drYarJ
+
+#### 4.7.2. Getting the board documentation
+
+Before doing any experiments I got the documentation called [Efabless Caravel “harness” SoC](https://caravel-harness.readthedocs.io/en/latest/index.html).
+The document is a relatively easy read, it outlines the registers you can set in a C program running on a housekeeping RISC-V core.
+If you have ever worked with microcontrollers and used embedded ARM, MIPS or RISC-V toolchains, there is nothing unexpected here.
+
+The fact that this board is programmable in C allows to add the exercises with this board to an embedded programming class.
+The students can try hardware-software interfaces at the barebone level.
+
+#### 4.7.3. Running a precompiled test
+
+You don't need to install the RISC-V toolchain to check the board is working.
+You can clone a GitHub repo [efabless/caravel_board](https://github.com/efabless/caravel_board)
+and use the precompiled elf executables to run a blinking light example.
+
+##### 4.7.3.1 Blinking light on Simply Linux
+
+The commands in README.md file in the repo use incorrect path, robably they forgot to update the README.md file.
+However the following worked right away:
+
+```bash
+git clone https://github.com/efabless/caravel_board.git
+cd caravel_board/firmware/chipignite/blink
+pip3 install pyftdi
+make flash
+```
+
+`pyftdi` is a Python package that works with a chip from FTDI, Future Technology Devices International Limited, a well-known company in Scotland.
+eFabless uses this chip to program the housekeeping CPU on the board via a micro-USB cable coming from a PC.
+
+##### 4.7.3.2 Blinking light on Ubuntu and Lubuntu
+
+When I tried to run the same command on Ubuntu, I got the following error message:
+
+```bash
+pip3 install pyftdi
+```
+
+```
+error: externally-managed-environment
+
+× This environment is externally managed
+╰─> To install Python packages system-wide, try brew install
+    xyz, where xyz is the package you are trying to
+    install.
+
+    If you wish to install a Python library that isn't in Homebrew,
+    use a virtual environment:
+
+    python3 -m venv path/to/venv
+    source path/to/venv/bin/activate
+    python3 -m pip install xyz
+
+    If you wish to install a Python application that isn't in Homebrew,
+    it may be easiest to use 'pipx install xyz', which will manage a
+    virtual environment for you. You can install pipx with
+
+    brew install pipx
+
+    You may restore the old behavior of pip by passing
+    the '--break-system-packages' flag to pip, or by adding
+    'break-system-packages = true' to your pip.conf file. The latter
+    will permanently disable this error.
+
+    If you disable this error, we STRONGLY recommend that you additionally
+    pass the '--user' flag to pip, or set 'user = true' in your pip.conf
+    file. Failure to do this can result in a broken Homebrew installation.
+
+    Read more about this behavior here: <https://peps.python.org/pep-0668/>
+
+note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, b
+hint: See PEP 668 for the detailed specification.
+```
+
+I followed the instructions and the following sequence worked:
+
+```bash
+python3 -m venv my-venv
+my-venv/bin/pip install pyftdi
+source my-venv/bin/activate
+make flash
+```
+
+##### 4.7.3.3 Unsuccessfull blinking light on Windows WSL
+
+##### 4.7.3.4 Unsuccessfull blinking light on MacOS
+
+
+
+
+
+##### 4.7.3.2 Blinking light on Ubuntu, Lubuntu and Simply Linux
+
+
 
 
 [verilog@host-15 blink]$ make clean flash
