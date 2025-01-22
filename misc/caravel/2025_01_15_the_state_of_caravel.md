@@ -404,7 +404,8 @@ make flash
 The most annoying thing for me when using virtual machines under Windows is dealing with COM ports. It all started 10 years ago when I visited Moscow State University to run a seminar on behalf of the US MIPS Technologies / British Imagination Technologies. The local folks in Moscow decided to use some VM (I believe it was VirtualBox) to run Altera Quartus and upload the designs to FPGA boards using USB Blaster. It did not work on some machines and required additional manipulations periodically.
 
 Windows Subsystem Linux (WSL) is more robust but is also annoying. You have to start at least two terminals, Admin PowerShell and WSL, and perform the following Voodoo act. In Russia they call it "tanetz s bubnami" or "dance with tambourines", referring to a ritual performed by a shaman in Siberia.
-This dance is well-documented by Microsoft in the instruction at [https://learn.microsoft.com/en-us/windows/wsl/connect-usb](https://learn.microsoft.com/en-us/windows/wsl/connect-usb), but be aware that if you try to Google it, the search may direct you to some obsolete instructions for WSL 1 which do not work for the modern WSL 2.
+
+This dance is well-documented by Microsoft in the instruction at [https://learn.microsoft.com/en-us/windows/wsl/connect-usb](https://learn.microsoft.com/en-us/windows/wsl/connect-usb), but be aware that if you try to Google it, the search may direct you to some obsolete instructions for WSL 1 which do not work for the modern WSL 2. In Russia they call it "a Susanin act" referring to a Russian hero Ivan Susanin who confused Polish troops back 18th Century so they got drowned in the swamp instead of proceeding to the battlefield.
 
 Just a couple of screenshots to illustrate the process:
 
