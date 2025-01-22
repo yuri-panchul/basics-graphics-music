@@ -9,6 +9,7 @@ This text is a mix of my thoughts on using Caravel and Open Lane together with a
 2. Running RTL-to-GDSII flow for eFabless examples.
 3. Running RTL and gate-level simulation for eFabless examples.
 4. Working with chipIgnite demo / evaluation / development board.
+5. Planning for the next steps: seminars with ASIC open-source tools in Mexico and Armenia.
 
 Let's start by defining a specific area where Caravel can be useful.
 
