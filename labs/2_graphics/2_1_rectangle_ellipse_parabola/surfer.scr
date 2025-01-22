@@ -1,0 +1,2 @@
+scope_add tb.i_display
+scope_select tb.i_lcd
