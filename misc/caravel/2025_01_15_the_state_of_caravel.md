@@ -333,7 +333,7 @@ and use the precompiled elf executables to run a blinking light example.
 
 ##### 4.7.3.1 Blinking light on Simply Linux
 
-The commands in README.md file in the repo use incorrect path, robably they forgot to update the README.md file.
+The commands in README.md file in the repo use incorrect path, probably they forgot to update the README.md file.
 However the following worked right away:
 
 ```bash
@@ -401,25 +401,58 @@ make flash
 
 ##### 4.7.3.3 Unsuccessfull blinking light on Windows WSL
 
+The most annoying thing for me when using virtual machines under Windows is dealing with COM ports. It all started 10 years ago when I visited Moscow State University to run a seminar on behalf of the US MIPS Technologies / British Imagination Technologies. The local folks in Moscow decided to use some VM (I believe it was VirtualBox) to run Altera Quartus and upload the designs to FPGA boards using USB Blaster. It did not work on some machines and required additional manipulations periodically.
+
+Windows Subsystem Linux (WSL) is more robust but is also annoying. You have to start at least two terminals, Admin PowerShell and WSL, and perform the following Voodoo act. In Russia they call it "tanetz s bubnami" or "dance with tambourines", referring to a ritual performed by a shaman in Siberia.
+This dance is well-documented by Microsoft in the instruction at [https://learn.microsoft.com/en-us/windows/wsl/connect-usb](https://learn.microsoft.com/en-us/windows/wsl/connect-usb), but be aware that if you try to Google it, the search may direct you to some obsolete instructions for WSL 1 which do not work for the modern WSL 2.
+
+Just a couple of screenshots to illustrate the process:
+
+`bind` in Windows Admin Power Shell:
+
+![`bind` in Windows Admin Power Shell](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/3_wsl_step_1_admin_power_shell_bind.png)
+
+`attach` in Windows Power Shell (not necessarily Admin):
+
+![`attach` in Windows Power Shell (not necessarily Admin)](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/4_wsl_step_2_power_shell_attach.png)
+
+Finally we have it inside the WSL 2 virtual machine:
+
+![Finally we have it inside WSL 2 virtual machine](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/5_wsl_step_3_ftdi_appears.png)
+
+I was doing the same thing when I was running the Gowin FPGA toolchain under WSL and it worked well, however with the Caravel board, it did not. There was some incompatibility or a bug related to Python scripts. Apparently, neither Docker nor Python virtual environments remedy the situation:
+
+![FTDI Python bug in Caravel script under Windows WSL](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/6_wsl_step_4_caravel_ftdi_script_bug.png)
+
 ##### 4.7.3.4 Unsuccessfull blinking light on MacOS
 
+#### 4.7.4. Modifying the test and building with RISC-V toolchain
 
+The only platform I was able to go all the way was Ubuntu. I was able to install the RISC-V toolchain, modify the code of the `blink` example by changing the time interval, build it, upload to the board and see the blinking pattern changing. I guess Lubuntu should work as well, but I did not try Lubuntu.
 
+All other platforms had issues. I had no problem installing the RISC-V toolchain under Windows WSL and MacOS but because of board programming script errors I could not test the results on the board.
 
+To build and install RISC-V toolchain under Windows WSL I did the following:
 
-##### 4.7.3.2 Blinking light on Ubuntu, Lubuntu and Simply Linux
+```bash
+git clone https://github.com/riscv/riscv-gnu-toolchain
+sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip python3-tomli libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
+./configure --prefix=/opt/riscv
+sudo make
+```
 
+The installation takes time but there are no issues. I had to use `sudo make` to install the toolchain in `/opt` directory, but if you install it into `$HOME` you can probably do this without sudo.
 
+Simply Linux 10.4 distribution has only 64-bit RISC-V toolchain package while the Caravel board requires 32-bit architecture support in the toolchain, i.e. `riscv32-unknown-elf-gcc -O0 -march=rv32i` or `riscv64-unknown-elf-gcc -O0 -march=rv32i`. I could probably build the 32-bit toolchain on Simply Linux 10.4 by myself, but I will let the maintainers of Simply Linux / ALT Linux to handle it.
 
-
+```
 [verilog@host-15 blink]$ make clean flash
 rm -f *.elf *.hex *.bin *.vvp *.vcd
 #/usr/local/bin/riscv32-unknown-elf-gcc -O0 -march=rv32i -Wl,-Bstatic,-T,../sections.lds,--strip-debug -ffreestanding -nostdlib -o blink.elf ../start.s ../print_io.c blink.c
 /usr/local/bin/riscv64-unknown-elf-gcc -I../ -I../generated/ -O0 -mabi=ilp32 -march=rv32i -D__vexriscv__ -Wl,-Bstatic,-T,../sections.lds,--strip-debug -ffreestanding -nostdlib -o blink.elf ../crt0_vex.S ../isr.c ../stub.c blink.c
 make: /usr/local/bin/riscv64-unknown-elf-gcc: No such file or directory
 make: *** [Makefile:24: blink.elf] Error 127
-
-
+```
 
 ## Appendix A.1. Ubuntu setup commands
 
