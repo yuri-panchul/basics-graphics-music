@@ -401,7 +401,7 @@ make flash
 
 ##### 4.7.3.3 Unsuccessfull blinking light on Windows WSL
 
-The most annoying thing for me when using virtual machines under Windows is dealing with COM ports. It all started 10 years ago when I visited Moscow State University to run a seminar on behalf of the US MIPS Technologies / British Imagination Technologies. The local folks in Moscow decided to use some VM (I believe it was VirtualBox) to run Altera Quartus and upload the designs to FPGA boards using USB Blaster. It did not work on some machines and required additional manipulations periodically.
+The most annoying thing for me when using virtual machines under Windows, is dealing with COM ports. It all started 10 years ago when I visited Moscow State University to run a seminar on behalf of the US MIPS Technologies / British Imagination Technologies. The local folks in Moscow decided to use some VM (I believe it was VirtualBox) to run Altera Quartus and upload the designs to FPGA boards using USB Blaster. It did not work on some machines and required additional manipulations periodically.
 
 Windows Subsystem Linux (WSL) is more robust but is also annoying. You have to start at least two terminals, Admin PowerShell and WSL, and perform the following Voodoo act. In Russia they call it "tanetz s bubnami" or "dance with tambourines", referring to a ritual performed by a shaman in Siberia.
 
@@ -490,6 +490,74 @@ rm -f *.elf *.hex *.bin *.vvp *.vcd
 make: /usr/local/bin/riscv64-unknown-elf-gcc: No such file or directory
 make: *** [Makefile:24: blink.elf] Error 127
 ```
+
+## 5. The Next Steps
+
+### 5.1. Hackathons in Mexico and Armenia
+
+Why am I doing this independent evaluation? Because I want to integrate Tiny
+Tapeout and eFabless Caravel into [Verilog
+Meetups](https://verilog-meetup.com) in Silicon Valley as well as some
+coming international hackathons, one in Mexico on February 14-15 and another
+in Armenia on March 13-14. The general format is outlined in *Chapter 2. The
+Usage Scenario*, as well as in [Between Physics and Programming: a Workshop
+on a Hardware Description Language SystemVerilog used to design the silicon
+chips](https://verilog-meetup.com/2024/10/23/between-physics-and-programming).
+
+For the event in Mexico we have a reasonably working variant of the Tiny Tapeout template,
+[https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup](https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup).
+
+For the event in Armenia I want to prepare a template based on Caravel-Mini.
+The good news is that the basic flow is kind of working:
+
+1. I can run RTL-to-GDSII on Lubuntu, get GDSII files, the area and timing
+reports. Open Lane is not as robust as Synopsys and Cadence, plus I read it
+has some issues with memory inferencing, but I can live with that.
+
+2. I can install the RISC-V toolchain and build some custom C programs that
+control the design in Caravel-Mini SoC.
+
+3. I can plug the board into a computer's USB port and program it with my executable.
+
+I don't like how the RTL verification is organized but I can do this part
+outside the Caravel framework. The only thing I need to do urgently is to
+create some glue Verilog code to put all the student designs under one
+Caravel-Mini wrapper. In a similar way to Tiny Tapeout, but without
+hardening each student's design individually. Let them learn the teamwork,
+just what we have in electronic companies.
+
+After this exercise I can make 30 bootable SSDs with Lubuntu and our variant
+of Caravel-Mini infrastructure, get some Gowin FPGA boards for the first
+part of the hackathon, drive to San Francisco International, then fly to
+Yerevan, Armenia to test it as a pilot project. If the Verilog glue code
+part does not work for some reason, my fall-back plan is Tiny Tapeout.
+
+### 5.2. Updating the matiarials
+
+Based on the outcome of hackathons in Mexico and Armenia,
+we plan to solidify all the materials to clone this event in other places.
+There is interest in ASIC and FPGA in many other places, even Nepal, Kenya and Bangladesh.
+
+Some examples of the previous materials:
+
+1. [Slides from the Verilog Meetup in Los Angeles back in August 2024](https://bit.ly/Verilog-Meetup-in-LA-2024-08-31)
+
+2. [Slides from a week-long seminar in Azerbaijan back in February 2024](https://bit.ly/ada-univ-sv-fpga-2024)
+
+3. [Slides from a seminar in hardware AI accelerators in Moscow back in 2021](https://bit.ly/startupvillage2021panchul)
+
+We plan to create videos in Mexico similar to the Verilog Meetup in LA but will all the practical training details.
+Here is a short promotional video from the seminar in LA:
+
+https://youtu.be/tyAGoEJCG14
+
+Here is the whole 3-hour-long recording:
+
+https://youtu.be/vTT7eRGGU6Q
+
+Thank you!
+
+Yuri Panchul 2025-01-22
 
 ## Appendix A.1. Ubuntu setup commands
 
