@@ -420,13 +420,40 @@ Finally we have it inside the WSL 2 virtual machine:
 
 ![Finally we have it inside WSL 2 virtual machine](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/5_wsl_step_3_ftdi_appears.png)
 
-I was doing the same thing when I was running the Gowin FPGA toolchain under WSL and it worked well, however with the Caravel board, it did not. There was some incompatibility or a bug related to Python scripts. Apparently, neither Docker nor Python virtual environments remedy the situation:
+I was doing the same thing when I was running the Gowin FPGA toolchain under WSL and it worked well, however with the Caravel board, it did not. There was some incompatibility or a bug related to Python scripts:
 
 ![FTDI Python bug in Caravel script under Windows WSL](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/6_wsl_step_4_caravel_ftdi_script_bug.png)
 
+Before running `make flash` I had to install *pyftdi*. Unlike regular Ubuntu it did not require a virtual environment under WSL Ubuntu:
+
+```bash
+pip install pyftdi
+```
+
 ##### 4.7.3.4 Unsuccessfull blinking light on MacOS
 
-#### 4.7.4. Modifying the test and building with RISC-V toolchain
+On MacOS *pyftdi* required a virtual environment again:
+
+```zsh
+python3 -m venv venv
+source venv/bin/activate
+python3 -m pip install pyftdi
+```
+
+Then I had the same bug as running `make flash` under Windows WSL. Apparently, neither Docker nor Python virtual environments remedy the situation:
+
+```
+(venv) yuri_panchul@Mac blink % make flash
+python3 ../util/caravel_hkflash.py blink.hex
+Traceback (most recent call last):
+  File "/Users/yuri_panchul/projects/caravel_board/firmware/chipignite/blink/../util/caravel_hkflash.py", line 22, in <module>
+    with HKSpi(uart_enable_mode=HKSpi.UART_DISABLE) as hk:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+I need some Pythonian to explain to me why I need venv under Ubuntu and MacOS, but don't need it under Windows WSL Ubuntu and Simply Linux.
+
+#### 4.7.4. Modifying the test, building it with RISC-V toolchain and running it on the board
 
 The only platform I was able to go all the way was Ubuntu. I was able to install the RISC-V toolchain, modify the code of the `blink` example by changing the time interval, build it, upload to the board and see the blinking pattern changing. I guess Lubuntu should work as well, but I did not try Lubuntu.
 
@@ -441,9 +468,18 @@ sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip py
 sudo make
 ```
 
-The installation takes time but there are no issues. I had to use `sudo make` to install the toolchain in `/opt` directory, but if you install it into `$HOME` you can probably do this without sudo.
+The installation on WSL took time but there were no issues. I had to use `sudo make` to install the toolchain in `/opt` directory, but if you install it into `$HOME` you can probably do this without sudo.
 
-Simply Linux 10.4 distribution has only 64-bit RISC-V toolchain package while the Caravel board requires 32-bit architecture support in the toolchain, i.e. `riscv32-unknown-elf-gcc -O0 -march=rv32i` or `riscv64-unknown-elf-gcc -O0 -march=rv32i`. I could probably build the 32-bit toolchain on Simply Linux 10.4 by myself, but I will let the maintainers of Simply Linux / ALT Linux to handle it.
+Installing RISC-V toolchain on MacOS was also easy using an instruction from [https://github.com/riscv-software-src/homebrew-riscv](https://github.com/riscv-software-src/homebrew-riscv):
+
+```zsh
+brew tap riscv-software-src/riscv
+brew install riscv-tools
+```
+
+Just as with WSL it took some significant time.
+
+Simply Linux 10.4 distribution had only 64-bit RISC-V toolchain package while the Caravel board required 32-bit architecture support in the toolchain, i.e. `riscv32-unknown-elf-gcc -O0 -march=rv32i` or `riscv64-unknown-elf-gcc -O0 -march=rv32i`. I could probably build the 32-bit toolchain on Simply Linux 10.4 by myself, but I will let the maintainers of Simply Linux / ALT Linux to handle it.
 
 ```
 [verilog@host-15 blink]$ make clean flash
