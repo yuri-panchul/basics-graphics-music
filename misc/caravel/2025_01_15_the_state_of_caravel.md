@@ -414,7 +414,7 @@ Just a couple of screenshots to illustrate the process:
 
 `attach` in Windows Power Shell (not necessarily Admin):
 
-![`attach` in Windows Power Shell (not necessarily Admin)](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/4_wsl_step_2_power_shell_attach.
+![`attach` in Windows Power Shell (not necessarily Admin)](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/4_wsl_step_2_power_shell_attach.png)
 
 Finally we have it inside the WSL 2 virtual machine:
 
@@ -422,7 +422,7 @@ Finally we have it inside the WSL 2 virtual machine:
 
 I was doing the same thing when I was running the Gowin FPGA toolchain under WSL and it worked well, however with the Caravel board, it did not. There was some incompatibility or a bug related to Python scripts. Apparently, neither Docker nor Python virtual environments remedy the situation:
 
-![FTDI Python bug in Caravel script under Windows WSL](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/6_wsl_step_4_caravel_ftdi_script_bug
+![FTDI Python bug in Caravel script under Windows WSL](https://raw.githubusercontent.com/yuri-panchul/basics-graphics-music/refs/heads/main/misc/caravel/6_wsl_step_4_caravel_ftdi_script_bug.png)
 
 ##### 4.7.3.4 Unsuccessfull blinking light on MacOS
 
