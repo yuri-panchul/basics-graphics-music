@@ -523,8 +523,8 @@ I don't like how the RTL verification is organized but I can do this part
 outside the Caravel framework. The only thing I need to do urgently is to
 create some glue Verilog code to put all the student designs under one
 Caravel-Mini wrapper. In a similar way to Tiny Tapeout, but without
-hardening each student's design individually. Let them learn the teamwork,
-just what we have in electronic companies.
+hardening each student's design individually. Let them learn teamwork, just
+what we have in electronic companies.
 
 After this exercise I can make 30 bootable SSDs with Lubuntu and our variant
 of Caravel-Mini infrastructure, get some Gowin FPGA boards for the first
@@ -532,7 +532,7 @@ part of the hackathon, drive to San Francisco International, then fly to
 Yerevan, Armenia to test it as a pilot project. If the Verilog glue code
 part does not work for some reason, my fall-back plan is Tiny Tapeout.
 
-### 5.2. Updating the matiarials
+### 5.2. Updating the materials
 
 Based on the outcome of hackathons in Mexico and Armenia,
 we plan to solidify all the materials to clone this event in other places.
