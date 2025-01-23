@@ -1,5 +1,7 @@
 `include "config.svh"
 
+    // Shows the image on the VGA screen using signal lines in Wave Analyzer
+
 module tb;
 
     timeunit      1ns;
@@ -72,7 +74,9 @@ module tb;
 
     );
 
-    assign  pixel = |LCD_G;
+    // We output all the green pixels to signal lines in Wave Analyzer
+
+    assign  pixel = |LCD_R; // You can try it |LCD_G or |LCD_B or a mix of them
 
     //------------------------------------------------------------------------
 
@@ -88,6 +92,8 @@ module tb;
     );
 
     //------------------------------------------------------------------------
+
+    // We output pixels to signal lines in Wave Analyzer
 
     tb_lcd_display        i_display
     (
@@ -141,7 +147,7 @@ module tb;
 
         // Based on timescale is 1 ns / 1 ps
 
-        # 0.0002s
+        # 0.0001740s  // We simulate until the end of the first frame
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;
@@ -151,6 +157,8 @@ module tb;
     end
 
 endmodule
+
+    // Scan and Sync signal generator for VGA screen
 
 module tb_lcd_480_272
 (
@@ -163,57 +171,58 @@ module tb_lcd_480_272
     output [8:0] y
 );
 
-    // Horizen count to Hsync, then next Horizen line.
+    // Calculation of visible, invisible pixel fields and synchronization signals
 
     parameter       H_Pixel_Valid    = 16'd480;
     parameter       H_FrontPorch     = 16'd50;
     parameter       H_BackPorch      = 16'd30;
-
     parameter       PixelForHS       = H_Pixel_Valid + H_FrontPorch + H_BackPorch;
-
     parameter       V_Pixel_Valid    = 16'd272;
     parameter       V_FrontPorch     = 16'd20;
     parameter       V_BackPorch      = 16'd5;
-
     parameter       PixelForVS       = V_Pixel_Valid + V_FrontPorch + V_BackPorch;
 
-    // Horizen pixel count
+    // Pixel counter
 
-    reg         [15:0]  H_PixelCount;
-    reg         [15:0]  V_PixelCount;
+    logic   [15:0]  H_PixelCount;
+    logic   [15:0]  V_PixelCount;
 
-    always @(  posedge PixelClk or posedge rst  )begin
-        if( rst ) begin
+    always_ff @ ( posedge PixelClk or posedge rst )begin
+        if ( rst ) begin
             V_PixelCount       <=  16'b0;
             H_PixelCount       <=  16'b0;
             end
-        else if(  H_PixelCount == PixelForHS ) begin
-            V_PixelCount       <=  V_PixelCount + 4'd9;
+        else if ( H_PixelCount == PixelForHS ) begin   // We show every 9 lines using 
+            V_PixelCount       <= V_PixelCount + 4'd9; // signal lines in Wave Analyzer
             H_PixelCount       <=  16'b0;
             end
-        else if(  V_PixelCount >= PixelForVS ) begin
+        else if ( V_PixelCount >= PixelForVS ) begin
             V_PixelCount       <=  16'b0;
             H_PixelCount       <=  16'b0;
             end
         else begin
-            V_PixelCount       <=  V_PixelCount ;
-            H_PixelCount       <=  H_PixelCount + 1'b1;
+            V_PixelCount       <= V_PixelCount ;
+            H_PixelCount       <= H_PixelCount + 1'b1;
         end
     end
 
-    // SYNC-DE MODE
+    // Synchronization signals
 
     assign  LCD_HSYNC = H_PixelCount   <= ( PixelForHS - H_FrontPorch ) ? 1'b0 : 1'b1;
-
     assign  LCD_VSYNC = V_PixelCount   <  ( PixelForVS )  ? 1'b0 : 1'b1;
+    assign  LCD_DE    = ( H_PixelCount >= H_BackPorch ) && 
+                        ( H_PixelCount <= H_Pixel_Valid + H_BackPorch ) &&
+                        ( V_PixelCount >= V_BackPorch ) &&
+                        ( V_PixelCount <= V_Pixel_Valid + V_BackPorch ) && PixelClk;
 
-    assign  LCD_DE =    ( H_PixelCount >= H_BackPorch ) && ( H_PixelCount <= H_Pixel_Valid + H_BackPorch ) &&
-                        ( V_PixelCount >= V_BackPorch ) && ( V_PixelCount <= V_Pixel_Valid + V_BackPorch ) && PixelClk;
+    // Current pixel position
 
     assign x = 9' (H_PixelCount - H_BackPorch);
     assign y = 9' (V_PixelCount - V_BackPorch);
 
 endmodule
+
+    // Shows the image on the VGA screen using signal lines in Wave Analyzer
 
 module tb_lcd_display
 (
