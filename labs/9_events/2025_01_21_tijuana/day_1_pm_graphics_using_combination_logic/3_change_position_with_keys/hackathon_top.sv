@@ -24,6 +24,10 @@ module hackathon_top
     output logic [4:0] blue
 );
 
+    wire [8:0] dx = key [0] ? 100 : 0;
+
+    logic [8:0] dy;
+
     always_comb
     begin
         red   = 0;
@@ -32,13 +36,15 @@ module hackathon_top
 
         // START_SOLUTION
 
-        if (x > 100 & x < 300 & y > 50 & y < 100)
+        dy = key [7:1];
+
+        if (x > 100 & x - dx < 300 & y > 50 & y < 100)
             red = 31;
 
-        if (x > 150 & x < 350 & y > 70 & y < 120)
+        if (x > 150 & x + dx < 350 & y > 70 & y < 120)
             green = 63;
 
-        if (x > 200 & x < 400 & y > 90 & y < 140)
+        if (x > 200 & x < 400 & y - dy > 90 & y - dy < 140)
             blue = 31;
 
         // END_SOLUTION
