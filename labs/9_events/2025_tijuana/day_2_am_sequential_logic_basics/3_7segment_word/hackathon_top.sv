@@ -30,7 +30,7 @@ module hackathon_top
 
     always_ff @ (posedge clock)
       if (reset)
-        shift_reg <= 1;
+        shift_reg <= 8'b00000001;
       else
         shift_reg <= { shift_reg [0], shift_reg [7:1] };
 

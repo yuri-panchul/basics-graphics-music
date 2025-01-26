@@ -63,8 +63,8 @@ module hackathon_top
     always_comb
     begin
         case (sel)
-        1'b1: led [3] = a;
-        1'b0: led [3] = b;
+        1: led [3] = a;
+        0: led [3] = b;
         endcase
     end
 
@@ -80,8 +80,8 @@ module hackathon_top
 
     always_comb
         case (sel)
-        1'b1: led [5] = a;
-        1'b0: led [5] = b;
+        1: led [5] = a;
+        0: led [5] = b;
         endcase
 
     //------------------------------------------------------------------------
@@ -100,6 +100,8 @@ module hackathon_top
     // without using "?" operation, "if", "case" or a bit selection.
     // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
+    /* TODO REMOVE ANSWER
     assign led [7] = (a & sel) | (b & ~ sel);
+    */
 
 endmodule

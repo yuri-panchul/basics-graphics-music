@@ -37,6 +37,15 @@ module hackathon_top
     wire enable = (counter [22:0] == 0);
     // Try different slices here, for example "counter [20:0] == 0"
 
+    // Alternatively you can instantiate strobe generator:
+
+    /*
+    wire enable;
+
+    strobe_gen # (.clk_mhz (27), .strobe_hz (10))
+    i_strobe_gen (.clk (clock), .rst (reset), .strobe (enable));
+    */
+
     //------------------------------------------------------------------------
 
     wire button_on = | key;
@@ -45,7 +54,7 @@ module hackathon_top
 
     always_ff @ (posedge clock)
         if (reset)
-            shift_reg <= 1;
+            shift_reg <= 8'b11111111;
         else if (enable)
             shift_reg <= { button_on, shift_reg [7:1] };
             // Alternatively you can write:

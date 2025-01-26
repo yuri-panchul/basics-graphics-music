@@ -32,7 +32,8 @@ module hackathon_top
     //  e     c     1     0
     //  |     |     |      
     //   --d--  h      0    0
-typedef enum bit [7:0]
+
+    typedef enum bit [7:0]
     {
         //         abcd efgh
         R     = 8'b1100_1100,  // This means "8-bit binary number"
@@ -48,8 +49,8 @@ typedef enum bit [7:0]
     }
     seven_seg_encoding_e;
 
-    //assign abcdefgh = key [0] ? P : R;
-    //assign digit    = key [1] ? 2'b10 : 2'b01;
+    assign abcdefgh = key [0] ? P : R;
+    assign digit    = key [1] ? 2'b10 : 2'b01;
 
     // Exercise 1: Display the first letters
     // of your first name and last name instead.
@@ -70,7 +71,7 @@ typedef enum bit [7:0]
     // Exercise 2: Display letters of a 4-character word
     // using this code to display letter of FPGA as an example
 
-    
+/*    
     seven_seg_encoding_e letter;
 
     always_comb
@@ -84,4 +85,6 @@ typedef enum bit [7:0]
 
     assign abcdefgh = letter;
     assign digit    = key;
+*/
+
 endmodule
