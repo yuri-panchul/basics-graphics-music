@@ -26,13 +26,20 @@ module hackathon_top
 
     //------------------------------------------------------------------------
 
-    logic [7:0] shift_reg;
+    wire update_ring;
+
+    strobe_gen # (.clk_mhz (27), .strobe_hz (200))
+    i_strobe_gen_1 (.clk (clock), .rst (reset), .strobe (update_ring));
+
+    //------------------------------------------------------------------------
+
+    logic [7:0] ring;
 
     always_ff @ (posedge clock)
       if (reset)
-        shift_reg <= 8'b00000001;
-      else
-        shift_reg <= { shift_reg [0], shift_reg [7:1] };
+        ring <= 8'b10000000;
+      else if (update_ring)
+        ring <= { ring [0], ring [7:1] };
 
     //------------------------------------------------------------------------
 
@@ -59,19 +66,26 @@ module hackathon_top
     seven_seg_encoding_e letter;
 
     always_comb
-      case (shift_reg)
-      4'b1000: letter = F;
-      4'b0100: letter = P;
-      4'b0010: letter = G;
-      4'b0001: letter = A;
-      default: letter = space;
-      endcase
+        case (ring)
+        8'b0000_1000: letter = F;
+        8'b0000_0100: letter = P;
+        8'b0000_0010: letter = G;
+        8'b0000_0001: letter = A;
+        default:      letter = space;
+        endcase
 
-    assign abcdefgh = letter;
-    assign digit    = shift_reg;
+    always_ff @ (posedge clock)
+        if (reset)
+        begin
+            abcdefgh <= space;
+            digit    <= 8'b0;
+        end
+        else
+        begin
+            abcdefgh <= letter;
+            digit    <= ring;
+        end
 
-    // Exercise 1: Put your name or another word to the display.
-
-    // Exercise 2: Make the word slowly moving across the display.
+    // Exercise: Put your name or another word to the display.
 
 endmodule
