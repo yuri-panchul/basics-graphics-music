@@ -26,6 +26,8 @@ module hackathon_top
 
     // Read the theory https://es.wikipedia.org/wiki/Multiplexor
 
+    //------------------------------------------------------------------------
+
     assign sel = key [2];
     assign a   = key [1];
     assign b   = key [0];
