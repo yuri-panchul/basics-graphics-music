@@ -56,8 +56,6 @@ module hackathon_top
     // Exercise 2: Display letters of a 4-character word
     // using this code to display letter of FPGA as an example
 
-    // START_SOLUTION
-
     seven_seg_encoding_e letter;
 
     always_comb
@@ -71,7 +69,5 @@ module hackathon_top
 
     assign abcdefgh = letter;
     assign digit    = key;
-
-    // END_SOLUTION
 
 endmodule
