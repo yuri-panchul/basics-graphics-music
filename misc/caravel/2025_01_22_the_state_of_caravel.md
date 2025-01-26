@@ -258,8 +258,6 @@ This result was also consistent for all platforms.
 
 `make_cocotb-verify-all-gl` target was mentioned in Caravel documentation, specifically [https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md](https://github.com/yuri-panchul/caravel_user_project_experiment/blob/main/docs/source/index.md) but it failed with a compilation error.
 
-TA data from a regular run rather than from make caravel-sta. However, I think if something does not work, it should be either debugged or removed from documentation.
-
 For the details see *Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.*
 
 ### 4.6. Step 6. Running other make targets
