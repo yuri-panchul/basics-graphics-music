@@ -40,6 +40,7 @@ module hackathon_top
         P     = 8'b1100_1110,
         E     = 8'b1001_1110,
         A     = 8'b1110_1110,
+
         F     = 8'b1000_1110,  // This means "8-bit binary number"
         G     = 8'b1011_1110,
         B     = 8'b0011_1110,
@@ -58,16 +59,6 @@ module hackathon_top
     // assign abcdefgh = ...
     // assign digit    = ...
     
-    /*
-    assign abcdefgh = key[3] ? P : (key[2] ? E : (key[1] ? R : (key[0] ? A : space)));
-    assign digit = (key[3]) ? 4'b1000 :   // se enciende 5
-               (key[2]) ? 4'b0100 :   // se enciende 6
-               (key[1]) ? 4'b0010 :   // se enciende 7
-               (key[0]) ? 4'b0001 :   // se enciende 8
-               4'b0000;               //apagar
-    */
-
-
     // Exercise 2: Display letters of a 4-character word
     // using this code to display letter of FPGA as an example
 

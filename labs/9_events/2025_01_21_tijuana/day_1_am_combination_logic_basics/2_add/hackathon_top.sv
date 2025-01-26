@@ -53,10 +53,11 @@ module hackathon_top
     //
     // assign led [7:6] = key [4] + key [0];
 
-    /*
-    TODO: REMOVE THE SOLUTION    
+    // START_SOLUTION
+
     assign led [7] = key [4] & key [0];
     assign led [6] = key [4] ^ key [0];
-    */
+
+    // END_SOLUTION
 
 endmodule
