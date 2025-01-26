@@ -69,6 +69,8 @@ module hackathon_top
 
     //------------------------------------------------------------------------
 
-    assign led = { 4'b0000, dec0, dec1, dec2, dec3 };
+    assign led = key [2] ? { dec3, dec2 } : { dec1, dec0 };
+
+    // Exercise: Change the code to decode 3-bit value to 8-bit vector
 
 endmodule
