@@ -54,8 +54,10 @@ module hackathon_top
     // 2. Two counters controlled by different keys
     // displayed in different groups of LEDs.
 
-    /*
+    // START_SOLUTION
 
+    /*
+    
     wire k = | key;  // Any key is on
 
     logic k_previous;
@@ -73,9 +75,8 @@ module hackathon_top
             led <= 0;
         else if (k_pressed)
             led <= led + 1;
-
     */
 
-endmodule
-    // START_SOLUTION
     // END_SOLUTION
+
+endmodule

@@ -101,10 +101,9 @@ module hackathon_top
             digit    <= 8'b10000000 >> i_digit;
         end
 
-    // Exercise 1: Put your name or another word to the display.
+    // Exercise: Make the word moving another direction
 
-    // Exercise 2: Make the word slowly moving across the display.
-
-endmodule
     // START_SOLUTION
     // END_SOLUTION
+
+endmodule

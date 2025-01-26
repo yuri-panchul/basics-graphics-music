@@ -43,6 +43,8 @@ module hackathon_top
         if (x > 150 & x < 350 & y > 70 & y < 120)
             green = 63;
 
+        // END_SOLUTION
+
         // 63 is the maximum 6-bit number, 6'b111111
 
         // Exercise 2: Add a blue rectangle

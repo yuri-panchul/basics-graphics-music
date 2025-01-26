@@ -28,7 +28,7 @@ module hackathon_top
 
     wire update_ring;
 
-    strobe_gen # (.clk_mhz (27), .strobe_hz (200))
+    strobe_gen # (.clk_mhz (27), .strobe_hz (200))  // Try changing strobe_hz
     i_strobe_gen_1 (.clk (clock), .rst (reset), .strobe (update_ring));
 
     //------------------------------------------------------------------------
@@ -88,6 +88,7 @@ module hackathon_top
 
     // Exercise: Put your name or another word to the display.
 
-endmodule
     // START_SOLUTION
     // END_SOLUTION
+
+endmodule
