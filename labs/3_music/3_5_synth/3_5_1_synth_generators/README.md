@@ -273,8 +273,8 @@ long bit(long val, byte bitnr) {
 
 /* Generate output from noise-waveform */
 void Noisewaveform {
-  long bit22;	/* Temp. to keep bit 22 */
-  long bit17;	/* Temp. to keep bit 17 */
+  long bit22; /* Temp. to keep bit 22 */
+  long bit17; /* Temp. to keep bit 17 */
 
   long reg= 0x7ffff8; /* Initial value of internal register*/
 

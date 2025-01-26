@@ -70,8 +70,8 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    // This is board-specific 
-    
+    // This is board-specific
+
     localparam shield_gpio_base = 3, // 3 is for Tang Nano 9K, but 36 is for Terasic DE10-Lite
                n_bulbs          = 2,
                w_bulbs          = $clog2 (n_bulbs + 1);

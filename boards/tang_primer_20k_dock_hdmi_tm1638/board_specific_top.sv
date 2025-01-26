@@ -322,7 +322,7 @@ module board_specific_top
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
         // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
-        // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but 
+        // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but
         // on-board amplifier LPA4809 needs enable signal PA_EN
 
         i2s_audio_out

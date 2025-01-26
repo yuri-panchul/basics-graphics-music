@@ -113,7 +113,7 @@ always_comb begin
 
         'd4: melody_rom = {1'b1, 4'd1, 4'd7, 2'd2};
         'd5: melody_rom = {1'b0, 4'd1, 4'd7, 2'd2};
-  
+
         'd6: melody_rom = {1'b1, 4'd1, 4'd3, 2'd2};
         'd7: melody_rom = {1'b1, 4'd1, 4'd10, 2'd2};
         'd8: melody_rom = {1'b1, 4'd1, 4'd7, 2'd2};

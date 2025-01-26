@@ -134,7 +134,7 @@ module lab_top
     assign up_data = up_data_const_array [up_data_index];
 
     //------------------------------------------------------------------------
-    
+
     gearbox_1_to_2 # ( .width (width) )
     i_gearbox12 ( .clk (slow_clk), .* );
 
@@ -157,7 +157,7 @@ module lab_top
 
     localparam sign_nothing = 8'b0000_0000;
 
-    always_comb 
+    always_comb
         if (       digit [2]
             | ( (| digit [1:0]) & ~ down_vld ))
             abcdefgh = sign_nothing;

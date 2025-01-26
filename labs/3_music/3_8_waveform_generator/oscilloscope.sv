@@ -42,7 +42,7 @@ module oscilloscope
     localparam signed [w_y-1:0] midy    = screen_height / 2 - 4;
 
     logic        [   15:0] prev_mic;
-    wire  signed [   15:0] mics = ($signed(mic) < mic_min) ? mic_min : 
+    wire  signed [   15:0] mics = ($signed(mic) < mic_min) ? mic_min :
                                  (($signed(mic) > mic_max) ? mic_max : mic);
     logic        [   18:0] counter;
     logic        [   18:0] distance;

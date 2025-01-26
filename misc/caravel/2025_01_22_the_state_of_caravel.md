@@ -53,7 +53,7 @@ Based on a rough estimation of 1:10 D-flip-flop and logic gates ratio in a typic
 
 ### 4.2. Step 2. Generating the baseline projects from the templates
 
-This step is straightforward. I generated two GitHub repos from eFabless templates: 
+This step is straightforward. I generated two GitHub repos from eFabless templates:
 
 * https://github.com/yuri-panchul/caravel_user_mini_experiment is generated from https://github.com/efabless/caravel_user_mini
 
@@ -865,43 +865,43 @@ make[1]: Entering directory '/home/verilog/projects/caravel_user_project_experim
 /home/verilog/projects/caravel_user_project_experiment/venv/bin/volare enable 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc
 Version 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc enabled for the sky130 PDK.
 # user_project_wrapper
-mkdir -p ./user_project_wrapper/runs/24_12_28_10_34 
+mkdir -p ./user_project_wrapper/runs/24_12_28_10_34
 rm -rf ./user_project_wrapper/runs/user_project_wrapper
 ln -s $(realpath ./user_project_wrapper/runs/24_12_28_10_34) ./user_project_wrapper/runs/user_project_wrapper
 docker run -it -u $(id -u $USER):$(id -g $USER) -v $(realpath /home/verilog/projects/caravel_user_project_experiment/..):$(realpath /home/verilog/projects/caravel_user_project_experiment/..) -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel -v /home/verilog/.ipm:/home/verilog/.ipm -v /home/verilog/projects/caravel_user_project_experiment/dependencies/openlane_src:/openlane -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper -e PDK_ROOT=/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -e PDK=sky130A -e MISMATCHES_OK=1 -e CARAVEL_ROOT=/home/verilog/projects/caravel_user_project_experiment/caravel -e OPENLANE_RUN_TAG=24_12_28_10_34 -e MCW_ROOT=/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper  \
-	efabless/openlane:2023.07.19-1 sh -c "flow.tcl -design $(realpath ./user_project_wrapper) -save_path $(realpath ..) -save -tag 24_12_28_10_34 -overwrite -ignore_mismatches"
-OpenLane 30ee1388932eb55a89ad84ee43997bfe3a386421
-All rights reserved. (c) 2020-2022 Efabless Corporation and contributors.
-Available under the Apache License, version 2.0. See the LICENSE file for more details.
-
-[36m[INFO]: Using configuration in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/config.json'...[39m
-[36m[INFO]: PDK Root: /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks[39m
-[36m[INFO]: Process Design Kit: sky130A[39m
-[36m[INFO]: Standard Cell Library: sky130_fd_sc_hd[39m
-[36m[INFO]: Optimization Standard Cell Library: sky130_fd_sc_hd[39m
-[36m[INFO]: Run Directory: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34[39m
-[36m[INFO]: Saving runtime environment...[39m
-[36m[INFO]: Preparing LEF files for the nom corner...[39m
-[36m[INFO]: Preparing LEF files for the min corner...[39m
-[36m[INFO]: Preparing LEF files for the max corner...[39m
-[STEP 1]
-[36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/logs/synthesis/1-synthesis.log)...[39m
-[31m[ERROR]: during executing yosys script /openlane/scripts/yosys/elaborate.tcl[39m
-[31m[ERROR]: Log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/logs/synthesis/1-synthesis.log[39m
-[31m[ERROR]: Last 10 lines:
-[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
-[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
-[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
-[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
-
-1. Executing Liberty frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../lib/user_proj_example.lib
-Imported 1 cell types from liberty file.
-
-2. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../verilog/gl/user_proj_example.v
-child killed: kill signal
-[39m
-[31m[ERROR]: Creating issue reproducible...[39m
-[36m[INFO]: Saving runtime environment...[39m
+    efabless/openlane:2023.07.19-1 sh -c "flow.tcl -design $(realpath ./user_project_wrapper) -save_path $(realpath ..) -save -tag 24_12_28_10_34 -overwrite -ignore_mismatches"
+OpenLane 30ee1388932eb55a89ad84ee43997bfe3a386421
+All rights reserved. (c) 2020-2022 Efabless Corporation and contributors.
+Available under the Apache License, version 2.0. See the LICENSE file for more details.
+
+[36m[INFO]: Using configuration in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/config.json'...[39m
+[36m[INFO]: PDK Root: /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks[39m
+[36m[INFO]: Process Design Kit: sky130A[39m
+[36m[INFO]: Standard Cell Library: sky130_fd_sc_hd[39m
+[36m[INFO]: Optimization Standard Cell Library: sky130_fd_sc_hd[39m
+[36m[INFO]: Run Directory: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34[39m
+[36m[INFO]: Saving runtime environment...[39m
+[36m[INFO]: Preparing LEF files for the nom corner...[39m
+[36m[INFO]: Preparing LEF files for the min corner...[39m
+[36m[INFO]: Preparing LEF files for the max corner...[39m
+[STEP 1]
+[36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/logs/synthesis/1-synthesis.log)...[39m
+[31m[ERROR]: during executing yosys script /openlane/scripts/yosys/elaborate.tcl[39m
+[31m[ERROR]: Log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/logs/synthesis/1-synthesis.log[39m
+[31m[ERROR]: Last 10 lines:
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Liberty frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../lib/user_proj_example.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../verilog/gl/user_proj_example.v
+child killed: kill signal
+[39m
+[31m[ERROR]: Creating issue reproducible...[39m
+[36m[INFO]: Saving runtime environment...[39m
 OpenLane TCL Issue Packager
 
 EFABLESS CORPORATION AND ALL AUTHORS OF THE OPENLANE PROJECT SHALL NOT BE HELD
@@ -915,29 +915,29 @@ AND ALL IT ENTAILS.
 Parsing config file(s)…
 Setting up /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/issue_reproducible…
 Done.
-[36m[INFO]: Reproducible packaged: Please tarball and upload '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/issue_reproducible' if you're going to submit an issue.[39m
-[31m[ERROR]: Step 1 (synthesis) failed with error:
--code 1 -level 0 -errorcode NONE -errorinfo {
-    while executing
-"throw_error"
-    (procedure "run_tcl_script" line 219)
-    invoked from within
-"run_tcl_script -tool yosys -no_consume {*}$args"
-    (procedure "run_yosys_script" line 2)
-    invoked from within
-"run_yosys_script $::env(SYNTH_SCRIPT) -indexed_log $arg_values(-indexed_log)"
-    (procedure "run_yosys" line 44)
-    invoked from within
-"run_yosys -indexed_log $log"
-    (procedure "run_synthesis" line 13)
-    invoked from within
-"run_synthesis"} -errorline 1[39m
-[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/results/final'...[39m
-[36m[INFO]: Generating final set of reports...[39m
-[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/reports/manufacturability.rpt'.[39m
-[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/reports/metrics.csv'.[39m
-[36m[INFO]: Saving runtime environment...[39m
-[31m[ERROR]: Flow failed.[39m
+[36m[INFO]: Reproducible packaged: Please tarball and upload '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/issue_reproducible' if you're going to submit an issue.[39m
+[31m[ERROR]: Step 1 (synthesis) failed with error:
+-code 1 -level 0 -errorcode NONE -errorinfo {
+    while executing
+"throw_error"
+    (procedure "run_tcl_script" line 219)
+    invoked from within
+"run_tcl_script -tool yosys -no_consume {*}$args"
+    (procedure "run_yosys_script" line 2)
+    invoked from within
+"run_yosys_script $::env(SYNTH_SCRIPT) -indexed_log $arg_values(-indexed_log)"
+    (procedure "run_yosys" line 44)
+    invoked from within
+"run_yosys -indexed_log $log"
+    (procedure "run_synthesis" line 13)
+    invoked from within
+"run_synthesis"} -errorline 1[39m
+[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/results/final'...[39m
+[36m[INFO]: Generating final set of reports...[39m
+[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/reports/manufacturability.rpt'.[39m
+[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_10_34/reports/metrics.csv'.[39m
+[36m[INFO]: Saving runtime environment...[39m
+[31m[ERROR]: Flow failed.[39m
 make[1]: *** [Makefile:80: user_project_wrapper] Error 255
 make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
 make: *** [Makefile:126: user_project_wrapper] Error 2
@@ -951,24 +951,24 @@ make user_project_wrapper
 
 ```
 . . . . . . . . . . . . . . .
-[STEP 1]
-[36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/logs/synthesis/1-synthesis.log)...[39m
-[31m[ERROR]: during executing yosys script /openlane/scripts/yosys/elaborate.tcl[39m
-[31m[ERROR]: Log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/logs/synthesis/1-synthesis.log[39m
-[31m[ERROR]: Last 10 lines:
-[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
-[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
-[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
-[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
-
-1. Executing Liberty frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../lib/user_proj_example.lib
-Imported 1 cell types from liberty file.
-
-2. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../verilog/gl/user_proj_example.v
-child killed: kill signal
-[39m
-[31m[ERROR]: Creating issue reproducible...[39m
-[36m[INFO]: Saving runtime environment...[39m
+[STEP 1]
+[36m[INFO]: Running Synthesis (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/logs/synthesis/1-synthesis.log)...[39m
+[31m[ERROR]: during executing yosys script /openlane/scripts/yosys/elaborate.tcl[39m
+[31m[ERROR]: Log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/logs/synthesis/1-synthesis.log[39m
+[31m[ERROR]: Last 10 lines:
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing Liberty frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../lib/user_proj_example.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/../../verilog/gl/user_proj_example.v
+child killed: kill signal
+[39m
+[31m[ERROR]: Creating issue reproducible...[39m
+[36m[INFO]: Saving runtime environment...[39m
 OpenLane TCL Issue Packager
 
 EFABLESS CORPORATION AND ALL AUTHORS OF THE OPENLANE PROJECT SHALL NOT BE HELD
@@ -982,29 +982,29 @@ AND ALL IT ENTAILS.
 Parsing config file(s)…
 Setting up /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/issue_reproducible…
 Done.
-[36m[INFO]: Reproducible packaged: Please tarball and upload '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/issue_reproducible' if you're going to submit an issue.[39m
-[31m[ERROR]: Step 1 (synthesis) failed with error:
--code 1 -level 0 -errorcode NONE -errorinfo {
-    while executing
-"throw_error"
-    (procedure "run_tcl_script" line 219)
-    invoked from within
-"run_tcl_script -tool yosys -no_consume {*}$args"
-    (procedure "run_yosys_script" line 2)
-    invoked from within
-"run_yosys_script $::env(SYNTH_SCRIPT) -indexed_log $arg_values(-indexed_log)"
-    (procedure "run_yosys" line 44)
-    invoked from within
-"run_yosys -indexed_log $log"
-    (procedure "run_synthesis" line 13)
-    invoked from within
-"run_synthesis"} -errorline 1[39m
-[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/results/final'...[39m
-[36m[INFO]: Generating final set of reports...[39m
-[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/reports/manufacturability.rpt'.[39m
-[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/reports/metrics.csv'.[39m
-[36m[INFO]: Saving runtime environment...[39m
-[31m[ERROR]: Flow failed.[39m
+[36m[INFO]: Reproducible packaged: Please tarball and upload '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/issue_reproducible' if you're going to submit an issue.[39m
+[31m[ERROR]: Step 1 (synthesis) failed with error:
+-code 1 -level 0 -errorcode NONE -errorinfo {
+    while executing
+"throw_error"
+    (procedure "run_tcl_script" line 219)
+    invoked from within
+"run_tcl_script -tool yosys -no_consume {*}$args"
+    (procedure "run_yosys_script" line 2)
+    invoked from within
+"run_yosys_script $::env(SYNTH_SCRIPT) -indexed_log $arg_values(-indexed_log)"
+    (procedure "run_yosys" line 44)
+    invoked from within
+"run_yosys -indexed_log $log"
+    (procedure "run_synthesis" line 13)
+    invoked from within
+"run_synthesis"} -errorline 1[39m
+[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/results/final'...[39m
+[36m[INFO]: Generating final set of reports...[39m
+[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/reports/manufacturability.rpt'.[39m
+[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/24_12_28_19_26/reports/metrics.csv'.[39m
+[36m[INFO]: Saving runtime environment...[39m
+[31m[ERROR]: Flow failed.[39m
 make[1]: *** [Makefile:80: user_project_wrapper] Error 255
 make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
 make: *** [Makefile:126: user_project_wrapper] Error 2
@@ -1018,48 +1018,48 @@ make user_project_wrapper
 
 ```
 . . . . . . . . . . . . . . .
-[STEP 25]
-[36m[INFO]: Running XOR on the layouts using KLayout (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log)...[39m
-[31m[ERROR]: during executing: "klayout -b -r /openlane/scripts/klayout/xor.drc -rd a=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.gds -rd b=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.klayout.gds -rd jobs=1 -rd rdb_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.xml -rd ignore=81/14 -rd rpt_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.rpt |& tee /dev/null /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log"[39m
-[31m[ERROR]: Exit code: 1[39m
-[31m[ERROR]: Last 10 lines:
-    Elapsed: 0.010s  Memory: 2169.00M
---- Running XOR for layer 67/44 ---
-"input" in: xor.drc:94
-    Polygons (raw): 7749766 (flat)  3222 (hierarchical)
-    Elapsed: 0.000s  Memory: 2169.00M
-"input" in: xor.drc:94
-    Polygons (raw): 15497204 (flat)  4116 (hierarchical)
-    Elapsed: 0.000s  Memory: 2169.00M
-"^" in: xor.drc:94
-child killed: kill signal
-[39m
-[31m[ERROR]: Step 25 (gds_klayout) failed with error:
--code 1 -level 0 -errorcode NONE -errorinfo {
-    while executing
-"throw_error"
-    (procedure "try_exec" line 17)
-    invoked from within
-"try_exec klayout  -b  -r $::env(SCRIPTS_DIR)/klayout/xor.drc  -rd a=$arg_values(-layout1)  -rd b=$arg_values(-layout2)  -rd jobs=$::env(KLAYOUT_XOR_TH..."
-    (procedure "run_klayout_gds_xor" line 23)
-    invoked from within
-"run_klayout_gds_xor"
-    (procedure "run_klayout_step" line 6)
-    invoked from within
-"run_klayout_step"} -errorline 1[39m
-[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/final'...[39m
-[36m[INFO]: Generating final set of reports...[39m
-[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/manufacturability.rpt'.[39m
-[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/metrics.csv'.[39m
-[36m[INFO]: Saving runtime environment...[39m
-[31m[ERROR]: Flow failed.[39m
-[36m[INFO]: The failure may have been because of the following warnings:[39m
-[WARNING]: Module sky130_fd_sc_hd__fill_1 blackboxed during sta
-[WARNING]: Module sky130_ef_sc_hd__decap_12 blackboxed during sta
-[WARNING]: Module sky130_fd_sc_hd__fill_2 blackboxed during sta
-[WARNING]: Module sky130_fd_sc_hd__tapvpwrvgnd_1 blackboxed during sta
-[WARNING]: VSRC_LOC_FILES is not defined. The IR drop analysis will run, but the values may be inaccurate.
-
+[STEP 25]
+[36m[INFO]: Running XOR on the layouts using KLayout (log: ../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log)...[39m
+[31m[ERROR]: during executing: "klayout -b -r /openlane/scripts/klayout/xor.drc -rd a=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.gds -rd b=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/signoff/user_project_wrapper.klayout.gds -rd jobs=1 -rd rdb_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.xml -rd ignore=81/14 -rd rpt_out=/home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/signoff/25-xor.rpt |& tee /dev/null /home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/logs/signoff/25-xor.log"[39m
+[31m[ERROR]: Exit code: 1[39m
+[31m[ERROR]: Last 10 lines:
+    Elapsed: 0.010s  Memory: 2169.00M
+--- Running XOR for layer 67/44 ---
+"input" in: xor.drc:94
+    Polygons (raw): 7749766 (flat)  3222 (hierarchical)
+    Elapsed: 0.000s  Memory: 2169.00M
+"input" in: xor.drc:94
+    Polygons (raw): 15497204 (flat)  4116 (hierarchical)
+    Elapsed: 0.000s  Memory: 2169.00M
+"^" in: xor.drc:94
+child killed: kill signal
+[39m
+[31m[ERROR]: Step 25 (gds_klayout) failed with error:
+-code 1 -level 0 -errorcode NONE -errorinfo {
+    while executing
+"throw_error"
+    (procedure "try_exec" line 17)
+    invoked from within
+"try_exec klayout  -b  -r $::env(SCRIPTS_DIR)/klayout/xor.drc  -rd a=$arg_values(-layout1)  -rd b=$arg_values(-layout2)  -rd jobs=$::env(KLAYOUT_XOR_TH..."
+    (procedure "run_klayout_gds_xor" line 23)
+    invoked from within
+"run_klayout_gds_xor"
+    (procedure "run_klayout_step" line 6)
+    invoked from within
+"run_klayout_step"} -errorline 1[39m
+[36m[INFO]: Saving current set of views in '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/results/final'...[39m
+[36m[INFO]: Generating final set of reports...[39m
+[36m[INFO]: Created manufacturability report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/manufacturability.rpt'.[39m
+[36m[INFO]: Created metrics report at '../home/verilog/projects/caravel_user_project_experiment/openlane/user_project_wrapper/runs/25_01_18_20_44/reports/metrics.csv'.[39m
+[36m[INFO]: Saving runtime environment...[39m
+[31m[ERROR]: Flow failed.[39m
+[36m[INFO]: The failure may have been because of the following warnings:[39m
+[WARNING]: Module sky130_fd_sc_hd__fill_1 blackboxed during sta
+[WARNING]: Module sky130_ef_sc_hd__decap_12 blackboxed during sta
+[WARNING]: Module sky130_fd_sc_hd__fill_2 blackboxed during sta
+[WARNING]: Module sky130_fd_sc_hd__tapvpwrvgnd_1 blackboxed during sta
+[WARNING]: VSRC_LOC_FILES is not defined. The IR drop analysis will run, but the values may be inaccurate.
+
 make[1]: *** [Makefile:80: user_project_wrapper] Error 255
 make[1]: Leaving directory '/home/verilog/projects/caravel_user_project_experiment/openlane'
 make: *** [Makefile:126: user_project_wrapper] Error 2
@@ -1078,7 +1078,7 @@ make[1]: *** No rule to make target 'cocotb-verify-counter_la_clk-rtl'.  Stop.
 make[1]: Leaving directory '/home/verilog/projects/caravel_user_mini_experiment'
 make: *** [Makefile:99: cocotb-verify-counter_la_clk-rtl] Error 2
 zzz_make_cocotb-verify-counter_la_reset
-Run tag: run_28_Dec_10_04_20_27 
+Run tag: run_28_Dec_10_04_20_27
 docker.io/efabless/dv:cocotb
      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
@@ -1087,14 +1087,14 @@ docker.io/efabless/dv:cocotb
 check update for docker image efabless/dv:cocotb.
 Start running test: [94m RTL-counter_la_reset [0m
 [96mCompiling as sim.vvp not found[0m
-┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                              
-┃ Total                ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                              
-┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                              
-│ 1                    │ 0      │ 1             │ 0             │ 0:00:04.16 │        │         │                                              
-│                      │        │               │               │            │        │         │                                              
-│ Test                 │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                              
-│ RTL-counter_la_reset │ done   │ 10:04:21(Sat) │ 10:04:25(Sat) │ 0:00:03.98 │ failed │ unknown │                                              
-└──────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                              
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Total                ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ 1                    │ 0      │ 1             │ 0             │ 0:00:04.16 │        │         │
+│                      │        │               │               │            │        │         │
+│ Test                 │ status │ start         │ end           │ duration   │ p/f    │ seed    │
+│ RTL-counter_la_reset │ done   │ 10:04:21(Sat) │ 10:04:25(Sat) │ 0:00:03.98 │ failed │ unknown │
+└──────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
 
 ```bash
@@ -1102,7 +1102,7 @@ make cocotb-verify-counter_la-rtl
 ```
 
 ```
-Run tag: run_28_Dec_10_04_13_42 
+Run tag: run_28_Dec_10_04_13_42
 docker.io/efabless/dv:cocotb
      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
@@ -1111,14 +1111,14 @@ docker.io/efabless/dv:cocotb
 check update for docker image efabless/dv:cocotb.
 Start running test: [94m RTL-counter_la [0m
 [96mCompiling as sim.vvp not found[0m
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                                    
-┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                                    
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                                    
-│ 1              │ 0      │ 1             │ 0             │ 0:00:04.09 │        │         │                                                    
-│                │        │               │               │            │        │         │                                                    
-│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                                    
-│ RTL-counter_la │ done   │ 10:04:14(Sat) │ 10:04:18(Sat) │ 0:00:03.90 │ failed │ unknown │                                                    
-└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                                    
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ 1              │ 0      │ 1             │ 0             │ 0:00:04.09 │        │         │
+│                │        │               │               │            │        │         │
+│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │
+│ RTL-counter_la │ done   │ 10:04:14(Sat) │ 10:04:18(Sat) │ 0:00:03.90 │ failed │ unknown │
+└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
 
 ```bash
@@ -1126,7 +1126,7 @@ make make_cocotb-verify-counter_wb
 ```
 
 ```
-Run tag: run_28_Dec_10_04_26_23 
+Run tag: run_28_Dec_10_04_26_23
 docker.io/efabless/dv:cocotb
      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
@@ -1135,14 +1135,14 @@ docker.io/efabless/dv:cocotb
 check update for docker image efabless/dv:cocotb.
 Start running test: [94m RTL-counter_wb [0m
 [96mCompiling as sim.vvp not found[0m
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                                    
-┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                                    
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                                    
-│ 1              │ 0      │ 1             │ 0             │ 0:00:04.21 │        │         │                                                    
-│                │        │               │               │            │        │         │                                                    
-│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                                    
-│ RTL-counter_wb │ done   │ 10:04:27(Sat) │ 10:04:31(Sat) │ 0:00:04.03 │ failed │ unknown │                                                    
-└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                                    
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ 1              │ 0      │ 1             │ 0             │ 0:00:04.21 │        │         │
+│                │        │               │               │            │        │         │
+│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │
+│ RTL-counter_wb │ done   │ 10:04:27(Sat) │ 10:04:31(Sat) │ 0:00:04.03 │ failed │ unknown │
+└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
 
 ## Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.
@@ -1201,28 +1201,28 @@ Start running test: [94m GL-counter_la_clk [0m
 
 ```
 docker run \
-	--rm \
-	-u $(id -u $USER):$(id -g $USER) \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
-	-v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
-	-v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
-	-v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
-	-w /home/verilog/projects/caravel_user_project_experiment \
-	efabless/timing-scripts:latest \
-	python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py \
-		-i ./verilog/gl/user_project_wrapper.v \
-		-o ./env/spef-mapping.tcl \
-		--pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A \
-		--macro-parent chip_core/mprj \
-		--project-root "/home/verilog/projects/caravel_user_project_experiment"
+    --rm \
+    -u $(id -u $USER):$(id -g $USER) \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
+    -v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
+    -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
+    -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+    -w /home/verilog/projects/caravel_user_project_experiment \
+    efabless/timing-scripts:latest \
+    python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py \
+        -i ./verilog/gl/user_project_wrapper.v \
+        -o ./env/spef-mapping.tcl \
+        --pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A \
+        --macro-parent chip_core/mprj \
+        --project-root "/home/verilog/projects/caravel_user_project_experiment"
 2024-12-28 19:58:27,529 | generate_spef_mapping | INFO | using project_root /home/verilog/projects/caravel_user_project_experiment
 2024-12-28 19:58:27,529 | generate_spef_mapping | INFO | getting pdk macros ..
 2024-12-28 19:58:28,655 | generate_spef_mapping | INFO | parsing netlist ./verilog/gl/user_project_wrapper.v ..
 2024-12-28 19:58:28,889 | generate_spef_mapping | INFO | comparing macros against pdk macros ..
 2024-12-28 19:58:28,890 | generate_spef_mapping | INFO | found netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v for macro user_proj_example
 2024-12-28 19:58:28,890 | generate_spef_mapping | INFO | parsing netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v ..
-2024-12-28 19:59:08,249 | verilog_parser | ERROR | 
+2024-12-28 19:59:08,249 | verilog_parser | ERROR |
  /----------------------------------------------------------------------------\
  |                                                                            |
  |  yosys -- Yosys Open SYnthesis Suite                                       |
@@ -1271,20 +1271,20 @@ make: *** [Makefile:382: create-spef-mapping] Error 1
 
 ```
 docker run \
-	--rm \
-	-u $(id -u $USER):$(id -g $USER) \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
-	-v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
-	-v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
-	-v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
-	-w /home/verilog/projects/caravel_user_project_experiment \
-	efabless/timing-scripts:latest \
-	python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
-		-i ./verilog/gl/user_project_wrapper.v \
-		-o ./tmp-macros-list \
-		--project-root "/home/verilog/projects/caravel_user_project_experiment" \
-		--pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
+    --rm \
+    -u $(id -u $USER):$(id -g $USER) \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
+    -v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
+    -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
+    -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+    -w /home/verilog/projects/caravel_user_project_experiment \
+    efabless/timing-scripts:latest \
+    python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
+        -i ./verilog/gl/user_project_wrapper.v \
+        -o ./tmp-macros-list \
+        --project-root "/home/verilog/projects/caravel_user_project_experiment" \
+        --pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
 Unable to find image 'efabless/timing-scripts:latest' locally
 latest: Pulling from efabless/timing-scripts
 c7bef7d09442: Pulling fs layer
@@ -1302,7 +1302,7 @@ Status: Downloaded newer image for efabless/timing-scripts:latest
 2024-12-28 19:57:00,713 |      get_macros |   INFO | comparing macros against pdk macros ..
 2024-12-28 19:57:00,714 |      get_macros |   INFO | found netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v for macro user_proj_example
 2024-12-28 19:57:00,715 |      get_macros |   INFO | parsing netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v ..
-2024-12-28 19:57:39,978 |  verilog_parser |  ERROR | 
+2024-12-28 19:57:39,978 |  verilog_parser |  ERROR |
  /----------------------------------------------------------------------------\
  |                                                                            |
  |  yosys -- Yosys Open SYnthesis Suite                                       |
@@ -1351,20 +1351,20 @@ make: *** [Makefile:402: extract-parasitics] Error 1
 
 ```
 docker run \
-		--rm \
-		-u $(id -u $USER):$(id -g $USER) \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment:/Users/yuri_panchul/projects/caravel_user_project_experiment \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/caravel:/Users/yuri_panchul/projects/caravel_user_project_experiment/caravel \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper:/Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts \
-		-w /Users/yuri_panchul/projects/caravel_user_project_experiment \
-		efabless/timing-scripts:latest \
-		python3 /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
-			-i ./verilog/gl/user_project_wrapper.v \
-			-o ./tmp-macros-list \
-			--project-root "/Users/yuri_panchul/projects/caravel_user_project_experiment" \
-			--pdk-path /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
+        --rm \
+        -u $(id -u $USER):$(id -g $USER) \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment:/Users/yuri_panchul/projects/caravel_user_project_experiment \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/caravel:/Users/yuri_panchul/projects/caravel_user_project_experiment/caravel \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper:/Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+        -w /Users/yuri_panchul/projects/caravel_user_project_experiment \
+        efabless/timing-scripts:latest \
+        python3 /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
+            -i ./verilog/gl/user_project_wrapper.v \
+            -o ./tmp-macros-list \
+            --project-root "/Users/yuri_panchul/projects/caravel_user_project_experiment" \
+            --pdk-path /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
 Unable to find image 'efabless/timing-scripts:latest' locally
 latest: Pulling from efabless/timing-scripts
 61b8fbdf0b15: Pulling fs layer
