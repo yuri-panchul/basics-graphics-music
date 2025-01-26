@@ -39,7 +39,7 @@ module hackathon_top
     assign led = counter [31:24];  // Try to put [23:16] here
 
     // assign led = counter >> 20;  // Try alternative way to shift the value
-    
+
     // Try to add "if (key)" after "else".
 
     // Exercise 2: Key-controlled counter.
@@ -57,7 +57,7 @@ module hackathon_top
     // START_SOLUTION
 
     /*
-    
+
     wire k = | key;  // Any key is on
 
     logic k_previous;

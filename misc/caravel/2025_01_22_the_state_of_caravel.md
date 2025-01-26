@@ -53,7 +53,7 @@ Based on a rough estimation of 1:10 D-flip-flop and logic gates ratio in a typic
 
 ### 4.2. Step 2. Generating the baseline projects from the templates
 
-This step is straightforward. I generated two GitHub repos from eFabless templates: 
+This step is straightforward. I generated two GitHub repos from eFabless templates:
 
 * https://github.com/yuri-panchul/caravel_user_mini_experiment is generated from https://github.com/efabless/caravel_user_mini
 
@@ -865,7 +865,7 @@ make[1]: Entering directory '/home/verilog/projects/caravel_user_project_experim
 /home/verilog/projects/caravel_user_project_experiment/venv/bin/volare enable 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc
 Version 78b7bc32ddb4b6f14f76883c2e2dc5b5de9d1cbc enabled for the sky130 PDK.
 # user_project_wrapper
-mkdir -p ./user_project_wrapper/runs/24_12_28_10_34 
+mkdir -p ./user_project_wrapper/runs/24_12_28_10_34
 rm -rf ./user_project_wrapper/runs/user_project_wrapper
 ln -s $(realpath ./user_project_wrapper/runs/24_12_28_10_34) ./user_project_wrapper/runs/user_project_wrapper
 docker run -it -u $(id -u $USER):$(id -g $USER) -v $(realpath /home/verilog/projects/caravel_user_project_experiment/..):$(realpath /home/verilog/projects/caravel_user_project_experiment/..) -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel -v /home/verilog/.ipm:/home/verilog/.ipm -v /home/verilog/projects/caravel_user_project_experiment/dependencies/openlane_src:/openlane -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper -e PDK_ROOT=/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -e PDK=sky130A -e MISMATCHES_OK=1 -e CARAVEL_ROOT=/home/verilog/projects/caravel_user_project_experiment/caravel -e OPENLANE_RUN_TAG=24_12_28_10_34 -e MCW_ROOT=/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper  \
@@ -1078,7 +1078,7 @@ make[1]: *** No rule to make target 'cocotb-verify-counter_la_clk-rtl'.  Stop.
 make[1]: Leaving directory '/home/verilog/projects/caravel_user_mini_experiment'
 make: *** [Makefile:99: cocotb-verify-counter_la_clk-rtl] Error 2
 zzz_make_cocotb-verify-counter_la_reset
-Run tag: run_28_Dec_10_04_20_27 
+Run tag: run_28_Dec_10_04_20_27
 docker.io/efabless/dv:cocotb
      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
@@ -1087,14 +1087,14 @@ docker.io/efabless/dv:cocotb
 check update for docker image efabless/dv:cocotb.
 Start running test: [94m RTL-counter_la_reset [0m
 [96mCompiling as sim.vvp not found[0m
-┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                              
-┃ Total                ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                              
-┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                              
-│ 1                    │ 0      │ 1             │ 0             │ 0:00:04.16 │        │         │                                              
-│                      │        │               │               │            │        │         │                                              
-│ Test                 │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                              
-│ RTL-counter_la_reset │ done   │ 10:04:21(Sat) │ 10:04:25(Sat) │ 0:00:03.98 │ failed │ unknown │                                              
-└──────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                              
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Total                ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ 1                    │ 0      │ 1             │ 0             │ 0:00:04.16 │        │         │
+│                      │        │               │               │            │        │         │
+│ Test                 │ status │ start         │ end           │ duration   │ p/f    │ seed    │
+│ RTL-counter_la_reset │ done   │ 10:04:21(Sat) │ 10:04:25(Sat) │ 0:00:03.98 │ failed │ unknown │
+└──────────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
 
 ```bash
@@ -1102,7 +1102,7 @@ make cocotb-verify-counter_la-rtl
 ```
 
 ```
-Run tag: run_28_Dec_10_04_13_42 
+Run tag: run_28_Dec_10_04_13_42
 docker.io/efabless/dv:cocotb
      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
@@ -1111,14 +1111,14 @@ docker.io/efabless/dv:cocotb
 check update for docker image efabless/dv:cocotb.
 Start running test: [94m RTL-counter_la [0m
 [96mCompiling as sim.vvp not found[0m
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                                    
-┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                                    
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                                    
-│ 1              │ 0      │ 1             │ 0             │ 0:00:04.09 │        │         │                                                    
-│                │        │               │               │            │        │         │                                                    
-│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                                    
-│ RTL-counter_la │ done   │ 10:04:14(Sat) │ 10:04:18(Sat) │ 0:00:03.90 │ failed │ unknown │                                                    
-└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                                    
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ 1              │ 0      │ 1             │ 0             │ 0:00:04.09 │        │         │
+│                │        │               │               │            │        │         │
+│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │
+│ RTL-counter_la │ done   │ 10:04:14(Sat) │ 10:04:18(Sat) │ 0:00:03.90 │ failed │ unknown │
+└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
 
 ```bash
@@ -1126,7 +1126,7 @@ make make_cocotb-verify-counter_wb
 ```
 
 ```
-Run tag: run_28_Dec_10_04_26_23 
+Run tag: run_28_Dec_10_04_26_23
 docker.io/efabless/dv:cocotb
      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
@@ -1135,14 +1135,14 @@ docker.io/efabless/dv:cocotb
 check update for docker image efabless/dv:cocotb.
 Start running test: [94m RTL-counter_wb [0m
 [96mCompiling as sim.vvp not found[0m
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓                                                    
-┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃                                                    
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩                                                    
-│ 1              │ 0      │ 1             │ 0             │ 0:00:04.21 │        │         │                                                    
-│                │        │               │               │            │        │         │                                                    
-│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │                                                    
-│ RTL-counter_wb │ done   │ 10:04:27(Sat) │ 10:04:31(Sat) │ 0:00:04.03 │ failed │ unknown │                                                    
-└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘                                                    
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Total          ┃ Passed ┃ Failed        ┃ Unknown       ┃ duration   ┃        ┃         ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ 1              │ 0      │ 1             │ 0             │ 0:00:04.21 │        │         │
+│                │        │               │               │            │        │         │
+│ Test           │ status │ start         │ end           │ duration   │ p/f    │ seed    │
+│ RTL-counter_wb │ done   │ 10:04:27(Sat) │ 10:04:31(Sat) │ 0:00:04.03 │ failed │ unknown │
+└────────────────┴────────┴───────────────┴───────────────┴────────────┴────────┴─────────┘
 ```
 
 ## Appendix D.2. Error running cocotb-based gate-level verification for the regular Caravel.
@@ -1222,7 +1222,7 @@ docker run \
 2024-12-28 19:58:28,889 | generate_spef_mapping | INFO | comparing macros against pdk macros ..
 2024-12-28 19:58:28,890 | generate_spef_mapping | INFO | found netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v for macro user_proj_example
 2024-12-28 19:58:28,890 | generate_spef_mapping | INFO | parsing netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v ..
-2024-12-28 19:59:08,249 | verilog_parser | ERROR | 
+2024-12-28 19:59:08,249 | verilog_parser | ERROR |
  /----------------------------------------------------------------------------\
  |                                                                            |
  |  yosys -- Yosys Open SYnthesis Suite                                       |
@@ -1302,7 +1302,7 @@ Status: Downloaded newer image for efabless/timing-scripts:latest
 2024-12-28 19:57:00,713 |      get_macros |   INFO | comparing macros against pdk macros ..
 2024-12-28 19:57:00,714 |      get_macros |   INFO | found netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v for macro user_proj_example
 2024-12-28 19:57:00,715 |      get_macros |   INFO | parsing netlist /home/verilog/projects/caravel_user_project_experiment/verilog/gl/user_proj_example.v ..
-2024-12-28 19:57:39,978 |  verilog_parser |  ERROR | 
+2024-12-28 19:57:39,978 |  verilog_parser |  ERROR |
  /----------------------------------------------------------------------------\
  |                                                                            |
  |  yosys -- Yosys Open SYnthesis Suite                                       |

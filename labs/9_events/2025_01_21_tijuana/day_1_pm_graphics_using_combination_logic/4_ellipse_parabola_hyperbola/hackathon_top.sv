@@ -26,10 +26,10 @@ module hackathon_top
     // START_SOLUTION
 
     //ellipse
-    localparam [9:0] a_menor = 100; 
-    localparam [9:0] a_mayor = 300;     
-    localparam [9:0] b_arriba = 50;      
-    localparam [9:0] b_abajo = 150; 
+    localparam [9:0] a_menor = 100;
+    localparam [9:0] a_mayor = 300;
+    localparam [9:0] b_arriba = 50;
+    localparam [9:0] b_abajo = 150;
     localparam [9:0] radio_a = (a_mayor-a_menor)/2;
     localparam [9:0] radio_b = (b_abajo-b_arriba)/2;
     localparam [9:0] a_centro = (a_mayor+a_menor)/2;
@@ -68,16 +68,16 @@ module hackathon_top
         if ((x >= a_menor) & (x <= a_mayor) & // Dentro del rango horizontal
             (y >= b_arriba) & (y <= b_abajo)// Dentro del rango vertical
             & ((term1 + term2) <= rhs))
-                red = 31; 
+                red = 31;
 
         //parabola
         //hacia arriba
         if ((y <= y_vertice) & (((y_vertice - y) * (4 * p_parabola)) >= ((x - x_vertice) * (x - x_vertice))))
-            blue = 31; 
+            blue = 31;
         /*
         //hacia arriba
         if ((y >= y_vertice) & (((y- y_vertice) * (4 * p_parabola)) >= ((x - x_vertice) * (x - x_vertice))))
-            blue = 31; 
+            blue = 31;
         */
         // Cálculos hyperbola
         x_diff2 = (x - x_centro) * (x - x_centro); // (x - x_centro)^2
@@ -86,15 +86,15 @@ module hackathon_top
         term2 = y_diff2 * (a_hiperbola * a_hiperbola); // (y - y_centro)^2 * a^2
         rhs = (a_hiperbola * a_hiperbola) * (b_hiperbola * b_hiperbola); // a^2 * b^2
          // Hipérbola horizontal
-         if (~((term1 - term2) >= rhs)) 
-            green = 61; 
-       
+         if (~((term1 - term2) >= rhs))
+            green = 61;
+
         //parabola
         /* para cara
         //hacia arriba
         if (((y >= y_vertice) & (((y- y_vertice) * (4 * p_parabola)) >= ((x - x_vertice) * (x - x_vertice))))& red ==31 )
-            blue = 31; 
-        
+            blue = 31;
+
         // Cálculos hyperbola
         x_diff2 = (x - x_centro) * (x - x_centro); // (x - x_centro)^2
         y_diff2 = (y - y_centro) * (y - y_centro); // (y - y_centro)^2
@@ -102,7 +102,7 @@ module hackathon_top
         term2 = y_diff2 * (a_hiperbola * a_hiperbola); // (y - y_centro)^2 * a^2
         rhs = (a_hiperbola * a_hiperbola) * (b_hiperbola * b_hiperbola); // a^2 * b^2
          // Hipérbola horizontal
-         if ((~((term1 - term2) >= rhs)) & red ==31 ) 
+         if ((~((term1 - term2) >= rhs)) & red ==31 )
             green = 61;
         */
     end

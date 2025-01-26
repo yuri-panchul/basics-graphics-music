@@ -1,4 +1,4 @@
-Using the labs/1_basic 
+Using the labs/1_basic
 
 There are differente exercises available
 

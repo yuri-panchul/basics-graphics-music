@@ -108,7 +108,7 @@ error ()
 
     # Alternative way to check for MacOS:
     # [ ${OSTYPE/[0-9]*/} = "darwin" ]
- 
+
     if    [  "$OSTYPE" = "linux-gnu" ]  \
        || [  "$OSTYPE" = "cygwin"    ]  \
        || [  "$OSTYPE" = "msys"      ]  \

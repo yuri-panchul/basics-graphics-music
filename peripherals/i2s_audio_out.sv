@@ -38,10 +38,10 @@ module i2s_audio_out
 );
 
     // Number of bits in one transmission during half a period of LRCLK
- 
+
     localparam W_OUT_VALUE = 32;
 
-    // Standard frequencies are 12.288 MHz, 3.072 MHz and 48 KHz. 
+    // Standard frequencies are 12.288 MHz, 3.072 MHz and 48 KHz.
     // We are using frequencies somewhat higher
     // but with the same relationship 256:64:1.
 

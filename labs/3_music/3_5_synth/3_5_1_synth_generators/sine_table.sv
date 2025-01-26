@@ -1,6 +1,6 @@
 module sine_table(
     input  logic [7:0] idx_i,
-    output logic [7:0] sine_o 
+    output logic [7:0] sine_o
 );
 
     always_comb begin
@@ -261,7 +261,7 @@ module sine_table(
            8'd253 : sine_o = 8'hFF;
            8'd254 : sine_o = 8'hFF;
            8'd255 : sine_o = 8'hFF;
-        endcase        
-    end    
+        endcase
+    end
 
 endmodule

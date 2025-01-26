@@ -47,7 +47,7 @@ module hackathon_top
         i_digit <= i_digit + 1;
 
     logic [2:0] offset;
-    
+
     always_ff @ (posedge clock)
       if (reset)
         offset <= 0;

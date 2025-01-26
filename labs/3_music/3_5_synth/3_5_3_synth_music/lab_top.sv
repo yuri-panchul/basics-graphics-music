@@ -74,7 +74,7 @@ module lab_top
     logic [1:0] octave; // THIRD, SECOND, FIRST, SMALL
     logic       enable;
 
-    melody_memory 
+    melody_memory
     #(
       .CLK_MHZ (clk_mhz),
       .BPM     (80)
@@ -83,7 +83,7 @@ module lab_top
     (
       .clk_i (clk),
       .rst_i (rst),
-      
+
       .note_o (note), // C, Cd, D, Dd, E, F, Fd, G, Gd, A, Ad, B
       .octave_o (octave), // THIRD, SECOND, FIRST, SMALL
       .enable_o (enable)

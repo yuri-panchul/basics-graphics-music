@@ -4,13 +4,13 @@ module melody_memory #(
 ) (
   input  logic    clk_i,
   input  logic    rst_i,
-  
+
   output logic [3:0] note_o, // C, Cd, D, Dd, E, F, Fd, G, Gd, A, Ad, B
   output logic [1:0] octave_o, // THIRD, SECOND, FIRST, SMALL
   output logic       enable_o
 );
 
-    // We use 1/8 part of beat as a unit to track time in this design 
+    // We use 1/8 part of beat as a unit to track time in this design
     localparam TPB = (CLK_MHZ * 30) * (1_000_000 / BPM);
 
     `include "music_imperial_march.svh"

@@ -20,7 +20,7 @@ module tone_sel
 
     localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4;
     localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 2 { 1'b0 } }, 1'b1 };
-    
+
     wire   [y_width - 1:0] tone_y [11:0];
     wire             [8:0] tone_x;
     wire             [8:0] tone_x_max [11:0];
@@ -33,7 +33,7 @@ module tone_sel
     logic  [y_width - 1:0] y_mod;
 
     always_ff @ (posedge clk or posedge reset)
-        if (reset) 
+        if (reset)
             clk_div <= '0;
         else
             clk_div <= clk_div + 1'b1;
@@ -92,7 +92,7 @@ generate
     table_52734_B  table_52734_B  ( .x(tone_x), .y(tone_y [11]), .x_max(tone_x_max [11]));
     end
     else
-    begin : clk_mhz_50    
+    begin : clk_mhz_50
     table_48828_C  table_48828_C  ( .x(tone_x), .y(tone_y [0] ), .x_max(tone_x_max [0] ));
     table_48828_Cs table_48828_Cs ( .x(tone_x), .y(tone_y [1] ), .x_max(tone_x_max [1] ));
     table_48828_D  table_48828_D  ( .x(tone_x), .y(tone_y [2] ), .x_max(tone_x_max [2] ));
@@ -106,7 +106,7 @@ generate
     table_48828_As table_48828_As ( .x(tone_x), .y(tone_y [10]), .x_max(tone_x_max [10]));
     table_48828_B  table_48828_B  ( .x(tone_x), .y(tone_y [11]), .x_max(tone_x_max [11]));
     end
-    
+
 endgenerate
 
 endmodule

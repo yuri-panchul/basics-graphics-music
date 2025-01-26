@@ -24,13 +24,13 @@ module hackathon_top
     output logic [4:0] blue
 );
     //   --a--       --1--
-    //  |     |     |      
+    //  |     |     |
     //  f     b     1     0
-    //  |     |     |      
+    //  |     |     |
     //   --g--       --1--
-    //  |     |     |      
+    //  |     |     |
     //  e     c     1     0
-    //  |     |     |      
+    //  |     |     |
     //   --d--  h      0    0
 
     typedef enum bit [7:0]

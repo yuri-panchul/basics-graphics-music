@@ -67,7 +67,7 @@ module lab_top
     // assign blue       = '0;
     assign sound      = '0;
     assign uart_tx    = '1;
-    
+
     logic                   white;
     assign red   = {w_red  {white}};
     assign green = {w_green{white}};
@@ -95,7 +95,7 @@ module lab_top
     // Another way:        micy = {mic[23], (mic[23]?~&mic[22:16]:|mic[22:16])? ~{(w_y-1){$signed(mic[23])}} : mic[15-:w_y-1]};
     wire         [w_x-1:0] cntx = counter[19-:w_x];
     wire                   cntx_in_buf = cntx < screen_width / 2;
-    
+
     // Excercise 1: Implement Zoom by x-axis with keys
     // Excercise 2: Optimize to reduce bits of bufy
     assign white = x <= vldx                            // Design practice: Check if element of bufy is initialized

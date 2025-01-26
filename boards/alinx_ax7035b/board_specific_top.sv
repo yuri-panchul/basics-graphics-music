@@ -82,7 +82,7 @@ module board_specific_top
     // Seven-segment display
 
     wire [7:0] abcdefgh;
-    wire [7:0] digit;     
+    wire [7:0] digit;
 
     `SWAP_BITS (SMG_Data, ~ abcdefgh);
     assign Scan_Sig = ~ digit;
