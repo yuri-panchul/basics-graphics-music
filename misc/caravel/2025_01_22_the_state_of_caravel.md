@@ -869,7 +869,7 @@ mkdir -p ./user_project_wrapper/runs/24_12_28_10_34
 rm -rf ./user_project_wrapper/runs/user_project_wrapper
 ln -s $(realpath ./user_project_wrapper/runs/24_12_28_10_34) ./user_project_wrapper/runs/user_project_wrapper
 docker run -it -u $(id -u $USER):$(id -g $USER) -v $(realpath /home/verilog/projects/caravel_user_project_experiment/..):$(realpath /home/verilog/projects/caravel_user_project_experiment/..) -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel -v /home/verilog/.ipm:/home/verilog/.ipm -v /home/verilog/projects/caravel_user_project_experiment/dependencies/openlane_src:/openlane -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper -e PDK_ROOT=/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks -e PDK=sky130A -e MISMATCHES_OK=1 -e CARAVEL_ROOT=/home/verilog/projects/caravel_user_project_experiment/caravel -e OPENLANE_RUN_TAG=24_12_28_10_34 -e MCW_ROOT=/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper  \
-	efabless/openlane:2023.07.19-1 sh -c "flow.tcl -design $(realpath ./user_project_wrapper) -save_path $(realpath ..) -save -tag 24_12_28_10_34 -overwrite -ignore_mismatches"
+    efabless/openlane:2023.07.19-1 sh -c "flow.tcl -design $(realpath ./user_project_wrapper) -save_path $(realpath ..) -save -tag 24_12_28_10_34 -overwrite -ignore_mismatches"
 OpenLane 30ee1388932eb55a89ad84ee43997bfe3a386421
 All rights reserved. (c) 2020-2022 Efabless Corporation and contributors.
 Available under the Apache License, version 2.0. See the LICENSE file for more details.
@@ -1201,21 +1201,21 @@ Start running test: [94m GL-counter_la_clk [0m
 
 ```
 docker run \
-	--rm \
-	-u $(id -u $USER):$(id -g $USER) \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
-	-v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
-	-v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
-	-v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
-	-w /home/verilog/projects/caravel_user_project_experiment \
-	efabless/timing-scripts:latest \
-	python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py \
-		-i ./verilog/gl/user_project_wrapper.v \
-		-o ./env/spef-mapping.tcl \
-		--pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A \
-		--macro-parent chip_core/mprj \
-		--project-root "/home/verilog/projects/caravel_user_project_experiment"
+    --rm \
+    -u $(id -u $USER):$(id -g $USER) \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
+    -v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
+    -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
+    -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+    -w /home/verilog/projects/caravel_user_project_experiment \
+    efabless/timing-scripts:latest \
+    python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/generate_spef_mapping.py \
+        -i ./verilog/gl/user_project_wrapper.v \
+        -o ./env/spef-mapping.tcl \
+        --pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A \
+        --macro-parent chip_core/mprj \
+        --project-root "/home/verilog/projects/caravel_user_project_experiment"
 2024-12-28 19:58:27,529 | generate_spef_mapping | INFO | using project_root /home/verilog/projects/caravel_user_project_experiment
 2024-12-28 19:58:27,529 | generate_spef_mapping | INFO | getting pdk macros ..
 2024-12-28 19:58:28,655 | generate_spef_mapping | INFO | parsing netlist ./verilog/gl/user_project_wrapper.v ..
@@ -1271,20 +1271,20 @@ make: *** [Makefile:382: create-spef-mapping] Error 1
 
 ```
 docker run \
-	--rm \
-	-u $(id -u $USER):$(id -g $USER) \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
-	-v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
-	-v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
-	-v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
-	-v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
-	-w /home/verilog/projects/caravel_user_project_experiment \
-	efabless/timing-scripts:latest \
-	python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
-		-i ./verilog/gl/user_project_wrapper.v \
-		-o ./tmp-macros-list \
-		--project-root "/home/verilog/projects/caravel_user_project_experiment" \
-		--pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
+    --rm \
+    -u $(id -u $USER):$(id -g $USER) \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks:/home/verilog/projects/caravel_user_project_experiment/dependencies/pdks \
+    -v /home/verilog/projects/caravel_user_project_experiment:/home/verilog/projects/caravel_user_project_experiment \
+    -v /home/verilog/projects/caravel_user_project_experiment/caravel:/home/verilog/projects/caravel_user_project_experiment/caravel \
+    -v /home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper:/home/verilog/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+    -v /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts:/home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+    -w /home/verilog/projects/caravel_user_project_experiment \
+    efabless/timing-scripts:latest \
+    python3 /home/verilog/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
+        -i ./verilog/gl/user_project_wrapper.v \
+        -o ./tmp-macros-list \
+        --project-root "/home/verilog/projects/caravel_user_project_experiment" \
+        --pdk-path /home/verilog/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
 Unable to find image 'efabless/timing-scripts:latest' locally
 latest: Pulling from efabless/timing-scripts
 c7bef7d09442: Pulling fs layer
@@ -1351,20 +1351,20 @@ make: *** [Makefile:402: extract-parasitics] Error 1
 
 ```
 docker run \
-		--rm \
-		-u $(id -u $USER):$(id -g $USER) \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment:/Users/yuri_panchul/projects/caravel_user_project_experiment \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/caravel:/Users/yuri_panchul/projects/caravel_user_project_experiment/caravel \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper:/Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper \
-		-v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts \
-		-w /Users/yuri_panchul/projects/caravel_user_project_experiment \
-		efabless/timing-scripts:latest \
-		python3 /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
-			-i ./verilog/gl/user_project_wrapper.v \
-			-o ./tmp-macros-list \
-			--project-root "/Users/yuri_panchul/projects/caravel_user_project_experiment" \
-			--pdk-path /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
+        --rm \
+        -u $(id -u $USER):$(id -g $USER) \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment:/Users/yuri_panchul/projects/caravel_user_project_experiment \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/caravel:/Users/yuri_panchul/projects/caravel_user_project_experiment/caravel \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper:/Users/yuri_panchul/projects/caravel_user_project_experiment/mgmt_core_wrapper \
+        -v /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts:/Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts \
+        -w /Users/yuri_panchul/projects/caravel_user_project_experiment \
+        efabless/timing-scripts:latest \
+        python3 /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/timing-scripts/scripts/get_macros.py \
+            -i ./verilog/gl/user_project_wrapper.v \
+            -o ./tmp-macros-list \
+            --project-root "/Users/yuri_panchul/projects/caravel_user_project_experiment" \
+            --pdk-path /Users/yuri_panchul/projects/caravel_user_project_experiment/dependencies/pdks/sky130A
 Unable to find image 'efabless/timing-scripts:latest' locally
 latest: Pulling from efabless/timing-scripts
 61b8fbdf0b15: Pulling fs layer
