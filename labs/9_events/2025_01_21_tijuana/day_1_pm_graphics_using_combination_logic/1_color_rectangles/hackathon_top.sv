@@ -30,15 +30,6 @@ module hackathon_top
         green = 0;
         blue  = 0;
 
-        // green = x / 64 % 2 == y / 64 % 2 ? 31 : 0;
-        // green = (x + y) % 256 >= 128 ? 31 : 0;
-
-        if (x * y > 10000)
-        begin
-            red = 21;
-            blue = 63;
-        end
-
         if (x > 100 & x < 300 & y > 50 & y < 100)
             red = 31;
 
@@ -47,7 +38,8 @@ module hackathon_top
         // Exercise 1: Uncomment the code for a green rectangle
         // that overlaps red rectangle
 
-        // TODO: REMOVE SOLUTION
+        // START_SOLUTION
+
         if (x > 150 & x < 350 & y > 70 & y < 120)
             green = 63;
 
@@ -56,8 +48,12 @@ module hackathon_top
         // Exercise 2: Add a blue rectangle
         // that overlaps both rectangles
 
+        // START_SOLUTION
+
         if (x > 200 & x < 400 & y > 90 & y < 140)
             blue = 31;
+
+        // END_SOLUTION
     end
 
 endmodule

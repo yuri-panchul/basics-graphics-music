@@ -106,3 +106,5 @@ module hackathon_top
     // Exercise 2: Make the word slowly moving across the display.
 
 endmodule
+    // START_SOLUTION
+    // END_SOLUTION

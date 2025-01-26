@@ -71,3 +71,5 @@ module hackathon_top
     // on a seven-segment display, moving the light in a circle.
 
 endmodule
+    // START_SOLUTION
+    // END_SOLUTION

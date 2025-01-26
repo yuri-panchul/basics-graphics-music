@@ -23,6 +23,8 @@ module hackathon_top
     output logic [5:0] green,
     output logic [4:0] blue
 );
+    // START_SOLUTION
+
     //ellipse
     localparam [9:0] a_menor = 100; 
     localparam [9:0] a_mayor = 300;     
@@ -41,7 +43,6 @@ module hackathon_top
     localparam [9:0] y_vertice = 125; // Coordenada Y del vértice
     localparam [9:0] p_parabola = 50; // Distancia del vértice al foco
 
-
     //hyperbola
     localparam [9:0] x_centro = 200; // Centro X
     localparam [9:0] y_centro = 100; // Centro Y
@@ -50,13 +51,11 @@ module hackathon_top
 
     // Registros auxiliares para cálculos intermedios
     reg [31:0] x_diff2, y_diff2; // Diferencias al cuadrado
-    
 
     always_comb begin
         red   = 0;
         green = 0;
         blue  = 0;
-    
 
         // Cálculos  elipse
         dx2 = (x - a_centro) * (x - a_centro); // (x - a_centro)^2
@@ -70,8 +69,6 @@ module hackathon_top
             (y >= b_arriba) & (y <= b_abajo)// Dentro del rango vertical
             & ((term1 + term2) <= rhs))
                 red = 31; 
-
-        
 
         //parabola
         //hacia arriba
@@ -109,5 +106,7 @@ module hackathon_top
             green = 61;
         */
     end
+
+    // END_SOLUTION
 
 endmodule

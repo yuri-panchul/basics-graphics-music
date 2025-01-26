@@ -85,3 +85,5 @@ module hackathon_top
     // 2. Halve the frequency when another key is pressed and released.
 
 endmodule
+    // START_SOLUTION
+    // END_SOLUTION
