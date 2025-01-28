@@ -2,11 +2,11 @@ The dates for the Verilog Meetup events in Mexico and Armenia are set:
 
 * Friday and Saturday, February 21-22, 2025 in Mexico, Universidad autónoma de baja California in Tijuana.
 
-* Thursday and Friday, March 13-14, 2025 in Armenia, Russian-Armenian University in Yerevan, in cooperation with Institute for Informatics and Automation Problems, National Academy of Sciences of the Republic of Armenia.
+* Thursday and Friday, March 13-14, 2025 in Armenia, Russian-Armenian University in Yerevan, in cooperation with the Institute for Informatics and Automation Problems, National Academy of Sciences of the Republic of Armenia.
 
 Both events will include a program for undergraduate students studying digital design. However, the event in Armenia will also include a program for a more advanced audience since we have worked with colleagues in Armenia longer (since 2023), plus they have a local division of Synopsys and do EDA (Electronic Design Automation) research over there.
 
-The program for the undegraduate students:
+The program for the undergraduate students:
 
 * Day 1. ASIC and FPGA design flow. Exercises with combinational logic.
 
@@ -20,28 +20,23 @@ The program for the undegraduate students:
 
     * Afternoon
 
-        4. Improving proficiency with SystemVerilog syntax by doing exercises with graphics.
+        4. Improving proficiency with SystemVerilog syntax by doing exercises with graphics. The students will draw static pictures on a color LCD screen or an HDMI display by changing the SystemVerilog code that computes a color RGB (red/green/blue) using X and y coordinates provided by an LCD or HDMI controller.
 
-The students will draw static pictures on a color LCD screen or an HDMI
-display by changing the SystemVerilog code that computes a color RGB
-(red/green/blue) using X and y coordinates provided by an LCD or HDMI
-controller.
-
-        5. Moving the students exercises developed on FPGA to Tiny Tapeout infrastructure, the most affordable way to do ASIC design.
-We are going to use [a special template that allows to write the same code targeting ASIC and FPGA](https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup).
+        5. Moving the students' exercises developed on FPGA to Tiny Tapeout infrastructure, the most affordable way to do ASIC design. We are going to use [a special template that allows to write the same code targeting ASIC and FPGA](https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup).
 
 * Day 2. Sequential logic is what makes circuits smart. More exercises and a hackathon.
 
     * Morning
 
-        6. Logic meets physics: the propagation delay and the need to synchromize the computations. Introducing clock, state, D-flip-flop, slack and aperture.
+        6. Logic meets physics: the propagation delay and the need to synchronize the computations. Introducing clock, state, D-flip-flop, slack and aperture.
 
-        7. The exercises on FPGA board covering sequential blocks and the finite state machines (FSMs).
+        7. The exercises on the FPGA board covering sequential blocks and finite state machines (FSMs).
 
         8. A hackathon on designing graphical games with moving objects on LCD screen.
 
-The hackathon participants present their games on FPGA board. A game should not use CPU cores, either external or synthesized, and should be synthesizable for ASIC
-using Tiny Tapeout infrastructure, fitting into no more than 4 Tiny Tapeout tiles. We plan to order a chip manifactured on Skywater Fab for both student teams in Mexico and Armenia.
+The hackathon participants present their games on the FPGA board. A game should not use CPU cores, either external or synthesized, and should be synthesizable for ASIC using Tiny Tapeout infrastructure, fitting into no more than 4 Tiny Tapeout tiles. We plan to order a chip manufactured on Skywater Fab for both student teams in Mexico and Armenia.
+
+
 
 
 
