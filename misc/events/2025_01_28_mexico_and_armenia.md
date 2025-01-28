@@ -51,7 +51,6 @@ In both Mexico and Armenia we are going to use [Gowin EDA](https://www.gowinsemi
 ## Topics for the advanced audience in Armenia event
 
 1. A presentation: Workforce development for the electronic industry: How the Academia can help the industry.
-
 When recent university graduates start to work in a typical microelectronic company, they frequently lack training in the following areas:
 
     1) Microarchitecture. While the students are usually exposed to the concepts of pipelining and FIFO buffers during their lectures in the university, they usually know pipelining only in the context of CPU and don't know how to use FIFO. As a result, they are unprepared to work in networking, GPU and ML chip projects where processing a stream of data is common.
