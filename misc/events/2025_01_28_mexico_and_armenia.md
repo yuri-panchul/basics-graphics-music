@@ -53,7 +53,7 @@ In both Mexico and Armenia we are going to use [Gowin EDA](https://www.gowinsemi
 1. A presentation: Workforce development for the electronic industry: How the Academia can help the industry.
 When recent university graduates start to work in a typical microelectronic company, they frequently lack training in the following areas:
 
-    1) Microarchitecture. While the students are usually exposed to the concepts of pipelining and FIFO buffers during their lectures in the university, they usually know pipelining only in the context of CPU and don't know how to use FIFO. As a result, they are unprepared to work in networking, GPU and ML chip projects where processing a stream of data is common.
+    1) Microarchitecture. While the students are usually exposed to the concepts of pipelining and FIFO buffers during their lectures in the university, they usually know pipelining only in the context of CPU and don't know where to apply FIFO to solve the design problems. As a result, they are unprepared to work in networking, GPU and ML chip projects where processing a stream of data is common.
 
     2) Verification. Many students don't know how to verify all the corner cases of their designs against a transaction-based model using modern techniques. This skill is crucial not only for future verification engineers but also for future design engineers because a lack of training in verification limits the complexity of the microarchitectural project a student can do.
 
