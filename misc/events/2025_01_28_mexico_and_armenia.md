@@ -1,12 +1,12 @@
 The dates for the Verilog Meetup events in Mexico and Armenia are set:
 
-* Friday and Saturday, February 21-22, 2025 in Mexico, Universidad autónoma de baja California in Tijuana.
+* Friday and Saturday, February 21-22, 2025 in Mexico, [Universidad autónoma de baja California in Tijuana](https://www.uabc.mx/en/).
 
-* Thursday and Friday, March 13-14, 2025 in Armenia, Russian-Armenian University in Yerevan, in cooperation with the Institute for Informatics and Automation Problems, National Academy of Sciences of the Republic of Armenia.
+* Thursday and Friday, March 13-14, 2025 in Armenia, [Russian-Armenian University](https://rau.am/en) in Yerevan, in cooperation with the [Institute for Informatics and Automation Problems, National Academy of Sciences of the Republic of Armenia](https://www.sci.am/orgsview.php?id=3&langid=2).
 
 Both events will include a program for undergraduate students studying digital design. However, the event in Armenia will also include a program for a more advanced audience since we have worked with colleagues in Armenia longer (since 2023), plus they have a local division of Synopsys and do EDA (Electronic Design Automation) research over there.
 
-The program for the undergraduate students:
+## The program for the undergraduate students
 
 * Day 1. ASIC and FPGA design flow. Exercises with combinational logic.
 
@@ -20,21 +20,55 @@ The program for the undergraduate students:
 
     * Afternoon
 
-        4. Improving proficiency with SystemVerilog syntax by doing exercises with graphics. The students will draw static pictures on a color LCD screen or an HDMI display by changing the SystemVerilog code that computes a color RGB (red/green/blue) using X and y coordinates provided by an LCD or HDMI controller.
+        4. Improving proficiency with SystemVerilog syntax by doing [exercises with graphics](https://github.com/yuri-panchul/basics-graphics-music/tree/main/labs/9_events/2025_01_21_tijuana/day_1_pm_graphics_using_combination_logic). The students will draw static pictures on a color LCD screen or an HDMI display by changing the SystemVerilog code that computes a color RGB (red/green/blue) using X and y coordinates provided by an LCD or HDMI controller.
 
-        5. Moving the students' exercises developed on FPGA to Tiny Tapeout infrastructure, the most affordable way to do ASIC design. We are going to use [a special template that allows to write the same code targeting ASIC and FPGA](https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup).
+        5. Moving the students' exercises developed on FPGA to [Tiny Tapeout](https://tinytapeout.com/) infrastructure, the most affordable way to do ASIC design. We are going to use a [special template that allows to write the same code targeting ASIC and FPGA](https://github.com/yuri-panchul/tt10-verilog-template-for-verilog-meetup).
 
 * Day 2. Sequential logic is what makes circuits smart. More exercises and a hackathon.
 
     * Morning
 
-        6. Logic meets physics: the propagation delay and the need to synchronize the computations. Introducing clock, state, D-flip-flop, slack and aperture.
+        6. Logic meets physics: the propagation delay and the need to synchronize the computations.
 
-        7. The exercises on the FPGA board covering sequential blocks and finite state machines (FSMs).
+        7. Introducing clock, state, D-flip-flop, slack and aperture.
 
-        8. A hackathon on designing graphical games with moving objects on LCD screen.
+        8. [The exercises on the FPGA board covering sequential blocks and finite state machines (FSMs)](https://github.com/yuri-panchul/basics-graphics-music/tree/main/labs/9_events/2025_01_21_tijuana/day_2_am_sequential_logic_basics).
+
+    * Afternoon
+
+        9. [Demonstrating using FPGA to recognize and generate music notes using input from microphone](https://github.com/yuri-panchul/basics-graphics-music/tree/main/labs/3_music).
+
+        10. Previewing the topics of [CPU](https://github.com/yuri-panchul/basics-graphics-music/tree/main/labs/5_cpu) and [pipelining](https://github.com/yuri-panchul/basics-graphics-music/tree/main/labs/4_microarchitecture).
+
+        11. A hackathon on designing graphical games with [moving objects on LCD screen](https://github.com/yuri-panchul/basics-graphics-music/tree/main/labs/9_events/2025_01_21_tijuana/day_2_pm_graphics_using_sequential_logic).
 
 The hackathon participants present their games on the FPGA board. A game should not use CPU cores, either external or synthesized, and should be synthesizable for ASIC using Tiny Tapeout infrastructure, fitting into no more than 4 Tiny Tapeout tiles. We plan to order a chip manufactured on Skywater Fab for both student teams in Mexico and Armenia.
+
+## Topics for the advanced audience in Armenia event
+
+    1. A presentation: Workforce development for the electronic industry: How the Academia can help the industry.
+
+    When recent university graduates start to work in a typical microelectronic company, they frequently lack training in the following areas:
+
+        1. Microarchitecture. While the students are usually exposed to the concepts of pipelining and FIFO buffers during their lectures in the university, they usually know pipelining only in the context of CPU and don't know how to use FIFO. As a result, they are unprepared to work in networking, GPU and ML chip projects where processing a stream of data is common.
+
+        2. Verification. Many students don't know how to verify all the corner cases of their designs against a transaction-based model using modern techniques. This skill is crucial not only for the future verification engineers but also for the future design engineers, because lack of training in verification limits the complexity of the microarchitectural project a student can do.
+
+        3. Physical design. Even if a student does not plan to become a physical design engineer, he still needs to develop some common sense and intuition about critical timing path in his design. This is needed for any future microarchitect, because without this skill a student cannot properly balance logic in different stages of his pipelined design. Training in low-power techniques could also be beneficial.
+
+    We are going to discuss the exercises necessary to develop these skills. It is very important for the whole ecosystem of microelectronics to train the students in university in comprehensive way rather then to let them to learn over several years on the job, where the lack of such training may cause missed deadlines, performance and quality problems.
+
+    2. A simulated job interview using questions similar to the problems in part 4 of [systemverilog-homework](https://github.com/yuri-panchul/systemverilog-homework) set of exercises used at Verilog Meetup to train the recent university graduates to pass job interviews.
+
+    3. A presentation and exercise in synthesizing the designs using eFabless Caravel and Caravel-Mini ecosystem. This is similar to using Tiny Tapeout but offers more I/O pins and is more cost-efficient for the larger designs. For more details, see [The State of Caravel: the First Look](https://verilog-meetup.com/2025/01/17/the-state-of-caravel-the-first-look/).
+
+
+
+
+
+
+
+
 
 
 
