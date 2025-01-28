@@ -52,15 +52,20 @@ The hackathon participants present their games on the FPGA board. A game should 
 
         1. Microarchitecture. While the students are usually exposed to the concepts of pipelining and FIFO buffers during their lectures in the university, they usually know pipelining only in the context of CPU and don't know how to use FIFO. As a result, they are unprepared to work in networking, GPU and ML chip projects where processing a stream of data is common.
 
-        2. Verification. Many students don't know how to verify all the corner cases of their designs against a transaction-based model using modern techniques. This skill is crucial not only for the future verification engineers but also for the future design engineers, because lack of training in verification limits the complexity of the microarchitectural project a student can do.
+        2. Verification. Many students don't know how to verify all the corner cases of their designs against a transaction-based model using modern techniques. This skill is crucial not only for future verification engineers but also for future design engineers because a lack of training in verification limits the complexity of the microarchitectural project a student can do.
 
-        3. Physical design. Even if a student does not plan to become a physical design engineer, he still needs to develop some common sense and intuition about critical timing path in his design. This is needed for any future microarchitect, because without this skill a student cannot properly balance logic in different stages of his pipelined design. Training in low-power techniques could also be beneficial.
+        3. Physical design. Even if a student does not plan to become a physical design engineer, he still needs to develop some common sense and intuition about critical timing path in his design. This is needed for any future microarchitect because without this skill, a student cannot properly balance logic in different stages of his pipelined design. Training in low-power techniques could also be beneficial.
 
-    We are going to discuss the exercises necessary to develop these skills. It is very important for the whole ecosystem of microelectronics to train the students in university in comprehensive way rather then to let them to learn over several years on the job, where the lack of such training may cause missed deadlines, performance and quality problems.
+    We are going to discuss the exercises necessary to develop these skills. It is very important for the whole ecosystem of microelectronics to train the students in a university in a comprehensive way rather than to let them learn over several years on the job, where the lack of such training may cause missed deadlines, performance and quality problems.
 
     2. A simulated job interview using questions similar to the problems in part 4 of [systemverilog-homework](https://github.com/yuri-panchul/systemverilog-homework) set of exercises used at Verilog Meetup to train the recent university graduates to pass job interviews.
 
     3. A presentation and exercise in synthesizing the designs using eFabless Caravel and Caravel-Mini ecosystem. This is similar to using Tiny Tapeout but offers more I/O pins and is more cost-efficient for the larger designs. For more details, see [The State of Caravel: the First Look](https://verilog-meetup.com/2025/01/17/the-state-of-caravel-the-first-look/).
+
+
+
+
+
 
 
 
