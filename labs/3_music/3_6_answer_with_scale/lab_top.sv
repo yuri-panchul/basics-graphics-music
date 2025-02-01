@@ -236,4 +236,36 @@ module lab_top
         .gpio          (               )
     );
 
+    //------------------------------------------------------------------------
+
+    wire [w_red   - 1:0] rx = w_red'   (x);
+    wire [w_green - 1:0] gx = w_green' (x);
+    wire [w_green - 1:0] gy = w_green' (y);
+    wire [w_blue  - 1:0] by = w_blue'  (y);
+
+    always_comb
+    begin
+        red   = '0;
+        green = '0;
+        blue  = '0;
+
+        if (x > { out_note, 5'b0 } & y > { out_note, 4'b0 })
+        begin
+            case (4' (out_note))
+            4'd0  : begin red = '1; green = '0; blue = '0; end
+            4'd1  : begin red = '1; green = gx; blue = '0; end
+            4'd2  : begin red = '1; green = '0; blue = by; end
+            4'd3  : begin red = '1; green = gx; blue = by; end
+            4'd4  : begin red = '0; green = '1; blue = '0; end
+            4'd5  : begin red = rx; green = '1; blue = '0; end
+            4'd6  : begin red = '0; green = '1; blue = by; end
+            4'd7  : begin red = rx; green = '1; blue = by; end
+            4'd8  : begin red = '0; green = '0; blue = '1; end
+            4'd9  : begin red = rx; green = '0; blue = '1; end
+            4'd10 : begin red = '0; green = gy; blue = '1; end
+            4'd11 : begin red = rx; green = gy; blue = '1; end
+            endcase
+        end
+    end
+
 endmodule
