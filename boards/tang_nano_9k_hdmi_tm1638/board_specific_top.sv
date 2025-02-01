@@ -438,8 +438,6 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_DAC_OUTPUT_INTERFACE_MODULE
 
-        `undef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
-
         wire dac_out;
 
         sigma_delta_dac
@@ -458,11 +456,9 @@ module board_specific_top
         assign LARGE_LCD_HS =   dac_out;
         assign LARGE_LCD_CK = ~ dac_out;
 
-    `endif
-
     //------------------------------------------------------------------------
 
-    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+    `elsif INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
         i2s_audio_out
         # (
@@ -470,14 +466,19 @@ module board_specific_top
         )
         inst_audio_out
         (
-            .clk      ( clk           ),
-            .reset    ( rst           ),
-            .data_in  ( sound         ),
-            .mclk     ( LARGE_LCD_DE  ),
-            .bclk     ( LARGE_LCD_VS  ),
-            .lrclk    ( LARGE_LCD_HS  ),
-            .sdata    ( LARGE_LCD_CK  )
+            .clk      (    clk             ),
+            .reset    (    rst             ),
+            .data_in  (    sound           ),
+            .mclk     ( /* LARGE_LCD_DE */ ),
+            .bclk     (    LARGE_LCD_VS    ),
+            .lrclk    (    LARGE_LCD_HS    ),
+            .sdata    (    LARGE_LCD_CK    )
         );
+
+        // PCM 5102 can recover mclk using PLL.
+        // It is better to put this pin to 0, it works more reliably this way.
+
+        assign LARGE_LCD_DE = 1'b0;
 
     `endif
 

@@ -417,14 +417,19 @@ module board_specific_top
         )
         inst_audio_out
         (
-            .clk      ( clk            ),
-            .reset    ( rst            ),
-            .data_in  ( sound          ),
-            .mclk     ( SMALL_LCD_DATA ),
-            .bclk     ( SMALL_LCD_CLK  ),
-            .lrclk    ( SMALL_LCD_RS   ),
-            .sdata    ( SMALL_LCD_CS   )
+            .clk      (    clk               ),
+            .reset    (    rst               ),
+            .data_in  (    sound             ),
+            .mclk     ( /* SMALL_LCD_DATA */ ),
+            .bclk     (    SMALL_LCD_CLK     ),
+            .lrclk    (    SMALL_LCD_RS      ),
+            .sdata    (    SMALL_LCD_CS      )
         );
+
+        // PCM 5102 can recover mclk using PLL.
+        // It is better to put this pin to 0, it works more reliably this way.
+
+        assign SMALL_LCD_DATA = 1'b0;
 
     `endif
 
