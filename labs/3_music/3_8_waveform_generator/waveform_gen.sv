@@ -8,7 +8,7 @@ module waveform_gen
 )
 (
     input                         clk,
-    input                         reset,
+    input                         rst,
     input        [           2:0] octave,
     input        [           3:0] waveform, // waveform type
     output logic [y_width  - 1:0] y
@@ -35,8 +35,8 @@ module waveform_gen
     logic        [y_width - 1:0] ys;
     logic        [y_width - 1:0] yq;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             clk_div <= '0;
         else
             clk_div <= clk_div + 1'b1;
@@ -63,12 +63,16 @@ module waveform_gen
     //
     //------------------------------------------------------------------------
 
-    always_comb begin
+    always_ff @ (posedge clk or posedge rst)
+    begin
+        if (rst)
+            y <= '0;
+        else
         case (waveform)
-           'b0001: y = ys; // sinus
-           'b0010: y = yt; // triangle
-           'b0100: y = yq; // square
-          default: y = '0;
+            'b0001: y <= ys; // sinus
+            'b0010: y <= yt; // triangle
+            'b0100: y <= yq; // square
+           default: y <= '0;
         endcase
     end
 
@@ -76,6 +80,8 @@ module waveform_gen
 
     sinus i_sinus
     (
+        .clk      ( clk   ),
+        .rst      ( rst   ),
         .y_max    ( y_max ),
         .yt       ( yt    ),
         .ys       ( ys    )
@@ -100,6 +106,8 @@ endmodule
 
 module sinus
 (
+    input                  clk,
+    input                  rst,
     input  logic    [15:0] y_max,
     input  logic    [15:0] yt,
     output logic    [15:0] ys
@@ -112,29 +120,29 @@ module sinus
     // decreasing transmission ratio as the level of the triangle
     // moves toward the two extremes. Accuracy of the sine is 1%.
 
-    always_comb
+    always_ff @ (posedge clk)
     begin
     if     (yt > (MAX >> 1)) // Shifting to right >> 1 for positive numbers is equivalent to dividing by 2
     begin
         if       (yt >   MAX - (y_max >> 1) + (y_max >> 4))                   // negative half-wave
-            ys =  yt - ((MAX - yt) >> 1) + ((MAX - yt) >> 5);
+            ys <= yt - ((MAX - yt) >> 1) + ((MAX - yt) >> 5);
         else if  (yt >  (MAX - (y_max >> 1) - (y_max >> 3)))
-            ys =  yt + ((MAX - yt) >> 4) - (y_max >> 2);
+            ys <= yt + ((MAX - yt) >> 4) - (y_max >> 2);
         else if  (yt >   MAX - (y_max >> 1) - (y_max >> 2) - (y_max >> 4))
-            ys = MAX - ((MAX - yt) >> 1) - ((MAX - yt) >> 4) - (y_max >> 1);
+            ys <= MAX - ((MAX - yt) >> 1) - ((MAX - yt) >> 4) - (y_max >> 1);
         else
-            ys = MAX - ((MAX - yt) >> 3) - ((MAX - yt) >> 5) - y_max + (y_max >> 3) + (y_max >> 5);
+            ys <= MAX - ((MAX - yt) >> 3) - ((MAX - yt) >> 5) - y_max + (y_max >> 3) + (y_max >> 5);
     end
     else
     begin
-        if       (yt < (y_max >> 1) - (y_max >> 4))                           // < 0.4375  y_max
-            ys =  yt + (yt >> 1) - (yt >> 5);                                 //                 + 1.46875 yt
-        else if  (yt < (y_max >> 1) + (y_max >> 3))                           // < 0.625   y_max
-            ys =  yt - (yt >> 4) + (y_max >> 2);                              //   0.25    y_max + 0.9375  yt
-        else if  (yt < (y_max >> 1) + (y_max >> 2) + (y_max >> 4))            // < 0.8125  y_max
-            ys = (yt >> 1) + (yt >> 4) + (y_max >> 1);                        //   0.5     y_max + 0.5625  yt
+        if        (yt < (y_max >> 1) - (y_max >> 4))                           // < 0.4375  y_max
+            ys <=  yt + (yt >> 1) - (yt >> 5);                                 //                 + 1.46875 yt
+        else if   (yt < (y_max >> 1) + (y_max >> 3))                           // < 0.625   y_max
+            ys <=  yt - (yt >> 4) + (y_max >> 2);                              //   0.25    y_max + 0.9375  yt
+        else if   (yt < (y_max >> 1) + (y_max >> 2) + (y_max >> 4))            // < 0.8125  y_max
+            ys <= (yt >> 1) + (yt >> 4) + (y_max >> 1);                        //   0.5     y_max + 0.5625  yt
         else
-            ys = (yt >> 3) + (yt >> 5) + y_max - (y_max >> 3) - (y_max >> 5); //   0.84375 y_max + 0.15625 yt
+            ys <= (yt >> 3) + (yt >> 5) + y_max - (y_max >> 3) - (y_max >> 5); //   0.84375 y_max + 0.15625 yt
     end
     end
 
