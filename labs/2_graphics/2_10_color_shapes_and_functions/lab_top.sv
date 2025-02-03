@@ -115,7 +115,7 @@ module lab_top
         16'b?????????????1??: rgb <= {{w_red {1'b1}}, {w_green {1'b0}}, {w_blue {1'b1}}};
         16'b??????????????1?: rgb <= {{w_red {1'b1}}, {w_green {1'b0}}, {w_blue {1'b0}}};
         16'b???????????????1: rgb <= {{w_red {1'b1}}, {w_green {1'b0}}, {w_blue {1'b1}}};
-        default: rgb = {{w_red-1{1'b0}}, 1'b1, {w_green-1{1'b0}}, 1'b1, {w_blue-1{1'b0}}, 1'b1};
+                     default: rgb <= '0;
         endcase
 
         end

@@ -1,5 +1,7 @@
 `include "config.svh"
 
+    // Shows the image on the VGA screen using signal lines in Wave Analyzer
+
 module tb;
 
     timeunit      1ns;
@@ -72,14 +74,55 @@ module tb;
 
     );
 
+    // We output all the green pixels to signal lines in Wave Analyzer
+    // You can try it |LCD_G or |LCD_B or a mix of them
+
+    assign  pixel = |LCD_R || |LCD_G || |LCD_B;
+
     //------------------------------------------------------------------------
 
+    tb_lcd_480_272        i_lcd
+    (
+        .PixelClk      (   pixel_clk   ),
+        .rst           (   rst         ),
+        .LCD_DE        (   LCD_DE      ),
+        .LCD_HSYNC     (   LCD_HS      ),
+        .LCD_VSYNC     (   LCD_VS      ),
+        .x             (   x           ),
+        .y             (   y           )
+    );
+
+    //------------------------------------------------------------------------
+
+    // We output pixels to signal lines in Wave Analyzer
+
+    tb_lcd_display        i_display
+    (
+        .PixelClk      (   pixel_clk   ),
+        .rst           (   rst         ),
+        .LCD_DE        (   LCD_DE      ),
+        .LCD_HSYNC     (   LCD_HS      ),
+        .LCD_VSYNC     (   LCD_VS      ),
+        .pixel         (   pixel       )
+    );
+
+    //------------------------------------------------------------------------
     initial
     begin
         clk = 1'b0;
 
         forever
             # (clk_period / 2) clk = ~ clk;
+    end
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
+        pixel_clk = 1'b0;
+
+        forever
+            # (clk_period / 6) pixel_clk = ~ pixel_clk;
     end
 
     //------------------------------------------------------------------------
