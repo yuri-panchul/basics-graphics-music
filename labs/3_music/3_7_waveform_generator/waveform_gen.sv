@@ -6,7 +6,7 @@ module waveform_gen
 )
 (
     input                         clk,
-    input                         reset,
+    input                         rst,
     input  [                 2:0] octave,
     input  [                 3:0] waveform,
     output [y_width        - 1:0] y
@@ -29,20 +29,20 @@ module waveform_gen
     wire            [ 8:0] x_max;    // Last sample in a quadrant (quarter period)
     logic  [y_width - 1:0] y_mod;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             clk_div <= '0;
         else
             clk_div <= clk_div + 1'b1;
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             x <= 9'b1;
         else if (clk_div == CLK_DIV_DATA_OFFSET ) // One sample for L and R audio channels
             x <= (quadrant [0] & (x > 1'b0) | (x >= x_max)) ? (x - 1'b1) : (x + 1'b1);
 
-    always_ff @ (posedge clk or posedge reset)
-        if (reset)
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
             quadrant <= 2'b0;
         else if ((clk_div == CLK_DIV_DATA_OFFSET ) & ((x == x_max) | (x == 9'b0)))
             quadrant <= quadrant + 1'b1;
