@@ -35,10 +35,6 @@ variable_add tb.LCD_G
 variable_add tb.LCD_B
 variable_add tb.x
 variable_add tb.y
-variable_add tb.i_lab_top.paint.mx
-variable_add tb.i_lab_top.paint.my
-variable_add tb.i_lab_top.paint.rx
-variable_add tb.i_lab_top.paint.ry
 
 scope_select tb.i_lcd
 
@@ -69,18 +65,6 @@ item_set_color Gray
 item_focus ce
 item_set_format Unsigned
 item_set_color Gray
-
-item_focus cf
-item_set_format Unsigned
-
-item_focus cg
-item_set_format Unsigned
-
-item_focus ch
-item_set_format Unsigned
-
-item_focus ci
-item_set_format Unsigned
 
 item_unfocus
 remove_unavailable
