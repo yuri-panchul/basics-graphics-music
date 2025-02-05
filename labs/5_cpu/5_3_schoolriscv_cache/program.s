@@ -32,21 +32,34 @@ loop:   add     t3, a0, t2
         bnez    t0, loop
 
         sw       zero, 0(a7)     ## cycle_cnt stop
-        nop                      ## mem_ctrl prefetch take three more commands after bnez
+        nop                      ## nop for program align; mem_ctrl prefetch take four commands time after time
 finish: beqz     zero, finish
 
 # RISC-V factorial program
+# CPU support for the mul command required
 # Uncomment it when necessary
 
 #init:
-#
-#        sw       a2, 0x200   ## cycle_cnt start
-#
-# factorial:
-#
-#         li      a0, 1
-#         li      t2, 2
-#
-# loop:   mul     a0, a0, t2
-#         addi    t2, t2, 1
-#         b       loop
+#        li       t1, 0x1         ## iteration decrement value
+
+#        li       a1, 1
+#        li       a7, 0xffff0020  ## memory-mapped I/O: start/stop cycle counter port address
+                                 ## RARS MMIO addresses is 0xffff0000 - 0xffffffe0
+#        sw       a1, 0(a7)       ## cycle_cnt start
+
+#factorial:
+
+#        li      a0, 1
+#        li      t2, 2
+
+#loop:   mul     a0, a0, t2
+#        addi    t2, t2, 1
+#        sub     t0, t0, t1
+#        bnez    t0, loop
+
+#        sw       zero, 0(a7)     ## cycle_cnt stop
+#        nop                      ## nop for program align; mem_ctrl prefetch take four commands time after time
+#        nop
+#        nop
+#        nop
+#finish: beqz     zero, finish
