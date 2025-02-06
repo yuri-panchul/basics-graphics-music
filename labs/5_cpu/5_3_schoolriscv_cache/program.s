@@ -1,9 +1,9 @@
 # li pseudo-instruction
 
         li      t0, 0x2F          ## iterations count
-        li      t2, 0x123
-        li      t3, 0x12345678
-        li      t4, 0x12345000
+        li      t2, 0x123         ## li is a pseudo command
+        li      t3, 0x12345678    ## there li is two real instructions: lui and addi
+        li      t4, 0x12345000    ## two real instructions: lui and addi
         li      t5, -0x123
 
 # RISC-V fibonacci program
@@ -18,6 +18,7 @@ init:
         li       a1, 1
         li       a7, 0xffff0020  ## memory-mapped I/O: start/stop cycle counter port address
                                  ## RARS MMIO addresses is 0xffff0000 - 0xffffffe0
+                                 ## two real instructions
         sw       a1, 0(a7)       ## cycle_cnt start
 
 fibonacci:
@@ -36,7 +37,6 @@ loop:   add     t3, a0, t2
 finish: beqz     zero, finish
 
 # RISC-V factorial program
-# CPU support for the mul command required
 # Uncomment it when necessary
 
 #init:
@@ -45,6 +45,7 @@ finish: beqz     zero, finish
 #        li       a1, 1
 #        li       a7, 0xffff0020  ## memory-mapped I/O: start/stop cycle counter port address
                                  ## RARS MMIO addresses is 0xffff0000 - 0xffffffe0
+                                 ## two real instructions
 #        sw       a1, 0(a7)       ## cycle_cnt start
 
 #factorial:
@@ -52,7 +53,7 @@ finish: beqz     zero, finish
 #        li      a0, 1
 #        li      t2, 2
 
-#loop:   mul     a0, a0, t2
+#loop:   mul     a0, a0, t2       ## CPU support for the mul instruction required
 #        addi    t2, t2, 1
 #        sub     t0, t0, t1
 #        bnez    t0, loop
