@@ -70,108 +70,42 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [ 4:0]  regAddr;  // debug access reg address
-    wire [31:0]  regData;  // debug access reg data
-    wire [31:0]  mem_addr;
-    wire [31:0]  mem_data;
-    wire         memWrite;
+    wire  [31:0] imAddr;        // instruction memory address
+    wire  [31:0] imData;        // instruction memory data
 
-    wire [31:0]  ext_addr;
-    wire         ext_req;
-    wire         ext_rsp;
-    wire [127:0] ext_data;
-    wire [31:0]  rom_data;
-    wire [31:0]  rom_addr;
-
-    wire         im_req;
-    wire [31:0]  imAddr;   // instruction memory address
-    wire [31:0]  imData;   // instruction memory data
-    wire         im_drdy;
-
-    sr_cpu cpu
-    (
-        .clk        ( clk      ),
-        .rst        ( rst      ),
-        .regAddr    ( regAddr  ),
-        .regData    ( regData  ),
-        .im_req     ( im_req   ),
-        .imAddr     ( imAddr   ),
-        .imData     ( imData   ),
-        .im_drdy    ( im_drdy  ),
-        .memAddr    ( mem_addr ),
-        .memData    ( mem_data ),
-        .memWrite   ( memWrite )
-    );
-
-    sr_icache #(
-    .CACHE_EN(0)
-    ) sm_icache (
-        .clk        ( clk      ),
-        .rst        ( rst      ),
-        .imem_req_i ( im_req   ),
-        .imAddr     ( imAddr   ),
-        .imData     ( imData   ),
-        .im_drdy    ( im_drdy  ),
-        .ext_addr_o ( ext_addr ),
-        .ext_req_o  ( ext_req  ),
-        .ext_rsp_i  ( ext_rsp  ),
-        .ext_data_i ( ext_data )
-    );
-
-    sr_mem mem_ctrl(
-        .clk        ( clk      ),
-        .rst        ( rst      ),
-        .ext_addr_i ( ext_addr ),
-        .ext_req_i  ( ext_req  ),
-        .ext_rsp_o  ( ext_rsp  ),
-        .ext_data_o ( ext_data ),
-        .rom_data_i ( rom_data ),
-        .rom_addr_o ( rom_addr )
-    );
+    logic [ 4:0] regAddr;       // debug access reg address
+    wire  [31:0] regData;       // debug access reg data
     
-    instruction_rom # (.SIZE (64)) rom
+    wire  [31:0] cycleCntPerf;  // clk counter for evaluation program time execution
+
+    sr_soc # (.CACHE_EN (0)) soc
     (
-        .a       ( rom_addr ),
-        .rd      ( rom_data )
+        .clk        ( clk          ),
+        .rst        ( rst          ),
+
+        .soc_addr_o ( imAddr       ),
+        .soc_data_i ( imData       ),
+
+        .regAddr    ( regAddr      ),
+        .regData    ( regData      ),
+
+        .cycleCnt_o ( cycleCntPerf )
     );
 
-    //------------------------------------------------------------------------
-
-    logic        cnt_en_ff;
-    logic        cnt_clear_ff;
-    wire  [31:0] cycleCnt_o;
-
-    // performance: cycle counter enable
-    always_ff @(posedge clk)
-        if (rst)
-            cnt_en_ff <= 1'b0;
-        else if (memWrite && (mem_addr == 32'hffff_0020))
-            cnt_en_ff <= mem_data[0];
-
-    // performance: cycle counter clear signal
-    always_ff @(posedge clk)
-        if (rst)
-            cnt_clear_ff <= 1'b0;
-        else if (memWrite && (mem_addr == 32'hffff_0120))
-            cnt_clear_ff <= mem_data[0];
-
-    // performance: cycle counter
-    perf_cycle_counter i_cycle_cnt (
-        .clk        (clk         ),
-        .rst        (rst         ),
-        .en_i       (cnt_en_ff   ),
-        .clear_i    (cnt_clear_ff),
-        .cycleCnt_o (cycleCnt_o  )
+    instruction_rom # (.SIZE (1024)) rom
+    (
+        .a       ( imAddr  ),
+        .rd      ( imData  )
     );
-
-    //------------------------------------------------------------------------
 
     assign regAddr = 5'd10;  // a0
+
+    //------------------------------------------------------------------------
 
     localparam w_number = w_digit * 4;
 
     wire [w_number - 1:0] number
-        = w_number' ( cycleCnt_o );
+        = w_number' ( cycleCntPerf );
 
     seven_segment_display
     # (

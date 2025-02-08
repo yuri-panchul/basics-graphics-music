@@ -33,7 +33,7 @@ module tb;
 
         .regAddr    ( regAddr      ),
         .regData    ( regData      ),
-        
+
         .cycleCnt_o ( cycleCntPerf )
     );
 
