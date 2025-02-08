@@ -39,7 +39,7 @@
 
   assign rom_addr_o = ext_req_i ? ext_addr_i : (ram_addr_ff + read_ctr_ff);
 
-  always_ff @(posedge clk or negedge rst)
+  always_ff @(posedge clk)
     if (rst) begin
       read_ctr_ff <= '0;
       rd_trans_ff <= '0;
@@ -65,7 +65,7 @@
   endgenerate
 
   // Primitive RAM Delay model
-  always_ff @(posedge clk or negedge rst)
+  always_ff @(posedge clk)
     if (rst)
       delay_ctr_ff <= '0;
     else if (ext_req_i | |(delay_ctr_ff))

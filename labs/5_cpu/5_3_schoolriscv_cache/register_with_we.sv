@@ -22,6 +22,6 @@ module register_with_we
         if (rst)
             q <= '0;
         else
-            if(we) q <= d;
+            if (we) q <= d;
 
 endmodule

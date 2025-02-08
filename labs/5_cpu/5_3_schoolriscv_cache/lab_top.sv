@@ -1,17 +1,23 @@
 `include "config.svh"
 
-module top
+module lab_top
 # (
-    parameter clk_mhz   = 50,
-              pixel_mhz = 25,
-              w_key     = 4,
-              w_sw      = 8,
-              w_led     = 8,
-              w_digit   = 8,
-              w_gpio    = 100,
-              w_red     = 4,
-              w_green   = 4,
-              w_blue    = 4
+    parameter  clk_mhz       = 50,
+               w_key         = 4,
+               w_sw          = 8,
+               w_led         = 8,
+               w_digit       = 8,
+               w_gpio        = 100,
+
+               screen_width  = 640,
+               screen_height = 480,
+
+               w_red         = 4,
+               w_green       = 4,
+               w_blue        = 4,
+
+               w_x           = $clog2 ( screen_width  ),
+               w_y           = $clog2 ( screen_height )
 )
 (
     input                        clk,
@@ -29,21 +35,22 @@ module top
     output logic [          7:0] abcdefgh,
     output logic [w_digit - 1:0] digit,
 
-    // VGA
+    // Graphics
 
-    output logic                 vsync,
-    output logic                 hsync,
+    input        [w_x     - 1:0] x,
+    input        [w_y     - 1:0] y,
+
     output logic [w_red   - 1:0] red,
     output logic [w_green - 1:0] green,
     output logic [w_blue  - 1:0] blue,
-    output                       display_on,
-    output                       pixel_clk,
 
-    input                        uart_rx,
-    output                       uart_tx,
+    // Microphone, sound output and UART
 
     input        [         23:0] mic,
     output       [         15:0] sound,
+
+    input                        uart_rx,
+    output                       uart_tx,
 
     // General-purpose Input/Output
 
@@ -55,13 +62,9 @@ module top
        assign led        = '0;
     // assign abcdefgh   = '0;
     // assign digit      = '0;
-       assign vsync      = '0;
-       assign hsync      = '0;
        assign red        = '0;
        assign green      = '0;
        assign blue       = '0;
-       assign display_on = '0;
-       assign pixel_clk  = '0;
        assign sound      = '0;
        assign uart_tx    = '1;
 
@@ -69,7 +72,10 @@ module top
 
     wire [ 4:0]  regAddr;  // debug access reg address
     wire [31:0]  regData;  // debug access reg data
-    
+    wire [31:0]  mem_addr;
+    wire [31:0]  mem_data;
+    wire         memWrite;
+
     wire [31:0]  ext_addr;
     wire         ext_req;
     wire         ext_rsp;
@@ -84,7 +90,7 @@ module top
 
     sr_cpu cpu
     (
-        .clk        ( slow_clk ),
+        .clk        ( clk      ),
         .rst        ( rst      ),
         .regAddr    ( regAddr  ),
         .regData    ( regData  ),
@@ -92,35 +98,35 @@ module top
         .imAddr     ( imAddr   ),
         .imData     ( imData   ),
         .im_drdy    ( im_drdy  ),
-        .addr_o     ( mem_addr ),
-        .data_o     ( mem_data ),
-        .memWrite_o ( memWrite )
+        .memAddr    ( mem_addr ),
+        .memData    ( mem_data ),
+        .memWrite   ( memWrite )
     );
 
     sr_icache #(
-    .CACHE_EN(CACHE_EN)
+    .CACHE_EN(0)
     ) sm_icache (
-        .clk        (clk     ),
-        .rst_n      (rst     ),
-        .imem_req_i (im_req  ),
-        .imAddr     (imAddr  ),
-        .imData     (imData  ),
-        .im_drdy    (im_drdy ),
-        .ext_addr_o (ext_addr),
-        .ext_req_o  (ext_req ),
-        .ext_rsp_i  (ext_rsp ),
-        .ext_data_i (ext_data)
+        .clk        ( clk      ),
+        .rst        ( rst      ),
+        .imem_req_i ( im_req   ),
+        .imAddr     ( imAddr   ),
+        .imData     ( imData   ),
+        .im_drdy    ( im_drdy  ),
+        .ext_addr_o ( ext_addr ),
+        .ext_req_o  ( ext_req  ),
+        .ext_rsp_i  ( ext_rsp  ),
+        .ext_data_i ( ext_data )
     );
 
     sr_mem mem_ctrl(
-        .clk        (slow_clk ),
-        .rst_n      (rst      ),
-        .ext_addr_i (ext_addr ),
-        .ext_req_i  (ext_req  ),
-        .ext_rsp_o  (ext_rsp  ),
-        .ext_data_o (ext_data ),
-        .rom_data_i (rom_data ),
-        .rom_addr_o (rom_addr )
+        .clk        ( clk      ),
+        .rst        ( rst      ),
+        .ext_addr_i ( ext_addr ),
+        .ext_req_i  ( ext_req  ),
+        .ext_rsp_o  ( ext_rsp  ),
+        .ext_data_o ( ext_data ),
+        .rom_data_i ( rom_data ),
+        .rom_addr_o ( rom_addr )
     );
     
     instruction_rom # (.SIZE (64)) rom
@@ -136,22 +142,22 @@ module top
     wire  [31:0] cycleCnt_o;
 
     // performance: cycle counter enable
-    always_ff @(posedge clk or negedge rst_n)
-        if (~rst_n)
+    always_ff @(posedge clk)
+        if (rst)
             cnt_en_ff <= 1'b0;
-        else if (memWrite && (mem_addr == 32'h200))
+        else if (memWrite && (mem_addr == 32'hffff_0020))
             cnt_en_ff <= mem_data[0];
 
     // performance: cycle counter clear signal
-    always_ff @(posedge clk or negedge rst_n)
-        if (~rst_n)
+    always_ff @(posedge clk)
+        if (rst)
             cnt_clear_ff <= 1'b0;
-        else if (memWrite && (mem_addr == 32'h201))
+        else if (memWrite && (mem_addr == 32'hffff_0120))
             cnt_clear_ff <= mem_data[0];
 
     // performance: cycle counter
     perf_cycle_counter i_cycle_cnt (
-        .clk        (slow_clk    ),
+        .clk        (clk         ),
         .rst        (rst         ),
         .en_i       (cnt_en_ff   ),
         .clear_i    (cnt_clear_ff),
