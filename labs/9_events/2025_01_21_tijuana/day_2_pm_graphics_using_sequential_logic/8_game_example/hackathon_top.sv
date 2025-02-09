@@ -117,8 +117,8 @@ module hackathon_top
     logic [8:0] x0,  y0,  x1,  y1,
                 x0r, y0r, x1r, y1r;
 
-    wire left  = | key [6:3];
-    wire right = | key [2:0];
+    wire left  = | key [6:1];
+    wire right =   key [0];
 
     always_comb
     begin
@@ -137,8 +137,12 @@ module hackathon_top
         else
         begin
             x0 = x0 + 1;
-            x1 = x1 + right - left;
-            y1 = y1 - 1;
+            
+            if (state == STATE_SHOOT)
+            begin
+                x1 = x1 + right - left;
+                y1 = y1 - 1;
+            end
         end
     end
     
@@ -202,31 +206,38 @@ module hackathon_top
 
     always_comb
     begin
-        red = 0; green = 0; blue = 0;
+        red   = 0;
+        green = 0;
+        blue  = 0;
 
-        if (  x >= x0 & x < x0 + wx
-            & y >= y0 & y < y0 + wy)
-        begin
-            blue = max_blue;
-        end
+        case (state)
 
-        if (  x >= x1 & x < x1 + wx
-            & y >= y1 & y < y1 + wy)
+        STATE_WON:
         begin
             red = max_red;
         end
+
+        STATE_LOST:
+        begin
+            red   = max_red;
+            green = max_green;
+        end
+                     
+        default:
+        begin
+            if (  x >= x0 & x < x0 + wx
+                & y >= y0 & y < y0 + wy)
+            begin
+                blue = max_blue;
+            end
+
+            if (  x >= x1 & x < x1 + wx
+                & y >= y1 & y < y1 + wy)
+            begin
+                red = max_red;
+            end
+        end
         
-        case (state)
-
-        STATE_WON  : begin
-                         red = max_red;
-                     end
-
-        STATE_LOST :
-                     begin
-                         red   = max_red;
-                         green = max_green;
-                     end
         endcase
     end
 
