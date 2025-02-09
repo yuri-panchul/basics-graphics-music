@@ -48,10 +48,10 @@ module hackathon_top
     //
     //  Pulse generator, 50 times a second
 
-    logic pulse;
+    logic enable;
 
-    strobe_gen # (.clk_mhz (27), .strobe_hz (80))
-    i_strobe_gen (clock, reset, pulse);
+    strobe_gen # (.clk_mhz (27), .strobe_hz (100))
+    i_strobe_gen (clock, reset, enable);
 
     //------------------------------------------------------------------------
     //
@@ -71,7 +71,7 @@ module hackathon_top
 
     // Conditions to change the state - declarations
 
-    logic out_of_screen, collision, launch;
+    logic out_of_screen, collision, launch, timeout;
 
     //------------------------------------------------------------------------
 
@@ -86,14 +86,18 @@ module hackathon_top
         STATE_AIM   : new_state =   out_of_screen ? STATE_LOST
                                   : collision     ? STATE_WON
                                   : launch        ? STATE_SHOOT
+                                  : timeout       ? STATE_SHOOT
                                   :                 STATE_AIM;
 
         STATE_SHOOT : new_state =   out_of_screen ? STATE_LOST
                                   : collision     ? STATE_WON
                                   :                 STATE_SHOOT;
 
-        STATE_WON   : new_state = STATE_START;
-        STATE_LOST  : new_state = STATE_START;
+        STATE_WON   : new_state =   timeout       ? STATE_START
+                                  :                 STATE_WON;
+
+        STATE_LOST  : new_state =   timeout       ? STATE_START
+                                  :                 STATE_LOST;
 
         endcase
     end
@@ -103,7 +107,7 @@ module hackathon_top
     always_ff @ (posedge clock)
         if (reset)
             state <= STATE_START;
-        else if (pulse)
+        else if (enable)
             state <= new_state;
 
     //------------------------------------------------------------------------
@@ -113,8 +117,8 @@ module hackathon_top
     logic [8:0] x0,  y0,  x1,  y1,
                 x0r, y0r, x1r, y1r;
 
-    wire left  = | key [6:4];
-    wire right = | key [3:0];
+    wire left  = | key [6:3];
+    wire right = | key [2:0];
 
     always_comb
     begin
@@ -124,18 +128,18 @@ module hackathon_top
         y1 = y1r;
 
         if (state == STATE_START)
-            x0 = 0;
-        else
-            x0 = x0 + 1;
-
-        x1 = x1 + right - left;
-            
-        if (y1 == 0)
+        begin
+            x0 = start_0_x;
+            y0 = start_0_y;
+            x1 = start_1_x;
             y1 = start_1_y;
-        else if (left & right & y1 > 1)
-            y1 = y1 - 2;
+        end
         else
+        begin
+            x0 = x0 + 1;
+            x1 = x1 + right - left;
             y1 = y1 - 1;
+        end
     end
     
     //------------------------------------------------------------------------
@@ -145,12 +149,12 @@ module hackathon_top
     always_ff @ (posedge clock)
         if (reset)
         begin
-            x0r <= start_0_x;
-            y0r <= start_0_y;
-            x1r <= start_1_x;
-            y1r <= start_1_y;
+            x0r <= '0;
+            y0r <= '0;
+            x1r <= '0;
+            y1r <= '0;
         end
-        else if (pulse)
+        else if (enable)
         begin
             x0r <= x0;
             y0r <= y0;
@@ -159,10 +163,36 @@ module hackathon_top
         end
 
     //------------------------------------------------------------------------
-
+    //
     // Conditions to change the state - implementations
 
-    logic out_of_screen, collision, launch;
+    assign out_of_screen =   x0 == screen_width
+                           | x1 == 0
+                           | x1 == screen_width
+                           | y1 == 0;
+    
+    assign collision = ~ (  x0 + wx <= x1
+                          | x1 + wx <= x0
+                          | y0 + wy <= y1
+                          | y1 + wy <= y0 );
+
+    assign launch = left | right;
+
+    //------------------------------------------------------------------------
+    //
+    // Timeout condition
+
+    logic [7:0] timer;
+    
+    always_ff @ (posedge clock)
+        if (reset)
+            timer <= '0;
+        else if (state == STATE_START | state == STATE_SHOOT)
+            timer <= 200;
+        else if (enable)
+            timer <= timer - 1;
+            
+    assign timeout = (timer == 0);
 
     //------------------------------------------------------------------------
     //
@@ -185,6 +215,19 @@ module hackathon_top
         begin
             red = max_red;
         end
+        
+        case (state)
+
+        STATE_WON  : begin
+                         red = max_red;
+                     end
+
+        STATE_LOST :
+                     begin
+                         red   = max_red;
+                         green = max_green;
+                     end
+        endcase
     end
 
     //------------------------------------------------------------------------
