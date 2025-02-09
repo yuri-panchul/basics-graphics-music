@@ -191,7 +191,9 @@ module hackathon_top
     always_ff @ (posedge clock)
         if (reset)
             timer <= 0;
-        else if (state == STATE_START | state == STATE_SHOOT)
+        else if (state == STATE_START)
+            timer <= 200;
+        else if (state == STATE_SHOOT)
             timer <= 100;
         else if (enable)
             timer <= timer - 1;
