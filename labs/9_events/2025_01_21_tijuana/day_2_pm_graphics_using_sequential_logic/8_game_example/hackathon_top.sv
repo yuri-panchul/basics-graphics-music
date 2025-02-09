@@ -153,10 +153,10 @@ module hackathon_top
     always_ff @ (posedge clock)
         if (reset)
         begin
-            x0r <= '0;
-            y0r <= '0;
-            x1r <= '0;
-            y1r <= '0;
+            x0r <= 0;
+            y0r <= 0;
+            x1r <= 0;
+            y1r <= 0;
         end
         else if (enable)
         begin
@@ -190,9 +190,9 @@ module hackathon_top
     
     always_ff @ (posedge clock)
         if (reset)
-            timer <= '0;
+            timer <= 0;
         else if (state == STATE_START | state == STATE_SHOOT)
-            timer <= 200;
+            timer <= 100;
         else if (enable)
             timer <= timer - 1;
             
