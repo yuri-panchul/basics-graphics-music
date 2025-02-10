@@ -318,7 +318,7 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 synthesize_for_fpga_gowin ()
 {
     is_command_available_or_error "$gowin_sh_full_real_path" " from GoWin IDE package"
-    "$gowin_sh_full_real_path" fpga_project.tcl
+    "$gowin_sh_full_real_path" fpga_project.tcl 2>&1 | tee -a "$log"
 }
 
 #-----------------------------------------------------------------------------
