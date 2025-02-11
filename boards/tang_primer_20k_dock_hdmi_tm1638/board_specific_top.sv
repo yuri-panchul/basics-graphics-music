@@ -10,6 +10,145 @@
    `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 `endif
 
+module m_top
+(
+    input                 CLK,
+//    output        [5 :2]  LED
+    output        [5:0]  LED
+);
+
+//`define V1
+//`define V2
+//`define V3
+//`define V4
+`define V5
+//`define V6
+//`define V7
+//`define V8
+//`define V9
+
+`ifdef V1
+        logic signed [15:0] b;
+        wire  signed [15:0] a;
+
+        assign LED [5:2] = 4'b1100;
+//        assign LED [1:0] = 2'b11;
+`endif
+
+`ifdef V2
+        logic signed [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire signed [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>1)+(a >>2)+1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+`ifdef V3
+        logic [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>1)+(a >>2)+1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+`ifdef V4
+        logic signed [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire signed [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>>1)+(a >>>2)+1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+`ifdef V5
+        logic [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>>1)+(a >>>2)+1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+`ifdef V6
+        logic signed [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire signed [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>1)+(a >>2)+1'd1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+`ifdef V7
+        logic [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>1)+(a >>2)+1'd1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+`ifdef V8
+        logic signed [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire signed [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>>1)+(a >>>2)+1'd1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+`ifdef V9
+        logic [15:0]  b;
+
+        logic  [5:2] led;
+
+        wire [15:0] a = 21844;
+        assign           LED [5:2] = led;
+
+        assign b   = (a >>>1)+(a >>>2)+1'd1;
+
+        always @ (posedge CLK) 
+            led [5:2] <= ~b [15:12];
+`endif
+
+endmodule
+
 module board_specific_top
 # (
     parameter   clk_mhz       = 27,
@@ -61,6 +200,16 @@ module board_specific_top
     output                      HP_WS,
     output                      HP_BCK
 );
+
+m_top i_m_top
+(
+    .CLK (CLK),
+    .LED (LED)
+);
+
+
+
+`ifdef UNDEFINED
 
     //------------------------------------------------------------------------
 
@@ -367,5 +516,7 @@ module board_specific_top
         );
 
     `endif
+
+`endif
 
 endmodule
