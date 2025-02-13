@@ -87,14 +87,14 @@ module lab_top
     logic [15:0]   in_data, out_data;
 
 // -----  Key & LED --------------------------------------------------------               
-    one_pusle gen_hand_clk(.clk(clk), .in_sig(key[2]), .out_sig(clk_hand));
+    one_pusle   gen_hand_clk(.clk(clk), .in_sig(key[2]), .out_sig(clk_hand));
+
     a_bounce  #(12)key_flt_1(.clk(clk), .in_sig(key[0]), .out_sig(inc_pop)); 
     a_bounce  #(12)key_flt_2(.clk(clk), .in_sig(key[1]), .out_sig(inc_push)); 
  
 
     always_ff @(posedge inc_pop) begin
-      if (n_pop == N_MAX_POP) begin n_pop <= '0;
-      end
+      if (n_pop == N_MAX_POP)  n_pop <= '0;
       else  n_pop <= n_pop + 1;
       if (&led_pop) led_pop <= '0;
       else led_pop <= {led_pop[2:0], 1'b1};
@@ -107,33 +107,32 @@ module lab_top
       else led_push <= {led_push[2:0], 1'b1}; 
     end 
 
- 
+    assign led [7:3] = led_pop;
+   
+   // reverse order LED  
    assign led [11] = led_push[0];
    assign led [10] = led_push[1];
-   assign led [9] = led_push[2];
-   assign led [8] = led_push[3];
-
-   assign led [7:3] = led_pop;
-
-     
-    //assign led[0] = inc_pop;
-    assign led[1] = 1'b1;
+   assign led [9]  = led_push[2];
+   assign led [8]  = led_push[3];
+   
+   assign led[1] = 1'b1;                           // просто эстетика 
 
     //----- instans DUT ------------------------------------------------------
-    // width = 4 
-    // depth = 9
-    // max pop_push = 4
-    multi_push_pop_fifo #(4,9,4 )dut
-                                   (
-                                    .clk(clk_hand),
-                                    .rst(rst),
-                                    .push(n_push),
-                                    .push_data(in_data),
-                                    .pop(n_pop),
-                                    .pop_data(out_data),
-                                    .can_push(),         // how many items can I push
-                                    .can_pop()
-                                     );
+    localparam width = 4 
+    localparam depth = 9
+    localparam max_pop_push = 4
+   
+    multi_push_pop_fifo #(width, depth, max_pop_push) dut
+                         (
+                          .clk(clk_hand),
+                          .rst(rst),
+                          .push(n_push),
+                          .push_data(in_data),
+                          .pop(n_pop),
+                          .pop_data(out_data),
+                          .can_push(),         // how many items can I push
+                          .can_pop()
+                         );
 
 
 
@@ -156,20 +155,14 @@ module lab_top
         .clk      (clk),
         .number   (display_data),
         .dots     (8'b00000000),
-        .abcdefgh (abcdefgh_pre),
+        .abcdefgh (abcdefgh),
         .digit    (digit),
         .*
     );
 
     //------------------------------------------------------------------------
 
-    localparam sign_empty_entry = 8'b00000000;
-
-    always_comb
-        if ((digit > 256 )&& (digit > 256))
-            abcdefgh = sign_empty_entry;
-        else
-            abcdefgh = abcdefgh_pre; //abcdefgh_pre;
+   
 
 endmodule
 

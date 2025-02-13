@@ -1,4 +1,4 @@
-//`include "config.svh"
+`include "config.svh"
 
 module tb;
 
@@ -148,16 +148,15 @@ end
     
     repeat (5) begin                                 
       @ (posedge clk);
-      if (size_free >= (2 * n_push))begin              
-          dat_0 = $urandom_range(MAX_DAT);
-          queue_in.push_back(dat_0);                    
-          in_data[0] = dat_0;                           
-           
+      if (size_free >= (2 * n_push))begin                           // if there is room for two maximum volume records, then we prepare and write the data.              
+        dat_0 = $urandom_range(MAX_DAT);                            // In any case, one entry will be made.   
+        queue_in.push_back(dat_0);                    
+        in_data[0] = dat_0;                           
         push_data <= in_data;                          
         push <= n_push;  
       end
       else  
-        push <= '0;                                               
+       push <= '0;                                               
     end
  
 //----------- push 1  pop 4 ------------------------------------- 
@@ -166,17 +165,17 @@ end
     
     repeat (3) begin                                
       @ (posedge clk);
-      if (size_free >= (2 * n_push))begin              // если есть место для двух записей то пишем, в связи с задержками решение нужно принимать на такт раньше  
+      if (size_free >= (2 * n_push))begin                
         for(int i = 0; i < n_push; i = i+1)begin  
           dat_0 = $urandom_range(MAX_DAT);
-          queue_in.push_back(dat_0);                    //  записываем данные в очередь 
-          in_data[i] = dat_0;                           // и в вектор входных данных  
+          queue_in.push_back(dat_0);                     
+          in_data[i] = dat_0;                             
         end   
-        push_data <= in_data;                           // выставляем данные и сигналы 
+        push_data <= in_data;                           
         push <= n_push;  
       end
       else  
-      push <= '0;                                                  //  
+      push <= '0;                                                    
     end
  
 
@@ -184,19 +183,19 @@ end
     n_pop  <= 3'h1;  
     n_push <= 3'h4;         
     
-    repeat (3) begin                                 // повторить N раз посылку данных
+    repeat (3) begin                                 
       @ (posedge clk);
-      if (size_free >= (2 * n_push))begin              // если есть место для двух записей то пишем, в связи с задержками решение нужно принимать на такт раньше  
+      if (size_free >= (2 * n_push))begin                
         for(int i = 0; i < n_push; i = i+1)begin  
           dat_0 = $urandom_range(MAX_DAT);
-          queue_in.push_back(dat_0);                    //  записываем данные в очередь 
-          in_data[i] = dat_0;                           // и в вектор входных данных  
+          queue_in.push_back(dat_0);                   
+          in_data[i] = dat_0;                          
         end   
-        push_data <= in_data;                           // выставляем данные и сигналы 
+        push_data <= in_data;                            
         push <= n_push;  
       end
       else  
-      push <= '0;                                                  //  
+      push <= '0;                                                   
     end
 
 
@@ -206,22 +205,22 @@ end
       n_pop  <= $urandom_range(n,0);
       n_push <= $urandom_range(n,0);   
       @ (posedge clk);
-      if (size_free >= (2 * n_push))begin              // если есть место для двух записей то пишем, в связи с задержками решение нужно принимать на такт раньше  
+      if (size_free >= (2 * n_push))begin                
         for(int i = 0; i < n_push; i = i+1)begin  
           dat_0 = $urandom_range(MAX_DAT);
-          queue_in.push_back(dat_0);                    //  записываем данные в очередь 
-          in_data[i] = dat_0;                           // и в вектор входных данных  
+          queue_in.push_back(dat_0);                     
+          in_data[i] = dat_0;                             
         end   
-        push_data <= in_data;                           // выставляем данные и сигналы 
+        push_data <= in_data;                            
         push <= n_push;  
       end
       else  
-      push <= '0;                                        //  
+      push <= '0;                                          
     end
 
     repeat(d) @(posedge clk);   
      
-    $display ("%s, PASS  " );
+    $display ("PASS  " );
 
     //--------------------------------------------------------------------
         $finish;
