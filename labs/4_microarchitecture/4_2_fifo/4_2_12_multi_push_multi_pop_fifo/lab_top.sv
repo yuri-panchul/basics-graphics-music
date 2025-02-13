@@ -118,11 +118,11 @@ module lab_top
    assign led[1] = 1'b1;                           // просто эстетика 
 
     //----- instans DUT ------------------------------------------------------
-    localparam width = 4 
-    localparam depth = 9
-    localparam max_pop_push = 4
+    localparam w = 4; 
+    localparam d = 9;
+    localparam max_pop_push = 4;
    
-    multi_push_pop_fifo #(width, depth, max_pop_push) dut
+    multi_push_pop_fifo #(w, d, max_pop_push) dut
                          (
                           .clk(clk_hand),
                           .rst(rst),
