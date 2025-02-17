@@ -6,6 +6,6 @@ module d_flip_flop
 );
 
     always_ff @ (posedge clock)
-        q <= 1'b0;
+        q <= d;
 
 endmodule

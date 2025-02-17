@@ -11,6 +11,6 @@ module d_flip_flop_sync_reset_and_enable
         if (reset)
             q <= 1'b0;
         else if (enable)
-            q <= 1'b0;
+            q <= d;
 
 endmodule

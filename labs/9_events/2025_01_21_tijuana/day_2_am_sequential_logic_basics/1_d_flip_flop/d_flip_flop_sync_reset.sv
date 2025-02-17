@@ -9,7 +9,7 @@ module d_flip_flop_sync_reset
     always_ff @ (posedge clock)
         if (reset)
             q <= 1'b0;
-        else if
-            q <= 1'b0;
+        else
+            q <= d;
 
 endmodule

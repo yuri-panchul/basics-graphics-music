@@ -9,7 +9,7 @@ module d_flip_flop_async_reset
     always_ff @ (posedge clock or posedge reset)
         if (reset)
             q <= 1'b0;
-        else if
-            q <= 1'b0;
+        else
+            q <= d;
 
 endmodule
