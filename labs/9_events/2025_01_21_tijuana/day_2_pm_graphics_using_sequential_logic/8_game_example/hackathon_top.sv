@@ -57,15 +57,14 @@ module hackathon_top
     //
     //  Finite State Machine (FSM) for the game
 
-    enum bit [2:0]
-    {
+    localparam [2:0]
         STATE_START = 0,
         STATE_AIM   = 1,
         STATE_SHOOT = 2,
         STATE_WON   = 3,
-        STATE_LOST  = 4
-    }
-    state, new_state;
+        STATE_LOST  = 4;
+
+    logic [2:0] state, new_state;
 
     //------------------------------------------------------------------------
 
@@ -212,6 +211,8 @@ module hackathon_top
         green = 0;
         blue  = 0;
 
+        // verilator lint_off CASEINCOMPLETE
+
         case (state)
 
         STATE_WON:
@@ -241,6 +242,8 @@ module hackathon_top
         end
 
         endcase
+
+        // verilator lint_on CASEINCOMPLETE
     end
 
     //------------------------------------------------------------------------
@@ -258,7 +261,7 @@ module hackathon_top
         .clk      ( clock    ),
         .rst      ( reset    ),
         .number   ( number   ),
-        .dots     ( 0        ),
+        .dots     ( '0       ),  // This syntax means "all 0s in the context"
         .abcdefgh ( abcdefgh ),
         .digit    ( digit    )
     );
