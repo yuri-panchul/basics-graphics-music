@@ -1,67 +1,6 @@
 // Board configuration: tang_nano_9k_lcd_480_272_tm1638_hackathon
 // This module uses few parameterization and relaxed typing rules
 
-module d_flip_flop_sync_reset_and_enable
-(
-    input  clock,
-    input  reset,
-    input  enable,
-    input  d,
-    output logic q
-);
-
-    always_ff @ (posedge clock)
-        if (reset)
-            q <= 1'b0;
-        else if (enable)
-            q <= 1'b0;
-
-endmodule
-
-module d_flip_flop_async_reset
-(
-    input  clock,
-    input  reset,
-    input  d,
-    output logic q
-);
-
-    always_ff @ (posedge clock or posedge reset)
-        if (reset)
-            q <= 1'b0;
-        else if
-            q <= 1'b0;
-
-endmodule
-
-module d_flip_flop_sync_reset
-(
-    input  clock,
-    input  reset,
-    input  d,
-    output logic q
-);
-
-    always_ff @ (posedge clock)
-        if (reset)
-            q <= 1'b0;
-        else if
-            q <= 1'b0;
-
-endmodule
-
-module d_flip_flop
-(
-    input  clock,
-    input  d,
-    output logic q
-);
-
-    always_ff @ (posedge clock)
-        q <= 1'b0;
-
-endmodule
-
 module hackathon_top
 (
     input  logic       clock,
