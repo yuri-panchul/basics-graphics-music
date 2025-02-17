@@ -1,6 +1,67 @@
 // Board configuration: tang_nano_9k_lcd_480_272_tm1638_hackathon
 // This module uses few parameterization and relaxed typing rules
 
+module d_flip_flop_sync_reset_and_enable
+(
+    input  clock,
+    input  reset,
+    input  enable,
+    input  d,
+    output logic q
+);
+
+    always_ff @ (posedge clock)
+        if (reset)
+            q <= 1'b0;
+        else if (enable)
+            q <= 1'b0;
+
+endmodule
+
+module d_flip_flop_async_reset
+(
+    input  clock,
+    input  reset,
+    input  d,
+    output logic q
+);
+
+    always_ff @ (posedge clock or posedge reset)
+        if (reset)
+            q <= 1'b0;
+        else if
+            q <= 1'b0;
+
+endmodule
+
+module d_flip_flop_sync_reset
+(
+    input  clock,
+    input  reset,
+    input  d,
+    output logic q
+);
+
+    always_ff @ (posedge clock)
+        if (reset)
+            q <= 1'b0;
+        else if
+            q <= 1'b0;
+
+endmodule
+
+module d_flip_flop
+(
+    input  clock,
+    input  d,
+    output logic q
+);
+
+    always_ff @ (posedge clock)
+        q <= 1'b0;
+
+endmodule
+
 module hackathon_top
 (
     input  logic       clock,
@@ -25,59 +86,42 @@ module hackathon_top
     output logic [4:0] blue
 );
 
-    // Exercise 1: Free running counter.
-    // How do you change the speed of LED blinking?
-    // Try different bit slices to display.
+    d_flip_flop i0
+    (
+        .clock   ( slow_clock ),
+        .d       ( key [0]    ),
+        .q       ( led [0]    )
+    );
 
-    logic [31:0] counter;
+    d_flip_flop_sync_reset i1
+    (
+        .clock   ( slow_clock ),
+        .reset,
+        .d       ( key [1]    ),
+        .q       ( led [1]    )
+    );
 
-    always_ff @ (posedge clock)
-        if (reset)
-            counter <= 0;
-        else
-            counter <= counter + 1;
+    d_flip_flop_async_reset i2
+    (
+        .clock   ( slow_clock ),
+        .reset,
+        .d       ( key [2]    ),
+        .q       ( led [2]    )
+    );
 
-    assign led = counter [31:24];  // Try to put [23:16] here
+    //  Pulse generator, 50 times a second
 
-    // assign led = counter >> 20;  // Try alternative way to shift the value
+    logic enable;
+    strobe_gen # (.clk_mhz (27), .strobe_hz (1))
+    i_strobe_gen (clock, reset, enable);
 
-    // Try to add "if (key)" after "else".
-
-    // Exercise 2: Key-controlled counter.
-    // Comment out the code above.
-    // Uncomment and synthesize the code below.
-    // Press the key to see the counter incrementing.
-    //
-    // Change the design, for example:
-    //
-    // 1. One key is used to increment, another to decrement.
-    //
-    // 2. Two counters controlled by different keys
-    // displayed in different groups of LEDs.
-
-    // START_SOLUTION
-
-    /*
-
-    wire k = | key;  // Any key is on
-
-    logic k_previous;
-
-    always_ff @ (posedge clock)
-        if (reset)
-            k_previous <= 0;
-        else
-            k_previous <= k;
-
-    wire k_pressed = k & ~ k_previous;
-
-    always_ff @ (posedge clock)
-        if (reset)
-            led <= 0;
-        else if (k_pressed)
-            led <= led + 1;
-    */
-
-    // END_SOLUTION
+    d_flip_flop_sync_reset_and_enable i3
+    (
+        .clock   ( clock      ),  // Note this is not a slow_clock
+        .reset,
+        .enable,
+        .d       ( key [3]    ),
+        .q       ( led [3]    )
+    );
 
 endmodule
