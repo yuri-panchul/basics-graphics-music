@@ -227,6 +227,7 @@ module board_specific_top
         hackathon_top i_hackathon_top
         (
             .clock         ( clk           ),
+            .slow_clock    ( slow_clk      ),
             .reset         ( rst           ),
 
             .key           ( lab_key       ),
