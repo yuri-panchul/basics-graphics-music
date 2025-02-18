@@ -4,6 +4,7 @@
 module hackathon_top
 (
     input  logic       clock,
+    input  logic       slow_clock,
     input  logic       reset,
 
     input  logic [7:0] key,

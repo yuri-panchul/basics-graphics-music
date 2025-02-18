@@ -4,6 +4,7 @@
 module hackathon_top
 (
     input  logic       clock,
+    input  logic       slow_clock,
     input  logic       reset,
 
     input  logic [7:0] key,
@@ -33,7 +34,7 @@ module hackathon_top
 
                wx            = 30,
                wy            = 30,
-               
+
                start_0_x     = 0,
                start_0_y     = screen_height     / 5,
 
@@ -57,15 +58,14 @@ module hackathon_top
     //
     //  Finite State Machine (FSM) for the game
 
-    enum bit [2:0]
-    {
+    localparam [2:0]
         STATE_START = 0,
         STATE_AIM   = 1,
         STATE_SHOOT = 2,
         STATE_WON   = 3,
-        STATE_LOST  = 4
-    }
-    state, new_state;
+        STATE_LOST  = 4;
+
+    logic [2:0] state, new_state;
 
     //------------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ module hackathon_top
     always_comb
     begin
         new_state = state;
-        
+
         case (state)
 
         STATE_START : new_state =                   STATE_AIM;
@@ -137,7 +137,7 @@ module hackathon_top
         else
         begin
             x0 = x0 + 1;
-            
+
             if (state == STATE_SHOOT)
             begin
                 x1 = x1 + right - left;
@@ -145,7 +145,7 @@ module hackathon_top
             end
         end
     end
-    
+
     //------------------------------------------------------------------------
     //
     //  Updating object coordinates
@@ -174,7 +174,7 @@ module hackathon_top
                            | x1 == 0
                            | x1 == screen_width
                            | y1 == 0;
-    
+
     assign collision = ~ (  x0 + wx <= x1
                           | x1 + wx <= x0
                           | y0 + wy <= y1
@@ -187,7 +187,7 @@ module hackathon_top
     // Timeout condition
 
     logic [7:0] timer;
-    
+
     always_ff @ (posedge clock)
         if (reset)
             timer <= 0;
@@ -197,7 +197,7 @@ module hackathon_top
             timer <= 100;
         else if (enable)
             timer <= timer - 1;
-            
+
     assign timeout = (timer == 0);
 
     //------------------------------------------------------------------------
@@ -212,6 +212,8 @@ module hackathon_top
         green = 0;
         blue  = 0;
 
+        // verilator lint_off CASEINCOMPLETE
+
         case (state)
 
         STATE_WON:
@@ -224,7 +226,7 @@ module hackathon_top
             red   = max_red;
             green = max_green;
         end
-                     
+
         default:
         begin
             if (  x >= x0 & x < x0 + wx
@@ -239,8 +241,10 @@ module hackathon_top
                 red = max_red;
             end
         end
-        
+
         endcase
+
+        // verilator lint_on CASEINCOMPLETE
     end
 
     //------------------------------------------------------------------------
@@ -252,13 +256,13 @@ module hackathon_top
     wire [31:0] number
         = key [7] ? { 7'b0, x0, 7'b0, y0 }
                   : { 7'b0, x1, 7'b0, y1 };
-    
+
     seven_segment_display # (.w_digit (8)) i_7segment
     (
         .clk      ( clock    ),
         .rst      ( reset    ),
         .number   ( number   ),
-        .dots     ( 0        ),
+        .dots     ( '0       ),  // This syntax means "all 0s in the context"
         .abcdefgh ( abcdefgh ),
         .digit    ( digit    )
     );

@@ -4,6 +4,7 @@
 module hackathon_top
 (
     input  logic       clock,
+    input  logic       slow_clock,
     input  logic       reset,
 
     input  logic [7:0] key,
@@ -26,20 +27,33 @@ module hackathon_top
 
     //------------------------------------------------------------------------
 
-    wire update_ring;
+    wire update_digit;
 
-    strobe_gen # (.clk_mhz (27), .strobe_hz (200))  // Try changing strobe_hz
-    i_strobe_gen_1 (.clk (clock), .rst (reset), .strobe (update_ring));
+    strobe_gen # (.clk_mhz (27), .strobe_hz (200))
+    i_strobe_gen_1 (.clk (clock), .rst (reset), .strobe (update_digit));
+
+    wire update_offset;
+
+    strobe_gen # (.clk_mhz (27), .strobe_hz (5))
+    i_strobe_gen_2 (.clk (clock), .rst (reset), .strobe (update_offset));
 
     //------------------------------------------------------------------------
 
-    logic [7:0] ring;
+    logic [2:0] i_digit;
 
     always_ff @ (posedge clock)
       if (reset)
-        ring <= 8'b10000000;
-      else if (update_ring)
-        ring <= { ring [0], ring [7:1] };
+        i_digit <= 0;
+      else if (update_digit)
+        i_digit <= i_digit + 1;
+
+    logic [2:0] offset;
+
+    always_ff @ (posedge clock)
+      if (reset)
+        offset <= 0;
+      else if (update_offset)
+        offset <= offset + 1;
 
     //------------------------------------------------------------------------
 
@@ -65,28 +79,30 @@ module hackathon_top
 
     seven_seg_encoding_e letter;
 
+    wire [2:0] shifted_i_digit = i_digit - offset;
+
     always_comb
-        case (ring)
-        8'b0000_1000: letter = F;
-        8'b0000_0100: letter = P;
-        8'b0000_0010: letter = G;
-        8'b0000_0001: letter = A;
-        default:      letter = space;
+        case (shifted_i_digit)
+        3'd4: letter = F;
+        3'd5: letter = P;
+        3'd6: letter = G;
+        3'd7: letter = A;
+        default: letter = space;
         endcase
 
     always_ff @ (posedge clock)
         if (reset)
         begin
             abcdefgh <= space;
-            digit    <= 8'b0;
+            digit    <= 0;
         end
         else
         begin
             abcdefgh <= letter;
-            digit    <= ring;
+            digit    <= 8'b10000000 >> i_digit;
         end
 
-    // Exercise: Put your name or another word to the display.
+    // Exercise: Make the word moving another direction
 
     // START_SOLUTION
     // END_SOLUTION
