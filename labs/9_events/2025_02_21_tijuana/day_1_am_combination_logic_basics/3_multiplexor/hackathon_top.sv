@@ -103,10 +103,5 @@ module hackathon_top
     // without using "?" operation, "if", "case" or a bit selection.
     // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
-    // START_SOLUTION
-
-    assign led [7] = (a & sel) | (b & ~ sel);
-
-    // END_SOLUTION
 
 endmodule

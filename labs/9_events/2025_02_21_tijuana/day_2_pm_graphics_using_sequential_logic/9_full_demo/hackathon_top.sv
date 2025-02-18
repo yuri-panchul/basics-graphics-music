@@ -69,5 +69,3 @@ module hackathon_top
     );
 
 endmodule
-    // START_SOLUTION
-    // END_SOLUTION

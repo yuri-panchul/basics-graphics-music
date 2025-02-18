@@ -55,29 +55,5 @@ module hackathon_top
     // 2. Two counters controlled by different keys
     // displayed in different groups of LEDs.
 
-    // START_SOLUTION
-
-    /*
-
-    wire k = | key;  // Any key is on
-
-    logic k_previous;
-
-    always_ff @ (posedge clock)
-        if (reset)
-            k_previous <= 0;
-        else
-            k_previous <= k;
-
-    wire k_pressed = k & ~ k_previous;
-
-    always_ff @ (posedge clock)
-        if (reset)
-            led <= 0;
-        else if (k_pressed)
-            led <= led + 1;
-    */
-
-    // END_SOLUTION
 
 endmodule

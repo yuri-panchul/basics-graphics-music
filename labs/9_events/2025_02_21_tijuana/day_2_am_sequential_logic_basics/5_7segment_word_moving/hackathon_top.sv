@@ -104,7 +104,5 @@ module hackathon_top
 
     // Exercise: Make the word moving another direction
 
-    // START_SOLUTION
-    // END_SOLUTION
 
 endmodule

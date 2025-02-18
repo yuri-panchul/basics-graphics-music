@@ -42,13 +42,5 @@ module hackathon_top
     //
     // https://es.wikipedia.org/wiki/Leyes_de_De_Morgan
 
-    // START_SOLUTION
-
-    assign led [2] = ~ (a &   b);
-    assign led [3] = ~  a | ~ b;  // The same as led [2]
-    assign led [4] = ~ (a |   b);
-    assign led [5] = ~  a & ~ b;  // The same as led [5]
-
-    // END_SOLUTION
 
 endmodule

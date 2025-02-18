@@ -31,18 +31,6 @@ module hackathon_top
         green = 0;
         blue  = 0;
 
-        // START_SOLUTION
-
-        if (x > 100 & x < 300 & y > 50 & y < 100)
-            red = key [0] ? 5'b11111 : x [6:2];
-
-        if (x > 150 & x < 350 & y > 70 & y < 120)
-            green = key [1] ? 6'b111111 : x [7:2];
-
-        if (x > 200 & x < 400 & y > 90 & y < 140)
-            blue = key [2] ? 5'b11111 : y [5:1];
-
-        // END_SOLUTION
     end
 
 endmodule

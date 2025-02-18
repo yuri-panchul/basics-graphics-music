@@ -89,7 +89,5 @@ module hackathon_top
 
     // Exercise: Put your name or another word to the display.
 
-    // START_SOLUTION
-    // END_SOLUTION
 
 endmodule

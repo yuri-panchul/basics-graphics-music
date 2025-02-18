@@ -39,24 +39,12 @@ module hackathon_top
         // Exercise 1: Uncomment the code for a green rectangle
         // that overlaps red rectangle
 
-        // START_SOLUTION
-
-        if (x > 150 & x < 350 & y > 70 & y < 120)
-            green = 63;
-
-        // END_SOLUTION
 
         // 63 is the maximum 6-bit number, 6'b111111
 
         // Exercise 2: Add a blue rectangle
         // that overlaps both rectangles
 
-        // START_SOLUTION
-
-        if (x > 200 & x < 400 & y > 90 & y < 140)
-            blue = 31;
-
-        // END_SOLUTION
     end
 
 endmodule

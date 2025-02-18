@@ -66,19 +66,13 @@ module hackathon_top
 
     // Exercise 1: Make the light move in the opposite direction.
 
-    // START_SOLUTION
-    // END_SOLUTION
 
     // Exercise 2: Make the light moving in a loop.
     // Use another key to reset the moving lights back to no lights.
 
-    // START_SOLUTION
-    // END_SOLUTION
 
     // Exercise 3: Display the state of the shift register
     // on a seven-segment display, moving the light in a circle.
 
-    // START_SOLUTION
-    // END_SOLUTION
 
 endmodule
