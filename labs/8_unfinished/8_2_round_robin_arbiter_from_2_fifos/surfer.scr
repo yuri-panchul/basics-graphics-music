@@ -1,0 +1,17 @@
+variable_add tb.i_lab_top.clk
+variable_add tb.i_lab_top.rst
+variable_add tb.i_lab_top.a_valid
+variable_add tb.i_lab_top.a_ready
+variable_add tb.i_lab_top.a_data
+variable_add tb.i_lab_top.b_valid
+variable_add tb.i_lab_top.b_ready
+variable_add tb.i_lab_top.b_data
+variable_add tb.i_lab_top.i_rra_from_fifos.a_down_valid
+variable_add tb.i_lab_top.i_rra_from_fifos.a_down_ready
+variable_add tb.i_lab_top.i_rra_from_fifos.a_down_data
+variable_add tb.i_lab_top.i_rra_from_fifos.b_down_valid
+variable_add tb.i_lab_top.i_rra_from_fifos.b_down_ready
+variable_add tb.i_lab_top.i_rra_from_fifos.b_down_data
+variable_add tb.i_lab_top.out_valid
+variable_add tb.i_lab_top.out_ready
+variable_add tb.i_lab_top.out_data

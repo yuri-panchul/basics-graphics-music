@@ -1,0 +1,8 @@
+variable_add tb.clk
+variable_add tb.rst
+variable_add tb.push
+variable_add tb.pop
+variable_add tb.write_data
+variable_add tb.read_data
+variable_add tb.empty
+variable_add tb.full

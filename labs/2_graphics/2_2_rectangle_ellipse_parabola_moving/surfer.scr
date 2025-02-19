@@ -1,0 +1,74 @@
+variable_add tb.i_display.pixel_29
+variable_add tb.i_display.pixel_28
+variable_add tb.i_display.pixel_27
+variable_add tb.i_display.pixel_26
+variable_add tb.i_display.pixel_25
+variable_add tb.i_display.pixel_24
+variable_add tb.i_display.pixel_23
+variable_add tb.i_display.pixel_22
+variable_add tb.i_display.pixel_21
+variable_add tb.i_display.pixel_20
+variable_add tb.i_display.pixel_19
+variable_add tb.i_display.pixel_18
+variable_add tb.i_display.pixel_17
+variable_add tb.i_display.pixel_16
+variable_add tb.i_display.pixel_15
+variable_add tb.i_display.pixel_14
+variable_add tb.i_display.pixel_13
+variable_add tb.i_display.pixel_12
+variable_add tb.i_display.pixel_11
+variable_add tb.i_display.pixel_10
+variable_add tb.i_display.pixel_09
+variable_add tb.i_display.pixel_08
+variable_add tb.i_display.pixel_07
+variable_add tb.i_display.pixel_06
+variable_add tb.i_display.pixel_05
+variable_add tb.i_display.pixel_04
+variable_add tb.i_display.pixel_03
+variable_add tb.i_display.pixel_02
+variable_add tb.i_display.pixel_01
+variable_add tb.i_display.pixel_00
+variable_add tb.i_lcd.LCD_DE
+variable_add tb.i_lcd.LCD_HSYNC
+variable_add tb.LCD_R
+variable_add tb.LCD_G
+variable_add tb.LCD_B
+variable_add tb.x
+variable_add tb.y
+
+scope_select tb.i_lcd
+
+item_focus bo
+item_set_format Unsigned
+item_set_color Yellow
+
+item_focus bp
+item_set_format Unsigned
+item_set_color Gray
+
+item_focus ca
+item_set_format Unsigned
+item_set_color Red
+
+item_focus cb
+item_set_format Unsigned
+item_set_color Green
+
+item_focus cc
+item_set_format Unsigned
+item_set_color Blue
+
+item_focus cd
+item_set_format Unsigned
+item_set_color Gray
+
+item_focus ce
+item_set_format Unsigned
+item_set_color Gray
+
+zoom_in
+zoom_in
+zoom_in
+zoom_in
+zoom_in
+scroll_to_end
