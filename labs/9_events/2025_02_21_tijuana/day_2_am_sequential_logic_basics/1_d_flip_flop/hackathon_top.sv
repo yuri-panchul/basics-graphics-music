@@ -58,8 +58,6 @@ module hackathon_top
     strobe_gen # (.clk_mhz (27), .strobe_hz (1))
     i_strobe_gen (clock, reset, enable);
 
-    assign led [6] = enable;
-
     d_flip_flop_sync_reset_and_enable i3
     (
         .clock   ( clock      ),  // Note this is not a slow_clock
