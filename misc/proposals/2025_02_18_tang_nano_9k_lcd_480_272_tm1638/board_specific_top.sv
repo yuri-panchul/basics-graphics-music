@@ -50,58 +50,58 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                        CLK,
+    input                              CLK,
 
-    input  [w_key        - 1:0]  KEY,
+    input        [w_key        - 1:0]  KEY,
 
-    output [w_led        - 1:0]  LED,
+    output       [w_led        - 1:0]  LED,
 
-    output                       LARGE_LCD_DE,
-    output                       LARGE_LCD_VS,
-    output                       LARGE_LCD_HS,
-    output                       LARGE_LCD_CK,
-    output                       LARGE_LCD_INIT,
-    output                       LARGE_LCD_BL,
+    output logic                       LARGE_LCD_DE,
+    output logic                       LARGE_LCD_VS,
+    output logic                       LARGE_LCD_HS,
+    output logic                       LARGE_LCD_CK,
+    output logic                       LARGE_LCD_INIT,
+    output logic                       LARGE_LCD_BL,
 
-    output [7:7 + 1 - w_red   ]  LARGE_LCD_R,
-    output [7:7 + 1 - w_green ]  LARGE_LCD_G,
-    output [7:7 + 1 - w_blue  ]  LARGE_LCD_B,
+    output logic [7:7 + 1 - w_red   ]  LARGE_LCD_R,
+    output logic [7:7 + 1 - w_green ]  LARGE_LCD_G,
+    output logic [7:7 + 1 - w_blue  ]  LARGE_LCD_B,
 
-    input                        UART_RX,
-    output                       UART_TX,
+    input                              UART_RX,
+    output                             UART_TX,
 
     // The following 4 pins (TF_CS, TF_MOSI, TF_SCLK, TF_MISO)
     // are used for INMP441 microphone
     // in basics-graphics-music labs
 
-    inout                        TF_CS,
-    inout                        TF_MOSI,
-    inout                        TF_SCLK,
-    inout                        TF_MISO,
+    inout                              TF_CS,
+    inout                              TF_MOSI,
+    inout                              TF_SCLK,
+    inout                              TF_MISO,
 
-    inout  [w_gpio       - 1:0]  GPIO,
+    inout        [w_gpio       - 1:0]  GPIO,
 
     // The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
     // are used for the I2S audio output
     // in basics-graphics-music labs
 
-    inout                        SMALL_LCD_CLK,
-    inout                        SMALL_LCD_RESETN,
-    inout                        SMALL_LCD_CS,
-    inout                        SMALL_LCD_RS,
-    inout                        SMALL_LCD_DATA,
+    inout                              SMALL_LCD_CLK,
+    inout                              SMALL_LCD_RESETN,
+    inout                              SMALL_LCD_CS,
+    inout                              SMALL_LCD_RS,
+    inout                              SMALL_LCD_DATA,
 
     // TMDS pins conflict with LARGE_LCD pins
 
-    // output                    TMDS_CLK_N,
-    // output                    TMDS_CLK_P,
-    // output [            2:0]  TMDS_D_N,
-    // output [            2:0]  TMDS_D_P,
+    // output                          TMDS_CLK_N,
+    // output                          TMDS_CLK_P,
+    // output       [            2:0]  TMDS_D_N,
+    // output       [            2:0]  TMDS_D_P,
 
-    output                       FLASH_CLK,
-    output                       FLASH_CSB,
-    output                       FLASH_MOSI,
-    input                        FLASH_MISO
+    output                             FLASH_CLK,
+    output                             FLASH_CSB,
+    output                             FLASH_MOSI,
+    input                              FLASH_MISO
 );
 
     wire clk = CLK;
@@ -145,6 +145,10 @@ module board_specific_top
 
     wire  [w_x         - 1:0] x;
     wire  [w_y         - 1:0] y;
+
+    wire  [w_red       - 1:0] red;
+    wire  [w_green     - 1:0] green;
+    wire  [w_blue      - 1:0] blue;
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
@@ -239,9 +243,9 @@ module board_specific_top
             .x             ( x             ),
             .y             ( y             ),
 
-            .red           ( LARGE_LCD_R   ),
-            .green         ( LARGE_LCD_G   ),
-            .blue          ( LARGE_LCD_B   )
+            .red           ( red           ),
+            .green         ( green         ),
+            .blue          ( blue          )
         );
 
     `else
@@ -289,9 +293,9 @@ module board_specific_top
 
             `endif
 
-            .red           ( LARGE_LCD_R   ),
-            .green         ( LARGE_LCD_G   ),
-            .blue          ( LARGE_LCD_B   ),
+            .red           ( red           ),
+            .green         ( green         ),
+            .blue          ( blue          ),
 
             .uart_rx       ( UART_RX       ),
             .uart_tx       ( UART_TX       ),
@@ -362,6 +366,10 @@ module board_specific_top
 
         `endif
 
+        wire pre_LARGE_LCD_DE;
+        wire pre_LARGE_LCD_VS;
+        wire pre_LARGE_LCD_HS;
+
         `ifdef USE_LCD_800_480
         lcd_800_480
         `elsif USE_LCD_480_272_ML6485
@@ -371,19 +379,44 @@ module board_specific_top
         `endif
         i_lcd
         (
-            .PixelClk  (   LARGE_LCD_CK   ),
-            .nRST      ( ~ rst            ),
+            .PixelClk  (   LARGE_LCD_CK     ),
+            .nRST      ( ~ rst              ),
 
-            .LCD_DE    (   LARGE_LCD_DE   ),
-            .LCD_HSYNC (   LARGE_LCD_HS   ),
-            .LCD_VSYNC (   LARGE_LCD_VS   ),
+            .LCD_DE    (   pre_LARGE_LCD_DE ),
+            .LCD_HSYNC (   pre_LARGE_LCD_HS ),
+            .LCD_VSYNC (   pre_LARGE_LCD_VS ),
 
-            .x         (   x              ),
-            .y         (   y              )
+            .x         (   x                ),
+            .y         (   y                )
         );
 
         assign LARGE_LCD_INIT = 1'b0;
         assign LARGE_LCD_BL   = 1'b0;
+
+        `ifdef DO_NOT_REGISTER_LARGE_LCD_SIGNALS
+
+            assign LARGE_LCD_DE = pre_LARGE_LCD_DE;
+            assign LARGE_LCD_HS = pre_LARGE_LCD_HS;
+            assign LARGE_LCD_VS = pre_LARGE_LCD_VS;
+
+            assign LARGE_LCD_R  = red;
+            assign LARGE_LCD_G  = green;
+            assign LARGE_LCD_B  = blue;
+
+        `else
+
+            always_ff @ (posedge clk)
+            begin
+                LARGE_LCD_DE <= pre_LARGE_LCD_DE;
+                LARGE_LCD_HS <= pre_LARGE_LCD_HS;
+                LARGE_LCD_VS <= pre_LARGE_LCD_VS;
+
+                LARGE_LCD_R  <= red;
+                LARGE_LCD_G  <= green;
+                LARGE_LCD_B  <= blue;
+            end
+
+        `endif
 
     `endif
 
