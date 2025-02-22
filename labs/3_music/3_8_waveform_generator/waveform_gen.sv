@@ -25,8 +25,9 @@ module waveform_gen
 
     //  Vertical step of triangle waveform generator
 
-    localparam int step = ((y_max * freq * ((clk_mhz < 36) ? 1 :
-                          ((clk_mhz > 67) ? 4 : 2))) / (clk_mhz * 488));
+    localparam   [         15:0] step = ((y_max * freq *
+        ((clk_mhz < 36) ? 1 : ((clk_mhz > 67) ? 4 : 2)))
+                                     / (clk_mhz * 488));
 
     logic        [CLK_BIT - 1:0] clk_div;
     logic        [          0:0] down = '0;
