@@ -1,0 +1,36 @@
+variable_add tb.i_converter.q00
+variable_add tb.i_converter.q90
+variable_add tb.i_converter.i_filtered
+variable_add tb.i_converter.q_filtered
+variable_add tb.i_converter.abs_i
+variable_add tb.i_converter.abs_q
+variable_add tb.i_converter.sum_abs
+variable_add tb.i_converter.ema
+variable_add tb.i_converter.rms_out
+variable_add tb.i_converter.mic
+variable_add tb.i_converter.switch
+
+item_focus a
+item_set_format Unsigned
+item_focus b
+item_set_format Unsigned
+item_focus c
+item_set_format Unsigned
+item_focus d
+item_set_format Unsigned
+item_focus e
+item_set_format Unsigned
+item_focus f
+item_set_format Unsigned
+item_focus g
+item_set_format Unsigned
+item_focus h
+item_set_format Unsigned
+item_focus i
+item_set_format Unsigned
+item_focus j
+item_set_format Unsigned
+item_focus k
+item_set_format Unsigned
+
+scope_select tb.i_converter

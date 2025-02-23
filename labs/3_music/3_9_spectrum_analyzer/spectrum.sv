@@ -8,7 +8,7 @@ module spectrum
                w_blue              = 4,
                w_x                 = $clog2 ( screen_width  ),
                w_y                 = $clog2 ( screen_height ),
-               [13:0] freq [0:11]  = '{132, 152, 174, 200, 230, 264,
+        logic  [0:11] [13:0] freq  = '{132, 152, 174, 200, 230, 264,
                                        303, 348, 400, 458, 525, 600}
 )
 (
