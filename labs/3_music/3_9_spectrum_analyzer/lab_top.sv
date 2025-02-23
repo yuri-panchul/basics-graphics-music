@@ -89,8 +89,8 @@ module lab_top
         .green         ( green         ),
         .blue          ( blue          ),
 
-    // Take the sign bit and the desired part of the signal
-        .mic           ({{mic[23]},{mic[13:6]}})
+    // Take sign bit and desired part of input signal
+        .mic           ({{mic[23]}, {mic[12:6]}})
     );
 
 endmodule

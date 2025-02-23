@@ -1,29 +1,30 @@
 module converter 
 # (
     parameter                  stripe = 7,  // stripe narrower > 7 wider < 7
-                               level  = 15, // output level (shift)
+                               level  = 14, // output level (shift)
                                smooth = 9   // smoothing output fluctuations
 )
 (
     input  logic               clk,
     input  logic               rst,
-    input  logic signed [ 8:0] mic,
+    input  logic signed [ 7:0] mic,
     input  logic        [16:0] band_count,
     output logic        [10:0] rms_out
 );
 
-    // The initial values will be needed if you exclude reset
+    // Initial values will be needed if you exclude reset code
     logic               [16:0] count      = '0;
     logic                      pulse_out;
     logic               [ 4:0] switch     = '0;
-    logic        signed [ 8:0] in, q00, q90;
-    logic        signed [17:0] i_filtered = '0;
-    logic        signed [17:0] q_filtered = '0;
-    logic               [17:0] abs_i, abs_q;
-    logic               [18:0] sum_abs;
-    logic               [21:0] ema        = '0;
+    logic        signed [ 7:0] q00, q90;
+    logic        signed [ 7:0] in;
+    logic        signed [14:0] i_filtered = '0;
+    logic        signed [14:0] q_filtered = '0;
+    logic               [14:0] abs_i, abs_q;
+    logic               [15:0] sum_abs;
+    logic               [16:0] ema        = '0;
 
-    // Reference frequency * 32 control pulses generator
+    // Reference frequency * 32 of control pulses generator
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             count     <= '0;
@@ -37,7 +38,7 @@ module converter
         end
     end
 
-    // Quadrature mixer
+    // Quadrature mixer * 32 steps with a 90 degree shift
     always_ff @(posedge clk or posedge rst) begin
         if (rst)
             switch <= '0;
@@ -52,8 +53,8 @@ module converter
             in  <= '0;
         end else begin
             in  <= mic;
-    //------------------------------------q00--9-h----q90-12-h----------------
         case (switch)
+    //------------------------------------q00--9-h----q90-12-h----------------
              0: begin 
             q00 <= '0;
             q90 <=  in;
@@ -194,29 +195,29 @@ module converter
         end
     end
 
-    // RC low frequency filter I
+    // Similar RC low frequency filter I
     always_ff @(posedge clk or posedge rst) begin
         if (rst)
             i_filtered <= '0;
-        else if (i_filtered [16] != i_filtered [17])  // overflow prevention
-            i_filtered <= {i_filtered [17], i_filtered [17], {16 {~i_filtered [17]}}};
+        else if (i_filtered [13] != i_filtered [14])  // overflow prevention
+            i_filtered <= {i_filtered [14], i_filtered [14], {13 {~i_filtered [14]}}};
         else if (pulse_out)
             i_filtered <= i_filtered - (i_filtered >>> stripe) + q00;
     end
 
-    // RC low frequency filter Q
+    // Similar RC low frequency filter Q
     always_ff @(posedge clk or posedge rst) begin
         if (rst)
             q_filtered <= '0;
-        else if (q_filtered [16] != q_filtered [17])  // overflow prevention
-            q_filtered <= {q_filtered [17], q_filtered [17], {16 {~q_filtered [17]}}};
+        else if (q_filtered [13] != q_filtered [14])  // overflow prevention
+            q_filtered <= {q_filtered [14], q_filtered [14], {13 {~q_filtered [14]}}};
         else if (pulse_out)
             q_filtered <= q_filtered - (q_filtered >>> stripe) + q90;
     end
 
     // Rectifier
-    assign abs_i = i_filtered [17] ? -i_filtered : i_filtered;
-    assign abs_q = q_filtered [17] ? -q_filtered : q_filtered;
+    assign abs_i = i_filtered [14] ? -i_filtered : i_filtered;
+    assign abs_q = q_filtered [14] ? -q_filtered : q_filtered;
     assign sum_abs = abs_i + abs_q;
 
     // Averaging

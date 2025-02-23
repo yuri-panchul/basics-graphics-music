@@ -40,6 +40,8 @@ module tb;
     logic                 sd;
     wire  [         23:0] value;
 
+    logic [         10:0] rms_out;
+
     //------------------------------------------------------------------------
 
     inmp441_mic_i2s_receiver i_microphone (.*);
@@ -50,8 +52,8 @@ module tb;
     (
         .clk        ( clk        ),
         .rst        ( rst        ),
-        .mic        ( value      ),
-        .band_count ( 2410       ),
+        .mic        ({{value[23]}, {value[12:6]}}),
+        .band_count ( 17'd2410   ),
         .rms_out    ( rms_out    )
     );
 
@@ -86,7 +88,7 @@ module tb;
 
         @ (negedge rst);
 
-        repeat (500000)
+        repeat (600000)
         begin
             sd <= $urandom ();
             @ (posedge clk);
@@ -94,7 +96,7 @@ module tb;
 
         // Based on timescale is 1 ns / 1 ps
 
-        # 0.007s
+        # 0.005s
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;
