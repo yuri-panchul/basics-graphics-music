@@ -78,7 +78,10 @@ module lab_top
     
     wire  [31:0] cycleCntPerf;  // clk counter for evaluation program time execution
 
-    sr_soc # (.CACHE_EN (0)) soc
+    sr_soc # (
+        .CACHE_EN (0)
+    )
+    soc
     (
         .clk        ( clk          ),
         .rst        ( rst          ),
@@ -98,7 +101,7 @@ module lab_top
         .rd      ( imData  )
     );
 
-    assign regAddr = 5'd10;  // a0
+    assign regAddr = 5'd10;  // a0 address line of the cpu register file
 
     //------------------------------------------------------------------------
 

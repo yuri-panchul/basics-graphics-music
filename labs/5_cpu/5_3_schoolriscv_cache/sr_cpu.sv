@@ -59,26 +59,10 @@ module sr_cpu
     wire [31:0] pcNext   = pcSrc ? pcBranch : pcPlus4;
 
     register_with_we r_pc (clk, rst, im_drdy, pcNext, pc);
-    
-    // PWRON detect
-    logic d1;
-    logic d2;
-    wire pwron;
-
-    always_ff @(posedge clk)
-      if (rst) begin
-        d1 <= 1;
-        d2 <= 1;
-      end else begin
-        d1 <= 0;
-        d2 <= d1;
-      end
-
-    assign pwron = ~d1 & d2;
 
     // program memory access
     assign imAddr = im_drdy ? (pcNext >> 2) : (pc >> 2);
-    assign im_req = im_drdy | pwron;
+    assign im_req = im_drdy;
 
     wire [31:0] instr = imData;
 
@@ -105,7 +89,7 @@ module sr_cpu
     wire [31:0] rd1;
     wire [31:0] rd2;
     wire [31:0] wd3;
-    
+
     assign rfUpd = regWrite & im_drdy;
 
     sr_register_file rf
