@@ -5,7 +5,7 @@ module tb;
     //------------------------------------------------------------------------
 
     logic               clk;
-    logic               reset;
+    logic               rst;
     bit   [0:12] [31:0] data_rgb;
     wire                sk9822_clk;
     wire                sk9822_data;
@@ -30,11 +30,11 @@ module tb;
 
     initial
     begin
-        reset <= 'bx;
+        rst <= 'bx;
         repeat (2) @ (posedge clk);
-        reset <= 1;
+        rst <= 1;
         repeat (2) @ (posedge clk);
-        reset <= 0;
+        rst <= 0;
     end
 
     //------------------------------------------------------------------------
