@@ -9,7 +9,7 @@ module inmp441_mic_i2s_receiver
 (
     input               clk,
     input               rst,
-    input               right = 1'b0,
+    input               right,
     output              lr,
     output logic        ws,
     output              sck,
@@ -17,7 +17,7 @@ module inmp441_mic_i2s_receiver
     output logic [23:0] value
 );
 
-    assign lr = right;
+    assign lr = (right == 1'bz) ? 1'b0 : right;
 
     //------------------------------------------------------------------------
 
