@@ -1,7 +1,7 @@
 module led_strip_combo
 (
     input                      clk,
-    input                      reset,
+    input                      rst,
 
     input  bit   [0:12] [31:0] data_rgb,
 
@@ -14,14 +14,14 @@ module led_strip_combo
     logic [1 :  0] cnt_3;
     logic [4 :  0] cnt_ws2812;
 
-    always_ff @(posedge clk or posedge reset)
-        if (reset)
+    always_ff @(posedge clk or posedge rst)
+        if (rst)
             clk_div <= 15'd7320;
         else
             clk_div <= clk_div + 1'b1;
 
-    always_ff @(posedge clk or posedge reset)
-        if (reset)
+    always_ff @(posedge clk or posedge rst)
+        if (rst)
             sk9822_clk <= '0;
         else
             sk9822_clk <= ~clk_div[3] & ~ws2812;

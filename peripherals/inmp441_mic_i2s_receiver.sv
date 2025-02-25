@@ -4,12 +4,12 @@
 
 module inmp441_mic_i2s_receiver
 # (
-    parameter clk_mhz = 50,
-              right   = 0
+    parameter clk_mhz = 50
 )
 (
     input               clk,
     input               rst,
+    input               right = 1'b0,
     output              lr,
     output logic        ws,
     output              sck,

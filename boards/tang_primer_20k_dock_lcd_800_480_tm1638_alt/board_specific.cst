@@ -57,13 +57,6 @@ IO_LOC  "KEY[0]"      T10;
 // GPIO
 IO_LOC  "GPIO_1[0]"   P11;
 
-// Microphone in Pmod 0
-/* IO_LOC  "GPIO_0[3]"   T9;  // ws
-IO_LOC  "GPIO_0[2]"   P8;  // lr
-IO_LOC  "GPIO_0[1]"   T7;  // sck
-IO_LOC  "GPIO_0[0]"   P6;  // sd
-IO_PORT "GPIO_0[0]"   PULL_MODE=DOWN; */
-
 // On-board sound DAC
 IO_LOC  "PA_EN"       R16;
 IO_LOC  "HP_DIN"      P15;
@@ -94,13 +87,3 @@ IO_LOC  "GPIO_0[1]"   T7;  // MIC_DAT3 sd_3 mic x C
 IO_PORT "GPIO_0[1]"   PULL_MODE=DOWN;
 IO_LOC  "GPIO_0[4]"   T6;  // MIC_BCK  sck
 IO_LOC  "GPIO_0[0]"   P6;  // MIC_WS   ws
-
-// PulseView Logic Analyzer in Pmod 0 
-/*                      T6;  //  -0-
-                      P6;  //  -1-
-                      R8;  //  -2-
-                      T7;  //  -3-
-                      T8;  //  -4-
-                      P8;  //  -5-
-                      P9;  //  -6-
-                      T9;  //  -7- */

@@ -84,6 +84,7 @@ module board_specific_top
                w_tm_led    = 8,
                w_tm_digit  = 8,
                right       = 7'b1101010;
+
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -131,24 +132,27 @@ module board_specific_top
     logic [              6:0] ws;
     logic [              6:0] sck;
     logic [              6:0] sd;
-    logic [       6:0] [23:0] mic_7;
-    logic [             29:0] mic_sum;
+    logic signed [6:0] [23:0] mic_7;
+    logic signed [      31:0] mic_sum;
 
     //------------------------------------------------------------------------
 
     // Sipeed R6+1 Microphone Board drivers Array
     assign GPIO_0[0] = ws[0];
     assign GPIO_0[4] = sck[0];
-    assign sd = {GPIO_0[1], {2{GPIO_0[5]}}, {2{GPIO_0[6]}}, {2{GPIO_0[2]}}};
-    assign mic_sum = mic_7[0] + mic_7[1] + mic_7[2] + mic_7[3]
-                              + mic_7[4] + mic_7[5] + mic_7[6];
-    assign mic = mic_sum[26:3];
+    assign mic       = mic_sum[31:8];
 
-    //------------------------------------------------------------------------
-
-
-
-
+    always_ff @(posedge lab_clk or posedge rst)
+        if (rst) begin
+            sd      <= '0;
+            mic_sum <= '0;
+        end
+        else begin
+            sd      <= {GPIO_0[1],   {2{GPIO_0[5]}},
+                     {2{GPIO_0[6]}}, {2{GPIO_0[2]}}};
+            mic_sum <= mic_7[0] + mic_7[1] + mic_7[2] + mic_7[3]
+                                + mic_7[4] + mic_7[5] + mic_7[6];
+        end
 
     //------------------------------------------------------------------------
 
@@ -318,13 +322,13 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz ( lab_mhz    ),
-            .right   ( right      )
+            .clk_mhz ( lab_mhz    )
         )
         i_microphone [6:0]
         (
             .clk     ( lab_clk    ),
             .rst     ( rst        ),
+            .right   ( right      ),
             .lr      (            ),
             .ws      ( ws         ),
             .sck     ( sck        ),
@@ -388,7 +392,7 @@ module board_specific_top
     led_strip_combo i_led_strip_combo
     (
         .clk         ( lab_clk     ),
-        .reset       ( rst         ),
+        .rst         ( rst         ),
         .data_rgb    ( data_rgb    ),
         .sk9822_clk  ( GPIO_0[7]   ),
         .sk9822_data ( GPIO_0[3]   )
