@@ -140,7 +140,7 @@ module board_specific_top
     // Sipeed R6+1 Microphone Board drivers Array
     assign GPIO_0[0] = ws[0];
     assign GPIO_0[4] = sck[0];
-    assign mic       = mic_sum[31:8];
+    assign mic       = mic_sum[28:5];
 
     always_ff @(posedge lab_clk or posedge rst)
         if (rst) begin
@@ -328,7 +328,7 @@ module board_specific_top
         (
             .clk     ( lab_clk    ),
             .rst     ( rst        ),
-            .right   ( right      ),
+//            .right   ( right      ),
             .lr      (            ),
             .ws      ( ws         ),
             .sck     ( sck        ),

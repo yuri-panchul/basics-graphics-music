@@ -34,7 +34,7 @@ module spectrum
     logic [11:0] [10:0] rms_out;        // result of spectrum analyzer band
     logic               white;
     logic      [ w_y:0] h_scr;
-    assign h_scr = screen_height + 20;  // shifting minimum height of strip
+    assign h_scr = screen_height + 22;  // shifting minimum height of strip
     assign red   = {w_red   {white}};   // \
     assign green = {w_green {white}};   // - color selection
     assign blue  = {w_blue  {white}};   // /
