@@ -54,7 +54,24 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-       assign led        = '0;
+    logic signed [          7:0] mic_8bit;
+
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst)
+            mic_8bit <= '0;
+        else if (mic [16] != mic [17]) begin // overflow prevention
+            mic_8bit <= {mic [17], {7 {~mic [17]}}};
+            led <= '1;                       // overflow
+        end
+        else begin
+            mic_8bit <= mic [16:9];
+            led <= '0;
+        end
+    end
+
+    //------------------------------------------------------------------------
+
+    // assign led        = '0;
        assign abcdefgh   = '0;
        assign digit      = '0;
     // assign red        = '0;
@@ -88,7 +105,7 @@ module lab_top
         .red           ( red           ),
         .green         ( green         ),
         .blue          ( blue          ),
-        .mic           ( mic[15:8]     )
+        .mic           ( mic_8bit      )
     );
 
 endmodule

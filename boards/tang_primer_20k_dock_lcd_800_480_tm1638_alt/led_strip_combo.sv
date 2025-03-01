@@ -33,7 +33,7 @@ module led_strip_combo
             sk9822_data <= 1'b0;
         else if ((clk_div > 15'd30727) && (clk_div < 15'd31896)) begin
             ws2812      <= 1'b1;
-            sk9822_data <= ((cnt_3 == 2'd2) ? data_rgb_reg[cnt_ws2812 + 10'd392] : cnt_3);
+            sk9822_data <= ((cnt_3 == 2'd2) ? data_rgb_reg[cnt_ws2812 + 10'd392] : cnt_3[0]);
             if (cnt_3 < 2'd2)
                 cnt_3      <= cnt_3 + 1'b1;
             else begin
