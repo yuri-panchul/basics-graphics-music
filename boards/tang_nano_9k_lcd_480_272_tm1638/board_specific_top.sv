@@ -79,11 +79,14 @@ module board_specific_top
     inout                        TF_SCLK,
     inout                        TF_MISO,
 
+    // The following pins are used for TM1638 and sound output
+
     inout  [w_gpio       - 1:0]  GPIO,
 
     // The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
-    // are used for the I2S audio output
-    // in basics-graphics-music labs
+    // were used for the I2S audio output
+    // but we decided to make these pins USER GPIO
+    // and move I2S pins to "real" GPIO
 
     inout                        SMALL_LCD_CLK,
     inout                        SMALL_LCD_RESETN,
@@ -108,9 +111,19 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    localparam w_tm_key   = 8,
-               w_tm_led   = 8,
-               w_tm_digit = 8;
+    localparam w_tm_key    = 8,
+               w_tm_led    = 8,
+               w_tm_digit  = 8,
+
+               w_user_gpio = 4;
+
+    `define USER_GPIO   \
+    {                   \
+        SMALL_LCD_RS,   \
+        SMALL_LCD_CS,   \
+        SMALL_LCD_CLK,  \
+        SMALL_LCD_DATA  \
+    }
 
     //------------------------------------------------------------------------
 
@@ -254,7 +267,7 @@ module board_specific_top
             .w_sw          ( w_lab_key     ),
             .w_led         ( w_lab_led     ),
             .w_digit       ( w_lab_digit   ),
-            .w_gpio        ( w_gpio        ),
+            .w_gpio        ( w_user_gpio   ),
 
             .screen_width  ( screen_width  ),
             .screen_height ( screen_height ),
@@ -298,7 +311,7 @@ module board_specific_top
 
             .mic           ( mic           ),
             .sound         ( sound         ),
-            .gpio          ( GPIO          )
+            .gpio          ( `USER_GPIO    )
         );
 
     `endif
@@ -412,6 +425,8 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        `ifdef USE_OLD_I2S_PINS
+
         i2s_audio_out
         # (
             .clk_mhz  ( clk_mhz        )
@@ -431,6 +446,8 @@ module board_specific_top
         // It is better to put this pin to 0, it works more reliably this way.
 
         assign SMALL_LCD_DATA = 1'b0;
+
+        `endif
 
         i2s_audio_out
         # (
