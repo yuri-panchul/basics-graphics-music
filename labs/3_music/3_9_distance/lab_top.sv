@@ -66,7 +66,7 @@ module lab_top
     i_sensor
     (
         .clk,
-        .reset             ( rst      ),
+        .rst,
         .trig              ( gpio [0] ),
         .echo              ( gpio [1] ),
         .relative_distance ( distance )
