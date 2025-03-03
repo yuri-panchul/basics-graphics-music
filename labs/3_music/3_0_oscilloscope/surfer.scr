@@ -1,0 +1,11 @@
+variable_add tb.dut.clk
+variable_add tb.dut.rst
+variable_add tb.dut.lr
+variable_add tb.dut.ws
+variable_add tb.dut.sck
+variable_add tb.dut.sd
+variable_add tb.dut.value
+variable_add tb.dut.cnt
+variable_add tb.dut.sample_bit
+variable_add tb.dut.value_done
+variable_add tb.dut.shift

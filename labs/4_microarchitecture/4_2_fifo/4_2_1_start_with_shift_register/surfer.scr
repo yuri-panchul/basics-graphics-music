@@ -1,0 +1,7 @@
+variable_add tb.clk
+variable_add tb.rst
+variable_add tb.in_valid
+variable_add tb.in_data
+variable_add tb.out_valid
+variable_add tb.out_data
+scope_select tb

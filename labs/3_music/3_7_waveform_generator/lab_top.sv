@@ -89,7 +89,7 @@ module lab_top
     i_waveform_gen
     (
         .clk            ( clk          ),
-        .reset          ( rst          ),
+        .rst            ( rst          ),
         .octave         ( octave       ),
         .waveform       ( waveform     ),
 
