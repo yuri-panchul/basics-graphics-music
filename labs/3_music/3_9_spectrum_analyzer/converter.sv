@@ -51,7 +51,7 @@ module converter
             q00 <= '0;
             q90 <= '0;
             in  <= '0;
-        end else begin
+        end else if (pulse_out) begin
             in  <= mic;
         case (switch)
     //------------------------------------q00--9-h----q90-12-h----------------
