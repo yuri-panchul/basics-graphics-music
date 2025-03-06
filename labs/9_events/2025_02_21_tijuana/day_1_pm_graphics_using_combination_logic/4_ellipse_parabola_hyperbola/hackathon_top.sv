@@ -22,7 +22,9 @@ module hackathon_top
 
     output logic [4:0] red,
     output logic [5:0] green,
-    output logic [4:0] blue
+    output logic [4:0] blue,
+
+    inout  logic [2:0] gpio
 );
 
 endmodule

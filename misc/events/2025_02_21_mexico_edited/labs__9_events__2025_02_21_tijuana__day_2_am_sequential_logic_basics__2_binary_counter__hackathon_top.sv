@@ -22,24 +22,50 @@ module hackathon_top
 
     output logic [4:0] red,
     output logic [5:0] green,
-    output logic [4:0] blue,
-
-    inout  logic [2:0] gpio
+    output logic [4:0] blue
 );
 
     // Exercise 1: Free running counter.
     // How do you change the speed of LED blinking?
     // Try different bit slices to display.
 
-    logic [31:0] counter;
+    logic [7:0] counter;
 
-    always_ff @ (posedge clock)
+    always_ff @ (posedge slow_clock)
         if (reset)
             counter <= 0;
         else
             counter <= counter + 1;
 
-    assign led = counter [31:24];  // Try to put [23:16] here
+    assign led = counter;
+/*
+    always_comb
+    begin
+        red = 0;
+        green = 0;
+        blue = 0;
+
+        if (x < counter)
+            red = 31;
+    end
+*/
+/*
+    logic old_key;
+
+    always_ff @(posedge clock)
+        old_key <= key [0];
+
+    wire change = key [0] == 1 & old_key == 0;
+
+    logic [31:0] counter;
+
+    always_ff @ (posedge clock)
+        if (reset)
+            counter <= 0;
+        else if (change)
+            counter <= counter + 1;
+
+    assign led = counter [7:0]; // counter [23:16]; // [31:24];  // Try to put [23:16] here
 
     // assign led = counter >> 20;  // Try alternative way to shift the value
 
@@ -56,6 +82,6 @@ module hackathon_top
     //
     // 2. Two counters controlled by different keys
     // displayed in different groups of LEDs.
-
+*/
 
 endmodule
