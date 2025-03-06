@@ -254,7 +254,9 @@ module board_specific_top
 
             .red           ( LARGE_LCD_R   ),
             .green         ( LARGE_LCD_G   ),
-            .blue          ( LARGE_LCD_B   )
+            .blue          ( LARGE_LCD_B   ),
+
+            .gpio          ( `USER_GPIO    )
         );
 
     `else
