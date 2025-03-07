@@ -33,12 +33,12 @@ module hackathon_top
 
     ultrasonic_distance_sensor
     # (
-        .clk_frequency ( clk_mhz * 1000 * 1000 )
+        .clk_frequency ( 27 * 1000 * 1000 )
     )
     i_sensor
     (
-        .clk,
-        .rst,
+        .clk               ( clock    ),
+        .rst               ( reset    ),
         .trig              ( gpio [0] ),
         .echo              ( gpio [1] ),
         .relative_distance ( distance )
