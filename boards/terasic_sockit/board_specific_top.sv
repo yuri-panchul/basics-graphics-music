@@ -69,7 +69,7 @@ module board_specific_top
         .w_sw          ( w_sw            ),
         .w_led         ( w_led           ),
         .w_digit       ( 2 /* w_digit */ ),
-        .w_gpio        ( 1 /* w_gpio  */ ),
+        .w_gpio        ( 2 /* w_gpio  */ ),
 
         .screen_width  ( screen_width    ),
         .screen_height ( screen_height   ),
