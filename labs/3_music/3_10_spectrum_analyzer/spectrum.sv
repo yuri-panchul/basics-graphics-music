@@ -25,7 +25,7 @@ module spectrum
     output logic [w_blue  - 1:0] blue,
 
     // Sound input
-    input        [          7:0] mic
+    input signed [         10:0] mic
 );
 
     //------------------------------------------------------------------------
@@ -33,11 +33,13 @@ module spectrum
     logic [11:0] [16:0] band_count;     // defines period converter.pulse_out
     logic [11:0] [10:0] rms_out;        // result of spectrum analyzer band
     logic               white;
-    logic      [ w_y:0] h_scr;
-    assign h_scr = screen_height + 22;  // shifting minimum height of strip
-    assign red   = {w_red   {white}};   // \
+    logic [      w_y:0] h_scr;
+    logic signed [ 9:0] [10:0] in;
+
+    assign h_scr = screen_height;       // shifting minimum height of strip
+    assign red   = {w_red   {white}};   //
     assign green = {w_green {white}};   // - color selection
-    assign blue  = {w_blue  {white}};   // /
+    assign blue  = {w_blue  {white}};   //
 
     //------------------------------------------------------------------------
     //
@@ -130,12 +132,30 @@ generate
 
 endgenerate
 
+    // Calculate levels
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            in    <= '0;
+        end else begin
+            in[0] <=   (mic >>> 1);
+            in[1] <=   (mic >>> 1) + (mic >>> 3);
+            in[2] <=    mic        - (mic >>> 2);
+            in[3] <=    mic        - (mic >>> 3);
+            in[4] <=    mic;
+            in[5] <= - (mic >>> 1);
+            in[6] <= - (mic >>> 1) - (mic >>> 3);
+            in[7] <= -  mic        + (mic >>> 2);
+            in[8] <= -  mic        + (mic >>> 3);
+            in[9] <= -  mic;
+        end
+    end
+
     // Quadrature conversion and averaging
     converter i_converter [11:0]
     (
         .clk        ( clk        ),
         .rst        ( rst        ),
-        .mic        ( mic        ),
+        .in         ( in         ),
         .band_count ( band_count ),
         .rms_out    ( rms_out    )
     );

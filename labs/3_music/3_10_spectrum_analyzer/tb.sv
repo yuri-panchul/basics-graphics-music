@@ -34,20 +34,39 @@ module tb;
 
     //------------------------------------------------------------------------
 
-    logic [         10:0] rms_out;
-    logic [         15:0] sound;
+    logic        [         10:0] rms_out;
+    logic signed [         10:0] sound;
+    logic signed [   9:0] [10:0] in;
 
     //------------------------------------------------------------------------
+
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            in    <= '0;
+        end else begin
+            in[0] <=   (sound >>> 1);
+            in[1] <=   (sound >>> 1) + (sound >>> 3);
+            in[2] <=    sound        - (sound >>> 2);
+            in[3] <=    sound        - (sound >>> 3);
+            in[4] <=    sound;
+            in[5] <= - (sound >>> 1);
+            in[6] <= - (sound >>> 1) - (sound >>> 3);
+            in[7] <= -  sound        + (sound >>> 2);
+            in[8] <= -  sound        + (sound >>> 3);
+            in[9] <= -  sound;
+        end
+    end
 
     converter i_converter
     (
         .clk        ( clk         ),
         .rst        ( rst         ),
-        .mic        ( sound[15:8] ), // waveform generator
-        .band_count ( 17'd2410    ), // f=440 Hz band_count=(clk_mhz*31250)/f
+        .in         ( in          ), // waveform generator
+        .band_count ( 17'd3300    ), // f=440 Hz band_count=(clk_mhz*31250)/f
         .rms_out    ( rms_out     )
     );
 
+    // Test (input waveform)
     waveform_gen
     # (
         .clk_mhz    (clk_mhz      )
@@ -103,19 +122,20 @@ module tb;
 
 endmodule
 
+    // Test (input waveform)
 module waveform_gen
 # (
     parameter clk_mhz        = 50,
-              y_width        = 16,      // sound samples resolution
+              y_width        = 11,                 // sound samples resolution
               waveform_width = 4,
-              y_max          = 21844,   // amplitude, to avoid overflow < 30000
-              freq           = 440      // frequency
+              y_max          = $signed (11'd1000), // amplitude
+              freq           = 440                 // frequency
 )
 (
     input                         clk,
     input                         rst,
     input        [           2:0] octave,
-    input        [           3:0] waveform, // waveform type
+    input        [           3:0] waveform,        // waveform type
     output logic [y_width  - 1:0] y
 );
 
@@ -123,7 +143,6 @@ module waveform_gen
     localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 2 { 1'b0 } }, 1'b1 };
 
     //  Vertical step of triangle waveform generator
-
     localparam   [         15:0] step = ((y_max * freq *
         ((clk_mhz < 36) ? 1 : ((clk_mhz > 67) ? 4 : 2)))
                                      / (clk_mhz * 488));
@@ -201,17 +220,17 @@ module sinus
 (
     input                  clk,
     input                  rst,
-    input  logic    [15:0] y_max,
-    input  logic    [15:0] yt,
-    output logic    [15:0] ys
+    input  logic    [10:0] y_max,
+    input  logic    [10:0] yt,
+    output logic    [10:0] ys
 );
-    localparam [15:0] MAX = '1;
+    localparam [10:0] MAX = '1;
 
     always_ff @ (posedge clk)
     begin
-    if     (yt > (MAX >> 1)) // Shifting to right >> 1 for positive numbers is equivalent to dividing by 2
+    if     (yt > (MAX >> 1))
     begin
-        if       (yt >   MAX - (y_max >> 1) + (y_max >> 4))                   // negative half-wave
+        if       (yt >   MAX - (y_max >> 1) + (y_max >> 4))         // negative half-wave
             ys <= yt - ((MAX - yt) >> 1) + ((MAX - yt) >> 5);
         else if  (yt >  (MAX - (y_max >> 1) - (y_max >> 3)))
             ys <= yt + ((MAX - yt) >> 4) - (y_max >> 2);
@@ -222,14 +241,14 @@ module sinus
     end
     else
     begin
-        if        (yt < (y_max >> 1) - (y_max >> 4))                           // < 0.4375  y_max
-            ys <=  yt + (yt >> 1) - (yt >> 5);                                 //                 + 1.46875 yt
-        else if   (yt < (y_max >> 1) + (y_max >> 3))                           // < 0.625   y_max
-            ys <=  yt - (yt >> 4) + (y_max >> 2);                              //   0.25    y_max + 0.9375  yt
-        else if   (yt < (y_max >> 1) + (y_max >> 2) + (y_max >> 4))            // < 0.8125  y_max
-            ys <= (yt >> 1) + (yt >> 4) + (y_max >> 1);                        //   0.5     y_max + 0.5625  yt
-        else
-            ys <= (yt >> 3) + (yt >> 5) + y_max - (y_max >> 3) - (y_max >> 5); //   0.84375 y_max + 0.15625 yt
+        if        (yt < (y_max >> 1) - (y_max >> 4))                // < 0.4375  y_max
+            ys <=  yt + (yt >> 1) - (yt >> 5);                      //                 + 1.46875 yt
+        else if   (yt < (y_max >> 1) + (y_max >> 3))                // < 0.625   y_max
+            ys <=  yt - (yt >> 4) + (y_max >> 2);                   //   0.25    y_max + 0.9375  yt
+        else if   (yt < (y_max >> 1) + (y_max >> 2) + (y_max >> 4)) // < 0.8125  y_max
+            ys <= (yt >> 1) + (yt >> 4) + (y_max >> 1);             //   0.5     y_max + 0.5625  yt
+        else                                                        //   0.84375 y_max + 0.15625 yt
+            ys <= (yt >> 3) + (yt >> 5) + y_max - (y_max >> 3) - (y_max >> 5);
     end
     end
 
@@ -241,11 +260,11 @@ endmodule
 
 module square
 (
-    input      [15:0] y_max,
-    input      [15:0] yt,
-    output     [15:0] yq
+    input      [10:0] y_max,
+    input      [10:0] yt,
+    output     [10:0] yq
 );
-    localparam [15:0] MAX = '1;
+    localparam [10:0] MAX = '1;
 
     assign yq = (yt > (MAX >> 1)) ?
                ((yt > (MAX - (y_max >> 6))) ? MAX : (MAX - y_max)) :

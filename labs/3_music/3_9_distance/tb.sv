@@ -1,122 +1,91 @@
 `include "config.svh"
 
-// This testbench is for microphone module only
-
 module tb;
 
-    logic       clk;
-    logic       rst;
-    wire        lr;
-    wire        ws;
-    wire        sck;
-    logic       sd;
-    wire [23:0] value;
+    timeunit      1ns;
+    timeprecision 1ps;
 
     //------------------------------------------------------------------------
 
-    inmp441_mic_i2s_receiver dut (.*);
-
-    //------------------------------------------------------------------------
-
-    initial
-    begin
-        clk = 1'b0;
-
-        forever
-            # 5 clk = ~ clk;
-    end
-
-    //------------------------------------------------------------------------
-
-    initial
-    begin
-        rst <= 1'bx;
-        repeat (2) @ (posedge clk);
-        rst <= 1'b1;
-        repeat (2) @ (posedge clk);
-        rst <= 1'b0;
-    end
-
-    //------------------------------------------------------------------------
-
-    initial
-    begin
-        `ifdef __ICARUS__
-            $dumpvars;
-        `endif
-
-        @ (negedge rst);
-
-        repeat (100000)
-        begin
-            sd <= $urandom ();
-            @ (posedge clk);
-        end
-
-        $finish;
-    end
-
-endmodule
-
-//----------------------------------------------------------------------------
-
-`ifdef UNDEFINED
-
-module tb;
-
-    localparam clk_mhz = 1,
+    localparam clk_mhz = 50,
                w_key   = 4,
-               w_sw    = 8,
+               w_sw    = 4,
                w_led   = 8,
                w_digit = 8,
+               w_sound = 16,
                w_gpio  = 100;
 
-    //------------------------------------------------------------------------
-
-    logic       clk;
-    logic       rst;
-    logic [3:0] key;
-    logic [7:0] sw;
+    localparam clk_period = 20ns;
 
     //------------------------------------------------------------------------
 
-    lab_top
+    logic                 clk;
+    logic                 rst;
+    logic [w_key   - 1:0] key;
+    logic [w_sw    - 1:0] sw;
+
+    // Graphics
+    logic [          9:0] x;
+    logic [          8:0] y;
+
+    logic [          3:0] red;
+    logic [          3:0] green;
+    logic [          3:0] blue;
+
+    //------------------------------------------------------------------------
+
+    logic                 echo;
+    logic [          7:0] relative_distance;
+
+    ultrasonic_distance_sensor
     # (
-        .clk_mhz ( clk_mhz ),
-        .w_key   ( w_key   ),
-        .w_sw    ( w_sw    ),
-        .w_led   ( w_led   ),
-        .w_digit ( w_digit ),
-        .w_gpio  ( w_gpio  )
+        .clk_frequency ( clk_mhz * 1000 * 1000 )
     )
-    i_lab_top
+    i_sensor
     (
-        .clk      ( clk ),
-        .slow_clk ( clk ),
-        .rst      ( rst ),
-        .key      ( key ),
-        .sw       ( sw  )
+        .clk,
+        .rst,
+        .trig              (                   ),
+        .echo              ( echo              ),
+        .relative_distance ( relative_distance )
     );
 
     //------------------------------------------------------------------------
 
     initial
     begin
-        clk = 1'b0;
+        echo = 1'b0;
+        # 0.001s
+        echo = 1'b1;
+        # 0.005s
+        echo = 1'b0;
+    end
 
-        forever
-            # 5 clk = ~ clk;
+    initial
+    begin
+        # 0.007s
+        $display ( "relative_distance                 : %0d", relative_distance);
     end
 
     //------------------------------------------------------------------------
 
     initial
     begin
-        rst <= 1'bx;
+        clk = 1'b0;
+
+        forever
+            # (clk_period / 2) clk = ~ clk;
+    end
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
+        rst <= 'bx;
         repeat (2) @ (posedge clk);
-        rst <= 1'b1;
+        rst <= 1;
         repeat (2) @ (posedge clk);
-        rst <= 1'b0;
+        rst <= 0;
     end
 
     //------------------------------------------------------------------------
@@ -127,22 +96,15 @@ module tb;
             $dumpvars;
         `endif
 
-        key <= '0;
-        sw  <= '0;
+        // Based on timescale is 1 ns / 1 ps
 
-        @ (negedge rst);
+        # 0.008s
 
-        repeat (50)
-        begin
-            @ (posedge clk);
-
-            key <= $urandom ();
-            sw  <= $urandom ();
-        end
-
-        $finish;
+        `ifdef MODEL_TECH  // Mentor ModelSim and Questa
+            $stop;
+        `else
+            $finish;
+        `endif
     end
 
 endmodule
-
-`endif

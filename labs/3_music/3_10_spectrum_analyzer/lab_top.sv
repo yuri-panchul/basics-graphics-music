@@ -54,23 +54,6 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic signed [          7:0] mic_8bit;
-
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst)
-            mic_8bit <= '0;
-        else if (mic [16] != mic [17]) begin // overflow prevention
-            mic_8bit <= {mic [17], {7 {~mic [17]}}};
-            led <= '1;                       // overflow
-        end
-        else begin
-            mic_8bit <= mic [16:9];
-            led <= '0;
-        end
-    end
-
-    //------------------------------------------------------------------------
-
     // assign led        = '0;
        assign abcdefgh   = '0;
        assign digit      = '0;
@@ -79,6 +62,25 @@ module lab_top
     // assign blue       = '0;
        assign sound      = '0;
        assign uart_tx    = '1;
+
+    //------------------------------------------------------------------------
+
+    logic signed [10:0] mic_11bit;
+
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            mic_11bit <= '0;
+            led       <= '0;
+        end
+        else if (mic [15] != mic [16]) begin // overflow prevention
+            mic_11bit <= {mic [16], {10 {~mic [16]}}};
+            led       <= '1;                 // overflow warning
+        end
+        else begin
+            mic_11bit <= mic [15:5];
+            led       <= '0;
+        end
+    end
 
     //------------------------------------------------------------------------
 
@@ -105,7 +107,7 @@ module lab_top
         .red           ( red           ),
         .green         ( green         ),
         .blue          ( blue          ),
-        .mic           ( mic_8bit      )
+        .mic           ( mic_11bit     )
     );
 
 endmodule
