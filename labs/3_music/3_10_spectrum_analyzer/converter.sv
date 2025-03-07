@@ -1,7 +1,7 @@
 module converter 
 # (
-    parameter                  stripe = 7,  // stripe narrower > 7 wider < 7
-                               level  = 17, // output level (shift)
+    parameter                  stripe = 9,  // stripe narrower > 7 wider < 7
+                               level  = 16, // output level (shift)
                                smooth = 9   // smoothing output fluctuations
 )
 (

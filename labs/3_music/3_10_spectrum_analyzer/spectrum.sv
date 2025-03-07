@@ -137,16 +137,16 @@ endgenerate
         if (rst) begin
             in    <= '0;
         end else begin
-            in[0] <=   (mic >>> 1);
-            in[1] <=   (mic >>> 1) + (mic >>> 3);
-            in[2] <=    mic        - (mic >>> 2);
-            in[3] <=    mic        - (mic >>> 3);
-            in[4] <=    mic;
-            in[5] <= - (mic >>> 1);
-            in[6] <= - (mic >>> 1) - (mic >>> 3);
-            in[7] <= -  mic        + (mic >>> 2);
-            in[8] <= -  mic        + (mic >>> 3);
-            in[9] <= -  mic;
+            in[0] <=   (mic >>> 1);                //  0.5
+            in[1] <=   (mic >>> 1) + (mic >>> 3);  //  0.625
+            in[2] <=    mic        - (mic >>> 2);  //  0.75
+            in[3] <=    mic        - (mic >>> 3);  //  0.875
+            in[4] <=    mic;                       //  1.0
+            in[5] <= - (mic >>> 1);                // -0.5
+            in[6] <= - (mic >>> 1) - (mic >>> 3);  // -0.625
+            in[7] <= -  mic        + (mic >>> 2);  // -0.75
+            in[8] <= -  mic        + (mic >>> 3);  // -0.875
+            in[9] <= -  mic;                       // -1.0
         end
     end
 
