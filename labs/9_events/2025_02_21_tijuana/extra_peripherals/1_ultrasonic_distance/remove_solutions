@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# find -type d -name solution_submodules -prune -exec rm -rf {} \;
-# find -name '*.sv'  | xargs -n 1 sed -i '/START_SOLUTION/,/END_SOLUTION/d'
-# find -name '*.svh' | xargs -n 1 sed -i '/START_SOLUTION/,/END_SOLUTION/d'

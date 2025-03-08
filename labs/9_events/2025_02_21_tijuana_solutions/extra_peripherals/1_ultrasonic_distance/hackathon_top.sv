@@ -27,6 +27,10 @@ module hackathon_top
     inout  logic [2:0] gpio
 );
 
+    // Exercise: Instantiate the ultrasonic module
+    // and the 7-segment display controller module,
+    // connect them with each other and with GPIO
+
     // START_SOLUTION
 
     wire [15:0] distance;
