@@ -1,0 +1,8 @@
+variable_add tb.clk
+variable_add tb.rst
+variable_add tb.up_valid
+variable_add tb.up_ready
+variable_add tb.up_data
+variable_add tb.down_valid
+variable_add tb.down_ready
+variable_add tb.down_data

@@ -2,18 +2,12 @@
 
 set all_signals [list]
 
-lappend all_signals tb.dut.clk
-lappend all_signals tb.dut.rst
-lappend all_signals tb.dut.lr
-lappend all_signals tb.dut.ws
-lappend all_signals tb.dut.sck
-lappend all_signals tb.dut.sd
-lappend all_signals tb.dut.value
-lappend all_signals tb.dut.cnt
-lappend all_signals tb.dut.sample_bit
-lappend all_signals tb.dut.value_done
-lappend all_signals tb.dut.shift
+lappend all_signals tb.i_sensor.echo
+lappend all_signals tb.i_sensor.relative_distance
 
 set num_added [ gtkwave::addSignalsFromList $all_signals ]
 
 gtkwave::/Time/Zoom/Zoom_Full
+
+gtkwave::highlightSignalsFromList "tb.i_sensor.relative_distance\[7:0\]"
+gtkwave::/Edit/Data_Format/Decimal

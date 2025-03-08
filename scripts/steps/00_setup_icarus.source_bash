@@ -84,11 +84,39 @@ run_icarus_verilog ()
         gtkwave_options="--script $gtkwave_script"
     fi
 
-    if    [ "$OSTYPE" = "linux-gnu" ]  \
-       || [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
+    if    [ "$OSTYPE" = "linux-gnu" ]
+
     then
         gtkwave=gtkwave
+
+    elif  [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        if is_command_available surfer ; then
+
+        gtkwave=surfer
+
+    gtkwave_script=../surfer.scr
+
+    gtkwave_options=
+
+    if [ -f $gtkwave_script ]; then
+        gtkwave_options="--command-file $gtkwave_script"
+    fi
+        else
+
+    is_command_available_or_error_and_install gtkwave
+
+        gtkwave=gtkwave
+
+    gtkwave_script=../gtkwave.tcl
+
+    gtkwave_options=
+
+    if [ -f $gtkwave_script ]; then
+        gtkwave_options="--script $gtkwave_script"
+    fi
+        fi
 
     elif [[ "$OSTYPE" = "darwin"* ]]
     then
@@ -97,6 +125,14 @@ run_icarus_verilog ()
             is_command_available_or_error_and_install surfer
 
             gtkwave=surfer
+
+    gtkwave_script=../surfer.scr
+
+    gtkwave_options=
+
+    if [ -f $gtkwave_script ]; then
+        gtkwave_options="--command-file $gtkwave_script"
+    fi
         else
             # For some reason the following way of opening the application
             # under Mac does not read the script file:
