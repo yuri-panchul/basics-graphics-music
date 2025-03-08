@@ -49,7 +49,7 @@ module ultrasonic_distance_sensor
         // To accomodate values up to max_echo_time
         echo_cnt_width = $clog2 (max_echo_time + 1);
 
-    `ifndef SIMULATION_ONLY
+    `ifdef SIMULATION_ONLY
     
     initial
     begin
