@@ -12,7 +12,7 @@
 
 module sr_soc
 #(
-  parameter bit CACHE_EN = 1'b0
+  parameter bit CACHE_EN = 1'b0 // 1 - enable cache, 0 - disable (block cl_hit signal in the sr_icache module)
 )
 (
     input           clk,        // clock

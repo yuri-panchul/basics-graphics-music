@@ -16,7 +16,7 @@
  )
  (
     input  logic          clk,         // clock
-    input  logic          rst,       // reset
+    input  logic          rst,         // reset
     input  logic          imem_req_i,  // Memory request
     input  logic  [31:0]  imAddr,      // instruction memory address
     output logic  [31:0]  imData,      // instruction memory data
@@ -24,7 +24,7 @@
     output logic  [31:0]  ext_addr_o,
     output logic          ext_req_o,
     input  logic          ext_rsp_i,
-    input  logic  [127:0]  ext_data_i
+    input  logic  [127:0] ext_data_i
 );
 
 localparam NWAYS = 4;

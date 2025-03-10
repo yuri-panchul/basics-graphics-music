@@ -23,7 +23,10 @@ module tb;
     
     wire  [31:0] cycleCntPerf;  // clk counter for evaluation program time execution
 
-    sr_soc # (.CACHE_EN (0)) soc
+    sr_soc # (
+        .CACHE_EN (0)           // 1 - enable cache, 0 - disable (block cl_hit signal in the sr_icache module)
+    )
+    soc
     (
         .clk        ( clk          ),
         .rst        ( rst          ),
@@ -37,7 +40,10 @@ module tb;
         .cycleCnt_o ( cycleCntPerf )
     );
 
-    instruction_rom # (.SIZE (1024)) rom
+    instruction_rom # (
+        .SIZE (1024)
+    )
+    rom
     (
         .a       ( imAddr  ),
         .rd      ( imData  )
