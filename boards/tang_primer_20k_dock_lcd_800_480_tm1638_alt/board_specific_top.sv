@@ -133,26 +133,7 @@ module board_specific_top
     logic [              6:0] sck;
     logic [              6:0] sd;
     logic signed [6:0] [23:0] mic_7;
-    logic signed [      31:0] mic_sum;
-
-    //------------------------------------------------------------------------
-
-    // Sipeed R6+1 Microphone Board drivers Array
-    assign GPIO_0[0] = ws[0];
-    assign GPIO_0[4] = sck[0];
-    assign mic       = mic_sum[27:4];
-
-    always_ff @(posedge lab_clk or posedge rst)
-        if (rst) begin
-            sd      <= '0;
-            mic_sum <= '0;
-        end
-        else begin
-            sd      <= {GPIO_0[1],   {2{GPIO_0[5]}},
-                     {2{GPIO_0[6]}}, {2{GPIO_0[2]}}};
-            mic_sum <= mic_7[0] + mic_7[1] + mic_7[2] + mic_7[3]
-                                + mic_7[4] + mic_7[5] + mic_7[6];
-        end
+    logic signed [      27:0] mic_sum;
 
     //------------------------------------------------------------------------
 
@@ -318,6 +299,26 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
+        // Sipeed R6+1 Microphone Board drivers Array
+
+        assign GPIO_0[0] = ws[0];
+        assign GPIO_0[4] = sck[0];
+        assign mic       = $signed (mic_sum[27:4]);
+
+        always_ff @(posedge lab_clk or posedge rst)
+            if (rst) begin
+                sd      <= '0;
+                mic_sum <= '0;
+            end
+            else begin
+                sd      <= {GPIO_0[1],   {2{GPIO_0[5]}},
+                         {2{GPIO_0[6]}}, {2{GPIO_0[2]}}};
+                mic_sum <= $signed (mic_7[0]) + $signed (mic_7[1])
+                         + $signed (mic_7[2]) + $signed (mic_7[3])
+                         + $signed (mic_7[4]) + $signed (mic_7[5])
+                         + $signed (mic_7[6]);
+            end
+
         // Sipeed R6+1 Microphone Array Board in GPIO connector
 
         inmp441_mic_i2s_receiver_alt
@@ -365,6 +366,7 @@ module board_specific_top
         );
 
         // Enable DAC
+
         assign PA_EN = 1'b1;
 
         // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A

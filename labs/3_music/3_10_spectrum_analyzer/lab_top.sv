@@ -72,9 +72,9 @@ module lab_top
             mic_11bit <= '0;
             led       <= '0;
         end
-        else if (mic [16] != mic [17]) begin // overflow prevention
-            mic_11bit <= {mic [17], {10 {~mic [17]}}};
-            led       <= '1;                 // overflow warning
+        else if (|(mic [23:16] ^ {8 {mic [23]}})) begin // overflow prevention
+            mic_11bit <= {mic [23], {10 {~mic [23]}}};
+            led       <= '1;                            // overflow warning
         end
         else begin
             mic_11bit <= mic [16:6];
