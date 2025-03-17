@@ -221,11 +221,15 @@ gowin_setup_ide ()
 
         qattr=com.apple.quarantine
 
-        if xattr "$GOWIN_VERSION_DIR/IDE" | grep -q $qattr
+        if xattr "$GOWIN_VERSION_DIR/IDE"        | grep -q $qattr ||
+           xattr "$GOWIN_VERSION_DIR/Programmer" | grep -q $qattr
         then
-            error "Directory '$GOWIN_VERSION_DIR/IDE' has '$qattr' attribute."            \
-                  "You need to remove it to run the software, using a terminal command."  \
-                  "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE'"
+            error "Either directory '$GOWIN_VERSION_DIR/IDE'"   \
+                  "or '$GOWIN_VERSION_DIR/Programmer'"          \
+                  "has '$qattr' attribute."                     \
+                  "You need to remove it to run the software,"  \
+                  "using a terminal command:"                   \
+                  "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
         fi
     fi
 }
