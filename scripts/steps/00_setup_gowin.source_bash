@@ -197,7 +197,7 @@ gowin_setup_ide ()
     if [ -z "${GOWIN_VERSION_DIR-}" ]
     then
         error "expected to find 'Gowin/IDE' or 'gowin/IDE',            \
-              any subdirectory of 'Gowin' or 'gowin'"                  \
+              or 'Gowin/*/IDE' or 'gowin/*/IDE'"                       \
               "in ${attempt_gowin_install_parent_dirs}."               \
               "The Gowin installation home location"                   \
               "can be set by GOWIN_HOME environment variable,"         \
@@ -218,6 +218,15 @@ gowin_setup_ide ()
     then
         export DYLD_FRAMEWORK_PATH="${DYLD_FRAMEWORK_PATH:+$DYLD_FRAMEWORK_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
         export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH:+$DYLD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
+
+        qattr=com.apple.quarantine
+
+        if xattr "$GOWIN_VERSION_DIR/IDE" | grep -q $qattr
+        then
+            error "Directory '$GOWIN_VERSION_DIR/IDE' has '$qattr' attribute."            \
+                  "You need to remove it to run the software, using a terminal command."  \
+                  "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE'"
+        fi
     fi
 }
 
