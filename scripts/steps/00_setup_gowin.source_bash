@@ -229,6 +229,8 @@ gowin_setup_ide ()
                   "has '$qattr' attribute."                     \
                   "You need to remove it to run the software,"  \
                   "using a terminal command:"                   \
+                  "xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer' ."     \
+                  "If you see a \"Permission denied\" error, try it with sudo:"                     \
                   "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
         fi
     fi
