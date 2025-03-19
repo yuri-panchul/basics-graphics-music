@@ -25,7 +25,12 @@ module i2s_audio_out
               // For PT8211 DAC, offset_by_one_cycle = 0,
               // i.e. value transmission is aligned with LRCLK signal change.
 
-              offset_by_one_cycle = 1
+              offset_by_one_cycle = 1,
+
+              // Doubling the input signal with overload and distortion
+              // if more than the maximum volume is needed
+
+              loud                = 1
 )
 (
     input                 clk,
@@ -52,9 +57,10 @@ module i2s_audio_out
                BCLK_BIT  =  MCLK_BIT + 2,
                LRCLK_BIT =  BCLK_BIT + 6;
 
-    logic  [LRCLK_BIT   - 1:0] clk_div;
-    logic  [W_OUT_VALUE - 1:0] shift;
-    logic  [W_OUT_VALUE - 1:0] data_aligned;
+    logic   [LRCLK_BIT   - 1:0] clk_div;
+    logic   [W_OUT_VALUE - 1:0] shift;
+    logic   [W_OUT_VALUE - 1:0] data_aligned;
+    logic signed [in_res - 1:0] data_in_loud;
 
     generate
 
@@ -73,13 +79,25 @@ module i2s_audio_out
     assign lrclk = clk_div [LRCLK_BIT   - 1];
     assign sdata = shift   [W_OUT_VALUE - 1];
 
+    // Doubling the input signal with overload (if parameter loud = 1)
+
+    always_ff @(posedge clk or posedge reset)
+        if (reset)
+            data_in_loud <= '0;
+        else if ((data_in [in_res - 2] ^ data_in [in_res - 1]) && loud)
+            data_in_loud <= {data_in [in_res - 1],
+            {(in_res - 1) {~ data_in [in_res - 1]}}};
+        else
+            data_in_loud <= {data_in [in_res - 1],
+                            {data_in [in_res - 2:0] <<< loud}};
+
     // Put data right-aligned relative to LRCLK (sometimes called WS)
     // or align data to the left, with the most significant bit, MSB.
 
     assign data_aligned
         = align_right ?
-              W_OUT_VALUE' (data_in)
-            : { data_in, { W_OUT_VALUE - in_res { 1'b0 } } };
+              W_OUT_VALUE' (data_in_loud)
+            : { data_in_loud, { W_OUT_VALUE - in_res { 1'b0 } } };
 
     always_ff @ (posedge clk or posedge reset)
         if (reset)
