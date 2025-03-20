@@ -30,7 +30,7 @@ module i2s_audio_out
               // Doubling the input signal with overload and distortion
               // if more than the maximum volume is needed
 
-              loud                = 1
+              loud                = 0
 )
 (
     input                 clk,
