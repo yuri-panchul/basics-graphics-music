@@ -125,7 +125,7 @@ module lab_top
 
     // draw a shape when the pixel is inside the intersection of the planes
 
-    function automatic logic [0:0] paint (input [9:0] x, y, mx, my, rx, ry, shape);
+    function automatic logic [0:0] paint(input[9:0]x, y, mx, my, rx, ry, shape);
 
     case (shape)
       0: paint = ((t     (x, mx, rx))       &&          (t (y, my, ry)));      // square
@@ -145,7 +145,7 @@ module lab_top
 
     // for triangle, two planes bent at an angle of 90 degrees
 
-    function automatic logic [9:0] t (input [9:0] z, m, r);
+    function automatic logic [9:0] t(input[9:0]z, m, r);
 
         if      ((z >= m)      && (z <  (m +  r)))
             t =   z  - m;
@@ -160,7 +160,7 @@ module lab_top
 
     // for sinus from triangle, the plane bent around the sine envelope
 
-    function automatic logic [9:0] s (input [9:0] t, r);
+    function automatic logic [9:0] s(input[9:0]t, r);
 
         if      (t < (r >> 1) - (r >> 4))            // < 0.4375  r
             s =  t + (t >> 1) - (t >> 5);            //            +  1.46875 t
