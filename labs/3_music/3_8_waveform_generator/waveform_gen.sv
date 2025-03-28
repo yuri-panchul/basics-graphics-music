@@ -16,18 +16,17 @@ module waveform_gen
 
     // We are grouping together clk_mhz ranges of
     // (12-19), (20-35), (36-67), (68-131).
-    // Sampling_rate = clk_mhz / 512  ( < 36 mhz)
-    //               = clk_mhz / 1024 (36-67 mhz)
-    //               = clk_mhz / 2048 ( > 67 mhz)
+    // Sampling_rate = clk (mhz) / 512  ( < 36 mhz)
+    //               = clk (mhz) / 1024 (36-67 mhz)
+    //               = clk (mhz) / 2048 ( > 67 mhz)
 
-    localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4;
-    localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 2 { 1'b0 } }, 1'b1 };
+    localparam CLK_BIT  =  $clog2 (clk_mhz - 4);
+    localparam CLK_DIV_DATA_OFFSET = {{CLK_BIT - 2 {1'b0}}, 1'b1};
 
     //  Vertical step of triangle waveform generator
 
-    localparam   [         15:0] step = ((y_max * freq *
-        ((clk_mhz < 36) ? 1 : ((clk_mhz > 67) ? 4 : 2)))
-                                     / (clk_mhz * 488));
+    localparam   [y_width - 1:0] step = ((y_max / clk_mhz) * freq *
+                 (clk_mhz < 36 ? 1 : (clk_mhz > 67 ? 4 : 2))) / 7808;
 
     logic        [CLK_BIT - 1:0] clk_div;
     logic        [          0:0] down = '0;
@@ -36,35 +35,28 @@ module waveform_gen
     logic        [y_width - 1:0] ys;
     logic        [y_width - 1:0] yq;
 
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @(posedge clk or posedge rst)
         if (rst)
             clk_div <= '0;
         else
             clk_div <= clk_div + 1'b1;
 
-    //------------------------------------------------------------------------
-    //
     //  Triangle waveform generator ( signed format )
     //  One sample for L and R audio channels
-    //
-    //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk)
+    always_ff @(posedge clk)
         if ((clk_div == CLK_DIV_DATA_OFFSET)
-              && (((yt < -y_max) &&  down) || ((yt > y_max) && ~down)))
-            down <= ~down;
-        else if ((clk_div == CLK_DIV_DATA_OFFSET) && !down)
-            yt   <= yt + step;
-        else if ((clk_div == CLK_DIV_DATA_OFFSET) &&  down)
-            yt   <= yt - step;
+              && (((yt < - $signed (y_max)) &&   down) ||
+                  ((yt >   $signed (y_max)) && ~ down)))
+            down <= ~ down;
+        else if ((clk_div == CLK_DIV_DATA_OFFSET) && ! down)
+            yt   <= yt +   $signed (step);
+        else if ((clk_div == CLK_DIV_DATA_OFFSET) &&   down)
+            yt   <= yt -   $signed (step);
 
-    //------------------------------------------------------------------------
-    //
     //  Wave selector
-    //
-    //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @(posedge clk or posedge rst)
     begin
         if (rst)
             y <= '0;
@@ -77,43 +69,46 @@ module waveform_gen
         endcase
     end
 
-    //------------------------------------------------------------------------
-
-    sinus i_sinus
+    sinus
+    # (
+        .y_width  ( y_width )
+    )
+    i_sinus
     (
-        .clk      ( clk   ),
-        .rst      ( rst   ),
-        .y_max    ( y_max ),
-        .yt       ( yt    ),
-        .ys       ( ys    )
+        .clk      ( clk     ),
+        .rst      ( rst     ),
+        .y_max    ( y_max   ),
+        .yt       ( yt      ),
+        .ys       ( ys      )
     );
 
-    //------------------------------------------------------------------------
-
-    square i_square
+    square
+    # (
+        .y_width  ( y_width )
+    )
+    i_square
     (
-        .y_max    ( y_max ),
-        .yt       ( yt    ),
-        .yq       ( yq    )
+        .y_max    ( y_max   ),
+        .yt       ( yt      ),
+        .yq       ( yq      )
     );
 
 endmodule
 
-    //------------------------------------------------------------------------
-    //
     //  Sinus from triangle waveform generator ( signed format )
-    //
-    //------------------------------------------------------------------------
 
 module sinus
+# (
+    parameter y_width = 24  // sound samples resolution
+)
 (
-    input                  clk,
-    input                  rst,
-    input  logic    [15:0] y_max,
-    input  logic    [15:0] yt,
-    output logic    [15:0] ys
+    input                        clk,
+    input                        rst,
+    input  logic [y_width - 1:0] y_max,
+    input  logic [y_width - 1:0] yt,
+    output logic [y_width - 1:0] ys
 );
-    localparam [15:0] MAX = '1;
+    localparam   [y_width - 1:0] MAX = '1;
 
     // Made as analog waveform generator ICL8038.
     // The sine wave is created by feeding the triangle wave into a
@@ -121,47 +116,46 @@ module sinus
     // decreasing transmission ratio as the level of the triangle
     // moves toward the two extremes. Accuracy of the sine is 1%.
 
-    always_ff @ (posedge clk)
-    begin
-    if     (yt > (MAX >> 1)) // Shifting to right >> 1 for positive numbers is equivalent to dividing by 2
-    begin
-        if       (yt >   MAX - (y_max >> 1) + (y_max >> 4))                   // negative half-wave
-            ys <= yt - ((MAX - yt) >> 1) + ((MAX - yt) >> 5);
-        else if  (yt >  (MAX - (y_max >> 1) - (y_max >> 3)))
-            ys <= yt + ((MAX - yt) >> 4) - (y_max >> 2);
-        else if  (yt >   MAX - (y_max >> 1) - (y_max >> 2) - (y_max >> 4))
+    always_ff @(posedge clk) begin
+    if     (yt > (MAX >> 1)) begin
+        if       (yt >    MAX - (y_max >> 1) + (y_max >> 4)) // negative half-wave
+            ys <= yt -  ((MAX - yt) >> 1) + ((MAX - yt) >> 5);
+        else if  (yt >   (MAX - (y_max >> 1) - (y_max >> 3)))
+            ys <= yt +  ((MAX - yt) >> 4) - (y_max >> 2);
+        else if  (yt >    MAX - (y_max >> 1) - (y_max >> 2) - (y_max >> 4))
             ys <= MAX - ((MAX - yt) >> 1) - ((MAX - yt) >> 4) - (y_max >> 1);
         else
-            ys <= MAX - ((MAX - yt) >> 3) - ((MAX - yt) >> 5) - y_max + (y_max >> 3) + (y_max >> 5);
+            ys <= MAX - ((MAX - yt) >> 3) - ((MAX - yt) >> 5) - y_max +
+                                                (y_max >> 3) + (y_max >> 5);
     end
-    else
-    begin
-        if        (yt < (y_max >> 1) - (y_max >> 4))                           // < 0.4375  y_max
-            ys <=  yt + (yt >> 1) - (yt >> 5);                                 //                 + 1.46875 yt
-        else if   (yt < (y_max >> 1) + (y_max >> 3))                           // < 0.625   y_max
-            ys <=  yt - (yt >> 4) + (y_max >> 2);                              //   0.25    y_max + 0.9375  yt
-        else if   (yt < (y_max >> 1) + (y_max >> 2) + (y_max >> 4))            // < 0.8125  y_max
-            ys <= (yt >> 1) + (yt >> 4) + (y_max >> 1);                        //   0.5     y_max + 0.5625  yt
-        else
-            ys <= (yt >> 3) + (yt >> 5) + y_max - (y_max >> 3) - (y_max >> 5); //   0.84375 y_max + 0.15625 yt
+    else begin
+        if        (yt < (y_max >> 1) - (y_max >> 4)) // < 0.4375  y_max
+            ys <=  yt + (yt >> 1) - (yt >> 5);       //                 + 1.46875 yt
+        else if   (yt < (y_max >> 1) + (y_max >> 3)) // < 0.625   y_max
+            ys <=  yt - (yt >> 4) + (y_max >> 2);    //   0.25    y_max + 0.9375  yt
+        else if   (yt < (y_max >> 1) + 
+                        (y_max >> 2) + (y_max >> 4)) // < 0.8125  y_max
+         ys <= (yt >> 1) + (yt >> 4) + (y_max >> 1); //   0.5     y_max + 0.5625  yt
+        else                                         //   0.84375 y_max + 0.15625 yt
+            ys <= (yt >> 3) + (yt >> 5) +
+                y_max - (y_max >> 3) - (y_max >> 5);
     end
     end
 
 endmodule
 
-    //------------------------------------------------------------------------
-    //
     //  Square from triangle waveform generator ( signed format )
-    //
-    //------------------------------------------------------------------------
 
 module square
+# (
+    parameter y_width = 24  // sound samples resolution
+)
 (
-    input      [15:0] y_max,
-    input      [15:0] yt,
-    output     [15:0] yq
+    input      [y_width - 1:0] y_max,
+    input      [y_width - 1:0] yt,
+    output     [y_width - 1:0] yq
 );
-    localparam [15:0] MAX = '1;
+    localparam [y_width - 1:0] MAX = '1;
 
     assign yq = (yt > (MAX >> 1)) ?
                ((yt > (MAX - (y_max >> 6))) ? MAX : (MAX - y_max)) :

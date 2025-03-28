@@ -24,7 +24,7 @@ module tb;
     logic [w_key   - 1:0] key;
     logic [w_sw    - 1:0] sw;
     logic [w_sound - 1:0] sound;
-    logic [2          :0] waveform;
+    logic [          2:0] waveform;
 
     //------------------------------------------------------------------------
 

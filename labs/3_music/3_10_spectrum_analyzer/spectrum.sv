@@ -10,8 +10,8 @@ module spectrum
                w_y                 = $clog2 ( screen_height ),
 
     // Frequency bands of the spectrum analyzer
-        logic  [0:11] [13:0] freq  = '{132, 152, 174, 200, 230, 264,
-                                       303, 348, 400, 458, 525, 600}
+        logic  [0:11][13:0] freq  = '{132, 152, 174, 200, 230, 264,
+                                      303, 348, 400, 458, 525, 600}
 )
 (
     input                        clk,
@@ -30,16 +30,16 @@ module spectrum
 
     //------------------------------------------------------------------------
 
-    logic [11:0] [16:0] band_count;     // defines period converter.pulse_out
-    logic [11:0] [10:0] rms_out;        // result of spectrum analyzer band
-    logic               white;
-    logic [      w_y:0] h_scr;
-    logic signed [ 9:0] [10:0] in;
+    logic        [11:0][16:0] band_count; // defines period converter.pulse_out
+    logic        [11:0][10:0] rms_out;    // result of spectrum analyzer band
+    logic                     white;
+    logic        [     w_y:0] h_scr;
+    logic signed [ 9:0][10:0] in;
 
-    assign h_scr = screen_height;       // shifting minimum height of strip
-    assign red   = {w_red   {white}};   //
-    assign green = {w_green {white}};   // - color selection
-    assign blue  = {w_blue  {white}};   //
+    assign h_scr = screen_height;         // shifting minimum height of strip
+    assign red   = {w_red   {white}};     //
+    assign green = {w_green {white}};     // color selection
+    assign blue  = {w_blue  {white}};     //
 
     //------------------------------------------------------------------------
     //
@@ -48,7 +48,7 @@ module spectrum
     //------------------------------------------------------------------------
 
     // Calculation of control pulses from system clock and band
-    function automatic logic [16:0] b (input [13:0] f );
+    function automatic logic [16:0] b (input [13:0] f);
     b = (clk_mhz * 31250) / f;
     endfunction
 
@@ -62,7 +62,7 @@ module spectrum
 generate
 
     if (screen_width == 800) begin : screen_w_800
-    always_ff @ (posedge clk or posedge rst) begin
+    always_ff @(posedge clk or posedge rst) begin
         if (rst)
             white <= '0;
         else
@@ -85,7 +85,7 @@ generate
     end
 
     else if (screen_width == 640) begin : screen_w_640
-    always_ff @ (posedge clk or posedge rst) begin
+    always_ff @(posedge clk or posedge rst) begin
         if (rst)
             white <= '0;
         else
@@ -108,7 +108,7 @@ generate
     end
 
     else begin : screen_w_480
-    always_ff @ (posedge clk or posedge rst) begin
+    always_ff @(posedge clk or posedge rst) begin
         if (rst)
             white <= '0;
         else

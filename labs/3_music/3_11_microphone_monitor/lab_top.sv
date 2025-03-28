@@ -55,32 +55,64 @@ module lab_top
     //------------------------------------------------------------------------
 
     // assign led        = '0;
-       assign abcdefgh   = '0;
-       assign digit      = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
     // assign red        = '0;
     // assign green      = '0;
     // assign blue       = '0;
-       assign sound      = '0;
+    // assign sound      = '0;
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
 
     logic signed [10:0] mic_11bit;
+    wire         [ 7:0] vol;
 
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            mic_11bit <= '0;
-            led       <= '0;
-        end
-        else if (mic [17] != mic [18]) begin // overflow prevention
-            mic_11bit <= {mic [18], {10 {~mic [18]}}};
-            led       <= '1;                 // overflow warning
-        end
-        else begin
-            mic_11bit <= mic [17:7];
-            led       <= '0;
-        end
-    end
+    // Spectrum analyzer level adjust
+    convert
+    # (
+        .w_in  ( 24        ),
+        .w_out ( 11        ),
+        .lev   ( 17        ),
+        .agc   ( 1         )
+    )
+    i_convert
+    (
+        .clk   ( clk       ),
+        .rst   ( rst       ),
+        .in    ( mic       ),
+        .out   ( mic_11bit ),
+        .led   ( led[0]    ),
+        .vol   ( vol[2:0]  )
+    );
+
+    // Sound output level adjust
+    convert
+    # (
+        .w_in  ( 24        ),
+        .w_out ( 16        ),
+        .lev   ( 17        ),
+        .agc   ( 1         )
+    )
+    i_convert_line
+    (
+        .clk   ( clk       ),
+        .rst   ( rst       ),
+        .in    ( mic       ),
+        .out   ( sound     ),
+        .led   ( led[1]    ),
+        .vol   ( vol[6:4]  )
+    );
+
+    seven_segment_display i_7segment
+    (
+        .clk      ( clk       ),
+        .rst      ( rst       ),
+        .number   ( 8' (vol)  ),
+        .dots     ( 2'b0      ),
+        .abcdefgh ( abcdefgh  ),
+        .digit    ( digit     )
+    );
 
     //------------------------------------------------------------------------
 
@@ -95,8 +127,8 @@ module lab_top
         .w_blue        ( w_blue        ),
 
     // Frequency bands of the spectrum analyzer
-        .freq          ('{132, 152, 174, 200, 230, 264,
-                          303, 348, 400, 458, 525, 600})
+        .freq          ('{200, 230, 264, 303,
+                          348, 400, 458, 525})
     )
     i_spectrum
     (

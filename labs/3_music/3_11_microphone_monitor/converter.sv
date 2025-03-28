@@ -7,7 +7,7 @@ module converter
 (
     input  logic               clk,
     input  logic               rst,
-    input  logic signed [ 9:0][10:0] in,
+    input  logic signed [ 9:0] [10:0] in,
     input  logic        [16:0] band_count,
     output logic        [10:0] rms_out
 );
@@ -17,11 +17,11 @@ module converter
     logic                      pulse_out;
     logic               [ 4:0] switch     = '0;
     logic        signed [10:0] q00, q90;
-    logic        signed [16:0] i_filtered = '0;
-    logic        signed [16:0] q_filtered = '0;
-    logic               [16:0] abs_i, abs_q;
-    logic               [16:0] sum_abs;
-    logic               [16:0] ema        = '0;
+    logic        signed [18:0] i_filtered = '0;
+    logic        signed [18:0] q_filtered = '0;
+    logic               [18:0] abs_i, abs_q;
+    logic               [18:0] sum_abs;
+    logic               [18:0] ema        = '0;
 
     // Reference frequency * 32 of control pulses generator
     always_ff @(posedge clk or posedge rst) begin
@@ -209,8 +209,8 @@ module converter
     end
 
     // Rectifier
-    assign abs_i = i_filtered[16] ? -i_filtered : i_filtered;
-    assign abs_q = q_filtered[16] ? -q_filtered : q_filtered;
+    assign abs_i = i_filtered [18] ? -i_filtered : i_filtered;
+    assign abs_q = q_filtered [18] ? -q_filtered : q_filtered;
     assign sum_abs = abs_i + abs_q;
 
     // Averaging
