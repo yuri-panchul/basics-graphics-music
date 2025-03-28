@@ -39,31 +39,31 @@ gtkwave::highlightSignalsFromList "tb.i_converter.switch\[4:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Decimal
 
-gtkwave::highlightSignalsFromList "tb.i_converter.i_filtered\[19:0\]"
+gtkwave::highlightSignalsFromList "tb.i_converter.i_filtered\[18:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Signed_Decimal
 gtkwave::/Edit/Insert_Analog_Height_Extension
 
-gtkwave::highlightSignalsFromList "tb.i_converter.q_filtered\[19:0\]"
+gtkwave::highlightSignalsFromList "tb.i_converter.q_filtered\[18:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Signed_Decimal
 gtkwave::/Edit/Insert_Analog_Height_Extension
 
-gtkwave::highlightSignalsFromList "tb.i_converter.abs_i\[19:0\]"
+gtkwave::highlightSignalsFromList "tb.i_converter.abs_i\[18:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Decimal
 gtkwave::/Edit/Insert_Analog_Height_Extension
 
-gtkwave::highlightSignalsFromList "tb.i_converter.abs_q\[19:0\]"
+gtkwave::highlightSignalsFromList "tb.i_converter.abs_q\[18:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Decimal
 gtkwave::/Edit/Insert_Analog_Height_Extension
 
-gtkwave::highlightSignalsFromList "tb.i_converter.sum_abs\[19:0\]"
+gtkwave::highlightSignalsFromList "tb.i_converter.sum_abs\[18:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Decimal
 
-gtkwave::highlightSignalsFromList "tb.i_converter.ema\[19:0\]"
+gtkwave::highlightSignalsFromList "tb.i_converter.ema\[18:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Decimal
 
