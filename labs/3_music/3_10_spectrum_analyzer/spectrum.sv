@@ -48,7 +48,7 @@ module spectrum
     //------------------------------------------------------------------------
 
     // Calculation of control pulses from system clock and band
-    function automatic logic [16:0] b(input[13:0]f);
+    function automatic logic [16:0] b (input [13:0] f);
     b = (clk_mhz * 31250) / f;
     endfunction
 
