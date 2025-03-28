@@ -28,11 +28,11 @@
 );
 
 localparam NWAYS = 4;
-localparam L1I_SIZE = 128;
-localparam TAG_WIDTH  = 32 - $clog2(L1I_SIZE/32);
+localparam LINE_SIZE = 128;
+localparam TAG_WIDTH  = 32 - $clog2(LINE_SIZE/32);
 
 logic     [NWAYS -1:0] cache_way_en      ;
-logic [L1I_SIZE  -1:0] cache_data_ff     [NWAYS -1:0];
+logic [LINE_SIZE -1:0] cache_data_ff     [NWAYS -1:0];
 logic [TAG_WIDTH -1:0] cache_tag_ff      [NWAYS -1:0];
 logic   [2*NWAYS -1:0] cache_state_ff    ;
 logic   [2*NWAYS -1:0] cache_state_next  ;
@@ -42,7 +42,7 @@ logic    [NWAYS -1:0]  cache_plru        ;
 logic    [NWAYS -1:0]  cache_valid       ;
 logic    [NWAYS -1:0]  cache_plru_new    ;
 logic    [NWAYS -1:0]  cache_valid_new   ;
-logic    [NWAYS -1:0]  cache_vict        ;
+logic    [NWAYS -1:0]  cache_evict       ;
 
 
 logic [31:0]           req_addr_ff;
@@ -78,11 +78,11 @@ genvar way_idx;
 
   assign cl_offs = imem_req_i ? imAddr[1:0] :req_addr_ff[1:0];
 
-
   // Hit/Miss detection and data bypass interface
   always_comb begin
     for (integer idx = 0 ; idx < NWAYS; idx = idx + 1)
-      cl_hit_vec[idx] = (in_tag == cache_tag_ff[idx]) & cache_state_ff[idx];
+      cl_hit_vec[idx] = (in_tag == cache_tag_ff[idx]) & cache_state_ff[idx]; // cache_state_ff[NWAYS-1:0] are valid bits
+                                                                             // cache_state_ff[NWAYS+:NWAYS] are used bits
   end
 
   assign cl_hit = (|cl_hit_vec) & CACHE_EN;
@@ -115,28 +115,30 @@ genvar way_idx;
     end
 
   // Refill logic
-
-  assign cache_vict[0] = (NWAYS==1) ? '1 : ( &(cache_valid) ? ~cache_plru[0] : ~cache_valid[0]);
+  assign cache_evict[0] = (NWAYS==1) ? '1 : ( &(cache_valid) ? ~cache_plru[0] : ~cache_valid[0]); // if cache is full, check used bit
 
   generate
     for (way_idx = 1; way_idx < NWAYS; way_idx = way_idx + 1) begin : g_vict
-      assign cache_vict[way_idx] = &(cache_valid) ? (~cache_plru[way_idx] & &(cache_plru[way_idx -1 : 0]))
-                                          : (~cache_valid[way_idx] & &(cache_valid[way_idx -1 : 0]));
+      assign cache_evict[way_idx] = &(cache_valid) ? (~cache_plru[way_idx] & &(cache_plru[way_idx -1 : 0])) // if [way_idx] used bit is low
+                                                                                                           // and other used bits are high
+                                                                                                           // then way_idx bit of cache_evict is high
+                                          : (~cache_valid[way_idx] & &(cache_valid[way_idx -1 : 0])); // cache_evict logic for valid bits
     end : g_vict
   endgenerate
 
-  assign cache_plru       = cache_state_ff[NWAYS+:NWAYS];
-  assign cache_valid      = cache_state_ff[NWAYS-1:0];
+  assign cache_plru       = cache_state_ff[NWAYS+:NWAYS]; // used bits
+  assign cache_valid      = cache_state_ff[NWAYS-1:0];    // valid bits
 
-  assign cache_state_en   = (cl_hit & l1i_req_val_ff ) | ext_rsp_i;
-  assign cache_valid_new  = (cache_valid | ( cache_vict & ~{NWAYS{cl_hit}}));
-  assign plru_set         = (cl_hit ? cl_hit_vec : cache_vict);
-  assign cache_plru_new   = &(cache_plru | plru_set) ? plru_set
-                                                      : (cache_plru | plru_set);
+  assign cache_state_en   = (cl_hit & l1i_req_val_ff ) | ext_rsp_i; // if cpu mem request and cache hit, or memory response
+                                                                    // update used and valid bits
+  assign cache_valid_new  = (cache_valid | ( cache_evict & ~{NWAYS{cl_hit}})); // update valid bits for evicting cache line
+  assign plru_set         = (cl_hit ? cl_hit_vec : cache_evict);    // if hit cache, mark hit cache lines as used,
+                                                                    // else mark evicted cache lines as used
+  assign cache_plru_new   = &(cache_plru | plru_set) ? plru_set                  // if all old used bits aren't equal new bits, take new
+                                                      : (cache_plru | plru_set); // else, merge old one and new
 
+  // used and valid bits register
   assign cache_state_next = {cache_plru_new, cache_valid_new};
-
-  assign cache_way_en  = cache_vict & {NWAYS{ext_rsp_i}};
 
   always_ff @(posedge clk)
     if(rst)
@@ -144,6 +146,9 @@ genvar way_idx;
     else if (cache_state_en)
       cache_state_ff <= cache_state_next;
 
+  assign cache_way_en  = cache_evict & {NWAYS{ext_rsp_i}}; // enable update for evicted lines
+
+  // tag and data memory
   generate
     for (way_idx = 0; way_idx < NWAYS; way_idx = way_idx + 1) begin : g_cache_memories
       always_ff @(posedge clk)
