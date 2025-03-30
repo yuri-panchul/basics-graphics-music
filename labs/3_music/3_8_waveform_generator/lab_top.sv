@@ -49,7 +49,7 @@ module lab_top
     // Microphone, sound output and UART
 
     input        [         23:0] mic,
-    output       [w_sound - 1:0] sound,
+    output logic [w_sound - 1:0] sound,
 
     input                        uart_rx,
     output                       uart_tx,
@@ -94,7 +94,7 @@ module lab_top
     i_waveform_gen
     (
         .clk            ( clk          ),
-        .reset          ( rst          ),
+        .rst            ( rst          ),
         .octave         ( octave       ),
         .waveform       ( waveform     ),
 

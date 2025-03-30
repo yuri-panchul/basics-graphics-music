@@ -1,0 +1,6 @@
+variable_add tb.sel
+variable_add tb.a
+variable_add tb.b
+variable_add tb.key
+variable_add tb.led
+variable_add tb.i_lab_top.all_muxes

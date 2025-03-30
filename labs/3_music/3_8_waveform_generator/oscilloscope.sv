@@ -52,10 +52,14 @@ module oscilloscope
     wire         [w_x-1:0] cntx = counter [18-:w_x];
     wire                   cntx_in_buf = cntx < screen_width / 2;
 
-    assign white = x <= vldx
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+            white <= '0;
+        else
+            white <= (x <=  vldx
             && (x >> 2) <  (distance [18-:w_x])
             && (y >> 3) == (midy - bufy [(x >> 2)]) >> 3
-            && x < screen_width && y < screen_height;
+            && x < screen_width && y < screen_height);
 
     always_ff @ (posedge clk)
         if (cntx_in_buf)

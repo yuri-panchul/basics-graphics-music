@@ -1,0 +1,7 @@
+variable_add tb.i_sensor.echo
+variable_add tb.i_sensor.relative_distance
+
+item_focus b
+item_set_format Unsigned
+
+scope_select tb.i_sensor
