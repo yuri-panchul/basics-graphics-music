@@ -24,7 +24,7 @@ module hackathon_top
     output logic [5:0] green,
     output logic [4:0] blue,
 
-    inout  logic [2:0] gpio
+    inout  logic [3:0] gpio
 );
     localparam screen_width  = 480,
                screen_height = 272;
