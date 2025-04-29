@@ -1,4 +1,4 @@
-`include "config.vh"
+`include "config.svh"
 
 module sync_and_debounce
 # (
