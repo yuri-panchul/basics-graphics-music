@@ -53,8 +53,13 @@ gowin_finish_setup_and_report_where_found ()
                     [ -d "$GOWIN_VERSION_DIR/IDE/bin" ]  ||
         error "directory '$GOWIN_VERSION_DIR/IDE/bin' expected"
 
+        if ! [ "$OSTYPE" = "linux-gnu" ] ; then
+            # Older Linux packages do not have this component
+
                     [ -d "$GOWIN_VERSION_DIR/Programmer/bin" ]  ||
         error "directory '$GOWIN_VERSION_DIR/Programmer/bin' expected"
+
+        fi
 
         #---------------------------------------------------------------------
 
@@ -85,9 +90,14 @@ gowin_finish_setup_and_report_where_found ()
                       [ -x "$gowin_sh_full_real_path" ] ||
     error "executable file '$gowin_sh_full_real_path' expected"
 
+    if ! [ "$OSTYPE" = "linux-gnu" ] ; then
+        # Older Linux packages do not have this component
+
                       [ -f "$gowin_prog_full_real_path" ] &&
                       [ -x "$gowin_prog_full_real_path" ] ||
     error "executable file '$gowin_prog_full_real_path' expected"
+
+    fi
 }
 
 #-----------------------------------------------------------------------------
