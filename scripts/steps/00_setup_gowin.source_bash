@@ -223,7 +223,6 @@ gowin_setup_ide ()
         export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD }$(echo /usr/lib/x86_64-linux-gnu/libfreetype.so*)"
         shopt -u nullglob
 
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
         export QT_XCB_GL_INTEGRATION=none
     fi
 
@@ -246,6 +245,27 @@ gowin_setup_ide ()
                   "If you see a \"Permission denied\" error, try it with sudo:"                     \
                   "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
         fi
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+special_temporary_setup_for_Gowin_V1.9.11.01_Education_Linux ()
+{
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        saved_LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+restore_setup_after_Gowin_V1.9.11.01_Education_Linux ()
+{
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        export LD_LIBRARY_PATH="$saved_LD_LIBRARY_PATH"
     fi
 }
 
@@ -346,7 +366,12 @@ setup_run_directory_for_fpga_synthesis_gowin ()
 synthesize_for_fpga_gowin ()
 {
     is_command_available_or_error "$gowin_sh_full_real_path" " from GoWin IDE package"
+
+    special_temporary_setup_for_Gowin_V1.9.11.01_Education_Linux
+
     "$gowin_sh_full_real_path" fpga_project.tcl 2>&1 | tee -a "$log"
+
+    restore_setup_after_Gowin_V1.9.11.01_Education_Linux
 }
 
 #-----------------------------------------------------------------------------
@@ -494,10 +519,14 @@ configure_fpga_gowin_proprietary ()
         flash_method="-r 2"
     fi
 
+    special_temporary_setup_for_Gowin_V1.9.11.01_Education_Linux
+
     "$gowin_prog_full_real_path"      \
         -d $fpga_board_for_programmer \
         $flash_method                 \
         --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
+
+    restore_setup_after_Gowin_V1.9.11.01_Education_Linux
 
     # TODO: Put check for error in WSL
     # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
@@ -560,5 +589,9 @@ run_fpga_synthesis_gui_gowin ()
 
     # TODO: Is it possible to load the project after a preceding synthesis run?
 
+    special_temporary_setup_for_Gowin_V1.9.11.01_Education_Linux
+
     "$gowin_ide_full_real_path" -prj fpga_project.gprj
+
+    restore_setup_after_Gowin_V1.9.11.01_Education_Linux
 }
