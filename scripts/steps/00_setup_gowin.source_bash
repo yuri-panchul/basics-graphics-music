@@ -222,6 +222,9 @@ gowin_setup_ide ()
         shopt -s nullglob
         export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD }$(echo /usr/lib/x86_64-linux-gnu/libfreetype.so*)"
         shopt -u nullglob
+
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
+        export QT_XCB_GL_INTEGRATION=none
     fi
 
     if [[ "$OSTYPE" = "darwin"* ]]

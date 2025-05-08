@@ -110,6 +110,16 @@ module hackathon_top
         */
     end
 
+    seven_segment_display # (.w_digit (8)) i_7segment
+    (
+        .clk      ( clock        ),
+        .rst      ( reset        ),
+        .number   ( 32'h1234abcd ),
+        .dots     ( '0           ),  // This syntax means "all 0s in the context"
+        .abcdefgh ( abcdefgh     ),
+        .digit    ( digit        )
+    );
+
     // END_SOLUTION
 
 endmodule
