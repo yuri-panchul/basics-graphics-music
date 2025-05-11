@@ -1,14 +1,14 @@
 `include "config.svh"
 
-// Rotary Encoder Ky-040
-
 module rotary_encoder
 (
     input               clk,
     input               reset,
     input               a,
     input               b,
-    output logic [15:0] value
+    output logic [15:0] value,
+    input               sw,
+    output logic        sw_state
 );
 
     logic prev_a;
@@ -22,7 +22,7 @@ module rotary_encoder
     always_ff @ (posedge clk)
         if (reset)
         begin
-            value <= - 16'd1;  // To do: figure out why we have to start with -1 and not 0
+            value <= - 16'd1;
         end
         else if (a && ! prev_a)
         begin
@@ -31,5 +31,13 @@ module rotary_encoder
             else
                 value <= value - 16'd1;
         end
+
+    // Simple switch handling with optional inversion
+    // Try both options to see which works with your hardware
+    // Option 1: Direct assignment
+    assign sw_state = sw;
+    
+    // Option 2: Inverted (if switch is active-low)
+    // assign sw_state = !sw;
 
 endmodule
