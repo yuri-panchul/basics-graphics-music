@@ -541,17 +541,15 @@ configure_fpga_gowin_proprietary ()
 
     special_temporary_setup_for_Gowin_V1.9.11.01_Education_Linux
 
-    "$gowin_prog_full_real_path"      \
-        -d $fpga_board_for_programmer \
-        $flash_method                 \
-        --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs \
-        | tee -a "$log"
-
-    restore_setup_after_Gowin_V1.9.11.01_Education_Linux
-
-    if ! grep -q Finished "$log" ; then
+    if ! "$gowin_prog_full_real_path"      \
+         -d $fpga_board_for_programmer \
+         $flash_method                 \
+         --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
+    then
         error "configuration failed"
     fi
+
+    restore_setup_after_Gowin_V1.9.11.01_Education_Linux
 
     # TODO: Put check for error in WSL
     # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
@@ -600,10 +598,8 @@ configure_fpga_gowin_openfpga ()
 
     #-------------------------------------------------------------------------
 
-    openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs 2>&1  \
-        | tee -a "$log"
-
-    if ! grep -q Finished "$log" ; then
+    if ! openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs
+    then
         error "configuration failed"
     fi
 
