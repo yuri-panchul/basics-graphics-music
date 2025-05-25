@@ -544,9 +544,14 @@ configure_fpga_gowin_proprietary ()
     "$gowin_prog_full_real_path"      \
         -d $fpga_board_for_programmer \
         $flash_method                 \
-        --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
+        --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs \
+        | tee -a "$log"
 
     restore_setup_after_Gowin_V1.9.11.01_Education_Linux
+
+    if ! grep -q Finished "$log" ; then
+        error "configuration failed"
+    fi
 
     # TODO: Put check for error in WSL
     # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
