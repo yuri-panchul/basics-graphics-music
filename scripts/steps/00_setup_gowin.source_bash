@@ -595,7 +595,12 @@ configure_fpga_gowin_openfpga ()
 
     #-------------------------------------------------------------------------
 
-    openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs
+    openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs 2>&1  \
+        | tee -a "$log"
+
+    if ! grep -q Finished "$log" ; then
+        error "configuration failed"
+    fi
 
     # TODO: Put check for error in WSL
     # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]
