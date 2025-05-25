@@ -236,14 +236,25 @@ gowin_setup_ide ()
         if xattr "$GOWIN_VERSION_DIR/IDE"        | grep -q $qattr ||
            xattr "$GOWIN_VERSION_DIR/Programmer" | grep -q $qattr
         then
-            error "Either directory '$GOWIN_VERSION_DIR/IDE'"   \
-                  "or '$GOWIN_VERSION_DIR/Programmer'"          \
-                  "has '$qattr' attribute."                     \
-                  "You need to remove it to run the software,"  \
-                  "using a terminal command:"                   \
-                  "xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer' ."     \
-                  "If you see a \"Permission denied\" error, try it with sudo:"                     \
-                  "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
+            while :
+            do
+                warning "Either directory '$GOWIN_VERSION_DIR/IDE'"   \
+                        "or '$GOWIN_VERSION_DIR/Programmer'"          \
+                        "has '$qattr' attribute."                     \
+                        "You need to remove it to run the software,"  \
+                        "using a terminal command:"                   \
+                        "xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer' ."     \
+                        "If you see a \"Permission denied\" error, try it with sudo:"                     \
+                        "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
+
+                read -n 1 -r -p "Abort, Retry, Ignore? [a/R/i] "
+                printf "\n"
+
+                case $REPLY in
+                A|a) exit 1 ;;
+                I|i) break  ;;
+                esac
+            fi
         fi
     fi
 }
