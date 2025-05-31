@@ -46,8 +46,8 @@ module hackathon_top
     // Signals for demoing multiplexers
 
     assign sel = key [7];
-    assign a   = key [6];
-    assign b   = key [5];
+    assign d1  = key [6];
+    assign d0  = key [5];
 
     //------------------------------------------------------------------------
 
@@ -56,9 +56,9 @@ module hackathon_top
     always_comb  // Combinational always block
     begin
         if (sel == 1)     // If sel == 1
-            led [7] = a;  //    Output value of "a" to led [0]
+            led [7] = d1;  //    Output value of "a" to led [0]
         else
-            led [7] = b;  //    Output value of "b" to led [0]
+            led [7] = d0;  //    Output value of "b" to led [0]
     end
 
     //------------------------------------------------------------------------
@@ -71,16 +71,16 @@ module hackathon_top
     always_comb  // Combinational always block
     begin
         if (sel)
-            led [7] = a;
+            led [7] = d1;
         else
-            led [7] = b;
+            led [7] = d0;
     end
     
     */
 
     //------------------------------------------------------------------------
 
-    assign led [6] = sel ? a : b;  // If sel == 1, choose a, otherwise b
+    assign led [6] = sel ? d1 : d0;  // If sel == 1, choose d1, otherwise d0
 
     //------------------------------------------------------------------------
 
@@ -89,8 +89,8 @@ module hackathon_top
     always_comb
     begin
         case (sel)
-        1: led [5] = a;
-        0: led [5] = b;
+        1: led [5] = d1;
+        0: led [5] = d0;
         endcase
     end
 
@@ -102,14 +102,14 @@ module hackathon_top
 
     always_comb
         if (sel)
-            led [7] = a;
+            led [7] = d1;
         else
-            led [7] = b;
+            led [7] = d0;
 
     always_comb
         case (sel)
-        1: led [5] = a;
-        0: led [5] = b;
+        1: led [5] = d1;
+        0: led [5] = d0;
         endcase
         
     */
@@ -118,11 +118,11 @@ module hackathon_top
 
     // The construct "{ , }" is called "concatenation"
 
-    wire [1:0] ab = { a, b };
-    assign led [4] = ab [sel];
+    wire [1:0] d = { d1, d0 };
+    assign led [4] = d [sel];
 
-    // If sel == 0, we choose ab [0] which is equal to b
-    // If sel == 1, we choose ab [1] which is equal to a
+    // If sel == 0, we choose d [0] which is equal to d0
+    // If sel == 1, we choose d [1] which is equal to d1
 
     //------------------------------------------------------------------------
 
@@ -132,7 +132,23 @@ module hackathon_top
 
     // START_SOLUTION
 
-    assign led [3] = (a & sel) | (b & ~ sel);
+    assign led [3] = (d1 & sel) | (d0 & ~ sel);
+
+    // END_SOLUTION
+
+    //------------------------------------------------------------------------
+
+    // Exercise: Implement a mux that chooses between four inputs
+    // using two-bit selector.
+
+    // START_SOLUTION
+    
+    wire [1:0] sel2 = key [7:6];
+    wire [3:0] d4   = key [3:0];
+
+    assign led [2] = sel2 [1] ?
+                            (sel2 [0] ? d4 [3] : d4 [2])
+                         :  (sel2 [0] ? d4 [1] : d4 [0]);
 
     // END_SOLUTION
 
