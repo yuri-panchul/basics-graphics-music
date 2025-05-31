@@ -119,7 +119,7 @@ gowin_try_install_dir ()
         Gowin_gowin="/Gowin /gowin"
     fi
 
-    local new_gowin_macos_sub_path=/Contents/Resources/Gowin_EDA
+    local new_gowin_macos_sub_path=Contents/Resources/Gowin_EDA
 
     for gowin in $Gowin_gowin ""
     do
