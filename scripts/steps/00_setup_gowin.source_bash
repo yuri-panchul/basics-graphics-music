@@ -124,13 +124,13 @@ gowin_try_install_dir ()
         [ -d "$dir$gowin" ] || continue
 
         find_dir="$dir$gowin"
-        find_opt="-mindepth 1 -maxdepth 1 -name 'Gowin_*' -type d -print"
+        find_opt="-mindepth 1 -maxdepth 1 -type d -print"
 
-        GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
+        GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | (grep Gowin_ || true) | sort | tail -1)
 
         if [ -n "$GOWIN_VERSION_DIR" ]
         then
-            all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
+            all_version_dirs=$($find_to_run "$find_dir" $find_opt | (grep Gowin_ || true) | xargs echo)
 
             [ "$GOWIN_VERSION_DIR" == "$all_version_dirs" ] ||
                 warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
@@ -411,13 +411,21 @@ synthesize_for_fpga_gowin ()
 
 configure_fpga_gowin ()
 {
-    if [  "$OSTYPE" = "msys"     ] ||
-       [  "$OSTYPE" = "cygwin"   ] ||
-       [[ "$OSTYPE" = "darwin"* ]]
+    if   [  "$OSTYPE" = "msys"     ] ||
+         [  "$OSTYPE" = "cygwin"   ] ||
+         [[ "$OSTYPE" = "darwin"* ]]
     then
         configure_fpga_gowin_proprietary
     else
-        configure_fpga_gowin_openfpga
+        if is_command_available openFPGALoader
+        then
+            configure_fpga_gowin_openfpga
+        else
+            warning "openFPGALoader utility is not installed in your system. You can get it here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
+            warning "in absense of openFPGALoader we will use a proprietary Gowin loader. If you get problems, install openFPGALoader and try again."
+
+            configure_fpga_gowin_proprietary
+        fi
     fi
 }
 
@@ -426,7 +434,7 @@ configure_fpga_gowin ()
 configure_fpga_gowin_proprietary ()
 {
     is_command_available_or_error "$gowin_prog_full_real_path"  \
-        " tool programmer_cli ($gowin_prog_full_real_path) is not installed on system\n You can download and install Gowin EDA https://www.gowinsemi.com/en/support/home/"
+        "programmer_cli utility ($gowin_prog_full_real_path) is not installed in your system. You can download and install Gowin EDA from https://www.gowinsemi.com/en/support/home/"
 
     # Run programmer_cli.exe -h to see the list of operations. As of September 2024:
     # /c/Gowin/Gowin_V1.9.9.03_Education_x64/Programmer/bin/programmer_cli.exe -h
@@ -582,7 +590,7 @@ configure_fpga_gowin_proprietary ()
 configure_fpga_gowin_openfpga ()
 {
     is_command_available_or_error openFPGALoader \
-        " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
+        " openFPGALoader utility is not installed in your system. You can get it here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
 
     #-------------------------------------------------------------------------
 
