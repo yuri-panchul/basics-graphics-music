@@ -27,13 +27,27 @@ module hackathon_top
     inout  logic [3:0] gpio
 );
 
-    // Read the theory https://es.wikipedia.org/wiki/Multiplexor
+    //------------------------------------------------------------------------
+
+    // Gates, wires and continuous assignments
+
+    assign led [0] = key [0] & key [1];
+
+    // Exercise 1: Change the code above.
+    // Assign to led [0] the result of OR operation (|).
+
+    wire a = key [0];  // Note a new construct - wire
+    wire b = key [1];
+
+    assign led [1] = a ^ b; // XOR - eXclusive OR
 
     //------------------------------------------------------------------------
 
-    assign sel = key [2];
-    assign a   = key [1];
-    assign b   = key [0];
+    // Signals for demoing multiplexers
+
+    assign sel = key [7];
+    assign a   = key [6];
+    assign b   = key [5];
 
     //------------------------------------------------------------------------
 
@@ -42,24 +56,31 @@ module hackathon_top
     always_comb  // Combinational always block
     begin
         if (sel == 1)     // If sel == 1
-            led [0] = a;  //    Output value of "a" to led [0]
+            led [7] = a;  //    Output value of "a" to led [0]
         else
-            led [0] = b;  //    Output value of "b" to led [0]
+            led [7] = b;  //    Output value of "b" to led [0]
     end
 
     //------------------------------------------------------------------------
+
+    /*
+    
+    // "== 1" is not necessary
+    // because Boolean value can be used as an "if" condition
 
     always_comb  // Combinational always block
     begin
-        if (sel)          // Boolean value is a condition
-            led [1] = a;
+        if (sel)
+            led [7] = a;
         else
-            led [1] = b;
+            led [7] = b;
     end
+    
+    */
 
     //------------------------------------------------------------------------
 
-    assign led [2] = sel ? a : b;  // If sel == 1, choose a, otherwise b
+    assign led [6] = sel ? a : b;  // If sel == 1, choose a, otherwise b
 
     //------------------------------------------------------------------------
 
@@ -68,33 +89,37 @@ module hackathon_top
     always_comb
     begin
         case (sel)
-        1: led [3] = a;
-        0: led [3] = b;
+        1: led [5] = a;
+        0: led [5] = b;
         endcase
     end
 
     //------------------------------------------------------------------------
 
+    /*
+    
     // If you have only one statement you can omit "begin/end"
 
-    always_comb  // Combinational always block
-        if (sel)          // Boolean value is a condition
-            led [4] = a;
+    always_comb
+        if (sel)
+            led [7] = a;
         else
-            led [4] = b;
+            led [7] = b;
 
     always_comb
         case (sel)
         1: led [5] = a;
         0: led [5] = b;
         endcase
+        
+    */
 
     //------------------------------------------------------------------------
 
     // The construct "{ , }" is called "concatenation"
 
     wire [1:0] ab = { a, b };
-    assign led [6] = ab [sel];
+    assign led [4] = ab [sel];
 
     // If sel == 0, we choose ab [0] which is equal to b
     // If sel == 1, we choose ab [1] which is equal to a
@@ -107,7 +132,7 @@ module hackathon_top
 
     // START_SOLUTION
 
-    assign led [7] = (a & sel) | (b & ~ sel);
+    assign led [3] = (a & sel) | (b & ~ sel);
 
     // END_SOLUTION
 
