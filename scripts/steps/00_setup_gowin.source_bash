@@ -102,6 +102,8 @@ gowin_finish_setup_and_report_where_found ()
 
 #-----------------------------------------------------------------------------
 
+local new_gowin_macos_sub_path=Contents/Resources/Gowin_EDA
+
 gowin_try_install_dir ()
 {
     local dir="$1"
@@ -118,8 +120,6 @@ gowin_try_install_dir ()
     else
         Gowin_gowin="/Gowin /gowin"
     fi
-
-    local new_gowin_macos_sub_path=Contents/Resources/Gowin_EDA
 
     for gowin in $Gowin_gowin ""
     do
@@ -257,29 +257,31 @@ gowin_setup_ide ()
 
         qattr=com.apple.quarantine
 
-        if xattr "$GOWIN_VERSION_DIR/IDE"        | grep -q $qattr ||
-           xattr "$GOWIN_VERSION_DIR/Programmer" | grep -q $qattr
-        then
-            while :
-            do
-                warning "Either directory '$GOWIN_VERSION_DIR/IDE'"   \
-                        "or '$GOWIN_VERSION_DIR/Programmer'"          \
-                        "has '$qattr' attribute."                     \
-                        "You need to remove it to run the software,"  \
-                        "using a terminal command:"                   \
-                        "xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer' ."     \
-                        "If you see a \"Permission denied\" error, try it with sudo:"                     \
-                        "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
+        VERSION_DIR_ROOT="${GOWIN_VERSION_DIR//\/$new_gowin_macos_sub_path$/}"
+        echo $GOWIN_VERSION_DIR
+        echo $VERSION_DIR_ROOT
+exit
 
-                read -n 1 -r -p "Abort, Retry, Ignore? [a/R/i] "
-                printf "\n"
+        while xattr "$GOWIN_VERSION_DIR/IDE"        | grep -q $qattr ||
+              xattr "$GOWIN_VERSION_DIR/Programmer" | grep -q $qattr
+        do
+            warning "Either directory '$GOWIN_VERSION_DIR/IDE'"   \
+                    "or '$GOWIN_VERSION_DIR/Programmer'"          \
+                    "has '$qattr' attribute."                     \
+                    "You need to remove it to run the software,"  \
+                    "using a terminal command:"                   \
+                    "xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer' ."     \
+                    "If you see a \"Permission denied\" error, try it with sudo:"                     \
+                    "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
 
-                case $REPLY in
-                A|a) exit 1 ;;
-                I|i) break  ;;
-                esac
-            done
-        fi
+            read -n 1 -r -p "Abort, Retry, Ignore? [a/R/i] "
+            printf "\n"
+
+            case $REPLY in
+            A|a) exit 1 ;;
+            I|i) break  ;;
+            esac
+        done
     fi
 }
 
