@@ -17,7 +17,5 @@ if ! [ -f $dir_source_script ]; then
     exit 1
 fi
 
-
 dir_source_script=$(readlink -f $dir_source_script)
 . "$dir_source_script"
-sleep 10
