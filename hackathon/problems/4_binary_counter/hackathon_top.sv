@@ -57,5 +57,4 @@ module hackathon_top
     // 2. Two counters controlled by different keys
     // displayed in different groups of LEDs.
 
-
 endmodule

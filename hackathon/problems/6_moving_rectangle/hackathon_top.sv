@@ -78,5 +78,4 @@ module hackathon_top
 
     // Exercise 3: Create a game with two rectangles
 
-
 endmodule

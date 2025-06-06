@@ -31,5 +31,4 @@ module hackathon_top
     // and the 7-segment display controller module,
     // connect them with each other and with GPIO
 
-
 endmodule

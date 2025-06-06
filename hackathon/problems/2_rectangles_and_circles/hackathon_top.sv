@@ -27,7 +27,6 @@ module hackathon_top
     inout  logic [3:0] gpio
 );
 
-
     always_comb
     begin
         red   = 0;
@@ -54,12 +53,9 @@ module hackathon_top
         // Exercise 2: Add a blue rectangle
         // that overlaps both rectangles
 
-
         // Exercise 3: Change color with keys
 
-
         // Exercise 4: Change position with keys
-
 
         // Exercise 5: Draw a circle
 

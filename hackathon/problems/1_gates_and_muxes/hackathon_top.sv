@@ -130,11 +130,9 @@ module hackathon_top
     // without using "?" operation, "if", "case" or a bit selection.
     // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
-
     //------------------------------------------------------------------------
 
     // Exercise: Implement a mux that chooses between four inputs
     // using two-bit selector.
-
 
 endmodule
