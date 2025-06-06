@@ -14,7 +14,7 @@ done
 
 if ! [ -f $dir_source_script ]; then
     printf "$script: cannot find \"$source_script\"\n" 1>&2
-	exit 1
+    exit 1
 fi
 
 

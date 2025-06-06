@@ -43,7 +43,7 @@ module tb;
     # END_TIME 
     $display ("FAIL: TIMEOUT" );
     $finish; 
-	
+    
   end
 
 // ----- the assistive process ------------------------------------
