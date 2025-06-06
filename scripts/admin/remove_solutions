@@ -21,8 +21,10 @@ $find_to_run . -name '*.sv'  \
     | xargs -n 1 sed -i  \
     -e 's/[[:space:]]\+$//'  \
     -e 's/\t/    /g'  \
-    -e '/START_SOLUTION/,/END_SOLUTION/d'  \
-    -e '/^$/N;/^\n$/D'
+    -e '/START_SOLUTION/,/END_SOLUTION/d'
+
+$find_to_run . -name '*.sv'  \
+    | xargs -n 1 sed -i '/^$/N;/^\n$/D'
 
 # See https://stackoverflow.com/questions/4521162/can-i-use-the-sed-command-to-replace-multiple-empty-line-with-one-empty-line/4522043#4522043
 #

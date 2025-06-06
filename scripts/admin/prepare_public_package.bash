@@ -196,7 +196,10 @@ cp -r "$pkg_src_root"/* "$pkg_src_root"/.gitignore "$package_path"
 #    the first included newline)
 
 $find_to_run "$package_path" -name '*.sv'  \
-    | xargs -n 1 sed -i '/START_SOLUTION/,/END_SOLUTION/d;/^$/N;/^\n$/D'
+    | xargs -n 1 sed -i '/START_SOLUTION/,/END_SOLUTION/d'
+
+$find_to_run "$package_path" -name '*.sv'  \
+    | xargs -n 1 sed -i '/^$/N;/^\n$/D'
 
 #-----------------------------------------------------------------------------
 
