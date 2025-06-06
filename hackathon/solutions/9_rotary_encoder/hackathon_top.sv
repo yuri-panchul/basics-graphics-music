@@ -61,7 +61,7 @@ module hackathon_top
         .digit    ( digit       )
     );
 
-    // Exercise: Use ultrasonic sensor to draw something on the screen
+    // Exercise 1: Use ultrasonic sensor to draw something on the screen
 
     // START_SOLUTION
 
@@ -76,5 +76,8 @@ module hackathon_top
     end
 
     // END_SOLUTION
+
+    // Exercise 2: Connect two ultrasonic sensors
+    // to draw something on the screen
 
 endmodule
