@@ -28,7 +28,7 @@ module hackathon_top
 );
 
     // START_SOLUTION
-    logi [8:0] dx, dy;
+    logic [8:0] dx, dy;
     // END_SOLUTION
 
     always_comb
