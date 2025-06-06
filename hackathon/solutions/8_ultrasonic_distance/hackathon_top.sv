@@ -27,12 +27,6 @@ module hackathon_top
     inout  logic [3:0] gpio
 );
 
-    // Exercise: Instantiate the ultrasonic module
-    // and the 7-segment display controller module,
-    // connect them with each other and with GPIO
-
-    // START_SOLUTION
-
     wire [15:0] distance;
 
     ultrasonic_distance_sensor
@@ -60,6 +54,20 @@ module hackathon_top
         .abcdefgh ( abcdefgh       ),
         .digit    ( digit          )
     );
+
+    // Exercise: Use ultrasonic sensor to draw something on the screen
+
+    // START_SOLUTION
+
+    always_comb
+    begin
+        red   = 0;
+        green = 0;
+        blue  = 0;
+
+        if (x > distance [16:8])
+            red = 31;
+    end
 
     // END_SOLUTION
 
