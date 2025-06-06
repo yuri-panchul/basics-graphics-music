@@ -30,10 +30,12 @@ module hackathon_top
     //------------------------------------------------------------------------
     // Counter with a slow 1 Hz clock (one beat per second)
 
+    wire reset_from_key = key [0];
+
     logic [31:0] counter;
 
     always_ff @ (posedge slow_clock)
-        if (reset)
+        if (reset_from_key)
             counter <= 0;
         else
             counter <= counter + 1;
