@@ -58,7 +58,7 @@ module hackathon_top
     //------------------------------------------------------------------------
     // A free running counter with a 27 MHz clock.
     // Comment out the code above and uncomment the code below.
-    // 
+    //
     // Exercise 1:
     //
     // How do you change the speed of LED blinking?
@@ -75,7 +75,7 @@ module hackathon_top
             counter <= counter + 1;
 
     assign led = counter [31:24];  // Try to put [23:16] here
-    
+
     */
 
     // assign led = counter >> 20;  // Try alternative way to shift the value
