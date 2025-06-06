@@ -65,7 +65,7 @@ module hackathon_top
         green = 0;
         blue  = 0;
 
-        if (x > distance [16:8])
+        if (x > distance [15:6])
             red = 31;
     end
 
