@@ -27,9 +27,6 @@ module hackathon_top
     inout  logic [3:0] gpio
 );
 
-    // START_SOLUTION
-    logic [8:0] dx, dy;
-    // END_SOLUTION
 
     always_comb
     begin
@@ -57,42 +54,15 @@ module hackathon_top
         // Exercise 2: Add a blue rectangle
         // that overlaps both rectangles
 
-        // START_SOLUTION
-
-        if (x > 200 & x < 400 & y > 90 & y < 140)
-            blue = 31;
-
-        // END_SOLUTION
 
         // Exercise 3: Change color with keys
 
-        // START_SOLUTION
-
-        if (x > 100 & x < 300 & y > 50 & y < 100)
-            blue = key [0] ? 31 : 0;
-
-        // END_SOLUTION
 
         // Exercise 4: Change position with keys
 
-        // START_SOLUTION
-
-        dx = key [1] ? 50 : 0;
-        dy = key [2] ? 70 : 0;
-
-        if (x > 150 + dx & x < 170 + dx & y > 70 + dy & y < 90 + dy)
-            green = 63;
-
-        // END_SOLUTION
 
         // Exercise 5: Draw a circle
 
-        // START_SOLUTION
-
-        if (x * x + y * y < 10000)
-            red = 31;
-
-        // END_SOLUTION
     end
 
 endmodule

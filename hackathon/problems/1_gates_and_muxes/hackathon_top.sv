@@ -130,26 +130,11 @@ module hackathon_top
     // without using "?" operation, "if", "case" or a bit selection.
     // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
-    // START_SOLUTION
-
-    assign led [3] = (d1 & sel) | (d0 & ~ sel);
-
-    // END_SOLUTION
 
     //------------------------------------------------------------------------
 
     // Exercise: Implement a mux that chooses between four inputs
     // using two-bit selector.
 
-    // START_SOLUTION
-
-    wire [1:0] sel2 = key [7:6];
-    wire [3:0] d4   = key [3:0];
-
-    assign led [2] = sel2 [1] ?
-                            (sel2 [0] ? d4 [3] : d4 [2])
-                         :  (sel2 [0] ? d4 [1] : d4 [0]);
-
-    // END_SOLUTION
 
 endmodule
