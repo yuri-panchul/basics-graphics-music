@@ -31,11 +31,26 @@ module hackathon_top
 
     assign led [7] = slow_clock;
 
+    //------------------------------------------------------------------------
+
+    wire  d = any_key;
+    logic q;
+
+    always_ff @ (posedge slow_clock)
+        if (reset)
+            q <= 1'b0;
+        else
+            q <= d;
+        
+    assign led [0] = q;
+
+    //------------------------------------------------------------------------
+
     d_flip_flop i0
     (
         .clock   ( slow_clock ),
         .d       ( any_key    ),
-        .q       ( led [0]    )
+        .q       ( led [1]    )
     );
 
     d_flip_flop_sync_reset i1
@@ -43,7 +58,7 @@ module hackathon_top
         .clock   ( slow_clock ),
         .reset,
         .d       ( any_key    ),
-        .q       ( led [1]    )
+        .q       ( led [2]    )
     );
 
     d_flip_flop_async_reset i2
@@ -51,12 +66,15 @@ module hackathon_top
         .clock   ( slow_clock ),
         .reset,
         .d       ( any_key    ),
-        .q       ( led [2]    )
+        .q       ( led [3]    )
     );
+
+    //------------------------------------------------------------------------
 
     //  Pulse generator, 50 times a second
 
     logic enable;
+
     strobe_gen # (.clk_mhz (27), .strobe_hz (1))
     i_strobe_gen (clock, reset, enable);
 
@@ -66,7 +84,7 @@ module hackathon_top
         .reset,
         .enable,
         .d       ( any_key    ),
-        .q       ( led [3]    )
+        .q       ( led [4]    )
     );
 
 endmodule
