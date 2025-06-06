@@ -4,7 +4,7 @@ module sync_and_debounce_one
 # (
     parameter depth = 8
 )
-(   
+(
     input        clk,
     input        reset,
     input        sw_in,

@@ -64,7 +64,7 @@ module hackathon_top
     //------------------------------------------------------------------------
 
     /*
-    
+
     // "== 1" is not necessary
     // because Boolean value can be used as an "if" condition
 
@@ -75,7 +75,7 @@ module hackathon_top
         else
             led [7] = d0;
     end
-    
+
     */
 
     //------------------------------------------------------------------------
@@ -97,7 +97,7 @@ module hackathon_top
     //------------------------------------------------------------------------
 
     /*
-    
+
     // If you have only one statement you can omit "begin/end"
 
     always_comb
@@ -111,7 +111,7 @@ module hackathon_top
         1: led [5] = d1;
         0: led [5] = d0;
         endcase
-        
+
     */
 
     //------------------------------------------------------------------------
@@ -142,7 +142,7 @@ module hackathon_top
     // using two-bit selector.
 
     // START_SOLUTION
-    
+
     wire [1:0] sel2 = key [7:6];
     wire [3:0] d4   = key [3:0];
 

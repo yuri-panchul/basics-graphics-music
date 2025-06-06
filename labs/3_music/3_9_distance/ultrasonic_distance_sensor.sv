@@ -32,25 +32,25 @@ module ultrasonic_distance_sensor
 
         trig_time
             = trig_time_in_microseconds * (clk_frequency / 1000000),
-        
+
         echo_clk_cycles_per_centimeters
-        
+
             =   clk_frequency
               * 2    // Sound wave goes 2 ways
               / speed_of_sound_meters_per_second
               / 100, // Number of centimeters in meter
-              
+
         max_echo_time
             = max_range_in_centimeters * echo_clk_cycles_per_centimeters,
 
         // To accomodate values up to measurement_cycle_time - 1
         trig_cnt_width = $clog2 (measurement_cycle_time),
-        
+
         // To accomodate values up to max_echo_time
         echo_cnt_width = $clog2 (max_echo_time + 1);
 
     `ifdef SIMULATION_ONLY
-    
+
     initial
     begin
         $display ( "speed_of_sound_meters_per_second  : %0d", speed_of_sound_meters_per_second  );
@@ -64,7 +64,7 @@ module ultrasonic_distance_sensor
         $display ( "trig_cnt_width                    : %0d", trig_cnt_width                    );
         $display ( "echo_cnt_width                    : %0d", echo_cnt_width                    );
     end
-    
+
     `endif
 
     logic [trig_cnt_width - 1:0] trig_cnt;
@@ -88,7 +88,7 @@ module ultrasonic_distance_sensor
             trig <= 0;
 
     logic prev_echo;
-    
+
     always @ (posedge clk)
         if (rst)
             prev_echo <= 0;
@@ -113,7 +113,7 @@ module ultrasonic_distance_sensor
         else if (negedge_echo)
         begin
             relative_distance
-                <= echo_cnt [   echo_cnt_width - 1 
+                <= echo_cnt [   echo_cnt_width - 1
                               : echo_cnt_width - relative_distance_width ];
         end
         else

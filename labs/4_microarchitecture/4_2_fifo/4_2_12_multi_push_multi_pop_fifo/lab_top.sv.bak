@@ -76,17 +76,17 @@ module lab_top
 
     logic [3:0]    n_pop, n_push;
     logic          hand_clk;
-   
-           
+
+
     one_pulse i_one_pulse(.clk(clk), .in_sig(key[2]), .out_sig(hand_clk));
 
     always_ff @(posedge key[0])
-    n_pop <= n_pop + 1; 
+    n_pop <= n_pop + 1;
 
     always_ff @(posedge key[1])
-    n_push <= n_push + 1; 
+    n_push <= n_push + 1;
 
-    
+
 
 /*    wire               in_valid = | key;  // Any key is pressed
     wire [width - 1:0] in_data;
@@ -203,7 +203,7 @@ module one_pusle(input clk, in_sig, output logic out_sig);
   logic [1:0] a;
     always_ff @(posedge clk)begin
     a       <= {a[0],in_sig};
-    out_sig <= a[1] & in_sig; 
+    out_sig <= a[1] & in_sig;
   end
 endmodule
 */

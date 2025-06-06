@@ -32,7 +32,7 @@ module hackathon_top
     // connect them with each other and with GPIO
 
     // START_SOLUTION
-    
+
     wire a, b;
 
     sync_and_debounce # (.w (2))

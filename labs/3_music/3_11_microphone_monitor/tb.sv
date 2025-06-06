@@ -267,7 +267,7 @@ module sinus
             ys <=  yt + (yt >> 1) - (yt >> 5);       //                 + 1.46875 yt
         else if   (yt < (y_max >> 1) + (y_max >> 3)) // < 0.625   y_max
             ys <=  yt - (yt >> 4) + (y_max >> 2);    //   0.25    y_max + 0.9375  yt
-        else if   (yt < (y_max >> 1) + 
+        else if   (yt < (y_max >> 1) +
                         (y_max >> 2) + (y_max >> 4)) // < 0.8125  y_max
          ys <= (yt >> 1) + (yt >> 4) + (y_max >> 1); //   0.5     y_max + 0.5625  yt
         else                                         //   0.84375 y_max + 0.15625 yt

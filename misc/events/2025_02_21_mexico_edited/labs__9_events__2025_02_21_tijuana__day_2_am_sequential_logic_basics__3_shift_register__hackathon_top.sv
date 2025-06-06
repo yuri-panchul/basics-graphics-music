@@ -36,12 +36,12 @@ module hackathon_top
             counter <= counter + 1;
 
     wire enable = (counter [22:0] == 0);
-    
+
     // Try different slices here, for example "counter [20:0] == 0"
 
     // Alternatively you can instantiate strobe generator:
 
-/*    
+/*
     wire enable0, enable1;
 
     strobe_gen # (.clk_mhz (27), .strobe_hz (3))

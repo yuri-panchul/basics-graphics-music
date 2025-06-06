@@ -76,7 +76,7 @@ module hackathon_top
         // Exercise 4: Change position with keys
 
         // START_SOLUTION
-        
+
         dx = key [1] ? 50 : 0;
         dy = key [2] ? 70 : 0;
 
@@ -88,7 +88,7 @@ module hackathon_top
         // Exercise 5: Draw a circle
 
         // START_SOLUTION
-        
+
         if (x * x + y * y < 10000)
             red = 31;
 
