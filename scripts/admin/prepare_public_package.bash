@@ -178,8 +178,25 @@ package_path="$tgt_pkg_dir/$package"
 mkdir "$package_path"
 cp -r "$pkg_src_root"/* "$pkg_src_root"/.gitignore "$package_path"
 
+# See https://stackoverflow.com/questions/4521162/can-i-use-the-sed-command-to-replace-multiple-empty-line-with-one-empty-line/4522043#4522043
+#
+# Explanation:
+#
+#    /^$/N - match an empty line and append it to pattern space.
+#
+#    ; - command delimiter, allows multiple commands on one line,
+#    can be used instead of separating commands into multiple -e clauses
+#    for versions of sed that support it.
+#
+#    /^\n$/D - if the pattern space contains only a newline
+#    in addition to the one at the end of the pattern space,
+#    in other words a sequence of more than one newline,
+#    then delete the first newline (more generally,
+#    the beginning of pattern space up to and including
+#    the first included newline)
+
 $find_to_run "$package_path" -name '*.sv'  \
-    | xargs -n 1 sed -i '/START_SOLUTION/,/END_SOLUTION/d'
+    | xargs -n 1 sed -i '/START_SOLUTION/,/END_SOLUTION/d;/^$/N;/^\n$/D'
 
 #-----------------------------------------------------------------------------
 
