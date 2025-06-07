@@ -87,4 +87,6 @@ module hackathon_top
         .q       ( led [4]    )
     );
 
+    // Exercise: Change the strobe generator frequency
+
 endmodule

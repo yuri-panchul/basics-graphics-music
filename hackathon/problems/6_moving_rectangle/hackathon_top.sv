@@ -56,7 +56,7 @@ module hackathon_top
         if (  x > 100 + counter & x < 150 + counter
             & y > 100           & y < 200 )
         begin
-            red = 30;
+            red = 31;
         end
     end
 
