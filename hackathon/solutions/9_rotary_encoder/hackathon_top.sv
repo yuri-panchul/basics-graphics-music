@@ -27,6 +27,11 @@ module hackathon_top
     inout  logic [3:0] gpio
 );
 
+    // Ky-040 pin marking:
+    //
+    // CLK - A
+    // DT  - B
+
     wire a, b;
 
     sync_and_debounce # (.w (2))
@@ -61,7 +66,7 @@ module hackathon_top
         .digit    ( digit       )
     );
 
-    // Exercise 1: Use ultrasonic sensor to draw something on the screen
+    // Exercise 1: Use rotary encoder to draw something on the screen
 
     // START_SOLUTION
 
@@ -77,7 +82,7 @@ module hackathon_top
 
     // END_SOLUTION
 
-    // Exercise 2: Connect two ultrasonic sensors
+    // Exercise 2: Connect two rotary encoders
     // to draw something on the screen
 
 endmodule

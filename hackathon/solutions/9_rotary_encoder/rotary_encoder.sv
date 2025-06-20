@@ -1,6 +1,9 @@
 `include "config.svh"
 
-// Rotary Encoder Ky-040
+// Ky-040 pin marking:
+//
+// CLK - A
+// DT  - B
 
 module rotary_encoder
 (
