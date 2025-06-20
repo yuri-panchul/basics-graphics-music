@@ -27,12 +27,12 @@ module rotary_encoder
         begin
             value <= - 16'd1;  // To do: figure out why we have to start with -1 and not 0
         end
-        else if (a && ! prev_a)
+        else if (a & ~ prev_a)
         begin
             if (b)
-                value <= value + 16'd1;
+                value <= value + 1'd1;
             else
-                value <= value - 16'd1;
+                value <= value - 1'd1;
         end
 
 endmodule
