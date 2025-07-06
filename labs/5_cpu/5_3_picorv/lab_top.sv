@@ -107,10 +107,8 @@ module lab_top
         if (rst) begin
             led <= '0;
         end
-        else if (mem_addr == 1000) begin
-            for (int idx = 0; idx < w_led; idx++) begin
-                led [idx] <= mem_wdata [idx];
-            end
+        else if (mem_addr == 32'h10010100 && mem_valid) begin
+            led <= mem_wdata [0 +: w_led];
         end
     end
 

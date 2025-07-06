@@ -59,14 +59,7 @@ module tb;
             $dumpvars;
         `endif
 
-        repeat (8)
-        begin
-             # 10
-             key <= $urandom ();
-             sw  <= $urandom ();
-        end
-
-        # 10000;
+        # 2_000_000;
 
         $finish;
     end
