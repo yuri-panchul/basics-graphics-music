@@ -80,54 +80,37 @@ module lab_top
 
 
 	picorv32 picorv (
-		.clk         (clk       ),
-		.resetn      (rst       ),
-		.trap        (trap      ),
-		.mem_valid   (mem_valid ),
-		.mem_instr   (mem_instr ),
-		.mem_ready   (mem_ready ),
-		.mem_addr    (mem_addr  ),
-		.mem_wdata   (mem_wdata ),
-		.mem_wstrb   (mem_wstrb ),
-		.mem_rdata   (mem_rdata )
+		.clk        ( clk       ),
+		.resetn     ( ~rst      ),
+		.trap       ( trap      ),
+		.mem_valid  ( mem_valid ),
+		.mem_instr  ( mem_instr ),
+		.mem_ready  ( mem_ready ),
+		.mem_addr   ( mem_addr  ),
+		.mem_wdata  ( mem_wdata ),
+		.mem_wstrb  ( mem_wstrb ),
+		.mem_rdata  ( mem_rdata )
 	);
 
-	reg [31:0] memory [0:255];
-
-	initial begin
-        memory[0]  = 32'h0x00100413; 
-        memory[1]  = 32'h0x100104b7;
-        memory[2]  = 32'h0x00048493;
-        // memory[3]  = 32'h0x10000913; // for w_led = 8
-        memory[3]  = {12'(w_led**2), 20'h913};
-        memory[4]  = 32'h0x00100293;
-        memory[5]  = 32'h0xfff28293;
-        memory[6]  = 32'h0xfe029ee3;
-        memory[7]  = 32'h0x0084a023;
-        memory[8]  = 32'h0x00141413;
-        memory[9]  = 32'h0xff2416e3;
-        memory[10] = 32'h0x00100413;
-        memory[11] = 32'h0xfe5ff06f;
-	end
-
-	always @(posedge clk) begin
-		if (mem_valid) begin
-			if (mem_addr < 1024) begin
-				mem_rdata <= memory[mem_addr >> 2];
-				if (mem_wstrb[0]) memory[mem_addr >> 2][ 7: 0] <= mem_wdata[ 7: 0];
-				if (mem_wstrb[1]) memory[mem_addr >> 2][15: 8] <= mem_wdata[15: 8];
-				if (mem_wstrb[2]) memory[mem_addr >> 2][23:16] <= mem_wdata[23:16];
-				if (mem_wstrb[3]) memory[mem_addr >> 2][31:24] <= mem_wdata[31:24];
-			end
-		end
-	end
-
-    assign mem_ready = mem_addr < 1024;
+    instruction_ram memory_file (
+        .clk        ( clk       ),
+        .mem_valid  ( mem_valid ),
+        .mem_ready  ( mem_ready ),
+        .mem_addr   ( mem_addr  ),
+        .mem_wstrb  ( mem_wstrb ),
+        .mem_rdata  ( mem_rdata ),
+        .mem_wdata  ( mem_wdata )
+    );
 
     // Bind LEDs into 128 with bit shift 0..w_led
-    always_comb begin
-        for (int idx = 0; idx < w_led; idx++) begin
-            led[idx] = memory[128][idx];
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            led <= '0;
+        end
+        else if (mem_addr == 1000) begin
+            for (int idx = 0; idx < w_led; idx++) begin
+                led [idx] <= mem_wdata [idx];
+            end
         end
     end
 

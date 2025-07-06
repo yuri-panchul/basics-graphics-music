@@ -38,6 +38,21 @@ module tb;
 
     //------------------------------------------------------------------------
 
+    initial begin
+        clk = 1'b0;
+        forever begin
+            #5;
+            clk = ~clk; 
+        end
+    end
+
+    initial begin
+        #10;
+        rst = 1;
+        #10;
+        rst = 0;
+    end
+
     initial
     begin
         `ifdef __ICARUS__
@@ -50,6 +65,8 @@ module tb;
              key <= $urandom ();
              sw  <= $urandom ();
         end
+
+        # 10000;
 
         $finish;
     end
