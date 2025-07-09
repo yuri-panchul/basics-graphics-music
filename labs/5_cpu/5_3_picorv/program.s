@@ -18,7 +18,7 @@ delay_loop:
     # Shift pattern right by 1 bit
     slli s0, s0, 1
 
-    mv t0, s3               # Reset delay timer
+    # mv t0, s3               # Reset delay timer
 
     # Reset pattern if s0 == s2
     bne s0, s2, delay_loop  # Continue if pattern != 0
