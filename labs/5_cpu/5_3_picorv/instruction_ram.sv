@@ -19,18 +19,18 @@ module instruction_ram
 
     initial $readmemh ("program.hex", memory);
 
-    always @(posedge clk) begin
+    always @(posedge clk) begin: mem_read_write
 		if (mem_valid) begin
-			if (mem_addr < 1024) begin
-				mem_rdata <= memory[mem_addr >> 2];
-				if (mem_wstrb[0]) memory[mem_addr >> 2][ 7: 0] <= mem_wdata[ 7: 0];
-				if (mem_wstrb[1]) memory[mem_addr >> 2][15: 8] <= mem_wdata[15: 8];
-				if (mem_wstrb[2]) memory[mem_addr >> 2][23:16] <= mem_wdata[23:16];
-				if (mem_wstrb[3]) memory[mem_addr >> 2][31:24] <= mem_wdata[31:24];
-			end
+            if      (mem_wstrb[0]) memory[mem_addr >> 2][ 7: 0] <= mem_wdata[ 7: 0];
+            else if (mem_wstrb[1]) memory[mem_addr >> 2][15: 8] <= mem_wdata[15: 8];
+            else if (mem_wstrb[2]) memory[mem_addr >> 2][23:16] <= mem_wdata[23:16];
+            else if (mem_wstrb[3]) memory[mem_addr >> 2][31:24] <= mem_wdata[31:24];
+            else    mem_rdata <= memory[mem_addr >> 2];
 		end
 	end
 
-    assign mem_ready = 1'b1;
+    always_ff @(posedge clk) begin: mem_read_ready_dly
+        mem_ready <= mem_valid;
+    end
 
 endmodule

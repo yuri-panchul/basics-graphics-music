@@ -59,7 +59,7 @@ module tb;
             $dumpvars;
         `endif
 
-        # 2_000_000;
+        # 2_000;
 
         $finish;
     end
