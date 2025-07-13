@@ -60,8 +60,8 @@ module lab_top
     //------------------------------------------------------------------------
 
     // assign led        = '0;
-    assign abcdefgh   = '0;
-    assign digit      = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
     assign red        = '0;
     assign green      = '0;
     assign blue       = '0;
@@ -80,7 +80,7 @@ module lab_top
 
 
 	picorv32 picorv (
-		.clk        ( clk       ),
+		.clk        ( slow_clk  ),
 		.resetn     ( ~rst      ),
 		.trap       ( trap      ),
 		.mem_valid  ( mem_valid ),
@@ -93,7 +93,7 @@ module lab_top
 	);
 
     instruction_ram memory_file (
-        .clk        ( clk       ),
+        .clk        ( slow_clk  ),
         .mem_valid  ( mem_valid ),
         .mem_ready  ( mem_ready ),
         .mem_addr   ( mem_addr  ),
@@ -102,14 +102,38 @@ module lab_top
         .mem_wdata  ( mem_wdata )
     );
 
+    logic [w_led-1:0] led_reg;
+
     // Bind LEDs into 128 with bit shift 0..w_led
     always_ff @(posedge clk) begin
         if (rst) begin
-            led <= '0;
+            led_reg <= '0;
         end
         else if (mem_addr == 32'h10010100 && mem_valid) begin
-            led <= mem_wdata [0 +: w_led];
+            led_reg <= mem_wdata [0 +: w_led];
         end
     end
+
+    assign led[w_led-1]   = mem_valid;
+    assign led[w_led-2]   = mem_ready;
+    assign led[w_led-3]   = trap;
+    assign led[w_led-4:0] = led_reg;
+
+    seven_segment_display
+    # (
+        .w_digit  ( w_digit * 4 ),
+        .clk_mhz  ( clk_mhz  )
+    )
+    display
+    (
+        .clk      ( clk      ),
+        .rst      ( rst      ),
+
+        .number   ( ~key[0] ? (mem_addr >> 2) : mem_rdata ),
+        .dots     ( '0       ),
+
+        .abcdefgh ( abcdefgh ),
+        .digit    ( digit    )
+    );
 
 endmodule
