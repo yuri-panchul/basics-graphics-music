@@ -321,7 +321,8 @@ update_fpga_toolchain_var ()
 
         runber                           | \
         marsohod3gw2*                    | \
-        tang_*                           )
+        tang_*                           | \
+        orangepi*                        )
 
             fpga_toolchain=gowin
         ;;

@@ -1,0 +1,90 @@
+// The pin assignments
+
+// CLK
+IO_LOC  "CLK"          V18;
+
+// LED
+IO_LOC  "LED[0]"       N13;
+IO_LOC  "LED[1]"       P14;
+IO_LOC  "LED[2]"       R14;
+IO_LOC  "LED[3]"       N14;
+IO_LOC  "LED[4]"       P15;
+IO_LOC  "LED[5]"       P16;
+IO_LOC  "LED[6]"       R16;
+IO_LOC  "LED[7]"       P17;
+IO_LOC  "LED[8]"       T18;
+IO_LOC  "LED[9]"       R18;
+IO_LOC  "LED[10]"      R17;
+IO_LOC  "LED[11]"      W22;
+IO_LOC  "LED[12]"      Y22;
+IO_LOC  "LED[13]"      AA21;
+IO_LOC  "LED[14]"      AB22;
+IO_LOC  "LED[15]"      AB21;
+
+// UART
+IO_LOC  "UART2_RXD"    Y19;
+IO_LOC  "UART2_TXD"    U20;
+
+// SWITCH
+IO_LOC  "SW[0]"        U18;
+IO_LOC  "SW[1]"        U17;
+IO_LOC  "SW[2]"        W17;
+IO_LOC  "SW[3]"        V17;
+IO_LOC  "SW[4]"        AA19;
+IO_LOC  "SW[5]"        AA18;
+IO_LOC  "SW[6]"        AB18;
+IO_LOC  "SW[7]"        AB20;
+IO_LOC  "SW[8]"        V10;
+IO_LOC  "SW[9]"        AB12;
+IO_LOC  "SW[10]"       W10;
+IO_LOC  "SW[11]"       AA11;
+IO_LOC  "SW[12]"       AA10;
+IO_LOC  "SW[13]"       AB11;
+IO_LOC  "SW[14]"       AA9;
+IO_LOC  "SW[15]"       AB10;
+
+// KEY
+IO_LOC  "KEY[0]"       V20;
+IO_LOC  "KEY[1]"       W19;
+IO_LOC  "KEY[2]"       W20;
+IO_LOC  "KEY[3]"       W21;
+
+// GPIO
+IO_LOC  "GPIO[0]"      B22;
+IO_LOC  "GPIO[1]"      B21;
+IO_LOC  "GPIO[2]"      A21;
+IO_LOC  "GPIO[3]"      B20;
+IO_LOC  "GPIO[4]"      A20;
+IO_LOC  "GPIO[5]"      A19;
+IO_LOC  "GPIO[6]"      B18;
+IO_LOC  "GPIO[7]"      A18;
+IO_LOC  "GPIO[8]"      B17;
+IO_LOC  "GPIO[9]"      A16;
+IO_LOC  "GPIO[10]"     B16;
+IO_LOC  "GPIO[11]"     A15;
+IO_LOC  "GPIO[12]"     B15;
+IO_LOC  "GPIO[13]"     A14;
+IO_LOC  "GPIO[14]"     B13;
+IO_LOC  "GPIO[15]"     A13;
+IO_LOC  "GPIO[16]"     E21;
+IO_LOC  "GPIO[17]"     G21;
+IO_LOC  "GPIO[18]"     D21;
+IO_LOC  "GPIO[19]"     G22;
+
+// 7SEG
+IO_LOC  "HGFEDCBA[0]"  M21; //A
+IO_LOC  "HGFEDCBA[1]"  L21; //B
+IO_LOC  "HGFEDCBA[2]"  M17; //C
+IO_LOC  "HGFEDCBA[3]"  J22; //D
+IO_LOC  "HGFEDCBA[4]"  H22; //E
+IO_LOC  "HGFEDCBA[5]"  K21; //F
+IO_LOC  "HGFEDCBA[6]"  K22; //G
+IO_LOC  "HGFEDCBA[7]"  J20; //Dot
+IO_LOC  "DIGIT[0]"     K17;
+IO_LOC  "DIGIT[1]"     J17;
+IO_LOC  "DIGIT[2]"     L14;
+IO_LOC  "DIGIT[3]"     L15;
+IO_LOC  "DIGIT[4]"     L16;
+IO_LOC  "DIGIT[5]"     M16;
+IO_LOC  "DIGIT[6]"     H20;
+IO_LOC  "DIGIT[7]"     G20;
