@@ -58,7 +58,7 @@ update_fpga_toolchain_var ()
         tang_primer_25k_dock*            | \
         tang_mega_138k_dock*             | \
         tang_mega_138k_pro_dock*         | \
-        orangepi*                        | \
+        orangepi*                        )
 
             fpga_toolchain=gowin
         ;;
