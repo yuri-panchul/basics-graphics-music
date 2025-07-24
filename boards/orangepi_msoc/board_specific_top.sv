@@ -25,22 +25,25 @@ module board_specific_top
               w_blue        = 5,
 
               w_x           = $clog2 ( screen_width  ),
-              w_y           = $clog2 ( screen_height )
+              w_y           = $clog2 ( screen_height ),
+
+              w_sound       = 16
 )
 (
     input                   CLK,
 
     input  [w_key   - 1:0]  KEY,
     input  [w_sw    - 1:0]  SW,
-    output [w_led   - 1:0]  LED,
 
-    input                   UART2_RXD,
-    output                  UART2_TXD,
+    input                   UART_RX,
+    output                  UART_TX,
+
+    output [w_led   - 1:0]  LED,
 
     output [          7:0]  HGFEDCBA,
     output [w_digit - 1:0]  DIGIT,
 
-    inout  [         19:0]  GPIO
+    inout  [w_gpio  - 1:0]  GPIO
 );
 
     wire clk = CLK;
@@ -49,7 +52,8 @@ module board_specific_top
 
     localparam w_tm_key   = 8,
                w_tm_led   = 8,
-               w_tm_digit = 8;
+               w_tm_digit = 8,
+               right      = 0;
 
     //------------------------------------------------------------------------
 
@@ -86,7 +90,7 @@ module board_specific_top
     wire  [w_y         - 1:0] y;
 
     wire  [             23:0] mic;
-    wire  [             15:0] sound;
+    wire  [w_sound     - 1:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -167,7 +171,7 @@ module board_specific_top
         .mic           ( mic           ),
         .sound         ( sound         ),
 
-        .gpio          ( GPIO          )
+        .gpio          (               )
     );
 
     //------------------------------------------------------------------------
@@ -195,9 +199,9 @@ module board_specific_top
             .digit    ( tm_digit       ),
             .ledr     ( tm_led         ),
             .keys     ( tm_key         ),
-            .sio_data ( GPIO[8]        ),
-            .sio_clk  ( GPIO[9]        ),
-            .sio_stb  ( GPIO[10]        )
+            .sio_data ( GPIO[3]        ),
+            .sio_clk  ( GPIO[5]        ),
+            .sio_stb  ( GPIO[7]        )
         );
 
     `endif
@@ -206,19 +210,20 @@ module board_specific_top
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-        inmp441_mic_i2s_receiver
+        inmp441_mic_i2s_receiver_alt
         # (
-            .clk_mhz  ( clk_mhz    )
+            .clk_mhz ( clk_mhz    )
         )
         i_microphone
         (
-            .clk      ( clk        ),
-            .rst      ( rst        ),
-            .lr       ( GPIO[0]    ),
-            .ws       ( GPIO[1]    ),
-            .sck      ( GPIO[2]    ),
-            .sd       ( GPIO[6]    ),
-            .value    ( mic        )
+            .clk     ( clk        ),
+            .rst     ( rst        ),
+            .right   ( right      ),
+            .lr      ( GPIO[13]   ),
+            .ws      ( GPIO[15]    ),
+            .sck     ( GPIO[11]   ),
+            .sd      ( GPIO[9]   ),
+            .value   ( mic        )
         );
 
     `endif
@@ -227,19 +232,24 @@ module board_specific_top
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
+        // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
+
         i2s_audio_out
         # (
-            .clk_mhz  ( clk_mhz    )
+            .clk_mhz             ( clk_mhz    ),
+            .in_res              ( w_sound    ),
+            .align_right         ( 1'b0       ),
+            .offset_by_one_cycle ( 1'b1       )
         )
-        inst_audio_out
+        i_ext_audio_out
         (
-            .clk      ( clk        ),
-            .reset    ( rst        ),
-            .data_in  ( sound      ),
-            .mclk     ( GPIO[4]    ),
-            .bclk     ( GPIO[5]    ),
-            .sdata    ( GPIO[6]    ),
-            .lrclk    ( GPIO[7]    )
+            .clk                 ( clk        ),
+            .reset               ( rst        ),
+            .data_in             ( sound      ),
+            .mclk                ( GPIO[8]    ),
+            .bclk                ( GPIO[10]   ),
+            .lrclk               ( GPIO[14]   ),
+            .sdata               ( GPIO[12]   )
         );
 
     `endif
