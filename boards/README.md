@@ -60,6 +60,10 @@
 * karnix_ecp5_yosys
 * orangecrab_ecp5_yosys
 
+## Orange Pi
+
+* Orange Pi MSOC
+
 ## Efinix (partial support)
 
 ## Others
