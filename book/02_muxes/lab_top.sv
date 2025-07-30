@@ -69,7 +69,7 @@ module lab_top
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
-/*
+
     mux_2_1_using_conditional_operator mux_1
     (
         .a   ( key [1] ),
@@ -85,7 +85,7 @@ module lab_top
         .sel ( key [7]   ),
         .out ( led [7:5] )
     );
-*/
+
     mux_5_1_using_case mux_3
     (
         .a   ( key [4]   ),
@@ -96,12 +96,12 @@ module lab_top
         .sel ( key [7:5] ),
         .out ( led [1]   )
     );
-/*
+
     mux_4_1_using_indexing mux_4
     (
         .in  ( key [3:0] ),
         .sel ( key [7:6] ),
         .out ( led [2]   )
     );
-*/
+
 endmodule
