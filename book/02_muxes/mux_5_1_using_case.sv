@@ -1,7 +1,7 @@
 module mux_5_1_using_case
 (
     input        a, b, c, d, e,
-    input  [2:0] sel
+    input  [2:0] sel,
     output logic out
 );
     always_comb
