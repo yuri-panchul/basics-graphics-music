@@ -70,11 +70,27 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    localparam w_in = 3;
+    wire [w_in - 1:0] in;
+
+    generate
+        if (w_key < w_in && w_sw >= w_in)
+        begin : use_switches
+            assign in = w_in' (sw);
+        end
+        else
+        begin : use_keys
+            assign in = w_in' (key);
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
     full_adder i_full_adder
     (
-        .a         ( key [2] ),
-        .b         ( key [1] ),
-        .carry_in  ( key [0] ),
+        .a         ( in  [2] ),
+        .b         ( in  [1] ),
+        .carry_in  ( in  [0] ),
         .sum       ( led [0] ),
         .carry_out ( led [1] )
     );
