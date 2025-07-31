@@ -70,37 +70,53 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    localparam w_in = 8;
+    wire [w_in - 1:0] in;
+
+    generate
+        if (w_key < w_in && w_sw >= w_in)
+        begin : use_switches
+            assign in = w_in' (sw);
+        end
+        else
+        begin : use_keys
+            assign in = w_in' (key);
+        end
+    endgenerate
+
+    //------------------------------------------------------------------------
+
     mux_2_1_using_conditional_operator mux_1
     (
-        .a   ( key [1] ),
-        .b   ( key [0] ),
-        .sel ( key [2] ),
-        .out ( led [0] )
+        .a   ( in  [1]   ),
+        .b   ( in  [0]   ),
+        .sel ( in  [2]   ),
+        .out ( led [0]   )
     );
 
     mux_2_1_width_3_using_if mux_2
     (
-        .a   ( key [5:3] ),
-        .b   ( key [2:0] ),
-        .sel ( key [7]   ),
+        .a   ( in  [5:3] ),
+        .b   ( in  [2:0] ),
+        .sel ( in  [7]   ),
         .out ( led [7:5] )
     );
 
     mux_5_1_using_case mux_3
     (
-        .a   ( key [4]   ),
-        .b   ( key [3]   ),
-        .c   ( key [2]   ),
-        .d   ( key [1]   ),
-        .e   ( key [0]   ),
-        .sel ( key [7:5] ),
+        .a   ( in  [4]   ),
+        .b   ( in  [3]   ),
+        .c   ( in  [2]   ),
+        .d   ( in  [1]   ),
+        .e   ( in  [0]   ),
+        .sel ( in  [7:5] ),
         .out ( led [1]   )
     );
 
     mux_4_1_using_indexing mux_4
     (
-        .in  ( key [3:0] ),
-        .sel ( key [7:6] ),
+        .in  ( in  [3:0] ),
+        .sel ( in  [7:6] ),
         .out ( led [2]   )
     );
 

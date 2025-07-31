@@ -70,12 +70,26 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    localparam w_in = 4;
+    wire [w_in - 1:0] in;
+
+    generate
+        if (w_key < w_in && w_sw >= w_in)
+        begin : use_switches
+            assign in = w_in' (sw);
+        end
+        else
+        begin : use_keys
+            assign in = w_in' (key);
+        end
+    endgenerate
+
     first_design first_design_instance
     (
-        .a ( key [3] ),
-        .b ( key [2] ),
-        .c ( key [1] ),
-        .d ( key [0] ),
+        .a ( in  [3] ),
+        .b ( in  [2] ),
+        .c ( in  [1] ),
+        .d ( in  [0] ),
 
         .e ( led [1] ),
         .f ( led [0] )
