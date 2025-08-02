@@ -14,8 +14,13 @@ module static_graphics
         green = 0;
         blue  = 0;
 
-        if (x > 100 & x < 300 & y > 50 & y < 100)
+        if (  x > 100
+            & x < 300
+            & y > 50
+            & y < 100)
+        begin
             red = 1;
+        end
     end
 
 endmodule
