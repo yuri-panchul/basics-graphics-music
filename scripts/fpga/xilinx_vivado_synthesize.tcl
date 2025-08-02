@@ -31,10 +31,10 @@ read_verilog -sv [glob $extra_dot_dot../../../../boards/$fpga_board/*.sv]
 
 read_xdc $extra_dot_dot../../../../boards/$fpga_board/board_specific.xdc
 
-synth_design -verilog_define XILINX_VIVADO                \
-             -include_dirs $extra_dot_dot../../../common  \
+synth_design -verilog_define XILINX_VIVADO                        \
+             -include_dirs $extra_dot_dot../../../common          \
              -include_dirs $extra_dot_dot../../../../peripherals  \
-             -part $part_name                             \
+             -part $part_name                                     \
              -top board_specific_top
 
 write_checkpoint          -force post_synth

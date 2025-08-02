@@ -36,6 +36,9 @@ module hackathon_top
         if (x > 100 & x < 300 & y > 50 & y < 100)
             red = 31;
 
+        if ((x - 240) * (x - 240) + (y - 136) * (y - 136) < 100 * 100)
+            green = x;
+
         // 31 is the maximum 5-bit number, 5'b11111
 
         // Exercise 1: Uncomment the code for a green rectangle
