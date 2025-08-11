@@ -225,7 +225,7 @@ intel_fpga_setup_quartus ()
     find_dir="$intelfpga_install_parent_dir/$intelfpga_install_dir"
     find_opt="-mindepth 1 -maxdepth 1 -type d -print"
 
-    choosen_version_dir=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
+    choosen_version_dir=$($find_to_run "$find_dir" -name '[0-9]*' $find_opt | sort | tail -1)
 
     if [ -z "$choosen_version_dir" ]
     then
