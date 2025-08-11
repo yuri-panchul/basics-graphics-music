@@ -7,7 +7,6 @@ module full_adder
     output carry_out
 );
 
-    assign sum       = a ^ b ^ carry_in;
-    assign carry_out = (a & b) | (a & carry_in) | (b & carry_in);
+    assign { carry_out, sum } = a + b + carry_in;
 
 endmodule
