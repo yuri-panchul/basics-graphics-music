@@ -14,10 +14,8 @@ done
 
 if ! [ -f $dir_source_script ]; then
     printf "$script: cannot find \"$source_script\"\n" 1>&2
-	exit 1
+    exit 1
 fi
-
 
 dir_source_script=$(readlink -f $dir_source_script)
 . "$dir_source_script"
-sleep 10

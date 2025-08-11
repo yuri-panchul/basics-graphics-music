@@ -344,7 +344,7 @@ module board_specific_top
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
 
         // Onboard PT8211 DAC requires LSB (Least Significant Bit Justified) data format
-        // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but 
+        // For Tang Primer 20k Dock DAC PT8211 do not require mclk signal but
         // on-board amplifier LPA4809 needs enable signal PA_EN
 
         i2s_audio_out
@@ -401,18 +401,18 @@ module board_specific_top
     );
 
     assign data_rgb = {
-    { 3'd7, 1'b0, {4{lab_led [0]}}, 24'h110000 }, 
-    { 3'd7, 1'b0, {4{lab_led [1]}}, 24'h001100 }, 
-    { 3'd7, 1'b0, {4{lab_led [2]}}, 24'h000011 }, 
-    { 3'd7, 1'b0, {4{lab_led [3]}}, 24'h110000 }, 
-    { 3'd7, 1'b0, {4{lab_led [4]}}, 24'h001100 }, 
-    { 3'd7, 1'b0, {4{lab_led [5]}}, 24'h000011 }, 
-    { 3'd7, 1'b0, {4{abcdefgh[5]}}, 24'h110000 }, 
-    { 3'd7, 1'b0, {4{abcdefgh[6]}}, 24'h001100 }, 
-    { 3'd7, 1'b0, {4{abcdefgh[7]}}, 24'h000011 }, 
-    { 3'd7, 1'b0, {4{abcdefgh[2]}}, 24'h110000 }, 
-    { 3'd7, 1'b0, {4{abcdefgh[1]}}, 24'h001100 }, 
-    { 3'd7, 1'b0, {4{abcdefgh[0]}}, 24'h000011 }, 
+    { 3'd7, 1'b0, {4{lab_led [0]}}, 24'h110000 },
+    { 3'd7, 1'b0, {4{lab_led [1]}}, 24'h001100 },
+    { 3'd7, 1'b0, {4{lab_led [2]}}, 24'h000011 },
+    { 3'd7, 1'b0, {4{lab_led [3]}}, 24'h110000 },
+    { 3'd7, 1'b0, {4{lab_led [4]}}, 24'h001100 },
+    { 3'd7, 1'b0, {4{lab_led [5]}}, 24'h000011 },
+    { 3'd7, 1'b0, {4{abcdefgh[5]}}, 24'h110000 },
+    { 3'd7, 1'b0, {4{abcdefgh[6]}}, 24'h001100 },
+    { 3'd7, 1'b0, {4{abcdefgh[7]}}, 24'h000011 },
+    { 3'd7, 1'b0, {4{abcdefgh[2]}}, 24'h110000 },
+    { 3'd7, 1'b0, {4{abcdefgh[1]}}, 24'h001100 },
+    { 3'd7, 1'b0, {4{abcdefgh[0]}}, 24'h000011 },
     { 3'd7, 1'b0, {4{abcdefgh[4]}},
       4'd0, {4{lab_led [0]}}, 4'd0, {4{lab_led [1]}}, 4'd0, {4{lab_led [2]}} }
     };

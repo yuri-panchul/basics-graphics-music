@@ -102,6 +102,8 @@ gowin_finish_setup_and_report_where_found ()
 
 #-----------------------------------------------------------------------------
 
+new_gowin_macos_sub_path=Contents/Resources/Gowin_EDA
+
 gowin_try_install_dir ()
 {
     local dir="$1"
@@ -114,36 +116,78 @@ gowin_try_install_dir ()
        [ "$OSTYPE" = "msys"   ]
     then
         # Windows is not case sensitive
-        Gowin_gowin="Gowin"
+        Gowin_gowin="/Gowin"
     else
-        Gowin_gowin="Gowin gowin"
+        Gowin_gowin="/Gowin /gowin"
     fi
 
-    for gowin in $Gowin_gowin
+    for gowin in $Gowin_gowin ""
     do
-        [ -d "$dir/$gowin" ] || continue
+        [ -d "$dir$gowin" ] || continue
 
-        if [ -d "$dir/$gowin/IDE" ] ; then
-            GOWIN_VERSION_DIR="$dir/$gowin"
-            gowin_finish_setup_and_report_where_found " inside '$dir'"
-            return
-        fi
-
-        find_dir="$dir/$gowin"
+        find_dir="$dir$gowin"
         find_opt="-mindepth 1 -maxdepth 1 -type d -print"
 
-        GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
+        GOWIN_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | (grep Gowin_ || true) | sort | tail -1)
 
         if [ -n "$GOWIN_VERSION_DIR" ]
         then
-            all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
+            all_version_dirs=$($find_to_run "$find_dir" $find_opt | (grep Gowin_ || true) | xargs echo)
 
             [ "$GOWIN_VERSION_DIR" == "$all_version_dirs" ] ||
                 warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
 
+            if [[ "$OSTYPE" = "darwin"* ]] &&
+               [ -d "$GOWIN_VERSION_DIR/$new_gowin_macos_sub_path" ]
+            then
+                GOWIN_VERSION_DIR="$GOWIN_VERSION_DIR/$new_gowin_macos_sub_path"
+            fi
+
             gowin_finish_setup_and_report_where_found " inside subdirectory of '$dir'"
             return
         fi
+
+        if [[ "$OSTYPE" = "darwin"* ]] &&
+           [ -x "$dir$gowin/$new_gowin_macos_sub_path/IDE/bin/gw_sh$exe" ]
+        then
+            GOWIN_VERSION_DIR="$GOWIN_VERSION_DIR/$new_gowin_macos_sub_path"
+            gowin_finish_setup_and_report_where_found " inside '$dir'"
+            return
+        fi
+
+        if [ -x "$dir$gowin/IDE/bin/gw_sh$exe" ]
+        then
+            GOWIN_VERSION_DIR="$dir$gowin"
+            gowin_finish_setup_and_report_where_found " inside '$dir'"
+            return
+        fi
+    done
+}
+
+#-----------------------------------------------------------------------------
+
+remove_macos_quarantine_attr ()
+{
+    dir="$1"
+
+    qattr=com.apple.quarantine
+
+    while xattr "$dir" | grep -q $qattr
+    do
+        warning "Directory '$dir' has '$qattr' attribute."                     \
+                "You need to remove the attribute to run the software,"        \
+                "using a terminal command:"                                    \
+                "xattr -rd $qattr '$dir' ."                                    \
+                "If you see a \"Permission denied\" error, try it with sudo:"  \
+                "sudo xattr -rd $qattr '$dir'"
+
+        read -n 1 -r -p "Abort, Retry, Ignore? [a/R/i] "
+        printf "\n"
+
+        case $REPLY in
+        A|a) exit 1 ;;
+        I|i) break  ;;
+        esac
     done
 }
 
@@ -190,9 +234,16 @@ gowin_setup_ide ()
     if [  "$OSTYPE" = "linux-gnu"  ] ||
        [[ "$OSTYPE" = "darwin"*   ]]
     then
+        if [[ "$OSTYPE" = "darwin"* ]]
+        then
+            gowin_try_install_dir "/Applications"
+            gowin_try_install_dir "$HOME/Applications"
+        fi
+
         gowin_try_install_dir "$HOME"
         gowin_try_install_dir /opt
         gowin_try_install_dir /tools
+        gowin_try_install_dir "$HOME/Downloads"
 
     elif [ "$OSTYPE" = "cygwin" ] ||
          [ "$OSTYPE" = "msys"   ]
@@ -231,20 +282,9 @@ gowin_setup_ide ()
         export DYLD_FRAMEWORK_PATH="${DYLD_FRAMEWORK_PATH:+$DYLD_FRAMEWORK_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
         export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH:+$DYLD_LIBRARY_PATH:}$GOWIN_VERSION_DIR/IDE/lib"
 
-        qattr=com.apple.quarantine
-
-        if xattr "$GOWIN_VERSION_DIR/IDE"        | grep -q $qattr ||
-           xattr "$GOWIN_VERSION_DIR/Programmer" | grep -q $qattr
-        then
-            error "Either directory '$GOWIN_VERSION_DIR/IDE'"   \
-                  "or '$GOWIN_VERSION_DIR/Programmer'"          \
-                  "has '$qattr' attribute."                     \
-                  "You need to remove it to run the software,"  \
-                  "using a terminal command:"                   \
-                  "xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer' ."     \
-                  "If you see a \"Permission denied\" error, try it with sudo:"                     \
-                  "sudo xattr -rd $qattr '$GOWIN_VERSION_DIR/IDE' '$GOWIN_VERSION_DIR/Programmer'"
-        fi
+        remove_macos_quarantine_attr "${GOWIN_VERSION_DIR//\/$new_gowin_macos_sub_path/}"
+        remove_macos_quarantine_attr "$GOWIN_VERSION_DIR/IDE"
+        remove_macos_quarantine_attr "$GOWIN_VERSION_DIR/Programmer"
     fi
 }
 
@@ -378,13 +418,21 @@ synthesize_for_fpga_gowin ()
 
 configure_fpga_gowin ()
 {
-    if [  "$OSTYPE" = "msys"     ] ||
-       [  "$OSTYPE" = "cygwin"   ] ||
-       [[ "$OSTYPE" = "darwin"* ]]
+    if   [  "$OSTYPE" = "msys"     ] ||
+         [  "$OSTYPE" = "cygwin"   ] ||
+         [[ "$OSTYPE" = "darwin"* ]]
     then
         configure_fpga_gowin_proprietary
     else
-        configure_fpga_gowin_openfpga
+        if is_command_available openFPGALoader
+        then
+            configure_fpga_gowin_openfpga
+        else
+            warning "openFPGALoader utility is not installed in your system. You can get it here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
+            warning "in absense of openFPGALoader we will use a proprietary Gowin loader. If you get problems, install openFPGALoader and try again."
+
+            configure_fpga_gowin_proprietary
+        fi
     fi
 }
 
@@ -393,7 +441,7 @@ configure_fpga_gowin ()
 configure_fpga_gowin_proprietary ()
 {
     is_command_available_or_error "$gowin_prog_full_real_path"  \
-        " tool programmer_cli ($gowin_prog_full_real_path) is not installed on system\n You can download and install Gowin EDA https://www.gowinsemi.com/en/support/home/"
+        "programmer_cli utility ($gowin_prog_full_real_path) is not installed in your system. You can download and install Gowin EDA from https://www.gowinsemi.com/en/support/home/"
 
     # Run programmer_cli.exe -h to see the list of operations. As of September 2024:
     # /c/Gowin/Gowin_V1.9.9.03_Education_x64/Programmer/bin/programmer_cli.exe -h
@@ -512,19 +560,31 @@ configure_fpga_gowin_proprietary ()
 
     #-------------------------------------------------------------------------
 
-    read -n 1 -r -p "Would you like to choose a flash method ? Try SRAM if flush does not work. S-SRAM E-Embedded Flash [s/E] "
-    printf "\n"
+    # We commented out the Embedded Flash method of configuration
+    # because it causes board to stuck with an old design sometimes.
+    # Getting the board un-stuck requires running Gowin GUI.
 
-    if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
+    if [ ]
+    then
+        read -n 1 -r -p "Would you like to choose a flash method ? Try SRAM if flush does not work. S-SRAM E-Embedded Flash [s/E] "
+        printf "\n"
+
+        if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
+            flash_method="-r 2"
+        fi
+    else
         flash_method="-r 2"
     fi
 
     special_temporary_setup_for_Gowin_V1.9.11.01_Education_Linux
 
-    "$gowin_prog_full_real_path"      \
-        -d $fpga_board_for_programmer \
-        $flash_method                 \
-        --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
+    if ! "$gowin_prog_full_real_path"      \
+         -d $fpga_board_for_programmer \
+         $flash_method                 \
+         --fsFile $(adj_path_for_gowin_win "$PWD")/impl/pnr/fpga_project.fs
+    then
+        error "configuration failed"
+    fi
 
     restore_setup_after_Gowin_V1.9.11.01_Education_Linux
 
@@ -537,7 +597,7 @@ configure_fpga_gowin_proprietary ()
 configure_fpga_gowin_openfpga ()
 {
     is_command_available_or_error openFPGALoader \
-        " tool openFPGALoader is not installed on system\n You can download openFPGALoader here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
+        " openFPGALoader utility is not installed in your system. You can get it here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
 
     #-------------------------------------------------------------------------
 
@@ -575,7 +635,10 @@ configure_fpga_gowin_openfpga ()
 
     #-------------------------------------------------------------------------
 
-    openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs
+    if ! openFPGALoader -b $fpga_board_for_openFPGALoader impl/pnr/fpga_project.fs
+    then
+        error "configuration failed"
+    fi
 
     # TODO: Put check for error in WSL
     # if [ "$OSTYPE" = "linux-gnu" ] && [ -n "${WSL_DISTRO_NAME-}" ]

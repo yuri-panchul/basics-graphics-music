@@ -261,6 +261,8 @@ setup_run_directory_for_fpga_synthesis()
 
 create_new_run_directories_for_fpga_synthesis()
 {
+    # TODO - extend this to book directory as well
+
     $find_to_run "$lab_dir" -name '*synthesize_for_fpga.bash' \
         | while read file
     do
@@ -321,7 +323,8 @@ update_fpga_toolchain_var ()
 
         runber                           | \
         marsohod3gw2*                    | \
-        tang_*                           )
+        tang_*                           | \
+        orangepi*                        )
 
             fpga_toolchain=gowin
         ;;

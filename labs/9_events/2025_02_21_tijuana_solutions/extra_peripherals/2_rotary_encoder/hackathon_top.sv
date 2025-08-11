@@ -21,7 +21,13 @@ module hackathon_top
 
     inout  logic [3:0] gpio
 );
-    
+
+    // Exercise: Instantiate the ultrasonic module
+    // and the 7-segment display controller module,
+    // connect them with each other and with GPIO
+
+    // START_SOLUTION
+
     // For rotary encoder A/B signals
     wire a, b;
     

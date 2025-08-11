@@ -100,7 +100,7 @@ module board_specific_top
 // endLook1
 
     wire  [           23:0] mic;
-
+    wire  [           15:0] sound;
 
     //------------------------------------------------------------------------
 
@@ -173,6 +173,8 @@ module board_specific_top
         .uart_tx  ( UART_TX   ),
 
         .mic      ( mic       ),
+        .sound    ( sound     ),
+
         .gpio     (           )
     );
 
@@ -251,6 +253,27 @@ module board_specific_top
         .sd      ( GPIO_3 [0] ),
         .value   ( mic        )
     );
+
+    //------------------------------------------------------------------------
+
+    `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
+
+        i2s_audio_out
+        # (
+            .clk_mhz  ( clk_mhz    )
+        )
+        inst_audio_out
+        (
+            .clk      ( clk        ),
+            .reset    ( rst        ),
+            .data_in  ( sound      ),
+            .mclk     ( GPIO_3 [4] ),
+            .bclk     ( GPIO_3 [5] ),
+            .sdata    ( GPIO_3 [6] ),
+            .lrclk    ( GPIO_3 [7] )
+        );
+
+    `endif
 
     //------------------------------------------------------------------------
 //Look4

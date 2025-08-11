@@ -50,7 +50,7 @@ module hackathon_top
 
     always_comb
     begin
-/*        
+/*
         case (key)
         8'b1000_0000: abcdefgh = P;
         8'b0100_0000: abcdefgh = A;
@@ -61,7 +61,7 @@ module hackathon_top
         8'b0000_0010: abcdefgh = L;
         default:      abcdefgh = nothing;
         endcase
-*/        
+*/
 /*
              if (key [7]) abcdefgh = P;
         else if (key [6]) abcdefgh = A;

@@ -32,7 +32,7 @@ module tb_lcd_480_272
             V_PixelCount       <=  16'b0;
             H_PixelCount       <=  16'b0;
             end
-        else if ( H_PixelCount == PixelForHS ) begin   // We show every 9 lines using 
+        else if ( H_PixelCount == PixelForHS ) begin   // We show every 9 lines using
             V_PixelCount       <= V_PixelCount + 4'd9; // signal lines in Wave Analyzer
             H_PixelCount       <=  16'b0;
             end
@@ -50,7 +50,7 @@ module tb_lcd_480_272
 
     assign  LCD_HSYNC = H_PixelCount   <= ( PixelForHS - H_FrontPorch ) ? 1'b0 : 1'b1;
     assign  LCD_VSYNC = V_PixelCount   <  ( PixelForVS )  ? 1'b0 : 1'b1;
-    assign  LCD_DE    = ( H_PixelCount >= H_BackPorch ) && 
+    assign  LCD_DE    = ( H_PixelCount >= H_BackPorch ) &&
                         ( H_PixelCount <= H_Pixel_Valid + H_BackPorch ) &&
                         ( V_PixelCount >= V_BackPorch ) &&
                         ( V_PixelCount <= V_Pixel_Valid + V_BackPorch ) && PixelClk;
