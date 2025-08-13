@@ -1,4 +1,4 @@
-// Board configuration: tang_nano_9k_lcd_480_272_tm1638_hackathon
+// Board configuration: tang_nano_9k_lcd_800_480_tm1638_hackathon
 // This module uses few parameterization and relaxed typing rules
 
 module hackathon_top
@@ -17,7 +17,7 @@ module hackathon_top
 
     // LCD screen interface
 
-    input  logic [8:0] x,
+    input  logic [9:0] x,
     input  logic [8:0] y,
 
     output logic [4:0] red,
