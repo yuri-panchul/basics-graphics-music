@@ -26,8 +26,8 @@ module hackathon_top
 
     inout  logic [3:0] gpio
 );
-    localparam screen_width  = 480,
-               screen_height = 272;
+    localparam screen_width  = 800,
+               screen_height = 480;
 
     logic pulse;
 

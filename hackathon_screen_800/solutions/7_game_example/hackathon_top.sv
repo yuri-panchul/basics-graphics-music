@@ -31,8 +31,8 @@ module hackathon_top
     //
     //  Screen, object and color constants
 
-    localparam screen_width  = 480,
-               screen_height = 272,
+    localparam screen_width  = 800,
+               screen_height = 480,
 
                wx            = 30,
                wy            = 30,
