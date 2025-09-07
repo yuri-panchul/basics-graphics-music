@@ -70,7 +70,7 @@ module hackathon_top
         else if (c1 == 0)
         begin
             if (c3 > screen_height)
-                c3 = 0;
+                c3 <= 0;
             else
                 c3 <= c3 + 10;
         end

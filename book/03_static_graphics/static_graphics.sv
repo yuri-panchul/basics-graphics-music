@@ -22,6 +22,9 @@ module static_graphics
 
         if (x > 200 & x < 400 & y > 90 & y < 140)
             blue = 1;
+
+        if (x * x + y * y < 3000)
+            red = 1;
     end
 
 endmodule
