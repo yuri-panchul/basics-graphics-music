@@ -47,6 +47,7 @@
 * marsohod3gw2
 * Tang Mega 138k
 * Tang Mega 138k Pro
+* Orange Pi MSOC
 * Tang Nano 20k
 * Tang Nano 4k
 * Tang Nano 9k
@@ -59,10 +60,6 @@
 * ice40hx8k_evb_yosys
 * karnix_ecp5_yosys
 * orangecrab_ecp5_yosys
-
-## Orange Pi
-
-* Orange Pi MSOC
 
 ## Efinix (partial support)
 
