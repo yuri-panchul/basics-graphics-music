@@ -71,7 +71,7 @@ module lab_top
     //------------------------------------------------------------------------
 
     localparam w_in = 4;
-    wire [w_in - 1:0] in;
+    logic [w_in - 1:0] in;
 
     generate
         if (w_key < w_in && w_sw >= w_in)
