@@ -152,8 +152,7 @@ run_icarus_verilog ()
     if [  "$OSTYPE" = "linux-gnu"  ] ||
        [[ "$OSTYPE" = "darwin"*   ]]
     then
-        // $command &
-        $command
+        $command &
     else
         $command
     fi

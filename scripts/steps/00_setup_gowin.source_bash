@@ -443,6 +443,24 @@ configure_fpga_gowin_proprietary ()
     is_command_available_or_error "$gowin_prog_full_real_path"  \
         "programmer_cli utility ($gowin_prog_full_real_path) is not installed in your system. You can download and install Gowin EDA from https://www.gowinsemi.com/en/support/home/"
 
+    #-------------------------------------------------------------------------
+
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        rules_dir=/etc/udev/rules.d
+        rules_file="$script_dir/fpga/91-sipeed.rules"
+
+        if ! grep -q 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010"' $rules_dir/*
+        then
+            error "No rules for Sipeed FPGA loader detected in $rules_dir."  \
+                  "Please put it there and reboot: sudo cp $rules_file $rules_dir"
+        fi
+
+        killall jtagd 2>/dev/null || true
+    fi
+
+    #-------------------------------------------------------------------------
+
     # Run programmer_cli.exe -h to see the list of operations. As of September 2024:
     # /c/Gowin/Gowin_V1.9.9.03_Education_x64/Programmer/bin/programmer_cli.exe -h
     #   --operation_index <int>, --run <int>, -r <int>

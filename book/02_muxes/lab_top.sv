@@ -60,8 +60,8 @@ module lab_top
     //------------------------------------------------------------------------
 
     // assign led        = '0;
-       assign abcdefgh   = '0;
-       assign digit      = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
        assign red        = '0;
        assign green      = '0;
        assign blue       = '0;
@@ -71,7 +71,7 @@ module lab_top
     //------------------------------------------------------------------------
 
     localparam w_in = 8;
-    wire [w_in - 1:0] in;
+    logic [w_in - 1:0] in;
 
     generate
         if (w_key < w_in && w_sw >= w_in)
@@ -94,7 +94,15 @@ module lab_top
         .out ( led [0]   )
     );
 
-    mux_2_1_width_3_using_if mux_2
+    mux_2_1_using_gates mux_2
+    (
+        .a   ( in  [1]   ),
+        .b   ( in  [0]   ),
+        .sel ( in  [2]   ),
+        .out ( led [1]   )
+    );
+
+    mux_2_1_width_3_using_if mux_3
     (
         .a   ( in  [5:3] ),
         .b   ( in  [2:0] ),
@@ -102,7 +110,7 @@ module lab_top
         .out ( led [7:5] )
     );
 
-    mux_5_1_using_case mux_3
+    mux_5_1_using_case mux_4
     (
         .a   ( in  [4]   ),
         .b   ( in  [3]   ),
@@ -110,14 +118,61 @@ module lab_top
         .d   ( in  [1]   ),
         .e   ( in  [0]   ),
         .sel ( in  [7:5] ),
-        .out ( led [1]   )
-    );
-
-    mux_4_1_using_indexing mux_4
-    (
-        .in  ( in  [3:0] ),
-        .sel ( in  [7:6] ),
         .out ( led [2]   )
     );
+
+    mux_4_1_using_three_2_1 mux_5
+    (
+        .in  ( in  [3:0]    ),
+        .sel ( in  [7:6]    ),
+        .out ( abcdefgh [0] )
+    );
+
+    mux_4_1_using_three_2_1_and_wires mux_6
+    (
+        .in  ( in  [3:0]    ),
+        .sel ( in  [7:6]    ),
+        .out ( abcdefgh [1] )
+    );
+
+    mux_4_1_using_three_2_1_and_hierarchy mux_7
+    (
+        .in  ( in  [3:0]    ),
+        .sel ( in  [7:6]    ),
+        .out ( abcdefgh [2] )
+    );
+
+    mux_4_1_using_indexing mux_8
+    (
+        .in  ( in  [3:0]    ),
+        .sel ( in  [7:6]    ),
+        .out ( abcdefgh [3] )
+    );
+
+    lut4 lut
+    (
+        .c   ( in  [3:0]    ),
+
+        .x0  ( in  [6]      ),
+        .x1  ( in  [7]      ),
+
+        .y   ( abcdefgh [4] )
+    );
+
+    lut4_alt lut_alt
+    (
+        .a   ( in  [0]      ),
+        .b   ( in  [1]      ),
+        .c   ( in  [2]      ),
+        .d   ( in  [3]      ),
+        
+        .x0  ( in  [6]      ),
+        .x1  ( in  [7]      ),
+
+        .y   ( abcdefgh [5] )
+    );
+
+    assign abcdefgh [7:6] = '0;
+    assign digit          = '1;
 
 endmodule
