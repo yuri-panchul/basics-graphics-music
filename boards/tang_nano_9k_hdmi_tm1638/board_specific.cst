@@ -2,6 +2,7 @@
 # All I/O pins here are 3.3V compatible unless specified otherwise
 
 IO_LOC "CLK"                52;
+IO_PORT "CLK" IO_TYPE=LVCMOS33;
 
 IO_LOC "KEY[0]"             4;
 IO_LOC "KEY[1]"             3;
