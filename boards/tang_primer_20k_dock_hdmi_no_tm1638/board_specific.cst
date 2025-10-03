@@ -2,6 +2,7 @@
 
 // CLK
 IO_LOC  "CLK"         H11;
+IO_PORT "CLK" IO_TYPE=LVCMOS33;
 
 // LED
 IO_LOC  "LED[5]"      L16;
