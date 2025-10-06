@@ -335,6 +335,7 @@ update_fpga_toolchain_var ()
             fpga_toolchain=efinity
         ;;
 
+        a7_lite*                         | \
         alinx_ax7035b*                   | \
         arty_a7*                         | \
         arty_s7                          | \
