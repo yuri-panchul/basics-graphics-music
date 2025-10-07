@@ -27,7 +27,7 @@ foreach file [glob ../*.{v,sv}] {
 
 read_verilog -sv [glob $extra_dot_dot../../../../peripherals/*.sv]
 
-read_verilog -sv [glob $extra_dot_dot../../../../boards/$fpga_board/*.sv]
+read_verilog -sv [glob $extra_dot_dot../../../../boards/$fpga_board/*.{v,sv}]
 
 read_xdc $extra_dot_dot../../../../boards/$fpga_board/board_specific.xdc
 
