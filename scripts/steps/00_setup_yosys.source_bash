@@ -75,13 +75,6 @@ setup_yosys ()
         echo "OK"
     fi
 
-    if [ "$OSTYPE" != "cygwin" ] &&  [ "$OSTYPE" != "msys" ] ; then
-
-        is_command_available_or_error netlistsvg "" "\n\nEither install it using 'sudo apt-get install npm && sudo npm install -g netlistsvg' or get it installed from repository: https://github.com/nturley/netlistsvg.git. Note: depends on jsnode!"
-
-        is_command_available_or_error "xdot" "" "Either install it using 'sudo apt-get install xdot' or get it installed manually from repository: https://github.com/jbohren/xdot.git. Note: depends on Python!"
-    fi
-
     is_command_available_or_error "make" "" "\n\nGNU make is not installed in the system. Either install it using 'sudo apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
 
 
@@ -167,20 +160,6 @@ configure_fpga_yosys ()
 
 configure_fpga_yosys_all ()
 {
-    printf "\n"
-    read -n 1 -r -p "Would you like to upload to FPGA ? [y/N] "
-    printf "\n"
-
-    if [[ "$REPLY" =~ ^[Yy]$ ]] ; then
-       printf "\n"
-    else
-        if [ -f "$lab_dir/$lab_name/run/$lab_name.bin" ]; then
-            printf "\nResulting binary file is:\n"
-            ls -al $lab_dir/$lab_name/run/$lab_name.bin
-        fi
-        exit 0
-    fi
-
 
     if [[ "$fpga_board" =~ "orangecrab" ]]; then
         printf "This board supports the following upload methods:\n"
@@ -222,17 +201,7 @@ configure_fpga_yosys_all ()
 
     printf "Upload method for this board is: $upload_method\n"
 
-    printf "\n"
-    read -n 1 -r -p "Where to upload, SRAM or Flash ? [s/F] "
-    printf "\n"
-
-    if [[ "$REPLY" =~ ^[Ss]$ ]] ; then
-        flash_method="sram"
-    else
-        flash_method="flash"
-    fi
-
-    printf "\n"
+    flash_method="sram"
 
     echo "$flash_method" > flash_method
     echo "$upload_method" > upload_method
