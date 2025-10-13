@@ -51,7 +51,14 @@ module board_specific_top
 
     input                 UART_RX,
 
-    inout  [w_gpio - 1:0] GPIO
+    inout  [w_gpio - 1:0] GPIO,
+
+    inout                 AUD_ADCLRCK,
+    input                 AUD_ADCDAT,
+    inout                 AUD_BCLK,
+    inout                 AUD_DACLRCK,
+    output                AUD_DACDAT,
+    output                AUD_XCK    
 );
 
     //------------------------------------------------------------------------
@@ -253,15 +260,18 @@ module board_specific_top
         assign HDMI_TX_HS       = hs;
         assign HDMI_TX_VS       = vs;
 
-        // HDMI transmitter configuration
-        I2C_HDMI_Config i_i2c_hdmi_conf (
-            .iCLK(clk),
-            .iRST_N(~rst),
-            .I2C_SCLK(I2C_SCL),
-            .I2C_SDAT(I2C_SDA),
-            .HDMI_TX_INT(HDMI_TX_INT)
-        );
-
+        `ifndef I2C_INSTANTIATED
+            `define I2C_INSTANTIATED
+            I2C_Config i_i2c_conf (
+                .iCLK(clk),
+                .iRST_N(~rst),
+                .I2C_SCLK(I2C_SCL),
+                .I2C_SDAT(I2C_SDA),
+                .HDMI_TX_INT(HDMI_TX_INT),
+                .READY   ()
+            );
+        `endif  
+        
     `endif
 
     //------------------------------------------------------------------------
@@ -301,11 +311,23 @@ module board_specific_top
             .clk     ( clk         ),
             .reset   ( rst         ),
             .data_in ( sound       ),
-            .mclk    ( GPIO [17] ), // JP9 pin 20
-            .bclk    ( GPIO [15] ), // JP9 pin 18
-            .lrclk   ( GPIO [11] ), // JP9 pin 14
-            .sdata   ( GPIO [13] )  // JP9 pin 16
-        );                          // JP9 pin 12 - GND, pin 29 - VCC 3.3V (30-45 mA)
+            .mclk    ( AUD_XCK ), 
+            .bclk    ( AUD_BCLK ), 
+            .lrclk   ( AUD_DACLRCK ), 
+            .sdata   ( AUD_DACDAT )           
+        ); 
+
+        `ifndef I2C_INSTANTIATED
+            `define I2C_INSTANTIATED
+            I2C_Config i_i2c_conf (
+                .iCLK(clk),
+                .iRST_N(~rst),
+                .I2C_SCLK(I2C_SCL),
+                .I2C_SDAT(I2C_SDA),
+                .HDMI_TX_INT(HDMI_TX_INT),
+                .READY   ()
+            );
+        `endif                                 
 
     `endif
 

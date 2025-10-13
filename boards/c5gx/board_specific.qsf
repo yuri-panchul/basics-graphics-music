@@ -36,6 +36,8 @@ set_instance_assignment -name IO_STANDARD "1.2 V"       -to SW[*]
 
 set_instance_assignment -name IO_STANDARD "2.5 V"       -to UART_*
 
+set_instance_assignment -name IO_STANDARD "2.5 V"       -to AUD_*
+
 #-----------------------------------------------------------------------------
 
 # set_location_assignment PIN_U12  -to CLOCK_125_p
@@ -186,3 +188,10 @@ set_location_assignment PIN_AA6  -to GPIO[21]
 # set_location_assignment PIN_AC24 -to GPIO[33]
 # set_location_assignment PIN_AC23 -to GPIO[34]
 # set_location_assignment PIN_AC22 -to GPIO[35]
+
+set_location_assignment PIN_D7  -to AUD_ADCDAT
+set_location_assignment PIN_C7  -to AUD_ADCLRCK
+set_location_assignment PIN_E6  -to AUD_BCLK
+set_location_assignment PIN_H10 -to AUD_DACDAT
+set_location_assignment PIN_G10 -to AUD_DACLRCK
+set_location_assignment PIN_D6  -to AUD_XCK
