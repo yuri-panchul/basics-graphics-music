@@ -90,7 +90,8 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire any_in = | in;
+    wire my_rst = in [0];
+    wire any_in = | (in [w_in - 1:1]);  // Same as "in [w_in - 1:1] != '0"
 
     assign out [0] = slow_clk;
 
@@ -100,7 +101,7 @@ module lab_top
     logic q;
 
     always_ff @ (posedge slow_clk)
-        if (rst)
+        if (my_rst)
             q <= 1'b0;
         else
             q <= d;
@@ -112,23 +113,23 @@ module lab_top
     d_flip_flop i0
     (
         .clk     ( slow_clk ),
-        .d       ( any_in   ),
+        .d       ( d        ),
         .q       ( out [2]  )
     );
 
     d_flip_flop_sync_rst i1
     (
         .clk     ( slow_clk ),
-        .rst,
-        .d       ( any_in   ),
+        .rst     ( my_rst   ),
+        .d       ( d        ),
         .q       ( out [3]  )
     );
 
     d_flip_flop_async_rst i2
     (
         .clk     ( slow_clk ),
-        .rst,
-        .d       ( any_in   ),
+        .rst     ( my_rst   ),
+        .d       ( d        ),
         .q       ( out [4]  )
     );
 
@@ -144,9 +145,9 @@ module lab_top
     d_flip_flop_sync_rst_and_enable i3
     (
         .clk     ( clk      ),  // Note this is not a slow_clk
-        .rst,
-        .enable,
-        .d       ( any_in   ),
+        .rst     ( my_rst   ),
+        .enable  ( enable   ),
+        .d       ( d        ),
         .q       ( out [5]  )
     );
 
