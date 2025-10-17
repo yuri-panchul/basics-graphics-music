@@ -28,8 +28,7 @@ module gearbox_2_to_1
 
   // START_SOLUTION
 
-  logic               half_vld;
-  logic [width - 1:0] half;
+  logic half_vld;
 
   always_ff @ (posedge clk or posedge rst)
     if (rst)

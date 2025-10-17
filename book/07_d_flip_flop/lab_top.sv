@@ -90,93 +90,66 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    mux_2_1_using_conditional_operator mux_1
+    wire any_in = | in;
+
+    assign out [0] = slow_clock;
+
+    //------------------------------------------------------------------------
+
+    wire  d = any_in;
+    logic q;
+
+    always_ff @ (posedge slow_clock)
+        if (reset)
+            q <= 1'b0;
+        else
+            q <= d;
+
+    assign out [1] = q;
+
+    //------------------------------------------------------------------------
+
+    d_flip_flop i0
     (
-        .a   ( in  [1]   ),
-        .b   ( in  [0]   ),
-        .sel ( in  [2]   ),
-        .out ( out [0]   )
+        .clock   ( slow_clock ),
+        .d       ( any_in     ),
+        .q       ( out [2]    )
     );
 
-    mux_2_1_using_gates mux_2
+    d_flip_flop_sync_reset i1
     (
-        .a   ( in  [1]   ),
-        .b   ( in  [0]   ),
-        .sel ( in  [2]   ),
-        .out ( out [1]   )
+        .clock   ( slow_clock ),
+        .reset,
+        .d       ( any_in     ),
+        .q       ( out [3]    )
     );
 
-    mux_2_1_width_3_using_if mux_3
+    d_flip_flop_async_reset i2
     (
-        .a   ( in  [5:3] ),
-        .b   ( in  [2:0] ),
-        .sel ( in  [7]   ),
-        .out ( out [7:5] )
+        .clock   ( slow_clock ),
+        .reset,
+        .d       ( any_in     ),
+        .q       ( out [4]    )
     );
 
-    mux_5_1_using_case mux_4
+    //------------------------------------------------------------------------
+
+    //  Pulse generator, 50 times a second
+
+    logic enable;
+
+    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (1))
+    i_strobe_gen (clock, reset, enable);
+
+    d_flip_flop_sync_reset_and_enable i3
     (
-        .a   ( in  [4]   ),
-        .b   ( in  [3]   ),
-        .c   ( in  [2]   ),
-        .d   ( in  [1]   ),
-        .e   ( in  [0]   ),
-        .sel ( in  [7:5] ),
-        .out ( out [2]   )
+        .clock   ( clock      ),  // Note this is not a slow_clock
+        .reset,
+        .enable,
+        .d       ( any_in     ),
+        .q       ( out [5]    )
     );
 
-    mux_4_1_using_three_2_1 mux_5
-    (
-        .in  ( in  [3:0]    ),
-        .sel ( in  [7:6]    ),
-        .out ( abcdefgh [0] )
-    );
-
-    mux_4_1_using_three_2_1_and_wires mux_6
-    (
-        .in  ( in  [3:0]    ),
-        .sel ( in  [7:6]    ),
-        .out ( abcdefgh [1] )
-    );
-
-    mux_4_1_using_three_2_1_and_hierarchy mux_7
-    (
-        .in  ( in  [3:0]    ),
-        .sel ( in  [7:6]    ),
-        .out ( abcdefgh [2] )
-    );
-
-    mux_4_1_using_indexing mux_8
-    (
-        .in  ( in  [3:0]    ),
-        .sel ( in  [7:6]    ),
-        .out ( abcdefgh [3] )
-    );
-
-    lut4 lut
-    (
-        .c   ( in  [3:0]    ),
-
-        .x0  ( in  [6]      ),
-        .x1  ( in  [7]      ),
-
-        .y   ( abcdefgh [4] )
-    );
-
-    lut4_alt lut_alt
-    (
-        .a   ( in  [0]      ),
-        .b   ( in  [1]      ),
-        .c   ( in  [2]      ),
-        .d   ( in  [3]      ),
-        
-        .x0  ( in  [6]      ),
-        .x1  ( in  [7]      ),
-
-        .y   ( abcdefgh [5] )
-    );
-
-    assign abcdefgh [7:6] = '0;
-    assign digit          = '1;
+    // Exercise: Change the strobe generator frequency
 
 endmodule
