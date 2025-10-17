@@ -92,15 +92,15 @@ module lab_top
 
     wire any_in = | in;
 
-    assign out [0] = slow_clock;
+    assign out [0] = slow_clk;
 
     //------------------------------------------------------------------------
 
     wire  d = any_in;
     logic q;
 
-    always_ff @ (posedge slow_clock)
-        if (reset)
+    always_ff @ (posedge slow_clk)
+        if (rst)
             q <= 1'b0;
         else
             q <= d;
@@ -111,25 +111,25 @@ module lab_top
 
     d_flip_flop i0
     (
-        .clock   ( slow_clock ),
-        .d       ( any_in     ),
-        .q       ( out [2]    )
+        .clk     ( slow_clk ),
+        .d       ( any_in   ),
+        .q       ( out [2]  )
     );
 
-    d_flip_flop_sync_reset i1
+    d_flip_flop_sync_rst i1
     (
-        .clock   ( slow_clock ),
-        .reset,
-        .d       ( any_in     ),
-        .q       ( out [3]    )
+        .clk     ( slow_clk ),
+        .rst,
+        .d       ( any_in   ),
+        .q       ( out [3]  )
     );
 
-    d_flip_flop_async_reset i2
+    d_flip_flop_async_rst i2
     (
-        .clock   ( slow_clock ),
-        .reset,
-        .d       ( any_in     ),
-        .q       ( out [4]    )
+        .clk     ( slow_clk ),
+        .rst,
+        .d       ( any_in   ),
+        .q       ( out [4]  )
     );
 
     //------------------------------------------------------------------------
@@ -139,17 +139,19 @@ module lab_top
     logic enable;
 
     strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (1))
-    i_strobe_gen (clock, reset, enable);
+    i_strobe_gen (clk, rst, enable);
 
-    d_flip_flop_sync_reset_and_enable i3
+    d_flip_flop_sync_rst_and_enable i3
     (
-        .clock   ( clock      ),  // Note this is not a slow_clock
-        .reset,
+        .clk     ( clk      ),  // Note this is not a slow_clk
+        .rst,
         .enable,
-        .d       ( any_in     ),
-        .q       ( out [5]    )
+        .d       ( any_in   ),
+        .q       ( out [5]  )
     );
 
     // Exercise: Change the strobe generator frequency
+
+    assign out [7:6] = '0;
 
 endmodule

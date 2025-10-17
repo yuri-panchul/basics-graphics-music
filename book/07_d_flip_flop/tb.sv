@@ -3,7 +3,7 @@
 module tb;
 
     localparam clk_mhz = 1,
-               w_key   = 4,
+               w_key   = 8,
                w_sw    = 8,
                w_led   = 8,
                w_digit = 8,
@@ -40,15 +40,62 @@ module tb;
 
     initial
     begin
+        clk = 1'b0;
+
+        forever
+            # 5 clk = ~ clk;
+    end
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
+        rst <= 1'bx;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b1;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b0;
+    end
+
+    //------------------------------------------------------------------------
+
+    initial
+    begin
         `ifdef __ICARUS__
             $dumpvars;
         `endif
+        
+        // Initialization
 
-        repeat (8)
+        key <= '0;
+        sw  <= '0;
+
+        // Reset
+
+        rst <= 1'bx;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b1;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b0;
+
+        // Driving stimuli
+
+        repeat (50)
         begin
-             # 10
-             key <= $urandom ();
-             sw  <= $urandom ();
+            key <= $urandom ();
+            sw  <= $urandom ();
+
+            @ (posedge clk);
+        end
+
+        // To change only one key
+
+        key <= '0;
+
+        repeat (50)
+        begin
+            key [0] <= $urandom ();
+            @ (posedge clk);
         end
 
         $finish;

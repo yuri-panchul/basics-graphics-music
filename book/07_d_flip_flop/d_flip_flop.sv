@@ -1,11 +1,11 @@
 module d_flip_flop
 (
-    input  clock,
+    input  clk,
     input  d,
     output logic q
 );
 
-    always_ff @ (posedge clock)
+    always_ff @ (posedge clk)
         q <= d;
 
 endmodule

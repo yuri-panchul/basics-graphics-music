@@ -3,7 +3,7 @@
 module tb;
 
     localparam clk_mhz = 1,
-               w_key   = 4,
+               w_key   = 8,
                w_sw    = 8,
                w_led   = 8,
                w_digit = 8,

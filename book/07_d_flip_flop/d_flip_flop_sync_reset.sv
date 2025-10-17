@@ -1,13 +1,13 @@
-module d_flip_flop_sync_reset
+module d_flip_flop_sync_rst
 (
-    input  clock,
-    input  reset,
+    input  clk,
+    input  rst,
     input  d,
     output logic q
 );
 
-    always_ff @ (posedge clock)
-        if (reset)
+    always_ff @ (posedge clk)
+        if (rst)
             q <= 1'b0;
         else
             q <= d;
