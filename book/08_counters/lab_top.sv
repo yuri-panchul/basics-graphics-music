@@ -97,7 +97,7 @@ module lab_top
             cnt1 <= '0;
         else
             cnt1 <= cnt1 + 1'd1;
-            
+
     //------------------------------------------------------------------------
 
     logic [31:0] cnt2;
@@ -117,13 +117,13 @@ module lab_top
     wire enable1 = cnt2 [19:0];
 
     // 2 ** 20 = (2 ** 10) * (2 ** 10) = 1024 * 1024 = approximate 1000000.
-    // For 27 MHz clock: 
+    // For 27 MHz clock:
     // 27 MHz 27000000 / 2 ** 20 = 27 times a cnt2 [19:0] overflows.
 
     logic [w_led - 1:0] cnt3;
 
     always_ff @ (posedge clk)
-        if (reset)
+        if (rst)
             cnt3 <= '0;
         else if (enable1)
             cnt3 <= cnt3 + 1'd1;
@@ -135,26 +135,13 @@ module lab_top
     strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (5))
     i_strobe_gen (clk, rst, enable2);
 
+    logic [w_led - 1:0] cnt4;
+
     always_ff @ (posedge clk)
-        if (reset)
+        if (rst)
             cnt4 <= '0;
         else if (enable2)
             cnt4 <= cnt4 + 1'd1;
-
-    //------------------------------------------------------------------------
-
-    localparam w_number = w_digit * 4;
-    wire [w_number - 1:0] number = w_number' (cnt2);
-
-    seven_segment_display # (.w_digit (w_digit)) i_7segment
-    (
-        .clk      ( clk      ),
-        .rst      ( rst      ),
-        .number   ( number   ),
-        .dots     ( '0       ),  // This syntax means "all 0s in the context"
-        .abcdefgh ( abcdefgh ),
-        .digit    ( digit    )
-    );
 
     //------------------------------------------------------------------------
 
@@ -168,6 +155,26 @@ module lab_top
         3'd4:    out = out2_3;
         3'd5:    out = cnt3;
         3'd6:    out = cnt4;
-        default: out = cnt1;
+        default: out = out2_1;
+        endcase
+
+    assign led = out;
+
+    //------------------------------------------------------------------------
+
+    localparam w_number = w_digit * 4;
+
+    wire [w_number - 1:0] number
+        = | in ? w_number' (out) : w_number' (cnt2);
+
+    seven_segment_display # (.w_digit (w_digit)) i_7segment
+    (
+        .clk      ( clk      ),
+        .rst      ( rst      ),
+        .number   ( number   ),
+        .dots     ( '0       ),  // This syntax means "all 0s in the context"
+        .abcdefgh ( abcdefgh ),
+        .digit    ( digit    )
+    );
 
 endmodule
