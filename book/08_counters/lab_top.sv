@@ -84,75 +84,90 @@ module lab_top
         end
     endgenerate
 
-    localparam w_out = 8;
-    logic [w_out - 1:0] out;
-    assign led = w_led' (out);
-
     //------------------------------------------------------------------------
 
     wire my_rst = in [0];
-    wire any_in = | (in [w_in - 1:1]);  // Same as "in [w_in - 1:1] != '0"
-
-    assign out [0] = slow_clk;
 
     //------------------------------------------------------------------------
 
-    wire  d = any_in;
-    logic q;
+    logic [w_led - 1:0] cnt1;
 
     always_ff @ (posedge slow_clk)
         if (my_rst)
-            q <= 1'b0;
+            cnt1 <= '0;
         else
-            q <= d;
+            cnt1 <= cnt1 + 1'd1;
+            
+    //------------------------------------------------------------------------
 
-    assign out [1] = q;
+    logic [31:0] cnt2;
+
+    always_ff @ (posedge clk)
+        if (rst)
+            cnt2 <= '0;
+        else
+            cnt2 <= cnt2 + 1'd1;
+
+    wire [w_led - 1:0] out2_1 = cnt2 [31 -: w_led];
+    wire [w_led - 1:0] out2_2 = cnt2 [23 -: w_led];
+    wire [w_led - 1:0] out2_3 = cnt2 [19 -: w_led];
 
     //------------------------------------------------------------------------
 
-    d_flip_flop i0
-    (
-        .clk     ( slow_clk ),
-        .d       ( d        ),
-        .q       ( out [2]  )
-    );
+    wire enable1 = cnt2 [19:0];
 
-    d_flip_flop_sync_rst i1
-    (
-        .clk     ( slow_clk ),
-        .rst     ( my_rst   ),
-        .d       ( d        ),
-        .q       ( out [3]  )
-    );
+    // 2 ** 20 = (2 ** 10) * (2 ** 10) = 1024 * 1024 = approximate 1000000.
+    // For 27 MHz clock: 
+    // 27 MHz 27000000 / 2 ** 20 = 27 times a cnt2 [19:0] overflows.
 
-    d_flip_flop_async_rst i2
+    logic [w_led - 1:0] cnt3;
+
+    always_ff @ (posedge clk)
+        if (reset)
+            cnt3 <= '0;
+        else if (enable1)
+            cnt3 <= cnt3 + 1'd1;
+
+    //------------------------------------------------------------------------
+
+    logic enable2;
+
+    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (5))
+    i_strobe_gen (clk, rst, enable2);
+
+    always_ff @ (posedge clk)
+        if (reset)
+            cnt4 <= '0;
+        else if (enable2)
+            cnt4 <= cnt4 + 1'd1;
+
+    //------------------------------------------------------------------------
+
+    localparam w_number = w_digit * 4;
+    wire [w_number - 1:0] number = w_number' (cnt2);
+
+    seven_segment_display # (.w_digit (w_digit)) i_7segment
     (
-        .clk     ( slow_clk ),
-        .rst     ( my_rst   ),
-        .d       ( d        ),
-        .q       ( out [4]  )
+        .clk      ( clk      ),
+        .rst      ( rst      ),
+        .number   ( number   ),
+        .dots     ( '0       ),  // This syntax means "all 0s in the context"
+        .abcdefgh ( abcdefgh ),
+        .digit    ( digit    )
     );
 
     //------------------------------------------------------------------------
 
-    //  Pulse generator, 1 time a second
+    logic [w_led - 1:0] out;
 
-    logic enable;
-
-    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (1))
-    i_strobe_gen (clk, rst, enable);
-
-    d_flip_flop_sync_rst_and_enable i3
-    (
-        .clk     ( clk      ),  // Note this is not a slow_clk
-        .rst     ( my_rst   ),
-        .enable  ( enable   ),
-        .d       ( d        ),
-        .q       ( out [5]  )
-    );
-
-    // Exercise: Change the strobe generator frequency
-
-    assign out [7:6] = '0;
+    always_comb
+        case (in [3:1])
+        3'd1:    out = cnt1;
+        3'd2:    out = out2_1;
+        3'd3:    out = out2_2;
+        3'd4:    out = out2_3;
+        3'd5:    out = cnt3;
+        3'd6:    out = cnt4;
+        default: out = cnt1;
 
 endmodule
