@@ -172,7 +172,7 @@ module lab_top
         .clk      ( clk      ),
         .rst      ( rst      ),
         .number   ( number   ),
-        .dots     ( '0       ),  // This syntax means "all 0s in the context"
+        .dots     ( '0       ),
         .abcdefgh ( abcdefgh ),
         .digit    ( digit    )
     );
