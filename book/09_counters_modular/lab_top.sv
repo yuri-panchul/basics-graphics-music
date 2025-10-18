@@ -94,11 +94,11 @@ module lab_top
     logic [31:0] o_counter32_verbose_slow_clk;
 
       counter32_verbose
-    i_counter32_verbose
+    i_counter32_verbose_slow_clk
     (
-        .clk ( clow_clk            ),
-        .rst ( rst_from_key0       ),
-        .cnt ( o_counter32_verbose )
+        .clk ( clow_clk                     ),
+        .rst ( rst_from_key0                ),
+        .cnt ( o_counter32_verbose_slow_clk )
     );
 
     //------------------------------------------------------------------------
