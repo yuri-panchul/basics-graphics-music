@@ -142,7 +142,7 @@ module lab_top
     logic [2:0] o_counter_with_width;
 
     counter_with_width
-    # (.width ($bits (o_counter_with_width)))
+    # (.width (3))
     i_counter_with_width
     (
         .clk ( slow_clk             ),
