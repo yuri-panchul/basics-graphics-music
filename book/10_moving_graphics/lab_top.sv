@@ -62,9 +62,9 @@ module lab_top
     // assign led        = '0;
     // assign abcdefgh   = '0;
     // assign digit      = '0;
-       assign red        = '0;
-       assign green      = '0;
-       assign blue       = '0;
+    // assign red        = '0;
+    // assign green      = '0;
+    // assign blue       = '0;
        assign sound      = '0;
        assign uart_tx    = '1;
 
@@ -96,15 +96,17 @@ module lab_top
         if (cnt2 == '0 | cnt2 == w_y' (screen_height - 1))
             cnt2_d = w_y' (screen_height / 2);
         else
-            cnt2_d = cnt2 + key [0] - (| key [w_key - 1:0]);
+            cnt2_d = cnt2 + key [0] - (| key [w_key - 1:1]);
+
+        red   = '0;
+        green = '0;
+        blue  = '0;
 
         if (x > cnt1)
-            red = w_red' (x);
+            red = '1;
 
         if (y > cnt2)
-            green = w_green' (y);
-
-        blue = '0;
+            green = '1;
     end
 
     //------------------------------------------------------------------------
