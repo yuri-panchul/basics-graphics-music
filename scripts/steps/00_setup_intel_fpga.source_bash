@@ -479,6 +479,9 @@ configure_fpga_quartus ()
         rules_dir=/etc/udev/rules.d
         rules_file="$script_dir/fpga/90-intel-fpga.rules"
 
+        # TODO: Proposed change
+        # if ! grep -q "USB[- ]Blaster" $rules_dir/*
+
         if ! grep -q USB-Blaster $rules_dir/*
         then
             error "No rules for USB Blaster detected in $rules_dir."  \
@@ -543,6 +546,9 @@ configure_fpga_quartus ()
 
         if [ $fpga_board = de1_soc ] || [ $fpga_board = de10_nano ]
         then
+            # TODO: Proposed change
+            # "$quartus_pgm_full_real_path" --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file@1"
+
             "$quartus_pgm_full_real_path" --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file@2"
         else
             "$quartus_pgm_full_real_path" --no_banner -c "$cable_name_1" --mode=jtag -o "P;$config_file"

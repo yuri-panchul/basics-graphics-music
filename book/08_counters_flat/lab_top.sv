@@ -86,14 +86,14 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire my_rst = in [0];
+    wire rst_from_key0 = in [0];
 
     //------------------------------------------------------------------------
 
     logic [w_led - 1:0] cnt1;
 
     always_ff @ (posedge slow_clk)
-        if (my_rst)
+        if (rst_from_key0)
             cnt1 <= '0;
         else
             cnt1 <= cnt1 + 1'd1;
@@ -103,7 +103,7 @@ module lab_top
     logic [31:0] cnt2;
 
     always_ff @ (posedge clk)
-        if (rst)
+        if (rst_from_key0)
             cnt2 <= '0;
         else
             cnt2 <= cnt2 + 1'd1;
@@ -114,7 +114,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire enable1 = cnt2 [19:0];
+    wire enable1 = (cnt2 [19:0] == '0);
 
     // 2 ** 20 = (2 ** 10) * (2 ** 10) = 1024 * 1024 = approximate 1000000.
     // For 27 MHz clock:
@@ -123,7 +123,7 @@ module lab_top
     logic [w_led - 1:0] cnt3;
 
     always_ff @ (posedge clk)
-        if (rst)
+        if (rst_from_key0)
             cnt3 <= '0;
         else if (enable1)
             cnt3 <= cnt3 + 1'd1;
@@ -138,7 +138,7 @@ module lab_top
     logic [w_led - 1:0] cnt4;
 
     always_ff @ (posedge clk)
-        if (rst)
+        if (rst_from_key0)
             cnt4 <= '0;
         else if (enable2)
             cnt4 <= cnt4 + 1'd1;
