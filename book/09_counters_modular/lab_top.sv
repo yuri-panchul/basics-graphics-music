@@ -96,7 +96,7 @@ module lab_top
       counter32_verbose
     i_counter32_verbose_slow_clk
     (
-        .clk ( clow_clk                     ),
+        .clk ( slow_clk                     ),
         .rst ( rst_from_key0                ),
         .cnt ( o_counter32_verbose_slow_clk )
     );
@@ -210,7 +210,7 @@ module lab_top
     counter_enables_counter
     i_counter_enables_counter
     (
-        .clk    ( slow_clk                  ),
+        .clk    ( clk                       ),
         .rst    ( rst_from_key0             ),
         .cnt    ( o_counter_enables_counter )
     );
@@ -222,7 +222,7 @@ module lab_top
     counter_and_strobe_generator
     i_counter_and_strobe_generator
     (
-        .clk    ( slow_clk                       ),
+        .clk    ( clk                            ),
         .rst    ( rst_from_key0                  ),
         .cnt    ( o_counter_and_strobe_generator )
     );
