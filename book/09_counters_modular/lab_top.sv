@@ -191,7 +191,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic [4:0] o_counter_with_max_and_enable;
+    logic [3:0] o_counter_with_max_and_enable;
 
     counter_with_max_and_enable
     # (.max (8))
