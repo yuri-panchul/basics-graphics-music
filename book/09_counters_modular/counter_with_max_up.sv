@@ -1,7 +1,7 @@
 module counter_with_max_up
 # (
     parameter max   = 0,
-              width = $clog2 (max)
+              width = $clog2 (max + 1)
 )
 (
     input                      clk,
