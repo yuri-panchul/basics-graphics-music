@@ -1,0 +1,121 @@
+logic [31:0] o_counter32_verbose;
+
+  counter32_verbose
+i_counter32_verbose
+(
+    .clk,
+    .rst (rst_from_key0),
+    .cnt (o_counter32_verbose)
+);
+
+logic [31:0] o_counter32_less_verbose;
+
+  counter32_less_verbose
+i_counter32_less_verbose
+(
+    .clk,
+    .rst (rst_from_key0),
+    .cnt (o_counter32_less_verbose)
+);
+
+logic [31:0] o_counter32_brief;
+
+  counter32_brief
+i_counter32_brief
+(
+    .clk,
+    .rst (rst_from_key0),
+    .cnt (o_counter32_brief)
+);
+
+logic [2:0] o_counter_with_width;
+
+counter_with_width
+# (.width ($bits (o_counter_with_width)))
+i_counter_with_width
+(
+    .clk ( slow_clk             ),
+    .rst ( rst_from_key0        ),
+    .cnt ( o_counter_with_width )
+);
+
+logic [2:0] o_counter_with_max_up;
+
+counter_with_max_up
+# (.max (4))
+i_counter_with_max_up
+(
+    .clk ( slow_clk              ),
+    .rst ( rst_from_key0         ),
+    .cnt ( o_counter_with_max_up )
+);
+
+logic [2:0] o_counter_with_max_down;
+
+counter_with_max_down
+# (.max (5))
+i_counter_with_max_down
+(
+    .clk ( slow_clk                ),
+    .rst ( rst_from_key0           ),
+    .cnt ( o_counter_with_max_down )
+);
+
+logic [2:0] o_counter_with_max_down_brief;
+
+counter_with_max_down_brief
+# (.max (6))
+i_counter_with_max_down_brief
+(
+    .clk ( slow_clk                      ),
+    .rst ( rst_from_key0                 ),
+    .cnt ( o_counter_with_max_down_brief )
+);
+
+logic [4:0] o_counter_with_max_and_enable;
+
+counter_with_max_and_enable
+# (.max (8))
+i_counter_with_max_and_enable
+(
+    .clk    ( slow_clk                      ),
+    .rst    ( rst_from_key0                 ),
+    .enable ( enable_from_key1              ),
+    .cnt    ( o_counter_with_max_and_enable )
+);
+
+logic [15:0] o_counter_enables_counter;
+
+counter_enables_counter
+i_counter_enables_counter
+(
+    .clk    ( slow_clk                  ),
+    .rst    ( rst_from_key0             ),
+    .cnt    ( o_counter_enables_counter )
+);
+
+logic [15:0] o_counter_and_strobe_generator;
+
+counter_and_strobe_generator
+i_counter_and_strobe_generator
+(
+    .clk    ( slow_clk                       ),
+    .rst    ( rst_from_key0                  ),
+    .cnt    ( o_counter_and_strobe_generator )
+);
+
+
+
+logic o_counter32_verbose              ;
+logic o_counter32_verbose      [31:24] ;
+logic o_counter32_less_verbose         ;
+logic o_counter32_less_verbose [31:24] ;
+logic o_counter32_brief                ;
+logic o_counter32_brief        [31:24] ;
+logic o_counter_with_width             ;
+logic o_counter_with_max_up            ;
+logic o_counter_with_max_down          ;
+logic o_counter_with_max_down_brief    ;
+logic o_counter_with_max_and_enable    ;
+logic o_counter_enables_counter        ;
+logic o_counter_and_strobe_generator   ;
