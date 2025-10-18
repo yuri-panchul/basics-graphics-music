@@ -86,86 +86,151 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire rst_from_key0 = in [0];
+    wire rst_from_key0    = in [0];
+    wire enable_from_key1 = in [1];
 
     //------------------------------------------------------------------------
 
-    logic [w_led - 1:0] cnt1;
+    logic [31:0] o_counter32_verbose_slow_clk;
 
-    always_ff @ (posedge slow_clk)
-        if (rst_from_key0)
-            cnt1 <= '0;
-        else
-            cnt1 <= cnt1 + 1'd1;
-
-    //------------------------------------------------------------------------
-
-    logic [31:0] cnt2;
-
-    always_ff @ (posedge clk)
-        if (rst)
-            cnt2 <= '0;
-        else
-            cnt2 <= cnt2 + 1'd1;
-
-    wire [w_led - 1:0] out2_1 = cnt2 [31 -: w_led];
-    wire [w_led - 1:0] out2_2 = cnt2 [23 -: w_led];
-    wire [w_led - 1:0] out2_3 = cnt2 [19 -: w_led];
+      counter32_verbose
+    i_counter32_verbose
+    (
+        .clk ( clow_clk            ),
+        .rst ( rst_from_key0       ),
+        .cnt ( o_counter32_verbose )
+    );
 
     //------------------------------------------------------------------------
 
-    wire enable1 = (cnt2 [19:0] == '0);
+    logic [31:0] o_counter32_verbose;
 
-    // 2 ** 20 = (2 ** 10) * (2 ** 10) = 1024 * 1024 = approximate 1000000.
-    // For 27 MHz clock:
-    // 27 MHz 27000000 / 2 ** 20 = 27 times a cnt2 [19:0] overflows.
-
-    logic [w_led - 1:0] cnt3;
-
-    always_ff @ (posedge clk)
-        if (rst)
-            cnt3 <= '0;
-        else if (enable1)
-            cnt3 <= cnt3 + 1'd1;
+      counter32_verbose
+    i_counter32_verbose
+    (
+        .clk,
+        .rst (rst_from_key0),
+        .cnt (o_counter32_verbose)
+    );
 
     //------------------------------------------------------------------------
 
-    logic enable2;
+    logic [31:0] o_counter32_less_verbose;
 
-    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (5))
-    i_strobe_gen (clk, rst, enable2);
-
-    logic [w_led - 1:0] cnt4;
-
-    always_ff @ (posedge clk)
-        if (rst)
-            cnt4 <= '0;
-        else if (enable2)
-            cnt4 <= cnt4 + 1'd1;
+      counter32_less_verbose
+    i_counter32_less_verbose
+    (
+        .clk,
+        .rst (rst_from_key0),
+        .cnt (o_counter32_less_verbose)
+    );
 
     //------------------------------------------------------------------------
 
-    logic [w_led - 1:0] out;
+    logic [31:0] o_counter32_brief;
 
-    always_comb
-        case (in [3:1])
-        3'd1:    out = cnt1;
-        3'd2:    out = out2_1;
-        3'd3:    out = out2_2;
-        3'd4:    out = out2_3;
-        3'd5:    out = cnt3;
-        3'd6:    out = cnt4;
-        default: out = out2_1;
-        endcase
+      counter32_brief
+    i_counter32_brief
+    (
+        .clk,
+        .rst (rst_from_key0),
+        .cnt (o_counter32_brief)
+    );
 
-    assign led = out;
+    //------------------------------------------------------------------------
+
+    logic [2:0] o_counter_with_width;
+
+    counter_with_width
+    # (.width ($bits (o_counter_with_width)))
+    i_counter_with_width
+    (
+        .clk ( slow_clk             ),
+        .rst ( rst_from_key0        ),
+        .cnt ( o_counter_with_width )
+    );
+
+    //------------------------------------------------------------------------
+
+    logic [2:0] o_counter_with_max_up;
+
+    counter_with_max_up
+    # (.max (4))
+    i_counter_with_max_up
+    (
+        .clk ( slow_clk              ),
+        .rst ( rst_from_key0         ),
+        .cnt ( o_counter_with_max_up )
+    );
+
+    //------------------------------------------------------------------------
+
+    logic [2:0] o_counter_with_max_down;
+
+    counter_with_max_down
+    # (.max (5))
+    i_counter_with_max_down
+    (
+        .clk ( slow_clk                ),
+        .rst ( rst_from_key0           ),
+        .cnt ( o_counter_with_max_down )
+    );
+
+    //------------------------------------------------------------------------
+
+    logic [2:0] o_counter_with_max_down_brief;
+
+    counter_with_max_down_brief
+    # (.max (6))
+    i_counter_with_max_down_brief
+    (
+        .clk ( slow_clk                      ),
+        .rst ( rst_from_key0                 ),
+        .cnt ( o_counter_with_max_down_brief )
+    );
+
+    //------------------------------------------------------------------------
+
+    logic [4:0] o_counter_with_max_and_enable;
+
+    counter_with_max_and_enable
+    # (.max (8))
+    i_counter_with_max_and_enable
+    (
+        .clk    ( slow_clk                      ),
+        .rst    ( rst_from_key0                 ),
+        .enable ( enable_from_key1              ),
+        .cnt    ( o_counter_with_max_and_enable )
+    );
+
+    //------------------------------------------------------------------------
+
+    logic [15:0] o_counter_enables_counter;
+
+    counter_enables_counter
+    i_counter_enables_counter
+    (
+        .clk    ( slow_clk                  ),
+        .rst    ( rst_from_key0             ),
+        .cnt    ( o_counter_enables_counter )
+    );
+
+    //------------------------------------------------------------------------
+
+    logic [15:0] o_counter_and_strobe_generator;
+
+    counter_and_strobe_generator
+    i_counter_and_strobe_generator
+    (
+        .clk    ( slow_clk                       ),
+        .rst    ( rst_from_key0                  ),
+        .cnt    ( o_counter_and_strobe_generator )
+    );
 
     //------------------------------------------------------------------------
 
     localparam w_number = w_digit * 4;
-
-    wire [w_number - 1:0] number
-        = | in ? w_number' (out) : w_number' (cnt2);
+    logic [w_number - 1:0] number;
 
     seven_segment_display # (.w_digit (w_digit)) i_7segment
     (
@@ -177,126 +242,46 @@ module lab_top
         .digit    ( digit    )
     );
 
+    //------------------------------------------------------------------------
+
+    always_comb
+        case (in [5:2])
+        4'd0    : led = w_led' ( o_counter32_verbose_slow_clk     );
+        4'd1    : led = w_led' ( o_counter32_verbose              );
+        4'd2    : led = w_led' ( o_counter32_verbose      [31:24] );
+        4'd3    : led = w_led' ( o_counter32_less_verbose         );
+        4'd4    : led = w_led' ( o_counter32_less_verbose [31:24] );
+        4'd5    : led = w_led' ( o_counter32_brief                );
+        4'd6    : led = w_led' ( o_counter32_brief        [31:24] );
+        4'd7    : led = w_led' ( o_counter_with_width             );
+        4'd8    : led = w_led' ( o_counter_with_max_up            );
+        4'd9    : led = w_led' ( o_counter_with_max_down          );
+        4'd10   : led = w_led' ( o_counter_with_max_down_brief    );
+        4'd11   : led = w_led' ( o_counter_with_max_and_enable    );
+        4'd12   : led = w_led' ( o_counter_enables_counter        );
+        4'd13   : led = w_led' ( o_counter_and_strobe_generator   );
+        default : led = '0;
+        endcase
+
+    //------------------------------------------------------------------------
+
+    always_comb
+        case (in [5:2])
+        4'd0    : number = w_number' ( o_counter32_verbose_slow_clk     );
+        4'd1    : number = w_number' ( o_counter32_verbose              );
+        4'd2    : number = w_number' ( o_counter32_verbose      [31:24] );
+        4'd3    : number = w_number' ( o_counter32_less_verbose         );
+        4'd4    : number = w_number' ( o_counter32_less_verbose [31:24] );
+        4'd5    : number = w_number' ( o_counter32_brief                );
+        4'd6    : number = w_number' ( o_counter32_brief        [31:24] );
+        4'd7    : number = w_number' ( o_counter_with_width             );
+        4'd8    : number = w_number' ( o_counter_with_max_up            );
+        4'd9    : number = w_number' ( o_counter_with_max_down          );
+        4'd10   : number = w_number' ( o_counter_with_max_down_brief    );
+        4'd11   : number = w_number' ( o_counter_with_max_and_enable    );
+        4'd12   : number = w_number' ( o_counter_enables_counter        );
+        4'd13   : number = w_number' ( o_counter_and_strobe_generator   );
+        default : number = '0;
+        endcase
+
 endmodule
-
-logic [31:0] o_counter32_verbose;
-
-  counter32_verbose
-i_counter32_verbose
-(
-    .clk,
-    .rst (rst_from_key0),
-    .cnt (o_counter32_verbose)
-);
-
-logic [31:0] o_counter32_less_verbose;
-
-  counter32_less_verbose
-i_counter32_less_verbose
-(
-    .clk,
-    .rst (rst_from_key0),
-    .cnt (o_counter32_less_verbose)
-);
-
-logic [31:0] o_counter32_brief;
-
-  counter32_brief
-i_counter32_brief
-(
-    .clk,
-    .rst (rst_from_key0),
-    .cnt (o_counter32_brief)
-);
-
-logic [2:0] o_counter_with_width;
-
-counter_with_width
-# (.width ($bits (o_counter_with_width)))
-i_counter_with_width
-(
-    .clk ( slow_clk             ),
-    .rst ( rst_from_key0        ),
-    .cnt ( o_counter_with_width )
-);
-
-logic [2:0] o_counter_with_max_up;
-
-counter_with_max_up
-# (.max (4))
-i_counter_with_max_up
-(
-    .clk ( slow_clk              ),
-    .rst ( rst_from_key0         ),
-    .cnt ( o_counter_with_max_up )
-);
-
-logic [2:0] o_counter_with_max_down;
-
-counter_with_max_down
-# (.max (5))
-i_counter_with_max_down
-(
-    .clk ( slow_clk                ),
-    .rst ( rst_from_key0           ),
-    .cnt ( o_counter_with_max_down )
-);
-
-logic [2:0] o_counter_with_max_down_brief;
-
-counter_with_max_down_brief
-# (.max (6))
-i_counter_with_max_down_brief
-(
-    .clk ( slow_clk                      ),
-    .rst ( rst_from_key0                 ),
-    .cnt ( o_counter_with_max_down_brief )
-);
-
-logic [4:0] o_counter_with_max_and_enable;
-
-counter_with_max_and_enable
-# (.max (8))
-i_counter_with_max_and_enable
-(
-    .clk    ( slow_clk                      ),
-    .rst    ( rst_from_key0                 ),
-    .enable ( enable_from_key1              ),
-    .cnt    ( o_counter_with_max_and_enable )
-);
-
-logic [15:0] o_counter_enables_counter;
-
-counter_enables_counter
-i_counter_enables_counter
-(
-    .clk    ( slow_clk                  ),
-    .rst    ( rst_from_key0             ),
-    .cnt    ( o_counter_enables_counter )
-);
-
-logic [15:0] o_counter_and_strobe_generator;
-
-counter_and_strobe_generator
-i_counter_and_strobe_generator
-(
-    .clk    ( slow_clk                       ),
-    .rst    ( rst_from_key0                  ),
-    .cnt    ( o_counter_and_strobe_generator )
-);
-
-
-
-logic o_counter32_verbose              ;
-logic o_counter32_verbose      [31:24] ;
-logic o_counter32_less_verbose         ;
-logic o_counter32_less_verbose [31:24] ;
-logic o_counter32_brief                ;
-logic o_counter32_brief        [31:24] ;
-logic o_counter_with_width             ;
-logic o_counter_with_max_up            ;
-logic o_counter_with_max_down          ;
-logic o_counter_with_max_down_brief    ;
-logic o_counter_with_max_and_enable    ;
-logic o_counter_enables_counter        ;
-logic o_counter_and_strobe_generator   ;
