@@ -13,11 +13,13 @@ create_project  board_specific_top ./gui_prj           \
                -force                                  \
                -quiet
 
-if {[file isdirectory ../../../../../labs]} {
+if {[file isdirectory ../../../../labs]} {
     set extra_dot_dot ../
+} elseif {[file isdirectory ../../../../../labs]} {
+    set extra_dot_dot ../../
 }
 
-read_verilog -sv [glob $extra_dot_dot../../../common/*.sv]
+read_verilog -sv [glob $extra_dot_dot../../../labs/common/*.sv]
 
 foreach file [glob ../*.{v,sv}] {
     if {$file ne "../tb.sv"} {
@@ -25,15 +27,15 @@ foreach file [glob ../*.{v,sv}] {
     }
 }
 
-read_verilog -sv [glob $extra_dot_dot../../../../peripherals/*.sv]
+read_verilog -sv [glob $extra_dot_dot../../../peripherals/*.sv]
 
-read_verilog -sv [glob $extra_dot_dot../../../../boards/$fpga_board/*.{v,sv}]
+read_verilog -sv [glob $extra_dot_dot../../../boards/$fpga_board/*.{v,sv}]
 
-read_xdc $extra_dot_dot../../../../boards/$fpga_board/board_specific.xdc
+read_xdc $extra_dot_dot../../../boards/$fpga_board/board_specific.xdc
 
 synth_design -verilog_define XILINX_VIVADO                        \
-             -include_dirs $extra_dot_dot../../../common          \
-             -include_dirs $extra_dot_dot../../../../peripherals  \
+             -include_dirs $extra_dot_dot../../../labs/common     \
+             -include_dirs $extra_dot_dot../../../peripherals     \
              -part $part_name                                     \
              -top board_specific_top
 
