@@ -127,7 +127,7 @@ module lab_top
 
     localparam w_number = w_digit * 4;
 
-    logic [w_number - 1:0] number
+    wire [w_number - 1:0] number
         = w_number' ({ 16' (cnt1), 16' (cnt2) });
 
     seven_segment_display # (.w_digit (w_digit)) i_7segment
