@@ -78,3 +78,7 @@ TODO: This is inconsistent with Linux, Altera and Xilinx. Need to review.
 8. When we find this version, we set XILINX_VIVADO, an environment variable used by Vivado, to this location.
 
 TODO: Consider skipping the setup process if XILINX_VIVADO is already defined.
+
+## Lattice
+
+TODO

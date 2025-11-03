@@ -191,6 +191,8 @@ fi
 #
 #   Intel FPGA Quartus and Questa, licensed by Intel from Siemens EDA
 #   Gowin IDE
+#   Xilinx Vivado
+#   Lattice (Yosys-based)
 #   Open Lane
 #   Icarus Verilog
 #
@@ -200,6 +202,7 @@ source "$script_dir/steps/00_setup_intel_fpga.source_bash"
 source "$script_dir/steps/00_setup_gowin.source_bash"
 source "$script_dir/steps/00_setup_efinity.source_bash"
 source "$script_dir/steps/00_setup_xilinx.source_bash"
+source "$script_dir/steps/00_setup_lattice.source_bash"
 source "$script_dir/steps/00_setup_open_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
 source "$script_dir/steps/00_setup_yosys.source_bash"
@@ -247,12 +250,15 @@ setup_run_directory_for_fpga_synthesis()
     xilinx)
         setup_run_directory_for_fpga_synthesis_xilinx  "$dir" "$parent_dir"
         ;;
+    lattice)
+        setup_run_directory_for_fpga_synthesis_lattice "$dir" "$parent_dir"
+        ;;
     yosys)
-        setup_run_directory_for_fpga_synthesis_yosys  "$dir" "$parent_dir"
+        setup_run_directory_for_fpga_synthesis_yosys   "$dir" "$parent_dir"
         ;;
     *)
         error "Unsupported FPGA synthesis toolchain: $fpga_toolchain." \
-              " Currently supported: quartus, xilinx, gowin, yosys."
+              " Currently supported: quartus, gowin, xilinx, lattice, yosys."
         ;;
     esac
 }
@@ -350,6 +356,11 @@ update_fpga_toolchain_var ()
         zybo_z7                          )
 
             fpga_toolchain=xilinx
+        ;;
+
+        icebreaker*                      )
+
+            fpga_toolchain=lattice
         ;;
 
         *)
@@ -482,10 +493,11 @@ case $fpga_toolchain in
         fi
     ;;
 
-    gowin   ) gowin_setup_ide     ;;
-    efinity ) efinity_setup_ide   ;;
-    xilinx  ) xilinx_setup_vivado ;;
-    yosys   ) setup_yosys         ;;
+    gowin   ) gowin_setup_ide             ;;
+    efinity ) efinity_setup_ide           ;;
+    xilinx  ) xilinx_setup_vivado         ;;
+    lattice ) lattice_setup_oss_cad_suite ;;
+    yosys   ) setup_yosys                 ;;
 esac
 
 openlane_setup

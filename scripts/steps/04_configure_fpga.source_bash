@@ -6,6 +6,7 @@ case $fpga_toolchain in
     efinity ) configure_fpga_efinity ;;
     gowin   ) configure_fpga_gowin   ;;
     xilinx  ) configure_fpga_xilinx  ;;
+    lattice ) configure_fpga_lattice ;;
     yosys   ) configure_fpga_yosys   ;;
     *       ) error "Unsupported FPGA synthesis toolchain: $fpga_toolchain." \
                     " Currently supported: quartus, xilinx, gowin, yosys, efinity." ;;

@@ -1,0 +1,221 @@
+expected_source_script=00_setup.source_bash
+
+if [ -z "$BASH_SOURCE" ]
+then
+    printf "script \"%s\" should be sourced from \"%s\"\n"  \
+        "$0" "$expected_source_script" 1>&2
+
+    exit 1
+fi
+
+this_script=$(basename "${BASH_SOURCE[0]}")
+source_script=$(basename "${BASH_SOURCE[1]}")
+
+if [ -z "$source_script" ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\"\n"  \
+        "$this_script" "$expected_source_script" 1>&2
+
+    return 1
+fi
+
+if [ "$source_script" != $expected_source_script ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\", not \"%s\"\n"  \
+        "$this_script" "$expected_source_script" "$source_script" 1>&2
+
+    exit 1
+fi
+
+#-----------------------------------------------------------------------------
+
+# setup_run_directory_for_fpga_synthesis_lattice
+# lattice_setup_oss_cad_suite
+# synthesize_for_fpga_lattice
+# configure_fpga_lattice
+# run_fpga_synthesis_gui_lattice
+# 
+# lattice_finish_setup_and_report_where_found ()
+# {
+#     # info                 "Found Gowin$1:"
+#     printf "%s\n" "$script: Found Gowin$1:"
+# }
+# 
+# #-----------------------------------------------------------------------------
+# 
+# lattice_try_install_dir ()
+# {
+#     local dir="$1"
+# 
+#     
+# 
+#     [ -z "${LATTICE_VERSION_DIR-}" ] && [ -n "${dir-}" ] || return 0
+# 
+#     attempt_lattice_install_parent_dirs="${attempt_lattice_install_parent_dirs:+$attempt_lattice_install_parent_dirs or }'$dir'"
+# 
+#     if [ "$OSTYPE" = "cygwin" ] ||
+#        [ "$OSTYPE" = "msys"   ]
+#     then
+#         # Windows is not case sensitive
+#         Gowin_lattice="/Gowin"
+#     else
+#         Gowin_lattice="/Gowin /lattice"
+#     fi
+# 
+#     for lattice in $Gowin_lattice ""
+#     do
+#         [ -d "$dir$lattice" ] || continue
+# 
+#         find_dir="$dir$lattice"
+#         find_opt="-mindepth 1 -maxdepth 1 -type d -print"
+# 
+#         LATTICE_VERSION_DIR=$($find_to_run "$find_dir" $find_opt | (grep Gowin_ || true) | sort | tail -1)
+# 
+#         if [ -n "$LATTICE_VERSION_DIR" ]
+#         then
+#             all_version_dirs=$($find_to_run "$find_dir" $find_opt | (grep Gowin_ || true) | xargs echo)
+# 
+#             [ "$LATTICE_VERSION_DIR" == "$all_version_dirs" ] ||
+#                 warning "multiple subdirectories inside '$find_dir': '$all_version_dirs'"
+# 
+#             if [[ "$OSTYPE" = "darwin"* ]] &&
+#                [ -d "$LATTICE_VERSION_DIR/$new_lattice_macos_sub_path" ]
+#             then
+#                 LATTICE_VERSION_DIR="$LATTICE_VERSION_DIR/$new_lattice_macos_sub_path"
+#             fi
+# 
+#             lattice_finish_setup_and_report_where_found " inside subdirectory of '$dir'"
+#             return
+#         fi
+# 
+#         if [[ "$OSTYPE" = "darwin"* ]] &&
+#            [ -x "$dir$lattice/$new_lattice_macos_sub_path/IDE/bin/gw_sh$exe" ]
+#         then
+#             LATTICE_VERSION_DIR="$LATTICE_VERSION_DIR/$new_lattice_macos_sub_path"
+#             lattice_finish_setup_and_report_where_found " inside '$dir'"
+#             return
+#         fi
+# 
+#         if [ -x "$dir$lattice/IDE/bin/gw_sh$exe" ]
+#         then
+#             LATTICE_VERSION_DIR="$dir$lattice"
+#             lattice_finish_setup_and_report_where_found " inside '$dir'"
+#             return
+#         fi
+#     done
+# }
+# 
+# #-----------------------------------------------------------------------------
+# 
+# lattice_setup_ide ()
+# {
+#     if ! (   [  "$OSTYPE" = "linux-gnu" ]  ||
+#              [  "$OSTYPE" = "cygwin"    ]  ||
+#              [  "$OSTYPE" = "msys"      ]  ||
+#            ( [[ "$OSTYPE" = "darwin"*   ]] && [ $(uname -m) = arm64 ] ) )
+#     then
+#         error "Gowin IDE is not working on your platform (Mac x64?)"
+#         return
+#     fi
+# 
+#     #-------------------------------------------------------------------------
+# 
+#     if [ -n "${LATTICE_VERSION_DIR-}" ]
+#     then
+#         lattice_finish_setup_and_report_where_found " using LATTICE_VERSION_DIR"
+#         return
+#     fi
+# 
+#     #-------------------------------------------------------------------------
+# 
+#     if   is_command_available gw_sh$exe &&
+#        ( is_command_available openFPGALoader &&       [ "$OSTYPE" = "linux-gnu" ] ||
+#          is_command_available programmer_cli$exe && ( [ "$OSTYPE" = "cygwin"    ] ||
+#                                                       [ "$OSTYPE" = "msys"      ] ) )
+#     then
+#         lattice_ide_full_real_path=$(command -v gw_ide$exe)
+#         lattice_sh_full_real_path=$(command -v gw_sh$exe)
+#         lattice_prog_full_real_path=$(command -v programmer_cli$exe)
+# 
+#         lattice_finish_setup_and_report_where_found " using PATH"
+#         return
+#     fi
+# 
+#     #-------------------------------------------------------------------------
+# 
+#     lattice_try_install_dir "${LATTICE_HOME-}"
+# 
+#     if [  "$OSTYPE" = "linux-gnu"  ] ||
+#        [[ "$OSTYPE" = "darwin"*   ]]
+#     then
+#         if [[ "$OSTYPE" = "darwin"* ]]
+#         then
+#             lattice_try_install_dir "/Applications"
+#             lattice_try_install_dir "$HOME/Applications"
+#         fi
+# 
+#         lattice_try_install_dir "$HOME"
+#         lattice_try_install_dir /opt
+#         lattice_try_install_dir /tools
+#         lattice_try_install_dir "$HOME/Downloads"
+# 
+#     elif [ "$OSTYPE" = "cygwin" ] ||
+#          [ "$OSTYPE" = "msys"   ]
+#     then
+#         lattice_try_install_dir /c
+#         lattice_try_install_dir /d
+#         lattice_try_install_dir /e
+#     fi
+# 
+#     #-------------------------------------------------------------------------
+# 
+#     if [ -z "${LATTICE_VERSION_DIR-}" ]
+#     then
+#         error "expected to find 'Gowin/IDE' or 'lattice/IDE',            \
+#               or 'Gowin/*/IDE' or 'lattice/*/IDE'"                       \
+#               "in ${attempt_lattice_install_parent_dirs}."               \
+#               "The Gowin installation home location"                   \
+#               "can be set by LATTICE_HOME environment variable,"         \
+#               "such as 'LATTICE_HOME=/home/verilog'."                    \
+#               " You can also use LATTICE_VERSION_DIR"                    \
+#               " to specify the version subtree location,"              \
+#               "such as 'LATTICE_VERSION_DIR=/home/verilog/lattice/0.99'."
+#     fi
+# }
+# 
+# #-----------------------------------------------------------------------------
+# 
+# setup_run_directory_for_fpga_synthesis_lattice ()
+# {
+# }
+# 
+# #-----------------------------------------------------------------------------
+# 
+# synthesize_for_fpga_lattice ()
+# {
+# yosys -ql dvi-24bit.log -p 'synth_ice40 -top top -json dvi-24bit.json' dvi-24bit.v vga_core.v vga_timing.v
+# nextpnr-ice40 --up5k \
+# --package sg48 \
+# --json dvi-24bit.json \
+# --pcf ../icebreaker.pcf \
+# --asc dvi-24bit.asc \
+# --seed 1
+# icepack dvi-24bit.asc dvi-24bit.bin
+# iceprog dvi-24bit.bin
+# 
+# 
+# }
+# 
+# #-----------------------------------------------------------------------------
+# 
+# configure_fpga_lattice ()
+# {
+# }
+# 
+# #-----------------------------------------------------------------------------
+# 
+# run_fpga_synthesis_gui_lattice ()
+# {
+#     error not implemented
+# }
+# 
