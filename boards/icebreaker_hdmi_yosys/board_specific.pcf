@@ -1,0 +1,42 @@
+# Credits: https://github.com/icebreaker-fpga/icebreaker-verilog-examples
+
+# 12 MHz clock
+set_io -nowarn CLK          35
+set_frequency CLK 12
+
+# UART
+set_io -nowarn UART_RX      6
+set_io -nowarn UART_TX      9
+
+# Reset key
+set_io -nowarn KEY          10
+
+# PMOD 1A (DVI or sound)
+set_io -nowarn GPIO[0]       4
+set_io -nowarn GPIO[1]       2
+set_io -nowarn GPIO[2]      47
+set_io -nowarn GPIO[3]      45
+set_io -nowarn GPIO[4]       3
+set_io -nowarn GPIO[5]      48
+set_io -nowarn GPIO[6]      46
+set_io -nowarn GPIO[7]      44
+
+# PMOD 1B (DVI or sound)
+set_io -nowarn GPIO[8]      43
+set_io -nowarn GPIO[9]      38
+set_io -nowarn GPIO[10]     34
+set_io -nowarn GPIO[11]     31
+set_io -nowarn GPIO[12]     42
+set_io -nowarn GPIO[13]     36
+set_io -nowarn GPIO[14]     32
+set_io -nowarn GPIO[15]     28
+
+# PMOD 2 (either on board keys/leds or TM1638)
+set_io -nowarn GPIO[16]     21
+set_io -nowarn GPIO[17]     27
+set_io -nowarn GPIO[18]     23
+set_io -nowarn GPIO[19]     25
+set_io -nowarn GPIO[20]     26
+set_io -nowarn GPIO[21]     20
+set_io -nowarn GPIO[22]     19
+set_io -nowarn GPIO[23]     18
