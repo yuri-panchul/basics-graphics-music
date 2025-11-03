@@ -97,7 +97,10 @@ module board_specific_top
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
-        assign rst          = tm_key [w_tm_key - 1];
+        wire rst_on_power_up;
+        imitate_reset_on_power_up i_reset_on_power_up (clk, rst_on_power_up);
+
+        assign rst          = rst_on_power_up | tm_key [w_tm_key - 1];
         assign lab_key      = tm_key [w_tm_key - 1:0];
 
         assign tm_led       = lab_led;
@@ -147,7 +150,7 @@ module board_specific_top
         .rst      ( rst       ),
 
         .key      ( lab_key   ),
-        .sw       (           ),
+        .sw       ( lab_key   ),
 
         .led      ( lab_led   ),
 
