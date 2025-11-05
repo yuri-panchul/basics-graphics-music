@@ -11,7 +11,7 @@ module note_recognizer
     input        [23:0] mic,
 
     output logic        note_vld,
-    output logic [ 3:0] note,
+    output logic [ 3:0] note_idx,
 
     output logic [ 7:0] abcdefgh   // for the seven-segment display
 );
@@ -193,18 +193,18 @@ module note_recognizer
 
     always_ff @ (posedge clk)
         case (t_note)
-        C  : note <= 4'h0;
-        Cs : note <= 4'h1;
-        D  : note <= 4'h2;
-        Ds : note <= 4'h3;
-        E  : note <= 4'h4;
-        F  : note <= 4'h5;
-        Fs : note <= 4'h6;
-        G  : note <= 4'h7;
-        Gs : note <= 4'h8;
-        A  : note <= 4'h9;
-        As : note <= 4'ha;
-        B  : note <= 4'hb;
+        C  : note_idx <= 4'h0;
+        Cs : note_idx <= 4'h1;
+        D  : note_idx <= 4'h2;
+        Ds : note_idx <= 4'h3;
+        E  : note_idx <= 4'h4;
+        F  : note_idx <= 4'h5;
+        Fs : note_idx <= 4'h6;
+        G  : note_idx <= 4'h7;
+        Gs : note_idx <= 4'h8;
+        A  : note_idx <= 4'h9;
+        As : note_idx <= 4'ha;
+        B  : note_idx <= 4'hb;
         endcase
 
     always_ff @ (posedge clk)

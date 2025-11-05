@@ -116,7 +116,7 @@ module lab_top
     //------------------------------------------------------------------------
 
     logic       note_vld;
-    logic [3:0] note, sticky_note;
+    logic [3:0] note_idx, sticky_note;
 
       note_recognizer
     # (.clk_mhz (clk_mhz))
@@ -128,7 +128,7 @@ module lab_top
         .mic,
 
         .note_vld,
-        .note,
+        .note_idx,
 
         .abcdefgh
     );
@@ -139,7 +139,7 @@ module lab_top
         if (rst)
             sticky_note <= '0;
         else if (note_vld)
-            sticky_note <= note;
+            sticky_note <= note_idx;
 
     //------------------------------------------------------------------------
 
