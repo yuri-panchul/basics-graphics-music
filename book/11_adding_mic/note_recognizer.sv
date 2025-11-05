@@ -13,7 +13,7 @@ module note_recognizer
     output logic        note_vld,
     output logic [ 3:0] note,
 
-    output logic [ 7:0] abcdefgh
+    output logic [ 7:0] abcdefgh   // for the seven-segment display
 );
 
     //------------------------------------------------------------------------
@@ -45,11 +45,11 @@ module note_recognizer
                 & mic      [$left ( mic      )] == 1'b0 )
             begin
                distance <= counter;
-               counter  <= 20'h0;
+               counter  <= '0;
             end
-            else if (counter != ~ 20'h0)  // To prevent overflow
+            else if (counter != '1)  // To prevent overflow
             begin
-               counter <= counter + 20'h1;
+               counter <= counter + 1'd1;
             end
         end
 
@@ -161,12 +161,12 @@ module note_recognizer
 
     always_ff @ (posedge clk)
         if (rst)
-            t_cnt <= 0;
+            t_cnt <= '0;
         else
             if (note == d_note)
-                t_cnt <= t_cnt + 1;
+                t_cnt <= t_cnt + 1'd1;
             else
-                t_cnt <= 0;
+                t_cnt <= '0;
 
     always_ff @ (posedge clk)
         if (rst)

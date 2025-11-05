@@ -97,16 +97,6 @@ module lab_top
             cnt2_d = w_y' (screen_height / 2);
         else
             cnt2_d = cnt2 + key [0] - (| key [w_key - 1:1]);
-
-        red   = '0;
-        green = '0;
-        blue  = '0;
-
-        if (x > cnt1)
-            red = '1;
-
-        if (y > cnt2)
-            green = '1;
     end
 
     //------------------------------------------------------------------------
@@ -125,35 +115,69 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-module note_recognizer
-# (
-    parameter clk_mhz = 50
-)
-(
-    input               clk,
-    input               rst,
+    logic       note_vld;
+    logic [3:0] note, sticky_note;
 
-    input        [23:0] mic,
+      note_recognizer
+    # (.clk_mhz (clk_mhz))
+    i_note_recognizer
+    (
+        .clk,
+        .rst,
 
-    output logic        note_vld,
-    output logic [ 3:0] note
-);
+        .mic,
+
+        .note_vld,
+        .note,
+
+        .abcdefgh
+    );
+
+    assign digit = '1;
+
+    always_ff @ (posedge clk)
+        if (rst)
+            sticky_note <= '0;
+        else if (note_vld)
+            sticky_note <= note;
 
     //------------------------------------------------------------------------
 
-    localparam w_number = w_digit * 4;
+    always_comb
+    begin
+        red   = '0;
+        green = '0;
+        blue  = '0;
 
-    wire [w_number - 1:0] number
-        = w_number' ({ 16' (cnt1), 16' (cnt2) });
+        case (sticky_note)
+        4'd0, 4'd3, 4'd6, 4'd9:
 
-    seven_segment_display # (.w_digit (w_digit)) i_7segment
-    (
-        .clk      ( clk      ),
-        .rst      ( rst      ),
-        .number   ( number   ),
-        .dots     ( '0       ),
-        .abcdefgh ( abcdefgh ),
-        .digit    ( digit    )
-    );
+            if (x < cnt1)
+            begin
+                red   = (x + y) >> 5;
+                green = (x - y) >> 5;
+                blue  = x;
+            end
+
+        4'd1, 4'd4, 4'd7, 4'd10:
+
+            if ((x - cnt1) * (y - cnt2) < (screen_width * screen_height) / 4)
+            begin
+                red   = x;
+                green = y;
+                blue  = '1;
+            end
+
+        4'd2, 4'd5, 4'd8, 4'd11:
+
+            if ((x - cnt1) ** 2 + (y - cnt2) ** 2 < (screen_width * screen_height) / 10)
+            begin
+                red   = '1;
+                green = '1;
+                blue  = x + y;
+            end
+
+        endcase
+    end
 
 endmodule
