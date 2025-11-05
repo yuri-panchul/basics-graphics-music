@@ -154,27 +154,27 @@ module lab_top
 
             if (x < cnt1)
             begin
-                red   = (x + y) >> 5;
-                green = (x - y) >> 5;
-                blue  = x;
+                red   = (x + y) >> 3;
+                green = (x - y) >> 3;
+                blue  = x >> 3;
             end
 
         4'd1, 4'd4, 4'd7, 4'd10:
 
-            if ((x - cnt1) * (y - cnt2) < (screen_width * screen_height) / 4)
+            if ((x - cnt1) * (y - cnt2) < (screen_width * screen_height) / 16)
             begin
-                red   = x;
-                green = y;
+                red   = x >> 3;
+                green = y >> 3;
                 blue  = '1;
             end
 
         4'd2, 4'd5, 4'd8, 4'd11:
 
-            if ((x - cnt1) ** 2 + (y - cnt2) ** 2 < (screen_width * screen_height) / 10)
+            if ((x - cnt1) ** 2 + (y - cnt2) ** 2 < (screen_width * screen_height) / 12)
             begin
                 red   = '1;
                 green = '1;
-                blue  = x + y;
+                blue  = (x + y) >> 3;
             end
 
         endcase
