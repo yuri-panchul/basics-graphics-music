@@ -59,7 +59,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    // assign led        = '0;
+       assign led        = '0;
     // assign abcdefgh   = '0;
     // assign digit      = '0;
     // assign red        = '0;
