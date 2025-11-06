@@ -86,7 +86,7 @@ module note_recognizer
 
     //------------------------------------------------------------------------
 
-    function [19:0] check_freq_single_range (input [18:0] freq_100, input [19:0] distance);
+    function check_freq_single_range (input [18:0] freq_100, input [19:0] distance);
 
        check_freq_single_range =    distance > low_distance  (freq_100)
                                   & distance < high_distance (freq_100);
@@ -94,7 +94,7 @@ module note_recognizer
 
     //------------------------------------------------------------------------
 
-    function [19:0] check_freq (input [18:0] freq_100, input [19:0] distance);
+    function check_freq (input [18:0] freq_100, input [19:0] distance);
 
        check_freq =   check_freq_single_range (freq_100 * 4 , distance)
                     | check_freq_single_range (freq_100 * 2 , distance)

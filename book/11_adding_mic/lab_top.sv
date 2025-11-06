@@ -161,7 +161,7 @@ module lab_top
 
         4'd1, 4'd4, 4'd7, 4'd10:
 
-            if ((x - cnt1) * (y - cnt2) < (screen_width * screen_height) / 16)
+            if (x * y < cnt2 ** 2)
             begin
                 red   = x >> 3;
                 green = y >> 3;
