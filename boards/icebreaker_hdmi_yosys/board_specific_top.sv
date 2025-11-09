@@ -205,9 +205,9 @@ module board_specific_top
             .digit    ( tm_digit  ),
             .ledr     ( tm_led    ),
             .keys     ( tm_key    ),
-            .sio_clk  ( GPIO [21] ),
-            .sio_stb  ( GPIO [22] ),
-            .sio_data ( GPIO [23] )
+            .sio_clk  ( GPIO [21] ),  // 
+            .sio_stb  ( GPIO [23] ),  // GPIO [22] ),
+            .sio_data ( GPIO [18] )   // GPIO [23] )
         );
 
     `endif
