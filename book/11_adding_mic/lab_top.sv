@@ -70,6 +70,14 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    wire any_sw = | sw;
+
+    localparam w_in = w_key > w_sw ? w_key : w_sw;
+
+    wire [w_in - 1:0] in = any_sw ? w_in' (sw) : w_in' (key);
+
+    //------------------------------------------------------------------------
+
     logic [19:0] cnt_e;
 
     always_ff @ (posedge clk)
@@ -96,7 +104,7 @@ module lab_top
         if (cnt2 == '0 | cnt2 == w_y' (screen_height - 1))
             cnt2_d = w_y' (screen_height / 2);
         else
-            cnt2_d = cnt2 + key [0] - (| key [w_key - 1:1]);
+            cnt2_d = cnt2 + w_y' (in [0]) - w_y' (| in [w_in - 1:1]);
     end
 
     //------------------------------------------------------------------------
@@ -137,11 +145,13 @@ module lab_top
 
     always_ff @ (posedge clk)
         if (rst)
-            sticky_note <= '0;
+            sticky_note <= '1;
         else if (note_vld)
             sticky_note <= note_idx;
 
     //------------------------------------------------------------------------
+
+    localparam w_xy = (w_x > w_y ? w_x : w_y) * 2;
 
     always_comb
     begin
@@ -154,27 +164,41 @@ module lab_top
 
             if (x < cnt1)
             begin
-                red   = (x + y) >> 3;
-                green = (x - y) >> 3;
-                blue  = x >> 3;
+                red   = w_red'   ((x + y) >> 3);
+                green = w_green' ((x - y) >> 3);
+                blue  = w_blue'  ( x      >> 3);
             end
 
         4'd1, 4'd4, 4'd7, 4'd10:
 
-            if (x * y < cnt2 ** 2)
+            // if ((x - cnt1) * (y - cnt2) < w_xy' ((screen_width * screen_height) / 16))
+            if (y > cnt2)
             begin
-                red   = x >> 3;
-                green = y >> 3;
+                red   = w_red'   (x >> 3);
+                green = w_green' (y >> 3);
                 blue  = '1;
             end
 
         4'd2, 4'd5, 4'd8, 4'd11:
 
-            if ((x - cnt1) ** 2 + (y - cnt2) ** 2 < (screen_width * screen_height) / 12)
+            // if ((x - cnt1) ** 2 + (y - cnt2) ** 2 < w_xy' ((screen_width * screen_height) / 12))
+            if (x + y < cnt1 + cnt2)
             begin
                 red   = '1;
                 green = '1;
-                blue  = (x + y) >> 3;
+                blue  = w_blue' ((x + y) >> 3);
+            end
+
+        default:
+
+            begin
+                if (x < cnt1)
+                    red = '1;
+                else
+                    blue = '1;
+
+                if (y < cnt2)
+                    green = '1;
             end
 
         endcase
