@@ -151,7 +151,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    localparam w_xy = (w_x > w_y ? w_x : w_y) * 2;
+    // localparam w_xy = (w_x > w_y ? w_x : w_y) * 2;
 
     always_comb
     begin
