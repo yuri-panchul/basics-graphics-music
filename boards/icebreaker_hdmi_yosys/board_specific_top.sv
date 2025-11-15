@@ -11,7 +11,7 @@ module board_specific_top
                 w_sw          = 0,
                 w_led         = 5,
                 w_digit       = 0,
-                w_gpio        = 24,
+                w_gpio        = 0,
 
                 screen_width  = 640,
                 screen_height = 480,
@@ -25,10 +25,52 @@ module board_specific_top
 )
 (
     input                       CLK,
-    input                       KEY,  // Only 1 independent key, other keys on GPIO
-    input                       UART_RX,
-    output                      UART_TX,
-    inout  [w_gpio      - 1:0]  GPIO
+    input                       BTN_N,  // rst button
+
+    // PMOD 1A
+    inout                       P1A1,
+    inout                       P1A2,
+    inout                       P1A3,
+    inout                       P1A4,
+    inout                       P1A7,
+    inout                       P1A8,
+    inout                       P1A9,
+    inout                       P1A10,
+
+    // PMOD 1B
+    inout                       P1B1,
+    inout                       P1B2,
+    inout                       P1B3,
+    inout                       P1B4,
+    inout                       P1B7,
+    inout                       P1B8,
+    inout                       P1B9,
+    inout                       P1B10,
+
+`ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    // PMOD 2
+    inout                       P2_1,
+    inout                       P2_2,
+    inout                       P2_3,
+    inout                       P2_4,
+    inout                       P2_7,
+    inout                       P2_8,
+    inout                       P2_9,
+    inout                       P2_10,
+`else
+    // On board leds and keys
+    output                      LED1,
+    output                      LED2,
+    output                      LED3,
+    output                      LED4,
+    output                      LED5,
+    input                       BTN1,
+    input                       BTN2,
+    input                       BTN3,
+`endif
+
+    input                       RX,
+    output                      TX
 );
 
     //------------------------------------------------------------------------
@@ -108,10 +150,10 @@ module board_specific_top
 
     `else                   // TM1638 module is not connected
 
-        assign rst          = ~ KEY;
-        assign lab_key      =  GPIO [w_gpio - 1 -: w_key];
+        assign rst          = ~ BTN_N;
+        assign lab_key      = { BTN3, BTN2, BTN1 };
 
-        assign GPIO [20:16] = lab_led;
+        assign { LED5, LED4, LED3, LED2, LED1 } = lab_led;
 
     `endif
 
@@ -164,10 +206,8 @@ module board_specific_top
         .green    ( lab_green ),
         .blue     ( lab_blue  ),
 
-        .uart_rx  ( UART_RX   ),
-        .uart_tx  ( UART_TX   ),
-
-        .gpio     ( GPIO      ),
+        .uart_rx  ( RX        ),
+        .uart_tx  ( TX        ),
 
         .mic      ( mic       ),
         .sound    ( sound     )
@@ -199,15 +239,15 @@ module board_specific_top
         )
         i_tm1638
         (
-            .clk      ( clk       ),
-            .rst      ( rst       ),
-            .hgfedcba ( hgfedcba  ),
-            .digit    ( tm_digit  ),
-            .ledr     ( tm_led    ),
-            .keys     ( tm_key    ),
-            .sio_clk  ( GPIO [21] ),  // 
-            .sio_stb  ( GPIO [23] ),  // GPIO [22] ),
-            .sio_data ( GPIO [18] )   // GPIO [23] )
+            .clk      ( clk      ),
+            .rst      ( rst      ),
+            .hgfedcba ( hgfedcba ),
+            .digit    ( tm_digit ),
+            .ledr     ( tm_led   ),
+            .keys     ( tm_key   ),
+            .sio_clk  ( P2_9     ),
+            .sio_stb  ( P2_10    ),
+            .sio_data ( P2_8     )
         );
 
     `endif
@@ -245,18 +285,18 @@ module board_specific_top
         )
         i_vga
         (
-            .clk         ( pixel_clk      ),
-            .rst         ( rst            ),
-            .hsync       ( hsync          ),
-            .vsync       ( vsync          ),
-            .display_on  ( display_on     ),
-            .hpos        ( x              ),
-            .vpos        ( y              )
+            .clk         ( pixel_clk  ),
+            .rst         ( rst        ),
+            .hsync       ( hsync      ),
+            .vsync       ( vsync      ),
+            .display_on  ( display_on ),
+            .hpos        ( x          ),
+            .vpos        ( y          )
         );
 
         //--------------------------------------------------------------------
 
-        logic [15:0] rising_edge_data, falling_edge_data;
+        logic [15:0] rising_edge_data, falling_edge_data, ddr_data;
 
         assign rising_edge_data = {
             lab_red  [7], lab_red  [5], lab_red[3], lab_red[1],
@@ -272,11 +312,18 @@ module board_specific_top
             lab_blue [2], lab_blue [0], display_on,  vsync
         };
 
+        assign {
+            P1A1, P1A2, P1A3, P1A4,
+            P1A7, P1A8, P1A9, P1A10,
+            P1B1, P1B2, P1B3, P1B4,
+            P1B7, P1B8, P1B9, P1B10
+        } = ddr_data;
+
         // DDR IO outputs for DVI PMOD
         SB_IO #(
             .PIN_TYPE ( 6'b01_0000 )  // PIN_OUTPUT_DDR
         ) dvi_ddr_iob [15:0] (
-            .PACKAGE_PIN ( GPIO[15:0]        ),
+            .PACKAGE_PIN ( ddr_data          ),
             .D_OUT_0     ( rising_edge_data  ),
             .D_OUT_1     ( falling_edge_data ),
             .OUTPUT_CLK  ( pixel_clk         )
@@ -295,13 +342,13 @@ module board_specific_top
             )
             i_microphone
             (
-                .clk   ( clk      ),
-                .rst   ( rst      ),
-                .lr    ( GPIO [0] ),
-                .ws    ( GPIO [1] ),
-                .sck   ( GPIO [2] ),
-                .sd    ( GPIO [3] ),
-                .value ( mic      )
+                .clk   ( clk  ),
+                .rst   ( rst  ),
+                .lr    ( P1A1 ),
+                .ws    ( P1A2 ),
+                .sck   ( P1A3 ),
+                .sd    ( P1A4 ),
+                .value ( mic  )
             );
 
         `endif
@@ -316,14 +363,14 @@ module board_specific_top
             )
             inst_pmod_amp3
             (
-                .clk     ( clk       ),
-                .reset   ( rst       ),
-                .data_in ( sound     ),
+                .clk     ( clk   ),
+                .reset   ( rst   ),
+                .data_in ( sound ),
 
-                .mclk    ( GPIO [8]  ),
-                .bclk    ( GPIO [9]  ),
-                .sdata   ( GPIO [10] ),
-                .lrclk   ( GPIO [11] )
+                .mclk    ( P1B1  ),
+                .bclk    ( P1B2  ),
+                .sdata   ( P1B3  ),
+                .lrclk   ( P1B4  )
             );
 
         `endif
