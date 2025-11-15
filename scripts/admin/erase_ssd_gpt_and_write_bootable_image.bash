@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# A script by Yuri Panchul
+# from https://github.com/yuri-panchul/basics-graphics-music/tree/main/scripts/admin
+
 #  set -e           - Exit immediately if a command exits with a non-zero
 #                     status.  Note that failing commands in a conditional
 #                     statement will not cause an immediate exit.
