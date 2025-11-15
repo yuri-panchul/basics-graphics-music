@@ -94,7 +94,7 @@ then
     error "The size of \"$drive_image\" is $drive_image_size_in_gb" GB  \
           "($drive_image_size bytes)."                                  \
           "\nIt is less than the minimum expected size"                 \
-          "of $minimum_expected_size_in_gb GB."                         \
+          "of $minimum_expected_size_in_gb GB."
 fi
 
 #-----------------------------------------------------------------------------
