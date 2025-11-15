@@ -64,23 +64,24 @@ is_command_available_or_error ()
         error "program $1$ is not in the path or cannot be run"
 }
 
+is_command_available_or_error lz4
 is_command_available_or_error partprobe
 
 #-----------------------------------------------------------------------------
 
-drive_image=$(find -maxdepth 1 -name '*.img' -type f -printf '%f\n')
+drive_image=$(find -maxdepth 1 -name '*.lz4' -type f -printf '%f\n')
 
 [ -n "$drive_image" ] \
-    || error "No files with .img extension in the current directory"
+    || error "No files with .lz4 extension in the current directory"
 
 [ $(wc -l <<< "$drive_image") = 1 ]  \
-    || error "Multiple files with .img extension in the current directory: $drive_image"
+    || error "Multiple files with .lz4 extension in the current directory: $drive_image"
 
 info "Using file \"$drive_image\" in the current directory as SSD image"
 
 #-----------------------------------------------------------------------------
 
-minimum_expected_size_in_gb=40
+minimum_expected_size_in_gb=5
 
 drive_image_size=$(stat -c %s "$drive_image")
 drive_image_size_in_gb=$((drive_image_size / 1024 / 1024 / 1024))
@@ -88,12 +89,23 @@ drive_image_size_in_gb=$((drive_image_size / 1024 / 1024 / 1024))
 if [ $drive_image_size_in_gb -lt $minimum_expected_size_in_gb ]
 then
     error "The size of \"$drive_image\" is $drive_image_size_in_gb" GB  \
-           "($drive_image_size bytes)."                                 \
-           "\nIt is less than the minimum expected size"                \
-           "of $minimum_expected_size_in_gb GB."                        \
-           "\nDid you forget to unpack the file using xz"               \
-           "and simple renamed it to .img?"
+          "($drive_image_size bytes)."                                  \
+          "\nIt is less than the minimum expected size"                 \
+          "of $minimum_expected_size_in_gb GB."                         \
 fi
+
+#-----------------------------------------------------------------------------
+
+[ -f /etc/os-release ] \
+    || error "No \"/etc/os-release\" needed to determine the current distro"
+
+distro=$(grep '^ID=' /etc/os-release | cut -d= -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')
+
+[[ ! "$drive_image" =~ $distro ]] \
+    || error "You should not create an SSD from the image \"$drive_image\""  \
+             "while running under the \"$distro\" distro."                   \
+             "It may cause a system confusion and corrupted drives."         \
+             "Run this script with the same file under another distro."
 
 #-----------------------------------------------------------------------------
 
@@ -169,7 +181,7 @@ info "Now all the partition tables should be erased:"
 (set -x; partprobe -d -s $drive) || true
 
 info "Finally, the main copying:"
-(set -x; dd if="$drive_image" of=$drive bs=1M status=progress && sync) \
+(set -x; lz4 -dc "$drive_image" | dd of=$drive bs=1M status=progress && sync) \
     || error "Something is wrong"
 
 info "Success, $drive_image is on $drive"
