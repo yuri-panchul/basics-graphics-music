@@ -298,19 +298,21 @@ module board_specific_top
 
         logic [15:0] rising_edge_data, falling_edge_data, ddr_data;
 
-        assign rising_edge_data = {
-            lab_red  [7], lab_red  [5], lab_red[3], lab_red[1],
-            lab_red  [6], lab_red  [4], lab_red[2], lab_red[0],
-            lab_green[7], lab_green[5], 1'b1,       hsync,
-            lab_green[6], lab_green[4], display_on, vsync
-        };
+        always_ff @(posedge pixel_clk) begin
+            rising_edge_data <= {
+                lab_red  [7], lab_red  [5], lab_red[3], lab_red[1],
+                lab_red  [6], lab_red  [4], lab_red[2], lab_red[0],
+                lab_green[7], lab_green[5], 1'b1,       hsync,
+                lab_green[6], lab_green[4], display_on, vsync
+            };
 
-        assign falling_edge_data = {
-            lab_green[3], lab_green[1], lab_blue[7], lab_blue[5],
-            lab_green[2], lab_green[0], lab_blue[6], lab_blue[4],
-            lab_blue [3], lab_blue [1], 1'b0,        hsync,
-            lab_blue [2], lab_blue [0], display_on,  vsync
-        };
+            falling_edge_data <= {
+                lab_green[3], lab_green[1], lab_blue[7], lab_blue[5],
+                lab_green[2], lab_green[0], lab_blue[6], lab_blue[4],
+                lab_blue [3], lab_blue [1], 1'b0,        hsync,
+                lab_blue [2], lab_blue [0], display_on,  vsync
+            };
+        end
 
         assign {
             P1A1, P1A2, P1A3, P1A4,
