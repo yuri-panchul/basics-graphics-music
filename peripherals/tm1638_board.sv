@@ -316,7 +316,7 @@ module tm1638_sio
     output logic   dio_out
 );
 
-    localparam CLK_DIV1 = $clog2 (clk_mhz*1000/2/700) - 1; // 700 kHz is recommended SIO clock
+    localparam CLK_DIV1 = $clog2 (clk_mhz*1000/2/700 + 1) - 1; // 700 kHz is recommended SIO clock
     localparam [1:0]
         S_IDLE      = 2'h0,
         S_WAIT      = 2'h1,
