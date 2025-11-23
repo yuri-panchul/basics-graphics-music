@@ -127,7 +127,7 @@ setup_run_directory_for_fpga_synthesis_yosys ()
             $find_to_run  \
                 "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
                 -type f -name '*.v' \
-                | xargs -L 1 -I % echo "DEPS += %\n" \
+                | xargs -L 1 -I % echo "DEPS += %" \
                 >> "$dir/Makefile"
          else
             $find_to_run  \
