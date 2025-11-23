@@ -13,7 +13,7 @@ upload:
 fw: $(NAME).bin
 
 $(NAME).bin: $(PCF) $(DEPS)
-	yosys -p "verilog_defaults -add -I$(subst :, -I,$(INC))" $(READ_VERILOG) -p "synth_ice40 -noabc9 -top board_specific_top -json $(NAME).json"
+	yosys -p "verilog_defaults -add -I$(subst :, -I,$(INC))" $(READ_VERILOG) -p "synth_ice40 -dsp -noabc9 -top board_specific_top -json $(NAME).json"
 	nextpnr-ice40 --$(DEVICE) --package $(PACKAGE) --json $(NAME).json --pcf $(PCF) --asc $(NAME).asc
 	icepack $(NAME).asc $(NAME).bin
 	icetime -d $(DEVICE) -mt $(NAME).asc
