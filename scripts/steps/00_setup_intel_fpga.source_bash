@@ -348,7 +348,8 @@ intel_fpga_setup_questa ()
 #-----------------------------------------------------------------------------
 
 questa_script=../questa.tcl
-[ "$OSTYPE" = "linux-gnu" ] && [ "$USER" = panchul ] && questa_script=../questa2.tcl
+[ "$OSTYPE" = "linux-gnu" ] && [ "${USER:-}" = panchul ] && questa_script=../questa2.tcl
+# USER might be not set in Apple Mac
 
 run_questa ()
 {
