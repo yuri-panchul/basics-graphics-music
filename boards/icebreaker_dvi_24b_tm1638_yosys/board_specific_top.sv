@@ -97,7 +97,6 @@ module board_specific_top
                w_tm_led    = 8,
                w_tm_digit  = 8;
 
-
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -177,6 +176,20 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        localparam w_user_gpio = 5;
+        `define USER_GPIO  { P2_7, P2_4, P2_3, P2_2, P2_1 }
+
+    `else
+
+        localparam w_user_gpio = 0;
+        `define USER_GPIO
+
+    `endif
+
+    //------------------------------------------------------------------------
+
     wire slow_clk;
     wire slow_clk_local;
 
@@ -194,7 +207,7 @@ module board_specific_top
         .w_sw          ( w_lab_key     ),
         .w_led         ( w_lab_led     ),
         .w_digit       ( w_lab_digit   ),
-        .w_gpio        ( w_gpio        ),
+        .w_gpio        ( w_user_gpio   ),
 
         .screen_width  ( screen_width  ),
         .screen_height ( screen_height ),
@@ -205,30 +218,32 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk      ( clk       ),
-        .slow_clk ( slow_clk  ),
-        .rst      ( rst       ),
+        .clk      ( clk        ),
+        .slow_clk ( slow_clk   ),
+        .rst      ( rst        ),
 
-        .key      ( lab_key   ),
-        .sw       ( lab_key   ),
+        .key      ( lab_key    ),
+        .sw       ( lab_key    ),
 
-        .led      ( lab_led   ),
+        .led      ( lab_led    ),
 
-        .abcdefgh ( abcdefgh  ),
-        .digit    ( lab_digit ),
+        .abcdefgh ( abcdefgh   ),
+        .digit    ( lab_digit  ),
 
-        .x        ( x         ),
-        .y        ( y         ),
+        .x        ( x          ),
+        .y        ( y          ),
 
-        .red      ( lab_red   ),
-        .green    ( lab_green ),
-        .blue     ( lab_blue  ),
+        .red      ( lab_red    ),
+        .green    ( lab_green  ),
+        .blue     ( lab_blue   ),
 
-        .uart_rx  ( RX        ),
-        .uart_tx  ( TX        ),
+        .uart_rx  ( RX         ),
+        .uart_tx  ( TX         ),
 
-        .mic      ( mic       ),
-        .sound    ( sound     )
+        .mic      ( mic        ),
+        .sound    ( sound      )
+
+        .gpio     ( `USER_GPIO )
     );
 
 
