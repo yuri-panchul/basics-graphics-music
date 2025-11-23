@@ -104,19 +104,34 @@ setup_run_directory_for_fpga_synthesis_yosys ()
     do
         # TODO: Check if we really need adj_path_for_gowin_win here
 
-        $find_to_run  \
-            "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-            -type f -name '*.sv' -not -name tb.sv  \
-            -printf "READ_VERILOG += -p \"read_verilog -sv -formal %p\"\n" \
-            -printf "DEPS += %p\n" \
-            >> "$dir/Makefile"
+        if [[ "$OSTYPE" = "darwin"* ]]
+        then
+            $find_to_run  \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                -type f -name '*.sv' -not -name tb.sv  \
+                | xargs -L 1 -I % echo "READ_VERILOG += -p \"read_verilog -sv -formal %\"\nDEPS += %\n" \
+                >> "$dir/Makefile"
 
-        $find_to_run  \
-            "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-            -type f -name '*.v' \
-            -printf "READ_VERILOG += -p \"read_verilog %p\"\n" \
-            -printf "DEPS += %p\n" \
-            >> "$dir/Makefile"
+            $find_to_run  \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                -type f -name '*.v' \
+                | xargs -L 1 -I % echo "READ_VERILOG += -p \"read_verilog %\"\nDEPS += %\n" \
+                >> "$dir/Makefile"
+         else
+            $find_to_run  \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                -type f -name '*.sv' -not -name tb.sv  \
+                -printf "READ_VERILOG += -p \"read_verilog -sv -formal %p\"\n" \
+                -printf "DEPS += %p\n" \
+                >> "$dir/Makefile"
+
+            $find_to_run  \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
+                -type f -name '*.v' \
+                -printf "READ_VERILOG += -p \"read_verilog %p\"\n" \
+                -printf "DEPS += %p\n" \
+                >> "$dir/Makefile"
+         fi
     done
 
     cat "$board_dir/$fpga_board/Makefile" >> "$dir/Makefile"
