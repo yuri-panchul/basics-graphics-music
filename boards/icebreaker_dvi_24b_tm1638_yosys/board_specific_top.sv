@@ -241,11 +241,10 @@ module board_specific_top
         .uart_tx  ( TX         ),
 
         .mic      ( mic        ),
-        .sound    ( sound      )
+        .sound    ( sound      ),
 
         .gpio     ( `USER_GPIO )
     );
-
 
     //------------------------------------------------------------------------
 
