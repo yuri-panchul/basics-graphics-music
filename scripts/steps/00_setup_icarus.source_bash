@@ -35,12 +35,23 @@ icarus_verilog_setup ()
         return  # Already set up
     fi
 
-    alt_icarus_install_path="$HOME/install/iverilog"
-
-    if [ -d "$alt_icarus_install_path" ]
+    if    [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
     then
-        export PATH="${PATH:+$PATH:}$alt_icarus_install_path/bin"
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$alt_icarus_install_path/lib"
+        alt_icarus_install_path="/c/iverilog"
+
+        if [ -d "$alt_icarus_install_path" ]
+        then
+            export PATH="${PATH:+$PATH:}$alt_icarus_install_path/bin:$alt_icarus_install_path/gtkwave/bin"
+        fi
+    else
+        alt_icarus_install_path="$HOME/install/iverilog"
+
+        if [ -d "$alt_icarus_install_path" ]
+        then
+            export PATH="${PATH:+$PATH:}$alt_icarus_install_path/bin"
+            export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$alt_icarus_install_path/lib"
+        fi
     fi
 }
 
