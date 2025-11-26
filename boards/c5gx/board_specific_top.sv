@@ -68,7 +68,14 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     wire                  clk     = CLOCK_50_B8A;
-    wire                  rst     = ~ CPU_RESET_n;
+    wire                  arst_n  = CPU_RESET_n;
+    wire                  rst     = ~rstn_ff[1];    
+    logic [1:0]           rstn_ff;
+    
+    always_ff @(posedge clk or negedge arst_n) begin
+        if (!arst_n) rstn_ff <= '0;
+        else rstn_ff <= {rstn_ff[0], 1'b1};
+    end
 
     // Keys, switches, LEDs
 
