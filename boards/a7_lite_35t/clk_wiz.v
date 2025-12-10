@@ -1,13 +1,13 @@
 
 // file: clk_wiz.v
-// 
+//
 // (c) Copyright 2008 - 2013 Xilinx, Inc. All rights reserved.
-// 
+//
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
 // international copyright and other intellectual property
 // laws.
-// 
+//
 // DISCLAIMER
 // This disclaimer is not a license and does not grant any
 // rights to the materials distributed herewith. Except as
@@ -29,7 +29,7 @@
 // by a third party) even if such damage or loss was
 // reasonably foreseeable or Xilinx had been advised of the
 // possibility of the same.
-// 
+//
 // CRITICAL APPLICATIONS
 // Xilinx products are not designed or intended to be fail-
 // safe, or for use in any application requiring fail-safe
@@ -43,10 +43,10 @@
 // liability of any use of Xilinx products in Critical
 // Applications, subject only to applicable laws and
 // regulations governing limitations on product liability.
-// 
+//
 // THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS
 // PART OF THIS FILE AT ALL TIMES.
-// 
+//
 //----------------------------------------------------------------------------
 // User entered comments
 //----------------------------------------------------------------------------
@@ -69,7 +69,7 @@
 
 (* CORE_GENERATION_INFO = "clk_wiz,clk_wiz_v6_0_8_0_0,{component_name=clk_wiz,use_phase_alignment=true,use_min_o_jitter=false,use_max_i_jitter=false,use_dyn_phase_shift=false,use_inclk_switchover=false,use_dyn_reconfig=false,enable_axi=0,feedback_source=FDBK_AUTO,PRIMITIVE=MMCM,num_out_clk=3,clkin1_period=20.000,clkin2_period=10.0,use_power_down=false,use_reset=false,use_locked=false,use_inclk_stopped=false,feedback_type=SINGLE,CLOCK_MGR_TYPE=NA,manual_override=false}" *)
 
-module clk_wiz 
+module clk_wiz
  (
   // Clock out ports
   output        clk_out1,
@@ -81,7 +81,7 @@ module clk_wiz
 
   clk_wiz_clk_wiz inst
   (
-  // Clock out ports  
+  // Clock out ports
   .clk_out1(clk_out1),
   .clk_out2(clk_out2),
   .clk_out3(clk_out3),

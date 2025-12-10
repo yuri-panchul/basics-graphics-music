@@ -76,7 +76,7 @@ module hackathon_top
         end
 
     always_comb
-    begin    
+    begin
         red   = 0;
         blue  = 0;
         green = 0;
@@ -84,7 +84,7 @@ module hackathon_top
         if (x > c2)
         begin
             red = 31;
-            
+
             if (key != 0)
                 green = 63;
         end

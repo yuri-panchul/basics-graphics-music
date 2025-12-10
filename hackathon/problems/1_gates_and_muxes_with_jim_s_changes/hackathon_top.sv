@@ -3,27 +3,27 @@
 
 module hackathon_top
 (
-    // System Clocks & Controls  
+    // System Clocks & Controls
     input  logic       clock,
     input  logic       slow_clock,
     input  logic       reset,
 
-    // HW-154 I/O Board - Switches & LEDs  
+    // HW-154 I/O Board - Switches & LEDs
     input  logic [7:0] key,
     output logic [7:0] led,
 
-    // A dynamic seven-segment display  
+    // A dynamic seven-segment display
     output logic [7:0] abcdefgh,
     output logic [7:0] digit,
 
-    // LCD screen interface  
+    // LCD screen interface
     input  logic [8:0] x,
     input  logic [8:0] y,
     output logic [4:0] red,
     output logic [5:0] green,
     output logic [4:0] blue,
 
-    // HW-154 I/O Board Communication Channel  
+    // HW-154 I/O Board Communication Channel
     inout  logic [3:0] gpio
 );
 

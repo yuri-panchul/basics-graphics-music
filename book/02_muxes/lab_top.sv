@@ -169,7 +169,7 @@ module lab_top
         .b   ( in  [1]      ),
         .c   ( in  [2]      ),
         .d   ( in  [3]      ),
-        
+
         .x0  ( in  [6]      ),
         .x1  ( in  [7]      ),
 

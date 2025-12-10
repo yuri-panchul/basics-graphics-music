@@ -23,7 +23,7 @@ module sr_soc
 
     input   [ 4:0]  regAddr,    // debug access reg address
     output  [31:0]  regData,    // debug access reg data
-    
+
     output  [31:0]  cycleCnt_o  // clk counter for evaluation program time execution
 );
 

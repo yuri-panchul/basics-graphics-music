@@ -8,7 +8,7 @@ main:
     li s3, 1                # Timer delay
 
     mv t0, s3               # Reset delay timer
-    
+
 delay_loop:
     addi t0, t0, -1         # Decrement counter
     bnez t0, delay_loop     # Loop until counter == 0

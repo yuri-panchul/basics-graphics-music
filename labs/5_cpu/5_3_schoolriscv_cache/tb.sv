@@ -20,7 +20,7 @@ module tb;
 
     logic [ 4:0] regAddr;       // debug access reg address
     wire  [31:0] regData;       // debug access reg data
-    
+
     wire  [31:0] cycleCntPerf;  // clk counter for evaluation program time execution
 
     sr_soc # (

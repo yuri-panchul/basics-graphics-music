@@ -36,7 +36,7 @@ module rotary_encoder
     // Try both options to see which works with your hardware
     // Option 1: Direct assignment
     assign sw_state = sw;
-    
+
     // Option 2: Inverted (if switch is active-low)
     // assign sw_state = !sw;
 

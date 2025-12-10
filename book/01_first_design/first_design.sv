@@ -8,4 +8,3 @@ module first_design
     assign f = ~ (c ^ d);
 
 endmodule
-                

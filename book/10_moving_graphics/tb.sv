@@ -64,7 +64,7 @@ module tb;
         `ifdef __ICARUS__
             $dumpvars;
         `endif
-        
+
         // Initialization
 
         key <= '0;

@@ -8,5 +8,5 @@ module tb;
             $dumpvars;
         `endif
     end
-                                    
+
 endmodule

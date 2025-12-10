@@ -42,7 +42,7 @@ module tb;
         clk = 1'b0;
         forever begin
             #5;
-            clk = ~clk; 
+            clk = ~clk;
         end
     end
 

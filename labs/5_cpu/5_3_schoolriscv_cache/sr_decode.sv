@@ -42,14 +42,14 @@ module sr_decode
     end
 
     // S-type
-    
+
     always_comb
     begin
         immS[ 4: 0] = instr[11: 7];
         immS[10: 5] = instr[30:25];
         immS[31:11] = { 21 {instr[31]} };
     end
-    
+
     // B-type
 
     always_comb

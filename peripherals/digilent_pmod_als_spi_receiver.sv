@@ -12,7 +12,7 @@ module digilent_pmod_als_spi_receiver
     logic [15:0] shift;
 
     always_ff @ (posedge clock)
-    begin       
+    begin
         if (! reset_n)
             cnt <= 22'b100;
         else
@@ -26,18 +26,18 @@ module digilent_pmod_als_spi_receiver
     wire value_done = ( cnt [21:0] == 22'b0 );
 
     always_ff @ (posedge clock)
-    begin       
+    begin
         if (! reset_n)
-        begin       
+        begin
             shift <= 16'h0000;
             value <= 16'h0000;
         end
         else if (sample_bit)
-        begin       
+        begin
             shift <= (shift << 1) | sdo;
         end
         else if (value_done)
-        begin       
+        begin
             value <= shift;
         end
     end

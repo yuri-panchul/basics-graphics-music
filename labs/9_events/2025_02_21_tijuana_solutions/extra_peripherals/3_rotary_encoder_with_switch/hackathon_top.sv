@@ -30,12 +30,12 @@ module hackathon_top
 
     // For rotary encoder A/B signals
     wire a, b;
-    
+
     // Connect A and B directly to gpio pins
     assign a = gpio[2];
     assign b = gpio[3];
-    
-    // Connect switch directly to gpio[0] 
+
+    // Connect switch directly to gpio[0]
     wire sw = gpio[0];  // Direct connection to GPIO0
 
     wire [15:0] value;

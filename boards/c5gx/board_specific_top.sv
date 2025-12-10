@@ -58,7 +58,7 @@ module board_specific_top
     inout                 AUD_BCLK,
     inout                 AUD_DACLRCK,
     output                AUD_DACDAT,
-    output                AUD_XCK    
+    output                AUD_XCK
 );
 
     //------------------------------------------------------------------------
@@ -69,9 +69,9 @@ module board_specific_top
 
     wire                  clk     = CLOCK_50_B8A;
     wire                  arst_n  = CPU_RESET_n;
-    wire                  rst     = ~rstn_ff[1];    
+    wire                  rst     = ~rstn_ff[1];
     logic [1:0]           rstn_ff;
-    
+
     always_ff @(posedge clk or negedge arst_n) begin
         if (!arst_n) rstn_ff <= '0;
         else rstn_ff <= {rstn_ff[0], 1'b1};
@@ -277,8 +277,8 @@ module board_specific_top
                 .HDMI_TX_INT(HDMI_TX_INT),
                 .READY   ()
             );
-        `endif  
-        
+        `endif
+
     `endif
 
     //------------------------------------------------------------------------
@@ -318,11 +318,11 @@ module board_specific_top
             .clk     ( clk         ),
             .reset   ( rst         ),
             .data_in ( sound       ),
-            .mclk    ( AUD_XCK ), 
-            .bclk    ( AUD_BCLK ), 
-            .lrclk   ( AUD_DACLRCK ), 
-            .sdata   ( AUD_DACDAT )           
-        ); 
+            .mclk    ( AUD_XCK ),
+            .bclk    ( AUD_BCLK ),
+            .lrclk   ( AUD_DACLRCK ),
+            .sdata   ( AUD_DACDAT )
+        );
 
         `ifndef I2C_INSTANTIATED
             `define I2C_INSTANTIATED
@@ -334,7 +334,7 @@ module board_specific_top
                 .HDMI_TX_INT(HDMI_TX_INT),
                 .READY   ()
             );
-        `endif                                 
+        `endif
 
     `endif
 

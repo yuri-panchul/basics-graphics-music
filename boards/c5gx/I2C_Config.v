@@ -173,7 +173,7 @@ begin
     7	:   LUT_DATA <= 16'h0C00;   //R6 PWR_CTL = 00h (disable power down)
     8	:   LUT_DATA <= 16'h0E02;   //R7 FORMAT=10(I2S), 16 bit
     9	:   LUT_DATA <= 16'h1002;   //R8 48KHz, Normal mode
-    10	:   LUT_DATA <= 16'h1201;   //R9 ACTIVE	
+    10	:   LUT_DATA <= 16'h1201;   //R9 ACTIVE
 
 	//	Video Config Data
 	11	:	LUT_DATA	<=	16'h9803;  //Must be set to 0x03 for proper operation
