@@ -2,6 +2,10 @@
 /**                                                                                       **/
 /** Copyright 2021 Monte J. Dalrymple                                                     **/
 /**                                                                                       **/
+/** Modified by Yuri Panchul in 2023-2025                                                 **/
+/** to integrate into Basics-Graphics-Music (BGM) project                                 **/
+/** from Verilog Meetup.                                                                  **/
+/**                                                                                       **/
 /** SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1                                      **/
 /**                                                                                       **/
 /** Licensed under the Solderpad Hardware License v 2.1 (the "License"); you may not use  **/
@@ -26,22 +30,22 @@
 `define MEM_BASE  16'h0000                                 /* msword of mem address        */
 
 /* processor                                                                               */
-`include "yrv_top.v"
+`include "yrv_top.vh"
 /* serial receive                                                                          */
-`include "serial_rx.v"
+`include "serial_rx.vh"
 /* serial transmit                                                                         */
-`include "serial_tx.v"
+`include "serial_tx.vh"
 /* serial port                                                                             */
-`include "serial_top.v"
+`include "serial_top.vh"
 
 `ifdef INSTANCE_MEM
 /* instantiated memory                                                                     */
-`include "inst_mem.v"
+`include "inst_mem.vh"
 `endif
 
 `ifdef BOOT_FROM_AUX_UART
-`include "boot_hex_parser.sv"
-`include "boot_uart_receiver.sv"
+`include "boot_hex_parser.svh"
+`include "boot_uart_receiver.svh"
 `endif
 
 module yrv_mcu  (debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk, ser_txd,

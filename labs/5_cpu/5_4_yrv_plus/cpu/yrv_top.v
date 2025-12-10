@@ -2,6 +2,10 @@
 /**                                                                                       **/
 /** Copyright 2020 Monte J. Dalrymple                                                     **/
 /**                                                                                       **/
+/** Modified by Yuri Panchul in 2023-2025                                                 **/
+/** to integrate into Basics-Graphics-Music (BGM) project                                 **/
+/** from Verilog Meetup.                                                                  **/
+/**                                                                                       **/
 /** SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1                                      **/
 /**                                                                                       **/
 /** Licensed under the Solderpad Hardware License v 2.1 (the "License"); you may not use  **/
@@ -20,39 +24,39 @@
 /*******************************************************************************************/
 
 /* options                                                                                 */
-`include "yrv_opt.v"
+`include "yrv_opt.vh"
 /* instruction opcodes                                                                     */
-`include "define_dec.v"
+`include "define_dec.vh"
 /* standard csr addresses                                                                  */
-`include "define_csr.v"
+`include "define_csr.vh"
 /* exception codes                                                                         */
-`include "define_ec.v"
+`include "define_ec.vh"
 /* control/status registers                                                                */
-`include "yrv_csr.v"
+`include "yrv_csr.vh"
 /* interrupt control                                                                       */
-`include "yrv_int.v"
+`include "yrv_int.vh"
 /* cpu                                                                                     */
-`include "yrv_cpu.v"
+`include "yrv_cpu.vh"
 
 `ifdef INSTANCE_REG
 /* instantiated registers                                                                  */
-`include "inst_reg.v"
+`include "inst_reg.vh"
 `endif
 `ifdef INSTANCE_ADD
 /* instantiated adder                                                                      */
-`include "inst_add.v"
+`include "inst_add.vh"
 `endif
 `ifdef INSTANCE_SUB
 /* instantiated subtractor                                                                 */
-`include "inst_sub.v"
+`include "inst_sub.vh"
 `endif
 `ifdef INSTANCE_INC
 /* instantiated incrementer                                                                */
-`include "inst_inc.v"
+`include "inst_inc.vh"
 `endif
 `ifdef INSTANCE_CNT
 /* instantiated count increment                                                            */
-`include "inst_cnt.v"
+`include "inst_cnt.vh"
 `endif
 
 module yrv_top  (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, debug_mode, ebrk_inst,

@@ -112,7 +112,7 @@ module inst_mem  (mem_rdata, clk, mem_addr, mem_addr_reg, mem_ble_reg, mem_ready
                      (mem_addr_reg[11:10] == 2'b01) ? mem1_data :
                      (mem_addr_reg[11:10] == 2'b10) ? mem2_data : mem3_data;
 
-`include "code_demo.v"
+`include "code_demo.vh"
 
 `endif  // ICE40_VERSION
 
