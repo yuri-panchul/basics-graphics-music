@@ -1,4 +1,3 @@
-
 module instruction_ram
 #(
     parameter SIZE = 256
@@ -24,9 +23,9 @@ module instruction_ram
     initial $readmemh ("program.hex", memory);
 
     always @(posedge clk) begin: blk_mem_read
-		if (mem_valid & mem_read)
+        if (mem_valid & mem_read)
             mem_rdata <= memory[mem_addr >> 2];
-	end
+    end
 
     logic [31:0] write_data;
 
@@ -40,10 +39,10 @@ module instruction_ram
     end
 
     always @(posedge clk) begin: blk_mem_write
-		if (mem_valid & mem_write) begin
+        if (mem_valid & mem_write) begin
             memory[mem_addr >> 2] <= write_data;
-		end
-	end
+        end
+    end
 
     always_ff @(posedge clk) begin: blk_mem_read_ready_dly
         mem_ready <= mem_valid;

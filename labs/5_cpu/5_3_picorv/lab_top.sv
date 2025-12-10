@@ -71,26 +71,26 @@ module lab_top
     //------------------------------------------------------------------------
     wire                trap;
     wire                mem_valid;
-	wire                mem_instr;
-	reg                 mem_ready;
-	wire [31:0]         mem_addr;
-	wire [31:0]         mem_wdata;
-	wire [3:0]          mem_wstrb;
-	reg  [31:0]         mem_rdata;
+    wire                mem_instr;
+    reg                 mem_ready;
+    wire [31:0]         mem_addr;
+    wire [31:0]         mem_wdata;
+    wire [3:0]          mem_wstrb;
+    reg  [31:0]         mem_rdata;
 
 
-	picorv32 picorv (
-		.clk        ( slow_clk  ),
-		.resetn     ( ~rst      ),
-		.trap       ( trap      ),
-		.mem_valid  ( mem_valid ),
-		.mem_instr  ( mem_instr ),
-		.mem_ready  ( mem_ready ),
-		.mem_addr   ( mem_addr  ),
-		.mem_wdata  ( mem_wdata ),
-		.mem_wstrb  ( mem_wstrb ),
-		.mem_rdata  ( mem_rdata )
-	);
+    picorv32 picorv (
+        .clk        ( slow_clk  ),
+        .resetn     ( ~rst      ),
+        .trap       ( trap      ),
+        .mem_valid  ( mem_valid ),
+        .mem_instr  ( mem_instr ),
+        .mem_ready  ( mem_ready ),
+        .mem_addr   ( mem_addr  ),
+        .mem_wdata  ( mem_wdata ),
+        .mem_wstrb  ( mem_wstrb ),
+        .mem_rdata  ( mem_rdata )
+    );
 
     instruction_ram memory_file (
         .clk        ( slow_clk  ),
