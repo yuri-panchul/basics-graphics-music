@@ -1,4 +1,8 @@
 `include "config.svh"
+`include "yrv_mcu.v"
+`define INTEL_VERSION
+`define NO_READMEMH_FOR_8_BIT_WIDE_MEM
+`define USE_MEM_BANKS_FOR_BYTE_LINES
 
 module lab_top
 # (
@@ -59,21 +63,25 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    assign led        = '0;
-    assign abcdefgh   = '0;
-    assign digit      = '0;
+    // assign led        = '0;
+    // assign abcdefgh   = '0;
+    // assign digit      = '0;
     assign red        = '0;
     assign green      = '0;
     assign blue       = '0;
     assign sound      = '0;
     assign uart_tx    = '1;
 
+    //--------------------------------------------------------------------------
+    // Invert reset
+    wire reset_n = ~rst;
+
     //------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     // Slow clock button / switch
 
-    wire slow_clk_mode = ~ key_sw [0];
+    wire slow_clk_mode = ~ key[0];
 
     //--------------------------------------------------------------------------
     // MCU clock
@@ -122,7 +130,7 @@ module lab_top
     // Auxiliary UART receive pin
 
     `ifdef BOOT_FROM_AUX_UART
-    wire        aux_uart_rx = rx;
+    wire        aux_uart_rx = uart_rx;
     `endif
 
     // Exposed memory bus for debug purposes
@@ -179,7 +187,7 @@ module lab_top
     logic [15:0] display_number;
 
     always_comb
-        casez (key_sw)
+        casez (sw)
         default : display_number = mem_addr    [15: 0];
         4'b110? : display_number = mem_rdata [15: 0];
         4'b100? : display_number = mem_rdata [31:16];

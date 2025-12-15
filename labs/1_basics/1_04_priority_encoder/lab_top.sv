@@ -7,7 +7,7 @@ module lab_top
                w_sw          = 8,
                w_led         = 8,
                w_digit       = 8,
-               w_gpio        = 100,
+               w_gpio        = 10,
 
                screen_width  = 640,
                screen_height = 480,

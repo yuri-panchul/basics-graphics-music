@@ -428,6 +428,9 @@ set_global_assignment -name SEARCH_PATH $rel_board_dir/$fpga_board
 set_global_assignment -name SEARCH_PATH $rel_peripheral_dir
 set_global_assignment -name SEARCH_PATH $rel_lab_dir/common
 
+set_global_assignment -name SEARCH_PATH ../cpu
+set_global_assignment -name VERILOG_MACRO "INTEL_VERSION"
+
 EOF
 
     $find_to_run  \
