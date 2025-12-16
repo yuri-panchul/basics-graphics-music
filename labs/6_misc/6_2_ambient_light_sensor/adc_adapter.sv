@@ -1,5 +1,5 @@
 /* Adapter for ADC081S021
-* https://www.ti.com/lit/ds/symlink/adc081s021.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1765789819202&ref_url=https%253A%252F%252Fwww.ti.com%252Fgeneral%252Fdocs%252Fsuppproductinfo.tsp%253FdistId%253D10%2526gotoUrl%253Dhttps%253A%252F%252Fwww.ti.com%252Flit%252Fgpn%252Fadc081s021
+* https://www.ti.com/lit/ds/symlink/adc081s021.pdf
 */
 
 module adc_adapter
