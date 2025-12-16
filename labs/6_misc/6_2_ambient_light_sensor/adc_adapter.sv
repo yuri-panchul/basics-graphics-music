@@ -32,6 +32,7 @@ module adc_adapter
    logic [$clog2(adc_cycles_per_sample_lp):0] adc_cycl_ctr_r;
    // 3 leading zeros + 8 data (big endian) + 4 trailing zeros
    logic [14:0]                   data_r;
+   logic                          has_signaled_valid_r;
 
    assign ready_o = 1'b1;
 
@@ -75,11 +76,17 @@ module adc_adapter
    always_ff @(posedge clk_i or posedge rst_i) begin
       if (rst_i) begin
          valid_o <= '0;
+         has_signaled_valid_r <= '0;
       end else begin
-         if (&{adc_cycl_ctr_r[$clog2(adc_cycles_per_sample_lp)-1:0]}) begin
+         if (adc_cycl_ctr_r[$clog2(adc_cycles_per_sample_lp)] && !has_signaled_valid_r) begin
             valid_o <= 1'b1;
+            has_signaled_valid_r <= 1'b1;
          end else begin
             valid_o <= '0;
+            has_signaled_valid_r <= has_signaled_valid_r;
+            if (!adc_cycl_ctr_r[$clog2(adc_cycles_per_sample_lp)]) begin
+               has_signaled_valid_r <= 1'b0;
+            end
          end
       end
    end

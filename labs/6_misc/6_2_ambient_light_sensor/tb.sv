@@ -127,6 +127,8 @@ module tb;
 
        @(posedge clk);
        @(posedge clk);
+
+       @(negedge clk);
         $finish;
     end
 
