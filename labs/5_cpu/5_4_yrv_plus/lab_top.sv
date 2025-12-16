@@ -1,5 +1,8 @@
 `include "config.svh"
 `include "yrv_mcu.v"
+`ifdef ALTERA_RESERVED_QIS
+    `define BOOT_FROM_AUX_UART
+`endif
 `define INTEL_VERSION
 `define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define USE_MEM_BANKS_FOR_BYTE_LINES
@@ -81,12 +84,14 @@ module lab_top
     //--------------------------------------------------------------------------
     // Slow clock button / switch
 
-    wire slow_clk_mode = ~ key[0];
+    wire slow_clk_mode = key[0];
+    assign led[0] = muxed_clk;
+
 
     //--------------------------------------------------------------------------
     // MCU clock
 
-    logic [22:0] clk_cnt;
+    logic [23:0] clk_cnt;
 
     always @ (posedge clk or negedge reset_n)
         if (~ reset_n)
@@ -95,7 +100,7 @@ module lab_top
             clk_cnt <= clk_cnt + 1'd1;
 
     wire muxed_clk_raw
-        = slow_clk_mode ? clk_cnt [22] : clk;
+        = slow_clk_mode ? clk_cnt [23] : clk;
 
     wire muxed_clk;
 
@@ -105,6 +110,17 @@ module lab_top
         global i_global (.in (muxed_clk_raw), .out (muxed_clk));
     `endif
 
+
+
+  logic [15:0] timer;
+
+  always_ff @ (posedge clk_cnt[23] or negedge reset_n)
+    if (~ reset_n)
+      timer <= '0;
+    else
+      timer <= timer + 1'b1;
+
+
     //--------------------------------------------------------------------------
     // MCU inputs
 
@@ -113,7 +129,7 @@ module lab_top
     wire                 resetb        = reset_n;    // master reset
     wire                 ser_rxd     = 1'b0;         // receive data input
     wire    [15:0] port4_in    = '0;
-    wire    [15:0] port5_in    = '0;
+    wire    [15:0] port5_in    = timer;
 
     //--------------------------------------------------------------------------
     // MCU outputs
@@ -130,7 +146,7 @@ module lab_top
     // Auxiliary UART receive pin
 
     `ifdef BOOT_FROM_AUX_UART
-    wire        aux_uart_rx = uart_rx;
+        wire        aux_uart_rx = uart_rx;
     `endif
 
     // Exposed memory bus for debug purposes
@@ -149,13 +165,13 @@ module lab_top
     //--------------------------------------------------------------------------
     // MCU instantiation
 
-    yrv_mcu i_yrv_mcu (.clk (muxed_clk), .*);
+    yrv_mcu i_yrv_mcu (.clk (muxed_clk),    .*);
 
     //--------------------------------------------------------------------------
     // Pin assignments
 
     // The original board had port3_reg [13:8], debug_mode, wfi_state
-    assign led = port3_reg [11:8];
+    // assign led = port3_reg [11:8];
 
     //--------------------------------------------------------------------------
 
@@ -186,26 +202,33 @@ module lab_top
 
     logic [15:0] display_number;
 
+  
+ 
     always_comb
         casez (sw)
-        default : display_number = mem_addr    [15: 0];
-        4'b110? : display_number = mem_rdata [15: 0];
-        4'b100? : display_number = mem_rdata [31:16];
-        4'b101? : display_number = mem_wdata [15: 0];
-        4'b001? : display_number = mem_wdata [31:16];
+        default : display_number = mem_addr  [15: 0];
+        4'b???1 : display_number = mem_rdata [15: 0];
+        4'b??10 : display_number = mem_rdata [31:16];
+        4'b?100 : display_number = mem_wdata [15: 0];
+        4'b1??? : display_number = mem_wdata [31:16];
 
         // 4'b101? : display_number = extra_debug_data [15: 0];
         // 4'b001? : display_number = extra_debug_data [31:16];
         endcase
 
-    display_dynamic # (.n_dig (4)) i_display
+    // 4 bits per hexadecimal digit
+    localparam w_display_number = w_digit * 4;
+
+    seven_segment_display # (w_digit) i_7segment
     (
-        .clk      (   clk                     ),
-        .reset    ( ~ reset_n                 ),
-        .number   (   display_number          ),
-        .abcdefgh (   abcdefgh_from_show_mode ),
-        .digit    (   digit_from_show_mode    )
+        .clk      ( clk                       ),
+        .rst      ( rst                       ),
+        .number   ( display_number            ),
+        .dots     ( w_digit' (0)              ),
+        .abcdefgh ( abcdefgh_from_show_mode   ),
+        .digit    ( digit_from_show_mode      )
     );
+
 
     //--------------------------------------------------------------------------
 
@@ -220,6 +243,8 @@ module lab_top
             abcdefgh = abcdefgh_from_mcu;
             digit    = digit_from_mcu;
         end
+
+
 
     //--------------------------------------------------------------------------
 
