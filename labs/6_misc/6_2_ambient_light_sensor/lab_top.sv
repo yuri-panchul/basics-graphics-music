@@ -52,22 +52,36 @@ module lab_top
 
     inout  logic [w_gpio - 1:0] gpio
  );
-   wire adc_valid_l;
+   wire adc_valid_w;
+   wire [7:0] adc_data_w;
+   logic [7:0] valid_data_r;
 
    // reads light levels from TI ADC081S021, and displays the analog value in 2 seven-segment displays
    // Uses GPIO[5:3] for interfacing with the ADC
 
-    //seven_segment_display
-    //# (.w_digit (2))
-    //i_7segment
-    //(
-    //    .clk      ( clk          ),
-    //    .rst      ( rst          ),
-    //    .number   ( 32' (d9) ),
-    //    .dots     ( '0             ),
-    //    .abcdefgh ( abcdefgh       ),
-    //    .digit    ( digit          )
-    //);
+   always_ff @(posedge clk or posedge rst) begin
+      if (rst) begin
+         valid_data_r <= '0;
+      end else begin
+         if (adc_valid_w) begin
+            valid_data_r <= adc_data_w;
+         end else begin
+            valid_data_r <= valid_data_r;
+         end
+      end
+   end
+
+    seven_segment_display
+    # (.w_digit (2))
+    i_7segment
+    (
+       .clk      ( clk          ),
+       .rst      ( rst          ),
+       .number   ( valid_data_r ),
+       .dots     ( '0             ),
+       .abcdefgh ( abcdefgh       ),
+       .digit    ( digit          )
+    );
 
     adc_adapter
     adc_inst
@@ -77,7 +91,8 @@ module lab_top
         .sclk_o(gpio[5]),
         .cs_o(gpio[4]),
         .sdo_i(gpio[3]),
-        .valid_o(adc_valid_l)
+        .valid_o(adc_valid_w),
+        .data_o(adc_data_w)
     );
 
 endmodule

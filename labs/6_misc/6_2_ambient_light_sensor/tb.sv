@@ -129,6 +129,11 @@ module tb;
        @(posedge clk);
 
        @(negedge clk);
+
+       @(posedge clk);
+       @(posedge clk);
+
+       @(negedge clk);
         $finish;
     end
 
