@@ -110,17 +110,6 @@ module lab_top
         global i_global (.in (muxed_clk_raw), .out (muxed_clk));
     `endif
 
-
-
-  logic [15:0] timer;
-
-  always_ff @ (posedge clk_cnt[23] or negedge reset_n)
-    if (~ reset_n)
-      timer <= '0;
-    else
-      timer <= timer + 1'b1;
-
-
     //--------------------------------------------------------------------------
     // MCU inputs
 
@@ -129,7 +118,7 @@ module lab_top
     wire                 resetb        = reset_n;    // master reset
     wire                 ser_rxd     = 1'b0;         // receive data input
     wire    [15:0] port4_in    = '0;
-    wire    [15:0] port5_in    = timer;
+    wire    [15:0] port5_in    = '0;
 
     //--------------------------------------------------------------------------
     // MCU outputs
@@ -211,13 +200,8 @@ module lab_top
         4'b??10 : display_number = mem_rdata [31:16];
         4'b?100 : display_number = mem_wdata [15: 0];
         4'b1??? : display_number = mem_wdata [31:16];
-
-        // 4'b101? : display_number = extra_debug_data [15: 0];
-        // 4'b001? : display_number = extra_debug_data [31:16];
         endcase
 
-    // 4 bits per hexadecimal digit
-    localparam w_display_number = w_digit * 4;
 
     seven_segment_display # (w_digit) i_7segment
     (
