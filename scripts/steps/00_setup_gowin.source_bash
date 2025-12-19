@@ -117,6 +117,9 @@ gowin_try_install_dir ()
     then
         # Windows is not case sensitive
         Gowin_gowin="/Gowin"
+    elif [[ "$OSTYPE" =~ "darwin" ]]
+    then
+        Gowin_gowin="/GowinIDE.app"
     else
         Gowin_gowin="/Gowin /gowin"
     fi
@@ -150,7 +153,7 @@ gowin_try_install_dir ()
         if [[ "$OSTYPE" = "darwin"* ]] &&
            [ -x "$dir$gowin/$new_gowin_macos_sub_path/IDE/bin/gw_sh$exe" ]
         then
-            GOWIN_VERSION_DIR="$GOWIN_VERSION_DIR/$new_gowin_macos_sub_path"
+            GOWIN_VERSION_DIR="$dir$gowin/$new_gowin_macos_sub_path"
             gowin_finish_setup_and_report_where_found " inside '$dir'"
             return
         fi
