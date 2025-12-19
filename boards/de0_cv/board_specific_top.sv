@@ -1,5 +1,6 @@
 `include "config.svh"
 `include "lab_specific_board_config.svh"
+`define MEMORY_BLOCKS 16
 
 module board_specific_top
 # (
@@ -139,8 +140,8 @@ module board_specific_top
         .mic           (   mic                ),
         .sound         (   sound              ),
 
-        .uart_rx       (                      ),
-        .uart_tx       (                      ),
+        .uart_rx       (    GPIO_1[34]        ),
+        .uart_tx       (    GPIO_1[35]        ),
 
         .gpio          (   { GPIO_0, GPIO_1 } )
     );

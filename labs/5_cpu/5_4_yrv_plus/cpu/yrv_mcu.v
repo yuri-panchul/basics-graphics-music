@@ -154,10 +154,10 @@ module yrv_mcu  (debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk
   wire    [3:0] mem_wr_byte;                               /* system ram byte enables      */
 
   `ifdef USE_MEM_BANKS_FOR_BYTE_LINES
-  reg     [7:0] mcu_mem_bank0 [0:1023];                    /* system ram banks             */
-  reg     [7:0] mcu_mem_bank1 [0:1023];
-  reg     [7:0] mcu_mem_bank2 [0:1023];
-  reg     [7:0] mcu_mem_bank3 [0:1023];
+  reg     [7:0] mcu_mem_bank0 [0:1024*16-1];                    /* system ram banks             */
+  reg     [7:0] mcu_mem_bank1 [0:1024*16-1];
+  reg     [7:0] mcu_mem_bank2 [0:1024*16-1];
+  reg     [7:0] mcu_mem_bank3 [0:1024*16-1];
   `else
   reg     [7:0] mcu_mem [0:4095];                          /* system ram                   */
   `endif
