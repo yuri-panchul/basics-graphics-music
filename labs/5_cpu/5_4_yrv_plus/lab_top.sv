@@ -113,8 +113,8 @@ module lab_top
     //--------------------------------------------------------------------------
     // MCU inputs
 
-    wire                 ei_req;                             // external int request
-    wire                 nmi_req     = 1'b0;         // non-maskable interrupt
+    wire                 ei_req = 1'b0;                             // external int request
+    wire                 nmi_req    ;         // non-maskable interrupt
     wire                 resetb        = reset_n;    // master reset
     wire                 ser_rxd     = 1'b0;         // receive data input
     wire    [15:0] port4_in    = '0;
@@ -232,52 +232,60 @@ module lab_top
 
     //--------------------------------------------------------------------------
 
-    `ifdef OLD_INTERRUPT_CODE
+    // `ifdef OLD_INTERRUPT_CODE
 
     //--------------------------------------------------------------------------
     // 125Hz interrupt
-    // 50,000,000 Hz / 125 Hz = 40,000 cycles
-
-    logic [15:0] hz125_reg;
+    // 50,000,000 Hz / 125 Hz = 40,000 cycles ???
+ 
+    logic [32:0] hz125_reg;
     logic                hz125_lat;
 
-    assign ei_req        = hz125_lat;
-    wire     hz125_lim = hz125_reg == 16'd39999;
+    assign   nmi_req        = hz125_lat;
+    wire     hz125_lim = hz125_reg == 32'd399999;
 
     always_ff @ (posedge clk or negedge resetb)
         if (~ resetb)
         begin
-            hz125_reg <= 16'd0;
+            hz125_reg <= 32'd0;
             hz125_lat <= 1'b0;
         end
         else
         begin
-            hz125_reg <= hz125_lim ? 16'd0 : hz125_reg + 1'b1;
-            hz125_lat <= ~ port3_reg [15] & (hz125_lim | hz125_lat);
+            hz125_reg <= hz125_lim ? 32'd0 : hz125_reg + 1'b1;
+            if(port3_reg[0])
+                hz125_lat <=  hz125_lim;
+            else
+                hz125_lat <= 1'b0;
         end
 
-    `endif
+    // `endif
 
     //--------------------------------------------------------------------------
     // 8 KHz interrupt
     // 50,000,000 Hz / 8 KHz = 6250 cycles
 
-    logic [12:0] khz8_reg;
-    logic                khz8_lat;
+    // logic [12:0] khz8_reg;
+    // logic                khz8_lat;
 
-    assign ei_req        = khz8_lat;
-    wire     khz8_lim = khz8_reg == 13'd6249;
+    // assign nmi_req        = khz8_lat;
 
-    always_ff @ (posedge clk or negedge resetb)
-        if (~ resetb)
-        begin
-            khz8_reg <= 13'd0;
-            khz8_lat <= 1'b0;
-        end
-        else
-        begin
-            khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
-            khz8_lat <= ~ port3_reg [15] & (khz8_lim | khz8_lat);
-        end
+    // wire     khz8_lim = khz8_reg == 13'd6249;
+
+    // always_ff @ (posedge clk or negedge resetb)
+    //     if (~ resetb)
+    //     begin
+    //         khz8_reg <= 13'd0;
+    //         khz8_lat <= 1'b0;
+    //     end
+    //     else
+    //     begin
+    //         khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
+    //         if(port3_reg [0]) begin
+    //                 khz8_lat <= khz8_lim;
+    //             end 
+    //         else
+    //             khz8_lat<= 1'b0;
+    //     end
 
 endmodule
