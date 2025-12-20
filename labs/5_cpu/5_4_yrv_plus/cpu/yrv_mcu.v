@@ -154,10 +154,10 @@ module yrv_mcu  (debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk
   wire    [3:0] mem_wr_byte;                               /* system ram byte enables      */
 
   `ifdef USE_MEM_BANKS_FOR_BYTE_LINES
-  reg     [7:0] mcu_mem_bank0 [0:1024*16-1];                    /* system ram banks             */
-  reg     [7:0] mcu_mem_bank1 [0:1024*16-1];
-  reg     [7:0] mcu_mem_bank2 [0:1024*16-1];
-  reg     [7:0] mcu_mem_bank3 [0:1024*16-1];
+  reg     [7:0] mcu_mem_bank0 [0:1024*4-1];                    /* system ram banks             */
+  reg     [7:0] mcu_mem_bank1 [0:1024*4-1];
+  reg     [7:0] mcu_mem_bank2 [0:1024*4-1];
+  reg     [7:0] mcu_mem_bank3 [0:1024*4-1];
   `else
   reg     [7:0] mcu_mem [0:4095];                          /* system ram                   */
   `endif
@@ -296,30 +296,30 @@ module yrv_mcu  (debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk
 
   always @ (posedge clk) begin
     if (mem_trans[0]) begin
-      mem_rdata[31:24] <= mcu_mem_bank3 [mem_addr[11:2]];
-      mem_rdata[23:16] <= mcu_mem_bank2 [mem_addr[11:2]];
-      mem_rdata[15:8]  <= mcu_mem_bank1 [mem_addr[11:2]];
-      mem_rdata[7:0]   <= mcu_mem_bank0 [mem_addr[11:2]];
+      mem_rdata[31:24] <= mcu_mem_bank3 [mem_addr[13:2]];
+      mem_rdata[23:16] <= mcu_mem_bank2 [mem_addr[13:2]];
+      mem_rdata[15:8]  <= mcu_mem_bank1 [mem_addr[13:2]];
+      mem_rdata[7:0]   <= mcu_mem_bank0 [mem_addr[13:2]];
       end
-    if (mem_wr_byte[3]) mcu_mem_bank3 [mem_addr_reg[11:2]] <= mem_wdata[31:24];
-    if (mem_wr_byte[2]) mcu_mem_bank2 [mem_addr_reg[11:2]] <= mem_wdata[23:16];
-    if (mem_wr_byte[1]) mcu_mem_bank1 [mem_addr_reg[11:2]] <= mem_wdata[15:8];
-    if (mem_wr_byte[0]) mcu_mem_bank0 [mem_addr_reg[11:2]] <= mem_wdata[7:0];
+    if (mem_wr_byte[3]) mcu_mem_bank3 [mem_addr_reg[13:2]] <= mem_wdata[31:24];
+    if (mem_wr_byte[2]) mcu_mem_bank2 [mem_addr_reg[13:2]] <= mem_wdata[23:16];
+    if (mem_wr_byte[1]) mcu_mem_bank1 [mem_addr_reg[13:2]] <= mem_wdata[15:8];
+    if (mem_wr_byte[0]) mcu_mem_bank0 [mem_addr_reg[13:2]] <= mem_wdata[7:0];
     end
 
   `else
 
   always @ (posedge clk) begin
     if (mem_trans[0]) begin
-      mem_rdata[31:24] <= mcu_mem[{mem_addr[11:2], 2'b11}];
-      mem_rdata[23:16] <= mcu_mem[{mem_addr[11:2], 2'b10}];
-      mem_rdata[15:8]  <= mcu_mem[{mem_addr[11:2], 2'b01}];
-      mem_rdata[7:0]   <= mcu_mem[{mem_addr[11:2], 2'b00}];
+      mem_rdata[31:24] <= mcu_mem[{mem_addr[13:2], 2'b11}];
+      mem_rdata[23:16] <= mcu_mem[{mem_addr[13:2], 2'b10}];
+      mem_rdata[15:8]  <= mcu_mem[{mem_addr[13:2], 2'b01}];
+      mem_rdata[7:0]   <= mcu_mem[{mem_addr[13:2], 2'b00}];
       end
-    if (mem_wr_byte[3]) mcu_mem[{mem_addr_reg[11:2], 2'b11}] <= mem_wdata[31:24];
-    if (mem_wr_byte[2]) mcu_mem[{mem_addr_reg[11:2], 2'b10}] <= mem_wdata[23:16];
-    if (mem_wr_byte[1]) mcu_mem[{mem_addr_reg[11:2], 2'b01}] <= mem_wdata[15:8];
-    if (mem_wr_byte[0]) mcu_mem[{mem_addr_reg[11:2], 2'b00}] <= mem_wdata[7:0];
+    if (mem_wr_byte[3]) mcu_mem[{mem_addr_reg[13:2], 2'b11}] <= mem_wdata[31:24];
+    if (mem_wr_byte[2]) mcu_mem[{mem_addr_reg[13:2], 2'b10}] <= mem_wdata[23:16];
+    if (mem_wr_byte[1]) mcu_mem[{mem_addr_reg[13:2], 2'b01}] <= mem_wdata[15:8];
+    if (mem_wr_byte[0]) mcu_mem[{mem_addr_reg[13:2], 2'b00}] <= mem_wdata[7:0];
     end
 
   `endif
