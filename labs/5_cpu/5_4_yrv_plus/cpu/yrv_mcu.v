@@ -32,9 +32,9 @@
 /* processor                                                                               */
 `include "yrv_top.vh"
 /* serial receive                                                                          */
-`include "serial_rx.vh"
+//`include "serial_rx.vh"
 /* serial transmit                                                                         */
-`include "serial_tx.vh"
+//`include "serial_tx.vh"
 /* serial port                                                                             */
 `include "serial_top.vh"
 
