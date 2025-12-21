@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "yrv_mcu.v"
+//`include "yrv_mcu.v"
 `ifdef ALTERA_RESERVED_QIS
     `define BOOT_FROM_AUX_UART
 `endif
@@ -104,11 +104,11 @@ module lab_top
 
     wire muxed_clk;
 
-    `ifdef SIMULATION
+   // `ifdef SIMULATION
         assign muxed_clk = muxed_clk_raw;
-    `else
-        global i_global (.in (muxed_clk_raw), .out (muxed_clk));
-    `endif
+   // `else
+   //     global i_global (.in (muxed_clk_raw), .out (muxed_clk));
+   // `endif
 
     //--------------------------------------------------------------------------
     // MCU inputs
