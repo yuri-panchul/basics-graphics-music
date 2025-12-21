@@ -154,7 +154,10 @@ module lab_top
     //--------------------------------------------------------------------------
     // MCU instantiation
 
-    yrv_mcu i_yrv_mcu (.clk (muxed_clk),    .*);
+    yrv_mcu
+    # (.clk_frequency (clk_mhz * 1000 * 1000))
+    i_yrv_mcu
+    (.clk (muxed_clk), .*);
 
     //--------------------------------------------------------------------------
     // Pin assignments

@@ -48,7 +48,11 @@
 `include "boot_uart_receiver.svh"
 `endif
 
-module yrv_mcu  (debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk, ser_txd,
+module yrv_mcu
+# (
+  parameter clk_frequency = 50 * 1000 * 1000
+)
+(                debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk, ser_txd,
                  wfi_state, clk, ei_req, nmi_req, port4_in, port5_in, resetb, ser_rxd
 
                  `ifdef BOOT_FROM_AUX_UART
@@ -205,7 +209,7 @@ module yrv_mcu  (debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk
 
   boot_uart_receiver
   # (
-    .clk_frequency ( `CLK_FREQUENCY )
+    .clk_frequency ( clk_frequency )
   )
   BOOT_UART_RECEIVER
   (
@@ -230,7 +234,7 @@ module yrv_mcu  (debug_mode, port0_reg, port1_reg, port2_reg, port3_reg, ser_clk
   # (
     .address_width      ( boot_address_width ),
     .data_width         ( 32                 ),
-    .clk_frequency      ( `CLK_FREQUENCY     ),
+    .clk_frequency      ( clk_frequency      ),
     .timeout_in_seconds ( 1                  )
   )
   BOOT_HEX_PARSER
