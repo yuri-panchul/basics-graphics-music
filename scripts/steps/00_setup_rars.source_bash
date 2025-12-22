@@ -91,5 +91,11 @@ rars_assembly ()
 rars_run_gui ()
 {
     cd ..
-    $rars_cmd &
+
+    if [[ "$OSTYPE" =~ "darwin" ]]
+    then
+        $rars_cmd
+    else
+        $rars_cmd &
+    fi
 }
