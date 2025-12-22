@@ -19,7 +19,7 @@
 /**                                                                                       **/
 /*******************************************************************************************/
 `include "serial_rx.vh"
-                                                                     
+
 `include "serial_tx.vh"
 
 module serial_top (bufr_done, bufr_empty, bufr_full, bufr_ovr, rx_rdata, ser_clk, ser_txd,

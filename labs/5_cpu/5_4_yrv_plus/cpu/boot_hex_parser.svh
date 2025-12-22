@@ -106,7 +106,7 @@ module boot_hex_parser
             else
                 nibble_counter <= nibble_counter + 1'd1;
         end
-   
+
     //------------------------------------------------------------------------
 
     always_ff @ (posedge clk or posedge reset)

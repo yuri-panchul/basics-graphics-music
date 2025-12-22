@@ -10,7 +10,7 @@ _start:
 	   li    t1, 0x3f            # all leds on | load immediate  0011 1111
 
 eset_led:  lui   a7, iobase          # i/o page Load Upper Immediate
-           lhu   t0, 6(a7)           # a7 = iobase           
+           lhu   t0, 6(a7)           # a7 = iobase
            slli  t1, t1, 7           # shift logical immediate 0001 1111 1000 0000
            or    t0, t0, t1          # set status led
            sh    t0, 6(a7) #a7 = iobase          # write port3

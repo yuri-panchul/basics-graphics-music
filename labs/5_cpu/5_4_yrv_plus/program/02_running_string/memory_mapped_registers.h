@@ -3,10 +3,10 @@
 
 
 /*
-define IO_PORT10 14 h0000                                  lsword of port 1/0 address   
-define IO_PORT32 14 h0001                                  lsword of port 3/2 address   
-define IO_PORT54 14 h0002                                  lsword of port 5/4 address   
-define IO_PORT76 14 h0003                                  lsword of port 7/6 address   
+define IO_PORT10 14 h0000                                  lsword of port 1/0 address
+define IO_PORT32 14 h0001                                  lsword of port 3/2 address
+define IO_PORT54 14 h0002                                  lsword of port 5/4 address
+define IO_PORT76 14 h0003                                  lsword of port 7/6 address
 
 
 */

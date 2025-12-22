@@ -15,20 +15,20 @@ uint8_t char_to_hex(char c);
  * @param str Указатель на строку (минимум 4 символа)
  */
 void display_string(const char* str) {
-    uint8_t anodes[4] = {LED_3, LED_2, LED_1, LED_0}; 
-    
+    uint8_t anodes[4] = {LED_3, LED_2, LED_1, LED_0};
+
     // Отображаем каждый из первых 4 символов
     for(int i = 0; i < 4; i++) {
         char c = str[i];
         uint8_t hex_code = char_to_hex(c);
-        
+
         // Включаем соответствующий индикатор
         port0 = hex_code;
         port1 = anodes[i];
-        
+
         // Задержка для визуализации (можно убрать при использовании динамической индикации)
         for(volatile int delay = 0; delay < 100; delay++);
-        
+
         // Очистка после отображения (если нужно мультиплексирование)
         port0 = 0x00;
         port1 = 0x00;
@@ -77,7 +77,7 @@ void delay(volatile uint32_t count) {
 
 void main() {
     const char message[] = "HELO"; // Строка из 4 символов
-    
+
     while(1) {
         display_string(message);
     }

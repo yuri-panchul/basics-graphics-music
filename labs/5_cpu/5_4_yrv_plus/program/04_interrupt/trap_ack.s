@@ -36,6 +36,5 @@ handle_exception:
 
 unknown:
     # Специфичная обработка неизвестного прерывания
-    mret 
+    mret
 
-    

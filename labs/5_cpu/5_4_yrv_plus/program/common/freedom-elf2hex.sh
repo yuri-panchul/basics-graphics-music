@@ -13,7 +13,7 @@ do
     *) echo "$0: unknown argument $1">&2; exit 1;;
     esac
 done
-   
+
 if [[ "$bit_width" == "" ]]
 then
     echo "$0 [-h] --bit-width BIT_WIDTH --input INPUT.ELF [--output OUTPUT.HEX]" >&2

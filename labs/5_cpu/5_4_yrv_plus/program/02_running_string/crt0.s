@@ -22,6 +22,6 @@ loop:
 	  add s0, sp, zero
 	  jal zero, main
 .cfi_endproc
-           
+
            beq   zero, zero, loop
-                    
+

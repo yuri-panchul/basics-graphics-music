@@ -12,17 +12,17 @@ uint8_t char_to_hex(char c);
 
 
 void marquee_string(const char* str) {
-    static int pos = 0;        
+    static int pos = 0;
     static int frame_counter = 0;
-    static int digit = 0;      
-    
+    static int digit = 0;
+
     uint8_t anodes[4] = {LED_3, LED_2, LED_1, LED_0};
     int len = 0;
-    
-    
+
+
     while(str[len] != '\0') len++;
     if(len < 4) len = 4;
-    
+
     frame_counter++;
     if(frame_counter >= FRAME_LIMIT) {
         frame_counter = 0;
@@ -36,27 +36,27 @@ void marquee_string(const char* str) {
                 port1 = 0x00;
                 for(volatile int d = 0; d < 100; d++);
             }
-            pos = -3;  
+            pos = -3;
         }
     }
-    
+
     char c;
     int char_pos = pos + digit;
-    
+
     if(char_pos < 0 || char_pos >= len) {
-        c = ' ';  
+        c = ' ';
     } else {
         c = str[char_pos];
     }
-    
+
     port0 = char_to_hex(c);
     port1 = anodes[digit];
-    
+
     for(volatile int delay = 0; delay < 500; delay++);
-    
+
     port0 = 0x00;
     port1 = 0x00;
-    
+
     digit = (digit + 1) & 0x3;
 }
 
@@ -93,7 +93,7 @@ uint8_t char_to_hex(char c) {
 
 void main() {
     const char message[] = "HELLO ALL PPL";
-    
+
     while(1) {
         marquee_string(message);
     }

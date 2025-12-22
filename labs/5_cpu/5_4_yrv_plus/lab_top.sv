@@ -176,7 +176,7 @@ module lab_top
         port0_reg[2],
         port0_reg[1],
         port0_reg[0],
-        port0_reg[7] 
+        port0_reg[7]
     };
 
     wire [3:0] digit_from_mcu =
@@ -194,8 +194,8 @@ module lab_top
 
     logic [15:0] display_number;
 
-  
- 
+
+
     always_comb
         casez (sw)
         default : display_number = mem_addr  [15: 0];
@@ -240,7 +240,7 @@ module lab_top
     //--------------------------------------------------------------------------
     // 125Hz interrupt
     // 50,000,000 Hz / 125 Hz = 40,000 cycles ???
- 
+
     logic [32:0] hz125_reg;
     logic                hz125_lat;
 
@@ -286,7 +286,7 @@ module lab_top
     //         khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
     //         if(port3_reg [0]) begin
     //                 khz8_lat <= khz8_lim;
-    //             end 
+    //             end
     //         else
     //             khz8_lat<= 1'b0;
     //     end

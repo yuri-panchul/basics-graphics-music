@@ -222,7 +222,7 @@ module yrv_mcu
 
   wire        boot_valid;
   wire [31:0] boot_address;
-  wire [31:0] boot_data;   
+  wire [31:0] boot_data;
   wire        boot_busy;
   wire        boot_error;
 

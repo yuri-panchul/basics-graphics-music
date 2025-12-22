@@ -29,48 +29,48 @@ _RST_BASE = 0x200;
     . = _RST_BASE;
     *(.text.init)
     *(.text)
- }>BRAM 
+ }>BRAM
 
  .rodata :
- {  
+ {
     . = ALIGN(4);
     *(.rodata)
  }> BRAM
 
  .data :
- {  
+ {
     *(.data)
     _edata = .;
  }> BRAM
 
  .sdata :
- {  
+ {
     . = ALIGN(4);
     PROVIDE( __global_pointer$ = . + 0x800);
     *(.sdata)
  }> BRAM
 
  .bss :
- {  
+ {
     . = ALIGN(4);
     *(.bss)
  }> BRAM
 
  .sbss :
- {  
+ {
     . = ALIGN(4);
     *(.sbss)
  }> BRAM
 
 
- 
+
   /DISCARD/ :
   {
     *(.note.gnu.build-id)
     *(.riscv.attributes)
     *(.comment)
   }
- 
+
 
 _end = .;
  }

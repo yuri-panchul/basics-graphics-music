@@ -67,7 +67,7 @@ export bin2hex := $(B2H)
 CFLAGS=  -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss
 CIFLAGS=  -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss
 LDFLAGS=-nostdlib -Tyrv.ld
- 
+
 
 all:check code_demo.mem32
 trap_ack.o:trap_ack.s
@@ -97,7 +97,7 @@ memset.o:memset.c
 	$(GCC) $(CFLAGS) -o $@ $^
 
 final.elf:crt0.o mscratch.o trap_ack.o nmi_vec.o dbg_vec.o main.o
-	$(LD) $(LDFLAGS)  -o $@ $^  
+	$(LD) $(LDFLAGS)  -o $@ $^
 
 final:final.elf
 	$(OBJ) -O binary final.elf final

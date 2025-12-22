@@ -60,4 +60,4 @@ void main() {
         L();
         delay_nop(20000);
         O();
-        delay_nop(80000);  
+        delay_nop(80000);

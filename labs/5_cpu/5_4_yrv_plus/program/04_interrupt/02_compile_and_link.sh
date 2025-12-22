@@ -1,3 +1,3 @@
 #!/bin/bash
 
-make final.elf 
+make final.elf
