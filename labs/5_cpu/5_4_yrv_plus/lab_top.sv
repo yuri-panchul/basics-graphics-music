@@ -4,7 +4,7 @@
 //    `define BOOT_FROM_AUX_UART
 //`endif
 `define BOOT_FROM_AUX_UART
-`define INTEL_VERSION
+//`define INTEL_VERSION
 `define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define USE_MEM_BANKS_FOR_BYTE_LINES
 `define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -106,11 +106,15 @@ module lab_top
 
     wire muxed_clk;
 
-   // `ifdef SIMULATION
-   //     assign muxed_clk = muxed_clk_raw;
-   // `else
-        BUFG i_global (.I (muxed_clk_raw), .O (muxed_clk));
-   // `endif
+    `ifdef SIMULATION
+        assign muxed_clk = muxed_clk_raw;
+    `else
+         `ifdef INTEL_VERSION
+             global i_global (.in (muxed_clk_raw), .out (muxed_clk));
+        `else
+             BUFG i_global (.I (muxed_clk_raw), .O (muxed_clk));
+         `endif
+    `endif
 
     //--------------------------------------------------------------------------
     // MCU inputs
