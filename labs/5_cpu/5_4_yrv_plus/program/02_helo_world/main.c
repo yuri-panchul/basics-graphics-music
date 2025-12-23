@@ -23,15 +23,18 @@ void display_string(const char* str) {
         uint8_t hex_code = char_to_hex(c);
 
         // Включаем соответствующий индикатор
-        port0 = hex_code;
         port1 = anodes[i];
+        port0 = hex_code;
+       
 
         // Задержка для визуализации (можно убрать при использовании динамической индикации)
         for(volatile int delay = 0; delay < 100; delay++);
 
-        // Очистка после отображения (если нужно мультиплексирование)
-        port0 = 0x00;
-        port1 = 0x00;
+        // Очистка после отображения
+        #ifdef STATIC
+            port0 = 0x00;
+            port1 = 0x00;
+        #endif
     }
 }
 

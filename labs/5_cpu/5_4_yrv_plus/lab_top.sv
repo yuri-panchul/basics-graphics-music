@@ -1,15 +1,17 @@
 `include "config.svh"
 //`include "yrv_mcu.v"
-`ifdef ALTERA_RESERVED_QIS
-    `define BOOT_FROM_AUX_UART
-`endif
+//`ifdef ALTERA_RESERVED_QIS
+//    `define BOOT_FROM_AUX_UART
+//`endif
+`define BOOT_FROM_AUX_UART
 `define INTEL_VERSION
 `define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define USE_MEM_BANKS_FOR_BYTE_LINES
+`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module lab_top
 # (
-    parameter  clk_mhz       = 50,
+    parameter  clk_mhz       = 27,
                w_key         = 4,
                w_sw          = 8,
                w_led         = 8,
@@ -91,7 +93,7 @@ module lab_top
     //--------------------------------------------------------------------------
     // MCU clock
 
-    logic [23:0] clk_cnt;
+    logic [22:0] clk_cnt;
 
     always @ (posedge clk or negedge reset_n)
         if (~ reset_n)
@@ -100,14 +102,14 @@ module lab_top
             clk_cnt <= clk_cnt + 1'd1;
 
     wire muxed_clk_raw
-        = slow_clk_mode ? clk_cnt [23] : clk;
+        = slow_clk_mode ? clk_cnt [22] : clk;
 
     wire muxed_clk;
 
    // `ifdef SIMULATION
-        assign muxed_clk = muxed_clk_raw;
+   //     assign muxed_clk = muxed_clk_raw;
    // `else
-   //     global i_global (.in (muxed_clk_raw), .out (muxed_clk));
+        BUFG i_global (.I (muxed_clk_raw), .O (muxed_clk));
    // `endif
 
     //--------------------------------------------------------------------------
@@ -179,8 +181,12 @@ module lab_top
         port0_reg[7]
     };
 
-    wire [3:0] digit_from_mcu =
+    wire [7:0] digit_from_mcu =
     {
+        port1_reg [7],
+        port1_reg [6],
+        port1_reg [5],
+        port1_reg [4],    
         port1_reg [3],
         port1_reg [2],
         port1_reg [1],
@@ -190,19 +196,17 @@ module lab_top
     //--------------------------------------------------------------------------
 
     wire [7:0] abcdefgh_from_show_mode;
-    wire [3:0] digit_from_show_mode;
+    wire [7:0] digit_from_show_mode;
 
     logic [15:0] display_number;
 
 
 
     always_comb
-        casez (sw)
-        default : display_number = mem_addr  [15: 0];
-        4'b???1 : display_number = mem_rdata [15: 0];
-        4'b??10 : display_number = mem_rdata [31:16];
-        4'b?100 : display_number = mem_wdata [15: 0];
-        4'b1??? : display_number = mem_wdata [31:16];
+        casez (key)
+        default : display_number = mem_addr  [31: 0];
+        4'b0001? : display_number = mem_rdata [31: 0];
+        4'b0010? : display_number = mem_wdata [31: 0];
         endcase
 
 
@@ -244,8 +248,8 @@ module lab_top
     logic [32:0] hz125_reg;
     logic                hz125_lat;
 
-    assign   nmi_req        = hz125_lat;
-    wire     hz125_lim = hz125_reg == 32'd399999;
+    assign   nmi_req        = hz125_lat || key[7];
+    wire     hz125_lim = hz125_reg == 32'd299999;
 
     always_ff @ (posedge clk or negedge resetb)
         if (~ resetb)
