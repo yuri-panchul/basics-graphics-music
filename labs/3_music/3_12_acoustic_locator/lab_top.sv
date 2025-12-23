@@ -54,13 +54,13 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic signed [12:0] mic_1, mic_2, mic_3, mic_4;
+    logic signed [12:0] mic_1, mic_2, mic_3, mic_4; // Left(2) right(2) bottom top
     logic               start, white, red_disp, green_disp, blue_disp;
     logic        [ 3:0] min_index_h, min_index_v, av_index_h, av_index_v, counter;
-    logic  [3:0] [w_x + w_y - 11:0] white_prev;
-    logic        [0:12] [31:0] data_rgb;
+    logic  [3:0] [w_x + w_y - 11:0] white_prev; // Repeating sound coordinates
+    logic        [0:12] [31:0] data_rgb; // Data to be output to addressable LEDs
     wire         [15:0] vol;
-    localparam          agc = 1'b0;
+    localparam          agc = 1'b0; // Enable automatic microphone level adjustment
 
     assign red     = {{w_red   - 2 {red_disp  }}, {2{white}}}; //
     assign green   = {{w_green - 2 {green_disp}}, {2{white}}}; // - color selection
@@ -70,7 +70,8 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    // Acoustic locator level adjust
+    // Adjusting level from the microphone to locator
+    // The module is located in the common folder
     convert
     # (
         .w_in  ( 24        ),
@@ -142,7 +143,7 @@ module lab_top
     );
 
     // A dynamic seven-segment display
-    always_ff @ (posedge clk or posedge rst) begin
+    always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             counter    <= '0;
             av_index_h <= '0;
@@ -161,6 +162,7 @@ module lab_top
         end
     end
 
+    // The module is located in the common folder
     seven_segment_display 
     # (
         .w_digit  ( w_digit   ),
@@ -200,7 +202,7 @@ module lab_top
     );
 
     // Drawing a position
-    always_ff @ (posedge clk or posedge rst) begin
+    always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             white      <= 1'b0;
             red_disp   <= 1'b0;
@@ -219,48 +221,60 @@ module lab_top
         else begin
             if (screen_width == 800) begin : screen_w_800
                 white <= (x[w_x - 1:5] == min_index_h + (min_index_h >> 1)) &&
-                         (y[w_y - 1:5] == min_index_v);
+                         (y[w_y - 1:5] == min_index_v - (min_index_v >> 3));
+                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:5]};
+                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]};
+                blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:5]};
+                if (white)
+                white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:5]};
             end
             else if (screen_width == 640) begin : screen_w_640
                 white <= (x[w_x - 1:5] == min_index_h + (min_index_h >> 2)) &&
-                         (y[w_y - 1:5] == min_index_v);
+                         (y[w_y - 1:5] == min_index_v - (min_index_v >> 3));
+                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:5]};
+                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]};
+                blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:5]};
+                if (white)
+                white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:5]};
             end
             else begin : screen_w_480
-                white <= (x[w_x - 1:5] == min_index_h) &&
-                         (y[w_y - 1:5] == min_index_v);
+                white <= (x[w_x - 1:5] == min_index_h - (min_index_v >> 3)) &&
+                         (y[w_y - 1:4] == min_index_v);
+                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:4]};
+                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:4]};
+                blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:4]};
+                if (white)
+                white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:4]};
             end
-            red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:5]};
-            green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]};
-            blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:5]};
-            if (white)
-            white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:5]};
         end
     end
 
+    // Data to be output to addressable LEDs
+    // The module is located in the common folder
     led_strip_combo i_led_strip_combo
     (
-        .clk         ( clk         ),
-        .rst         ( rst         ),
-        .data_rgb    ( data_rgb    ),
-        .sk9822_clk  ( gpio[7]     ),
-        .sk9822_data ( gpio[3]     )
+        .clk         ( clk              ),
+        .rst         ( rst              ),
+        .data_rgb    ( data_rgb         ),
+        .sk9822_clk  ( gpio[w_gpio - 1] ),
+        .sk9822_data ( gpio[w_gpio - 2] )
     );
 
     assign data_rgb = {
-    { 3'd7, 4'd0, ~| av_index_v[3:2],                   24'h001100 }, // SK9822  U4  B G R
-    { 3'd7, 4'd0,  ~ av_index_v[3]  |& av_index_h[3:2], 24'h001100 }, // SK9822  U5  B G R
-    { 3'd7, 4'd0, ~| av_index_v[3:2]|  av_index_h[3],   24'h001100 }, // SK9822  U6  B G R
-    { 3'd7, 4'd0,  & av_index_h[3:2],                   24'h001100 }, // SK9822  U9  B G R
-    { 3'd7, 4'd0,  & av_index_v[3:2]|  av_index_h[3],   24'h001100 }, // SK9822  U10 B G R
-    { 3'd7, 4'd0,    av_index_v[3]  |& av_index_h[3:2], 24'h001100 }, // SK9822  U11 B G R
-    { 3'd7, 4'd0,  & av_index_v[3:2],                   24'h001100 }, // SK9822  U12 B G R
-    { 3'd7, 4'd0, ~| av_index_h[3:2]|  av_index_v[3],   24'h001100 }, // SK9822  U15 B G R
-    { 3'd7, 4'd0,  ~ av_index_h[3] | & av_index_v[3:2], 24'h001100 }, // SK9822  U16 B G R
-    { 3'd7, 4'd0, ~| av_index_h[3:2],                   24'h001100 }, // SK9822  U17 B G R
-    { 3'd7, 4'd0, ~| av_index_h[3:2]|~ av_index_v[3],   24'h001100 }, // SK9822  U18 B G R
-    { 3'd7, 4'd0,  ~ av_index_h[3] |~| av_index_v[3:2], 24'h001100 }, // SK9822  U3  B G R
+    { 3'd7, 3'd0, {2{~| av_index_v[3:0]}},               24'h000011 }, // SK9822  U4  B G R
+    { 3'd7, 4'd0, ~| av_index_v[3:1] |& av_index_h[3:2], 24'h001100 }, // SK9822  U5  B G R
+    { 3'd7, 4'd0, ~| av_index_v[3:2] |& av_index_h[3:1], 24'h001100 }, // SK9822  U6  B G R
+    { 3'd7, 3'd0, {2{ & av_index_h[3:0]}},               24'h000011 }, // SK9822  U9  B G R
+    { 3'd7, 4'd0,  & av_index_v[3:2] |& av_index_h[3:1], 24'h001100 }, // SK9822  U10 B G R
+    { 3'd7, 4'd0,  & av_index_v[3:1] |& av_index_h[3:2], 24'h001100 }, // SK9822  U11 B G R
+    { 3'd7, 3'd0, {2{ & av_index_v[3:0]}},               24'h000011 }, // SK9822  U12 B G R
+    { 3'd7, 4'd0, ~| av_index_h[3:2] |& av_index_v[3:1], 24'h001100 }, // SK9822  U15 B G R
+    { 3'd7, 4'd0, ~| av_index_h[3:1] |& av_index_v[3:2], 24'h001100 }, // SK9822  U16 B G R
+    { 3'd7, 3'd0, {2{~| av_index_h[3:0]}},               24'h000011 }, // SK9822  U17 B G R
+    { 3'd7, 4'd0, ~| av_index_h[3:1]|~| av_index_v[3:2], 24'h001100 }, // SK9822  U18 B G R
+    { 3'd7, 4'd0, ~| av_index_h[3:2]|~| av_index_v[3:1], 24'h001100 }, // SK9822  U3  B G R
     { 3'd7, 1'd0, {4{1'b1}},
-            4'd0, {4{1'b0}}, 4'd0, {4{1'b0}}, 4'd0, {4{1'b0}} }       // WS2812B     G R B
+            4'd0, {4{1'b0}}, 4'd0, {4{1'b0}}, 4'd0, {4{1'b0}} }        // WS2812B     G R B
     };
 
 endmodule
