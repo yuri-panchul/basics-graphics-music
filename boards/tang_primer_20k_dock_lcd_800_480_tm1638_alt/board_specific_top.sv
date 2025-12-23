@@ -244,9 +244,12 @@ module board_specific_top
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
 
-        .mic           ( mic           ),
+        .mic           ( mic_7         ),
         .sound         ( sound         ),
-        .gpio          (               )
+        .gpio          ( {GPIO_3,
+                          GPIO_2,
+                          GPIO_1,
+                          GPIO_0}      )
     );
 
     //------------------------------------------------------------------------
@@ -296,7 +299,7 @@ module board_specific_top
     `endif
 
     //------------------------------------------------------------------------
-
+ 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
         // Sipeed R6+1 Microphone Board drivers Array
@@ -390,31 +393,5 @@ module board_specific_top
         );
 
     `endif
-
-    led_strip_combo i_led_strip_combo
-    (
-        .clk         ( lab_clk     ),
-        .rst         ( rst         ),
-        .data_rgb    ( data_rgb    ),
-        .sk9822_clk  ( GPIO_0[7]   ),
-        .sk9822_data ( GPIO_0[3]   )
-    );
-
-    assign data_rgb = {
-    { 3'd7, 1'b0, {4{lab_led [0]}}, 24'h110000 },
-    { 3'd7, 1'b0, {4{lab_led [1]}}, 24'h001100 },
-    { 3'd7, 1'b0, {4{lab_led [2]}}, 24'h000011 },
-    { 3'd7, 1'b0, {4{lab_led [3]}}, 24'h110000 },
-    { 3'd7, 1'b0, {4{lab_led [4]}}, 24'h001100 },
-    { 3'd7, 1'b0, {4{lab_led [5]}}, 24'h000011 },
-    { 3'd7, 1'b0, {4{abcdefgh[5]}}, 24'h110000 },
-    { 3'd7, 1'b0, {4{abcdefgh[6]}}, 24'h001100 },
-    { 3'd7, 1'b0, {4{abcdefgh[7]}}, 24'h000011 },
-    { 3'd7, 1'b0, {4{abcdefgh[2]}}, 24'h110000 },
-    { 3'd7, 1'b0, {4{abcdefgh[1]}}, 24'h001100 },
-    { 3'd7, 1'b0, {4{abcdefgh[0]}}, 24'h000011 },
-    { 3'd7, 1'b0, {4{abcdefgh[4]}},
-      4'd0, {4{lab_led [0]}}, 4'd0, {4{lab_led [1]}}, 4'd0, {4{lab_led [2]}} }
-    };
 
 endmodule

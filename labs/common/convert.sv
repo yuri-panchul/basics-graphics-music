@@ -98,6 +98,7 @@ end
 else begin : agc_n  // Automatic gain control is off
 
     assign ina = in;
+    assign gk  = '0;
 
 end
 
