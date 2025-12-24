@@ -3,14 +3,19 @@
 #include <stdint.h>
 #include <string.h>
 
-// Регистры индикаторов
+// HEX number
 #define LED_0   0x1
 #define LED_1   0x2
 #define LED_2   0x4
 #define LED_3   0x8
+#define LED_4   0x10
+#define LED_5   0x20
+#define LED_6   0x40
+#define LED_7   0x80
+
 
 // Интервал смены положений строки
-#define FRAME_LIMIT 1000  // Цифра с расчетом не сошлась на порядок
+#define FRAME_LIMIT 500  // Цифра с расчетом не сошлась на порядок
 
 //Буфер
 const char message[] = "HELLO ALL PPL";
@@ -23,7 +28,7 @@ static int call_count = 0;   // Счётчик вызовов
 static int pos = 0;          // Текущая позиция строки
 
 // Массив адресов индикаторов
-const uint8_t anodes[4] = {LED_3, LED_2, LED_1, LED_0};
+const uint8_t anodes[8] = {LED_7,LED_6,LED_5,LED_4,LED_3, LED_2, LED_1, LED_0};
 
 // Преобразует символ в значение индикатора
 uint8_t char_to_hex(char c) {
@@ -71,7 +76,8 @@ void shift_message() {
 
 // Функция отображения текущих символов на индикаторах
 void display_current_chars() {
-    for (int digit = 0; digit < 4; ++digit) { // Проходим по всем индикаторам
+    for (int digit = 0; digit < 8; ++digit) { 
+        // Проходим по всем индикаторам
         char c;
         int char_pos = pos + digit;
         if (char_pos < 0 || char_pos >= message_len) {
@@ -81,15 +87,15 @@ void display_current_chars() {
         }
 
         // Выводим симво на соответствующий индикатор
-        port0 = char_to_hex(c);    // Устанавливаем значение сегмента
+        unsigned short ch  = char_to_hex(c);
         port1 = anodes[digit];    // Включаем индикатор
-
+        port0 = ch;    // Устанавливаем значение сегмента
         // Яркость
         for (volatile int delay = 0; delay < 100; delay++);
-
-        // Выключаем индикатор, для того чтобы враппер коректно отработал
-        port0 = 0x00;
+     
         port1 = 0x00;
+        port0 = 0x00;
+        for (volatile int delay = 0; delay < 10; delay++);
     }
 }
 

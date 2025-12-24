@@ -43,10 +43,20 @@
 `include "inst_mem.vh"
 `endif
 
+
+// For real boards
+`ifndef SIMULATION
+`define BOOT_FROM_AUX_UART
+`define USE_MEM_BANKS_FOR_BYTE_LINES
+`define NO_READMEMH_FOR_8_BIT_WIDE_MEM
+`define EXPOSE_MEM_BUS
+`endif 
+
 `ifdef BOOT_FROM_AUX_UART
 `include "boot_hex_parser.svh"
 `include "boot_uart_receiver.svh"
 `endif
+
 
 module yrv_mcu
 # (

@@ -6,7 +6,7 @@
 #define LED_1   0x2
 #define LED_2   0x4
 #define LED_3   0x8
-#define FRAME_LIMIT 2000  // SPEED OF STRING
+#define FRAME_LIMIT 1000  // SPEED OF STRING
 
 uint8_t char_to_hex(char c);
 
@@ -29,12 +29,16 @@ void marquee_string(const char* str) {
         pos++;
         if(pos > len) {
             for(int i = 0; i < 4; i++) {
-                port0 = HEX_SPACE;
+        
+                // IT NEED FOR ORRECT TM1638
+                // AT FIRST SELECT HEX!
                 port1 = anodes[i];
-                for(volatile int d = 0; d < 500; d++);
-                port0 = 0x00;
+                port0 = HEX_SPACE;
+                for(volatile int d = 0; d < 50; d++);
+            
                 port1 = 0x00;
-                for(volatile int d = 0; d < 100; d++);
+                port0 = 0x00;
+                for(volatile int d = 0; d < 10; d++);
             }
             pos = -3;
         }
@@ -49,13 +53,14 @@ void marquee_string(const char* str) {
         c = str[char_pos];
     }
 
-    port0 = char_to_hex(c);
     port1 = anodes[digit];
+    port0 = char_to_hex(c);
+    
 
     for(volatile int delay = 0; delay < 500; delay++);
 
-    port0 = 0x00;
     port1 = 0x00;
+    port0 = 0x00;
 
     digit = (digit + 1) & 0x3;
 }
