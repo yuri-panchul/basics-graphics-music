@@ -22,7 +22,7 @@ module inmp441_mic_i2s_receiver_alt
     logic     [          1:0] state;    // For divisor by 3
     logic     [         23:0] shift;    // Data
 
-    assign lr = (right == 1'bz) ? 1'b0 : right;
+    assign lr = (right == 1'b1) ? 1'b1 : 1'b0;
 
     //------------------------------------------------------------------------
 

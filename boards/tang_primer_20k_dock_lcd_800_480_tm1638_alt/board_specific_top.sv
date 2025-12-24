@@ -82,8 +82,7 @@ module board_specific_top
 
     localparam w_tm_key    = 8,
                w_tm_led    = 8,
-               w_tm_digit  = 8,
-               right       = 7'b1101010;
+               w_tm_digit  = 8;
 
     //------------------------------------------------------------------------
 
@@ -114,8 +113,6 @@ module board_specific_top
     wire  [w_lab_led   - 1:0] lab_led;
     wire  [w_lab_digit - 1:0] lab_digit;
 
-    logic [      0:12] [31:0] data_rgb;
-
     wire                      rst;
     wire  [              7:0] abcdefgh;
 
@@ -126,14 +123,14 @@ module board_specific_top
     wire  [w_green     - 1:0] green;
     wire  [w_blue      - 1:0] blue;
 
-    wire  [             23:0] mic;
+    wire  [             23:0] mic;     // Normalized sum from 7 microphones
     wire  [w_sound     - 1:0] sound;
 
     logic [              6:0] ws;
     logic [              6:0] sck;
     logic [              6:0] sd;
-    logic signed [6:0] [23:0] mic_7;
-    logic signed [      27:0] mic_sum;
+    logic signed [6:0] [23:0] mic_7;   // 7 microphones each separately
+    logic signed [      27:0] mic_sum; // Sum from 7 microphones
 
     //------------------------------------------------------------------------
 
@@ -302,11 +299,11 @@ module board_specific_top
  
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
-        // Sipeed R6+1 Microphone Board drivers Array
+        // Sipeed R6+1 Microphone Array Board in GPIO connector
+        localparam right = 7'b1101010; // Which microphones of array are right
 
         assign GPIO_0[0] = ws[0];
         assign GPIO_0[4] = sck[0];
-        assign mic       = $signed (mic_sum[27:4]);
 
         always_ff @(posedge lab_clk or posedge rst)
             if (rst) begin
@@ -322,13 +319,17 @@ module board_specific_top
                          + $signed (mic_7[6]);
             end
 
-        // Sipeed R6+1 Microphone Array Board in GPIO connector
+        assign mic       = $signed (mic_sum[27:4]);
+
+        // Data to be output to addressable LEDs Sipeed R6+1 Board
+        assign GPIO_0[3] = GPIO_3[6];
+        assign GPIO_0[7] = GPIO_3[7];
 
         inmp441_mic_i2s_receiver_alt
         # (
             .clk_mhz ( lab_mhz    )
         )
-        i_microphone [6:0]
+        i_microphone [6:0] // Sipeed R6+1 Microphone Board drivers Array
         (
             .clk     ( lab_clk    ),
             .rst     ( rst        ),
