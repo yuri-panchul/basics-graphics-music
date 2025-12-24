@@ -133,7 +133,7 @@ module tb;
             $dumpvars;
         `endif
 
-        // Based on timescale is 1 ns / 1 ps
+        // Based on timescale is 1 ns / 1 ps simulation time
 
         # 0.002s
 
@@ -165,8 +165,16 @@ module tb;
         .y             (   y           )
     );
 
-    // Virtual display: Look pixel_00-pixel_29 at the time equal to 1 interval DE
-    // The module is located in the common folder
+    //------------------------------------------------------------------------
+    //  Virtual display
+    //------------------------------------------------------------------------
+
+    // Display variables pixel_29 to pixel_00 tb_lcd_display
+    // from top to bottom and zoom the left and right screen borders to
+    // adjacent frame syncs LCD_VSYNC or high level LCD_DE
+    // see \labs\2_graphics\2_10_color_shapes_and_functions\
+    // The module tb_lcd_display is located in the common folder
+
     /* tb_lcd_display         i_display
     (
         .PixelClk      (   pixel_clk   ),

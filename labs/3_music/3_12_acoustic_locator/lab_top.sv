@@ -55,21 +55,22 @@ module lab_top
     //------------------------------------------------------------------------
 
     logic signed [12:0] mic_1, mic_2, mic_3, mic_4; // Left(2) right(2) bottom top
-    logic               start, white, red_disp, green_disp, blue_disp;
+    logic               start, white, white_disp, red_disp, green_disp, blue_disp;
     logic        [ 3:0] min_index_h, min_index_v, av_index_h, av_index_v, counter;
-    logic  [3:0] [w_x + w_y - 11:0] white_prev; // Repeating sound coordinates
+    logic  [4:0] [w_x + w_y - 11:0] white_prev; // Repeating sound coordinates
     logic        [0:12] [31:0] data_rgb; // Data to be output to addressable LEDs
     wire         [15:0] vol;
     localparam          agc = 1'b0; // Enable automatic microphone level adjustment
 
-    assign red     = {{w_red   - 2 {red_disp  }}, {2{white}}}; //
-    assign green   = {{w_green - 2 {green_disp}}, {2{white}}}; // - color selection
-    assign blue    = {{w_blue  - 2 {blue_disp }}, {2{white}}}; //
+    assign red     = {red_disp  , {w_red   - 1{white_disp}}}; //
+    assign green   = {green_disp, {w_green - 1{white_disp}}}; // - color selection
+    assign blue    = {blue_disp , {w_blue  - 1{white_disp}}}; //
     assign sound   = '0;
     assign uart_tx = '1;
 
     //------------------------------------------------------------------------
 
+    // LEDs [3:0] are microphone overload
     // Adjusting level from the microphone to locator
     // The module is located in the common folder
     convert
@@ -142,7 +143,9 @@ module lab_top
         .vol   ( vol[14:12])
     );
 
-    // A dynamic seven-segment display
+    // Display on an 8-bit display of the measured value at the top left 
+    // from 0 to F horizontally and vertically, the same thinned values 
+    // ​​and weakening of automatic gain control of each microphone
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             counter    <= '0;
@@ -162,6 +165,7 @@ module lab_top
         end
     end
 
+    // A dynamic seven-segment display
     // The module is located in the common folder
     seven_segment_display 
     # (
@@ -172,11 +176,11 @@ module lab_top
     (
         .clk      ( clk       ),
         .rst      ( rst       ),
-        .number   ({min_index_h,
-                    min_index_v,
-                     av_index_h,
-                     av_index_v,
-                         vol} ),
+        .number   ( {vol, 
+                  min_index_h,
+                  min_index_v,
+                  av_index_h,
+                  av_index_v} ),
         .dots     (8'b01010101),
         .abcdefgh ( abcdefgh  ),
         .digit    ( digit     )
@@ -184,6 +188,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    // Determining direction by subtracting direct and delayed signals
     locator
     # (
         .clk_mhz     ( clk_mhz     )
@@ -210,46 +215,54 @@ module lab_top
             blue_disp  <= 1'b0;
             white_prev <= '0;
         end
+        // When the end of line is reached repetitions are counted for filtering purposes
         else if ((y > screen_height) && !start) begin
             white_prev[1] <= white_prev[0];
                 if (white_prev[1] == white_prev[0]) begin
                 white_prev[2] <= white_prev[1];
-                    if (white_prev[2] == white_prev[1])
+                    if (white_prev[2] == white_prev[1]) begin
                     white_prev[3] <= white_prev[2];
+                        if (white_prev[3] == white_prev[2])
+                        white_prev[4] <= white_prev[3];
+                    end
                 end
         end
         else begin
             if (screen_width == 800) begin : screen_w_800
-                white <= (x[w_x - 1:5] == min_index_h + (min_index_h >> 1)) &&
-                         (y[w_y - 1:5] == min_index_v - (min_index_v >> 3));
-                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:5]};
-                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]};
-                blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:5]};
-                if (white)
-                white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:5]};
+                // Determining the moment when sweep position coincides with measured value
+                white <= (x[w_x - 1:5] == min_index_h + (min_index_h >> 1) +
+                (min_index_h >> 3)) && (y[w_y - 1:5] == min_index_v - (min_index_v >> 3));
+                blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:5]}; // Indication
+                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]}; // Indication
+                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:5]}; // Indication
+                white_disp <= white_prev[4] == {x[w_x - 1:5], y[w_y - 1:5]}; // Indication
+                if (white && x[0]) // && x[0] prevents moving white_prev to the next pixel
+                white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:5]}; // Active position recording
             end
             else if (screen_width == 640) begin : screen_w_640
                 white <= (x[w_x - 1:5] == min_index_h + (min_index_h >> 2)) &&
                          (y[w_y - 1:5] == min_index_v - (min_index_v >> 3));
-                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:5]};
-                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]};
                 blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:5]};
-                if (white)
+                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]};
+                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:5]};
+                white_disp <= white_prev[4] == {x[w_x - 1:5], y[w_y - 1:5]};
+                if (white && x[0])
                 white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:5]};
             end
             else begin : screen_w_480
                 white <= (x[w_x - 1:5] == min_index_h - (min_index_v >> 3)) &&
                          (y[w_y - 1:4] == min_index_v);
-                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:4]};
-                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:4]};
                 blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:4]};
-                if (white)
+                green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:4]};
+                red_disp   <= white_prev[3] == {x[w_x - 1:5], y[w_y - 1:4]};
+                white_disp <= white_prev[4] == {x[w_x - 1:5], y[w_y - 1:4]};
+                if (white && x[0])
                 white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:4]};
             end
         end
     end
 
-    // Data to be output to addressable LEDs
+    // Data to be output to addressable LEDs on Sipeed R6+1 Microphone Array Board and Dock
     // The module is located in the common folder
     led_strip_combo i_led_strip_combo
     (
@@ -260,7 +273,7 @@ module lab_top
         .sk9822_data ( gpio[w_gpio - 2] )
     );
 
-    assign data_rgb = {
+    assign data_rgb = { // Sipeed R6+1 Microphone Array Board including 12 three-color LEDs
     { 3'd7, 3'd0, {2{~| av_index_v[3:0]}},               24'h000011 }, // SK9822  U4  B G R
     { 3'd7, 4'd0, ~| av_index_v[3:1] |& av_index_h[3:2], 24'h001100 }, // SK9822  U5  B G R
     { 3'd7, 4'd0, ~| av_index_v[3:2] |& av_index_h[3:1], 24'h001100 }, // SK9822  U6  B G R
@@ -273,8 +286,8 @@ module lab_top
     { 3'd7, 3'd0, {2{~| av_index_h[3:0]}},               24'h000011 }, // SK9822  U17 B G R
     { 3'd7, 4'd0, ~| av_index_h[3:1]|~| av_index_v[3:2], 24'h001100 }, // SK9822  U18 B G R
     { 3'd7, 4'd0, ~| av_index_h[3:2]|~| av_index_v[3:1], 24'h001100 }, // SK9822  U3  B G R
-    { 3'd7, 1'd0, {4{1'b1}},
-            4'd0, {4{1'b0}}, 4'd0, {4{1'b0}}, 4'd0, {4{1'b0}} }        // WS2812B     G R B
+    { 3'd7, 1'd0, {4{1'b1}},                                           // Primer  Dock LED
+            4'd0, {4{1'b0}}, 4'd0, {4{1'b0}}, 4'd0, {4{1'b0}} }        // WS2812B U17 G R B
     };
 
 endmodule

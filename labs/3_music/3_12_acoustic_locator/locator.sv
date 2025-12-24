@@ -26,9 +26,7 @@ module locator
     wire               ws;
 
     //------------------------------------------------------------------------
-    //
     //  Acoustic locator
-    //
     //------------------------------------------------------------------------
 
     // Correlation for the shift (horizontal)
@@ -82,7 +80,7 @@ module locator
         end
     end
 
-    // ws clk only
+    // To receive ws clock only
     inmp441_mic_i2s_receiver_alt
     # (
         .clk_mhz ( clk_mhz    )

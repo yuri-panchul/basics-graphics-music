@@ -38,9 +38,9 @@ module correlator
             delay_2  <= inv ? in_2 : in_1;
             // Comparison of direct and delayed signal
             out      <= delay_2 - delay[shift];
-            // Rectifier
+            // Calculate the absolute value
             abs      <= out[13] ? -out : out;
-            // Averaging
+            // Averaging and overflow prevention
             ema      <= ema - (ema >>> 12) + (& ema[19:10] ? '0 : (abs >>> 4));
             // Normalization of output
             rms_out  <= ema[19:7];
