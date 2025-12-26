@@ -122,18 +122,11 @@ module tb;
        @(negedge sclk);
        @(negedge sclk);
        @(negedge sclk);
+       sdo = 1'bx;
 
        @(posedge cs);
 
-       @(posedge clk);
-       @(posedge clk);
-
-       @(negedge clk);
-
-       @(posedge clk);
-       @(posedge clk);
-
-       @(negedge clk);
+       @(negedge cs);
         $finish;
     end
 

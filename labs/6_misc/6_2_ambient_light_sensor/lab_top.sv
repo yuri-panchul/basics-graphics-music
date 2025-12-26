@@ -52,24 +52,85 @@ module lab_top
 
     inout  logic [w_gpio - 1:0] gpio
  );
-   wire adc_valid_w;
-   wire [7:0] adc_data_w;
-   logic [7:0] valid_data_r;
 
    // reads light levels from TI ADC081S021, and displays the analog value in 2 seven-segment displays
    // Uses GPIO[5:3] for interfacing with the ADC
 
+   localparam cycle_rd_en_lp = 50_000;
+
+   // localparam [7:-8] one_third_fixed_pt_lp = { {8{1'b0}}, 1'b0, 1'b1, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0 };
+   // logic [7:-16] one_fourth_pt_lp = { 8'h01, 1'b0, 1'b0, {14{'0}} };
+   // potential issue with Gowin synthesizer not properly recognizing 7:-16?
+   logic [23:0] one_fourth_pt_lp = { 8'h00, 16'h02 };
+
+   // logic         [slow_clk_w;
+
+   wire adc_valid_w;
+   wire [7:0] adc_data_w;
+   // logic [7:0] valid_data_r;
+
+   // registers for implementing 1D convolution to smooth ADC output
+   logic [23:0] sr_data_r[3:0];
+   // logic [0:0] sr_valid_r[2:0];
+   // sum shift register data to complete convolution
+   logic [23:0] pooled_data_l;
+
+   logic [$clog2(cycle_rd_en_lp) - 1:0] rd_ctr_r;
+   wire                                 adc_rd_en;
+
+   assign adc_rd_en = rd_ctr_r == cycle_rd_en_lp - 1;
+
+    assign pooled_data_l = '0 + sr_data_r[3] + sr_data_r[2] + sr_data_r[1] + sr_data_r[0];
+    // assign pooled_data_l = sr_data_r[0];
+
+
+   // registers that shifts in valid data from ADC.
    always_ff @(posedge clk or posedge rst) begin
       if (rst) begin
-         valid_data_r <= '0;
+         sr_data_r[0] <= '0;
+         sr_data_r[1] <= '0;
+         sr_data_r[2] <= '0;
+         sr_data_r[3] <= '0;
       end else begin
-         if (adc_valid_w) begin
-            valid_data_r <= adc_data_w;
+          // valid_data_r <= { adc_data_w[7:3], 3'b0 };
+         if (adc_valid_w && adc_rd_en) begin
+            sr_data_r[0] <= { adc_data_w[7:0], {16{1'b0}} } * one_fourth_pt_lp;
+            // sr_data_r[0] <= { 8'h01, {16{1'b0}} };
+            // sr_data_r[0] <= { adc_data_w[7:3], 3'b0, {16{1'b0}} };
+            // sr_data_r[0] <= 16'hff00;
+            sr_data_r[1] <= sr_data_r[0];
+            sr_data_r[2] <= sr_data_r[1];
+            sr_data_r[3] <= sr_data_r[2];
          end else begin
-            valid_data_r <= valid_data_r;
+            sr_data_r[0] <= sr_data_r[0];
+            sr_data_r[1] <= sr_data_r[1];
+            sr_data_r[2] <= sr_data_r[2];
+            sr_data_r[3] <= sr_data_r[3];
          end
       end
    end
+
+   always_ff @(posedge clk or posedge rst) begin
+      if (rst) begin
+         rd_ctr_r <= '0;
+      end else begin
+         if (rd_ctr_r == cycle_rd_en_lp - 1) begin
+            rd_ctr_r <= '0;
+         end else begin
+            rd_ctr_r <= rd_ctr_r + 1;
+         end
+      end
+   end
+
+   // // sampling every 0.125s
+   // slow_clk_gen
+   // # (.fast_clk_mhz(clk_mhz), .slow_clk_hz(1000))
+   // slow_clk_gen_inst
+   // (
+   //    .clk      (clk),
+   //    .rst      (rst),
+   //    .slow_clk (slow_clk_w)
+   // );
 
     seven_segment_display
     # (.w_digit (2))
@@ -77,7 +138,7 @@ module lab_top
     (
        .clk      ( clk          ),
        .rst      ( rst          ),
-       .number   ( valid_data_r ),
+       .number   ( pooled_data_l[23:16] ),
        .dots     ( '0             ),
        .abcdefgh ( abcdefgh       ),
        .digit    ( digit          )
