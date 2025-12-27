@@ -56,24 +56,24 @@ module lab_top
    // reads light levels from TI ADC081S021, and displays the analog value in 2 seven-segment displays
    // Uses GPIO[5:3] for interfacing with the ADC
 
-   localparam cycle_rd_en_lp = 50_000;
+   localparam cycle_rd_en_lp = 30_000;
 
    // potential issue with Gowin synthesizer not properly recognizing 7:-16?
-   logic [23:0] one_fourth_pt_lp = { 8'h00, 16'h02 };
+   // logic [15:0] one_fourth_pt_lp = 16'h0040;;
 
    wire adc_valid_w;
    wire [7:0] adc_data_w;
 
    // registers for implementing 1D convolution to smooth ADC output
-   logic [23:0] sr_data_r[3:0];
+   logic [15:0] sr_data_r[3:0];
    // sum shift register data to complete convolution
-   logic [23:0] pooled_data_l;
+   logic [15:0] conv_data_l;
 
    logic [$clog2(cycle_rd_en_lp) - 1:0] rd_ctr_r;
    wire                                 adc_rd_en;
 
    assign adc_rd_en = rd_ctr_r == cycle_rd_en_lp - 1;
-   assign pooled_data_l = '0 + sr_data_r[3] + sr_data_r[2] + sr_data_r[1] + sr_data_r[0];
+   assign conv_data_l = '0 + sr_data_r[3] + sr_data_r[2] + sr_data_r[1] + sr_data_r[0];
 
    // registers that shifts in valid data from ADC.
    always_ff @(posedge clk or posedge rst) begin
@@ -83,9 +83,8 @@ module lab_top
          sr_data_r[2] <= '0;
          sr_data_r[3] <= '0;
       end else begin
-          // valid_data_r <= { adc_data_w[7:3], 3'b0 };
          if (adc_valid_w && adc_rd_en) begin
-            sr_data_r[0] <= { adc_data_w[7:0], {16{1'b0}} } * one_fourth_pt_lp;
+            sr_data_r[0] <= ({ adc_data_w[7:0], {8{1'b0}} } >> 2);
             sr_data_r[1] <= sr_data_r[0];
             sr_data_r[2] <= sr_data_r[1];
             sr_data_r[3] <= sr_data_r[2];
@@ -116,7 +115,7 @@ module lab_top
     (
        .clk      ( clk          ),
        .rst      ( rst          ),
-       .number   ( pooled_data_l[23:16] ),
+       .number   ( conv_data_l[15:8] ),
        .dots     ( '0             ),
        .abcdefgh ( abcdefgh       ),
        .digit    ( digit          )
