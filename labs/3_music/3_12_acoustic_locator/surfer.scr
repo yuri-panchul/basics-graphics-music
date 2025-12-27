@@ -1,0 +1,36 @@
+variable_add tb.sound_1
+variable_add tb.sound_2
+variable_add tb.i_lab_top.i_locator.i_correlator_h[10].delay[77:65]
+variable_add tb.i_lab_top.i_locator.i_correlator_h[10].delay_2
+variable_add tb.i_lab_top.i_locator.i_correlator_h[10].out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[10].abs
+variable_add tb.i_lab_top.i_locator.i_correlator_h[10].ema
+variable_add tb.i_lab_top.i_locator.i_correlator_h[0].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[1].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[2].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[3].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[4].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[5].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[6].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[7].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[8].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[9].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[10].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[11].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[12].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[13].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[14].rms_out
+variable_add tb.i_lab_top.i_locator.i_correlator_h[15].rms_out
+
+item_focus a
+item_set_format Signed
+item_focus b
+item_set_format Signed
+item_focus c
+item_set_format Signed
+item_focus d
+item_set_format Signed
+item_focus e
+item_set_format Unsigned
+
+scope_select tb.i_locator.i_correlator_h[12]

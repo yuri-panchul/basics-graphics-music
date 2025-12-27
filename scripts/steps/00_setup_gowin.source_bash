@@ -119,7 +119,7 @@ gowin_try_install_dir ()
         Gowin_gowin="/Gowin"
     elif [[ "$OSTYPE" =~ "darwin" ]]
     then
-        Gowin_gowin="/GowinIDE.app"
+        Gowin_gowin="/GowinIDE.app /Gowin /gowin"
     else
         Gowin_gowin="/Gowin /gowin"
     fi

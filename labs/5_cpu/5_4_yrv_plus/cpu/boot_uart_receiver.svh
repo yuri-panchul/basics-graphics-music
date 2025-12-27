@@ -109,7 +109,7 @@ module boot_uart_receiver
             begin
                 load_counter       = 1;
                 load_counter_value = clk_cycles_in_symbol * 3 / 2;
-           
+
                 idle = 0;
             end
         end

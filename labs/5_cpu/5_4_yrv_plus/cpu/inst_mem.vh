@@ -66,7 +66,7 @@ module inst_mem  (mem_rdata, clk, mem_addr, mem_addr_reg, mem_ble_reg, mem_ready
   assign wr_en3    = wr_en        &&  mem_addr_reg[11] &&  mem_addr_reg[10];
   assign byte_mask = ~mem_ble_reg;
   assign wr_mask   = { {8{byte_mask[3]}}, {8{byte_mask[2]}},
-                       {8{byte_mask[1]}}, {8{byte_mask[0]}} }; 
+                       {8{byte_mask[1]}}, {8{byte_mask[0]}} };
 
   SB_RAM256x16 RAM0L  ( .RDATA(mem0_data[15:0]), .RADDR(mem_addr[9:2]), .RCLK(clk),
                         .RCLKE(rd_en0), .RE(rd_en0), .WADDR(mem_addr_reg[9:2]), .WCLK(clk),
@@ -142,7 +142,7 @@ module inst_mem  (mem_rdata, clk, mem_addr, mem_addr_reg, mem_ble_reg, mem_ready
   /* Another option, readmemh in yrv_mcu.v under ifndef INSTANCE_MEM, is not going to work */
   /* because Intel FPGA Quartus Prime does not support 8-bit readmemh for synthesis.       */
   /*****************************************************************************************/
- 
+
   reg [31:0] rom[0:255];
 
   initial $readmemh("code_demo.mem32", rom);

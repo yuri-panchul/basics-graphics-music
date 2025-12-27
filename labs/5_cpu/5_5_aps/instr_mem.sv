@@ -1,0 +1,29 @@
+// `include "memory_pkg.sv"
+
+module instr_mem
+import memory_pkg::INSTR_MEM_SIZE_BYTES;
+import memory_pkg::INSTR_MEM_SIZE_WORDS;
+(
+  input  logic [31:0] read_addr_i,
+  output logic [31:0] read_data_o
+);
+
+  logic [31:0] ROM [INSTR_MEM_SIZE_WORDS];  // создать память с
+                                            // <INSTR_MEM_SIZE_WORDS>
+                                            // 32-битных ячеек
+
+  initial begin
+    $readmemh("program.hex", ROM);          // поместить в память ROM содержимое
+  end                                       // файла program.hex
+
+  // Реализация асинхронного порта на чтение, где на выход идет ячейка памяти
+  // инструкций, расположенная по адресу read_addr_i, в котором обнулены два
+  // младших бита, а также биты, двоичный вес которых превышает размер памяти
+  //  данных в байтах.
+  // Два младших бита обнулены, чтобы обеспечить выровненный доступ к памяти,
+  // в то время как старшие биты обнулены, чтобы не дать обращаться в память
+  // по адресам несуществующих ячеек (вместо этого будут выданы данные ячеек,
+  // расположенных по младшим адресам).
+  assign read_data_o = ROM[read_addr_i[$clog2(INSTR_MEM_SIZE_BYTES)-1:2]];
+
+endmodule

@@ -124,7 +124,7 @@ module top
     port0_reg[2],
     port0_reg[1],
     port0_reg[0],
-    port0_reg[7] 
+    port0_reg[7]
   };
 
   wire [3:0] digit_from_mcu =

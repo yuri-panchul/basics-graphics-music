@@ -18,6 +18,10 @@
 /** serial i/o module                                                 Rev 0.0  03/29/2021 **/
 /**                                                                                       **/
 /*******************************************************************************************/
+`include "serial_rx.vh"
+
+`include "serial_tx.vh"
+
 module serial_top (bufr_done, bufr_empty, bufr_full, bufr_ovr, rx_rdata, ser_clk, ser_txd,
                    cks_mode, clkp, div_rate, ld_wdata, rd_rdata, s_reset, ser_rxd, tx_wdata);
 

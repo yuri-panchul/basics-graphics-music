@@ -1,12 +1,17 @@
 `include "config.svh"
-`include "yrv_mcu.v"
-`define INTEL_VERSION
+//`include "yrv_mcu.v"
+//`ifdef ALTERA_RESERVED_QIS
+//    `define BOOT_FROM_AUX_UART
+//`endif
+`define BOOT_FROM_AUX_UART
+//`define INTEL_VERSION
 `define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define USE_MEM_BANKS_FOR_BYTE_LINES
+`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module lab_top
 # (
-    parameter  clk_mhz       = 50,
+    parameter  clk_mhz       = 27,
                w_key         = 4,
                w_sw          = 8,
                w_led         = 8,
@@ -81,7 +86,9 @@ module lab_top
     //--------------------------------------------------------------------------
     // Slow clock button / switch
 
-    wire slow_clk_mode = ~ key[0];
+    wire slow_clk_mode = key[0];
+    assign led[0] = muxed_clk;
+
 
     //--------------------------------------------------------------------------
     // MCU clock
@@ -102,14 +109,18 @@ module lab_top
     `ifdef SIMULATION
         assign muxed_clk = muxed_clk_raw;
     `else
-        global i_global (.in (muxed_clk_raw), .out (muxed_clk));
+         `ifdef INTEL_VERSION
+             global i_global (.in (muxed_clk_raw), .out (muxed_clk));
+        `else
+             BUFG i_global (.I (muxed_clk_raw), .O (muxed_clk));
+         `endif
     `endif
 
     //--------------------------------------------------------------------------
     // MCU inputs
 
-    wire                 ei_req;                             // external int request
-    wire                 nmi_req     = 1'b0;         // non-maskable interrupt
+    wire                 ei_req = 1'b0;                             // external int request
+    wire                 nmi_req    ;         // non-maskable interrupt
     wire                 resetb        = reset_n;    // master reset
     wire                 ser_rxd     = 1'b0;         // receive data input
     wire    [15:0] port4_in    = '0;
@@ -130,7 +141,7 @@ module lab_top
     // Auxiliary UART receive pin
 
     `ifdef BOOT_FROM_AUX_UART
-    wire        aux_uart_rx = uart_rx;
+        wire        aux_uart_rx = uart_rx;
     `endif
 
     // Exposed memory bus for debug purposes
@@ -149,13 +160,16 @@ module lab_top
     //--------------------------------------------------------------------------
     // MCU instantiation
 
-    yrv_mcu i_yrv_mcu (.clk (muxed_clk), .*);
+    yrv_mcu
+    # (.clk_frequency (clk_mhz * 1000 * 1000))
+    i_yrv_mcu
+    (.clk (muxed_clk), .*);
 
     //--------------------------------------------------------------------------
     // Pin assignments
 
     // The original board had port3_reg [13:8], debug_mode, wfi_state
-    assign led = port3_reg [11:8];
+    // assign led = port3_reg [11:8];
 
     //--------------------------------------------------------------------------
 
@@ -168,11 +182,15 @@ module lab_top
         port0_reg[2],
         port0_reg[1],
         port0_reg[0],
-        port0_reg[7] 
+        port0_reg[7]
     };
 
-    wire [3:0] digit_from_mcu =
+    wire [7:0] digit_from_mcu =
     {
+        port1_reg [7],
+        port1_reg [6],
+        port1_reg [5],
+        port1_reg [4],    
         port1_reg [3],
         port1_reg [2],
         port1_reg [1],
@@ -182,30 +200,30 @@ module lab_top
     //--------------------------------------------------------------------------
 
     wire [7:0] abcdefgh_from_show_mode;
-    wire [3:0] digit_from_show_mode;
+    wire [7:0] digit_from_show_mode;
 
     logic [15:0] display_number;
 
-    always_comb
-        casez (sw)
-        default : display_number = mem_addr    [15: 0];
-        4'b110? : display_number = mem_rdata [15: 0];
-        4'b100? : display_number = mem_rdata [31:16];
-        4'b101? : display_number = mem_wdata [15: 0];
-        4'b001? : display_number = mem_wdata [31:16];
 
-        // 4'b101? : display_number = extra_debug_data [15: 0];
-        // 4'b001? : display_number = extra_debug_data [31:16];
+
+    always_comb
+        casez (key)
+        default : display_number = mem_addr  [31: 0];
+        4'b0001? : display_number = mem_rdata [31: 0];
+        4'b0010? : display_number = mem_wdata [31: 0];
         endcase
 
-    display_dynamic # (.n_dig (4)) i_display
+
+    seven_segment_display # (w_digit) i_7segment
     (
-        .clk      (   clk                     ),
-        .reset    ( ~ reset_n                 ),
-        .number   (   display_number          ),
-        .abcdefgh (   abcdefgh_from_show_mode ),
-        .digit    (   digit_from_show_mode    )
+        .clk      ( clk                       ),
+        .rst      ( rst                       ),
+        .number   ( display_number            ),
+        .dots     ( w_digit' (0)              ),
+        .abcdefgh ( abcdefgh_from_show_mode   ),
+        .digit    ( digit_from_show_mode      )
     );
+
 
     //--------------------------------------------------------------------------
 
@@ -221,54 +239,64 @@ module lab_top
             digit    = digit_from_mcu;
         end
 
+
+
     //--------------------------------------------------------------------------
 
-    `ifdef OLD_INTERRUPT_CODE
+    // `ifdef OLD_INTERRUPT_CODE
 
     //--------------------------------------------------------------------------
     // 125Hz interrupt
-    // 50,000,000 Hz / 125 Hz = 40,000 cycles
+    // 50,000,000 Hz / 125 Hz = 40,000 cycles ???
 
-    logic [15:0] hz125_reg;
+    logic [32:0] hz125_reg;
     logic                hz125_lat;
 
-    assign ei_req        = hz125_lat;
-    wire     hz125_lim = hz125_reg == 16'd39999;
+    assign   nmi_req        = hz125_lat || key[7];
+    wire     hz125_lim = hz125_reg == 32'd299999;
 
     always_ff @ (posedge clk or negedge resetb)
         if (~ resetb)
         begin
-            hz125_reg <= 16'd0;
+            hz125_reg <= 32'd0;
             hz125_lat <= 1'b0;
         end
         else
         begin
-            hz125_reg <= hz125_lim ? 16'd0 : hz125_reg + 1'b1;
-            hz125_lat <= ~ port3_reg [15] & (hz125_lim | hz125_lat);
+            hz125_reg <= hz125_lim ? 32'd0 : hz125_reg + 1'b1;
+            if(port3_reg[0])
+                hz125_lat <=  hz125_lim;
+            else
+                hz125_lat <= 1'b0;
         end
 
-    `endif
+    // `endif
 
     //--------------------------------------------------------------------------
     // 8 KHz interrupt
     // 50,000,000 Hz / 8 KHz = 6250 cycles
 
-    logic [12:0] khz8_reg;
-    logic                khz8_lat;
+    // logic [12:0] khz8_reg;
+    // logic                khz8_lat;
 
-    assign ei_req        = khz8_lat;
-    wire     khz8_lim = khz8_reg == 13'd6249;
+    // assign nmi_req        = khz8_lat;
 
-    always_ff @ (posedge clk or negedge resetb)
-        if (~ resetb)
-        begin
-            khz8_reg <= 13'd0;
-            khz8_lat <= 1'b0;
-        end
-        else
-        begin
-            khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
-            khz8_lat <= ~ port3_reg [15] & (khz8_lim | khz8_lat);
-        end
+    // wire     khz8_lim = khz8_reg == 13'd6249;
+
+    // always_ff @ (posedge clk or negedge resetb)
+    //     if (~ resetb)
+    //     begin
+    //         khz8_reg <= 13'd0;
+    //         khz8_lat <= 1'b0;
+    //     end
+    //     else
+    //     begin
+    //         khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
+    //         if(port3_reg [0]) begin
+    //                 khz8_lat <= khz8_lim;
+    //             end
+    //         else
+    //             khz8_lat<= 1'b0;
+    //     end
 
 endmodule

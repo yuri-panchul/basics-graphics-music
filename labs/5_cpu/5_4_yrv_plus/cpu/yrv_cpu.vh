@@ -329,9 +329,9 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
   assign mem_rdy   = mem_ready || rdymask_reg;
   assign mem_rdy_v = mem_rdy && valid_1_reg;
 
-  assign run_dec   = mem_rdy_v && !stall_csr && !stall_ldst; 
-  assign run_exe   = mem_rdy_v && !stall_csr && !stall_ldst && !stall_align; 
-  assign run_mem   = mem_rdy_v && !stall_csr && !stall_ldst && (ld_pc || !stall_cmp); 
+  assign run_dec   = mem_rdy_v && !stall_csr && !stall_ldst;
+  assign run_exe   = mem_rdy_v && !stall_csr && !stall_ldst && !stall_align;
+  assign run_mem   = mem_rdy_v && !stall_csr && !stall_ldst && (ld_pc || !stall_cmp);
 
   /*****************************************************************************************/
   /* clock 1 - memory address                                                              */
@@ -340,7 +340,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
 
 `ifdef INSTANCE_INC
   inst_inc  PC_1_INC  ( .inc_out(pc_1_nxt), .clk(clk), .inc_ain({pc_1_reg, 1'b0}),
-                        .inc_bin(pc_1_adj) ); 
+                        .inc_bin(pc_1_adj) );
 `else
   assign pc_1_nxt = {pc_1_reg, 1'b0} + pc_1_adj;
 `endif
@@ -381,7 +381,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
 
 `ifdef INSTANCE_INC
   inst_inc LS_ADDR_INC ( .inc_out(ls_addr_nxt), .clk(clk), .inc_ain(ls_addr_reg),
-                         .inc_bin({1'b0, ls_ainc_reg}) ); 
+                         .inc_bin({1'b0, ls_ainc_reg}) );
 `else
   assign ls_addr_nxt = ls_addr_reg + ls_ainc_reg;
 `endif
@@ -433,7 +433,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
   /*****************************************************************************************/
 `ifdef INSTANCE_ADD
   inst_add AMO_ADD   ( .add_out(ls_amo_add), .clk(clk), .add_ain(ls_data_reg),
-                       .add_bin(mem_rdat), .add_cyin(1'b0) ); 
+                       .add_bin(mem_rdat), .add_cyin(1'b0) );
 `else
   assign ls_amo_add = ls_data_reg + mem_rdat;
 `endif
@@ -634,7 +634,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
 
 `ifdef INSTANCE_INC
   inst_inc  PC_3_INC  ( .inc_out(pc_3_nxt), .clk(clk), .inc_ain({pc_3_reg, 1'b0}),
-                        .inc_bin({pc_3_inc, 1'b0}) ); 
+                        .inc_bin({pc_3_inc, 1'b0}) );
 `else
   assign pc_3_nxt = {pc_3_reg, 1'b0} + {pc_3_inc, 1'b0};
 `endif
@@ -1145,7 +1145,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
       st_5_reg    <= st_4_dec;
       trap_5_reg  <= valid_4_reg && !(wreg_4_out || br_4_dec || fnc_4_dec || ecall_4_dec ||
                                       eret_4_dec || st_4_dec  || wfi_4_dec || ebrk_4_dec ||
-                                      (dret_4_dec && debug_mode)); 
+                                      (dret_4_dec && debug_mode));
       valid_5_reg <= !ld_pc && valid_4_reg;
       wfi_5_reg   <= (wfi_4_dec && !debug_mode);
       wreg_5_reg  <= wreg_4_out;
@@ -1267,7 +1267,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
   assign src1_5_rv2 = {src1_5_out[16], src1_5_out[17], src1_5_out[18], src1_5_out[19],
                        src1_5_out[20], src1_5_out[21], src1_5_out[22], src1_5_out[23]};
   assign src1_5_rv3 = {src1_5_out[24], src1_5_out[25], src1_5_out[26], src1_5_out[27],
-                       src1_5_out[28], src1_5_out[29], src1_5_out[30], src1_5_out[31]};                 
+                       src1_5_out[28], src1_5_out[29], src1_5_out[30], src1_5_out[31]};
 
   always @ (shamt_5_out or src1_5_out or src1_5_rv0 or src1_5_rv1 or src1_5_rv2 or
             src1_5_rv3) begin
@@ -1334,7 +1334,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
 
 `ifdef INSTANCE_ADD
   inst_add ALU_ADD   ( .add_out(alu_5_add), .clk(clk), .add_ain(alu_5_ain),
-                       .add_bin(alu_5_bin), .add_cyin(invb_5_reg) ); 
+                       .add_bin(alu_5_bin), .add_cyin(invb_5_reg) );
 `else
   assign alu_5_add = alu_5_ain + alu_5_bin + invb_5_reg;
 `endif
@@ -1365,7 +1365,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
   /*****************************************************************************************/
 `ifdef INSTANCE_SUB
   inst_sub BR_SUB    ( .sub_out(op_5_diff), .sub_cyout(br_5_cyout), .clk(clk),
-                       .sub_ain(src1_5_out), .sub_bin(src2_5_out) ); 
+                       .sub_ain(src1_5_out), .sub_bin(src2_5_out) );
 `else
   assign op_5_diff  = src1_5_out - src2_5_out;
   assign br_5_cyout = !op_5_diff[32];
@@ -1416,7 +1416,7 @@ module yrv_cpu (csr_achk, csr_addr, csr_read, csr_wdata, csr_write, dbg_type, de
       wfi_state  <= 1'b0;
       end
     else if (inst_5_ret) begin
-      if (irq_5_reg[5]) dbg_type <= dbg_5_reg; 
+      if (irq_5_reg[5]) dbg_type <= dbg_5_reg;
       debug_mode <= !dret_5_reg && (irq_5_reg[5] || debug_mode);
       wfi_state  <= ~|irq_5_reg && (wfi_5_reg || wfi_state);
       end

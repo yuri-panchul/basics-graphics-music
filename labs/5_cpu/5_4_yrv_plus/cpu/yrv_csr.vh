@@ -323,7 +323,7 @@ module yrv_csr (csr_idata, csr_ok_int, cycle_ov, ebrkd_reg, instret_ov, meie_reg
   assign ld_mcycle  = mcycle_wr || ccount_en;
 
 `ifdef INSTANCE_CNT
-  inst_cnt CCYC_CNTL ( .cnt_out(cycle_nxt), .clk(clk), .cnt_in(cycle_reg) ); 
+  inst_cnt CCYC_CNTL ( .cnt_out(cycle_nxt), .clk(clk), .cnt_in(cycle_reg) );
 `else
   assign cycle_nxt[7:0]   = cycle_reg[7:0]   + 1'b1;
   assign cycle_nxt[15:8]  = cycle_reg[15:8]  + &cycle_reg[7:0];
@@ -350,7 +350,7 @@ module yrv_csr (csr_idata, csr_ok_int, cycle_ov, ebrkd_reg, instret_ov, meie_reg
   assign ld_mcycleh = mcycleh_wr || (ccount_en && &cycle_reg);
 
 `ifdef INSTANCE_CNT
-  inst_cnt CCYC_CNTH ( .cnt_out(cycleh_nxt), .clk(clk), .cnt_in(cycleh_reg) ); 
+  inst_cnt CCYC_CNTH ( .cnt_out(cycleh_nxt), .clk(clk), .cnt_in(cycleh_reg) );
 `else
   assign cycleh_nxt[7:0]   = cycleh_reg[7:0]   + 1'b1;
   assign cycleh_nxt[15:8]  = cycleh_reg[15:8]  + &cycleh_reg[7:0];
@@ -381,7 +381,7 @@ module yrv_csr (csr_idata, csr_ok_int, cycle_ov, ebrkd_reg, instret_ov, meie_reg
   assign ld_minstret  = minstret_wr  || icount_en;
 
 `ifdef INSTANCE_CNT
-  inst_cnt INST_CNTL ( .cnt_out(instret_nxt), .clk(clk), .cnt_in(instret_reg) ); 
+  inst_cnt INST_CNTL ( .cnt_out(instret_nxt), .clk(clk), .cnt_in(instret_reg) );
 `else
   assign instret_nxt[7:0]   = instret_reg[7:0]   + 1'b1;
   assign instret_nxt[15:8]  = instret_reg[15:8]  + &instret_reg[7:0];
@@ -408,7 +408,7 @@ module yrv_csr (csr_idata, csr_ok_int, cycle_ov, ebrkd_reg, instret_ov, meie_reg
   assign ld_minstreth = minstreth_wr || (icount_en && &instret_reg);
 
 `ifdef INSTANCE_CNT
-  inst_cnt INST_CNTL ( .cnt_out(instreth_nxt), .clk(clk), .cnt_in(instreth_reg) ); 
+  inst_cnt INST_CNTL ( .cnt_out(instreth_nxt), .clk(clk), .cnt_in(instreth_reg) );
 `else
   assign instreth_nxt[7:0]   = instreth_reg[7:0]   + 1'b1;
   assign instreth_nxt[15:8]  = instreth_reg[15:8]  + &instreth_reg[7:0];
