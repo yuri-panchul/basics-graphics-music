@@ -25,9 +25,9 @@ LD=/c/opt/riscv/bin/riscv-none-elf-gcc
 GCC=/c/opt/riscv/bin/riscv-none-elf-gcc
 OBJ = /c/opt/riscv/bin/riscv-none-elf-objcopy
 else
-LD=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc
-GCC=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc
-OBJ=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-objcopy
+LD=/home/verilog/xpack-riscv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc
+GCC=/home/verilog/xpack-riscv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc
+OBJ=/home/verilog/xpack-riscv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-objcopy
 #LD=/opt/riscv/bin/riscv-none-elf-gcc
 #GCC=/opt/riscv/bin/riscv-none-elf-gcc
 #OBJ = /opt/riscv/bin/riscv-none-elf-objcopy
