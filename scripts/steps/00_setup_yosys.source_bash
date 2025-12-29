@@ -31,6 +31,12 @@ fi
 
 setup_yosys ()
 {
+    if ! is_command_available yosys &&
+       [ -d ~/oss-cad-suite ]
+    then
+        source ~/oss-cad-suite/environment
+    fi
+
     is_command_available_or_error "yosys" "" ". Either install it using 'sudo apt-get install yosys' or get it installed manually from repository: https://github.com/YosysHQ/yosys.git or from https://github.com/YosysHQ/oss-cad-suite-build/releases/latest"
 
     if [[ "$fpga_board" =~ "ice40" ]]
