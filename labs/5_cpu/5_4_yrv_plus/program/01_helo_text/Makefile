@@ -106,7 +106,7 @@ final:final.elf
 	$(OBJ) -O binary final.elf final
 
 code_demo.mem32: final
-	python ../common/freedom-bin2hex.py -w32  final > code_demo.mem32
+	python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32
 
 clean:
 	rm -rf *.o *.elf final code_demo.mem32
@@ -114,7 +114,7 @@ clean:
 PYTHON := $(python)
 
 check_python:
-	@python -V > /dev/null 2>&1 \
+	@python3 -V > /dev/null 2>&1 \
 		&& { echo "Python is correctly installed."; } \
 		|| { echo "Error: Python not installed or not accessible. Please install Python"; exit 1; }
 
@@ -145,7 +145,9 @@ check_objcopy:
 
 check: check_ld check_gcc check_objcopy check_python
 
-
+ifneq ($(OS),Windows_NT)
+USBDEV=/dev/ttyUSB0
+endif
 
 uart:
 ifeq ($(OS),Windows_NT)
@@ -154,7 +156,6 @@ ifeq ($(OS),Windows_NT)
 	$(eval cmd_str:=cmd.exe //C "type code_demo.mem32 > \\.\COM$(COM_PORT)")
 	$(cmd_str)
 else
-	USBDEV=/dev/ttyUSB0
 	stty -F $(USBDEV) raw speed 115200 -crtscts cs8 -parenb -cstopb
 	cat code_demo.mem32 > $(USBDEV)
 endif
