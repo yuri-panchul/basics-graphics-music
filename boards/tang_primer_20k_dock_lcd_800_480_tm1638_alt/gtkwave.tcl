@@ -4,7 +4,7 @@ set all_signals [list]
 
 lappend all_signals tb.i_led_strip_combo.clk
 lappend all_signals tb.i_led_strip_combo.clk_div
-lappend all_signals tb.i_led_strip_combo.cnt_3
+lappend all_signals tb.i_led_strip_combo.cnt_48
 lappend all_signals tb.i_led_strip_combo.cnt_ws2812
 lappend all_signals tb.i_led_strip_combo.data_rgb
 lappend all_signals tb.i_led_strip_combo.data_rgb_reg
@@ -19,7 +19,7 @@ gtkwave::/Time/Zoom/Zoom_Full
 gtkwave::highlightSignalsFromList "tb.i_led_strip_combo.clk_div\[14:0\]"
 gtkwave::/Edit/Data_Format/Decimal
 
-gtkwave::highlightSignalsFromList "tb.i_led_strip_combo.cnt_3\[1:0\]"
+gtkwave::highlightSignalsFromList "tb.i_led_strip_combo.cnt_48\[5:0\]"
 gtkwave::/Edit/Data_Format/Decimal
 
 gtkwave::highlightSignalsFromList "tb.i_led_strip_combo.cnt_ws2812\[4:0\]"
