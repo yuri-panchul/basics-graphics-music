@@ -275,6 +275,7 @@ gowin_setup_ide ()
     then
         shopt -s nullglob
         export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD }$(echo /usr/lib/x86_64-linux-gnu/libfreetype.so*)"
+        export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD }$(echo /usr/lib/x86_64-linux-gnu/libz.so*)"
         export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD }$(echo /usr/lib/jvm/java-21-openjdk/lib/libfreetype.so*)"
         shopt -u nullglob
 

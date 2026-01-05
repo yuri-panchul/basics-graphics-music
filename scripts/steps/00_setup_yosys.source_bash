@@ -31,19 +31,25 @@ fi
 
 setup_yosys ()
 {
-    is_command_available_or_error "yosys" "" "\n\nEither install it using 'sudo apt-get install yosys' or get it installed manually from repository: https://github.com/YosysHQ/yosys.git"
+    if ! is_command_available yosys &&
+       [ -d ~/oss-cad-suite ]
+    then
+        source ~/oss-cad-suite/environment
+    fi
+
+    is_command_available_or_error "yosys" "" ". Either install it using 'sudo apt-get install yosys' or get it installed manually from repository: https://github.com/YosysHQ/yosys.git or from https://github.com/YosysHQ/oss-cad-suite-build/releases/latest"
 
     if [[ "$fpga_board" =~ "ice40" ]]
     then
         echo "Configuring for Lattice iCE40..."
 
-        is_command_available_or_error "nextpnr-ice40" "" "\n\nEither install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Lattice iCE40 chips which is not enabled by default!"
+        is_command_available_or_error "nextpnr-ice40" "" ". Either install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Lattice iCE40 chips which is not enabled by default!"
 
-        is_command_available_or_error "icepack" "" "\n\nEither install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
+        is_command_available_or_error "icepack" "" ". Either install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
 
-        is_command_available_or_error "icebram" "" "\n\nEither install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
+        is_command_available_or_error "icebram" "" ". Either install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
 
-        is_command_available_or_error "iceprog" "" "\n\nEither install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
+        is_command_available_or_error "iceprog" "" ". Either install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
 
         echo "OK"
     fi
@@ -54,11 +60,11 @@ setup_yosys ()
 
         is_command_available_or_error "nextpnr-ecp5" "" "Either install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Lattice ECP5 chips which is not enabled by default!"
 
-        is_command_available_or_error "ecppack" "" "\n\nProject Trellis is not installed in the system. Either install it using 'sudo apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
+        is_command_available_or_error "ecppack" "" ". Project Trellis is not installed in the system. Either install it using 'sudo apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
 
-        is_command_available_or_error "ecpbram" "" "\n\nProject Trellis is not installed in the system. Either install it using 'sudo apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
+        is_command_available_or_error "ecpbram" "" ". Project Trellis is not installed in the system. Either install it using 'sudo apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
 
-        is_command_available_or_error "dfu-util" "" "\n\nDFU utils are not installed in the system. Either install them using 'sudo apt-get install dfu-util' or get it installed manually from repository: https://dfu-util.sourceforge.net/"
+        is_command_available_or_error "dfu-util" "" ". DFU utils are not installed in the system. Either install them using 'sudo apt-get install dfu-util' or get it installed manually from repository: https://dfu-util.sourceforge.net/"
         echo "OK"
     fi
 
@@ -66,20 +72,20 @@ setup_yosys ()
     then
     echo "Configuring for Gowin chips..."
 
-        is_command_available_or_error "nextpnr-himbaechel" "" "\n\nEither install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Gowin chips which is not enabled by default!"
+        is_command_available_or_error "nextpnr-himbaechel" "" ". Either install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Gowin chips which is not enabled by default!"
 
-        is_command_available_or_error "gowin_pack" "" "\n\nProject Apicula is not installed. Either install it using 'pip3 install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
+        is_command_available_or_error "gowin_pack" "" ". Project Apicula is not installed. Either install it using 'pip3 install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
 
-        is_command_available_or_error "gowin_bba" "" "\n\nProject Apycula is not installed. Either install it using 'sudo apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
+        is_command_available_or_error "gowin_bba" "" ". Project Apycula is not installed. Either install it using 'sudo apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
 
         echo "OK"
     fi
 
-    is_command_available_or_error "make" "" "\n\nGNU make is not installed in the system. Either install it using 'sudo apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
+    is_command_available_or_error "make" "" ". GNU make is not installed in the system. Either install it using 'sudo apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
 
 
 
-###    is_command_available_or_error "firefox" "" "\n\nFirefox is not installed in the system. It is used to display SVG graphics. Either install it using 'sudo apt-get install firefox' or get it installed manually from web site: https://www.mozilla.org/en-US/firefox/download/thanks/. Note: you may fake it by creating empty bash script with name 'firefox' in /usr/bin. ;-)"
+###    is_command_available_or_error "firefox" "" ". Firefox is not installed in the system. It is used to display SVG graphics. Either install it using 'sudo apt-get install firefox' or get it installed manually from web site: https://www.mozilla.org/en-US/firefox/download/thanks/. Note: you may fake it by creating empty bash script with name 'firefox' in /usr/bin. ;-)"
 }
 
 #-------------------------------------------------------------------------
