@@ -1,0 +1,221 @@
+`define VGA_BASE_0  16'hA000                                 /* msword of mem address        */
+`define VGA_BASE_1  16'hA001                                 /* msword of mem address        */
+
+
+module text_vga 
+# (
+    screen_width  = 640,
+    screen_height = 480,
+
+    w_red         = 4,
+    w_green       = 4,
+    w_blue        = 4,
+
+    w_x           = $clog2 ( screen_width  ),
+    w_y           = $clog2 ( screen_height )
+)
+
+(
+  input             clk,
+  input             rst,
+
+  //YRV bus
+  input  [31:0] mem_addr,
+  input  [ 3:0] mem_ble,
+  input  [ 1:0] mem_trans,
+  input  [31:0] mem_wdata,
+  input         mem_write,
+  input         mem_lock,
+  output        mem_ready,
+  output [31:0] mem_rdata, 
+  
+
+  //HDMI bus
+  input       [w_x     - 1:0] x,
+  input       [w_y     - 1:0] y,
+  input             hsync,
+  input             vsync,
+  input             display_on,
+ 
+   output   reg [7:0] char_row,
+   input clk_TMDS,
+       output logic [w_red   - 1:0] red,
+    output logic [w_green - 1:0] green,
+    output logic [w_blue  - 1:0] blue
+);
+
+
+
+ //Memory bus interface
+  reg    [15:0] mem_addr_reg;                              /* reg'd memory address         */
+  reg     [3:0] mem_ble_reg;                               /* reg'd memory byte lane en    */
+
+
+  wire    [3:0] vga_wr_byte_0;                                 /* vga ram byte enables      */
+  reg           vga_wr_reg_0;                                  /* mem write                    */
+
+  wire    [3:0] vga_wr_byte_1;                                 /* vga ram byte enables      */
+  reg           vga_wr_reg_1;                                  /* mem write                    */
+
+  reg     [7:0] char[0:2047];
+  initial $readmemh("char.mem8", char);
+
+  reg     [7:0] text_mem[0:4799];
+  // initial $readmemh("text.mem8", text_mem);
+
+  assign vga_wr_byte_0 = {4{vga_wr_reg_0}} & mem_ble_reg & {4{mem_ready}};
+  assign vga_wr_byte_1 = {4{vga_wr_reg_1}} & mem_ble_reg & {4{mem_ready}};
+
+
+
+    logic [16:0] pixel_addr;
+  wire  [16:0] wr_addr;
+  reg   [2:0]  color_reg;// = 8'b00000011;
+  reg   [2:0]  border_color_reg = 3'b101;
+
+  reg  [1:0] pixel_color;
+  reg  [2:0] pixel_pos;
+  reg  [2:0] row_pos;
+  
+  reg [7:0] character;
+
+  reg [11:0] pixel_byte;
+
+  wire [7:0] is_byte;
+
+  reg [7:0] row = 8'b01010111;
+
+  reg [12:0] text_symbol;
+
+  wire [6:0] d_row;
+
+  assign d_row = (y>>3);
+
+  always_ff @ (posedge vga_clock or posedge rst)
+    if (rst)
+      begin
+        text_symbol<=0;      
+      end
+    else
+      begin
+        if(x==799 && y == 524)
+          text_symbol<=0;
+        begin
+          if(pixel_pos == 3'b110)
+            text_symbol<= (d_row<<6)+(d_row<<4)+(x>>3);
+        end        
+      end
+
+
+  reg vga_clock;
+  wire symbol_clock;
+
+  always_ff @ (posedge clk)
+    if (rst)
+    begin
+      vga_clock<=0;
+    end
+    else
+      begin
+        vga_clock <=vga_clock+1;
+      end
+   
+  always_ff @ (posedge vga_clock or negedge hsync)
+    if (~ hsync)
+      begin
+        pixel_pos <=0;
+      end
+    else
+      begin
+        pixel_pos <=pixel_pos+1;     
+      end
+
+  always_ff @ (posedge hsync or posedge rst)
+    if (rst)
+      begin
+        row_pos <= 0;
+      end
+    else
+      if(y == 524)
+        row_pos <= 0;
+      else
+        row_pos <= row_pos+1;     
+
+
+  always @ (posedge clk ) begin
+    if (rst) begin
+      mem_addr_reg <= 16'h0;
+      mem_ble_reg  <=  4'h0;
+      vga_wr_reg_0   <=  1'b0;
+      vga_wr_reg_1   <=  1'b0;
+    end
+    else if (mem_ready) begin
+      mem_addr_reg <= mem_addr[15:0];
+      mem_ble_reg  <= mem_ble;
+      vga_wr_reg_0   <= mem_write && &mem_trans    && (mem_addr[31:16] == `VGA_BASE_0);
+      end
+  end
+
+
+always_ff @ (posedge vga_clock) begin        
+          if (vga_wr_byte_0[3]) text_mem[{mem_addr_reg[12:2],2'b11}] <= mem_wdata[31:24];
+          else if (vga_wr_byte_0[2]) text_mem[{mem_addr_reg[12:2],2'b10}] <= mem_wdata[23:16];
+          else if (vga_wr_byte_0[1]) text_mem[{mem_addr_reg[12:2],2'b01}] <= mem_wdata[15:8];
+          else if (vga_wr_byte_0[0]) text_mem[{mem_addr_reg[12:2],2'b00}] <= mem_wdata[7:0]; 
+          else  begin
+             character<= text_mem[text_symbol];
+          end 
+  end
+
+  wire  [10:0] row_in_ram;
+
+
+  assign row_in_ram = (character<<3)+row_pos;
+ 
+ 
+ 
+  always_comb
+    begin
+      if (~ display_on)
+        begin          
+                 red   = 32'h0000;
+                 blue  = 32'h0000;
+                 green = 32'h0000;
+        end
+      else 
+        begin
+          if(char[row_in_ram][pixel_pos]) begin
+               red   = 32'hffff;
+               blue  = 32'hffff;
+               green = 32'hffff ;
+          end
+          else
+          begin
+                 red   = 32'h0000;
+                 blue  = 32'h0000;
+                 green = 32'h0000;
+          end
+        end
+    end
+ 
+ 
+
+    
+ 
+
+
+    //  always_ff @ (posedge clk)  begin    
+    //     if (( char_row[3'b111-3'(x)] )) begin
+    //           red   <= 32'hffff;
+    //           blue  <= 32'hffff;
+    //           green <= 32'hffff ;
+    //      end
+    //      else 
+    //       begin
+    //           red   <= 32'h0000;
+    //           blue  <= 32'hffff;
+    //           green <= 32'h0000;
+    //      end
+    //  end
+
+endmodule

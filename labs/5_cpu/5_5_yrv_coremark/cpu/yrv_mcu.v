@@ -60,7 +60,6 @@ module yrv_mcu
                  , mem_ready, mem_rdata, mem_lock, mem_write, mem_trans, mem_ble,
                  mem_addr, mem_wdata, extra_debug_data
                  `endif
-                 , li_req
   );
 
   input         clk;                                       /* cpu clock                    */
@@ -96,8 +95,6 @@ module yrv_mcu
 
   output [31:0] extra_debug_data;                          /* extra debug data unconnected */
 `endif
-  input   [15:0] li_req;                                    /* local int requests           */
-
 
   /*****************************************************************************************/
   /* signal declarations                                                                   */
@@ -120,6 +117,7 @@ module yrv_mcu
   wire    [1:0] mem_trans;                                 /* memory transfer type         */
   wire    [3:0] mem_ble;                                   /* memory byte lane enables     */
   wire    [7:0] rx_rdata;                                  /* receive data buffer          */
+  wire   [15:0] li_req;                                    /* local int requests           */
   wire   [15:0] port7_dat;                                 /* i/o port                     */
   wire   [31:0] mcu_rdata;                                 /* system memory read data      */
   wire   [31:0] mem_addr;                                  /* memory address               */
@@ -174,7 +172,7 @@ module yrv_mcu
   /*****************************************************************************************/
   assign bus_32    = 1'b1;
   assign mem_ready = 1'b1;
-  ;
+  assign li_req    = {12'h0, bufr_empty, bufr_done, bufr_full, bufr_ovr};
 
   /*****************************************************************************************/
   /* processor                                                                             */

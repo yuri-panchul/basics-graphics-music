@@ -1,0 +1,57 @@
+module testbench();
+
+    reg clk;
+    reg rst;
+    reg [11:0] x;
+    reg [11:0] y;
+    wire [12:0] text_symbol;
+    wire [11:0] ry;
+
+    initial begin
+        clk = 0;
+        forever #5 clk = !clk;
+    end
+
+    initial begin
+        rst = 1;
+        repeat(2) @(posedge clk);
+        rst = 0;
+
+        // Начнем тестирование с нуля
+        x = 0;
+        y = 0;
+
+        while (1) begin
+            @(posedge clk);
+            
+            // Проверяем предел х
+            if (x == 639) begin
+                x = 0;  // Перезагружаем x
+                
+                // Проверяем предел y
+                if (y == 479) begin
+                    y = 0;  // Перезагружаем y
+                end else begin
+                    y = y + 1;  // Увеличение y на 1
+                end
+            end else begin
+                x = x + 1;  // Нормальное инкрементирование x
+            end
+        end
+    end
+
+    my_module uut (
+        .clk(clk),
+        .rst(rst),
+        .x(x),
+        .y(y),
+        .text_symbol(text_symbol),
+        .ry(ry)
+    );
+
+    initial begin
+        $dumpfile("my_module.vcd");
+        $dumpvars(0,testbench);
+    end
+
+endmodule

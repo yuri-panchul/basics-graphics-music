@@ -1,0 +1,15 @@
+[General]
+ipc_version=4
+file=gowin_prom
+module=Gowin_pROM
+target_device=gw1nr9c-004
+type=ram_prom
+version=1.0
+
+[Config]
+DEPTH=2048
+LANG=0
+MEM_FILE=C:\\_Development\\basics-graphics-music_y\\labs\\5_cpu\\5_5_vga\\font.mi
+READ=0
+RESET_MODE=true
+WIDTH=8

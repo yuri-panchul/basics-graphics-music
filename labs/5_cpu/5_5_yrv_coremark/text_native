@@ -1,0 +1,189 @@
+`define VGA_BASE_0  16'hA000                                 /* msword of mem address        */
+`define VGA_BASE_1  16'hA001                                 /* msword of mem address        */
+
+module text_vga 
+# (
+    screen_width  = 640,
+    screen_height = 480,
+
+    w_red         = 4,
+    w_green       = 4,
+    w_blue        = 4,
+
+    w_x           = $clog2 ( screen_width  ),
+    w_y           = $clog2 ( screen_height )
+)
+
+(
+  input             clk,
+  input             resetb,
+
+  //YRV bus
+  input  [31:0] mem_addr,
+  input  [ 3:0] mem_ble,
+  input  [ 1:0] mem_trans,
+  input  [31:0] mem_wdata,
+  input         mem_write,
+  input         mem_lock,
+  output        mem_ready,
+  output [31:0] mem_rdata, 
+  
+     
+  input        [w_x     - 1:0] x,
+  input        [w_y     - 1:0] y,
+
+  output logic [w_red   - 1:0] red,
+  output logic [w_green - 1:0] green,
+  output logic [w_blue  - 1:0] blue
+
+
+);
+
+
+  logic [16:0] pixel_addr;
+  wire  [16:0] wr_addr;
+  reg   [2:0]  color_reg;// = 8'b00000011;
+  reg   [2:0]  border_color_reg = 3'b101;
+
+  reg  [1:0] pixel_color;
+  reg  [2:0] pixel_pos;
+  reg  [2:0] row_pos;
+  
+  reg [7:0] character;
+
+  reg [11:0] pixel_byte;
+
+  wire [7:0] is_byte;
+
+  reg [7:0] row = 8'b01010111;
+
+  reg [12:0] text_symbol;
+
+  reg  [2:0] pixel_pos;
+
+  wire [6:0] d_row;
+  reg vga_clock;
+  wire symbol_clock;
+
+  //Memory bus interface
+  reg    [15:0] mem_addr_reg;                              /* reg'd memory address         */
+  reg     [3:0] mem_ble_reg;                               /* reg'd memory byte lane en    */
+
+
+  wire    [3:0] vga_wr_byte_0;                                 /* vga ram byte enables      */
+  reg           vga_wr_reg_0;                                  /* mem write                    */
+
+  wire    [3:0] vga_wr_byte_1;                                 /* vga ram byte enables      */
+  reg           vga_wr_reg_1;                                  /* mem write                    */
+
+  reg     [7:0] char[0:2047];
+  initial $readmemh("char.mem8", char);
+
+  reg     [7:0] text_mem[0:4799];
+  initial $readmemh("text.mem8", text_mem);
+
+  assign vga_wr_byte_0 = {4{vga_wr_reg_0}} & mem_ble_reg & {4{mem_ready}};
+  assign vga_wr_byte_1 = {4{vga_wr_reg_1}} & mem_ble_reg & {4{mem_ready}};
+
+  always @ (posedge clk or negedge resetb) begin
+    if (!resetb) begin
+      mem_addr_reg <= 16'h0;
+      mem_ble_reg  <=  4'h0;
+      vga_wr_reg_0   <=  1'b0;
+      vga_wr_reg_1   <=  1'b0;
+    end
+    else if (mem_ready) begin
+      mem_addr_reg <= mem_addr[15:0];
+      mem_ble_reg  <= mem_ble;
+      vga_wr_reg_0   <= mem_write && &mem_trans    && (mem_addr[31:16] == `VGA_BASE_0);
+      end
+  end
+
+
+    always_ff @ (posedge clk or negedge resetb)
+    if (~ resetb)
+      begin
+        text_symbol<=0;      
+      end
+    else
+      begin
+        if(x >640 || y > 480)
+          text_symbol<=0;
+        begin
+         // if(x[2:0] == 3'b110)
+            text_symbol<= (y<<6)+(y<<4)+(x>>3);
+        end        
+      end
+
+  always_ff @ (posedge clk) begin        
+          if      (vga_wr_byte_0[3]) text_mem[{mem_addr_reg[12:2],2'b11}] <= mem_wdata[31:24];
+          else if (vga_wr_byte_0[2]) text_mem[{mem_addr_reg[12:2],2'b10}] <= mem_wdata[23:16];
+          else if (vga_wr_byte_0[1]) text_mem[{mem_addr_reg[12:2],2'b01}] <= mem_wdata[15:8];
+          else if (vga_wr_byte_0[0]) text_mem[{mem_addr_reg[12:2],2'b00}] <= mem_wdata[7:0]; 
+          else  begin
+             //character<= text_mem[text_symbol];
+             character<= 8'h41;
+          end 
+  end
+
+
+
+ 
+ 
+
+  assign row_in_ram = (character<<3)+y[2:0];
+
+ //------------------------------------------------------------------------
+
+
+    always_comb
+    begin
+        red   = '0;
+        green = '0;
+        blue  = '0;
+
+        if (  x[2:0] == 3'b110 && y[2:0]== 3'b110  )
+        begin
+               green = 32'hffff;
+        end
+
+    end
+
+
+
+    // wire [2:0] w_8;
+    // assign w_8 = x[2:0]; 
+    
+    // always_comb
+    // begin
+    //     red   = '0;
+    //     green = '0;
+    //     blue  = '0;
+
+    //     if (x == 100)  // Parabola
+    //         begin
+    //           red = 32'hffff;
+    //           green = 32'hffff;
+    //           blue = 32'hffff;
+    //         end
+    // end
+
+
+ 
+  // always_comb
+  //   begin
+  //     if (~ display_on)
+  //       begin          
+  //         rgb = 3'b000;
+  //       end
+  //     else 
+  //       begin
+  //         if(char[row_in_ram][x[3:0]])
+  //             rgb = 3'b111;
+  //         else
+  //             rgb = 3'b000;
+  //       end
+  //   end
+ 
+
+endmodule

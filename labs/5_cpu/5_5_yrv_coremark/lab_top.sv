@@ -1,17 +1,12 @@
 `include "config.svh"
-//`include "yrv_mcu.v"
-//`ifdef ALTERA_RESERVED_QIS
-//    `define BOOT_FROM_AUX_UART
-//`endif
+
 `define BOOT_FROM_AUX_UART
-//`define INTEL_VERSION
 `define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define USE_MEM_BANKS_FOR_BYTE_LINES
-`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module lab_top
 # (
-    parameter  clk_mhz       = 27,
+    parameter  clk_mhz       = 50,
                w_key         = 4,
                w_sw          = 8,
                w_led         = 8,
@@ -68,12 +63,6 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    // assign led        = '0;
-    // assign abcdefgh   = '0;
-    // assign digit      = '0;
-    assign red        = '0;
-    assign green      = '0;
-    assign blue       = '0;
     assign sound      = '0;
     assign uart_tx    = '1;
 
@@ -90,7 +79,6 @@ module lab_top
     assign led[0] = muxed_clk;
 
 
- 
     //--------------------------------------------------------------------------
     // MCU clock
 
@@ -120,12 +108,10 @@ module lab_top
     //--------------------------------------------------------------------------
     // MCU inputs
 
-    wire                 ei_req;                             // external int request
-    wire                 nmi_req    ;         // non-maskable interrupt
-    wire          [15:0] li_req; 
-
-    wire                 resetb        = reset_n;    // master reset
-    wire                 ser_rxd     = 1'b0;         // receive data input
+    wire                 ei_req = 1'b0;                             // external int request
+    wire                 nmi_req;         // non-maskable interrupt
+    wire                 resetb  = reset_n;    // master reset
+    wire                 ser_rxd = 1'b0;         // receive data input
     wire    [15:0] port4_in    = '0;
     wire    [15:0] port5_in    = '0;
 
@@ -159,12 +145,6 @@ module lab_top
     wire [31:0] mem_wdata;     // memory write data
 
     wire [31:0] extra_debug_data;
-
-
-   //-------------------------------------------------------------------------
-    // Local interrupt
-    assign li_req ={12'h0, 1'b0,key[5],key[4],key[3]};
-    assign ei_req = key[6];
 
     //--------------------------------------------------------------------------
     // MCU instantiation
@@ -250,11 +230,6 @@ module lab_top
 
 
 
-    //--------------------------------------------------------------------------
-
-    // `ifdef OLD_INTERRUPT_CODE
-
-    //--------------------------------------------------------------------------
     // 125Hz interrupt
     // 50,000,000 Hz / 125 Hz = 40,000 cycles ???
 
@@ -279,33 +254,21 @@ module lab_top
                 hz125_lat <= 1'b0;
         end
 
-    // `endif
+//DOT NOT DOTED!
+    always_comb
+    begin
+        red   = '0;
+        green = '0;
+        blue  = '0;
 
-    //--------------------------------------------------------------------------
-    // 8 KHz interrupt
-    // 50,000,000 Hz / 8 KHz = 6250 cycles
-
-    // logic [12:0] khz8_reg;
-    // logic                khz8_lat;
-
-    // assign nmi_req        = khz8_lat;
-
-    // wire     khz8_lim = khz8_reg == 13'd6249;
-
-    // always_ff @ (posedge clk or negedge resetb)
-    //     if (~ resetb)
-    //     begin
-    //         khz8_reg <= 13'd0;
-    //         khz8_lat <= 1'b0;
-    //     end
-    //     else
-    //     begin
-    //         khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
-    //         if(port3_reg [0]) begin
-    //                 khz8_lat <= khz8_lim;
-    //             end
-    //         else
-    //             khz8_lat<= 1'b0;
-    //     end
+        if ( 
+            (y[2:0]== 3'b110) 
+              &&
+            (x[2:0] == 3'b110)
+           )
+        begin
+               green = 32'hffff;
+        end
+    end
 
 endmodule
