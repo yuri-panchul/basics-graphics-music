@@ -116,12 +116,12 @@ module tb;
     begin
         rst   <= 'bx;
         rst_2 <= 'bx;
-        repeat (2) @ (posedge clk);
+        repeat (2) @(posedge clk);
         rst   <= 1;
         rst_2 <= 1;
-        repeat (2) @ (posedge clk);
+        repeat (2) @(posedge clk);
         rst   <= 0;
-        repeat (3000) @ (posedge clk);
+        repeat (3000) @(posedge clk);
         rst_2 <= 0;
     end
 
@@ -133,7 +133,7 @@ module tb;
             $dumpvars;
         `endif
 
-        // Based on timescale is 1 ns / 1 ps
+        // Based on timescale is 1 ns / 1 ps simulation time
 
         # 0.002s
 
@@ -165,7 +165,17 @@ module tb;
         .y             (   y           )
     );
 
-    /* tb_lcd_display         i_display // Virtual display
+    //------------------------------------------------------------------------
+    //  Virtual display
+    //------------------------------------------------------------------------
+
+    // Display variables pixel_29 to pixel_00 tb_lcd_display
+    // from top to bottom and zoom the left and right screen borders to
+    // adjacent frame syncs LCD_VSYNC or high level LCD_DE
+    // see \labs\2_graphics\2_10_color_shapes_and_functions\
+    // The module tb_lcd_display is located in the common folder
+
+    /* tb_lcd_display         i_display
     (
         .PixelClk      (   pixel_clk   ),
         .rst           (   rst         ),
@@ -211,7 +221,7 @@ module waveform_gen
     logic        [y_width - 1:0] ys;
     logic        [y_width - 1:0] yq;
 
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @(posedge clk or posedge rst)
         if (rst)
             clk_div <= '0;
         else
@@ -221,7 +231,7 @@ module waveform_gen
     //  Triangle waveform generator ( signed format )
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @(posedge clk or posedge rst)
         if (rst) begin
             down <= '0;
             yt   <= '0;
@@ -238,7 +248,7 @@ module waveform_gen
     //  Wave selector
     //------------------------------------------------------------------------
 
-    always_ff @ (posedge clk or posedge rst)
+    always_ff @(posedge clk or posedge rst)
     begin
         if (rst)
             y <= '0;
@@ -287,7 +297,7 @@ module sinus
 );
     localparam [23:0] MAX = '1;
 
-    always_ff @ (posedge clk)
+    always_ff @(posedge clk)
     begin
     if     (yt > (MAX >> 1))
     begin

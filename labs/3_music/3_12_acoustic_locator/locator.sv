@@ -19,16 +19,14 @@ module locator
     logic       [15:0] inv   = 16'b1111111000000000;
     logic [15:0][ 3:0] shift = {4'd7, 4'd6, 4'd5, 4'd4, 4'd3, 4'd2, 4'd1, 4'd0,
                                 4'd1, 4'd2, 4'd3, 4'd4, 4'd5, 4'd6, 4'd7, 4'd8};
-    logic [15:0][12:0] rms_out_h;     // result of band (horizontal)
-    logic [15:0][12:0] rms_out_v;     // result of band (vertical)
-    logic [15:0][12:0] level_h;       // buf result of band (horizontal)
-    logic [15:0][12:0] level_v;       // buf result of band (vertical)
+    logic [15:0][12:0] rms_out_h;    // result of band (horizontal)
+    logic [15:0][12:0] rms_out_v;    // result of band (vertical)
+    logic [15:0][12:0] level_h;      // buf result of band (horizontal)
+    logic [15:0][12:0] level_v;      // buf result of band (vertical)
     wire               ws;
 
     //------------------------------------------------------------------------
-    //
     //  Acoustic locator
-    //
     //------------------------------------------------------------------------
 
     // Correlation for the shift (horizontal)
@@ -75,14 +73,14 @@ module locator
         .min_index ( min_index_v )
     );
 
-    always_ff @ (posedge clk) begin
+    always_ff @(posedge clk) begin
         if (start) begin
             level_h <= rms_out_h;
             level_v <= rms_out_v;
         end
     end
 
-    // ws clk only
+    // To receive ws clock only
     inmp441_mic_i2s_receiver_alt
     # (
         .clk_mhz ( clk_mhz    )
