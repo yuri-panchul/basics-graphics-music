@@ -90,6 +90,7 @@ module lab_top
     assign led[0] = muxed_clk;
 
 
+ 
     //--------------------------------------------------------------------------
     // MCU clock
 
@@ -119,8 +120,10 @@ module lab_top
     //--------------------------------------------------------------------------
     // MCU inputs
 
-    wire                 ei_req = 1'b0;                             // external int request
+    wire                 ei_req;                             // external int request
     wire                 nmi_req    ;         // non-maskable interrupt
+    wire          [15:0] li_req; 
+
     wire                 resetb        = reset_n;    // master reset
     wire                 ser_rxd     = 1'b0;         // receive data input
     wire    [15:0] port4_in    = '0;
@@ -156,6 +159,12 @@ module lab_top
     wire [31:0] mem_wdata;     // memory write data
 
     wire [31:0] extra_debug_data;
+
+
+   //-------------------------------------------------------------------------
+    // Local interrupt
+    assign li_req ={12'h0, 1'b0,key[5],key[4],key[3]};
+    assign ei_req = key[6];
 
     //--------------------------------------------------------------------------
     // MCU instantiation
