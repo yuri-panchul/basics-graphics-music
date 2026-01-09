@@ -1,7 +1,8 @@
 module find_min_index
 (
-    input  logic              clk,
-    input  logic              start,
+    input                     clk,
+    input                     rst,
+    input                     start,
     input  logic [15:0][12:0] level,
     output logic       [ 3:0] min_index
 );
@@ -11,8 +12,15 @@ module find_min_index
     logic        [ 1:0][15:0] sum_3;
     logic              [ 2:0] counter;
 
-    always_ff @(posedge clk) begin
-        if (start) begin
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            min_index <= '0;
+            sum_1     <= '0;
+            sum_2     <= '0;
+            sum_3     <= '0;
+            counter   <= '0;
+        end
+        else if (start) begin
             min_index <= '0;
             sum_1     <= '0;
             sum_2     <= '0;
