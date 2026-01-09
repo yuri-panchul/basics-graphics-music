@@ -4,7 +4,7 @@ set all_signals [list]
 
 lappend all_signals tb.sound_1
 lappend all_signals tb.sound_2
-lappend all_signals tb.i_lab_top.i_locator.i_correlator_h\[10\].delay\[38:25\]
+lappend all_signals tb.i_lab_top.i_locator.i_correlator_h\[10\].delay\[38:26\]
 lappend all_signals tb.i_lab_top.i_locator.i_correlator_h\[10\].delay_2
 lappend all_signals tb.i_lab_top.i_locator.i_correlator_h\[10\].out
 lappend all_signals tb.i_lab_top.i_locator.i_correlator_h\[10\].abs
@@ -30,7 +30,7 @@ set num_added [ gtkwave::addSignalsFromList $all_signals ]
 
 gtkwave::highlightSignalsFromList "tb.sound_1\[23:0\]"
 gtkwave::highlightSignalsFromList "tb.sound_2\[23:0\]"
-gtkwave::highlightSignalsFromList "tb.i_lab_top.i_locator.i_correlator_h\[10\].delay\[38:25\]"
+gtkwave::highlightSignalsFromList "tb.i_lab_top.i_locator.i_correlator_h\[10\].delay\[38:26\]"
 gtkwave::highlightSignalsFromList "tb.i_lab_top.i_locator.i_correlator_h\[10\].delay_2\[12:0\]"
 gtkwave::/Edit/Data_Format/Analog/Step
 gtkwave::/Edit/Data_Format/Signed_Decimal
