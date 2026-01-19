@@ -2,18 +2,18 @@
 
 module lab_top
 # (
-    parameter  clk_mhz       = 50,
-               w_key         = 4,
-               w_sw          = 8,
+    parameter  clk_mhz       = 33,
+               w_key         = 8,
+               w_sw          = 5,
                w_led         = 8,
                w_digit       = 8,
-               w_gpio        = 100,
+               w_gpio        = 32,
 
                screen_width  = 640,
                screen_height = 480,
-               w_red         = 4,
-               w_green       = 4,
-               w_blue        = 4,
+               w_red         = 5,
+               w_green       = 6,
+               w_blue        = 5,
                w_x           = $clog2 ( screen_width  ),
                w_y           = $clog2 ( screen_height ),
 
@@ -54,7 +54,8 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic signed [12:0] mic_1, mic_2, mic_3, mic_4; // Left(2) right(2) bottom top
+    // microphone mic_1->right(2) mic_2->left(2) mic_3->bottom mic_4->top
+    logic signed [12:0] mic_1, mic_2, mic_3, mic_4;
     logic               start, white, white_disp, red_disp, green_disp, blue_disp;
     logic        [ 3:0] min_index_h, min_index_v, av_index_h, av_index_v, counter;
     logic  [4:0] [w_x + w_y - 11:0] white_prev; // Repeating sound coordinates
@@ -153,7 +154,8 @@ module lab_top
             av_index_v <= '0;
         end
         else if (y > screen_height) begin
-            start   <= 1'b1;
+            start <= 1'b1;
+            if (!start)
             counter <= counter + 1'b1;
         end
         else begin
@@ -240,7 +242,7 @@ module lab_top
                 white_prev[0] <= {x[w_x - 1:5], y[w_y - 1:5]}; // Active position recording
             end
             else if (screen_width == 640) begin : screen_w_640
-                white <= (x[w_x - 1:5] == min_index_h + (min_index_h >> 2)) &&
+                white <= (x[w_x - 1:5] == min_index_h + (min_index_h >> 2) + (min_index_h >> 3)) &&
                          (y[w_y - 1:5] == min_index_v - (min_index_v >> 3));
                 blue_disp  <= white_prev[1] == {x[w_x - 1:5], y[w_y - 1:5]};
                 green_disp <= white_prev[2] == {x[w_x - 1:5], y[w_y - 1:5]};
@@ -273,7 +275,8 @@ module lab_top
         .sk9822_data ( gpio[w_gpio - 2] )
     );
 
-    assign data_rgb = { // Sipeed R6+1 Microphone Array Board including 12 three-color LEDs
+    // Sipeed R6+1 Microphone Array Board including 12 three-color LEDs
+    assign data_rgb = {
     { 3'd7, 3'd0, {2{~| av_index_v[3:0]}},               24'h000011 }, // SK9822  U4  B G R
     { 3'd7, 4'd0, ~| av_index_v[3:1] |& av_index_h[3:2], 24'h001100 }, // SK9822  U5  B G R
     { 3'd7, 4'd0, ~| av_index_v[3:2] |& av_index_h[3:1], 24'h001100 }, // SK9822  U6  B G R
@@ -286,8 +289,8 @@ module lab_top
     { 3'd7, 3'd0, {2{~| av_index_h[3:0]}},               24'h000011 }, // SK9822  U17 B G R
     { 3'd7, 4'd0, ~| av_index_h[3:1]|~| av_index_v[3:2], 24'h001100 }, // SK9822  U18 B G R
     { 3'd7, 4'd0, ~| av_index_h[3:2]|~| av_index_v[3:1], 24'h001100 }, // SK9822  U3  B G R
-    { 3'd7, 1'd0, {4{1'b1}},                                           // Primer  Dock LED
-            4'd0, {4{1'b0}}, 4'd0, {4{1'b0}}, 4'd0, {4{1'b0}} }        // WS2812B U17 G R B
+    { 3'd7, 1'd0, {4{1'b1}},                           // Primer Dock LED WS2812
+            4'd0, {4{green_disp}}, 4'd0, {4{red_disp}}, 4'd0, {4{blue_disp}} } // U17 G R B
     };
 
 endmodule

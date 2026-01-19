@@ -10,12 +10,10 @@
    `undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 `endif
 
-// `define MIRROR_LCD
-
 module board_specific_top
 # (
-    parameter   clk_mhz       = 27, // CLK
-                pixel_mhz     = 33, // LCD_CLK
+    parameter   clk_mhz       = 27,
+                pixel_mhz     = 25,
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 5,
@@ -25,14 +23,14 @@ module board_specific_top
                 w_digit       = 1,
                 w_gpio        = 32,
 
-                screen_width  = 800,
+                screen_width  = 640,
                 screen_height = 480,
 
-                w_red         = 5,
-                w_green       = 6,
-                w_blue        = 5,
+                w_red         = 8,
+                w_green       = 8,
+                w_blue        = 8,
 
-                w_x = $clog2 ( screen_width  ),
+                w_x = $clog2 ( screen_width ),
                 w_y = $clog2 ( screen_height ),
 
                 w_sound       = 16
@@ -48,32 +46,23 @@ module board_specific_top
 
     output [w_led       - 1:0]  LED,
 
-    output                      LCD_DE,
-    output                      LCD_VS,
-    output                      LCD_HS,
-    output                      LCD_CLK,
     output                      LCD_BL,
-
-    output [              4:0]  LCD_R,
-    output [              5:0]  LCD_G,
-    output [              4:0]  LCD_B,
 
     inout  [w_gpio / 4  - 1:0]  GPIO_0,
     inout  [w_gpio / 4  - 1:0]  GPIO_1,
     inout  [w_gpio / 4  - 1:0]  GPIO_2,
     inout  [w_gpio / 4  - 1:0]  GPIO_3,
 
+    output                      TMDS_CLK_N,
+    output                      TMDS_CLK_P,
+    output [              2:0]  TMDS_D_N,
+    output [              2:0]  TMDS_D_P,
+
     output                      PA_EN,
     output                      HP_DIN,
     output                      HP_WS,
     output                      HP_BCK
 );
-
-        Gowin_rPLL i_Gowin_rPLL
-        (
-            .clkout   ( LCD_CLK ),  //  33 MHz
-            .clkin    ( CLK     )   //  27 MHz
-        );
 
     //------------------------------------------------------------------------
 
@@ -110,6 +99,7 @@ module board_specific_top
     wire  [w_lab_led   - 1:0] lab_led;
     wire  [w_lab_digit - 1:0] lab_digit;
 
+    wire                      clk;
     wire                      rst;
     wire  [              7:0] abcdefgh;
 
@@ -131,17 +121,17 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    assign LCD_BL  = 1'b0; // Disabling LCD backlight source voltage on the Dock
+
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
         localparam lab_mhz = pixel_mhz;
-        assign     lab_clk = LCD_CLK;
-        assign     LCD_BL  = ~ rst;
+        assign     clk     = pixel_clk;
 
     `else
 
         localparam lab_mhz = clk_mhz;
-        assign     lab_clk = CLK;
-        assign     LCD_BL  = 1'b0;
+        assign     clk     = CLK;
 
     `endif
 
@@ -149,6 +139,7 @@ module board_specific_top
 
     // Always use button on board for reset, otherwise the board would be
     // stuck on reset if tm1638 is not connected
+
     assign rst = ~ KEY [w_key - 1];
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
@@ -173,16 +164,7 @@ module board_specific_top
     wire slow_clk;
 
     slow_clk_gen # (.fast_clk_mhz (lab_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .clk (lab_clk), .rst (rst));
-
-    //------------------------------------------------------------------------
-
-    `ifdef MIRROR_LCD
-
-    wire  [w_x - 1:0] mirrored_x = w_x' (screen_width  - 1 - x);
-    wire  [w_y - 1:0] mirrored_y = w_y' (screen_height - 1 - y);
-
-    `endif
+    i_slow_clk_gen (.slow_clk (slow_clk), .clk (clk), .rst (rst));
 
     //------------------------------------------------------------------------
 
@@ -207,7 +189,7 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk           ( lab_clk       ),
+        .clk           ( clk           ),
         .slow_clk      ( slow_clk      ),
         .rst           ( rst           ),
 
@@ -219,27 +201,19 @@ module board_specific_top
         .abcdefgh      ( abcdefgh      ),
         .digit         ( lab_digit     ),
 
-        `ifdef MIRROR_LCD
-
-        .x             ( mirrored_x    ),
-        .y             ( mirrored_y    ),
-
-        `else
-
         .x             ( x             ),
         .y             ( y             ),
 
-        `endif
-
-        .red           ( LCD_R         ),
-        .green         ( LCD_G         ),
-        .blue          ( LCD_B         ),
+        .red           ( red           ),
+        .green         ( green         ),
+        .blue          ( blue          ),
 
         .uart_rx       ( UART_RX       ),
         .uart_tx       ( UART_TX       ),
 
         .mic           ( mic_7         ),
         .sound         ( sound         ),
+
         .gpio          ( {GPIO_3,
                           GPIO_2,
                           GPIO_1,
@@ -255,20 +229,20 @@ module board_specific_top
 
         tm1638_board_controller
         # (
-            .clk_mhz    ( lab_mhz     ),
-            .w_digit    ( w_tm_digit  )
+            .clk_mhz   ( lab_mhz     ),
+            .w_digit   ( w_tm_digit  )
         )
         i_tm1638
         (
-            .clk        ( lab_clk     ),
-            .rst        ( rst         ),
-            .hgfedcba   ( hgfedcba    ),
-            .digit      ( tm_digit    ),
-            .ledr       ( tm_led      ),
-            .keys       ( tm_key      ),
-            .sio_clk    ( GPIO_1[2]   ),
-            .sio_stb    ( GPIO_1[3]   ),
-            .sio_data   ( GPIO_1[1]   )
+            .clk       ( clk         ),
+            .rst       ( rst         ),
+            .hgfedcba  ( hgfedcba    ),
+            .digit     ( tm_digit    ),
+            .ledr      ( tm_led      ),
+            .keys      ( tm_key      ),
+            .sio_clk   ( GPIO_1[2]   ),
+            .sio_stb   ( GPIO_1[3]   ),
+            .sio_data  ( GPIO_1[1]   )
         );
 
     `endif
@@ -277,23 +251,70 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        lcd_800_480 i_lcd
+        localparam serial_clk_mhz = 125;
+
+        wire serial_clk, pixel_clk;
+
+        Gowin_rPLL i_Gowin_rPLL
         (
-            .PixelClk   (   lab_clk   ),
-            .nRST       ( ~ rst       ),
+            .clkin  ( CLK        ), // input   27 MHz
+            .clkout ( serial_clk )  // output 125 MHz
+        );
 
-            .LCD_DE     (   LCD_DE    ),
-            .LCD_HSYNC  (   LCD_HS    ),
-            .LCD_VSYNC  (   LCD_VS    ),
+        Gowin_CLKDIV i_Gowin_CLKDIV
+        (
+            .hclkin ( serial_clk ), // input  125 MHz
+            .clkout ( pixel_clk  ), // output  25 MHz
+            .resetn ( ~ rst      )
+        );
 
-            .x          (   x         ),
-            .y          (   y         )
+        //--------------------------------------------------------------------
+
+        wire hsync, vsync, display_on;
+
+        wire [9:0] x10; assign x = x10;
+        wire [9:0] y10; assign y = y10;
+
+        vga
+        # (
+            .CLK_MHZ     ( serial_clk_mhz ),
+            .PIXEL_MHZ   ( pixel_mhz      )
+        )
+        i_vga
+        (
+            .clk         ( serial_clk     ),
+            .rst         ( rst            ),
+            .hsync       ( hsync          ),
+            .vsync       ( vsync          ),
+            .display_on  ( display_on     ),
+            .hpos        ( x10            ),
+            .vpos        ( y10            ),
+            .pixel_clk   (                )
+        );
+
+        //--------------------------------------------------------------------
+
+        DVI_TX_Top i_DVI_TX_Top
+        (
+            .I_rst_n        ( ~ rst         ),
+            .I_serial_clk   (   serial_clk  ),
+            .I_rgb_clk      (   pixel_clk   ),
+            .I_rgb_vs       ( ~ vsync       ),
+            .I_rgb_hs       ( ~ hsync       ),
+            .I_rgb_de       (   display_on  ),
+            .I_rgb_r        (   red         ),
+            .I_rgb_g        (   green       ),
+            .I_rgb_b        (   blue        ),
+            .O_tmds_clk_p   (   TMDS_CLK_P  ),
+            .O_tmds_clk_n   (   TMDS_CLK_N  ),
+            .O_tmds_data_p  (   TMDS_D_P    ),
+            .O_tmds_data_n  (   TMDS_D_N    )
         );
 
     `endif
 
     //------------------------------------------------------------------------
- 
+
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
         // Sipeed R6+1 Microphone Array Board in GPIO connector
@@ -302,7 +323,7 @@ module board_specific_top
         assign GPIO_0[0] = ws[0];
         assign GPIO_0[4] = sck[0];
 
-        always_ff @(posedge lab_clk or posedge rst)
+        always_ff @(posedge clk or posedge rst)
             if (rst) begin
                 sd      <= '0;
                 mic_sum <= '0;
@@ -328,7 +349,7 @@ module board_specific_top
         )
         i_microphone [6:0] // Sipeed R6+1 Microphone Board drivers Array
         (
-            .clk     ( lab_clk    ),
+            .clk     ( clk        ),
             .rst     ( rst        ),
             .right   ( right      ),
             .lr      (            ),
@@ -357,7 +378,7 @@ module board_specific_top
         )
         i_audio_out
         (
-            .clk                 ( lab_clk    ),
+            .clk                 ( clk        ),
             .reset               ( rst        ),
             .data_in             ( sound      ),
             .mclk                (            ),
@@ -367,7 +388,6 @@ module board_specific_top
         );
 
         // Enable DAC
-
         assign PA_EN = 1'b1;
 
         // External DAC PCM5102A, Digilent Pmod AMP3, UDA1334A
@@ -381,7 +401,7 @@ module board_specific_top
         )
         i_ext_audio_out
         (
-            .clk                 ( lab_clk    ),
+            .clk                 ( clk        ),
             .reset               ( rst        ),
             .data_in             ( sound      ),
             .mclk                ( GPIO_1[4]  ),
