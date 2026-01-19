@@ -8,64 +8,46 @@
 #define LED_3   0x8
 
 
-#define MTVEC_MODE_CLINT_DIRECT                 0x00
-#define MTVEC_MODE_CLINT_VECTORED               0x01
-#define MTVEC_MODE_CLIC_DIRECT                  0x02
-#define MTVEC_MODE_CLIC_VECTORED                0x03
+
+extern void default_exception_handler();
+extern void default_vector_handler();
+extern void nmi_handler_function();
+extern void software_interrupt_handler();
+extern void timer_interrupt_handler();
+extern void external_interrupt_handler();
 
 
-#define METAL_MTVEC_DIRECT 0x00
-#define METAL_MTVEC_VECTORED 0x01
-#define METAL_MTVEC_CLIC 0x02
-#define METAL_MTVEC_CLIC_VECTORED 0x03
-#define METAL_MTVEC_CLIC_RESERVED 0x3C
-#define METAL_MTVEC_MASK 0x3F
-#if __riscv_xlen == 32
-#define METAL_MCAUSE_INTR 0x80000000UL
-#define METAL_MCAUSE_CAUSE 0x000003FFUL
-#else
-#define METAL_MCAUSE_INTR 0x8000000000000000UL
-#define METAL_MCAUSE_CAUSE 0x00000000000003FFUL
-#endif
-#define METAL_MCAUSE_MINHV 0x40000000UL
-#define METAL_MCAUSE_MPP 0x30000000UL
-#define METAL_MCAUSE_MPIE 0x08000000UL
-#define METAL_MCAUSE_MPIL 0x00FF0000UL
-#define METAL_MSTATUS_MIE 0x00000008UL
-#define METAL_MSTATUS_MPIE 0x00000080UL
-#define METAL_MSTATUS_MPP 0x00001800UL
-#define METAL_MSTATUS_FS_INIT 0x00002000UL
-#define METAL_MSTATUS_FS_CLEAN 0x00004000UL
-#define METAL_MSTATUS_FS_DIRTY 0x00006000UL
-#define METAL_MSTATUS_MPRV 0x00020000UL
-#define METAL_MSTATUS_MXR 0x00080000UL
-#define METAL_MINTSTATUS_MIL 0xFF000000UL
-#define METAL_MINTSTATUS_SIL 0x0000FF00UL
-#define METAL_MINTSTATUS_UIL 0x000000FFUL
 
-#define METAL_LOCAL_INTR(X) (16 + X)
-#define METAL_MCAUSE_EVAL(cause) (cause & METAL_MCAUSE_INTR)
-#define METAL_INTERRUPT(cause) (METAL_MCAUSE_EVAL(cause) ? 1 : 0)
-#define METAL_EXCEPTION(cause) (METAL_MCAUSE_EVAL(cause) ? 0 : 1)
-#define METAL_SW_INTR_EXCEPTION (METAL_MCAUSE_INTR + 3)
-#define METAL_TMR_INTR_EXCEPTION (METAL_MCAUSE_INTR + 7)
-#define METAL_EXT_INTR_EXCEPTION (METAL_MCAUSE_INTR + 11)
-#define METAL_LOCAL_INTR_EXCEPTION(X) (METAL_MCAUSE_INTR + METAL_LOCAL_INTR(X))
-#define METAL_LOCAL_INTR_RESERVE0 1
-#define METAL_LOCAL_INTR_RESERVE1 2
-#define METAL_LOCAL_INTR_RESERVE2 4
-#define METAL_LOCAL_INTERRUPT_SW 8 /* Bit3 0x008 */
-#define METAL_LOCAL_INTR_RESERVE4 16
-#define METAL_LOCAL_INTR_RESERVE5 32
-#define METAL_LOCAL_INTR_RESERVE6 64
-#define METAL_LOCAL_INTERRUPT_TMR 128 /* Bit7 0x080 */
-#define METAL_LOCAL_INTR_RESERVE8 256
-#define METAL_LOCAL_INTR_RESERVE9 512
-#define METAL_LOCAL_INTR_RESERVE10 1024
-#define METAL_LOCAL_INTERRUPT_EXT 2048 /* Bit11 0x800 */
+void __attribute__((weak, interrupt)) __mtvec_clint_vector_table(void);
 
-#define METAL_MIE_INTERRUPT METAL_MSTATUS_MIE
+extern void exception_handler(void);
+extern void vector_handler(void);
+extern void software_interrupt_handler(void);
+extern void timer_interrupt_handler(void);
+extern void external_interrupt_handler(void);
 
+
+extern char __irq_handlers[];
+#define irq_handlers ((void**)__irq_handlers)
+
+void __attribute__((naked)) nmi_handler() {
+    asm volatile (
+        ".org 0x40\n\t"                       
+        "csrrs t0, mscratch, zero\n\t"         
+        "call nmi_handler_function\n\t"         
+        "mret\n\t"                              
+    );
+}
+
+
+void set_mtvec_vectored_mode() {
+    uintptr_t addr = (uintptr_t)irq_handlers | 0b1; 
+    asm volatile ("csrw mtvec, %0\n\t" :: "r"(addr));
+}
+
+void init() {
+    set_mtvec_vectored_mode(); 
+}
 
 
 
@@ -106,7 +88,7 @@ void interrupt_local_enable (int id);
 
 
 
-char message[] = "HELO"; // Строка из 4 символов
+char message[] = "HELO"; 
 
 void __attribute__((weak, interrupt)) default_vector_handler (void) {
     message[0] = 'L';
@@ -133,30 +115,27 @@ void __attribute__((weak)) default_exception_handler(void) {
             message[0] = ' ';
 }
 
+void __attribute__((weak)) nmi_handler_function(void) {
+            message[0] = 'N';
+}
+
 
 
 uint8_t char_to_hex(char c);
-/**
- * Отображает первые 4 символа строки на 7-сегментных индикаторах
- * @param str Указатель на строку (минимум 4 символа)
- */
+
 void display_string(const char* str) {
     uint8_t anodes[4] = {LED_3, LED_2, LED_1, LED_0};
 
-    // Отображаем каждый из первых 4 символов
     for(int i = 0; i < 4; i++) {
         char c = str[i];
         uint8_t hex_code = char_to_hex(c);
 
-        // Включаем соответствующий индикатор
         port1 = anodes[i];
         port0 = hex_code;
        
 
-        // Задержка для визуализации (можно убрать при использовании динамической индикации)
         for(volatile int delay = 0; delay < 100; delay++);
 
-        // Очистка после отображения
         #ifdef STATIC
             port0 = 0x00;
             port1 = 0x00;
@@ -164,9 +143,7 @@ void display_string(const char* str) {
     }
 }
 
-/**
- * Вспомогательная функция: преобразует символ в 7-сегментный код
- */
+
 uint8_t char_to_hex(char c) {
     switch(c) {
         case ' ': return HEX_SPACE;
@@ -231,9 +208,9 @@ void main() {
     // Enable External and local Interrupts
     asm("csrw mie, a5");
 
-    mode = MTVEC_MODE_CLINT_VECTORED;
-    mtvec_base = (uintptr_t)&__mtvec_clint_vector_table;
-    write_csr (mtvec, (mtvec_base | mode));
+    // mode = MTVEC_MODE_CLINT_VECTORED;
+    // mtvec_base = (uintptr_t)&__mtvec_clint_vector_table;
+    // write_csr (mtvec, (mtvec_base | mode));
     
     //Save  handler to mtvec
     //Run 08_show_dump.sh  to see assembler code
@@ -246,45 +223,45 @@ void main() {
 }
 
 
-void interrupt_global_enable (void) {
-    uintptr_t m;
-    __asm__ volatile ("csrrs %0, mstatus, %1" : "=r"(m) : "r"(METAL_MIE_INTERRUPT));
-}
+// void interrupt_global_enable (void) {
+//     uintptr_t m;
+//     __asm__ volatile ("csrrs %0, mstatus, %1" : "=r"(m) : "r"(METAL_MIE_INTERRUPT));
+// }
 
-void interrupt_global_disable (void) {
-    uintptr_t m;
-    __asm__ volatile ("csrrc %0, mstatus, %1" : "=r"(m) : "r"(METAL_MIE_INTERRUPT));
-}
+// void interrupt_global_disable (void) {
+//     uintptr_t m;
+//     __asm__ volatile ("csrrc %0, mstatus, %1" : "=r"(m) : "r"(METAL_MIE_INTERRUPT));
+// }
 
-void interrupt_software_enable (void) {
-    uintptr_t m;
-    __asm__ volatile ("csrrs %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_SW));
-}
+// void interrupt_software_enable (void) {
+//     uintptr_t m;
+//     __asm__ volatile ("csrrs %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_SW));
+// }
 
-void interrupt_software_disable (void) {
-    uintptr_t m;
-    __asm__ volatile ("csrrc %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_SW));
-}
+// void interrupt_software_disable (void) {
+//     uintptr_t m;
+//     __asm__ volatile ("csrrc %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_SW));
+// }
 
-void interrupt_timer_enable (void) {
-    uintptr_t m;
-    __asm__ volatile ("csrrs %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_TMR));
-}
+// void interrupt_timer_enable (void) {
+//     uintptr_t m;
+//     __asm__ volatile ("csrrs %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_TMR));
+// }
 
-void interrupt_timer_disable (void) {
-    uintptr_t m;
-    __asm__ volatile ("csrrc %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_TMR));
-}
+// void interrupt_timer_disable (void) {
+//     uintptr_t m;
+//     __asm__ volatile ("csrrc %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_TMR));
+// }
 
-void interrupt_external_enable (void) {
-    uintptr_t m;
-    __asm__ volatile ("csrrs %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_EXT));
-}
+// void interrupt_external_enable (void) {
+//     uintptr_t m;
+//     __asm__ volatile ("csrrs %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_EXT));
+// }
 
-void interrupt_external_disable (void) {
-    unsigned long m;
-    __asm__ volatile ("csrrc %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_EXT));
-}
+// void interrupt_external_disable (void) {
+//     unsigned long m;
+//     __asm__ volatile ("csrrc %0, mie, %1" : "=r"(m) : "r"(METAL_LOCAL_INTERRUPT_EXT));
+// }
 
 void interrupt_local_enable (int id) {
     uintptr_t b = 1 << id;
