@@ -1,0 +1,14 @@
+[General]
+ipc_version=4
+file=dvi_tx
+module=DVI_TX_Top
+target_device=gw2a18c-011
+type=dvi_tx
+version=1.0
+
+[Config]
+DISABLE_IO_INSERTION=true
+ELVDS=false
+LANG=0
+Synthesis_tool=GowinSynthesis
+TLVDS=true

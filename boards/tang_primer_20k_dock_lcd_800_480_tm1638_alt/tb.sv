@@ -2,6 +2,11 @@
 
 module tb;
 
+    timeunit      1ns;
+    timeprecision 1ns;
+
+    localparam clk_period    = 40ns;
+
     //------------------------------------------------------------------------
 
     logic               clk;
@@ -23,7 +28,7 @@ module tb;
         clk = 1'b0;
 
         forever
-            # 1 clk = ! clk;
+            # (clk_period / 2) clk = ~ clk;
     end
 
     //------------------------------------------------------------------------
@@ -46,7 +51,7 @@ module tb;
             $dumpvars;
         `endif
 
-        #140000
+        # 0.002s
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;
