@@ -322,6 +322,7 @@ update_fpga_toolchain_var ()
         ;;
 
         runber                           | \
+        brs_100*                         | \
         marsohod3gw2*                    | \
         tang_*                           | \
         orangepi*                        )
