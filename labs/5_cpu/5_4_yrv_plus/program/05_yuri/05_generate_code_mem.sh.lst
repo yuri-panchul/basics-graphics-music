@@ -1,0 +1,1 @@
+/opt/riscv/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss -o crt0.o crt0.s

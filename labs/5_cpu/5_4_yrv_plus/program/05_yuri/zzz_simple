@@ -1,0 +1,72 @@
+# The final one
+
+# the simplest using xpack
+
+xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -fno-zero-initialized-in-bss -nostdlib -O3 -Tyrv.ld *.s *.c
+$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32
+
+exit
+
+xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -ffreestanding -fno-zero-initialized-in-bss -nostdlib -O3 -Tyrv.ld *.s *.c
+$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32.2
+
+diff code_demo.mem32.1 code_demo.mem32.2
+
+exit
+
+
+
+#xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+#$xpack/bin/riscv-none-elf-gcc -c -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss *.s *.c
+#$xpack/bin/riscv-none-elf-gcc -nostdlib -Tyrv.ld  -o final.elf *.o
+#$xpack/bin/riscv-none-elf-objcopy -O binary final.elf final
+#python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.1
+
+#xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+#$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld *.s *.c
+#echo $xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld *.s *.c
+#$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+#python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.2
+
+xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld crt0.s mscratch.s trap_ack.s nmi_vec.s dbg_vec.s main.c
+$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.3
+
+#xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+#$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld crt0.s dbg_vec.s dex_vec.s mscratch.s nmi_vec.s trap_ack.s main.c
+#$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+#python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.3
+
+#xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+#$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld crt0.s mscratch.s dbg_vec.s trap_ack.s nmi_vec.s main.c
+#$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+#python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.4
+
+#crt0.s mscratch.s dbg_vec.s dex_vec.s main.c nmi_vec.s trap_ack.s
+
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -o crt0.o crt0.s
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -o mscratch.o mscratch.s
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -o trap_ack.o trap_ack.s
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -o nmi_vec.o nmi_vec.s
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -o dbg_vec.o dbg_vec.s
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -o main.o main.c
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-gcc -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld  -o final.elf crt0.o mscratch.o trap_ack.o nmi_vec.o dbg_vec.o main.o
+/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1/bin/riscv-none-elf-objcopy -O binary final.elf final
+python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32
+
+xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+$xpack/bin/riscv-none-elf-gcc -c -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -fno-zero-initialized-in-bss -nostdlib -O0 crt0.s mscratch.s trap_ack.s nmi_vec.s dbg_vec.s main.c
+$xpack/bin/riscv-none-elf-gcc -nostdlib -Tyrv.ld  -o final.elf crt0.o mscratch.o trap_ack.o nmi_vec.o dbg_vec.o main.o
+$xpack/bin/riscv-none-elf-objcopy -O binary final.elf final
+python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.5
+
+xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld crt0.s mscratch.s trap_ack.s nmi_vec.s dbg_vec.s main.c
+$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.3
+

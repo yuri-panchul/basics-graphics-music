@@ -1,0 +1,3 @@
+USBDEV=/dev/ttyUSB0
+stty -F  raw speed 115200 -crtscts cs8 -parenb -cstopb
+cat code_demo.mem32 > 
