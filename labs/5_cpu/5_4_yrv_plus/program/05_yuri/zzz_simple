@@ -1,11 +1,23 @@
 # The final one
 
+xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -fno-zero-initialized-in-bss -nostdlib -static -Wl,--build-id=none -Wl,--no-warn-rwx-segments -O3 -Tyrv.ld *.s *.c
+$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32.3
+
+riscv64-linux-gnu-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -fno-zero-initialized-in-bss -nostdlib -static -Wl,--build-id=none -Wl,--no-warn-rwx-segments -O3 -Tyrv.ld *.s *.c
+/usr/bin/riscv64-linux-gnu-objcopy -O binary a.out final
+python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32.2
+
 # the simplest using xpack
 
-xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
-$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -fno-zero-initialized-in-bss -nostdlib -O3 -Tyrv.ld *.s *.c
-$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
-python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32
+#xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
+#$xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -fno-zero-initialized-in-bss -nostdlib -O3 -Tyrv.ld *.s *.c
+#$xpack/bin/riscv-none-elf-objcopy -O binary a.out final
+#python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32.1
+
+#diff code_demo.mem32.1 code_demo.mem32.2
+#diff code_demo.mem32.2 code_demo.mem32.3
 
 exit
 

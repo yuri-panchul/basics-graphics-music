@@ -1,7 +1,8 @@
 #include "memory_mapped_registers.h"
 #include "seg7.h"
 #include <stdint.h>
-#include <string.h>
+#include <stddef.h>
+//#include <string.h>
 
 // HEX number
 #define LED_0   0x1

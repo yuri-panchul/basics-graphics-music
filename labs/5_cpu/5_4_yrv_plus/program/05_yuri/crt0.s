@@ -1,4 +1,5 @@
 .section .text.init
+.global _start
 .global _run
 .global redo
 .global digit
@@ -8,6 +9,7 @@
            .equ  mcause, 0x342
            .equ  iobase, 0xffff0     # i/o at 0xffff0000
 
+_start:
 _run:
 redo:
 loop:
