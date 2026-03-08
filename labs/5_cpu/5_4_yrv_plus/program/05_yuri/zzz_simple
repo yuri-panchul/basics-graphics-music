@@ -1,3 +1,11 @@
+
+riscv64-unknown-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -fno-zero-initialized-in-bss -nostdlib -static -Wl,--build-id=none -Wl,--no-warn-rwx-segments -O3 -Tyrv.ld *.s *.c
+riscv64-unknown-elf-objcopy -O binary a.out final
+python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32.1
+
+exit
+
+
 # The final one
 
 xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
@@ -81,4 +89,3 @@ xpack=/home/verilog/install/gccrv/xpack-riscv-none-elf-gcc-15.2.0-1
 $xpack/bin/riscv-none-elf-gcc -march=rv32i_zbs_zicsr -mabi=ilp32 -ffreestanding -O0 -fno-zero-initialized-in-bss -nostdlib -Tyrv.ld crt0.s mscratch.s trap_ack.s nmi_vec.s dbg_vec.s main.c
 $xpack/bin/riscv-none-elf-objcopy -O binary a.out final
 python3 ../common/freedom-bin2hex.py -w32  final > code_demo.mem32.3
-
