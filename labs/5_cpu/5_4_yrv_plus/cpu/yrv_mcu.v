@@ -31,18 +31,8 @@
 
 /* processor                                                                               */
 `include "yrv_top.vh"
-/* serial receive                                                                          */
-//`include "serial_rx.vh"
-/* serial transmit                                                                         */
-//`include "serial_tx.vh"
-/* serial port                                                                             */
+
 `include "serial_top.vh"
-
-`ifdef INSTANCE_MEM
-/* instantiated memory                                                                     */
-`include "inst_mem.vh"
-`endif
-
 
 // For real boards
 `ifndef SIMULATION
@@ -72,6 +62,7 @@ module yrv_mcu
                  , mem_ready, mem_rdata, mem_lock, mem_write, mem_trans, mem_ble,
                  mem_addr, mem_wdata, extra_debug_data
                  `endif
+                 , li_req
   );
 
   input         clk;                                       /* cpu clock                    */
@@ -107,6 +98,8 @@ module yrv_mcu
 
   output [31:0] extra_debug_data;                          /* extra debug data unconnected */
 `endif
+  input   [15:0] li_req;                                    /* local int requests           */
+
 
   /*****************************************************************************************/
   /* signal declarations                                                                   */
@@ -129,7 +122,6 @@ module yrv_mcu
   wire    [1:0] mem_trans;                                 /* memory transfer type         */
   wire    [3:0] mem_ble;                                   /* memory byte lane enables     */
   wire    [7:0] rx_rdata;                                  /* receive data buffer          */
-  wire   [15:0] li_req;                                    /* local int requests           */
   wire   [15:0] port7_dat;                                 /* i/o port                     */
   wire   [31:0] mcu_rdata;                                 /* system memory read data      */
   wire   [31:0] mem_addr;                                  /* memory address               */
@@ -184,7 +176,7 @@ module yrv_mcu
   /*****************************************************************************************/
   assign bus_32    = 1'b1;
   assign mem_ready = 1'b1;
-  assign li_req    = {12'h0, bufr_empty, bufr_done, bufr_full, bufr_ovr};
+  ;
 
   /*****************************************************************************************/
   /* processor                                                                             */
@@ -412,14 +404,17 @@ initial $readmemh("code_demo.mem8", mcu_mem);
       end
     end
 
+
   /*****************************************************************************************/
   /* serial port                                                                           */
   /*****************************************************************************************/
+  // div_rate = 27*1000 *1000/(9600*16)
+  
   serial_top SERIAL ( .bufr_done(bufr_done), .bufr_empty(bufr_empty), .bufr_full(bufr_full),
                       .bufr_ovr(bufr_ovr), .rx_rdata(rx_rdata), .ser_clk(ser_clk),
                       .ser_txd(ser_txd), .cks_mode(port6_reg[0]), .clkp(clk),
                       .div_rate(port6_reg[15:4]), .ld_wdata(ld_wdata), .rd_rdata(rd_rdata),
-                      .s_reset(port6_reg[3]), .ser_rxd(ser_rxd), .tx_wdata(mem_wdata[7:0]) );
+                      .s_reset(port6_reg[3]), .ser_rxd(ser_rxd), .tx_wdata(mem_wdata[23:16]) );
 
   assign ld_wdata  = io_wr_reg && port76_dec && mem_ble_reg[2] && mem_ready;
   assign rd_rdata  = io_rd_reg && port76_dec && mem_ble_reg[2] && mem_ready;
