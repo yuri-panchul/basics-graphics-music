@@ -1,0 +1,109 @@
+expected_source_script=00_setup.source_bash
+
+if [ -z "$BASH_SOURCE" ]
+then
+    printf "script \"%s\" should be sourced from \"%s\"\n"  \
+           "$0" "$expected_source_script" 1>&2
+
+    exit 1
+fi
+
+this_script=$(basename "${BASH_SOURCE[0]}")
+source_script=$(basename "${BASH_SOURCE[1]}")
+
+if [ -z "$source_script" ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\"\n"  \
+           "$this_script" "$expected_source_script" 1>&2
+
+    return 1
+fi
+
+if [ "$source_script" != $expected_source_script ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\", not \"%s\"\n"  \
+           "$this_script" "$expected_source_script" "$source_script" 1>&2
+
+    exit 1
+fi
+
+#-----------------------------------------------------------------------------
+
+linker_script=linker_script.ld
+
+#-----------------------------------------------------------------------------
+
+riscv_software_toolchain_setup ()
+{
+    [ -f ../$linker_script ] || return
+
+    #-------------------------------------------------------------------------
+
+    # TODO Check whether $exe is needed
+
+    if  is_command_available riscv-none-elf-gcc &&
+        is_command_available riscv-none-elf-objcopy
+    then
+        riscv-gcc=riscv-none-elf-gcc
+        riscv-objcopy=riscv-none-elf-objcopy
+
+        return  # Already set up
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if  is_command_available riscv64-unknown-elf-gcc &&
+        is_command_available riscv64-unknown-elf-objcopy
+    then
+        riscv-gcc=riscv64-unknown-elf-gcc
+        riscv-objcopy=riscv64-unknown-elf-objcopy
+
+        return  # Already set up
+    fi
+
+    #-------------------------------------------------------------------------
+
+    # TODO Check whether $exe is needed
+    is_command_available_or_error_and_install python3$exe
+
+    #-------------------------------------------------------------------------
+
+    if [  "$OSTYPE" = "linux-gnu"  ] ||
+       [[ "$OSTYPE" = "darwin"*   ]]
+    then
+        if [[ "$OSTYPE" = "darwin"* ]]
+        then
+            riscv_try_install_dir "/Applications"
+            riscv_try_install_dir "$HOME/Applications"
+        fi
+
+        riscv_try_install_dir "$HOME"
+        riscv_try_install_dir /opt
+        riscv_try_install_dir /tools
+        riscv_try_install_dir "$HOME/Downloads"
+
+    elif [ "$OSTYPE" = "cygwin" ] ||
+         [ "$OSTYPE" = "msys"   ]
+    then
+        riscv_try_install_dir /c
+        riscv_try_install_dir /d
+        riscv_try_install_dir /e
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if [ -z "${riscv_gcc-}" ]
+    then
+        error "expected to find RISC-V GCC toolchain',                                 \
+              "in ${attempt_riscv_install_parent_dirs}."                               \
+              "You can download a variant of the toolchain from"                       \
+              "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+riscv_software_toolchain_run ()
+{
+    [ -f ../$linker_script ] || error "no $linker_script in the directory"
+}

@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module instruction_ram
 #(
     parameter SIZE = 256
