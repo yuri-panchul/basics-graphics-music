@@ -200,7 +200,7 @@ source "$script_dir/steps/00_setup_intel_fpga.source_bash"
 source "$script_dir/steps/00_setup_gowin.source_bash"
 source "$script_dir/steps/00_setup_efinity.source_bash"
 source "$script_dir/steps/00_setup_xilinx.source_bash"
-source "$script_dir/steps/00_setup_open_lane.source_bash"
+source "$script_dir/steps/00_setup_libre_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
 source "$script_dir/steps/00_setup_yosys.source_bash"
 source "$script_dir/steps/00_setup_rars.source_bash"
@@ -488,7 +488,7 @@ case $fpga_toolchain in
     yosys   ) setup_yosys         ;;
 esac
 
-openlane_setup
+librelane_setup
 icarus_verilog_setup
 
 if [ -f ../program.s ] ; then

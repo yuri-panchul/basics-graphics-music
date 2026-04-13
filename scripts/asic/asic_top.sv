@@ -46,8 +46,8 @@ module asic_top
         .abcdefgh  ( abcdefgh ),
         .digit     ( digit    ),
 
-        .vsync     (          ),
-        .hsync     (          ),
+//        .vsync     (          ),
+//        .hsync     (          ),
         .red       (          ),
         .green     (          ),
         .blue      (          ),
