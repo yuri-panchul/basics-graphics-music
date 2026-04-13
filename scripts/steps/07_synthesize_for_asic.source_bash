@@ -59,4 +59,4 @@ pushd $design_dir &> /dev/null
 librelane --flow Classic $design_dir/config.tcl
 popd
 
-echo "Done running Librelane flow. The run and its reports can be viewed at ${design_dir}/src"
+echo "Done running Librelane flow. The run and its reports can be viewed at ${design_dir}"
