@@ -50,7 +50,23 @@ librelane_setup()
 
 #-----------------------------------------------------------------------------
 
-run_openlane_layout_viewer ()
+run_librelane_layout_viewer ()
 {
-    error "TODO: to be implemented"
+    # copied form 07_synthesize_for_asic.source_bash
+    top_level_dir=$(git rev-parse --show-toplevel)
+    design_dir="$top_level_dir/librelane_designs/$lab_name"
+
+    if [ -z "${1-}" ]; then
+        LAYOUT_VIEWER="${LAYOUT_VIEWER:-openroad}"
+    fi
+
+    pushd $design_dir &> /dev/null
+    if [ "${1-}" == "klayout" ] || [ LAYOUT_VIEWER == "klayout" ];  then
+        librelane --last-run --flow openinklayout ./config.tcl
+    elif [ "${1-}" == "openroad" ] || [ LAYOUT_VIEWER == "openroad" ] ; then
+        librelane --last-run --flow openinopenroad ./config.tcl
+    else
+        error 'Invalid layout viewer. Valid layout viewers are "klayout" and "openroad"'
+    fi
+    popd
 }
