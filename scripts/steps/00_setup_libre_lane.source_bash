@@ -37,11 +37,12 @@ librelane_setup()
 
     if [ -v "LIBRELANE_PATH" ]; then
 	export PATH="${LIBRELANE_PATH}:$PATH"
+    fi
 
     if  ! is_command_available librelane ; then
         error "Cannot find librelane binary for ASIC synthesis." \
               "Librelane can be installed via Nix and sourcing into" \
-              "a Nix development shell with nix develop, or by" \
+              "a Nix development shell with \'nix develop\', or by" \
               "specifying a custom Librelane binary path with" \
               "LIBRELANE_PATH"
     fi
