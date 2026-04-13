@@ -74,7 +74,7 @@
       },
       "original": {
         "owner": "librelane",
-        "ref": "dev",
+        "ref": "3.0.0",
         "repo": "librelane",
         "type": "github"
       }

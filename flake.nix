@@ -9,7 +9,7 @@
   };
 
   inputs = {
-    librelane.url = "github:librelane/librelane/dev";
+    librelane.url = "github:librelane/librelane/3.0.0";
   };
 
   outputs =
@@ -34,12 +34,6 @@
             nix-eda.overlays.default
             devshell.overlays.default
             librelane.overlays.default
-            (final: prev: {
-              klayout = prev.klayout.override {
-                version = "0.30.4";
-                sha256 = "sha256-eL1RjqZpZI3+20ax+NsQ3qoOPzdm4k6KJwW+Rn0wg8Y=";
-              };
-            })
           ];
         }
       );
