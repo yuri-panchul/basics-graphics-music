@@ -31,11 +31,11 @@ fi
 
 librelane_setup()
 {
-    if ! [[ $script =~ asic ]] ; then
+    if ! [[ $script =~ asic ]]; then
         return
     fi
 
-    if [ -v "LIBRELANE_PATH" ]; then
+    if [ -v LIBRELANE_PATH ]; then
 	export PATH="${LIBRELANE_PATH}:$PATH"
     fi
 
@@ -52,21 +52,19 @@ librelane_setup()
 
 run_librelane_layout_viewer ()
 {
-    # copied form 07_synthesize_for_asic.source_bash
-    top_level_dir=$(git rev-parse --show-toplevel)
-    design_dir="$top_level_dir/librelane_designs/$lab_name"
+    viewer="${1-}"
 
-    if [ -z "${1-}" ]; then
-        LAYOUT_VIEWER="${LAYOUT_VIEWER:-openroad}"
+    if [ -z "$viewer" ]; then
+        viewer="${LAYOUT_VIEWER:-openroad}"
     fi
+
+    [ "$viewer" == "klayout"  ] ||
+    [ "$viewer" == "openroad" ] ||
+    error 'Invalid layout viewer. Valid layout viewers are "klayout" and "openroad"'
+
+    design_dir="$package_dir/librelane_designs/$lab_name"
 
     pushd $design_dir &> /dev/null
-    if [ "${1-}" == "klayout" ] || [ LAYOUT_VIEWER == "klayout" ];  then
-        librelane --last-run --flow openinklayout ./config.tcl
-    elif [ "${1-}" == "openroad" ] || [ LAYOUT_VIEWER == "openroad" ] ; then
-        librelane --last-run --flow openinopenroad ./config.tcl
-    else
-        error 'Invalid layout viewer. Valid layout viewers are "klayout" and "openroad"'
-    fi
+    librelane --last-run --flow openin$viewer ./config.tcl
     popd
 }
