@@ -186,6 +186,33 @@ else
 fi
 
 #-----------------------------------------------------------------------------
+
+remove_macos_quarantine_attr ()
+{
+    dir="$1"
+
+    qattr=com.apple.quarantine
+
+    while xattr "$dir" | grep -q $qattr
+    do
+        warning "Directory '$dir' has '$qattr' attribute."                     \
+                "You need to remove the attribute to run the software,"        \
+                "using a terminal command:"                                    \
+                "xattr -rd $qattr '$dir' ."                                    \
+                "If you see a \"Permission denied\" error, try it with sudo:"  \
+                "sudo xattr -rd $qattr '$dir'"
+
+        read -n 1 -r -p "Abort, Retry, Ignore? [a/R/i] "
+        printf "\n"
+
+        case $REPLY in
+        A|a) exit 1 ;;
+        I|i) break  ;;
+        esac
+    done
+}
+
+#-----------------------------------------------------------------------------
 #
 #   Tool setup:
 #
