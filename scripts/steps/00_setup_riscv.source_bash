@@ -33,6 +33,37 @@ linker_script=linker_script.ld
 
 #-----------------------------------------------------------------------------
 
+riscv_try_install_dir ()
+{
+    dir="$1"
+
+    find_opt="-mindepth 1 -maxdepth 1 -type f -name 'xpack-riscv-none-elf-gcc-*[0-9]' -print"
+    latest_xpack=$($find_to_run "$dir" $find_opt | sort | tail -1)
+CHANGE
+    if [ -z "$latest_rars_jar" ]
+    then
+        error "cannot find any version of RARS"                              \
+              "RISC-V instruction set simulator installed in '$bin_dir'."    \
+              "Download the latest 'rars*.jar'"                              \
+              "from https://github.com/TheThirdOne/rars/releases"            \
+              "and put it into '$bin_dir'."
+    fi
+
+    all_rars_jars=$($find_to_run "$bin_dir" $find_opt | xargs echo)
+
+    if [ "$latest_rars_jar" != "$all_rars_jars" ]
+    then
+        warning "multiple versions of RARS"                                  \
+                "RISC-V instruction set simulator installed in '$bin_dir':"  \
+                "'$all_rars_jars'\n"                                         \
+                "Using '$latest_rars_jar' which appears to be the latest."
+    fi
+
+    rars_cmd="java -jar $latest_rars_jar"
+}
+
+#-----------------------------------------------------------------------------
+
 riscv_software_toolchain_setup ()
 {
     [ -f ../$linker_script ] || return
