@@ -5,12 +5,14 @@ module tb;
     timeunit      1ns;
     timeprecision 1ps;
 
+    localparam clk_period    = 30ns;
+
     //------------------------------------------------------------------------
 
-    localparam clk_mhz       = 27,
+    localparam clk_mhz       = 33,
                pixel_mhz     = 9,
-               w_key         = 4,
-               w_sw          = 4,
+               w_key         = 8,
+               w_sw          = 5,
                w_led         = 8,
                w_digit       = 8,
                w_gpio        = 32,
@@ -21,8 +23,6 @@ module tb;
                screen_height = 272,
                w_x           = $clog2 ( screen_width  ),
                w_y           = $clog2 ( screen_height );
-
-    localparam clk_period    = 37ns;
 
     //------------------------------------------------------------------------
 
@@ -52,6 +52,11 @@ module tb;
     lab_top
     # (
         .clk_mhz       ( clk_mhz       ),
+        .w_key         ( w_key         ),
+        .w_sw          ( w_sw          ),
+        .w_led         ( w_led         ),
+        .w_digit       ( w_digit       ),
+        .w_gpio        ( w_gpio        ),
         .screen_width  ( screen_width  ),
         .screen_height ( screen_height ),
         .w_red         ( w_red         ),
@@ -154,15 +159,15 @@ module tb;
             # (clk_period / 6) pixel_clk = ~ pixel_clk;
     end
 
-    tb_lcd_480_272         i_lcd
+    tb_lcd_480_272   i_lcd
     (
-        .PixelClk      (   pixel_clk   ),
-        .rst           (   rst         ),
-        .LCD_DE        (   LCD_DE      ),
-        .LCD_HSYNC     (   LCD_HS      ),
-        .LCD_VSYNC     (   LCD_VS      ),
-        .x             (   x           ),
-        .y             (   y           )
+        .PixelClk  ( pixel_clk ),
+        .rst       ( rst       ),
+        .LCD_DE    ( LCD_DE    ),
+        .LCD_HSYNC ( LCD_HS    ),
+        .LCD_VSYNC ( LCD_VS    ),
+        .x         ( x         ),
+        .y         ( y         )
     );
 
     //------------------------------------------------------------------------
@@ -175,14 +180,14 @@ module tb;
     // see \labs\2_graphics\2_10_color_shapes_and_functions\
     // The module tb_lcd_display is located in the common folder
 
-    /* tb_lcd_display         i_display
+    /* tb_lcd_display  i_display
     (
-        .PixelClk      (   pixel_clk   ),
-        .rst           (   rst         ),
-        .LCD_DE        (   LCD_DE      ),
-        .LCD_HSYNC     (   LCD_HS      ),
-        .LCD_VSYNC     (   LCD_VS      ),
-        .pixel         (   pixel       )
+        .PixelClk  ( pixel_clk ),
+        .rst       ( rst       ),
+        .LCD_DE    ( LCD_DE    ),
+        .LCD_HSYNC ( LCD_HS    ),
+        .LCD_VSYNC ( LCD_VS    ),
+        .pixel     ( pixel     )
     ); */
 
     //------------------------------------------------------------------------
