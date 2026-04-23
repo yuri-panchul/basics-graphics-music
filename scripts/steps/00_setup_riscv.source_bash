@@ -29,44 +29,68 @@ fi
 
 #-----------------------------------------------------------------------------
 
-linker_script=linker_script.ld
+riscv_find_linker_script ()
+{
+    find_opt="-mindepth 1 -maxdepth 1 -type f -name *.ld -print"
+
+    linker_script=$($find_to_run .. $find_opt | head -1)
+    [ -n "$linker_script" ] || return 0
+
+    linker_script=$(basename "$linker_script")
+
+    all_linker_scripts=$($find_to_run .. $find_opt | xargs basename | xargs echo)
+
+    if [ "$linker_script" != "$all_linker_scripts" ]
+    then
+        warning "multiple presumable linker scripts found:" \
+                "'$all_linker_scripts'."                    \
+                "Using '$linker_script'."
+    fi
+}
 
 #-----------------------------------------------------------------------------
 
 riscv_try_install_dir ()
 {
-    dir="$1"
+    local dir="$1"
 
-    find_opt="-mindepth 1 -maxdepth 1 -type f -name 'xpack-riscv-none-elf-gcc-*[0-9]' -print"
-    latest_xpack=$($find_to_run "$dir" $find_opt | sort | tail -1)
-CHANGE
-    if [ -z "$latest_rars_jar" ]
+    [ -z "${riscv_dir-}" ] || return 0
+
+    attempt_riscv_install_parent_dirs="${attempt_riscv_install_parent_dirs:+$attempt_riscv_install_parent_dirs or }'$dir'"
+
+    find_opt="-mindepth 1 -maxdepth 1 -type d -name xpack-riscv-none-elf-gcc-*[0-9] -print"
+    riscv_dir=$($find_to_run "$dir" $find_opt | sort | tail -1)
+
+    [ -n "${riscv_dir-}" ] || return 0
+
+    all_riscv_dirs=$($find_to_run "$dir" $find_opt | xargs echo)
+
+    if [ "$riscv_dir" != "$all_riscv_dirs" ]
     then
-        error "cannot find any version of RARS"                              \
-              "RISC-V instruction set simulator installed in '$bin_dir'."    \
-              "Download the latest 'rars*.jar'"                              \
-              "from https://github.com/TheThirdOne/rars/releases"            \
-              "and put it into '$bin_dir'."
+        warning "multiple versions of RISC-V toolchain"               \
+                "installed in '$dir': '$all_riscv_dirs'\n"            \
+                "Using '$riscv_dir' which appears to be the latest."
     fi
 
-    all_rars_jars=$($find_to_run "$bin_dir" $find_opt | xargs echo)
+    riscv_gcc="$riscv_dir/bin/riscv-none-elf-gcc"
+    riscv_objcopy="$riscv_dir/bin/riscv-none-elf-objcopy"
 
-    if [ "$latest_rars_jar" != "$all_rars_jars" ]
-    then
-        warning "multiple versions of RARS"                                  \
-                "RISC-V instruction set simulator installed in '$bin_dir':"  \
-                "'$all_rars_jars'\n"                                         \
-                "Using '$latest_rars_jar' which appears to be the latest."
-    fi
-
-    rars_cmd="java -jar $latest_rars_jar"
+    [ -x "$riscv_gcc"     ] || error "expected executable '$riscv_gcc'"
+    [ -x "$riscv_objcopy" ] || error "expected executable '$riscv_objcopy'"
 }
 
 #-----------------------------------------------------------------------------
 
 riscv_software_toolchain_setup ()
 {
-    [ -f ../$linker_script ] || return
+    riscv_find_linker_script
+
+    [ -n "${linker_script-}" ] || return 0
+
+    #-------------------------------------------------------------------------
+
+    # TODO Check whether $exe is needed
+    is_command_available_or_error_and_install python3$exe
 
     #-------------------------------------------------------------------------
 
@@ -75,10 +99,10 @@ riscv_software_toolchain_setup ()
     if  is_command_available riscv-none-elf-gcc &&
         is_command_available riscv-none-elf-objcopy
     then
-        riscv-gcc=riscv-none-elf-gcc
-        riscv-objcopy=riscv-none-elf-objcopy
+        riscv_gcc=riscv-none-elf-gcc
+        riscv_objcopy=riscv-none-elf-objcopy
 
-        return  # Already set up
+        return 0 # Already set up
     fi
 
     #-------------------------------------------------------------------------
@@ -86,16 +110,11 @@ riscv_software_toolchain_setup ()
     if  is_command_available riscv64-unknown-elf-gcc &&
         is_command_available riscv64-unknown-elf-objcopy
     then
-        riscv-gcc=riscv64-unknown-elf-gcc
-        riscv-objcopy=riscv64-unknown-elf-objcopy
+        riscv_gcc=riscv64-unknown-elf-gcc
+        riscv_objcopy=riscv64-unknown-elf-objcopy
 
-        return  # Already set up
+        return 0 # Already set up
     fi
-
-    #-------------------------------------------------------------------------
-
-    # TODO Check whether $exe is needed
-    is_command_available_or_error_and_install python3$exe
 
     #-------------------------------------------------------------------------
 
@@ -109,6 +128,9 @@ riscv_software_toolchain_setup ()
         fi
 
         riscv_try_install_dir "$HOME"
+        riscv_try_install_dir "$HOME/install"
+        riscv_try_install_dir "$HOME/install/gccrv"
+        riscv_try_install_dir "$HOME/install/riscv"
         riscv_try_install_dir /opt
         riscv_try_install_dir /tools
         riscv_try_install_dir "$HOME/Downloads"
@@ -125,7 +147,7 @@ riscv_software_toolchain_setup ()
 
     if [ -z "${riscv_gcc-}" ]
     then
-        error "expected to find RISC-V GCC toolchain',                                 \
+        error "expected to find RISC-V GCC toolchain"                                  \
               "in ${attempt_riscv_install_parent_dirs}."                               \
               "You can download a variant of the toolchain from"                       \
               "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/"
@@ -137,4 +159,8 @@ riscv_software_toolchain_setup ()
 riscv_software_toolchain_run ()
 {
     [ -f ../$linker_script ] || error "no $linker_script in the directory"
+
+    echo $riscv_gcc
+    echo $riscv_objcopy
+    echo $linker_script
 }

@@ -231,6 +231,7 @@ source "$script_dir/steps/00_setup_libre_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
 source "$script_dir/steps/00_setup_yosys.source_bash"
 source "$script_dir/steps/00_setup_rars.source_bash"
+source "$script_dir/steps/00_setup_riscv.source_bash"
 
 #-----------------------------------------------------------------------------
 #
@@ -521,3 +522,5 @@ icarus_verilog_setup
 if [ -f ../program.s ] ; then
     rars_setup
 fi
+
+riscv_software_toolchain_setup
