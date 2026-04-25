@@ -90,8 +90,8 @@ riscv_try_install_dir ()
     [ -x "$riscv_gcc$exe"     ] || error "expected executable '$riscv_gcc$exe'"
     [ -x "$riscv_objcopy$exe" ] || error "expected executable '$riscv_objcopy$exe'"
 
-    [ is_command_available "$riscv_gcc"     ] || error "expected command available '$riscv_gcc'"
-    [ is_command_available "$riscv_objcopy" ] || error "expected command available '$riscv_objcopy'"
+    is_command_available "$riscv_gcc"     || error "expected command available '$riscv_gcc'"
+    is_command_available "$riscv_objcopy" || error "expected command available '$riscv_objcopy'"
 
     info "found XPACK RISC-V GCC toolchain in '$riscv_dir'"
 
