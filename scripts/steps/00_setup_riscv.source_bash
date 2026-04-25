@@ -139,28 +139,30 @@ riscv_software_toolchain_setup ()
 
     #-------------------------------------------------------------------------
 
-    if [  "$OSTYPE" = "linux-gnu"  ] ||
-       [[ "$OSTYPE" = "darwin"*   ]]
+    if [[ "$OSTYPE" = "darwin"* ]]
     then
-        if [[ "$OSTYPE" = "darwin"* ]]
-        then
-            riscv_try_install_dir "/Applications"
-            riscv_try_install_dir "$HOME/Applications"
-        fi
+        riscv_try_install_dir "/Applications"
+        riscv_try_install_dir "$HOME/Applications"
+    fi
 
         riscv_try_install_dir "$HOME"
         riscv_try_install_dir "$HOME/install"
+
+    if [  "$OSTYPE" = "linux-gnu"  ]
+    then
         riscv_try_install_dir /opt
         riscv_try_install_dir /tools
-        riscv_try_install_dir "$HOME/Downloads"
+    fi
 
-    elif [ "$OSTYPE" = "cygwin" ] ||
-         [ "$OSTYPE" = "msys"   ]
+    if [ "$OSTYPE" = "cygwin" ] ||
+       [ "$OSTYPE" = "msys"   ]
     then
         riscv_try_install_dir /c
         riscv_try_install_dir /d
         riscv_try_install_dir /e
     fi
+
+        riscv_try_install_dir "$HOME/Downloads"
 
     #-------------------------------------------------------------------------
 
