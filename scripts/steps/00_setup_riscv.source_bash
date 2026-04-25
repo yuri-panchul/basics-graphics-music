@@ -65,6 +65,8 @@ riscv_try_install_dir ()
         # Permission errors go to /dev/null
 
         find_opt="-mindepth 1 -maxdepth 2 -type d -name xpack-riscv-none-elf-gcc-*[0-9] -print"
+echo 1 "$find_opt"
+echo 2 $find_opt
 
         set +o pipefail
         riscv_dir=$($find_to_run "$dir" $find_opt 2>/dev/null | sort | tail -1)
