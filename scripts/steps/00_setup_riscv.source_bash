@@ -58,18 +58,23 @@ riscv_try_install_dir ()
 
     attempt_riscv_install_parent_dirs="${attempt_riscv_install_parent_dirs:+$attempt_riscv_install_parent_dirs or }'$dir'"
 
-    find_opt="-mindepth 1 -maxdepth 1 -type d -name xpack-riscv-none-elf-gcc-*[0-9] -print"
-    riscv_dir=$($find_to_run "$dir" $find_opt | sort | tail -1)
-
-    [ -n "${riscv_dir-}" ] || return 0
-
-    all_riscv_dirs=$($find_to_run "$dir" $find_opt | xargs echo)
-
-    if [ "$riscv_dir" != "$all_riscv_dirs" ]
+    if [ -d "$dir/xpack/bin" ]
     then
-        warning "multiple versions of RISC-V toolchain"               \
-                "installed in '$dir': '$all_riscv_dirs'\n"            \
-                "Using '$riscv_dir' which appears to be the latest."
+        riscv_dir="$dir/xpack"
+    else
+        find_opt="-mindepth 1 -maxdepth 2 -type d -name xpack-riscv-none-elf-gcc-*[0-9] -print"
+        riscv_dir=$($find_to_run "$dir" $find_opt | sort | tail -1)
+
+        [ -n "${riscv_dir-}" ] || return 0
+
+        all_riscv_dirs=$($find_to_run "$dir" $find_opt | xargs echo)
+
+        if [ "$riscv_dir" != "$all_riscv_dirs" ]
+        then
+            warning "multiple versions of XPACK RISC-V GCC toolchain"     \
+                    "installed in '$dir': '$all_riscv_dirs'\n"            \
+                    "Using '$riscv_dir' which appears to be the latest."
+        fi
     fi
 
     riscv_gcc="$riscv_dir/bin/riscv-none-elf-gcc"
@@ -77,6 +82,8 @@ riscv_try_install_dir ()
 
     [ -x "$riscv_gcc"     ] || error "expected executable '$riscv_gcc'"
     [ -x "$riscv_objcopy" ] || error "expected executable '$riscv_objcopy'"
+
+    info "found XPACK RISC-V GCC toolchain in '$dir'"
 }
 
 #-----------------------------------------------------------------------------
@@ -129,8 +136,6 @@ riscv_software_toolchain_setup ()
 
         riscv_try_install_dir "$HOME"
         riscv_try_install_dir "$HOME/install"
-        riscv_try_install_dir "$HOME/install/gccrv"
-        riscv_try_install_dir "$HOME/install/riscv"
         riscv_try_install_dir /opt
         riscv_try_install_dir /tools
         riscv_try_install_dir "$HOME/Downloads"
@@ -147,7 +152,7 @@ riscv_software_toolchain_setup ()
 
     if [ -z "${riscv_gcc-}" ]
     then
-        error "expected to find RISC-V GCC toolchain"                                  \
+        error "expected to find XPACK RISC-V GCC toolchain"                            \
               "in ${attempt_riscv_install_parent_dirs}."                               \
               "You can download a variant of the toolchain from"                       \
               "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/"
@@ -163,4 +168,12 @@ riscv_software_toolchain_run ()
     echo $riscv_gcc
     echo $riscv_objcopy
     echo $linker_script
+
+    $riscv_gcc -march=rv32i_zbs_zicsr -mabi=ilp32 \
+        -ffreestanding -fno-zero-initialized-in-bss \
+        -nostdlib -static -Wl,--build-id=none -Wl,--no-warn-rwx-segments \
+        -O3 -T"../$linker_script" *.s *.c
+
+    $riscv_objcopy -O binary a.out final
+    python3 ../common/freedom-bin2hex.py -w32 final > code_demo.mem32
 }
