@@ -164,10 +164,12 @@ riscv_software_toolchain_setup ()
 
     if [ -z "${riscv_gcc-}" ]
     then
-        error "expected to find XPACK RISC-V GCC toolchain"                            \
-              "in ${attempt_riscv_install_parent_dirs}."                               \
-              "You can download a variant of the toolchain from"                       \
-              "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/"
+        error "expected to find XPACK RISC-V GCC toolchain"                              \
+              "in ${attempt_riscv_install_parent_dirs}."                                 \
+              "You can download a variant of the toolchain from"                         \
+              "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/ ."  \
+              "On Debian-derived distributions you can install the toolchain"            \
+              "using 'sudo apt install gcc-riscv64-unknown-elf'"
     fi
 }
 
