@@ -133,7 +133,7 @@ riscv_software_toolchain_setup ()
         riscv_gcc=riscv64-unknown-elf-gcc
         riscv_objcopy=riscv64-unknown-elf-objcopy
 
-        info "using $(which riscv-none-elf-gcc)"
+        info "using $(which riscv64-unknown-elf-gcc)"
         return 0 # Already set up
     fi
 
