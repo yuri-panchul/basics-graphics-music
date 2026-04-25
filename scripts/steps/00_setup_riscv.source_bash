@@ -87,8 +87,8 @@ riscv_try_install_dir ()
     riscv_gcc="$riscv_dir/bin/riscv-none-elf-gcc"
     riscv_objcopy="$riscv_dir/bin/riscv-none-elf-objcopy"
 
-    [ -x "$riscv_gcc"     ] || error "expected executable '$riscv_gcc'"
-    [ -x "$riscv_objcopy" ] || error "expected executable '$riscv_objcopy'"
+    [ -x "$riscv_gcc$exe"     ] || error "expected executable '$riscv_gcc$exe'"
+    [ -x "$riscv_objcopy$exe" ] || error "expected executable '$riscv_objcopy$exe'"
 
     info "found XPACK RISC-V GCC toolchain in '$riscv_dir'"
 
@@ -108,12 +108,9 @@ riscv_software_toolchain_setup ()
 
     #-------------------------------------------------------------------------
 
-    # TODO Check whether $exe is needed
-    is_command_available_or_error_and_install python3$exe
+    is_command_available_or_error_and_install python3
 
     #-------------------------------------------------------------------------
-
-    # TODO Check whether $exe is needed
 
     if  is_command_available riscv-none-elf-gcc &&
         is_command_available riscv-none-elf-objcopy
