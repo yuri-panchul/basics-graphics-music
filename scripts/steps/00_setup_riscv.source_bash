@@ -64,7 +64,9 @@ riscv_try_install_dir ()
     else
         # Permission errors go to /dev/null
 
-        find_opt="-mindepth 1 -maxdepth 2 -type d -name xpack-riscv-none-elf-gcc-*[0-9] -exec test -d {}/bin ; -print"
+        [[ "$OSTYPE" = "darwin"* ]] && exclude_Desktop_for_mac="-type d -name Desktop -prune -o"
+
+        find_opt="${exclude_Desktop_for_mac-} -mindepth 1 -maxdepth 2 -type d -name xpack-riscv-none-elf-gcc-*[0-9] -exec test -d {}/bin ; -print"
 
         set +o pipefail
         riscv_dir=$($find_to_run "$dir" $find_opt 2>/dev/null | sort | tail -1)
@@ -95,10 +97,7 @@ riscv_try_install_dir ()
 
     info "found XPACK RISC-V GCC toolchain in '$riscv_dir'"
 
-    if [[ "$OSTYPE" = "darwin"* ]]
-    then
-        remove_macos_quarantine_attr "$riscv_dir"
-    fi
+    [[ "$OSTYPE" = "darwin"* ]] && remove_macos_quarantine_attr "$riscv_dir"
 }
 
 #-----------------------------------------------------------------------------
