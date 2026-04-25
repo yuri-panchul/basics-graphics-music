@@ -171,8 +171,7 @@ riscv_software_toolchain_setup ()
               "You can download a variant of the toolchain from"                         \
               "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/ ."  \
               "On Debian-derived distributions you can install the toolchain"            \
-              "using 'sudo apt install gcc-riscv64-unknown-elf',"                        \
-              "then starting a new shell"
+              "using 'sudo apt install gcc-riscv64-unknown-elf'."
     fi
 }
 
