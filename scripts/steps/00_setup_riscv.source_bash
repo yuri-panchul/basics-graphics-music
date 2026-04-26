@@ -201,4 +201,23 @@ riscv_software_toolchain_run ()
 
     $riscv_objcopy -O binary a.out final
     python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > code_demo.mem32
+
+    riscv_upload_software_to_the_board_using_uart
+}
+
+#-----------------------------------------------------------------------------
+
+riscv_upload_software_to_the_board_using_uart ()
+{
+    set +o pipefail
+    available_uart_ports=$(ls /dev/ttyUSB* | sed 's|/dev/ttyUSB||g' | tr "\r\n" " ")
+    set -o pipefail
+
+    [ -n "$available_uart_ports" ] ||
+    error "no active /dev/ttyUSB devices for UART"
+
+    [[ "$available_uart_ports" == *" "* ]] &&
+    error "multiple /dev/ttyUSB devices for UART: $available_uart_ports"
+
+    info "/dev/ttyUSB device for UART: $available_uart_ports"
 }

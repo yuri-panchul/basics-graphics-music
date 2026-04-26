@@ -1,7 +1,0 @@
-/opt/riscv/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss -o crt0.o crt0.s
-/opt/riscv/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss -o mscratch.o mscratch.s
-/opt/riscv/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss -o trap_ack.o trap_ack.s
-/opt/riscv/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss -o nmi_vec.o nmi_vec.s
-/opt/riscv/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss -o dbg_vec.o dbg_vec.s
-/opt/riscv/bin/riscv-none-elf-gcc -I./barebones -I. -c -march=rv32i_zbs_zicsr -mabi=ilp32  -ffreestanding -O0 -fno-zero-initialized-in-bss -o main.o main.c
-/opt/riscv/bin/riscv-none-elf-gcc -nostdlib -Tyrv.ld  -o final.elf crt0.o mscratch.o trap_ack.o nmi_vec.o dbg_vec.o main.o
