@@ -97,7 +97,9 @@ riscv_try_install_dir ()
 
     info "found XPACK RISC-V GCC toolchain in '$riscv_dir'"
 
-    [[ "$OSTYPE" = "darwin"* ]] && remove_macos_quarantine_attr "$riscv_dir"
+    if [[ "$OSTYPE" = "darwin"* ]] ; then
+        remove_macos_quarantine_attr "$riscv_dir"
+    fi
 }
 
 #-----------------------------------------------------------------------------
