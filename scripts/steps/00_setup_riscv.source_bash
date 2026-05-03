@@ -29,6 +29,10 @@ fi
 
 #-----------------------------------------------------------------------------
 
+program_mem32=program.mem32
+
+#-----------------------------------------------------------------------------
+
 riscv_find_linker_script ()
 {
     find_opt="-mindepth 1 -maxdepth 1 -type f -name *.ld -print"
@@ -202,7 +206,7 @@ riscv_software_toolchain_run ()
         -O3 -T"../$linker_script" $src
 
     $riscv_objcopy -O binary a.out final
-    python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > code_demo.mem32
+    python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32
 
     riscv_upload_software_to_the_board_using_uart
 }
@@ -270,6 +274,34 @@ riscv_upload_software_to_the_board_using_uart ()
 
     #-------------------------------------------------------------------------
 
-    stty -F /dev/ttyUSB0 raw speed 115200 -crtscts cs8 -parenb -cstopb
-    cat code_demo.mem32 > /dev/ttyUSB0
+    dev="/dev/ttyUSB$uart_port"
+
+    dev_grp=$(stat -c "%G" $dev)
+    [ -n "$dev_grp" ] || error "Cannot determine the groups that owns $dev"
+
+    # id
+    #
+    # -G, --groups  print all group IDs
+    # -n, --name    print a name instead of a number, for -ugG
+    #
+    # grep
+    #
+    # -w, --word-regexp      match only whole words
+    # -q, --quiet, --silent  suppress all normal output
+
+    if ! id -nG | grep -qw $dev_grp
+    then
+        error "User \"$USER\" is not in \"$dev_grp\" group."  \
+              "Run: \"sudo usermod -a -G $dev_grp $USER\","   \
+              "then reboot and try again."                    \
+              "(On some systems it is sufficient"             \
+              "to logout and login instead of the reboot)."
+    fi
+
+       stty -F $dev raw speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
+    || error "USB-to-UART is not working"
+
+    [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
+
+    cat $program_mem32 > $dev || error "Error sending '$program_mem32' to $dev"
 }
