@@ -29,6 +29,10 @@ fi
 
 #-----------------------------------------------------------------------------
 
+program_mem32=program.mem32
+
+#-----------------------------------------------------------------------------
+
 riscv_find_linker_script ()
 {
     find_opt="-mindepth 1 -maxdepth 1 -type f -name *.ld -print"
@@ -202,7 +206,7 @@ riscv_software_toolchain_run ()
         -O3 -T"../$linker_script" $src
 
     $riscv_objcopy -O binary a.out final
-    python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > code_demo.mem32
+    python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32
 
     riscv_upload_software_to_the_board_using_uart
 }
@@ -212,14 +216,93 @@ riscv_software_toolchain_run ()
 riscv_upload_software_to_the_board_using_uart ()
 {
     set +o pipefail
-    available_uart_ports=$(ls /dev/ttyUSB* | sed 's|/dev/ttyUSB||g' | tr "\r\n" " ")
+
+    available_uart_ports=$(ls /dev/ttyUSB* |
+        sed 's|/dev/ttyUSB||g'             |
+        tr "\r\n" " "                      |
+        sed 's/ $//g'                      )
+
     set -o pipefail
 
     [ -n "$available_uart_ports" ] ||
     error "no active /dev/ttyUSB devices for UART"
 
-    [[ "$available_uart_ports" == *" "* ]] &&
-    error "multiple /dev/ttyUSB devices for UART: $available_uart_ports"
+    uart_port="$available_uart_ports"
 
-    info "/dev/ttyUSB device for UART: $available_uart_ports"
+    #-------------------------------------------------------------------------
+
+    last_uart_port_file="$package_dir/last_uart_port"
+
+    #-------------------------------------------------------------------------
+
+    if [[ "$available_uart_ports" == *" "* ]]
+    then
+        warning "multiple /dev/ttyUSB devices for UART: $available_uart_ports"
+
+        default_uart_port=
+
+        if [ -f "$last_uart_port_file" ] ; then
+            default_uart_port=$(head -1 "$last_uart_port_file" |
+            grep -E '^[0-9]+$'                                 |
+            tr "\r\n" " "                                      |
+            sed 's/ $//g'                                      )
+        fi
+
+        if [ -n "$default_uart_port" ] ; then
+            info "default UART port is /dev/ttyUSB$default_uart_port"
+        fi
+
+        if ! [[ " $available_uart_ports " == *" $default_uart_port "* ]]
+        then
+            # Stored UART port is not available
+            default_uart_port=
+        fi
+
+        default_uart_port_selection=
+
+        if [ -n "$default_uart_port" ] ; then
+            default_uart_port_selection=". The default is $default_uart_port"
+        fi
+
+        read -rp "Choose UART port out of: $available_uart_ports$default_uart_port_selection: " uart_port
+        uart_port=${uart_port:-$default_uart_port}
+    fi
+
+    #-------------------------------------------------------------------------
+
+    printf "$uart_port" > $last_uart_port_file
+
+    #-------------------------------------------------------------------------
+
+    dev="/dev/ttyUSB$uart_port"
+
+    dev_grp=$(stat -c "%G" $dev)
+    [ -n "$dev_grp" ] || error "Cannot determine the groups that owns $dev"
+
+    # id
+    #
+    # -G, --groups  print all group IDs
+    # -n, --name    print a name instead of a number, for -ugG
+    #
+    # grep
+    #
+    # -w, --word-regexp      match only whole words
+    # -q, --quiet, --silent  suppress all normal output
+
+    if ! id -nG | grep -qw $dev_grp
+    then
+        error "User \"$USER\" is not in \"$dev_grp\" group."  \
+              "Run: \"sudo usermod -a -G $dev_grp $USER\","   \
+              "then reboot and try again."                    \
+              "(On some systems it is sufficient"             \
+              "to logout and login instead of the reboot)."
+    fi
+
+       stty -F $dev raw speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
+    || error "USB-to-UART is not working"
+
+    [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
+
+    info "uploading '$program_mem32' to $dev"
+    cat $program_mem32 > $dev || error "Error sending '$program_mem32' to $dev"
 }
