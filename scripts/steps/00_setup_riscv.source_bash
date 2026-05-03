@@ -212,14 +212,64 @@ riscv_software_toolchain_run ()
 riscv_upload_software_to_the_board_using_uart ()
 {
     set +o pipefail
-    available_uart_ports=$(ls /dev/ttyUSB* | sed 's|/dev/ttyUSB||g' | tr "\r\n" " ")
+
+    available_uart_ports=$(ls /dev/ttyUSB* |
+        sed 's|/dev/ttyUSB||g'             |
+        tr "\r\n" " "                      |
+        sed 's/ $//g'                      )
+
     set -o pipefail
 
     [ -n "$available_uart_ports" ] ||
     error "no active /dev/ttyUSB devices for UART"
 
-    [[ "$available_uart_ports" == *" "* ]] &&
-    error "multiple /dev/ttyUSB devices for UART: $available_uart_ports"
+    uart_port="$available_uart_ports"
 
-    info "/dev/ttyUSB device for UART: $available_uart_ports"
+    #-------------------------------------------------------------------------
+
+    last_uart_port_file="$package_dir/last_uart_port"
+
+    #-------------------------------------------------------------------------
+
+    if [[ "$available_uart_ports" == *" "* ]]
+    then
+        warning "multiple /dev/ttyUSB devices for UART: $available_uart_ports"
+
+        default_uart_port=
+
+        if [ -f "$last_uart_port_file" ] ; then
+            default_uart_port=$(head -1 "$last_uart_port_file" |
+            grep -E '^[0-9]+$'                                 |
+            tr "\r\n" " "                                      |
+            sed 's/ $//g'                                      )
+        fi
+
+        if [ -n "$default_uart_port" ] ; then
+            info "default UART port is /dev/ttyUSB$default_uart_port"
+        fi
+
+        if ! [[ " $available_uart_ports " == *" $default_uart_port "* ]]
+        then
+            # Stored UART port is not available
+            default_uart_port=
+        fi
+
+        default_uart_port_selection=
+
+        if [ -n "$default_uart_port" ] ; then
+            default_uart_port_selection=". The default is $default_uart_port"
+        fi
+
+        read -rp "Choose UART port out of: $available_uart_ports$default_uart_port_selection: " uart_port
+        uart_port=${uart_port:-$default_uart_port}
+    fi
+
+    #-------------------------------------------------------------------------
+
+    printf "$uart_port" > $last_uart_port_file
+
+    #-------------------------------------------------------------------------
+
+    stty -F /dev/ttyUSB0 raw speed 115200 -crtscts cs8 -parenb -cstopb
+    cat code_demo.mem32 > /dev/ttyUSB0
 }

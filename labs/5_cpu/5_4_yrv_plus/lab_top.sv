@@ -1,5 +1,5 @@
 `include "config.svh"
-//`include "yrv_mcu.v"
+`include "yrv_mcu.v"
 //`ifdef ALTERA_RESERVED_QIS
 //    `define BOOT_FROM_AUX_UART
 //`endif
@@ -83,10 +83,12 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    wire [7:0] key_ext = 8' (key);
+
     //--------------------------------------------------------------------------
     // Slow clock button / switch
 
-    wire slow_clk_mode = key[0];
+    wire slow_clk_mode = key_ext[0];
     assign led[0] = muxed_clk;
 
 
@@ -163,8 +165,8 @@ module lab_top
 
    //-------------------------------------------------------------------------
     // Local interrupt
-    assign li_req ={12'h0, 1'b0,key[5],key[4],key[3]};
-    assign ei_req = key[6];
+    assign li_req ={12'h0, 1'b0,key_ext[5],key_ext[4],key_ext[3]};
+    assign ei_req = key_ext[6];
 
     //--------------------------------------------------------------------------
     // MCU instantiation
@@ -216,7 +218,7 @@ module lab_top
 
 
     always_comb
-        casez (key)
+        casez (key_ext [3:0])
         default : display_number = mem_addr  [31: 0];
         4'b0001? : display_number = mem_rdata [31: 0];
         4'b0010? : display_number = mem_wdata [31: 0];
@@ -261,7 +263,7 @@ module lab_top
     logic [32:0] hz125_reg;
     logic                hz125_lat;
 
-    assign   nmi_req        = hz125_lat || key[7];
+    assign   nmi_req        = hz125_lat | key_ext[7];
     wire     hz125_lim = hz125_reg == 32'd299999;
 
     always_ff @ (posedge clk or negedge resetb)

@@ -3,3 +3,4 @@ work/
 librelane_designs/
 log.txt
 fpga_board_selection
+last_uart_port

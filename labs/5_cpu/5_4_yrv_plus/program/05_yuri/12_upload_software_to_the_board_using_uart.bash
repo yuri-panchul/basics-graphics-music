@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x
+
 set -Eeuo pipefail  # See the meaning in scripts/README.md
 
 script=$(basename "$0")
