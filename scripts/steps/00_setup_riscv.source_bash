@@ -303,5 +303,6 @@ riscv_upload_software_to_the_board_using_uart ()
 
     [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
 
+    info "uploading '$program_mem32' to $dev"
     cat $program_mem32 > $dev || error "Error sending '$program_mem32' to $dev"
 }
