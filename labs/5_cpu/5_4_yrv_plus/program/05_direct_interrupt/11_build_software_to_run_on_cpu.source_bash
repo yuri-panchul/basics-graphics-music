@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -Eeuo pipefail  # See the meaning in scripts/README.md
- 
+
 script=$(basename "$0")
 source_script=${script/\.bash/.source_bash}
 dir_source_script=../scripts/steps/$source_script
