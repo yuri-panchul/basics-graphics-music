@@ -1,5 +1,5 @@
 `include "config.svh"
-`include "yrv_mcu.v"
+`include "cpu/yrv_mcu.vh"
 //`ifdef ALTERA_RESERVED_QIS
 //    `define BOOT_FROM_AUX_UART
 //`endif
