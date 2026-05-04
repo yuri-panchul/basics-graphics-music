@@ -109,8 +109,8 @@ void display_current_chars() {
 
 // Display and shift
 void run_display() {
-    display_current_chars();  // Сначала отображаем текущие символы
-    shift_message();          // Потом обновляем позицию строки
+    display_current_chars();  
+    shift_message();          
 }
 
 
@@ -138,7 +138,6 @@ void main() {
     asm("csrw mie, a5");
 
     //Save  handler to mtvec
-    //Run 08_show_dump.sh  to see assembler code
     asm("csrw mtvec, %0" ::"r"(&trap_function_handler)); 
     while (1) {
         run_display();         // Main loop
