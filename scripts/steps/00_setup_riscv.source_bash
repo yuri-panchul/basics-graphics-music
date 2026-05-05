@@ -217,15 +217,18 @@ riscv_upload_software_to_the_board_using_uart ()
 {
     set +o pipefail
 
-    available_uart_ports=$(ls /dev/ttyUSB* |
-        sed 's|/dev/ttyUSB||g'             |
-        tr "\r\n" " "                      |
-        sed 's/ $//g'                      )
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        available_uart_ports=$(ls /dev/ttyUSB* 2>/dev/null | sed 's/\/dev\/ttyUSB//g')
+        prefix="/dev/ttyUSB"
+    elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+        available_uart_ports=$(ls /dev/ttyS* 2>/dev/null | sed 's/\/dev\/ttyS//g')
+        prefix="/dev/ttyS"
+    fi
 
     set -o pipefail
 
     [ -n "$available_uart_ports" ] ||
-    error "no active /dev/ttyUSB devices for UART"
+    error "no active /dev/ttyUSB (or /dev/ttyS for git bash)  devices for UART"
 
     uart_port="$available_uart_ports"
 
@@ -237,7 +240,13 @@ riscv_upload_software_to_the_board_using_uart ()
 
     if [[ "$available_uart_ports" == *" "* ]]
     then
-        warning "multiple /dev/ttyUSB devices for UART: $available_uart_ports"
+
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+             warning "multiple /dev/ttyUSB  devices for UART: $available_uart_ports"
+        elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+             warning "Git bash multiple /dev/ttyS  devices for UART: $available_uart_ports"
+        fi
+
 
         default_uart_port=
 
@@ -249,7 +258,11 @@ riscv_upload_software_to_the_board_using_uart ()
         fi
 
         if [ -n "$default_uart_port" ] ; then
-            info "default UART port is /dev/ttyUSB$default_uart_port"
+            if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+                info "default UART port is /dev/ttyUSB$default_uart_port"
+            elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+                info "default UART port is /dev/ttyS$default_uart_port"
+            fi
         fi
 
         if ! [[ " $available_uart_ports " == *" $default_uart_port "* ]]
@@ -274,10 +287,18 @@ riscv_upload_software_to_the_board_using_uart ()
 
     #-------------------------------------------------------------------------
 
-    dev="/dev/ttyUSB$uart_port"
+    dev="$prefix$uart_port"
 
-    dev_grp=$(stat -c "%G" $dev)
-    [ -n "$dev_grp" ] || error "Cannot determine the groups that owns $dev"
+    dev_grp=$(stat -c "%G" $dev 2>/dev/null)
+    dev_grp_id=$(stat -c "%g" "$dev" 2>/dev/null)
+
+    if [ -z "$dev_grp_id" ]; then
+      error "Cannot access $dev. Check if device is connected."
+    fi
+
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      [ -n "$dev_grp" ] || error "Cannot determine the groups that owns $dev"
+    fi
 
     # id
     #
@@ -289,6 +310,7 @@ riscv_upload_software_to_the_board_using_uart ()
     # -w, --word-regexp      match only whole words
     # -q, --quiet, --silent  suppress all normal output
 
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     if ! id -nG | grep -qw $dev_grp
     then
         error "User \"$USER\" is not in \"$dev_grp\" group."  \
@@ -297,12 +319,21 @@ riscv_upload_software_to_the_board_using_uart ()
               "(On some systems it is sufficient"             \
               "to logout and login instead of the reboot)."
     fi
-
-       stty -F $dev raw speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
-    || error "USB-to-UART is not working"
+    fi
+    
 
     [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
+    
+    info "($$) uploading '$program_mem32' to $dev"
+    
 
-    info "uploading '$program_mem32' to $dev"
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        stty -F $dev raw speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
+        || error "USB-to-UART is not working"
+    elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+        stty -F $dev  speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
+        || error "USB-to-UART is not working"
+    fi  
+    
     cat $program_mem32 > $dev || error "Error sending '$program_mem32' to $dev"
 }
