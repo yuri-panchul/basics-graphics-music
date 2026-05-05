@@ -331,7 +331,6 @@ riscv_upload_software_to_the_board_using_uart ()
         stty -F $dev raw speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
         || error "USB-to-UART is not working"
     elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
-#        stty -F $dev 115200 min 1 time 0 -brkint -icrnl -imaxbel -opost -isig -icanon -iexten -echo \
         stty -F $dev  speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
         || error "USB-to-UART is not working"
     fi  
