@@ -7,6 +7,7 @@
 // `define FCR fcr_3_single_for_pipes_with_global_stall
 // `define FCR fcr_4_wrapped_2_deep_fifo
 // `define FCR fcr_5_double_buffer_from_dally_harting
+// `define FCR fcr_6_double_buffer_from_dally_harting_modified
 
 module pow_5_pipelined
 # (
