@@ -217,12 +217,20 @@ riscv_upload_software_to_the_board_using_uart ()
 {
     set +o pipefail
 
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if [[ "$OSTYPE" == "linux-gnu"* ]]
+    then
         tty_suffix="USB"
         git_bash=
-    elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+
+    elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]
+    then
         tty_suffix="S"
         git_bash="Git Bash "
+
+    elif [[ "$OSTYPE" = "darwin"* ]]
+    then
+        tty_suffix=".usbserial-"
+        git_bash=""
     fi
 
     dev_name_in_err="$git_bash/dev/tty${tty_suffix}"
@@ -296,7 +304,7 @@ riscv_upload_software_to_the_board_using_uart ()
 
     #-------------------------------------------------------------------------
 
-    if [[ "$OSTYPE" == "linux-gnu"* ]]
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" = "darwin"* ]]
     then
         dev_grp=$(stat -c "%G" $dev 2>/dev/null)
 
@@ -326,7 +334,7 @@ riscv_upload_software_to_the_board_using_uart ()
     
     info "uploading '$program_mem32' to $dev"
 
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" = "darwin"* ]] ; then
         extra_stty_arg="raw "
     fi
 
