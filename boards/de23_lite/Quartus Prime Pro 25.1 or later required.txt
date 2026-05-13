@@ -1,0 +1,3 @@
+Agilex 3 FPGA (C-Series) development requires Quartus Prime Pro Edition version 25.1 or later, with support officially introduced in early 2025. A full installation requires up to 140 GB of disk space, and you must install the specific Agilex 3 device support files (e.g., agilex3-25.1.0.129.qdz) along with the Quartus common files.
+
+Requires a valid license, such as the SW-ONE-QUARTUS (paid) or the specialized SW-AGILEX-3 (free license for C-series).
