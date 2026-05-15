@@ -38,20 +38,26 @@ module tb;
 
     //------------------------------------------------------------------------
 
-    initial begin
+    initial
+    begin
         clk = 1'b0;
-        forever begin
-            #5;
-            clk = ~clk;
-        end
+
+        forever
+            # 5 clk = ~ clk;
     end
 
-    initial begin
-        #10;
-        rst = 1;
-        #10;
-        rst = 0;
+    //------------------------------------------------------------------------
+
+    initial
+    begin
+        rst <= 1'bx;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b1;
+        repeat (2) @ (posedge clk);
+        rst <= 1'b0;
     end
+
+    //------------------------------------------------------------------------
 
     initial
     begin
@@ -59,7 +65,18 @@ module tb;
             $dumpvars;
         `endif
 
-        # 2_000;
+        key <= '0;
+        sw  <= '0;
+
+        @ (negedge rst);
+
+        repeat (50)
+        begin
+            @ (posedge clk);
+
+            key <= $urandom ();
+            sw  <= $urandom ();
+        end
 
         $finish;
     end
