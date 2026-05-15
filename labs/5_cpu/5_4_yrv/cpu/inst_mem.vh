@@ -145,7 +145,24 @@ module inst_mem  (mem_rdata, clk, mem_addr, mem_addr_reg, mem_ble_reg, mem_ready
 
   reg [31:0] rom[0:255];
 
-  initial $readmemh("code_demo.mem32", rom);
+  localparam string code_demo_file_name = "code_demo.mem32";
+
+  initial
+  begin
+    int fd;
+
+    fd = $fopen(default_mem_file_name, "r");
+
+    if (fd)
+    begin
+      $fclose(fd);
+      $readmemh(default_mem_file_name, rom);
+    end
+    else
+    begin
+      $warning("No default memory file '%s' found", default_mem_file_name);
+    end
+  end
 
   assign mem_rdata = rom[mem_addr_reg[9:2]];
 

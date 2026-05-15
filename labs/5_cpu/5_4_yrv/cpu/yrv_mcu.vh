@@ -330,7 +330,26 @@ module yrv_mcu
   `endif
 
 `ifndef NO_READMEMH_FOR_8_BIT_WIDE_MEM
-initial $readmemh("code_demo.mem8", mcu_mem);
+
+localparam string default_mem_file_name = "code_demo.mem8";
+
+initial
+begin
+  int fd;
+
+  fd = $fopen(default_mem_file_name, "r");
+
+  if (fd)
+  begin
+    $fclose(fd);
+    $readmemh(default_mem_file_name, mcu_mem);
+  end
+  else
+  begin
+    $warning("No default memory file '%s' found", default_mem_file_name);
+  end
+end
+
 `endif
 
 `endif
