@@ -1,17 +1,9 @@
 `include "config.svh"
 `include "cpu/yrv_mcu.vh"
-//`ifdef ALTERA_RESERVED_QIS
-//    `define BOOT_FROM_AUX_UART
-//`endif
-`define BOOT_FROM_AUX_UART
-//`define INTEL_VERSION
-`define NO_READMEMH_FOR_8_BIT_WIDE_MEM
-`define USE_MEM_BANKS_FOR_BYTE_LINES
-`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
 
 module lab_top
 # (
-    parameter  clk_mhz       = 27,
+    parameter  clk_mhz       = 50,
                w_key         = 4,
                w_sw          = 8,
                w_led         = 8,
@@ -71,11 +63,11 @@ module lab_top
     // assign led        = '0;
     // assign abcdefgh   = '0;
     // assign digit      = '0;
-    assign red        = '0;
-    assign green      = '0;
-    assign blue       = '0;
-    assign sound      = '0;
-    assign uart_tx    = '1;
+       assign red        = '0;
+       assign green      = '0;
+       assign blue       = '0;
+       assign sound      = '0;
+       assign uart_tx    = '1;
 
     //--------------------------------------------------------------------------
     // Invert reset
@@ -250,64 +242,19 @@ module lab_top
             digit    = digit_from_mcu;
         end
 
-
-
     //--------------------------------------------------------------------------
 
-    // `ifdef OLD_INTERRUPT_CODE
+    wire interrupt_raw;
 
-    //--------------------------------------------------------------------------
-    // 125Hz interrupt
-    // 50,000,000 Hz / 125 Hz = 40,000 cycles ???
+    strobe_gen
+    # (.clk_mhz (clk_mhz), .strobe_hz (125))
+    interrupt_gen
+    (
+        .clk,
+        .rst,
+        .strobe (interrupt_raw)
+    );
 
-    logic [32:0] hz125_reg;
-    logic                hz125_lat;
-
-    assign   nmi_req        = hz125_lat | key_ext[7];
-    wire     hz125_lim = hz125_reg == 32'd299999;
-
-    always_ff @ (posedge clk or negedge resetb)
-        if (~ resetb)
-        begin
-            hz125_reg <= 32'd0;
-            hz125_lat <= 1'b0;
-        end
-        else
-        begin
-            hz125_reg <= hz125_lim ? 32'd0 : hz125_reg + 1'b1;
-            if(port3_reg[0])
-                hz125_lat <=  hz125_lim;
-            else
-                hz125_lat <= 1'b0;
-        end
-
-    // `endif
-
-    //--------------------------------------------------------------------------
-    // 8 KHz interrupt
-    // 50,000,000 Hz / 8 KHz = 6250 cycles
-
-    // logic [12:0] khz8_reg;
-    // logic                khz8_lat;
-
-    // assign nmi_req        = khz8_lat;
-
-    // wire     khz8_lim = khz8_reg == 13'd6249;
-
-    // always_ff @ (posedge clk or negedge resetb)
-    //     if (~ resetb)
-    //     begin
-    //         khz8_reg <= 13'd0;
-    //         khz8_lat <= 1'b0;
-    //     end
-    //     else
-    //     begin
-    //         khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
-    //         if(port3_reg [0]) begin
-    //                 khz8_lat <= khz8_lim;
-    //             end
-    //         else
-    //             khz8_lat<= 1'b0;
-    //     end
+    assign nmi_req = (interrupt_raw | key_ext [7]) & ~ port3_reg [0];
 
 endmodule
