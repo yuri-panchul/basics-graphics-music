@@ -17,7 +17,7 @@ _RST_BASE = 0x200;
 
  .text :
  {
-    *(.text.eset_led)
+    *(.text.mscratch)
     . = _TRAP_ACK;
     *(.text.trap_ack)
     . = _NMI_VECT;
