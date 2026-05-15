@@ -6,5 +6,5 @@
            .equ  mcause, 0x342
            .equ  iobase, 0xffff0     # i/o at 0xffff0000
 
-dex_vec:   li    t1, 0x50            # bits 13 and 11
-           beq   zero, zero, dset_led
+dex_vec:   
+
