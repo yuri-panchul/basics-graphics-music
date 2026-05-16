@@ -1,5 +1,4 @@
-| CSR           | Read Only | Writable | Reset           | Init         | Updated on   | Comment                                                                                                       |
-|               |           |          | in hardware?    | in software? | background   |                                                                                                               |
+| CSR           | Read Only | Writable | Reset in hardware? | Init in software? | Updated on backround?  | Comment                                                                                                       |
 | ------------- | --------- |--------- | --------------- | ------------ | ------------ | ------------------------------------------------------------------------------------------------------------- |
 | CYCLE         |           | Writable | Not guaranteed  | Should       | Yes          | The counter registers have an arbitrary value after the hart is reset, and can be written with a given value  |
 | CYCLEH        |           | Writable | Not guaranteed  | Should       | Yes          | The counter registers have an arbitrary value after the hart is reset, and can be written with a given value  |
