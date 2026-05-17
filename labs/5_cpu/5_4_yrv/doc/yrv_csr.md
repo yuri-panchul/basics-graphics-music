@@ -28,3 +28,13 @@ MTVEC         | Yes   |           | Writable |                   |              
 MVENDORID     |       | Read Only |          | 0 or define       |                 |               |              |
 TIME          |       | Read Only |          |                   | Current time    |               |  Yes         |
 TIMEH         |       | Read Only |          |                   | Current time    |               |  Yes         |
+
+What has to be initialized in software in the boot code:
+
+* MTVEC - trap vector base OR-ed with vector bit
+* MSTATUS - enable interrupts
+* MIE - enable interrupts
+* MSCRATCH - set the stack pointer for the ISR, interrupt service routine
+* MCOUNTINHIBIT - turn on the counters
+* MCYCLE/MINSTRET - optionally set the counters to 0
+* DCSR и другие debug CSR - not sure, maybe set everything to 0
