@@ -1,4 +1,4 @@
-| CSR           | Used in MIET APS | Read Only | Writable | Value in YRV      | Reset in hardware? | Init in software? | Updated on backround?  | Comments, references and details                                                 |
+| CSR           | Used in MIET APS | Read Only | Writable | Value in YRV      | Reset in hardware? | Init in software? | Updated on backround?  | Comments....................                                                      |
 | ------------- | ----- | --------- |--------- | ---------         | --------------- | ------------ | ------------ | ------------------------------------------------------------------------------------------------------------- |
 | CYCLE         |       |           | Writable |                   | Not guaranteed  | Should       | Yes          | The counter registers have an arbitrary value after the hart is reset, and can be written with a given value  |
 | CYCLEH        |       |           | Writable |                   | Not guaranteed  | Should       | Yes          | The counter registers have an arbitrary value after the hart is reset, and can be written with a given value  |
