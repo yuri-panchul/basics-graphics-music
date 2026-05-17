@@ -1,5 +1,5 @@
 CSR           | Used in MIET APS | Read Only | Writable | Value in YRV | Reset in hardware? | Init in software? | Updated on backround?  | Comments....................
-------------- | ----- | --------- |--------- | ----------------- | --------------- | ------------- | --------------- | ------------------------------------------------
+------------- | ---------------- | --------- |--------- | ------------ | ------------------ | ----------------- | ---------------------- | ----------------------------
 CYCLE         |       | Read Only |          |                   | Not guaranteed  |               | Yes, if enabled | Alias to MCYCLE to use in user mode (no user mode in YRV)
 CYCLEH        |       | Read Only |          |                   | Not guaranteed  |               | Yes, if enabled | Alias to MCYCLEH to use in user mode (no user mode in YRV)
 DCSR          |       |           |          |                   |                 |               |                 |
