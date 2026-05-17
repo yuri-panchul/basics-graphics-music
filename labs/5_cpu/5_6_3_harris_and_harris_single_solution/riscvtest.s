@@ -1,11 +1,12 @@
 # riscvtest.s
 # Sarah.Harris@unlv.edu
 # David_Harris@hmc.edu
-# 27 Oct 2020
+# 27 Oct 2021
 #
 # Test the RISC-V processor.  
 #  add, sub, and, or, slt, addi, lw, sw, beq, jal
-# If successful, it should write the value 25 to address 100
+# Added instructions: lui and xor (see *** in code below)
+# If successful, it should write the value 0xABCDE7D5 to address 108
 
 #       RISC-V Assembly         Description               Address   Machine Code
 main:   addi x2, x0, 5          # x2 = 5                  0         00500113   
@@ -24,10 +25,13 @@ around: slt  x4, x7, x2         # x4 = (3 < 5)  = 1       28        0023A233
         sw   x7, 84(x3)         # [96] = 7                34        0471AA23 
         lw   x2, 96(x0)         # x2 = [96] = 7           38        06002103 
         add  x9, x2, x5         # x9 = (7 + 11) = 18      3C        005104B3
-        jal  x3, end            # jump to end, x3 = 0x44  40        008001EF
-        addi x2, x0, 1          # shouldn't happen        44        00100113
-end:    add  x2, x2, x9         # x2 = (7 + 18)  = 25     48        00910133
-        sw   x2, 0x20(x3)       # mem[100] = 25           4C        0221A023 
-done:   beq  x2, x2, done       # infinite loop           50        00210063
+        lui  x4, 0xABCDE        # ***x4 = 0xABCDE000      40        ABCDE237
+        addi x4, x4, 0x7CC      # ***x4 = 0xABCDE7CC      44        7CC20213
+        jal  x3, end            # jump to end, x3 = 0x4C  48        008001EF
+        addi x2, x0, 1          # shouldn't happen        4C        00100113
+end:    add  x2, x2, x9         # x2 = (7 + 18)  = 25     50        00910133
+        xor  x2, x2, x4         # ***x2 = 0xABCDE7D5      54        00414133
+        sw   x2, 0x20(x3)       # mem[108] = 0xABCDE7D5   58        0221A023 
+done:   beq  x2, x2, done       # infinite loop           5C        00210063
 		
 		
