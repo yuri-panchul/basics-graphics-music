@@ -10,7 +10,7 @@ INSTRET       |       |           |          |                   |              
 INSTRETH      |       |           |          |                   |                 |               |                 |
 MARCHID       |       | Read Only |          | 0 or define       |                 |               |                 |
 MCAUSE        | Yes   |           |          |                   |                 |               |                 |
-MCOUNTINHIBIT |       |           | Writable |                   | Yes, to 0       | Don't have to |                 | CY (bit 0) inhibits cycle counting, IR (2) instruction counting. Timer counting (1) is never inhibited.
+MCOUNTINHIBIT |       |           | Writable |                   | Yes, to 0       |               |                 | CY (bit 0) inhibits cycle counting, IR (2) instruction counting. Timer counting (1) is never inhibited.
 MCYCLE        |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | The counter registers have an arbitrary value after the hart is reset, and can be written with a given value
 MCYCLEH       |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | Upper part of MCYCLE
 MEPC          | Yes   |           |          |                   |                 |               |                 |
@@ -21,7 +21,7 @@ MINSTRET      |       |           | Writable |                   |              
 MINSTRETH     |       |           | Writable |                   |                 |               |                 |
 MIP           |       | Read Only in YRV |   |                   |                 |               |                 | Three bits MSIP (3), MTIP (7) and MEIP (11), plus user-defined MLIP [31:0]
 MISA          |       | Read Only |          | 0 or define       |                 |               |                 |
-MSCRATCH      | Yes   |           | Writable |                   |                 |               |                 |
+MSCRATCH      | Yes   |           | Writable |                   |                 | Yes, for interrupt stack |      | Usage varied depending on internet service routine, see H&H testbook example where this csr is used as a stack pointer.
 MSTATUS       |       | Except MIE (bit 3) and MPIE (bit 7) | bits 3 and 7 are writable | 0 except bits 3 and 7 | MPIE=1, MIE=0 | Yes (complicated) | Yes (complicated) | Changes on reset, interrupt, exception, mret or csr write. Read the doc carefully.
 MTVAL         |       |           |          |                   |                 |               |                 |
 MTVEC         | Yes   |           | Writable |                   |                 | Must if interrupts are used |   | Machine Trap Handler Base-Adress OR-ed with Vectored bit
