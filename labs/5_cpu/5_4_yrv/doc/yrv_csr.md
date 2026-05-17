@@ -10,7 +10,7 @@ INSTRET       |       |           |          |                   |              
 INSTRETH      |       |           |          |                   |                 |               |                 |
 MARCHID       |       | Read Only |          | 0 or define       |                 |               |                 |
 MCAUSE        | Yes   |           |          |                   |                 |               |                 |
-MCOUNTINHIBIT |       |           |          |                   |                 |               |                 |
+MCOUNTINHIBIT |       |           | Writable |                   | Yes, to 0       | Don't have to |                 | CY (bit 0) inhibits cycle counting, IR (2) instruction counting. Timer counting (1) is never inhibited.
 MCYCLE        |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | The counter registers have an arbitrary value after the hart is reset, and can be written with a given value
 MCYCLEH       |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | Upper part of MCYCLE
 MEPC          | Yes   |           |          |                   |                 |               |                 |
