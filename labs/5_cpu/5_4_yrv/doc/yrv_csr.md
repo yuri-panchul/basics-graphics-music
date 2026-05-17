@@ -2,23 +2,23 @@ CSR           | Used in MIET APS | Read Only | Writable | Value in YRV | Reset i
 ------------- | ---------------- | --------- |--------- | ------------ | ------------------ | ----------------- | ---------------------- | ----------------------------
 CYCLE         |       | Read Only |          |                   | Not guaranteed  |               | Yes, if enabled | Alias to MCYCLE to use in user mode (no user mode in YRV)
 CYCLEH        |       | Read Only |          |                   | Not guaranteed  |               | Yes, if enabled | Alias to MCYCLEH to use in user mode (no user mode in YRV)
-DCSR          |       |           |          |                   |                 |               |                 |
-DPC           |       |           |          |                   |                 |               |                 |
-DSCRATCH0     |       |           | Writable |                   |                 |               |                 |
-DSCRATCH1     |       |           | Writable |                   |                 |               |                 |
-INSTRET       |       |           |          |                   |                 |               |                 |
-INSTRETH      |       |           |          |                   |                 |               |                 |
+DCSR          |       | Some bits |          |                   | Check           | Check         | Check           | Check usage
+DPC           |       |           | Writable |                   | Yes, to 0       |               |                 | Check usage
+DSCRATCH0     |       |           | Writable |                   | Yes, to 0       |               |                 | Check usage
+DSCRATCH1     |       |           | Writable |                   |                 |               |                 | Check usage
+INSTRET       |       | Read Only |          |                   | Not guaranteed  |               | Yes, if enabled | Alias to MINSTRET to use in user mode (no user mode in YRV)
+INSTRETH      |       | Read Only |          |                   | Not guaranteed  |               | Yes, if enabled | Alias to MINSTRETH to use in user mode (no user mode in YRV)
 MARCHID       |       | Read Only |          | 0 or define       |                 |               |                 |
 MCAUSE        | Yes   |           |          |                   |                 |               |                 |
 MCOUNTINHIBIT |       |           | Writable |                   | Yes, to 0       |               |                 | CY (bit 0) inhibits cycle counting, IR (2) instruction counting. Timer counting (1) is never inhibited.
 MCYCLE        |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | The counter registers have an arbitrary value after the hart is reset, and can be written with a given value
 MCYCLEH       |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | Upper part of MCYCLE
-MEPC          | Yes   |           |          |                   |                 |               |                 |
+MEPC          | Yes   |           | Writable |                   |                 |               | Yes             | Is valid and relevant only after the first exception.
 MHARTID       |       | Read Only |          | 0, wire from MCU  |                 |               |                 |
 MIE           | Yes   |           | Writable |                   | Expected 0, not guaranteed | Generally required | | In YRV the same flop is used for all three IE bits in MIE, as well as MIE bit in MSTATUS
 MIMPID        |       | Read Only |          | 0 or define       |                 |               |                 |
-MINSTRET      |       |           | Writable |                   |                 |               |                 |
-MINSTRETH     |       |           | Writable |                   |                 |               |                 |
+MINSTRET      |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | Should be close to 0 but not sure
+MINSTRETH     |       |           | Writable |                   | Not guaranteed  | Don't have to | Yes, if enabled | Upper part of MINSTRET
 MIP           |       | Read Only in YRV |   |                   |                 |               |                 | Three bits MSIP (3), MTIP (7) and MEIP (11), plus user-defined MLIP [31:0]
 MISA          |       | Read Only |          | 0 or define       |                 |               |                 |
 MSCRATCH      | Yes   |           | Writable |                   |                 | Yes, for interrupt stack |      | Usage varied depending on internet service routine, see H&H testbook example where this csr is used as a stack pointer.
@@ -28,19 +28,3 @@ MTVEC         | Yes   |           | Writable |                   |              
 MVENDORID     |       | Read Only |          | 0 or define       |                 |               |              |
 TIME          |       | Read Only |          |                   | Current time    |               |  Yes         |
 TIMEH         |       | Read Only |          |                   | Current time    |               |  Yes         |
-
-      mcyinh_reg <= csr_wdata[0];
-      mirinh_reg <= csr_wdata[2];
-      mie_reg   <= (mstat_wr) ? csr_wdata[3] :
-      mpie_reg  <= (mstat_wr) ? csr_wdata[7] :
-      mlie_reg  <= csr_wdata[31:16];
-      meie_reg  <= csr_wdata[11];
-      mtie_reg  <= csr_wdata[7];
-      msie_reg  <= csr_wdata[3];
-    if (mscr_wr) mscratch_reg <= csr_wdata;
-      mtvec_reg <= csr_wdata[31:2];
-      vmode_reg <= csr_wdata[1:0];
-      ebrkd_reg  <= csr_wdata[15];
-      stopc_reg  <= csr_wdata[10];
-      stopt_reg  <= csr_wdata[9];
-      step_reg   <= csr_wdata[2];
