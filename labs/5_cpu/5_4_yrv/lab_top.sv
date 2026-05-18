@@ -82,6 +82,8 @@ module lab_top
 
     wire slow_clk_mode = key_ext[0];
     assign led[0] = muxed_clk;
+    assign led[1] = nmi_req;
+    
 
 
  
@@ -255,6 +257,6 @@ module lab_top
         .strobe (interrupt_raw)
     );
 
-    assign nmi_req = (interrupt_raw | key_ext [7]) & ~ port3_reg [0];
+    assign nmi_req = (interrupt_raw | key_ext [7]) &  port3_reg [0];
 
 endmodule
