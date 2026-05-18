@@ -4,7 +4,7 @@
 .equ  iobase, 0xffff0     # i/o at 0xffff0000
 
 # ==============================================================================
-# SECTION: SCRATCH for interrupt
+# SECTION: DEAFULT SCRATCH for interrupt
 # ==============================================================================
 # Here is mscratch place
 #  See book : mscratch_reg <= `MSCR_RST;
@@ -16,7 +16,7 @@ _mscratch:
 
 
 # ==============================================================================
-# SECTION: TRAP HANDLER  0x040
+# SECTION: DEAFULT TRAP HANDLER  0x040
 # ==============================================================================
 
 .section .text.trap_ack
@@ -28,7 +28,6 @@ trap_ack:
     csrr  t2, mcause           
     bltz  t2, handle_exception 
 
-   
     srli  t2, t2, 1            
     li    t1, 0x16             
     bne   t1, t2, check_other  
