@@ -1,76 +1,86 @@
-OUTPUT_ARCH( "riscv" )
-ENTRY(_start)
+OUTPUT_ARCH ( riscv  )
+ENTRY       ( _start )
+
 MEMORY
 {
-  BRAM     (rx) : ORIGIN = 0x00000000, LENGTH = 16K
+    BRAM (rwx) : ORIGIN = 0x00000000, LENGTH = 8K
 }
+
+# TODO Check if this list is complete
+
 _TRAP_ACK = 0x040;
 _NMI_VECT = 0x100;
-_DBG_VEC =  0x140;
-_DEX_VEC =  0x1c0;
+_DBG_VEC  = 0x140;
+_DEX_VEC  = 0x1c0;
 _RST_BASE = 0x200;
 
- SECTIONS
- {
+SECTIONS
+{
+    PROVIDE (__stack_top = ORIGIN (BRAM) + LENGTH (BRAM));
 
- PROVIDE(__stack_top = ORIGIN(BRAM) + LENGTH(BRAM));
+    .text :
+    {
+        # Move scratch from here
 
- .text :
- {
-    *(.text.mscratch)
-    . = _TRAP_ACK;
-    *(.text.trap_ack)
-    . = _NMI_VECT;
-    *(.text.nmi_vec)
-    . = _DBG_VEC;
-    *(.text.dbg_vec)
-    . = _DEX_VEC;
-    *(.text.dex_vec)
-    . = _RST_BASE;
-    *(.text.init)
-    *(.text)
- }>BRAM
+        * (.text.mscratch)
+        . = _TRAP_ACK;
+        KEEP (* (.text.trap_ack))
+        . = _NMI_VECT;
+        KEEP (* (.text.nmi_vec))
+        . = _DBG_VEC;
+        KEEP (* (.text.dbg_vec))
+        . = _DEX_VEC;
+        KEEP (* (.text.dex_vec))
+        . = _RST_BASE;
+        KEEP (* (.text.init))
+        * (.text)
+    }
+    > BRAM
 
- .rodata :
- {
-    . = ALIGN(4);
-    *(.rodata)
- }> BRAM
+    .rodata :
+    {
+        . = ALIGN(4);
+        * (.rodata)
+    }
+    > BRAM
 
- .data :
- {
-    *(.data)
-    _edata = .;
- }> BRAM
+    .data :
+    {
+        * (.data)
+        _edata = .;
+    }
+    > BRAM
 
- .sdata :
- {
-    . = ALIGN(4);
-    PROVIDE( __global_pointer$ = . + 0x800);
-    *(.sdata)
- }> BRAM
+    .sdata :
+    {
+        . = ALIGN(4);
+        PROVIDE (__global_pointer$ = . + 0x800);
+        * (.sdata)
+    }
+    > BRAM
 
- .bss :
- {
-    . = ALIGN(4);
-    *(.bss)
- }> BRAM
+    .bss :
+    {
+        . = ALIGN(4);
+        * (.bss)
+    }
+    > BRAM
 
- .sbss :
- {
-    . = ALIGN(4);
-    *(.sbss)
- }> BRAM
+    # TODO : should have access using global pointer
 
+    .sbss :
+    {
+        . = ALIGN(4);
+        * (.sbss)
+    }
+    > BRAM
 
+    /DISCARD/ :
+    {
+        *(.note.gnu.build-id)
+        *(.riscv.attributes)
+        *(.comment)
+    }
 
-  /DISCARD/ :
-  {
-    *(.note.gnu.build-id)
-    *(.riscv.attributes)
-    *(.comment)
-  }
-
-
-_end = .;
- }
+    _end = .;
+}
