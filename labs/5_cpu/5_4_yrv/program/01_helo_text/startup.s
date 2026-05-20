@@ -6,13 +6,13 @@
 # ==============================================================================
 # SECTION: DEAFULT SCRATCH for interrupt
 # ==============================================================================
-# Here is mscratch place
-#  See book : mscratch_reg <= `MSCR_RST;
+# Here is DEFAULT mscratch place
+# See book : mscratch_reg <= `MSCR_RST;
 
-.section .text.mscratch
-.global _mscratch
-_mscratch:
-            .zero
+.section .text.default_mscratch
+.global _default_mscratch
+_default_mscratch:
+    .zero
 
 
 # ==============================================================================
@@ -88,6 +88,15 @@ dex_vec:
 
 _start:
 loop:
+
+
+# ------------------------------------------------------------------------------
+# Sub-section: mscratch initialization
+# ------------------------------------------------------------------------------
+# used trapframe scetion with 128 bytes lenght
+
+    la t0, _trapframe_start
+    csrw mscratch, t0
 
 # Inform the debugger that this is the root of the call stack and there are no callers above.
 # https://sourceware.org/binutils/docs/as/CFI-directives.html

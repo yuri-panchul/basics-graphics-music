@@ -20,9 +20,6 @@ SECTIONS
 
     .text :
     {
-        # Move scratch from here
-
-        * (.text.mscratch)
         . = _TRAP_ACK;
         KEEP (* (.text.trap_ack))
         . = _NMI_VECT;
@@ -47,34 +44,58 @@ SECTIONS
     .data :
     {
         * (.data)
-        _edata = .;
     }
     > BRAM
 
+    # sdata and .sbss must be contiguous for Linker Relaxation to work 
+    # Examples:
+    # https://github.com/bouffalolab/bl_iot_sdk/blob/master/components/platform/soc/bl602/bl602/evb/ld/ram.ld
+    # https://github.com/riscv-mcu/GD32VF103_Firmware_Library/blob/master/Firmware/RISCV/env_Eclipse/GD32VF103x4.lds
     .sdata :
     {
-        . = ALIGN(4);
-        PROVIDE (__global_pointer$ = . + 0x800);
+        . = ALIGN(4)
+        PROVIDE (__global_pointer$ = . + 0x800); 
         * (.sdata)
     }
     > BRAM
 
-    .bss :
-    {
-        . = ALIGN(4);
-        * (.bss)
-    }
-    > BRAM
-
-    # TODO : should have access using global pointer
-
+    # TODO : should be zeroed in starup.s
     .sbss :
     {
+        __start_bss_zero = .
         . = ALIGN(4);
         * (.sbss)
     }
     > BRAM
 
+    .bss :
+    {
+        . = ALIGN(4)
+        * (.bss)
+        __stop_bss_zero = .
+    }
+    > BRAM
+
+
+
+    .trapframe (NOLOAD) : ALIGN(16)  # inspired by xv6.  
+    # ALIGN(16) from https://docs.riscv.org/reference/abi/riscv-cc-c-cpp-type-details.html
+    # https://riscv.org/wp-content/uploads/2024/12/riscv-calling.pdf similar stack
+    {
+        __trapframe_start = .
+        . = . + 128 
+        __trapframe_end = .   
+    } 
+    > BRAM
+
+    .heap (NOLOAD) : ALIGN(16)  # inspired by xv6 
+    {
+        __heap_start = .
+        . = . + 256;        # TODO : should be changed when C examples appeared
+        __heap_end = .      
+    } 
+    > BRAM
+    
     /DISCARD/ :
     {
         *(.note.gnu.build-id)
@@ -82,5 +103,5 @@ SECTIONS
         *(.comment)
     }
 
-    _end = .;
+    __end = . # It can be used to cheсk for collision with SP 
 }
