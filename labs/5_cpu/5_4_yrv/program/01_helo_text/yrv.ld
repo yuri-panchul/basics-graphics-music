@@ -36,7 +36,7 @@ SECTIONS
 
     .rodata :
     {
-        . = ALIGN(4);
+        . = ALIGN (4);
         * (.rodata)
     }
     > BRAM
@@ -47,61 +47,69 @@ SECTIONS
     }
     > BRAM
 
-    # sdata and .sbss must be contiguous for Linker Relaxation to work 
+    # .sdata and .sbss must be contiguous for the Linker Relaxation to work
+    #
     # Examples:
+    #
     # https://github.com/bouffalolab/bl_iot_sdk/blob/master/components/platform/soc/bl602/bl602/evb/ld/ram.ld
     # https://github.com/riscv-mcu/GD32VF103_Firmware_Library/blob/master/Firmware/RISCV/env_Eclipse/GD32VF103x4.lds
+
     .sdata :
     {
-        . = ALIGN(4)
-        PROVIDE (__global_pointer$ = . + 0x800); 
+        . = ALIGN (4);
+        __sdata_start = .;
+        PROVIDE (__global_pointer$ = . + 0x800);
         * (.sdata)
     }
     > BRAM
 
-    # TODO : should be zeroed in starup.s
     .sbss :
     {
-        __start_bss_zero = .
-        . = ALIGN(4);
+        . = ALIGN (4);
+        __sbss_start = .;
         * (.sbss)
+        __sbss_end = .;
     }
     > BRAM
 
     .bss :
     {
-        . = ALIGN(4)
+        . = ALIGN(4);
         * (.bss)
-        __stop_bss_zero = .
+        __bss_end = .;
     }
     > BRAM
 
+    ASSERT ((__sbss_end - __sdata_start) <= 0x1000,
+       ".sdata + .sbss exceed 4 KB gp range")
 
+    .trapframe (NOLOAD) : ALIGN(16)  # inspired by xv6, a core from MIT
 
-    .trapframe (NOLOAD) : ALIGN(16)  # inspired by xv6.  
-    # ALIGN(16) from https://docs.riscv.org/reference/abi/riscv-cc-c-cpp-type-details.html
+    # ALIGN (16) from https://docs.riscv.org/reference/abi/riscv-cc-c-cpp-type-details.html
     # https://riscv.org/wp-content/uploads/2024/12/riscv-calling.pdf similar stack
+
     {
-        __trapframe_start = .
-        . = . + 128 
-        __trapframe_end = .   
-    } 
+        __trapframe_start = .;
+        . = . + 128;
+        __trapframe_end = .;
+    }
     > BRAM
 
-    .heap (NOLOAD) : ALIGN(16)  # inspired by xv6 
+    .heap (NOLOAD) : ALIGN (16)
     {
-        __heap_start = .
-        . = . + 256;        # TODO : should be changed when C examples appeared
-        __heap_end = .      
-    } 
+        __heap_start = .;
+       # TODO: increase the heap in the future C examples with malloc/free
+        . = . + 256;
+        __heap_end = .;
+    }
     > BRAM
-    
+
     /DISCARD/ :
     {
-        *(.note.gnu.build-id)
-        *(.riscv.attributes)
-        *(.comment)
+        * (.note.gnu.build-id)
+        * (.riscv.attributes)
+        * (.comment)
     }
 
-    __end = . # It can be used to cheсk for collision with SP 
+    __end = .; # It can be used to cheсk for collision with SP
 }
