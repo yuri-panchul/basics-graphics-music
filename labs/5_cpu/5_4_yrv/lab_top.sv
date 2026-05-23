@@ -59,6 +59,7 @@ module lab_top
 );
 
     //------------------------------------------------------------------------
+    // Unused pins
 
     // assign led        = '0;
     // assign abcdefgh   = '0;
@@ -69,38 +70,52 @@ module lab_top
        assign sound      = '0;
        assign uart_tx    = '1;
 
-    //--------------------------------------------------------------------------
-    // Invert reset
-    wire reset_n = ~rst;
-
     //------------------------------------------------------------------------
 
-    wire [7:0] key_ext = 8' (key);
+    generate
 
-    //--------------------------------------------------------------------------
-    // Slow clock button / switch
+        if (w_key >= 6)
+        begin : keys_at_least_6
 
-    wire slow_clk_mode = key_ext[0];
-    assign led[0] = muxed_clk;
-    assign led[1] = nmi_req;
+            wire slow_clk_mode      = key [w_key - 1];
+            wire external_interrupt = key [w_key - 2];
+            wire local_interrupt_0  = key [w_key - 3];
+            wire local_interrupt_1  = key [w_key - 4];
+        end
+        else if (w_sw >= 6)
+        begin : switches_at_least_6
+            // Covers Terasic DE10-Lite (2 keys, 10 switches)
 
+            wire slow_clk_mode      = sw  [w_sw  - 1];
+            wire external_interrupt = sw  [w_sw  - 2];
+            wire local_interrupt_0  = sw  [w_sw  - 3];
+            wire local_interrupt_1  = sw  [w_sw  - 4];
+        end
+        else if (w_key >= 4)
+        begin : keys_at_least_4
+            // Covers Omdazz Altera Cyclone IV board
+            // (4 keys are combined with 4 switches)
 
+            wire slow_clk_mode      = key [w_key - 1];
+            wire external_interrupt = key [w_key - 2];
+            wire local_interrupt_0  = 1'b0;
+            wire local_interrupt_1  = 1'b0;
+        end
+        else
+        begin : few_keys_and_sw_available
 
+            wire slow_clk_mode      = 1'b0;
+            wire external_interrupt = 1'b0;
+            wire local_interrupt_0  = 1'b0;
+            wire local_interrupt_1  = 1'b0;
+        end
+
+    endgenerate
 
     //--------------------------------------------------------------------------
     // MCU clock
 
-    logic [22:0] clk_cnt;
-
-    always @ (posedge clk or negedge reset_n)
-        if (~ reset_n)
-            clk_cnt <= '0;
-        else
-            clk_cnt <= clk_cnt + 1'd1;
-
-    wire muxed_clk_raw
-        = slow_clk_mode ? clk_cnt [22] : clk;
-
+    wire muxed_clk_raw = slow_clk_mode ? slow_clk : clk;
     wire muxed_clk;
 
     `ifdef SIMULATION
@@ -109,21 +124,23 @@ module lab_top
          `ifdef INTEL_VERSION
              global i_global (.in (muxed_clk_raw), .out (muxed_clk));
         `else
-             BUFG i_global (.I (muxed_clk_raw), .O (muxed_clk));
+             BUFG   i_global (.I  (muxed_clk_raw), .O   (muxed_clk));
          `endif
     `endif
+
+    assign led [w_led - 1] = muxed_clk;
 
     //--------------------------------------------------------------------------
     // MCU inputs
 
-    wire                 ei_req;                             // external int request
-    wire                 nmi_req    ;         // non-maskable interrupt
-    wire          [15:0] li_req;
+    wire        ei_req;            // external int request
+    wire        nmi_req;           // non-maskable interrupt
+    wire [15:0] li_req;
 
-    wire                 resetb        = reset_n;    // master reset
-    wire                 ser_rxd     = 1'b0;         // receive data input
-    wire    [15:0] port4_in    = '0;
-    wire    [15:0] port5_in    = '0;
+    wire        resetb   = ~ rst;  // master reset
+    wire        ser_rxd  = 1'b0;   // receive data input
+    wire [15:0] port4_in = '0;
+    wire [15:0] port5_in = '0;
 
     //--------------------------------------------------------------------------
     // MCU outputs
@@ -156,11 +173,38 @@ module lab_top
 
     wire [31:0] extra_debug_data;
 
+    //-------------------------------------------------------------------------
+    // External interrupt and Local interrupts
+    //
+    // See
+    //
+    // Inside an Open-Source Processor by Monte Dalrympl
+    //
+    // 3.2.8 Machine Interrupt-Enable (mie)
+    // The Machine Local Interrupt-Enable bits (MLIE, bits 31-16)
+    // enable the individual Local interrupts
+    // that are custom additions for this design.
+    //
+    // 3.2.9 Machine Interrupt-Pending (mip)
+    // The Machine Local Interrupt-Pending bits (MLIP, bits 31-16)
+    // reflects the state of the individual Local interrupts.
+    //
+    // 3.2.16 Machine Exception Cause (mcause)
+    // Local interrupts are identified by mcause[31] interrupt bit
+    // and mcause[30:0] from 16 (Local Interrupt 0)
+    // to 31 (Local Interrupt 15).
+    //
+    // Listing 5.6: Local Interrupt Exception Code Definitions.
+    // Table 6.2: Interrupt-related Signals
 
-   //-------------------------------------------------------------------------
-    // Local interrupt
-    assign li_req ={12'h0, 1'b0,key_ext[5],key_ext[4],key_ext[3]};
-    assign ei_req = key_ext[6];
+    assign ei_req = external_interrupt;
+
+    assign li_req =
+    {
+        14'b0,
+        local_interrupt_1,
+        local_interrupt_0
+    }
 
     //--------------------------------------------------------------------------
     // MCU instantiation
@@ -209,11 +253,9 @@ module lab_top
 
     logic [15:0] display_number;
 
-
-
     always_comb
         casez (key_ext [3:0])
-        default : display_number = mem_addr  [31: 0];
+        default  : display_number = mem_addr  [31: 0];
         4'b0001? : display_number = mem_rdata [31: 0];
         4'b0010? : display_number = mem_wdata [31: 0];
         endcase
