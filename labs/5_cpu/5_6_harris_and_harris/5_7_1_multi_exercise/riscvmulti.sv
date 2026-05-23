@@ -74,7 +74,7 @@
 //   ori          0010011   110       immediate
 //   slti         0010011   010       immediate
 //   beq          1100011   000       immediate
-//   lw	          0000011   010       immediate
+//   lw           0000011   010       immediate
 //   sw           0100011   010       immediate
 //   jal          1101111   immediate immediate
 
@@ -98,11 +98,11 @@ module riscvmulti(input  logic        clk, reset,
   logic        RegWrite, jump;
   logic [1:0]  ResultSrc, ImmSrc;
   logic [2:0]  ALUControl;
-  logic 	     PCWrite;
-  logic 	     IRWrite;
+  logic        PCWrite;
+  logic        IRWrite;
   logic [1:0]  ALUSrcA;
   logic [1:0]  ALUSrcB;
-  logic		     AdrSrc;
+  logic        AdrSrc;
   logic        Zero;
   logic [6:0]  op;
   logic [2:0]  funct3;
@@ -202,18 +202,18 @@ module mainfsm(input  logic         clk,
   // state-dependent output logic
   always_comb
     case(state)
-      FETCH: 	controls = 15'b00_10_10_0_1100_00_0; 
-      DECODE:  	controls = 15'b01_01_00_0_0000_00_0;      
-      MEMADR:  	controls = 15'b10_01_00_0_0000_00_0;
+      FETCH:    controls = 15'b00_10_10_0_1100_00_0; 
+      DECODE:   controls = 15'b01_01_00_0_0000_00_0;      
+      MEMADR:   controls = 15'b10_01_00_0_0000_00_0;
       MEMREAD:  controls = 15'b00_00_00_1_0000_00_0;
       MEMWRITE: controls = 15'b00_00_00_1_0001_00_0;
-      MEMWB:   	controls = 15'b00_00_01_0_0010_00_0;
-      EXECUTER:	controls = 15'b10_00_00_0_0000_10_0;
+      MEMWB:    controls = 15'b00_00_01_0_0010_00_0;
+      EXECUTER: controls = 15'b10_00_00_0_0000_10_0;
       EXECUTEI: controls = 15'b10_01_00_0_0000_10_0;
       ALUWB:    controls = 15'b00_00_00_0_0010_00_0;
-      BEQ:  	controls = 15'b10_00_00_0_0000_01_1;
-      JAL:  	controls = 15'b01_10_00_0_0100_00_0;
-      default: 	controls = 15'bxx_xx_xx_x_xxxx_xx_x;
+      BEQ:      controls = 15'b10_00_00_0_0000_01_1;
+      JAL:      controls = 15'b01_10_00_0_0100_00_0;
+      default:  controls = 15'bxx_xx_xx_x_xxxx_xx_x;
     endcase
 
   assign {ALUSrcA, ALUSrcB, ResultSrc, AdrSrc, IRWrite, PCUpdate, 
@@ -264,7 +264,7 @@ endmodule
 module datapath(input  logic        clk, reset,
                 input  logic [1:0]  ImmSrc, ALUSrcA, ALUSrcB, 
                 input  logic [1:0]  ResultSrc, 
-				input  logic        AdrSrc,
+                input  logic        AdrSrc,
                 input  logic        IRWrite, PCWrite,
                 input  logic        RegWrite, MemWrite,
                 input  logic [2:0]  alucontrol,
@@ -326,7 +326,7 @@ module regfile(input  logic        clk,
   // register 0 hardwired to 0
 
   always_ff @(posedge clk)
-    if (we3) rf[a3] <= wd3;	
+    if (we3) rf[a3] <= wd3;
 
   assign rd1 = (a1 != 0) ? rf[a1] : 0;
   assign rd2 = (a2 != 0) ? rf[a2] : 0;

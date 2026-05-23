@@ -77,7 +77,7 @@
 //   ori          0010011   110       immediate
 //   slti         0010011   010       immediate
 //   beq          1100011   000       immediate
-//   lw	          0000011   010       immediate
+//   lw           0000011   010       immediate
 //   sw           0100011   010       immediate
 //   jal          1101111   immediate immediate
 //   xor          0110011   100       0000000
@@ -286,7 +286,7 @@ module regfile(input  logic        clk,
   // register 0 hardwired to 0
 
   always_ff @(posedge clk)
-    if (we3) rf[a3] <= wd3;	
+    if (we3) rf[a3] <= wd3;
 
   assign rd1 = (a1 != 0) ? rf[a1] : 0;
   assign rd2 = (a2 != 0) ? rf[a2] : 0;
