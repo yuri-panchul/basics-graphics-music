@@ -293,7 +293,7 @@ module board_specific_top
     `endif
 
     //------------------------------------------------------------------------
- 
+
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 
         // Sipeed R6+1 Microphone Array Board in GPIO connector

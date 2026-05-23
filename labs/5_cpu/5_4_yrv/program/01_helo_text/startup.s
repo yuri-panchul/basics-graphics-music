@@ -58,25 +58,25 @@ _default_mscratch:
 # Template for common trap handler
 
 trap_ack:
-    csrr  t2, mcause           
-    bltz  t2, handle_exception 
+    csrr  t2, mcause
+    bltz  t2, handle_exception
 
-    srli  t2, t2, 1            
-    li    t1, 0x16             
-    bne   t1, t2, check_other  
+    srli  t2, t2, 1
+    li    t1, 0x16
+    bne   t1, t2, check_other
 
-    j common_return           
+    j common_return
 
 check_other:
-    li    t1, 0x20             
-    bltu  t2, t1, unknown      
+    li    t1, 0x20
+    bltu  t2, t1, unknown
 
-    
+
 common_return:
-    mret                      
+    mret
 
 handle_exception:
-    mret                   
+    mret
 
 unknown:
     mret
@@ -90,7 +90,7 @@ unknown:
 .global nmi_vec
 
 nmi_vec:
-    mret       
+    mret
 
 
 # ==============================================================================
@@ -99,7 +99,7 @@ nmi_vec:
 .section .text.dbg_vec
 .global dbg_vec
 
-dbg_vec:  
+dbg_vec:
     dret
 
 
@@ -108,7 +108,7 @@ dbg_vec:
 # ==============================================================================
 .section .text.dex_vec
 .global dex_vec
-dex_vec:  
+dex_vec:
     dret
 
 
@@ -142,7 +142,7 @@ loop:
     la      t1, __bss_end       # End address of memory to clear (from .bss section)
 
     # Check if the BSS sections are empty (if t0 >= t1, skip the loop entirely)
-    bgeu    t0, t1, bss_clr_done         
+    bgeu    t0, t1, bss_clr_done
 
 bss_clr:
     sw      zero, 0(t0)         # Store a 32-bit zero into the memory address held in t0

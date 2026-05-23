@@ -14,7 +14,7 @@ input				iRST_N;
 output			I2C_SCLK;
 inout				I2C_SDAT;
 input				HDMI_TX_INT;
-output READY ; 
+output READY ;
 
 //	Internal Registers/Wires
 reg	[15:0]	mI2C_CLK_DIV;
@@ -26,7 +26,7 @@ wire				mI2C_ACK;
 reg	[15:0]	LUT_DATA;
 reg	[5:0]		LUT_INDEX;
 reg	[3:0]		mSetup_ST;
-reg READY ; 
+reg READY ;
 
 //	Clock Setting
 parameter	CLK_Freq	=	50000000;	//	50	MHz
@@ -59,7 +59,7 @@ I2C_Controller 	u0	(	.CLOCK(mI2C_CTRL_CLK),	//	Controller Work Clock
  	 	 	 	 	 	.I2C_SDAT(I2C_SDAT),				//	I2C DATA
 						.I2C_DATA(mI2C_DATA),			//	DATA:[SLAVE_ADDR,SUB_ADDR,DATA]
 						.GO(mI2C_GO),						//	GO transfor
-						.END(mI2C_END),					//	END transfor 
+						.END(mI2C_END),					//	END transfor
 						.ACK(mI2C_ACK),					//	ACK
 						.RESET(iRST_N)	);
 ////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ begin
 						if(!mI2C_ACK)
 						mSetup_ST	<=	2;
 						else
-						mSetup_ST	<=	0;							
+						mSetup_ST	<=	0;
 						mI2C_GO		<=	0;
 					end
 				end
@@ -113,7 +113,7 @@ begin
 	end
 end
 ////////////////////////////////////////////////////////////////////
-/////////////////////	Config Data LUT	  //////////////////////////	
+/////////////////////	Config Data LUT	  //////////////////////////
 always
 begin
 	case(LUT_INDEX)
@@ -190,7 +190,7 @@ begin
   //
 	//default:		LUT_DATA	<=	16'h9803;
 	//endcase
-	
+
 end
 ////////////////////////////////////////////////////////////////////
 endmodule

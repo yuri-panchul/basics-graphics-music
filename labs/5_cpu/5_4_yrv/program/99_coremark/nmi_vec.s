@@ -3,5 +3,5 @@
 .global run_display
 
 # NMI Trap handler
-nmi_vec:  
-    mret                           
+nmi_vec:
+    mret

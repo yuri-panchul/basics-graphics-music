@@ -1,4 +1,4 @@
-// Use this example to get 
+// Use this example to get
 // experience with HEX on differents boards
 #include "memory_mapped_registers.h"
 #include "seg7.h"
@@ -19,7 +19,7 @@ void delay_nop(volatile int count) {
 }
 
 void clean() {
-    
+
     port1 = 0x00;
     port0 = 0x00;
 
@@ -32,7 +32,7 @@ void display_char(uint8_t led, uint8_t hex_code) {
     port1 = led;
     // Second put letter
     port0 = hex_code;
-    
+
     // For boards DE0, DE0-CV with static hexs
     #ifdef STATIC
         clean();

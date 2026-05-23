@@ -5,8 +5,8 @@
 // Permission:
 //
 //   Terasic grants permission to use and modify this code for use
-//   in synthesis for all Terasic Development Boards and Altrea Development 
-//   Kits made by Terasic.  Other use of this code, including the selling 
+//   in synthesis for all Terasic Development Boards and Altrea Development
+//   Kits made by Terasic.  Other use of this code, including the selling
 //   ,duplication, or modification of any portion is strictly prohibited.
 //
 // Disclaimer:
@@ -15,11 +15,11 @@
 //   which illustrates how these types of functions can be implemented.
 //   It is the user's responsibility to verify their design for
 //   consistency and functionality through the use of formal
-//   verification methods.  Terasic provides no warranty regarding the use 
+//   verification methods.  Terasic provides no warranty regarding the use
 //   or functionality of this code.
 //
 // ============================================================================
-//           
+//
 //  Terasic Technologies Inc
 //  9F., No.176, Sec.2, Gongdao 5th Rd, East Dist, Hsinchu City, 30070. Taiwan
 //
@@ -45,7 +45,7 @@ module I2C_Controller (
  	I2C_SDAT,//I2C DATA
 	I2C_DATA,//DATA:[SLAVE_ADDR,SUB_ADDR,DATA]
 	GO,      //GO transfor
-	END,     //END transfor 
+	END,     //END transfor
 	W_R,     //W_R
 	ACK,      //ACK
 	RESET,
@@ -54,13 +54,13 @@ module I2C_Controller (
 	SDO
 );
 	input  CLOCK;
-	input  [23:0]I2C_DATA;	
+	input  [23:0]I2C_DATA;
 	input  GO;
-	input  RESET;	
+	input  RESET;
 	input  W_R;
- 	inout  I2C_SDAT;	
+ 	inout  I2C_SDAT;
 	output I2C_SCLK;
-	output END;	
+	output END;
 	output ACK;
 
 //TEST
@@ -74,7 +74,7 @@ reg END;
 reg [23:0]SD;
 reg [5:0]SD_COUNTER;
 
-assign I2C_SCLK=(I2C_SCLK_)?1'b1:1'b0 ; 
+assign I2C_SCLK=(I2C_SCLK_)?1'b1:1'b0 ;
 wire   I2C_SCLK_;
 assign I2C_SCLK_= SCLK | ( ((SD_COUNTER >= 4) & (SD_COUNTER <=30))? ~CLOCK :0 );
 wire I2C_SDAT= SDO?1'bz:0 ;
@@ -86,10 +86,10 @@ wire ACK=ACK1 | ACK2 |ACK3;
 always @(negedge RESET or posedge CLOCK ) begin
 if (!RESET) SD_COUNTER=6'b111111;
 else begin
-if (GO==0) 
+if (GO==0)
 	SD_COUNTER=0;
-	else 
-	if (SD_COUNTER < 6'b111111) SD_COUNTER=SD_COUNTER+1;	
+	else
+	if (SD_COUNTER < 6'b111111) SD_COUNTER=SD_COUNTER+1;
 end
 end
 //----
@@ -110,7 +110,7 @@ case (SD_COUNTER)
 	6'd7  : SDO=SD[19];
 	6'd8  : SDO=SD[18];
 	6'd9  : SDO=SD[17];
-	6'd10 : SDO=SD[16];	
+	6'd10 : SDO=SD[16];
 	6'd11 : SDO=1'b1;//ACK
 
 	//SUB ADDR
@@ -135,11 +135,11 @@ case (SD_COUNTER)
 	6'd28  : SDO=SD[0];
 	6'd29  : SDO=1'b1;//ACK
 
-	
+
 	//stop
-    6'd30 : begin SDO=1'b0;	SCLK=1'b0; ACK3=I2C_SDAT; end	
-    6'd31 : SCLK=1'b1; 
-    6'd32 : begin SDO=1'b1; END=1; end 
+    6'd30 : begin SDO=1'b0;	SCLK=1'b0; ACK3=I2C_SDAT; end
+    6'd31 : SCLK=1'b1;
+    6'd32 : begin SDO=1'b1; END=1; end
 
 endcase
 end

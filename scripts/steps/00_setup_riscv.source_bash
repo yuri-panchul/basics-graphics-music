@@ -331,7 +331,7 @@ riscv_upload_software_to_the_board_using_uart ()
     fi
 
     [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
-    
+
     info "uploading '$program_mem32' to $dev"
 
     if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" = "darwin"* ]] ; then

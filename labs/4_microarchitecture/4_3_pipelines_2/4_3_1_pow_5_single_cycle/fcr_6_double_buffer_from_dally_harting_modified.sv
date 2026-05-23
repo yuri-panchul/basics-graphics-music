@@ -8,7 +8,7 @@
 // Digital Design: A Systems Approach
 // by William James Dally and R. Curtis Harting
 // 2012
-// 
+//
 // Modified by Arseniy Lyskov
 
 // It is equivalent to 2-deep FIFO
@@ -33,7 +33,7 @@ module fcr_6_double_buffer_from_dally_harting_modified
     logic           enable;
     logic           buf_vld;
     logic [w - 1:0] buf_data;
-    
+
     assign enable = down_rdy | ~down_vld;
 
     always_ff @ (posedge clk)

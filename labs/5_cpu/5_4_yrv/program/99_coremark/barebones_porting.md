@@ -15,7 +15,7 @@ CoreMark can be used with microcontrollers / embedded processor devices. Before 
 - printf support
 - timer support (e.g. base on a reference that has a constant clock frequency)
 
-The CoreMark execution needs to execute for at least 10 seconds. Therefore when selecting a timer peripheral for timing measurement, you need to ensure that the timer can measure the whole duration of the coremark execution. For example, let's say you are using a microcontroller and that has a 24-bit timer, and use the 24-bit timer as the timing reference. If the device is running at 100MHz and the timer is setup to run using the processor's clock, the longest time that the timer can count is 0.16777 second before it overflows or reaches zero. To measure the execution time, you could setup that timer to interrupt at a rate of 1KHz, and increment a counter variable inside the interrupt service routine. With this arrangement, there is some software overhead but the result should still be quite accurate. 
+The CoreMark execution needs to execute for at least 10 seconds. Therefore when selecting a timer peripheral for timing measurement, you need to ensure that the timer can measure the whole duration of the coremark execution. For example, let's say you are using a microcontroller and that has a 24-bit timer, and use the 24-bit timer as the timing reference. If the device is running at 100MHz and the timer is setup to run using the processor's clock, the longest time that the timer can count is 0.16777 second before it overflows or reaches zero. To measure the execution time, you could setup that timer to interrupt at a rate of 1KHz, and increment a counter variable inside the interrupt service routine. With this arrangement, there is some software overhead but the result should still be quite accurate.
 
 If the timer is 32-bit, and providing that:
 
@@ -64,7 +64,7 @@ Several C macros require update:
 |HAS_STDIO| 1 |
 |HAS_PRINTF| 1 |
 
-The next section in the file is dependent on the C compiler that you are using. The original code below utilizes compiler predefine macros for GCC **\_\_GNUC\_\_** and **\_\_VERSION\_\_** to provides printed message of compiler's version.  (See [GCC documentation page](https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html) for additional information.) 
+The next section in the file is dependent on the C compiler that you are using. The original code below utilizes compiler predefine macros for GCC **\_\_GNUC\_\_** and **\_\_VERSION\_\_** to provides printed message of compiler's version.  (See [GCC documentation page](https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html) for additional information.)
 
 ```C
 #ifndef COMPILER_VERSION
@@ -111,7 +111,7 @@ barebones_clock()
 /*#error \
     "You must implement a method to measure time in barebones_clock()! This function should return current time.\n"
     */
-  return get_100Hz_value();  
+  return get_100Hz_value();
 }
 ```
 
@@ -157,7 +157,7 @@ portable_init(core_portable *p, int *argc, char *argv[])
     stdio_init();
     cache_init();
     timer_config();
-    
+
     if (sizeof(ee_ptr_int) != sizeof(ee_u8 *))
     {
         ee_printf(

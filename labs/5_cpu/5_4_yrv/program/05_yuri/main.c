@@ -78,7 +78,7 @@ void shift_message() {
 
 // Функция отображения текущих символов на индикаторах
 void display_current_chars() {
-    for (int digit = 0; digit < 8; ++digit) { 
+    for (int digit = 0; digit < 8; ++digit) {
         // Проходим по всем индикаторам
         char c;
         int char_pos = pos + digit;
@@ -94,7 +94,7 @@ void display_current_chars() {
         port0 = ch;    // Устанавливаем значение сегмента
         // Яркость
         for (volatile int delay = 0; delay < 100; delay++);
-     
+
         port1 = 0x00;
         port0 = 0x00;
         for (volatile int delay = 0; delay < 10; delay++);

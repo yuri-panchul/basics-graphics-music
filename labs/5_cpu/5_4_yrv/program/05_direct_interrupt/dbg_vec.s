@@ -6,6 +6,6 @@
            .equ  mcause, 0x342
            .equ  iobase, 0xffff0     # i/o at 0xffff0000
 
-dbg_vec:  
+dbg_vec:
            dret
 

@@ -29,13 +29,13 @@ void marquee_string(const char* str) {
         pos++;
         if(pos > len) {
             for(int i = 0; i < 4; i++) {
-        
+
                 // IT NEED FOR ORRECT TM1638
                 // AT FIRST SELECT HEX!
                 port1 = anodes[i];
                 port0 = HEX_SPACE;
                 for(volatile int d = 0; d < 50; d++);
-            
+
                 port1 = 0x00;
                 port0 = 0x00;
                 for(volatile int d = 0; d < 10; d++);
@@ -55,7 +55,7 @@ void marquee_string(const char* str) {
 
     port1 = anodes[digit];
     port0 = char_to_hex(c);
-    
+
 
     for(volatile int delay = 0; delay < 500; delay++);
 

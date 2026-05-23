@@ -25,7 +25,7 @@ void display_string(const char* str) {
         // Включаем соответствующий индикатор
         port1 = anodes[i];
         port0 = hex_code;
-       
+
 
         // Задержка для визуализации (можно убрать при использовании динамической индикации)
         for(volatile int delay = 0; delay < 100; delay++);

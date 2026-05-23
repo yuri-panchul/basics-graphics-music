@@ -1,4 +1,4 @@
-module OBUFDS( 
+module OBUFDS(
     input I,
     output O,
     output OB

@@ -40,7 +40,7 @@
 `define USE_MEM_BANKS_FOR_BYTE_LINES
 `define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define EXPOSE_MEM_BUS
-`endif 
+`endif
 
 `ifdef BOOT_FROM_AUX_UART
 `include "boot_hex_parser.svh"
@@ -427,7 +427,7 @@ end
   /* serial port                                                                           */
   /*****************************************************************************************/
   // div_rate = 27*1000 *1000/(9600*16)
-  
+
   serial_top SERIAL ( .bufr_done(bufr_done), .bufr_empty(bufr_empty), .bufr_full(bufr_full),
                       .bufr_ovr(bufr_ovr), .rx_rdata(rx_rdata), .ser_clk(ser_clk),
                       .ser_txd(ser_txd), .cks_mode(port6_reg[0]), .clkp(clk),

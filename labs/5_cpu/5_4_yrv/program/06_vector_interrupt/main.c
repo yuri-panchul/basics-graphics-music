@@ -32,21 +32,21 @@ extern char __irq_handlers[];
 
 void __attribute__((naked)) nmi_handler() {
     asm volatile (
-        ".org 0x40\n\t"                       
-        "csrrs t0, mscratch, zero\n\t"         
-        "call nmi_handler_function\n\t"         
-        "mret\n\t"                              
+        ".org 0x40\n\t"
+        "csrrs t0, mscratch, zero\n\t"
+        "call nmi_handler_function\n\t"
+        "mret\n\t"
     );
 }
 
 
 void set_mtvec_vectored_mode() {
-    uintptr_t addr = (uintptr_t)irq_handlers | 0b1; 
+    uintptr_t addr = (uintptr_t)irq_handlers | 0b1;
     asm volatile ("csrw mtvec, %0\n\t" :: "r"(addr));
 }
 
 void init() {
-    set_mtvec_vectored_mode(); 
+    set_mtvec_vectored_mode();
 }
 
 
@@ -88,7 +88,7 @@ void interrupt_local_enable (int id);
 
 
 
-char message[] = "HELO"; 
+char message[] = "HELO";
 
 void __attribute__((weak, interrupt)) default_vector_handler (void) {
     message[0] = 'L';
@@ -132,7 +132,7 @@ void display_string(const char* str) {
 
         port1 = anodes[i];
         port0 = hex_code;
-       
+
 
         for(volatile int delay = 0; delay < 100; delay++);
 
@@ -191,32 +191,32 @@ void main() {
     // The Machine Interrupt-Enable bit (MIE, bit 3) First bit - 0
     asm("csrr %0, mstatus" : "=r"(mstatus));
     asm("csrw mstatus, %0" ::"r"(mstatus | 0x8));
-    
+
     // The Machine External Interrupt-Enable bit (MEIE, bit 11) enables the External interrupt.
     // This is the only general-purpose interrupt source specified in the RISC-V Instruction Set
     // Manual.
     // Press KEY[6] to external interrupt
     asm("li    a5, 0x1");
     asm("slli  a5, a5, 11"); //RV32I style
-    
+
     // The Machine Local Interrupt-Enable bits (MLIE, bits 31-16) enable the individual Local
     // interrupts that are custom additions for this design.
     // Press KEY[3] to local interrupt
-    asm("bset a5,a5, 17"); // Bit manip extention style   
+    asm("bset a5,a5, 17"); // Bit manip extention style
 
-    
+
     // Enable External and local Interrupts
     asm("csrw mie, a5");
 
     // mode = MTVEC_MODE_CLINT_VECTORED;
     // mtvec_base = (uintptr_t)&__mtvec_clint_vector_table;
     // write_csr (mtvec, (mtvec_base | mode));
-    
+
     //Save  handler to mtvec
     //Run 08_show_dump.sh  to see assembler code
 
 
-    
+
     while(1) {
         display_string(message);
     }

@@ -10,26 +10,26 @@
 # Template for common trap handler
 
 trap_ack:
-    csrr  t2, mcause           
-    bltz  t2, handle_exception 
+    csrr  t2, mcause
+    bltz  t2, handle_exception
 
-   
-    srli  t2, t2, 1            
-    li    t1, 0x16             
-    bne   t1, t2, check_other  
 
-    j common_return           
+    srli  t2, t2, 1
+    li    t1, 0x16
+    bne   t1, t2, check_other
+
+    j common_return
 
 check_other:
-    li    t1, 0x20             
-    bltu  t2, t1, unknown      
+    li    t1, 0x20
+    bltu  t2, t1, unknown
 
-    
+
 common_return:
-    mret                      
+    mret
 
 handle_exception:
-    mret                   
+    mret
 
 unknown:
     mret

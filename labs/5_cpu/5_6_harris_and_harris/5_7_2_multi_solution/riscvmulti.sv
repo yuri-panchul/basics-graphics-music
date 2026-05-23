@@ -3,7 +3,7 @@
 // RISC-V multicycle processor
 // From Section 7.6 of Digital Design & Computer Architecture: RISC-V Edition
 // 27 April 2020
-// David_Harris@hmc.edu 
+// David_Harris@hmc.edu
 // Sarah.Harris@unlv.edu
 
 // run 210
@@ -14,7 +14,7 @@
 // User-level Instruction Set Architecture V2.2 (May 7, 2017)
 // Implements a subset of the base integer instructions:
 //    lw, sw
-//    add, sub, and, or, slt, 
+//    add, sub, and, or, slt,
 //    addi, andi, ori, slti
 //    beq
 //    jal
@@ -78,14 +78,14 @@
 //   sw           0100011   010       immediate
 //   jal          1101111   immediate immediate
 
-module top(input  logic        clk, reset, 
-           output logic [31:0] WriteData, DataAdr, 
+module top(input  logic        clk, reset,
+           output logic [31:0] WriteData, DataAdr,
            output logic        MemWrite);
 
   logic [31:0] ReadData;
-  
+
   // instantiate processor and memories
-  riscvmulti rvmulti(clk, reset, MemWrite, DataAdr, 
+  riscvmulti rvmulti(clk, reset, MemWrite, DataAdr,
                      WriteData, ReadData);
   mem mem(clk, MemWrite, DataAdr, WriteData, ReadData);
 endmodule
@@ -108,30 +108,30 @@ module riscvmulti(input  logic        clk, reset,
   logic [2:0]  funct3;
   logic        funct7b5;
 
-  controller c(clk, reset, op, funct3, funct7b5, Zero, 
+  controller c(clk, reset, op, funct3, funct7b5, Zero,
                ImmSrc, ALUSrcA, ALUSrcB,
                ResultSrc, AdrSrc, ALUControl,
                IRWrite, PCWrite, RegWrite, MemWrite);
-               
-  datapath   dp(clk, reset, 
+
+  datapath   dp(clk, reset,
                 ImmSrc, ALUSrcA, ALUSrcB,
-                ResultSrc, AdrSrc, IRWrite, PCWrite, 
-                RegWrite, MemWrite, ALUControl, op, funct3, 
+                ResultSrc, AdrSrc, IRWrite, PCWrite,
+                RegWrite, MemWrite, ALUControl, op, funct3,
                 funct7b5, Zero, Adr, ReadData, WriteData);
 endmodule
 
 module controller(input  logic       clk,
-                  input  logic       reset,  
+                  input  logic       reset,
                   input  logic [6:0] op,
                   input  logic [2:0] funct3,
                   input  logic       funct7b5,
                   input  logic       Zero,
                   output logic [1:0] ImmSrc,
                   output logic [1:0] ALUSrcA, ALUSrcB,
-                  output logic [1:0] ResultSrc, 
+                  output logic [1:0] ResultSrc,
                   output logic       AdrSrc,
                   output logic [2:0] ALUControl,
-                  output logic       IRWrite, PCWrite, 
+                  output logic       IRWrite, PCWrite,
                   output logic       RegWrite, MemWrite);
 
   logic [1:0] ALUOp;
@@ -139,19 +139,19 @@ module controller(input  logic       clk,
 
   // Main FSM
   mainfsm fsm(clk, reset, op,
-              ALUSrcA, ALUSrcB, ResultSrc, AdrSrc, 
-              IRWrite, PCUpdate, RegWrite, MemWrite, 
+              ALUSrcA, ALUSrcB, ResultSrc, AdrSrc,
+              IRWrite, PCUpdate, RegWrite, MemWrite,
               ALUOp, Branch);
 
   // ALU Decoder
   aludec  ad(op[5], funct3, funct7b5, ALUOp, ALUControl);
-  
+
   // Instruction Decoder
   instrdec id(op, ImmSrc);
-  
+
   // Branch logic
-  assign PCWrite = (Branch & Zero) | PCUpdate; 
-  
+  assign PCWrite = (Branch & Zero) | PCUpdate;
+
 endmodule
 
 module mainfsm(input  logic         clk,
@@ -159,24 +159,24 @@ module mainfsm(input  logic         clk,
                input  logic [6:0]   op,
                output logic [1:0]   ALUSrcA, ALUSrcB,
                output logic [1:0]   ResultSrc,
-               output logic         AdrSrc,  
+               output logic         AdrSrc,
                output logic         IRWrite, PCUpdate,
                output logic         RegWrite, MemWrite,
                output logic [1:0]   ALUOp,
-               output logic         Branch);  
-              
-  typedef enum logic [3:0] {FETCH, DECODE, MEMADR, MEMREAD, MEMWB, MEMWRITE, 
-                            EXECUTER, EXECUTEI, ALUWB, 
+               output logic         Branch);
+
+  typedef enum logic [3:0] {FETCH, DECODE, MEMADR, MEMREAD, MEMWB, MEMWRITE,
+                            EXECUTER, EXECUTEI, ALUWB,
                             BEQ, JAL, UNKNOWN} statetype;
-  
+
   statetype state, nextstate;
   logic [14:0] controls;
-  
+
   // state register
   always @(posedge clk or posedge reset)
     if (reset) state <= FETCH;
     else state <= nextstate;
-  
+
   // next state logic
   always_comb
     case(state)
@@ -189,21 +189,21 @@ module mainfsm(input  logic         clk,
                 7'b1101111:      nextstate = JAL;       // jal
                 default:         nextstate = UNKNOWN;
               endcase
-      MEMADR: 
+      MEMADR:
         if (op[5])               nextstate = MEMWRITE;  // sw
         else                     nextstate = MEMREAD;   // lw
       MEMREAD:                   nextstate = MEMWB;
       EXECUTER:                  nextstate = ALUWB;
       EXECUTEI:                  nextstate = ALUWB;
       JAL:                       nextstate = ALUWB;
-      default:                   nextstate = FETCH; 
+      default:                   nextstate = FETCH;
     endcase
-    
+
   // state-dependent output logic
   always_comb
     case(state)
-      FETCH:    controls = 15'b00_10_10_0_1100_00_0; 
-      DECODE:   controls = 15'b01_01_00_0_0000_00_0;      
+      FETCH:    controls = 15'b00_10_10_0_1100_00_0;
+      DECODE:   controls = 15'b01_01_00_0_0000_00_0;
       MEMADR:   controls = 15'b10_01_00_0_0000_00_0;
       MEMREAD:  controls = 15'b00_00_00_1_0000_00_0;
       MEMWRITE: controls = 15'b00_00_00_1_0001_00_0;
@@ -216,14 +216,14 @@ module mainfsm(input  logic         clk,
       default:  controls = 15'bxx_xx_xx_x_xxxx_xx_x;
     endcase
 
-  assign {ALUSrcA, ALUSrcB, ResultSrc, AdrSrc, IRWrite, PCUpdate, 
+  assign {ALUSrcA, ALUSrcB, ResultSrc, AdrSrc, IRWrite, PCUpdate,
   RegWrite, MemWrite, ALUOp, Branch} = controls;
-          
-endmodule  
+
+endmodule
 
 module aludec(input  logic       opb5,
               input  logic [2:0] funct3,
-              input  logic       funct7b5, 
+              input  logic       funct7b5,
               input  logic [1:0] ALUOp,
               output logic [2:0] ALUControl);
 
@@ -235,9 +235,9 @@ module aludec(input  logic       opb5,
       2'b00:                ALUControl = 3'b000; // addition
       2'b01:                ALUControl = 3'b001; // subtraction
       default: case(funct3) // R-type or I-type ALU
-                 3'b000:  if (RtypeSub) 
+                 3'b000:  if (RtypeSub)
                             ALUControl = 3'b001; // sub
-                          else          
+                          else
                             ALUControl = 3'b000; // add, addi
                  3'b010:    ALUControl = 3'b101; // slt, slti
                  3'b110:    ALUControl = 3'b011; // or, ori
@@ -247,7 +247,7 @@ module aludec(input  logic       opb5,
     endcase
 endmodule
 
-module instrdec (input  logic [6:0] op, 
+module instrdec (input  logic [6:0] op,
                  output logic [1:0] ImmSrc);
   always_comb
     case(op)
@@ -262,8 +262,8 @@ module instrdec (input  logic [6:0] op,
 endmodule
 
 module datapath(input  logic        clk, reset,
-                input  logic [1:0]  ImmSrc, ALUSrcA, ALUSrcB, 
-                input  logic [1:0]  ResultSrc, 
+                input  logic [1:0]  ImmSrc, ALUSrcA, ALUSrcB,
+                input  logic [1:0]  ResultSrc,
                 input  logic        AdrSrc,
                 input  logic        IRWrite, PCWrite,
                 input  logic        RegWrite, MemWrite,
@@ -284,14 +284,14 @@ module datapath(input  logic        clk, reset,
   // next PC logic
   flopenr #(32) pcreg(clk, reset, PCWrite, Result, PC);
   flopenr #(32) oldpcreg(clk, reset, IRWrite, PC, OldPC);
-  
+
   // memory logic
   mux2    #(32) adrmux(PC, Result, AdrSrc, Adr);
   flopenr #(32) ir(clk, reset, IRWrite, ReadData, Instr);
   flopr   #(32) datareg(clk, reset, ReadData, Data);
- 
+
   // register file logic
-  regfile       rf(clk, RegWrite, Instr[19:15], Instr[24:20], 
+  regfile       rf(clk, RegWrite, Instr[19:15], Instr[24:20],
                    Instr[11:7], Result, RD1, RD2);
   extend        ext(Instr[31:7], ImmSrc, immext);
   flopr  #(32)  srcareg(clk, reset, RD1, A);
@@ -303,19 +303,19 @@ module datapath(input  logic        clk, reset,
   alu           alu(SrcA, SrcB, alucontrol, ALUResult, Zero);
   flopr  #(32)  aluoutreg(clk, reset, ALUResult, ALUOut);
   mux3   #(32)  resmux(ALUOut, Data, ALUResult, ResultSrc, Result);
-  
+
   // outputs to control unit
   assign op       = Instr[6:0];
   assign funct3   = Instr[14:12];
   assign funct7b5 = Instr[30];
-  
+
 endmodule
 
 
-module regfile(input  logic        clk, 
-               input  logic        we3, 
-               input  logic [ 4:0] a1, a2, a3, 
-               input  logic [31:0] wd3, 
+module regfile(input  logic        clk,
+               input  logic        we3,
+               input  logic [ 4:0] a1, a2, a3,
+               input  logic [31:0] wd3,
                output logic [31:0] rd1, rd2);
 
   logic [31:0] rf[31:0];
@@ -341,24 +341,24 @@ endmodule
 module extend(input  logic [31:7] instr,
               input  logic [1:0]  immsrc,
               output logic [31:0] immext);
- 
+
   always_comb
-    case(immsrc) 
-               // I-type 
-      2'b00:   immext = {{20{instr[31]}}, instr[31:20]};  
+    case(immsrc)
+               // I-type
+      2'b00:   immext = {{20{instr[31]}}, instr[31:20]};
                // S-type (stores)
-      2'b01:   immext = {{20{instr[31]}}, instr[31:25], instr[11:7]}; 
+      2'b01:   immext = {{20{instr[31]}}, instr[31:25], instr[11:7]};
                // B-type (branches)
-      2'b10:   immext = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0}; 
+      2'b10:   immext = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
                // J-type (jal)
-      2'b11:   immext = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0}; 
+      2'b11:   immext = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
       default: immext = 32'bx; // undefined
-    endcase             
+    endcase
 endmodule
 
 module flopr #(parameter WIDTH = 8)
               (input  logic             clk, reset,
-               input  logic [WIDTH-1:0] d, 
+               input  logic [WIDTH-1:0] d,
                output logic [WIDTH-1:0] q);
 
   always_ff @(posedge clk, posedge reset)
@@ -368,7 +368,7 @@ endmodule
 
 module flopenr #(parameter WIDTH = 8)
                 (input  logic             clk, reset, en,
-                 input  logic [WIDTH-1:0] d, 
+                 input  logic [WIDTH-1:0] d,
                  output logic [WIDTH-1:0] q);
 
   always_ff @(posedge clk, posedge reset)
@@ -377,27 +377,27 @@ module flopenr #(parameter WIDTH = 8)
 endmodule
 
 module mux2 #(parameter WIDTH = 8)
-             (input  logic [WIDTH-1:0] d0, d1, 
-              input  logic             s, 
+             (input  logic [WIDTH-1:0] d0, d1,
+              input  logic             s,
               output logic [WIDTH-1:0] y);
 
-  assign y = s ? d1 : d0; 
+  assign y = s ? d1 : d0;
 endmodule
 
 module mux3 #(parameter WIDTH = 8)
              (input  logic [WIDTH-1:0] d0, d1, d2,
-              input  logic [1:0]       s, 
+              input  logic [1:0]       s,
               output logic [WIDTH-1:0] y);
 
-  assign y = s[1] ? d2 : (s[0] ? d1 : d0); 
+  assign y = s[1] ? d2 : (s[0] ? d1 : d0);
 endmodule
 
 module mux4 #(parameter WIDTH = 8)
              (input  logic [WIDTH-1:0] d0, d1, d2, d3,
-              input  logic [1:0]       s, 
+              input  logic [1:0]       s,
               output logic [WIDTH-1:0] y);
 
-  assign y = s[1] ? (s[0] ? d3: d2) : (s[0] ? d1 : d0); 
+  assign y = s[1] ? (s[0] ? d3: d2) : (s[0] ? d1 : d0);
 endmodule
 
 module mem(input  logic        clk, we,
@@ -405,7 +405,7 @@ module mem(input  logic        clk, we,
            output logic [31:0] rd);
 
   logic [31:0] RAM[63:0];
-  
+
   initial
       $readmemh("riscvtest.txt",RAM);
 
@@ -444,6 +444,6 @@ module alu(input  logic [31:0] a, b,
 
   assign zero = (result == 32'b0);
   assign v = ~(alucontrol[0] ^ a[31] ^ b[31]) & (a[31] ^ sum[31]) & isAddSub;
-  
+
 endmodule
 

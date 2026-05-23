@@ -16,17 +16,17 @@
 
 
 // Shift delay
-#define FRAME_LIMIT 1000 
+#define FRAME_LIMIT 1000
 
 // Message
  char message[] = "HELLO ALL PPL";
 
-// String legth 
+// String legth
 size_t message_len = sizeof(message)-1;
 
 // Global vars
-static int call_count = 0;  
-static int pos = 0;          
+static int call_count = 0;
+static int pos = 0;
 
 // HEXs
 const uint8_t anodes[8] = {LED_7,LED_6,LED_5,LED_4,LED_3, LED_2, LED_1, LED_0};
@@ -73,18 +73,18 @@ uint8_t char_to_hex(char c) {
 // Shift string
 void shift_message() {
     if (call_count >= FRAME_LIMIT) {
-        pos++;                         
-        if (pos > message_len + 7) {     
-            pos = 0;                    
+        pos++;
+        if (pos > message_len + 7) {
+            pos = 0;
         }
-        call_count = 0;                 
+        call_count = 0;
     }
-    call_count++;                         
+    call_count++;
 }
 
 //Show string
 void display_current_chars() {
-    for (int digit = 0; digit < 8; ++digit) { 
+    for (int digit = 0; digit < 8; ++digit) {
         char c;
         int char_pos = pos + digit;
         if (char_pos < 0 || char_pos >= message_len) {
@@ -94,8 +94,8 @@ void display_current_chars() {
         }
 
         // Show digit
-        port1 = anodes[digit];    
-        port0 = char_to_hex(c);    
+        port1 = anodes[digit];
+        port0 = char_to_hex(c);
 
         // Wailtin for light
         for (volatile int delay = 0; delay < 100; delay++);
@@ -109,8 +109,8 @@ void display_current_chars() {
 
 // Display and shift
 void run_display() {
-    display_current_chars();  
-    shift_message();          
+    display_current_chars();
+    shift_message();
 }
 
 
@@ -121,24 +121,24 @@ void main() {
     // The Machine Interrupt-Enable bit (MIE, bit 3) First bit - 0
     asm("csrr %0, mstatus" : "=r"(mstatus));
     asm("csrw mstatus, %0" ::"r"(mstatus | 0x8));
-    
+
     // The Machine External Interrupt-Enable bit (MEIE, bit 11) enables the External interrupt.
     // This is the only general-purpose interrupt source specified in the RISC-V Instruction Set
     // Manual.
     // Press KEY[6] to external interrupt
     asm("li    a5, 0x1");
     asm("slli  a5, a5, 11"); //RV32I style
-    
+
     // The Machine Local Interrupt-Enable bits (MLIE, bits 31-16) enable the individual Local
     // interrupts that are custom additions for this design.
     // Press KEY[3] to local interrupt
-    asm("bset a5,a5, 16"); // Bit manip extention style   
-    
+    asm("bset a5,a5, 16"); // Bit manip extention style
+
     // Enable External and local Interrupts
     asm("csrw mie, a5");
 
     //Save  handler to mtvec
-    asm("csrw mtvec, %0" ::"r"(&trap_function_handler)); 
+    asm("csrw mtvec, %0" ::"r"(&trap_function_handler));
     while (1) {
         run_display();         // Main loop
     }

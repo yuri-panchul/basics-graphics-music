@@ -299,7 +299,7 @@ module board_specific_top
         .mic           ( mic           ),
         .sound         ( sound         ),
         .gpio          ( GPIO          )
-        
+
         `ifdef YRV_HDMI
         ,
         .clk_TMDS      (clk_TMDS),
@@ -341,11 +341,11 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-       
+
     ////////////////////////////////////////////////////////////////////////
     wire clk_TMDS, DCM_TMDS_CLKFX;  // 25MHz x 10 = 250MHz
     wire clk_50; //For CPU
-    reg pixclk; 
+    reg pixclk;
 
     Gowin_rPLL_250 i_pll(
         .clkout(DCM_TMDS_CLKFX), //output clkout
@@ -363,11 +363,11 @@ module board_specific_top
         else
             pixclk <= ~pixclk;
 
-    BUFG  BUFG_TMDSp(.I(DCM_TMDS_CLKFX), .O(clk_TMDS));   
+    BUFG  BUFG_TMDSp(.I(DCM_TMDS_CLKFX), .O(clk_TMDS));
 
     logic [9:0] CounterX, CounterY;
     logic hSync, vSync, DrawArea;
-    
+
     always @(posedge pixclk) DrawArea <= (CounterX<640) && (CounterY<480);
 
     always @ (posedge pixclk)
@@ -391,9 +391,9 @@ module board_specific_top
     wire [7:0] W = {8{CounterX[7:0]==CounterY[7:0]}};
     wire [7:0] A = {8{CounterX[7:5]==3'h2 && CounterY[7:5]==3'h2}};
     reg [7:0] red_r, green_r, blue_r;
-     
 
-`ifdef YRV_HDMI 
+
+`ifdef YRV_HDMI
     always @(posedge pixclk) red_r <= (({CounterX[3:0] & {6{CounterY[4:3]==~CounterX[4:3]}}, 2'b00} | W) & ~A) | red[7:0];
     always @(posedge pixclk) green_r <= green[7:0];
     always @(posedge pixclk) blue_r <= (CounterY[5:0]) | blue[7:0];

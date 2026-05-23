@@ -83,10 +83,10 @@ module lab_top
     wire slow_clk_mode = key_ext[0];
     assign led[0] = muxed_clk;
     assign led[1] = nmi_req;
-    
 
 
- 
+
+
     //--------------------------------------------------------------------------
     // MCU clock
 
@@ -118,7 +118,7 @@ module lab_top
 
     wire                 ei_req;                             // external int request
     wire                 nmi_req    ;         // non-maskable interrupt
-    wire          [15:0] li_req; 
+    wire          [15:0] li_req;
 
     wire                 resetb        = reset_n;    // master reset
     wire                 ser_rxd     = 1'b0;         // receive data input
@@ -195,7 +195,7 @@ module lab_top
         port1_reg [7],
         port1_reg [6],
         port1_reg [5],
-        port1_reg [4],    
+        port1_reg [4],
         port1_reg [3],
         port1_reg [2],
         port1_reg [1],

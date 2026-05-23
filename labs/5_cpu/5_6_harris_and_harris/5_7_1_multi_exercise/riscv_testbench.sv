@@ -8,7 +8,7 @@ module testbench();
 
   // instantiate device to be tested
   top dut(clk, reset, WriteData, DataAdr, MemWrite);
-  
+
   // initialize test
   initial
     begin
