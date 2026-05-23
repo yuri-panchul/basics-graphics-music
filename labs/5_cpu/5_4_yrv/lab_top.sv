@@ -71,25 +71,28 @@ module lab_top
        assign uart_tx    = '1;
 
     //------------------------------------------------------------------------
+    // Board-specific key and switch assignments
 
     generate
 
-        if (w_key >= 6)
-        begin : keys_at_least_6
+        if (w_key >= 7)
+        begin : keys_at_least_7
 
             wire slow_clk_mode      = key [w_key - 1];
-            wire external_interrupt = key [w_key - 2];
-            wire local_interrupt_0  = key [w_key - 3];
-            wire local_interrupt_1  = key [w_key - 4];
+            wire slow_addr_data_sel = key [w_key - 2];
+            wire external_interrupt = key [w_key - 3];
+            wire local_interrupt_0  = key [w_key - 4];
+            wire local_interrupt_1  = key [w_key - 5];
         end
-        else if (w_sw >= 6)
-        begin : switches_at_least_6
+        else if (w_sw >= 7)
+        begin : switches_at_least_7
             // Covers Terasic DE10-Lite (2 keys, 10 switches)
 
             wire slow_clk_mode      = sw  [w_sw  - 1];
-            wire external_interrupt = sw  [w_sw  - 2];
-            wire local_interrupt_0  = sw  [w_sw  - 3];
-            wire local_interrupt_1  = sw  [w_sw  - 4];
+            wire slow_addr_data_sel = sw  [w_sw  - 2];
+            wire external_interrupt = sw  [w_sw  - 3];
+            wire local_interrupt_0  = sw  [w_sw  - 4];
+            wire local_interrupt_1  = sw  [w_sw  - 5];
         end
         else if (w_key >= 4)
         begin : keys_at_least_4
@@ -97,6 +100,7 @@ module lab_top
             // (4 keys are combined with 4 switches)
 
             wire slow_clk_mode      = key [w_key - 1];
+            wire slow_addr_data_sel = 1'b0;
             wire external_interrupt = key [w_key - 2];
             wire local_interrupt_0  = 1'b0;
             wire local_interrupt_1  = 1'b0;
@@ -105,6 +109,7 @@ module lab_top
         begin : few_keys_and_sw_available
 
             wire slow_clk_mode      = 1'b0;
+            wire slow_addr_data_sel = 1'b0;
             wire external_interrupt = 1'b0;
             wire local_interrupt_0  = 1'b0;
             wire local_interrupt_1  = 1'b0;
@@ -112,7 +117,7 @@ module lab_top
 
     endgenerate
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     // MCU clock
 
     wire muxed_clk_raw = slow_clk_mode ? slow_clk : clk;
@@ -130,7 +135,7 @@ module lab_top
 
     assign led [w_led - 1] = muxed_clk;
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     // MCU inputs
 
     wire        ei_req;            // external int request
@@ -142,38 +147,38 @@ module lab_top
     wire [15:0] port4_in = '0;
     wire [15:0] port5_in = '0;
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     // MCU outputs
 
-    wire                 debug_mode;    // in debug mode
-    wire                 ser_clk;         // serial clk output (cks mode)
-    wire                 ser_txd;         // transmit data output
-    wire                 wfi_state;     // waiting for interrupt
-    wire    [15:0] port0_reg;     // port 0
-    wire    [15:0] port1_reg;     // port 1
-    wire    [15:0] port2_reg;     // port 2
-    wire    [15:0] port3_reg;     // port 3
+    wire         debug_mode;  // in debug mode
+    wire         ser_clk;     // serial clk output (cks mode)
+    wire         ser_txd;     // transmit data output
+    wire         wfi_state;   // waiting for interrupt
+    wire  [15:0] port0_reg;   // port 0
+    wire  [15:0] port1_reg;   // port 1
+    wire  [15:0] port2_reg;   // port 2
+    wire  [15:0] port3_reg;   // port 3
 
     // Auxiliary UART receive pin
 
     `ifdef BOOT_FROM_AUX_UART
-        wire        aux_uart_rx = uart_rx;
+        wire     aux_uart_rx = uart_rx;
     `endif
 
     // Exposed memory bus for debug purposes
 
-    wire        mem_ready;     // memory ready
-    wire [31:0] mem_rdata;     // memory read data
-    wire        mem_lock;        // memory lock (rmw)
-    wire        mem_write;     // memory write enable
-    wire [ 1:0] mem_trans;     // memory transfer type
-    wire [ 3:0] mem_ble;         // memory byte lane enables
-    wire [31:0] mem_addr;        // memory address
-    wire [31:0] mem_wdata;     // memory write data
+    wire         mem_ready;   // memory ready
+    wire  [31:0] mem_rdata;   // memory read data
+    wire         mem_lock;    // memory lock (rmw)
+    wire         mem_write;   // memory write enable
+    wire  [ 1:0] mem_trans;   // memory transfer type
+    wire  [ 3:0] mem_ble;     // memory byte lane enables
+    wire  [31:0] mem_addr;    // memory address
+    wire  [31:0] mem_wdata;   // memory write data
 
-    wire [31:0] extra_debug_data;
+    wire  [31:0] extra_debug_data;
 
-    //-------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     // External interrupt and Local interrupts
     //
     // See
@@ -206,7 +211,7 @@ module lab_top
         local_interrupt_0
     }
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     // MCU instantiation
 
     yrv_mcu
@@ -214,13 +219,13 @@ module lab_top
     i_yrv_mcu
     (.clk (muxed_clk), .*);
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     // Pin assignments
 
     // The original board had port3_reg [13:8], debug_mode, wfi_state
     // assign led = port3_reg [11:8];
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     wire [7:0] abcdefgh_from_mcu =
     {
@@ -246,7 +251,7 @@ module lab_top
         port1_reg [0]
     };
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     wire [7:0] abcdefgh_from_show_mode;
     wire [7:0] digit_from_show_mode;
@@ -271,8 +276,7 @@ module lab_top
         .digit    ( digit_from_show_mode      )
     );
 
-
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     always_comb
         if (slow_clk_mode)
@@ -286,7 +290,7 @@ module lab_top
             digit    = digit_from_mcu;
         end
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
     wire interrupt_raw;
 
