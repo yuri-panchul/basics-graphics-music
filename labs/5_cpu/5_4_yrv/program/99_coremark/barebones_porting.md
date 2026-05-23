@@ -119,13 +119,14 @@ In this example, the timer value increments at 100Hz. So I need to tell the scor
 
 ```C
 /* Define : TIMER_RES_DIVIDER
-        Divider to trade off timer resolution and total time that can be
+   Divider to trade off timer resolution and total time that can be
    measured.
 
-        Use lower values to increase resolution, but make sure that overflow
+   Use lower values to increase resolution, but make sure that overflow
    does not occur. If there are issues with the return value overflowing,
    increase this value.
-        */
+*/
+
 #define CLOCKS_PER_SEC             100
 #define GETMYTIME(_t)              (*_t = barebones_clock())
 #define MYTIMEDIFF(fin, ini)       ((fin) - (ini))
@@ -138,9 +139,10 @@ Finally, the platform initialization code is updated as follow:
 
 ```C
 /* Function : portable_init
-        Target specific initialization code
-        Test for some common mistakes.
+   Target specific initialization code
+   Test for some common mistakes.
 */
+
 void
 portable_init(core_portable *p, int *argc, char *argv[])
 {
@@ -179,5 +181,3 @@ If you are using a microcontroller with flash memory for program storage, and if
 Typically the CoreMark project fit within 32KB of ROM/flash and use less than 32KB of RAM. The stack and heap sizes inside the RAM is dependent on the processor architecture as well as the toolchain being used. For example, some toolchains could use more RAM for printf and floating-point library (Note: floating-point operations could be used for benchmark result calculation). In toolchains for typical 32-bit microcontrollers, usually the CoreMark uses less than 4KB of stack and 4KB of heap space.
 
 Many microcontroller vendors and some toolchain vendors provide application notes to explain to their customers how to setup CoreMark project to get the best performance.
-
-

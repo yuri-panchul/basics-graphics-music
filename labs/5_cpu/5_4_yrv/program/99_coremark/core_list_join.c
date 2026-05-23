@@ -239,9 +239,9 @@ core_bench_list(core_results *res, ee_s16 finder_idx)
         Parameters:
         blksize - Size of memory to be initialized.
         memblock - Pointer to memory block.
-        seed - 	Actual values chosen depend on the seed parameter.
-                The seed parameter MUST be supplied from a source that cannot be
-   determined at compile time
+        seed - Actual values chosen depend on the seed parameter.
+               The seed parameter MUST be supplied from a source that cannot be
+               determined at compile time
 
         Returns:
         Pointer to the head of the list.
