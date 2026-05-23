@@ -158,6 +158,8 @@ module lab_top
     wire  [15:0] port1_reg;   // port 1
     wire  [15:0] port2_reg;   // port 2
     wire  [15:0] port3_reg;   // port 3
+    wire  [15:0] port4_reg;   // port 4
+    wire  [15:0] port5_reg;   // port 5
 
     // Auxiliary UART receive pin
 
@@ -222,21 +224,16 @@ module lab_top
     //------------------------------------------------------------------------
     // Pin assignments
 
-    // The original board had port3_reg [13:8], debug_mode, wfi_state
-    // assign led = port3_reg [11:8];
-
-    //------------------------------------------------------------------------
-
     wire [7:0] abcdefgh_from_mcu =
     {
-        port0_reg[6],
-        port0_reg[5],
-        port0_reg[4],
-        port0_reg[3],
-        port0_reg[2],
-        port0_reg[1],
-        port0_reg[0],
-        port0_reg[7]
+        port0_reg [6],
+        port0_reg [5],
+        port0_reg [4],
+        port0_reg [3],
+        port0_reg [2],
+        port0_reg [1],
+        port0_reg [0],
+        port0_reg [7]
     };
 
     wire [7:0] digit_from_mcu =
