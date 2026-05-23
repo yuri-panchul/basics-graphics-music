@@ -1,9 +1,9 @@
 module TMDS_encoder(
-	input clk,
-	input [7:0] VD,  // video data (red, green or blue)
-	input [1:0] CD,  // control data
-	input VDE,  // video data enable, to choose between CD (when VDE=0) and VD (when VDE=1)
-	output reg [9:0] TMDS = 0
+    input clk,
+    input [7:0] VD,  // video data (red, green or blue)
+    input [1:0] CD,  // control data
+    input VDE,  // video data enable, to choose between CD (when VDE=0) and VD (when VDE=1)
+    output reg [9:0] TMDS = 0
 );
 
 wire [3:0] Nb1s = VD[0] + VD[1] + VD[2] + VD[3] + VD[4] + VD[5] + VD[6] + VD[7];

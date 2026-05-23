@@ -99,12 +99,15 @@ module board_specific_top
     // inout                     SMALL_LCD_RS,
     // inout                     SMALL_LCD_DATA,
 
-    // output                       TMDS_CLK_N,
-    // output                       TMDS_CLK_P,
-    // output [               2:0]  TMDS_D_N,
-    // output [               2:0]  TMDS_D_P
-         output [2:0] TMDSp, TMDSn,
-	  output TMDSp_clock, TMDSn_clock
+    // output                    TMDS_CLK_N,
+    // output                    TMDS_CLK_P,
+    // output [            2:0]  TMDS_D_N,
+    // output [            2:0]  TMDS_D_P
+
+       output [            2:0]  TMDSp,
+       output [            2:0]  TMDSn,
+       output                    TMDSp_clock,
+       output                    TMDSn_clock
 
     // This pins have bank conflict when used with HDMI
 
@@ -362,14 +365,24 @@ module board_specific_top
 
     BUFG  BUFG_TMDSp(.I(DCM_TMDS_CLKFX), .O(clk_TMDS));   
 
-
-    reg [9:0] CounterX=0, CounterY=0;
-    reg hSync, vSync, DrawArea;
+    logic [9:0] CounterX, CounterY;
+    logic hSync, vSync, DrawArea;
     
     always @(posedge pixclk) DrawArea <= (CounterX<640) && (CounterY<480);
 
-    always @(posedge pixclk) CounterX <= (CounterX==799) ? 0 : CounterX+1;  
-    always @(posedge pixclk) if(CounterX==799) CounterY <= (CounterY==524) ? 0 : CounterY+1;
+    always @ (posedge pixclk)
+        if (rst)
+            CounterX <= '0;
+        else
+            CounterX <= CounterX == 10'd799 ? '0 : CounterX + 1'd1;
+
+    // TODO:
+    //
+    // 1. Put size for each constant.
+    // 2. Replace reg to logic.
+    // 3. Remove "reg a = N" and "logic a = N", replace with reset.
+
+    always @(posedge pixclk) if(CounterX==799) CounterY <= (CounterY==524) ? 0 : CounterY + 1;
 
     always @(posedge pixclk) hSync <= (CounterX>=656) && (CounterX<752);
     always @(posedge pixclk) vSync <= (CounterY>=490) && (CounterY<492);
@@ -394,36 +407,42 @@ module board_specific_top
     assign y = CounterY;
 
     ////////////////////////////////////////////////////////////////////////
+
     wire [9:0] TMDS_red, TMDS_green, TMDS_blue;
-    TMDS_encoder encode_R(.clk(pixclk), .VD(red_r  ), .CD(2'b00)        , .VDE(DrawArea), .TMDS(TMDS_red));
-    TMDS_encoder encode_G(.clk(pixclk), .VD(green_r), .CD(2'b00)        , .VDE(DrawArea), .TMDS(TMDS_green));
-    TMDS_encoder encode_B(.clk(pixclk), .VD(blue_r ), .CD({vSync,hSync}), .VDE(DrawArea), .TMDS(TMDS_blue));
 
+    TMDS_encoder encode_R
+    (
+        .clk  ( pixclk   ),
+        .VD   ( red_r    ),
+        .CD   ( 2'b00    ),
+        .VDE  ( DrawArea ),
+        .TMDS ( TMDS_red )
+    );
 
+    TMDS_encoder encode_G (.clk (pixclk), .VD (green_r), .CD (2'b00)            , .VDE (DrawArea), .TMDS (TMDS_green));
+    TMDS_encoder encode_B (.clk (pixclk), .VD (blue_r ), .CD ({ vSync, hSync }) , .VDE (DrawArea), .TMDS (TMDS_blue));
 
     ////////////////////////////////////////////////////////////////////////
-    reg [3:0] TMDS_mod10=0;  // modulus 10 counter
-    reg [9:0] TMDS_shift_red=0, TMDS_shift_green=0, TMDS_shift_blue=0;
-    reg TMDS_shift_load=0;
-    always @(posedge clk_TMDS) TMDS_shift_load <= (TMDS_mod10==4'd9);
+
+    logic [3:0] TMDS_mod10     = '0;  // modulus 10 counter
+    logic [9:0] TMDS_shift_red = '0, TMDS_shift_green = '0, TMDS_shift_blue = '0;
+
+    logic TMDS_shift_load = '0;
+
+    always @(posedge clk_TMDS) TMDS_shift_load <= (TMDS_mod10 == 4'd9);
 
     always @(posedge clk_TMDS)
     begin
-	    TMDS_shift_red   <= TMDS_shift_load ? TMDS_red   : TMDS_shift_red  [9:1];
-	    TMDS_shift_green <= TMDS_shift_load ? TMDS_green : TMDS_shift_green[9:1];
-	    TMDS_shift_blue  <= TMDS_shift_load ? TMDS_blue  : TMDS_shift_blue [9:1];	
-	    TMDS_mod10 <= (TMDS_mod10==4'd9) ? 4'd0 : TMDS_mod10+4'd1;
+        TMDS_shift_red   <= TMDS_shift_load ? TMDS_red   : TMDS_shift_red   [9:1];
+        TMDS_shift_green <= TMDS_shift_load ? TMDS_green : TMDS_shift_green [9:1];
+        TMDS_shift_blue  <= TMDS_shift_load ? TMDS_blue  : TMDS_shift_blue  [9:1];
+        TMDS_mod10       <= (TMDS_mod10 == 4'd9) ? 4'd0  : TMDS_mod10 + 4'd1;
     end
 
-
-    OBUFDS OBUFDS_red  (.I(TMDS_shift_red  [0]), .O(TMDSp[2]), .OB(TMDSn[2]));
-    OBUFDS OBUFDS_green(.I(TMDS_shift_green[0]), .O(TMDSp[1]), .OB(TMDSn[1]));
-    OBUFDS OBUFDS_blue (.I(TMDS_shift_blue [0]), .O(TMDSp[0]), .OB(TMDSn[0]));
-    OBUFDS OBUFDS_clock(.I(pixclk), .O(TMDSp_clock), .OB(TMDSn_clock));
-
-
-
-
+    OBUFDS OBUFDS_red   (.I (TMDS_shift_red   [0]), .O (TMDSp [2]), .OB (TMDSn [2]));
+    OBUFDS OBUFDS_green (.I (TMDS_shift_green [0]), .O (TMDSp [1]), .OB (TMDSn [1]));
+    OBUFDS OBUFDS_blue  (.I (TMDS_shift_blue  [0]), .O (TMDSp [0]), .OB (TMDSn [0]));
+    OBUFDS OBUFDS_clock (.I (pixclk), .O (TMDSp_clock), .OB (TMDSn_clock));
 
     `endif
 

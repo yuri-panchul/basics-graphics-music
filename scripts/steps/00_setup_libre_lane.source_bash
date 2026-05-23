@@ -36,7 +36,7 @@ librelane_setup()
     fi
 
     if [ -v LIBRELANE_PATH ]; then
-	export PATH="${LIBRELANE_PATH}:$PATH"
+        export PATH="${LIBRELANE_PATH}:$PATH"
     fi
 
     if  ! is_command_available librelane ; then

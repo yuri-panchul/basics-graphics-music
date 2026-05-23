@@ -303,12 +303,11 @@ module board_specific_top
 
      `ifdef USE_SD_CARD
          ,
-	.sd_cs(SD_CS),
-        .sd_mosi(SD_MOSI),
-        .sd_miso(SD_MISO),
-        .sd_sclk(SD_SCLK)
+        .sd_cs         ( SD_CS         ),
+        .sd_mosi       ( SD_MOSI       ),
+        .sd_miso       ( SD_MISO       ),
+        .sd_sclk       ( SD_SCLK       )
      `endif
-
     );
 
     //------------------------------------------------------------------------
