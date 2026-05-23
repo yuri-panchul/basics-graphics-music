@@ -38,7 +38,7 @@ int __mulsi3 (int a, int b)
   while (b != 0)
     {
       if (b & 1)
-	result += a;
+        result += a;
       a <<= 1;
       b >>= 1;
     }

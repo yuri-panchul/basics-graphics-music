@@ -39,10 +39,10 @@ unsigned int __udivmodsi4 (unsigned int num, unsigned int den, int modwanted)
   while (bit)
     {
       if (num >= den)
-	{
-	  num -= den;
-	  res |= bit;
-	}
+        {
+          num -= den;
+          res |= bit;
+        }
       bit >>= 1;
       den >>= 1;
     }

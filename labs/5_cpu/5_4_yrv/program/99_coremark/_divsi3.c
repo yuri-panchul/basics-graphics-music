@@ -53,7 +53,7 @@ int __divsi3 (int a, int b)
 
   if (b == 0)
     {
-	return 0;
+        return 0;
     }
 
   if (((unsigned int) (a | b)) < 16)
@@ -62,21 +62,21 @@ int __divsi3 (int a, int b)
     {
 
       if (a < 0)
-	{
-	  a = -a;
-	  neg = !neg;
-	}
+        {
+          a = -a;
+          neg = !neg;
+        }
 
       if (b < 0)
-	{
-	  b = -b;
-	  neg = !neg;
-	}
+        {
+          b = -b;
+          neg = !neg;
+        }
 
-	res = __udivmodsi4 (a, b, 0);
+        res = __udivmodsi4 (a, b, 0);
 
       if (neg)
-	res = -res;
+        res = -res;
     }
 
   return res;

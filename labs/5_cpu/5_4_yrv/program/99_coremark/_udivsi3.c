@@ -30,7 +30,7 @@ unsigned int __udivsi3 (unsigned int a, unsigned int b)
 {
   if (b == 0)
     {
-	return 0;
+        return 0;
     }
 
   return __udivmodsi4 (a, b, 0);
