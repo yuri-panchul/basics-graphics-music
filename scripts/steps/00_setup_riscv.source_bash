@@ -200,10 +200,18 @@ riscv_software_toolchain_run ()
 
     [ -n "$src" ] || error "no .s, .S, .c or .C files in the directory"
 
-    $riscv_gcc -march=rv32i_zbs_zicsr -mabi=ilp32 \
+    cp "../$linker_script" linker_script.ld
+
+    gcc_cmd="$riscv_gcc -march=rv32i_zbs_zicsr -mabi=ilp32 \
         -ffreestanding -fno-zero-initialized-in-bss \
         -nostdlib -static -Wl,--build-id=none -Wl,--no-warn-rwx-segments \
-        -O3 -T"../$linker_script" $src
+        -O3 -T linker_script.ld $src"
+
+    # We build two times to get both the output assembly file
+    # and the output ELF
+
+    $gcc_cmd -S
+    $gcc_cmd
 
     $riscv_objcopy -O binary a.out final
     python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32

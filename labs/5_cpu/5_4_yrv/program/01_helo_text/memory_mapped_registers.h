@@ -1,31 +1,43 @@
-#ifndef MFP_MEMORY_MAPPED_REGISTERS_H
-#define MFP_MEMORY_MAPPED_REGISTERS_H
+#ifndef MEMORY_MAPPED_REGISTERS_H
+#define MEMORY_MAPPED_REGISTERS_H
 
+#include <stdint.h>
 
-/*
-define IO_PORT10 14 h0000                                  lsword of port 1/0 address
-define IO_PORT32 14 h0001                                  lsword of port 3/2 address
-define IO_PORT54 14 h0002                                  lsword of port 5/4 address
-define IO_PORT76 14 h0003                                  lsword of port 7/6 address
+#define MMIO_BASE_ADDR    0xffff0000
 
+#define MMIO_7SEG_ADDR    0xffff0000
+#define MMIO_LED_ADDR     0xffff0004
+#define MMIO_KEY_SW_ADDR  0xffff0008
+#define MMIO_SERIAL_ADDR  0xffff000c
 
-*/
+#define MMIO(a) (* (volatile uint32_t *) (a))
 
-#define IO_PORT00_ADDR     0xFFFF0000
-#define IO_PORT16_ADDR     0xFFFF0002
-#define IO_PORT32_ADDR     0xFFFF0004
-#define IO_PORT48_ADDR     0xFFFF0006
-#define IO_PORT54_ADDR     0xFFFF0008
-#define IO_PORT60_ADDR     0xFFFF000A
-#define IO_PORT76_ADDR     0xFFFF000C
+#define MMIO_7SEG    MMIO ( MMIO_7SEG_ADDR   )
+#define MMIO_LED     MMIO ( MMIO_LED_ADDR    )
+#define MMIO_KEY_SW  MMIO ( MMIO_KEY_SW_ADDR )
+#define MMIO_SERIAL  MMIO ( MMIO_SERIAL_ADDR )
 
+typedef struct
+{
+    unsigned
+    reserved : 8,
+    rdp      : 1,
+    ra       : 1,
+    rb       : 1,
+    rc       : 1,
+    rd       : 1,
+    re       : 1,
+    rf       : 1,
+    rg       : 1;
+}
+mmio_7seg_t;
 
-#define port0 (* (volatile unsigned short*) IO_PORT00_ADDR )
-#define port1 (* (volatile unsigned short*) IO_PORT16_ADDR )
-#define port2 (* (volatile unsigned short*) IO_PORT32_ADDR )
-#define port3 (* (volatile unsigned short*) IO_PORT48_ADDR )
-#define port4 (* (volatile unsigned short*) IO_PORT54_ADDR )
-#define port5 (* (volatile unsigned short*) IO_PORT60_ADDR )
-#define port6 (* (volatile unsigned short*) IO_PORT76_ADDR )
+typedef struct
+{
+    mmio_7seg_t seven_seg;
+}
+mmio_t;
+
+#define mmio (* (volatile mmio_t *) MMIO_BASE_ADDR)
 
 #endif
