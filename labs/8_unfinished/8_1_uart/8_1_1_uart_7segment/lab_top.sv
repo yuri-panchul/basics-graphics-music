@@ -129,7 +129,10 @@ module lab_top
     genvar i;
     generate
         for (i = 0; i < w_digit; i++) 
-            assign display_number[i * 4 +: 4] = rx_buf[i][3:0];
+        begin : assign_display
+            //assign display_number[i * 4 +: 4] = rx_buf[i][3:0];
+            assign display_number[i * 4 +: 4] = 4' (rx_buf[i] - 8'h41 + 8'hA);
+        end
     endgenerate
 
     seven_segment_display # (w_digit) i_7segment
