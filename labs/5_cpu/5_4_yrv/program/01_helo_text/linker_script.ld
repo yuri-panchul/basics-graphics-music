@@ -1,10 +1,18 @@
 OUTPUT_ARCH ( riscv  )
 ENTRY       ( _start )
 
-MEMORY
-{
-    BRAM (rwx) : ORIGIN = 0x00000000, LENGTH = 8K
-}
+# We don't need the MEMORY command in our script
+# because we don't have separate ROM and RAM,
+# the sections start at 0,
+# and the memory overflow check is done using ASSERT
+# at the end of the script.
+
+# TODO: Make MEMORY_SIZE board-specific
+
+PROVIDE (MEMORY_SIZE    = 0x2000);
+PROVIDE (TRAPFRAME_SIZE = 0x100);
+PROVIDE (HEAP_SIZE      = 0x100);
+PROVIDE (MIN_STACK_SIZE = 0x100);
 
 # TODO Check if this list is complete
 
@@ -16,8 +24,6 @@ _RST_BASE = 0x200;
 
 SECTIONS
 {
-    PROVIDE (__stack_top = ORIGIN (BRAM) + LENGTH (BRAM));
-
     .text :
     {
         . = _TRAP_ACK;
@@ -32,20 +38,16 @@ SECTIONS
         KEEP (* (.text.init))
         * (.text)
     }
-    > BRAM
 
-    .rodata :
+    .rodata : ALIGN (4)
     {
-        . = ALIGN (4);
         * (.rodata)
     }
-    > BRAM
 
-    .data :
+    .data : ALIGN (4)
     {
         * (.data)
     }
-    > BRAM
 
     # .sdata and .sbss must be contiguous for the Linker Relaxation to work
     #
@@ -54,55 +56,52 @@ SECTIONS
     # https://github.com/bouffalolab/bl_iot_sdk/blob/master/components/platform/soc/bl602/bl602/evb/ld/ram.ld
     # https://github.com/riscv-mcu/GD32VF103_Firmware_Library/blob/master/Firmware/RISCV/env_Eclipse/GD32VF103x4.lds
 
-    .sdata :
+    .sdata : ALIGN (4)
     {
-        . = ALIGN (4);
         __sdata_start = .;
         PROVIDE (__global_pointer$ = . + 0x800);
         * (.sdata)
     }
-    > BRAM
 
-    .sbss :
+    .sbss : ALIGN (4)
     {
-        . = ALIGN (4);
         __sbss_start = .;
         * (.sbss)
         __sbss_end = .;
     }
-    > BRAM
 
-    .bss :
+    .bss : ALIGN (4)
     {
-        . = ALIGN(4);
         * (.bss)
         __bss_end = .;
     }
-    > BRAM
 
-    ASSERT ((__sbss_end - __sdata_start) <= 0x1000,
+    ASSERT (__sbss_end - __sdata_start <= 0x1000,
        ".sdata + .sbss exceed 4 KB gp range")
-
-    .trapframe (NOLOAD) : ALIGN(16)  # inspired by xv6, a core from MIT
 
     # ALIGN (16) from https://docs.riscv.org/reference/abi/riscv-cc-c-cpp-type-details.html
     # https://riscv.org/wp-content/uploads/2024/12/riscv-calling.pdf similar stack
 
+    .trapframe (NOLOAD) : ALIGN (16)  # inspired by xv6, a core from MIT
     {
         __trapframe_start = .;
-        . = . + 128;
+        . = . + TRAPFRAME_SIZE;
         __trapframe_end = .;
     }
-    > BRAM
 
     .heap (NOLOAD) : ALIGN (16)
     {
         __heap_start = .;
-       # TODO: increase the heap in the future C examples with malloc/free
-        . = . + 256;
+        . = . + HEAP_SIZE;
         __heap_end = .;
     }
-    > BRAM
+
+    .stack (NOLOAD) : ALIGN (4)
+    {
+        __stack_bottom = .;
+        . = MEMORY_SIZE;
+        __stack_top = .;
+    }
 
     /DISCARD/ :
     {
@@ -111,5 +110,6 @@ SECTIONS
         * (.comment)
     }
 
-    __end = .; # It can be used to cheсk for collision with SP
+    ASSERT (__stack_top - __stack_bottom >= MIN_STACK_SIZE,
+        "Not enough space for the stack: consider increasing MEMORY_SIZE or decreasing MIN_STACK_SIZE");
 }
