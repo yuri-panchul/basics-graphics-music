@@ -110,6 +110,6 @@ SECTIONS
         * (.comment)
     }
 
-    ASSERT (__stack_top - __stack_bottom >= MIN_STACK_SIZE,
-        "Not enough space for the stack: consider increasing MEMORY_SIZE or decreasing MIN_STACK_SIZE");
+    ASSERT ((__stack_top - __stack_bottom) >= MIN_STACK_SIZE,
+        "Not enough space for the stack: consider increasing MEMORY_SIZE or decreasing MIN_STACK_SIZE")
 }
