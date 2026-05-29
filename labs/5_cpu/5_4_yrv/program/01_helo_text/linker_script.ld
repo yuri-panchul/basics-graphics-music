@@ -31,6 +31,7 @@ SECTIONS
         . = _RST_BASE;
         KEEP (* (.text.init))
         * (.text)
+        * (.text.*)
     }
     > BRAM
 
