@@ -232,6 +232,7 @@ source "$script_dir/steps/00_setup_icarus.source_bash"
 source "$script_dir/steps/00_setup_yosys.source_bash"
 source "$script_dir/steps/00_setup_rars.source_bash"
 source "$script_dir/steps/00_setup_riscv.source_bash"
+source "$script_dir/steps/00_setup_terminal.source_bash"
 
 #-----------------------------------------------------------------------------
 #

@@ -1,0 +1,174 @@
+expected_source_script=00_setup.source_bash
+
+if [ -z "$BASH_SOURCE" ]
+then
+    printf "script \"%s\" should be sourced from \"%s\"\n"  \
+           "$0" "$expected_source_script" 1>&2
+
+    exit 1
+fi
+
+this_script=$(basename "${BASH_SOURCE[0]}")
+source_script=$(basename "${BASH_SOURCE[1]}")
+
+if [ -z "$source_script" ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\"\n"  \
+           "$this_script" "$expected_source_script" 1>&2
+
+    return 1
+fi
+
+if [ "$source_script" != $expected_source_script ]
+then
+    printf "script \"%s\" should be sourced from  \"%s\", not \"%s\"\n"  \
+           "$this_script" "$expected_source_script" "$source_script" 1>&2
+
+    exit 1
+fi
+
+#-----------------------------------------------------------------------------
+
+setup_uart ()
+{
+    set +o pipefail
+
+    if [[ "$OSTYPE" == "linux-gnu"* ]]
+    then
+        tty_suffix="USB"
+        git_bash=
+
+    elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]
+    then
+        tty_suffix="S"
+        git_bash="Git Bash "
+
+    elif [[ "$OSTYPE" = "darwin"* ]]
+    then
+        tty_suffix=".usbserial-"
+        git_bash=""
+    fi
+
+    dev_name_in_err="$git_bash/dev/tty${tty_suffix}"
+
+    available_uart_ports=$(ls /dev/tty${tty_suffix}* 2>/dev/null |
+        tr "\r\n" " "                                            |
+        sed 's/ $//g'                                            |
+        sed "s|/dev/tty$tty_suffix||g")
+
+    set -o pipefail
+
+    [ -n "$available_uart_ports" ] ||
+    error "no active $dev_name_in_err devices for UART"
+
+    uart_port="$available_uart_ports"
+
+    #-------------------------------------------------------------------------
+
+    last_uart_port_file="$package_dir/last_uart_port"
+
+    #-------------------------------------------------------------------------
+
+    if [[ "$available_uart_ports" == *" "* ]]
+    then
+        warning "multiple $dev_name_in_err devices for UART: $available_uart_ports"
+
+        default_uart_port=
+
+        if [ -f "$last_uart_port_file" ] ; then
+            default_uart_port=$(head -1 "$last_uart_port_file" |
+            grep -E '^[0-9]+$'                                 |
+            tr "\r\n" " "                                      |
+            sed 's/ $//g'                                      )
+        fi
+
+        if [ -n "$default_uart_port" ] ; then
+            info "default UART port is /dev/tty${tty_suffix}$default_uart_port"
+        fi
+
+        if ! [[ " $available_uart_ports " == *" $default_uart_port "* ]]
+        then
+            # Stored UART port is not available
+            default_uart_port=
+        fi
+
+        default_uart_port_selection=
+
+        if [ -n "$default_uart_port" ] ; then
+            default_uart_port_selection=". The default is $default_uart_port"
+        fi
+
+        read -rp "Choose UART port out of: $available_uart_ports$default_uart_port_selection: " uart_port
+
+        uart_port=${uart_port:-$default_uart_port}
+
+        [[ "$uart_port" =~ ^[0-9]+$ ]] ||
+        error "the selection '$uart_port' should be a decimal number"
+
+        [[ " $available_uart_ports " == *" $uart_port "* ]] ||
+        error "the selection '$uart_port' is not among the available uart_ports: $available_uart_ports"
+    fi
+
+    #-------------------------------------------------------------------------
+
+    dev="/dev/tty${tty_suffix}$uart_port"
+
+    [ -c $dev ] ||
+    error "$dev does not exist, is not connected or not a serial device"
+
+    printf "$uart_port" > $last_uart_port_file
+
+    #-------------------------------------------------------------------------
+
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" = "darwin"* ]]
+    then
+        dev_grp=$(stat -c "%G" $dev 2>/dev/null)
+
+        [ -n "$dev_grp" ] || error "Cannot determine the groups that owns $dev"
+
+        # id
+        #
+        # -G, --groups  print all group IDs
+        # -n, --name    print a name instead of a number, for -ugG
+        #
+        # grep
+        #
+        # -w, --word-regexp      match only whole words
+        # -q, --quiet, --silent  suppress all normal output
+
+        if ! id -nG | grep -qw $dev_grp
+        then
+            error "User \"$USER\" is not in \"$dev_grp\" group."  \
+                  "Run: \"sudo usermod -a -G $dev_grp $USER\","   \
+                  "then reboot and try again."                    \
+                  "(On some systems it is sufficient"             \
+                  "to logout and login instead of the reboot)."
+        fi
+    fi
+
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" = "darwin"* ]] ; then
+        extra_stty_arg="raw "
+    fi
+
+    stty -F $dev ${extra_stty_arg-}speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
+    || error "USB-to-UART is not working"
+
+    #tio $dev || error "Error starting tio $dev"
+
+    #minicom -D $dev -b 115200
+    printf ABCD > $dev
+}
+
+#-----------------------------------------------------------------------------
+
+setup_terminal ()
+{
+    echo setup
+}
+
+#-----------------------------------------------------------------------------
+
+run_terminal_program ()
+{
+    setup_uart
+}
