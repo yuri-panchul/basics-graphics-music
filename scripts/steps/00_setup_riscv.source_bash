@@ -205,7 +205,7 @@ riscv_software_toolchain_run ()
     gcc_cmd="$riscv_gcc -march=rv32i_zbs_zicsr -mabi=ilp32 \
         -ffreestanding -fno-zero-initialized-in-bss \
         -nostdlib -static -Wl,--build-id=none -Wl,--no-warn-rwx-segments \
-        -O3 -T linker_script.ld $src"
+        -O3 -T linker_script.ld -Wl,-M=map.txt $src"
 
     # We build two times to get both the output assembly file
     # and the output ELF

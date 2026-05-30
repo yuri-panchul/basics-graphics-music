@@ -99,7 +99,7 @@ SECTIONS
     .stack (NOLOAD) : ALIGN (4)
     {
         __stack_bottom = .;
-        . = MEMORY_SIZE;
+        . = ABSOLUTE (MEMORY_SIZE);
         __stack_top = .;
     }
 
