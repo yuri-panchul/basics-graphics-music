@@ -1,0 +1,11 @@
+variable_add tb.clk
+variable_add tb.rst
+variable_add tb.a_valid
+variable_add tb.a_ready
+variable_add tb.a_data
+variable_add tb.b_valid
+variable_add tb.b_ready
+variable_add tb.b_data
+variable_add tb.sum_valid
+variable_add tb.sum_ready
+variable_add tb.sum_data

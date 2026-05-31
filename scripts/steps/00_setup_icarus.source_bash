@@ -85,6 +85,13 @@ run_icarus_verilog ()
 
     #-------------------------------------------------------------------------
 
+    dump_vcd=dump.vcd
+
+    if ! [ -f $dump_vcd ]; then
+        warning no $dump_vcd file
+        return 0
+    fi
+
     is_command_available_or_error_and_install gtkwave
 
     gtkwave_script=../gtkwave.tcl
@@ -148,7 +155,7 @@ run_icarus_verilog ()
             # For some reason the following way of opening the application
             # under Mac does not read the script file:
             #
-            # open -a gtkwave dump.vcd --args --script $PWD/gtkwave.tcl
+            # open -a gtkwave $dump_vcd --args --script $PWD/gtkwave.tcl
             #
             # This way works:
 
@@ -158,7 +165,7 @@ run_icarus_verilog ()
         error 1 "don't know how to run GTKWave on your OS $OSTYPE"
     fi
 
-    command="$gtkwave dump.vcd $gtkwave_options"
+    command="$gtkwave $dump_vcd $gtkwave_options"
 
     if [  "$OSTYPE" = "linux-gnu"  ] ||
        [[ "$OSTYPE" = "darwin"*   ]]
