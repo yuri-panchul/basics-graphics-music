@@ -17,31 +17,32 @@
 #define MMIO_KEY_SW  MMIO ( MMIO_KEY_SW_ADDR )
 #define MMIO_SERIAL  MMIO ( MMIO_SERIAL_ADDR )
 
-// # 0x00010000 port0 = { 8'bxxxxxxxx, RDP, RA, RB, RC, RD, RE, RF, RG }
 // # 0x00010002 port1 = { 4'bxxxx, C46, C45, C43, C42, 4'bxxxx, AN4, AN3, AN2, AN1 }
+// # 0x00010000 port0 = { 8'bxxxxxxxx, RDP, RA, RB, RC, RD, RE, RF, RG }
+
 
 typedef struct
 {
     unsigned
-    reserved_31_28 : 4,
-    c46            : 1,
-    c45            : 1,
-    c43            : 1,
-    c42            : 1,
-    reserved_23_20 : 4,
-    an4            : 1,
-    an3            : 1,
-    an2            : 1,
-    an1            : 1,
-    reserved_15_8  : 8,
-    rdp            : 1,
-    ra             : 1,
-    rb             : 1,
-    rc             : 1,
-    rd             : 1,
-    re             : 1,
+    rg             : 1,
     rf             : 1,
-    rg             : 1;
+    re             : 1,
+    rd             : 1,
+    rc             : 1,
+    rb             : 1,
+    ra             : 1,
+    rdp            : 1,
+    reserved_15_8  : 8,
+    an1            : 1,
+    an2            : 1,
+    an3            : 1,
+    an4            : 1,
+    reserved_23_20 : 4,
+    c42            : 1,
+    c43            : 1,
+    c45            : 1,
+    c46            : 1,
+    reserved_31_28 : 4;
 }
 mmio_7seg_t;
 
@@ -51,39 +52,39 @@ mmio_7seg_t;
 typedef struct
 {
     unsigned
-    l15       : 1,
-    l14       : 1,
-    l13       : 1,
-    l12       : 1,
-    l11       : 1,
-    l10       : 1,
-    l9        : 1,
-    l8        : 1,
-    l7        : 1,
-    l6        : 1,
-    l5        : 1,
-    l4        : 1,
-    l3        : 1,
-    l2        : 1,
-    l1        : 1,
-    l0        : 1,
-    clr_ei    : 1,
-    free      : 1, //TODO
-    init      : 1,
-    ecall     : 1,
-    nmi       : 1,
-    lint      : 1,
-    internal  : 4,
-    except    : 1,
-    l24       : 1,
-    l23       : 1,
-    l22       : 1,
-    l21       : 1,
-    l20       : 1,
-    l19       : 1,
-    l18       : 1,
-    l17       : 1,
-    l16       : 1;
+    l0           : 1,
+    l1           : 1,
+    l2           : 1,
+    l3          : 1,
+    l4          : 1,
+    l5          : 1,
+    l6          : 1,
+    l7          : 1,
+    l8          : 1,
+    l9          : 1,
+    l10         : 1,
+    l11         : 1,
+    l12         : 1,
+    l13         : 1,
+    l14         : 1,
+    l15         : 1,
+    l16         : 1,
+    l17         : 1,
+    l18         : 1,
+    l19         : 1,
+    l20         : 1,
+    l21         : 1,
+    l22         : 1,
+    l23         : 1,
+    l24         : 1,
+    except      : 1,
+    internal    : 4,
+    lint        : 1, 
+    nmi         : 1,
+    ecall       : 1,
+    init        : 1,
+    reserved_30 : 1,
+    clr_ei      : 1;
 }
 mmio_led_t;
 
@@ -93,39 +94,39 @@ mmio_led_t;
 typedef struct
 {
     unsigned
-    dip15       : 1,
-    dip14       : 1,
-    dip13       : 1,
-    dip12       : 1,
-    dip11       : 1,
-    dip10       : 1,
-    dip9        : 1,
-    dip8        : 1,
-    dip7        : 1,
-    dip6        : 1,
-    dip5        : 1,
-    dip4        : 1,
-    dip3        : 1,
-    dip2        : 1,
-    dip1        : 1,
-    dip0        : 1,
-    c9          : 1,
-    c8          : 1, 
+    dip0        : 1, 
+    dip1        : 1,                                                                                                                                                                                                                                           
+    dip2        : 1,                                                                                                                                                                                                                                           
+    dip3        : 1,                                                                                                                                                                                                                                           
+    dip4        : 1,                                                                                                                                                                                                                                           
+    dip5        : 1,                                                                                                                                                                                                                                           
+    dip6        : 1,                                                                                                                                                                                                                                           
+    dip7        : 1,                                                                                                                                                                                                                                           
+    dip8        : 1,                                                                                                                                                                                                                                           
+    dip9        : 1,                                                                                                                                                                                                                                           
+    dip10       : 1,                                                                                                                                                                                                                                           
+    dip11       : 1,                                                                                                                                                                                                                                           
+    dip12       : 1,        
+    dip13       : 1,                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    dip14       : 1,                                                                                                                                                                                                                                           
+    dip15       : 1,   
+    dip16       : 1, 
+    dip17       : 1,                                                                                                                                                                                                                                           
+    dip18       : 1,                                                                                                                                                                                                                                           
+    dip19       : 1,                                                                                                                                                                                                                                           
+    dip20       : 1,                                                                                                                                                                                                                                           
+    dip21       : 1,                                                                                                                                                                                                                                           
+    dip22       : 1,                                                                                                                                                                                                                                           
+    dip24       : 1,                                                                                                                                                                                                                                           
+    dip23       : 1, 
+    s1          : 1,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+    s2          : 1,                                                                                                                                                                                                                                           
+    s3          : 1,                                                                                                                                                                                                                                           
+    s4          : 1,                                                                                                                                                                                                                                           
+    s5          : 1,                                                                                                                                                                                                                                           
     c6          : 1,
-    s5          : 1,
-    s4          : 1,
-    s3          : 1,
-    s2          : 1,
-    s1          : 1,
-    dip24       : 1,
-    dip23       : 1,
-    dip22       : 1,
-    dip21       : 1,
-    dip20       : 1,
-    dip19       : 1,
-    dip18       : 1,
-    dip17       : 1,
-    dip16       : 1;
+    c8          : 1,                                                                                                                                                                                                                                           
+    c9          : 1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 }
 mmio_key_sw_t;
 
@@ -135,14 +136,14 @@ mmio_key_sw_t;
 typedef struct
 {
     unsigned
-    div_rate    : 12,
-    s_reset     :  1,
-    free        :  7,
-    empty       :  1,
-    done        :  1,
-    full        :  1,
-    ovr         :  1,
-    ser_data    :  8;
+    s_reset         :  1,   
+    div_rate        : 12,
+    ser_data        :  8, 
+    ovr             :  1,
+    full            :  1,
+    done            :  1,
+    empty           :  1,
+    reserved_28_31  :  4;
 }
 mmio_serial_t;
 
