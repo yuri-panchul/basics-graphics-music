@@ -1,6 +1,3 @@
-// Use this example to get
-// experience with HEX on differents boards
-
 #include "memory_mapped_registers.h"
 #define MTIME_CLK_FREQ 27000000
 #define TICKS_PER_MS   (MTIME_CLK_FREQ / 1000)
@@ -17,7 +14,7 @@ asm volatile ("csrw " #reg ", %0" :: "rK"(val)); })
 void delay(int ms) {
     unsigned long start_time = read_csr(time);
     unsigned long wait_time = (unsigned long)ms * TICKS_PER_MS;
-    while ((read_csr(time) - start_time) < wait_time); // Wait until time is reached. Unsigned help with overload
+    while ((read_csr(time) - start_time) < wait_time); // Wait until time is reached. Unsigned help to protect overload
 }
 
 
