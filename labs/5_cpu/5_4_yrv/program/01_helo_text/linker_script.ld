@@ -9,36 +9,39 @@ ENTRY       ( _start )
 
 # TODO: Make MEMORY_SIZE board-specific
 
-PROVIDE (MEMORY_SIZE    = 0x2000);
+PROVIDE (MEMORY_SIZE    = 4K);
 PROVIDE (TRAPFRAME_SIZE = 0x100);
 PROVIDE (HEAP_SIZE      = 0x100);
 PROVIDE (MIN_STACK_SIZE = 0x100);
 
 # TODO Check if this list is complete
 
-_TRAP_ACK = 0x040;
-_NMI_VECT = 0x100;
-_DBG_VEC  = 0x140;
-_DEX_VEC  = 0x1c0;
-_RST_BASE = 0x200;
+TRAP_ACK = 0x040;
+NMI_VECT = 0x100;
+DBG_VEC  = 0x140;
+DEX_VEC  = 0x1c0;
+RST_BASE = 0x200;
 
 SECTIONS
 {
     .text :
     {
-        . = _TRAP_ACK;
+        . = TRAP_ACK;
         KEEP (* (.text.trap_ack))
-        . = _NMI_VECT;
+        . = NMI_VECT;
         KEEP (* (.text.nmi_vec))
-        . = _DBG_VEC;
+        . = DBG_VEC;
         KEEP (* (.text.dbg_vec))
-        . = _DEX_VEC;
+        . = DEX_VEC;
         KEEP (* (.text.dex_vec))
-        . = _RST_BASE;
+        . = RST_BASE;
         KEEP (* (.text.init))
+
+        * (.text.startup)
         * (.text)
-        * (.text.*)
     }
+
+    # TODO: Consider ALIGN (8) to be compatible with 64-bit cores
 
     .rodata : ALIGN (4)
     {
@@ -68,7 +71,6 @@ SECTIONS
     {
         __sbss_start = .;
         * (.sbss)
-        __sbss_end = .;
     }
 
     .bss : ALIGN (4)
@@ -86,14 +88,14 @@ SECTIONS
     .trapframe (NOLOAD) : ALIGN (16)  # inspired by xv6, a core from MIT
     {
         __trapframe_start = .;
-        . = . + TRAPFRAME_SIZE;
+        . += TRAPFRAME_SIZE;
         __trapframe_end = .;
     }
 
     .heap (NOLOAD) : ALIGN (16)
     {
         __heap_start = .;
-        . = . + HEAP_SIZE;
+        . += HEAP_SIZE;
         __heap_end = .;
     }
 
