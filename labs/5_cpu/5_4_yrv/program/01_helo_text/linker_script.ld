@@ -92,6 +92,8 @@ SECTIONS
         __trapframe_end = .;
     }
 
+    # Heap is aligned by 16 because of a typical malloc library implementation
+
     .heap (NOLOAD) : ALIGN (16)
     {
         __heap_start = .;
