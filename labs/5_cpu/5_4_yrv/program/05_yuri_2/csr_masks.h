@@ -38,9 +38,23 @@
 #define MSTATUS_MPP_BIT_LO      11
 #define MSTATUS_MPP_BIT_HI      12
 
-#define MIE_MEIE_BIT            11
-#define MIE_MTIE_BIT             7
 #define MIE_MSIE_BIT             3
+#define MIE_MTIE_BIT             7
+#define MIE_MEIE_BIT            11
+
+#define MIP_MSIP_BIT             3
+#define MIP_MTIP_BIT             7
+#define MIP_MEIP_BIT            11 
+
+#define MCAUSE_EXCCODE_BIT_LO    0
+#define MCAUSE_EXCCODE_BIT_HI   30
+
+#define MTVEC_MODE_BIT_LO        0
+#define MTVEC_MODE_BIT_HI        1
+
+#define MTVEC_BASE_BIT_LO        2
+#define MTVEC_BASE_BIT_HI       31
+
 
 //  mie (Machine Interrupt Enable) - Fine-grained interrupt masking
 //    - mie.MEIE     [Bit 11] : Machine External Interrupt Enable (Peripherals)
@@ -70,12 +84,21 @@
 #define MASK_FROM_BIT(b)             (1 << (b))
 #define MASK_FROM_HI_LO_BIT(hi, lo)  ((~ 0u >> (31 - (hi))) & (~ 0 << (lo)))
 
-#define MSTATUS_MIE   MASK_FROM_BIT        ( MSTATUS_MIE_BIT                          )
-#define MSTATUS_MPIE  MASK_FROM_BIT        ( MSTATUS_MPIE_BIT                         )
-#define MSTATUS_MPP   MASK_FROM_HI_LO_BIT  ( MSTATUS_MPP_BIT_HI  , MSTATUS_MPP_BIT_LO )
+#define MSTATUS_MIE    MASK_FROM_BIT        ( MSTATUS_MIE_BIT                               )
+#define MSTATUS_MPIE   MASK_FROM_BIT        ( MSTATUS_MPIE_BIT                              )
+#define MSTATUS_MPP    MASK_FROM_HI_LO_BIT  ( MSTATUS_MPP_BIT_HI  , MSTATUS_MPP_BIT_LO      )
+     
+#define MIE_MEIE       MASK_FROM_BIT        ( MIE_MEIE_BIT                                  )
+#define MIE_MTIE       MASK_FROM_BIT        ( MIE_MTIE_BIT                                  )
+#define MIE_MSIE       MASK_FROM_BIT        ( MIE_MSIE_BIT                                  )
+ 
+#define MIP_MSIP       MASK_FROM_BIT        ( MIP_MSIP_BIT                                  ) 
+#define MIP_MTIP       MASK_FROM_BIT        ( MIP_MTIP_BIT                                  ) 
+#define MIP_MEIP       MASK_FROM_BIT        ( MIP_MEIP_BIT                                  )  
 
-#define MIE_MEIE      MASK_FROM_BIT        ( MIE_MEIE_BIT                             )
-#define MIE_MTIE      MASK_FROM_BIT        ( MIE_MTIE_BIT                             )
-#define MIE_MSIE      MASK_FROM_BIT        ( MIE_MSIE_BIT                             )
+#define MCAUSE_EXCCODE MASK_FROM_HI_LO_BIT  ( MCAUSE_EXCCODE_BIT_LO , MCAUSE_EXCCODE_BIT_HI )    
+
+#define MTVEC_MODE     MASK_FROM_HI_LO_BIT  ( MTVEC_MODE_BIT_LO , MTVEC_MODE_BIT_HI         )
+#define MTVEC_BASE     MASK_FROM_HI_LO_BIT  ( MTVEC_BASE_BIT_LO , MTVEC_BASE_BIT_HI         )
 
 #endif  // ifdef CSR_MASKS_H
