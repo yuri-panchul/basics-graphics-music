@@ -1,8 +1,16 @@
 #include "bgm_pico_threads.h"
+#include "csr_masks.h"
 
 #-----------------------------------------------------------------------------
 
+<<<<<<< HEAD
         .section .sdata
+=======
+# For whatever reason GCC version we use does not recognize ".sdata"
+# and requires writing ".section .sdata".
+
+        .section    .sdata
+>>>>>>> afa00312f522fb8fc06ac223e1dd59243ad821e9
         .align      2
 
 num_threads:
@@ -39,19 +47,26 @@ define_thread:
 
 start_running_threads:
 
+<<<<<<< HEAD
         li          t0, MSTATUS_MIE 
         csrw        mstatus, t0     // Enable interrupts
         li          t0, MIP_MTIP
         csrw        mip,     t0     // Enable timer interrupt
         wfi                         // Wait for interrupts
+=======
+        csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
+>>>>>>> afa00312f522fb8fc06ac223e1dd59243ad821e9
 
-        // The following eternal loop should not be necessary
-        // because after the first timer interrupt
-        // we are going to return to the first defined thread.
-        // Then on another timer interrupt we are going to switch
-        // to the second thread and so on.
+        li          t0,      MIP_MTIP     // Enable timer interrupt
+        csrw        mip,     t0
 
-.1:     j           1
+        // The eternal loop below is not necessary
+        // if the only interrupts we have come from the timer.
+        // Otherwise we do need the loop in order to continue
+        // running after the interrupt processing.
+
+.1:     wfi                               // Wait for interrupts
+        j           1
 
 #-----------------------------------------------------------------------------
 

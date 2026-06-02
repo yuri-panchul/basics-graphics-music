@@ -210,7 +210,7 @@ riscv_software_toolchain_run ()
     # We build two times to get both the output assembly file
     # and the output ELF
 
-    $gcc_cmd -S
+    $gcc_cmd -S > cpp_out.txt
     $gcc_cmd
 
     $riscv_objcopy -O binary a.out final
