@@ -2,20 +2,20 @@
 
 #-----------------------------------------------------------------------------
 
-        .sdata
+        .section .sdata
         .align      2
 
 num_threads:
         .word       0
 
 cur_thread:
-        .word       0
+        .word       0  # should be a TP (x4) register??
 
 #-----------------------------------------------------------------------------
 
 #define THREAD_CONTEXT_SIZE  32
 
-        .bss
+        .section .bss
         .align      2
 
 thread_contexts:
@@ -23,7 +23,7 @@ thread_contexts:
 
 #-----------------------------------------------------------------------------
 
-        .text
+        .section .text
 
         .align      2
         .globl      define_thread
@@ -39,9 +39,11 @@ define_thread:
 
 start_running_threads:
 
-        csrw        mstatus, MSTATUS_MIE  // Enable interrupts
-        csrw        mip,     MIP_MTIP     // Enable timer interrupt
-        wfi                               // Wait for interrupts
+        li          t0, MSTATUS_MIE 
+        csrw        mstatus, t0     // Enable interrupts
+        li          t0, MIP_MTIP
+        csrw        mip,     t0     // Enable timer interrupt
+        wfi                         // Wait for interrupts
 
         // The following eternal loop should not be necessary
         // because after the first timer interrupt
