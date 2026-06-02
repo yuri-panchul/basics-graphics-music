@@ -13,13 +13,13 @@ num_threads:
         .word       0
 
 cur_thread:
-        .word       0  # should be a TP (x4) register??
+        .word       0
 
 #-----------------------------------------------------------------------------
 
 #define THREAD_CONTEXT_SIZE  32
 
-        .section .bss
+        .bss
         .align      2
 
 thread_contexts:
@@ -27,7 +27,7 @@ thread_contexts:
 
 #-----------------------------------------------------------------------------
 
-        .section .text
+        .text
 
         .align      2
         .globl      define_thread
