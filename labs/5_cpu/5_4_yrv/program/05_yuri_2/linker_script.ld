@@ -76,6 +76,7 @@ SECTIONS
     {
         __sbss_start = .;
         * (.sbss)
+        __sbss_end = .;
     }
 
     .bss : ALIGN (4)

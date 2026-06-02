@@ -34,7 +34,15 @@ thread_contexts:
 
 define_thread:
 
+        lw          t0, num_threads
+        li          t1, MAX_THREADS - 1
+        mv          a0, zero
+        blt         t0, t1, dt_return
+
+        la          t0, thread_contexts
+
         li          a0, 1
+dt_return:
         ret
 
 #-----------------------------------------------------------------------------
@@ -53,8 +61,10 @@ start_running_threads:
         // Otherwise we do need the loop in order to continue
         // running after the interrupt processing.
 
-.1:     wfi                               // Wait for interrupts
-        j           1
+srt_loop:
+
+        wfi                               // Wait for interrupts
+        j           srt_loop
 
 #-----------------------------------------------------------------------------
 

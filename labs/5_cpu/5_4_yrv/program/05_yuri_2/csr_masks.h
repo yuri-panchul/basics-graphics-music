@@ -86,7 +86,7 @@
 
 #define MSTATUS_MIE    MASK_FROM_BIT        ( MSTATUS_MIE_BIT                               )
 #define MSTATUS_MPIE   MASK_FROM_BIT        ( MSTATUS_MPIE_BIT                              )
-#define MSTATUS_MPP    MASK_FROM_HI_LO_BIT  ( MSTATUS_MPP_BIT_HI  , MSTATUS_MPP_BIT_LO      )
+#define MSTATUS_MPP    MASK_FROM_HI_LO_BIT  ( MSTATUS_MPP_BIT_HI    , MSTATUS_MPP_BIT_LO    )
      
 #define MIE_MEIE       MASK_FROM_BIT        ( MIE_MEIE_BIT                                  )
 #define MIE_MTIE       MASK_FROM_BIT        ( MIE_MTIE_BIT                                  )
@@ -98,7 +98,7 @@
 
 #define MCAUSE_EXCCODE MASK_FROM_HI_LO_BIT  ( MCAUSE_EXCCODE_BIT_LO , MCAUSE_EXCCODE_BIT_HI )    
 
-#define MTVEC_MODE     MASK_FROM_HI_LO_BIT  ( MTVEC_MODE_BIT_LO , MTVEC_MODE_BIT_HI         )
-#define MTVEC_BASE     MASK_FROM_HI_LO_BIT  ( MTVEC_BASE_BIT_LO , MTVEC_BASE_BIT_HI         )
+#define MTVEC_MODE     MASK_FROM_HI_LO_BIT  ( MTVEC_MODE_BIT_LO     , MTVEC_MODE_BIT_HI     )
+#define MTVEC_BASE     MASK_FROM_HI_LO_BIT  ( MTVEC_BASE_BIT_LO     , MTVEC_BASE_BIT_HI     )
 
 #endif  // ifdef CSR_MASKS_H
