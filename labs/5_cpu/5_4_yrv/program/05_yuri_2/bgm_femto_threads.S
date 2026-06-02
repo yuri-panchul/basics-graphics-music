@@ -3,14 +3,10 @@
 
 #-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-        .section .sdata
-=======
 # For whatever reason GCC version we use does not recognize ".sdata"
 # and requires writing ".section .sdata".
 
         .section    .sdata
->>>>>>> afa00312f522fb8fc06ac223e1dd59243ad821e9
         .align      2
 
 num_threads:
@@ -47,15 +43,7 @@ define_thread:
 
 start_running_threads:
 
-<<<<<<< HEAD
-        li          t0, MSTATUS_MIE 
-        csrw        mstatus, t0     // Enable interrupts
-        li          t0, MIP_MTIP
-        csrw        mip,     t0     // Enable timer interrupt
-        wfi                         // Wait for interrupts
-=======
         csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
->>>>>>> afa00312f522fb8fc06ac223e1dd59243ad821e9
 
         li          t0,      MIP_MTIP     // Enable timer interrupt
         csrw        mip,     t0
