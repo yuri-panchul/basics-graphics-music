@@ -49,6 +49,7 @@ update_fpga_toolchain_var ()
         ;;
 
         runber                           | \
+        brs_100*                         | \
         tang_nano_1k*                    | \
         tang_nano_4k*                    | \
         tang_nano_9k*                    | \

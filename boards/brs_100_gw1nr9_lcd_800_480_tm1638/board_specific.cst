@@ -1,0 +1,86 @@
+# The pin assignments
+# All I/O pins here are 3.3V compatible unless specified otherwise
+
+IO_LOC "CLK"                52; # pad_clk_27Mhz
+
+IO_LOC "KEY[0]"             4;
+IO_LOC "KEY[1]"             3;
+
+IO_LOC "LED[0]"             10;
+IO_LOC "LED[1]"             11;
+IO_LOC "LED[2]"             13;
+IO_LOC "LED[3]"             14;
+IO_LOC "LED[4]"             15;
+IO_LOC "LED[5]"             16;
+
+# The following 4 pins
+# (TF_MOSI, TF_SCLK, TF_MISO) on J5, (TF_CS) on J6
+# are used for INMP441 microphone
+# in basics-graphics-music labs
+
+# The first 3 GPIO pins are used for TM1638 I/O module
+# which carries 8 LEDs, 8-digit 7-segment display and 8 keys
+
+# J5
+IO_LOC  "TF_MOSI"           25; # pad_io[1]  inmp441: ws  
+IO_LOC  "TF_SCLK"           26; # pad_io[2]  inmp441: sck
+IO_LOC  "TF_MISO"           27; # pad_io[3]  inmp441: sd
+IO_LOC  "GPIO[0]"           28; # pad_io[4]  tm1638: sio_data
+IO_LOC  "GPIO[1]"           29; # pad_io[5]  tm1638: sio_clk
+IO_LOC  "GPIO[2]"           30; # pad_io[6]  tm1638: sio_stb
+IO_LOC  "LARGE_LCD_G[2]"    33; # pad_io[7]  PMOD-RGBLCD[1]
+IO_LOC  "LARGE_LCD_G[3]"    34; # pad_io[8]  PMOD-RGBLCD[2]
+IO_LOC  "LARGE_LCD_G[4]"    35; # pad_io[9]  PMOD-RGBLCD[3]
+IO_LOC  "LARGE_LCD_G[5]"    36; # pad_io[10] PMOD-RGBLCD[4]
+IO_LOC  "LARGE_LCD_G[6]"    37; # pad_io[11] PMOD-RGBLCD[7]
+IO_LOC  "LARGE_LCD_G[7]"    38; # pad_io[12] PMOD-RGBLCD[9]
+IO_LOC  "LARGE_LCD_CK"      39; # pad_io[13] PMOD-RGBLCD[10]
+IO_LOC  "LARGE_LCD_HS"      40; # pad_io[14] PMOD-RGBLCD[11]
+IO_LOC  "LARGE_LCD_VS"      41; # pad_io[15] PMOD-RGBLCD[12]
+IO_LOC  "LARGE_LCD_DE"      42; # pad_io[16] PMOD-RGBLCD[13]
+                                # pad_io GND
+                                # pad_io 5V
+
+#
+#IO_LOC "LARGE_LCD_INIT"     63;
+#IO_LOC "LARGE_LCD_BL"       86;
+
+# The following 4 pins
+# (TF_MOSI, TF_SCLK, TF_MISO) on J5, (TF_CS) on J6
+# are used for INMP441 microphone
+# in basics-graphics-music labs
+
+# The 4 pins SMALL_LCD_CLK, _CS, _RS and _DATA
+# are used for the I2S audio output module PCM5102
+# in basics-graphics-music labs
+
+# J6
+IO_LOC  "TF_CS"            77; # pad_io[17] inmp441: lr
+IO_LOC  "GPIO[3]"          76; # pad_io[18]          free
+IO_LOC  "SMALL_LCD_DATA"   75; # pad_io[19] pcm5102: sck   i2s_audio_out: mclk
+IO_LOC  "SMALL_LCD_CLK"    74; # pad_io[20] pcm5102: bck   i2s_audio_out: bclk
+IO_LOC  "SMALL_LCD_CS"     73; # pad_io[21] pcm5102: din   i2s_audio_out: sdata
+IO_LOC  "SMALL_LCD_RS"     72; # pad_io[22] pcm5102: lrck  i2s_audio_out: lrclk
+IO_LOC  "LARGE_LCD_R[3]"   71; # pad_io[23] PMOD-RGBLCD[30]
+IO_LOC  "LARGE_LCD_R[4]"   70; # pad_io[24] PMOD-RGBLCD[29]
+IO_LOC  "LARGE_LCD_R[5]"   69; # pad_io[25] PMOD-RGBLCD[28]
+IO_LOC  "LARGE_LCD_R[6]"   68; # pad_io[26] PMOD-RGBLCD[27]
+IO_LOC  "LARGE_LCD_R[7]"   57; # pad_io[27] PMOD-RGBLCD[24]
+IO_LOC  "LARGE_LCD_B[3]"   56; # pad_io[28] PMOD-RGBLCD[22]
+IO_LOC  "LARGE_LCD_B[4]"   55; # pad_io[29] PMOD-RGBLCD[21]
+IO_LOC  "LARGE_LCD_B[5]"   54; # pad_io[30] PMOD-RGBLCD[20]
+IO_LOC  "LARGE_LCD_B[6]"   53; # pad_io[31] PMOD-RGBLCD[19]
+IO_LOC  "LARGE_LCD_B[7]"   51; # pad_io[32] PMOD-RGBLCD[18]
+                               # pad_io GND
+                               # pad_io 3.3V
+
+IO_LOC "UART_RX"            18;
+IO_LOC "UART_TX"            17;
+
+#IO_LOC "GPIO[4]"            29;
+#IO_LOC "GPIO[5]"            30;
+
+IO_LOC "FLASH_CLK"          59;
+IO_LOC "FLASH_CSB"          60;
+IO_LOC "FLASH_MOSI"         61;
+IO_LOC "FLASH_MISO"         62;
