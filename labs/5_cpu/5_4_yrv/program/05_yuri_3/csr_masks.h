@@ -33,30 +33,30 @@
 //  mscratch (Machine Scratch)
 //    - Dedicated context register used to temporarily swap and save CPU registers.
 
-#define MSTATUS_MIE_BIT          3
-#define MSTATUS_MPIE_BIT         7
+#define MSTATUS_MIE_BIT         3
+#define MSTATUS_MPIE_BIT        7
 
-#define MSTATUS_MPP_BIT_LO      11
-#define MSTATUS_MPP_BIT_HI      12
+#define MSTATUS_MPP_BIT_LO     11
+#define MSTATUS_MPP_BIT_HI     12
 
-#define MIE_MSIE_BIT             3
-#define MIE_MTIE_BIT             7
-#define MIE_MEIE_BIT            11
+#define MIE_MSIE_BIT            3
+#define MIE_MTIE_BIT            7
+#define MIE_MEIE_BIT           11
 
-#define MIP_MSIP_BIT             3
-#define MIP_MTIP_BIT             7
-#define MIP_MEIP_BIT            11
+#define MIP_MSIP_BIT            3
+#define MIP_MTIP_BIT            7
+#define MIP_MEIP_BIT           11
 
-#define MCAUSE_EXCCODE_BIT_LO    0
-#define MCAUSE_EXCCODE_BIT_HI   30
+#define MCAUSE_EXCCODE_BIT_LO   0
+#define MCAUSE_EXCCODE_BIT_HI  30
 
-#define MCAUSE_INTERRUPT_BIT    31
+#define MCAUSE_INTERRUPT_BIT   31
 
-#define MTVEC_MODE_BIT_LO        0
-#define MTVEC_MODE_BIT_HI        1
+#define MTVEC_MODE_BIT_LO       0
+#define MTVEC_MODE_BIT_HI       1
 
-#define MTVEC_BASE_BIT_LO        2
-#define MTVEC_BASE_BIT_HI       31
+#define MTVEC_BASE_BIT_LO       2
+#define MTVEC_BASE_BIT_HI      31
 
 //----------------------------------------------------------------------------
 
@@ -67,9 +67,9 @@
 #define MSTATUS_MPIE      MASK_FROM_BIT        ( MSTATUS_MPIE_BIT                              )
 #define MSTATUS_MPP       MASK_FROM_HI_LO_BIT  ( MSTATUS_MPP_BIT_HI    , MSTATUS_MPP_BIT_LO    )
 
-#define MIE_MEIE          MASK_FROM_BIT        ( MIE_MEIE_BIT                                  )
-#define MIE_MTIE          MASK_FROM_BIT        ( MIE_MTIE_BIT                                  )
 #define MIE_MSIE          MASK_FROM_BIT        ( MIE_MSIE_BIT                                  )
+#define MIE_MTIE          MASK_FROM_BIT        ( MIE_MTIE_BIT                                  )
+#define MIE_MEIE          MASK_FROM_BIT        ( MIE_MEIE_BIT                                  )
 
 #define MIP_MSIP          MASK_FROM_BIT        ( MIP_MSIP_BIT                                  )
 #define MIP_MTIP          MASK_FROM_BIT        ( MIP_MTIP_BIT                                  )
