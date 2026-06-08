@@ -106,6 +106,24 @@ trap_ack:
         la          t1, thread_contexts
         addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
         blt         t0, t2, less_than_two_threads_defined
+        j           switch_the_contexts
+
+        //--------------------------------------------------------------------
+        // Recovery from no-switching situations.
+
+less_than_two_threads_defined:
+        lw          t2, THREAD_CONTEXT_OFFSET_T2 (tp)  // restore t2
+not_timer_interrupt:
+        lw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)  // restore t1
+not_interrupt:
+        lw          t0, THREAD_CONTEXT_OFFSET_T0 (tp)  // restore t0
+        mret
+
+//----------------------------------------------------------------------------
+
+        .text
+
+switch_the_contexts:
 
         //--------------------------------------------------------------------
         // Advance the thread pointer
@@ -198,15 +216,4 @@ tp_is_advanced:
         lw            t5  , THREAD_CONTEXT_OFFSET_T5     (tp)
         lw            t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
 
-        mret
-
-        //--------------------------------------------------------------------
-        // Recovery from no-switching situations.
-
-less_than_two_threads_defined:
-        lw          t2, THREAD_CONTEXT_OFFSET_T2 (tp)  // restore t2
-not_timer_interrupt:
-        lw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)  // restore t1
-not_interrupt:
-        lw          t0, THREAD_CONTEXT_OFFSET_T0 (tp)  // restore t0
         mret
