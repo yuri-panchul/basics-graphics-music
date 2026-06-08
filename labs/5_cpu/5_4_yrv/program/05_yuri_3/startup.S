@@ -78,6 +78,14 @@ _start:
 loop:
 
 # ------------------------------------------------------------------------------
+# Sub-section: Interrupt handler initialization
+# ------------------------------------------------------------------------------
+    la      t0, __TRAP_ACK        # CPU cores can use different default trap vector
+                                # Use TRAP_ACK address from lionker script
+    andi    t0, t0, ~3          # Select Direct mode for interrupt handling 
+    csrw    mtvec, t0           # Set TRAP_ACK as interrupt handler address
+
+# ------------------------------------------------------------------------------
 # Sub-section: mscratch initialization
 # ------------------------------------------------------------------------------
 # used trapframe scetion with 128 bytes lenght

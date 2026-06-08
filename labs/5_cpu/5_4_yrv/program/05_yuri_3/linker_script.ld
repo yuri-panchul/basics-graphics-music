@@ -16,7 +16,7 @@ PROVIDE (MIN_STACK_SIZE = 0x100);
 
 # TODO Check if this list is complete
 
-TRAP_ACK = 0x040;  # TODO: Consider a better name
+PROVIDE (__TRAP_ACK = 0x040);  # TODO: Consider a better name
 NMI_VEC  = 0x100;
 DBG_VEC  = 0x140;
 DEX_VEC  = 0x1c0;
@@ -26,7 +26,7 @@ SECTIONS
 {
     .text :
     {
-        . = TRAP_ACK;
+        . = __TRAP_ACK;
         KEEP (* (.text.trap_ack))
         . = NMI_VEC;
         KEEP (* (.text.nmi_vec))

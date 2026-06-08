@@ -67,7 +67,7 @@ start_running_threads:
 
 eternal_loop:
 
-        wfi                               // Wait for interrupts
+//        wfi                               // Wait for interrupts Bad for debug
         j           eternal_loop
 
 //----------------------------------------------------------------------------
