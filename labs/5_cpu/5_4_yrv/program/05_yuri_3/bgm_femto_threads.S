@@ -1,7 +1,7 @@
 #include "bgm_femto_threads.h"
 #include "csr_masks.h"
 
-#-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
         .bss
         .align      2
@@ -11,10 +11,10 @@ thread_contexts:
 
 after_thread_contexts:
 
-#-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
-# For whatever reason GCC version we use does not recognize ".sdata"
-# and requires writing ".section .sdata".
+// For whatever reason GCC version we use does not recognize ".sdata"
+// and requires writing ".section .sdata".
 
         .section    .sdata
         .align      2
@@ -22,7 +22,7 @@ after_thread_contexts:
 threads_end_pointer:
         .word       thread_contexts
 
-#-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
         .text
 
@@ -35,7 +35,7 @@ define_thread:
         la          t1, after_thread_contexts
 
         blt         t0, t1, enough_space_for_new_thread
-        li          a0, 0  # Error return
+        li          a0, 0  // Error return
         ret
 
 enough_space_for_new_thread:
@@ -47,7 +47,7 @@ enough_space_for_new_thread:
         li          a0, 1
         ret
 
-#-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
         .globl      start_running_threads
 
@@ -70,139 +70,143 @@ eternal_loop:
         wfi                               // Wait for interrupts
         j           eternal_loop
 
-#-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
         .section    .text.trap_ack
         .global     trap_ack
 
 trap_ack:
 
-        # Save t0
-        # Instead of using mscratch and trapframe
-        # we use thread context to save registers.
+        // Save t0
+        // Instead of using mscratch and trapframe
+        // we use thread context to save registers.
 
-        sw          t0, thread_context_offset_t0 (tp)  # save t0
+        sw          t0, thread_context_offset_t0 (tp)  // save t0
 
-        # Check if interrupt
+        //--------------------------------------------------------------------
+        // Check if interrupt
 
-        csrr        t0, mcause         # read exception cause
+        csrr        t0, mcause         // read exception cause
         bgez        t0, not_interrupt
 
-        # Check if a timer interrupt
+        //--------------------------------------------------------------------
+        // Check if a timer interrupt
 
-        sw          t1, thread_context_offset_t1 (tp)  # save t1
+        sw          t1, thread_context_offset_t1 (tp)  // save t1
         li          t1, MCAUSE_EXCCODE_MASK
-        and         t0, t0, t1         # isolate interrupt cause
+        and         t0, t0, t1         // isolate interrupt cause
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
         bne         t0, t1, not_timer_interrupt
 
-        # Timer interrupt
+        //--------------------------------------------------------------------
+        // Check if there is more than one thread
 
-        sw          a3,  8 (a0)       # save a3
-        sw          a4, 12 (a0)       # save a4
-
+        sw          t2, thread_context_offset_t2 (tp)  // save t2
         lw          t0, thread_end_pointer (gp)
         la          t1, thread_contexts
-        beq         t0, t1, no_thread_defined
+        addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
+        blt         t0, t2, less_than_two_threads_defined
 
-        lw          a3, current_thread_pointer (gp)
-        addi        a4, a3, THREAD_CONTEXT_SIZE
+        //--------------------------------------------------------------------
+        // Advance the thread pointer
 
-        beq         a4, t0, next_thread_0
-        mv          t1, a4
+        mv          t2, tp
+        addi        tp, tp, THREAD_CONTEXT_SIZE
+        bne         tp, t0, tp_is_advanced
+        mv          tp, t1
 
-        // TODO: check case of num_threads=1
+tp_is_advanced:
 
-next_thread_0:
+        //--------------------------------------------------------------------
+        // Now t2 is the previous/current thread and tp is the next thread.
+        // Let's save all the registers in the previous thread context.
 
-        # Now a3 is the current thread and t1 is the next thread
+        sw            ra  , THREAD_CONTEXT_OFFSET_RA     (t2)
+        sw            sp  , THREAD_CONTEXT_OFFSET_SP     (t2)
+        sw            gp  , THREAD_CONTEXT_OFFSET_GP     (t2)
 
-        beq         t1, a3, one_thread_defined
+        // Registers t0, t1 and t2 are already saved
 
-        // TODO: take care of saving proper t0-a4
+        sw            s0  , THREAD_CONTEXT_OFFSET_S0_FP  (t2)
+        sw            s1  , THREAD_CONTEXT_OFFSET_S1     (t2)
+        sw            a0  , THREAD_CONTEXT_OFFSET_A0     (t2)
+        sw            a1  , THREAD_CONTEXT_OFFSET_A1     (t2)
+        sw            a2  , THREAD_CONTEXT_OFFSET_A2     (t2)
+        sw            a3  , THREAD_CONTEXT_OFFSET_A3     (t2)
+        sw            a4  , THREAD_CONTEXT_OFFSET_A4     (t2)
+        sw            a5  , THREAD_CONTEXT_OFFSET_A5     (t2)
+        sw            a6  , THREAD_CONTEXT_OFFSET_A6     (t2)
+        sw            a7  , THREAD_CONTEXT_OFFSET_A7     (t2)
+        sw            s2  , THREAD_CONTEXT_OFFSET_S2     (t2)
+        sw            s3  , THREAD_CONTEXT_OFFSET_S3     (t2)
+        sw            s4  , THREAD_CONTEXT_OFFSET_S4     (t2)
+        sw            s5  , THREAD_CONTEXT_OFFSET_S5     (t2)
+        sw            s6  , THREAD_CONTEXT_OFFSET_S6     (t2)
+        sw            s7  , THREAD_CONTEXT_OFFSET_S7     (t2)
+        sw            s8  , THREAD_CONTEXT_OFFSET_S8     (t2)
+        sw            s9  , THREAD_CONTEXT_OFFSET_S9     (t2)
+        sw            s10 , THREAD_CONTEXT_OFFSET_S10    (t2)
+        sw            s11 , THREAD_CONTEXT_OFFSET_S11    (t2)
+        sw            t3  , THREAD_CONTEXT_OFFSET_T3     (t2)
+        sw            t4  , THREAD_CONTEXT_OFFSET_T4     (t2)
+        sw            t5  , THREAD_CONTEXT_OFFSET_T5     (t2)
+        sw            t6  , THREAD_CONTEXT_OFFSET_T6     (t2)
 
-        sw           x1,  1 * 4 (a3)
-        sw           x2,  2 * 4 (a3)
-        sw           x3,  3 * 4 (a3)
-        sw           x4,  4 * 4 (a3)
-        sw           x5,  5 * 4 (a3)
-        sw           x6,  6 * 4 (a3)
-        sw           x7,  7 * 4 (a3)
-        sw           x8,  8 * 4 (a3)
-        sw           x9,  9 * 4 (a3)
-        sw          x10, 10 * 4 (a3)
-        sw          x11, 11 * 4 (a3)
-        sw          x12, 12 * 4 (a3)
-        sw          x13, 13 * 4 (a3)
-        sw          x14, 14 * 4 (a3)
-        sw          x15, 15 * 4 (a3)
-        sw          x16, 16 * 4 (a3)
-        sw          x17, 17 * 4 (a3)
-        sw          x18, 18 * 4 (a3)
-        sw          x19, 19 * 4 (a3)
-        sw          x20, 20 * 4 (a3)
-        sw          x21, 21 * 4 (a3)
-        sw          x22, 22 * 4 (a3)
-        sw          x23, 23 * 4 (a3)
-        sw          x24, 24 * 4 (a3)
-        sw          x25, 25 * 4 (a3)
-        sw          x26, 26 * 4 (a3)
-        sw          x27, 27 * 4 (a3)
-        sw          x28, 28 * 4 (a3)
-        sw          x29, 29 * 4 (a3)
-        sw          x30, 30 * 4 (a3)
-        sw          x31, 31 * 4 (a3)
+        //--------------------------------------------------------------------
+        // Save the program counter of the previous/current thread
+        // and schedule the restoration of the program counter
+        // for the next thread.
 
-        lw           x1,  1 * 4 (a2)
-        lw           x2,  2 * 4 (a2)
-        lw           x3,  3 * 4 (a2)
-        lw           x4,  4 * 4 (a2)
-        lw           x5,  5 * 4 (a2)
-        lw           x6,  6 * 4 (a2)
-        lw           x7,  7 * 4 (a2)
-        lw           x8,  8 * 4 (a2)
-        lw           x9,  9 * 4 (a2)
-        lw          x10, 10 * 4 (a2)
-        lw          x11, 11 * 4 (a2)
-        lw          x12, 12 * 4 (a2)
-        lw          x13, 13 * 4 (a2)
-        lw          x14, 14 * 4 (a2)
-        lw          x15, 15 * 4 (a2)
-        lw          x16, 16 * 4 (a2)
-        lw          x17, 17 * 4 (a2)
-        lw          x18, 18 * 4 (a2)
-        lw          x19, 19 * 4 (a2)
-        lw          x20, 20 * 4 (a2)
-        lw          x21, 21 * 4 (a2)
-        lw          x22, 22 * 4 (a2)
-        lw          x23, 23 * 4 (a2)
-        lw          x24, 24 * 4 (a2)
-        lw          x25, 25 * 4 (a2)
-        lw          x26, 26 * 4 (a2)
-        lw          x27, 27 * 4 (a2)
-        lw          x28, 28 * 4 (a2)
-        lw          x29, 29 * 4 (a2)
-        lw          x30, 30 * 4 (a2)
-        lw          x31, 31 * 4 (a2)
+        csrr          t0  , mepc  // Program counter before the interrupt
+        sw            t0  , THREAD_CONTEXT_OFFSET_PC     (t2)
 
-one_thread_defined:
+        lw            t0  , THREAD_CONTEXT_OFFSET_PC     (tp)
+        csrw          t0  , mepc  // Program counter after mret
 
-        lw          t1,  8 (a0)       # restore t1
-        lw          a4, 12 (a0)       # restore a4
+        //--------------------------------------------------------------------
+        // Restore all the registers for the next thread
+        // from the next thread context.
 
-no_thread_defined:
+        lw            ra  , THREAD_CONTEXT_OFFSET_RA     (tp)
+        lw            sp  , THREAD_CONTEXT_OFFSET_SP     (tp)
+        lw            gp  , THREAD_CONTEXT_OFFSET_GP     (tp)
+        lw            t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
+        lw            t1  , THREAD_CONTEXT_OFFSET_T1     (tp)
+        lw            t2  , THREAD_CONTEXT_OFFSET_T2     (tp)
+        lw            s0  , THREAD_CONTEXT_OFFSET_S0_FP  (tp)
+        lw            s1  , THREAD_CONTEXT_OFFSET_S1     (tp)
+        lw            a0  , THREAD_CONTEXT_OFFSET_A0     (tp)
+        lw            a1  , THREAD_CONTEXT_OFFSET_A1     (tp)
+        lw            a2  , THREAD_CONTEXT_OFFSET_A2     (tp)
+        lw            a3  , THREAD_CONTEXT_OFFSET_A3     (tp)
+        lw            a4  , THREAD_CONTEXT_OFFSET_A4     (tp)
+        lw            a5  , THREAD_CONTEXT_OFFSET_A5     (tp)
+        lw            a6  , THREAD_CONTEXT_OFFSET_A6     (tp)
+        lw            a7  , THREAD_CONTEXT_OFFSET_A7     (tp)
+        lw            s2  , THREAD_CONTEXT_OFFSET_S2     (tp)
+        lw            s3  , THREAD_CONTEXT_OFFSET_S3     (tp)
+        lw            s4  , THREAD_CONTEXT_OFFSET_S4     (tp)
+        lw            s5  , THREAD_CONTEXT_OFFSET_S5     (tp)
+        lw            s6  , THREAD_CONTEXT_OFFSET_S6     (tp)
+        lw            s7  , THREAD_CONTEXT_OFFSET_S7     (tp)
+        lw            s8  , THREAD_CONTEXT_OFFSET_S8     (tp)
+        lw            s9  , THREAD_CONTEXT_OFFSET_S9     (tp)
+        lw            s10 , THREAD_CONTEXT_OFFSET_S10    (tp)
+        lw            s11 , THREAD_CONTEXT_OFFSET_S11    (tp)
+        lw            t3  , THREAD_CONTEXT_OFFSET_T3     (tp)
+        lw            t4  , THREAD_CONTEXT_OFFSET_T4     (tp)
+        lw            t5  , THREAD_CONTEXT_OFFSET_T5     (tp)
+        lw            t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
+
+        mret
+
+        //--------------------------------------------------------------------
+        // Recovery from no-switching situations.
+
+less_than_two_threads_defined:
+        lw          t2, thread_context_offset_t2 (tp)  // restore t2
 not_timer_interrupt:
-
-        lw          t1, 4 (a0)        # restore t1
-
+        lw          t1, thread_context_offset_t1 (tp)  // restore t1
 not_interrupt:
-
-        lw          t0, 0 (a0)        # restore t0
-        csrrw       a0, mscratch, a0  # restore a0; mscratch = &temp storage
-
-        // TODO: return to the proper address
-        // restored from the next thread context.
-        // The current return from interrupt register
-        // should be saved in the context.
-
+        lw          t0, thread_context_offset_t0 (tp)  // restore t0
         mret

@@ -2,16 +2,16 @@
 #define BGM_FEMTO_THREADS_H
 
 //----------------------------------------------------------------------------
-//  Limits and sizes
+// Limits and sizes
 
 #define MAX_THREADS  8
 #define WORD_SIZE    4
 
 //----------------------------------------------------------------------------
-//  The thread context words.
-//  Most words are used to store registers,
-//  however we do not need to store x0 (zero) and x4 (tp),
-//  so we use the corresponding words for something else.
+// The thread context words.
+// Most words are used to store registers,
+// however we do not need to store x0 (zero) and x4 (tp),
+// so we use the corresponding words for something else.
 
 #define THREAD_CONTEXT_WORD_RESERVED_0   0  // We do not to store x0
 #define THREAD_CONTEXT_WORD_RA           1

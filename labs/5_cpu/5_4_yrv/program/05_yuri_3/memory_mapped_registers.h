@@ -20,7 +20,6 @@
 // # 0x00010002 port1 = { 4'bxxxx, C46, C45, C43, C42, 4'bxxxx, AN4, AN3, AN2, AN1 }
 // # 0x00010000 port0 = { 8'bxxxxxxxx, RDP, RA, RB, RC, RD, RE, RF, RG }
 
-
 typedef struct
 {
     unsigned
