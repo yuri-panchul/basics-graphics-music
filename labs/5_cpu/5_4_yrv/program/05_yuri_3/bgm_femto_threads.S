@@ -3,13 +3,11 @@
 
 #-----------------------------------------------------------------------------
 
-#define THREAD_CONTEXT_SIZE  32
-
         .bss
         .align      2
 
 thread_contexts:
-        .space      MAX_THREADS * THREAD_CONTEXT_SIZE
+        .space      max_threads * context_size
 
 #-----------------------------------------------------------------------------
 
