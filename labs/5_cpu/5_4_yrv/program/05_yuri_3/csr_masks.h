@@ -63,23 +63,23 @@
 #define MASK_FROM_BIT(b)             (1 << (b))
 #define MASK_FROM_HI_LO_BIT(hi, lo)  ((~ 0u >> (31 - (hi))) & (~ 0 << (lo)))
 
-#define MSTATUS_MIE       MASK_FROM_BIT        ( MSTATUS_MIE_BIT                               )
-#define MSTATUS_MPIE      MASK_FROM_BIT        ( MSTATUS_MPIE_BIT                              )
-#define MSTATUS_MPP       MASK_FROM_HI_LO_BIT  ( MSTATUS_MPP_BIT_HI    , MSTATUS_MPP_BIT_LO    )
+#define MSTATUS_MIE            MASK_FROM_BIT        ( MSTATUS_MIE_BIT                               )
+#define MSTATUS_MPIE           MASK_FROM_BIT        ( MSTATUS_MPIE_BIT                              )
+#define MSTATUS_MPP_MASK       MASK_FROM_HI_LO_BIT  ( MSTATUS_MPP_BIT_HI    , MSTATUS_MPP_BIT_LO    )
 
-#define MIE_MSIE          MASK_FROM_BIT        ( MIE_MSIE_BIT                                  )
-#define MIE_MTIE          MASK_FROM_BIT        ( MIE_MTIE_BIT                                  )
-#define MIE_MEIE          MASK_FROM_BIT        ( MIE_MEIE_BIT                                  )
+#define MIE_MSIE               MASK_FROM_BIT        ( MIE_MSIE_BIT                                  )
+#define MIE_MTIE               MASK_FROM_BIT        ( MIE_MTIE_BIT                                  )
+#define MIE_MEIE               MASK_FROM_BIT        ( MIE_MEIE_BIT                                  )
 
-#define MIP_MSIP          MASK_FROM_BIT        ( MIP_MSIP_BIT                                  )
-#define MIP_MTIP          MASK_FROM_BIT        ( MIP_MTIP_BIT                                  )
-#define MIP_MEIP          MASK_FROM_BIT        ( MIP_MEIP_BIT                                  )
+#define MIP_MSIP               MASK_FROM_BIT        ( MIP_MSIP_BIT                                  )
+#define MIP_MTIP               MASK_FROM_BIT        ( MIP_MTIP_BIT                                  )
+#define MIP_MEIP               MASK_FROM_BIT        ( MIP_MEIP_BIT                                  )
 
-#define MCAUSE_EXCCODE    MASK_FROM_HI_LO_BIT  ( MCAUSE_EXCCODE_BIT_LO , MCAUSE_EXCCODE_BIT_HI )
-#define MCAUSE_INTERRUPT  MASK_FROM_BIT        ( MCAUSE_INTERRUPT_BIT                          )
+#define MCAUSE_EXCCODE_MASK    MASK_FROM_HI_LO_BIT  ( MCAUSE_EXCCODE_BIT_LO , MCAUSE_EXCCODE_BIT_HI )
+#define MCAUSE_INTERRUPT       MASK_FROM_BIT        ( MCAUSE_INTERRUPT_BIT                          )
 
-#define MTVEC_MODE        MASK_FROM_HI_LO_BIT  ( MTVEC_MODE_BIT_LO     , MTVEC_MODE_BIT_HI     )
-#define MTVEC_BASE        MASK_FROM_HI_LO_BIT  ( MTVEC_BASE_BIT_LO     , MTVEC_BASE_BIT_HI     )
+#define MTVEC_MODE_MASK        MASK_FROM_HI_LO_BIT  ( MTVEC_MODE_BIT_LO     , MTVEC_MODE_BIT_HI     )
+#define MTVEC_BASE_MASK        MASK_FROM_HI_LO_BIT  ( MTVEC_BASE_BIT_LO     , MTVEC_BASE_BIT_HI     )
 
 //----------------------------------------------------------------------------
 

@@ -31,7 +31,7 @@ threads_end_pointer:
 
 define_thread:
 
-        lw          t0, thread_end_pointer (gp)
+        lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, after_thread_contexts
 
         blt         t0, t1, enough_space_for_new_thread
@@ -42,7 +42,7 @@ enough_space_for_new_thread:
 
         sw          a0, (t0)
         addi        t2, t0, THREAD_CONTEXT_SIZE
-        sw          t2, thread_end_pointer (gp)
+        sw          t2, %lo (threads_end_pointer) (gp)
 
         li          a0, 1
         ret
@@ -81,7 +81,7 @@ trap_ack:
         // Instead of using mscratch and trapframe
         // we use thread context to save registers.
 
-        sw          t0, thread_context_offset_t0 (tp)  // save t0
+        sw          t0, THREAD_CONTEXT_OFFSET_T0 (tp)  // save t0
 
         //--------------------------------------------------------------------
         // Check if interrupt
@@ -92,7 +92,7 @@ trap_ack:
         //--------------------------------------------------------------------
         // Check if a timer interrupt
 
-        sw          t1, thread_context_offset_t1 (tp)  // save t1
+        sw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)  // save t1
         li          t1, MCAUSE_EXCCODE_MASK
         and         t0, t0, t1         // isolate interrupt cause
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
@@ -101,8 +101,8 @@ trap_ack:
         //--------------------------------------------------------------------
         // Check if there is more than one thread
 
-        sw          t2, thread_context_offset_t2 (tp)  // save t2
-        lw          t0, thread_end_pointer (gp)
+        sw          t2, THREAD_CONTEXT_OFFSET_T2 (tp)  // save t2
+        lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, thread_contexts
         addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
         blt         t0, t2, less_than_two_threads_defined
@@ -157,11 +157,11 @@ tp_is_advanced:
         // and schedule the restoration of the program counter
         // for the next thread.
 
-        csrr          t0  , mepc  // Program counter before the interrupt
-        sw            t0  , THREAD_CONTEXT_OFFSET_PC     (t2)
+        csrr          t0,   mepc  // Program counter before the interrupt
+        sw            t0,   THREAD_CONTEXT_OFFSET_PC     (t2)
 
-        lw            t0  , THREAD_CONTEXT_OFFSET_PC     (tp)
-        csrw          t0  , mepc  // Program counter after mret
+        lw            t0,   THREAD_CONTEXT_OFFSET_PC     (tp)
+        csrw          mepc, t0    // Program counter after mret
 
         //--------------------------------------------------------------------
         // Restore all the registers for the next thread
@@ -204,9 +204,9 @@ tp_is_advanced:
         // Recovery from no-switching situations.
 
 less_than_two_threads_defined:
-        lw          t2, thread_context_offset_t2 (tp)  // restore t2
+        lw          t2, THREAD_CONTEXT_OFFSET_T2 (tp)  // restore t2
 not_timer_interrupt:
-        lw          t1, thread_context_offset_t1 (tp)  // restore t1
+        lw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)  // restore t1
 not_interrupt:
-        lw          t0, thread_context_offset_t0 (tp)  // restore t0
+        lw          t0, THREAD_CONTEXT_OFFSET_T0 (tp)  // restore t0
         mret
