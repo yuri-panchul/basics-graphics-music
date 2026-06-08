@@ -7,7 +7,9 @@
         .align      2
 
 thread_contexts:
-        .space      max_threads * context_size
+        .space      MAX_THREADS * THREAD_CONTEXT_SIZE
+
+after_thread_contexts:
 
 #-----------------------------------------------------------------------------
 
@@ -20,9 +22,6 @@ thread_contexts:
 threads_end_pointer:
         .word       thread_contexts
 
-current_thread_pointer:
-        .word       0
-
 #-----------------------------------------------------------------------------
 
         .text
@@ -33,7 +32,7 @@ current_thread_pointer:
 define_thread:
 
         lw          t0, thread_end_pointer (gp)
-        la          t1, thread_contexts + MAX_THREADS * THREAD_CONTEXT_SIZE
+        la          t1, after_thread_contexts
 
         blt         t0, t1, enough_space_for_new_thread
         li          a0, 0  # Error return
@@ -54,10 +53,12 @@ enough_space_for_new_thread:
 
 start_running_threads:
 
-        csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
+        la          tp, thread_contexts   // Assign thread pointer
 
-        li          t0,      MIP_MTIP     // Enable timer interrupt
-        csrw        mip,     t0
+        li          t1,      MIP_MTIP     // Enable timer interrupt
+        csrw        mip,     t1
+
+        csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
 
         // The eternal loop below is not necessary
         // if the only interrupts we have come from the timer.
@@ -76,47 +77,49 @@ eternal_loop:
 
 trap_ack:
 
-        # Save a0 and a1 registers
+        # Save t0
+        # Instead of using mscratch and trapframe
+        # we use thread context to save registers.
 
-        csrrw       a0, mscratch, a0  # save a0; set a0 = & temp storage
-        sw          a1, 0 (a0)        # save a1
+        sw          t0, thread_context_offset_t0 (tp)  # save t0
 
         # Check if interrupt
 
-        csrr        a1, mcause        # read exception cause
-        bgez        a1, not_interrupt
+        csrr        t0, mcause         # read exception cause
+        bgez        t0, not_interrupt
 
         # Check if a timer interrupt
 
-        sw          a2, 4 (a0)        # save a2
-        andi        a1, a1, 0x3f      # isolate interrupt cause
-        li          a2, 7             # a2 = machine timer interrupt cause
-        bne         a1, a2, not_timer_interrupt
+        sw          t1, thread_context_offset_t1 (tp)  # save t1
+        li          t1, MCAUSE_EXCCODE_MASK
+        and         t0, t0, t1         # isolate interrupt cause
+        li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
+        bne         t0, t1, not_timer_interrupt
 
         # Timer interrupt
 
         sw          a3,  8 (a0)       # save a3
         sw          a4, 12 (a0)       # save a4
 
-        lw          a1, thread_end_pointer (gp)
-        la          a2, thread_contexts
-        beq         a1, a2, no_thread_defined
+        lw          t0, thread_end_pointer (gp)
+        la          t1, thread_contexts
+        beq         t0, t1, no_thread_defined
 
         lw          a3, current_thread_pointer (gp)
         addi        a4, a3, THREAD_CONTEXT_SIZE
 
-        beq         a4, a1, next_thread_0
-        mv          a2, a4
+        beq         a4, t0, next_thread_0
+        mv          t1, a4
 
         // TODO: check case of num_threads=1
 
 next_thread_0:
 
-        # Now a3 is the current thread and a2 is the next thread
+        # Now a3 is the current thread and t1 is the next thread
 
-        beq         a2, a3, one_thread_defined
+        beq         t1, a3, one_thread_defined
 
-        // TODO: take care of saving proper a1-a4
+        // TODO: take care of saving proper t0-a4
 
         sw           x1,  1 * 4 (a3)
         sw           x2,  2 * 4 (a3)
@@ -184,17 +187,17 @@ next_thread_0:
 
 one_thread_defined:
 
-        lw          a2,  8 (a0)       # restore a2
+        lw          t1,  8 (a0)       # restore t1
         lw          a4, 12 (a0)       # restore a4
 
 no_thread_defined:
 not_timer_interrupt:
 
-        lw          a2, 4 (a0)        # restore a2
+        lw          t1, 4 (a0)        # restore t1
 
 not_interrupt:
 
-        lw          a1, 0 (a0)        # restore a1
+        lw          t0, 0 (a0)        # restore t0
         csrrw       a0, mscratch, a0  # restore a0; mscratch = &temp storage
 
         // TODO: return to the proper address

@@ -81,4 +81,8 @@
 #define MTVEC_MODE        MASK_FROM_HI_LO_BIT  ( MTVEC_MODE_BIT_LO     , MTVEC_MODE_BIT_HI     )
 #define MTVEC_BASE        MASK_FROM_HI_LO_BIT  ( MTVEC_BASE_BIT_LO     , MTVEC_BASE_BIT_HI     )
 
+//----------------------------------------------------------------------------
+
+#define MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT  7
+
 #endif  // ifdef CSR_MASKS_H
