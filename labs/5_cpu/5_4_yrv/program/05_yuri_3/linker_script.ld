@@ -16,17 +16,17 @@ PROVIDE (MIN_STACK_SIZE = 0x100);
 
 # TODO Check if this list is complete
 
-TRAP_ACK = 0x040;  # TODO: Consider a better name
+PROVIDE (__TRAP_ACK = 0x040);  # TODO: Consider a better name
 NMI_VEC  = 0x100;
 DBG_VEC  = 0x140;
 DEX_VEC  = 0x1c0;
-RST_BASE = 0x200;
+PROVIDE (__RST_BASE = 0x200);
 
 SECTIONS
 {
     .text :
-    {
-        . = TRAP_ACK;
+    {   KEEP (* (.text.zero))
+        . = __TRAP_ACK;
         KEEP (* (.text.trap_ack))
         . = NMI_VEC;
         KEEP (* (.text.nmi_vec))
@@ -34,7 +34,7 @@ SECTIONS
         KEEP (* (.text.dbg_vec))
         . = DEX_VEC;
         KEEP (* (.text.dex_vec))
-        . = RST_BASE;
+        . = __RST_BASE;
         KEEP (* (.text.init))
 
         * (.text.startup)
