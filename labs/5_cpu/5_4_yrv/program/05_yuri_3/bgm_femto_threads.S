@@ -43,7 +43,7 @@ enough_space_for_new_thread:
         sw          a0, (t0)
         addi        t2, t0, THREAD_CONTEXT_SIZE
         sw          t2, %lo (threads_end_pointer) (gp)
-
+        sw          t0, %lo (THREAD_CONTEXT_OFFSET_PC+threads_end_pointer+4) (gp)
         li          a0, 1
         ret
 
@@ -92,9 +92,9 @@ trap_ack:
         //--------------------------------------------------------------------
         // Check if a timer interrupt
 
-        sw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)  // save t1
+        sw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)           // save t1
         li          t1, MCAUSE_EXCCODE_MASK
-        and         t0, t0, t1         // isolate interrupt cause
+        and         t0, t0, t1                                  // isolate interrupt cause Problem MCAUSE_EXCCODE_MASK 0xffffffff
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
         bne         t0, t1, not_timer_interrupt
 
@@ -175,10 +175,10 @@ tp_is_advanced:
         // and schedule the restoration of the program counter
         // for the next thread.
 
-        csrr          t0,   mepc  // Program counter before the interrupt
+        csrr          t0,   mepc  // Program counter before the interrupt  
         sw            t0,   THREAD_CONTEXT_OFFSET_PC     (t2)
 
-        lw            t0,   THREAD_CONTEXT_OFFSET_PC     (tp)
+        lw            t0,   THREAD_CONTEXT_OFFSET_PC     (tp) //zero ?!  First start context is null
         csrw          mepc, t0    // Program counter after mret
 
         //--------------------------------------------------------------------

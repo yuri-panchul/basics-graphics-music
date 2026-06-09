@@ -12,8 +12,6 @@ b tp_is_advanced
 
 # --- Automatic display block ---
 
-# Automatically print current Program Counter (PC) in hex on every step
-display /x $pc
 
 # Automatically print mtvec value (to verify it changes to 0x040)
 display /x $mtvec
@@ -21,16 +19,19 @@ display /x $mtvec
 # Automatically print mcause value (useful if you trigger an exception)
 display /x $mcause
 
-display/i $pc
-
+# Print PC, MEPC , TP
+display /i $pc
 display /x $mepc
+display /x $tp
+display /x $t0
+display /x $t1
 
 set $pc = 0x200
 
 ### GDB Timer Interrupt Simulation Macro
 
 define tick
-  set $mepc = 0x2b4
+  set $mepc = $pc
   set $mcause = 0x80000007
   set $pc = $mtvec
   stepi
@@ -43,6 +44,7 @@ define context
  x/6i ($pc - 8)
 end
 
+# For uart
 #watch *(char *)0x100000
 #commands
 #  silent
@@ -50,3 +52,18 @@ end
 #  continue
 #end
 #continue
+
+define loop
+ set $pc=eternal_loop
+end
+
+
+# Show current thread context
+define th
+ x/32xw $tp
+end
+
+# Show sawed contexts
+define tc
+  x/96xw &thread_contexts 
+end
