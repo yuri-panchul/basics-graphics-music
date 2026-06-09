@@ -43,7 +43,7 @@ enough_space_for_new_thread:
         sw          a0, (t0)
         addi        t2, t0, THREAD_CONTEXT_SIZE
         sw          t2, %lo (threads_end_pointer) (gp)
-        sw          t0, %lo (THREAD_CONTEXT_OFFSET_PC+threads_end_pointer+4) (gp)
+        sw          a0, %lo (THREAD_CONTEXT_OFFSET_PC) (t0) 
         li          a0, 1
         ret
 
