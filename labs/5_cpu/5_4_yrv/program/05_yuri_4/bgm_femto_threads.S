@@ -27,7 +27,7 @@ threads_end_pointer:
         .text
 
         .align      2
-        .globl      define_thread
+        .global     define_thread
 
 define_thread:
 
@@ -49,7 +49,7 @@ enough_space_for_new_thread:
 
 //----------------------------------------------------------------------------
 
-        .globl      start_running_threads
+        .global     start_running_threads
 
 start_running_threads:
 
