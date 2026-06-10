@@ -53,22 +53,15 @@ enough_space_for_new_thread:
 
 start_running_threads:
 
-        la          tp, thread_contexts   // Assign thread pointer
+        // Initialize the thread pointer to 0.
+        // tp will be changed to thread_contexts after the first interrupt.
 
+        li          tp, 0
         li          t1,      MIP_MTIP     // Enable timer interrupt
         csrw        mip,     t1
 
         csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
-
-        // The eternal loop below is not necessary
-        // if the only interrupts we have come from the timer.
-        // Otherwise we do need the loop in order to continue
-        // running after the interrupt processing.
-
-eternal_loop:
-
-        wfi                               // Wait for interrupts
-        j           eternal_loop
+        ret
 
 //----------------------------------------------------------------------------
 
@@ -125,13 +118,32 @@ not_interrupt:
 
 switch_the_contexts:
 
+        // Checking if this context switch is not the first one.
+        // Before the first context switch the thread pointer is set to 0.
+
+        bne         tp, zero, advance_tp
+
+        // The first context switch, no need to save the context.
+        // We have to initialize the thread pointer
+        // and restore the program counter
+        // which contains the address of the function
+        // with the body of the first thread.
+        // The program counter is restored in restore_context.
+
+        la          tp, thread_contexts
+        j           restore_context
+
         //--------------------------------------------------------------------
-        // Advance the thread pointer
+        // Advance the thread pointer,
+        // wrapping to thread_contexts
+        // once it reaches threads_end_pointer
+
+advance_tp:
 
         mv          t2, tp
         addi        tp, tp, THREAD_CONTEXT_SIZE
         bne         tp, t0, tp_is_advanced
-        mv          tp, t1
+        mv          tp, t1  // t1 contains thread_contexts
 
 tp_is_advanced:
 
@@ -177,6 +189,8 @@ tp_is_advanced:
 
         csrr          t0,   mepc  // Program counter before the interrupt
         sw            t0,   THREAD_CONTEXT_OFFSET_PC     (t2)
+
+restore_context:
 
         lw            t0,   THREAD_CONTEXT_OFFSET_PC     (tp)
         csrw          mepc, t0    // Program counter after mret
