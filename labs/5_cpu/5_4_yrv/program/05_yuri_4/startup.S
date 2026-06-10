@@ -87,7 +87,7 @@ bss_clr_done:
 
         mv          fp, sp
 
-        jal         zero, main
+        jal         main
 
         .cfi_endproc
 
