@@ -92,12 +92,15 @@ riscv_try_install_dir ()
 
     riscv_gcc="$riscv_dir/bin/riscv-none-elf-gcc"
     riscv_objcopy="$riscv_dir/bin/riscv-none-elf-objcopy"
+    riscv_objdump="$riscv_dir/bin/riscv-none-elf-objdump"
 
     [ -x "$riscv_gcc$exe"     ] || error "expected executable '$riscv_gcc$exe'"
     [ -x "$riscv_objcopy$exe" ] || error "expected executable '$riscv_objcopy$exe'"
+    [ -x "$riscv_objdump$exe" ] || error "expected executable '$riscv_objdump$exe'"
 
     is_command_available "$riscv_gcc"     || error "expected command available '$riscv_gcc'"
     is_command_available "$riscv_objcopy" || error "expected command available '$riscv_objcopy'"
+    is_command_available "$riscv_objdump" || error "expected command available '$riscv_objdump'"
 
     info "found XPACK RISC-V GCC toolchain in '$riscv_dir'"
 
@@ -121,10 +124,12 @@ riscv_software_toolchain_setup ()
     #-------------------------------------------------------------------------
 
     if  is_command_available riscv-none-elf-gcc &&
-        is_command_available riscv-none-elf-objcopy
+        is_command_available riscv-none-elf-objcopy &&
+        is_command_available riscv-none-elf-objdump
     then
         riscv_gcc=riscv-none-elf-gcc
         riscv_objcopy=riscv-none-elf-objcopy
+        riscv_objdump=riscv-none-elf-objdump
 
         info "using $(which riscv-none-elf-gcc)"
         return 0 # Already set up
@@ -133,10 +138,12 @@ riscv_software_toolchain_setup ()
     #-------------------------------------------------------------------------
 
     if  is_command_available riscv64-unknown-elf-gcc &&
-        is_command_available riscv64-unknown-elf-objcopy
+        is_command_available riscv64-unknown-elf-objcopy &&
+        is_command_available riscv64-unknown-elf-objdump
     then
         riscv_gcc=riscv64-unknown-elf-gcc
         riscv_objcopy=riscv64-unknown-elf-objcopy
+        riscv_objdump=riscv64-unknown-elf-objdump
 
         info "using $(which riscv64-unknown-elf-gcc)"
         return 0 # Already set up
@@ -203,15 +210,22 @@ riscv_software_toolchain_run ()
     cp "../$linker_script" linker_script.ld
 
     gcc_cmd="$riscv_gcc -march=rv32i_zbs_zicsr -mabi=ilp32 \
-        -ffreestanding -fno-zero-initialized-in-bss \
-        -nostdlib -static -Wl,--build-id=none -Wl,--no-warn-rwx-segments \
-        -O3 -T linker_script.ld -Wl,-M=map.txt $src"
+        -ffreestanding -fno-zero-initialized-in-bss -fverbose-asm \
+        -O3 \
+        -nostdlib -static \
+        -Wa,-adhln=asm.lst \
+        -T linker_script.ld \
+        -Wl,--build-id=none -Wl,--no-warn-rwx-segments \
+        -Wl,-M=map.txt \
+        $src"
 
     # We build two times to get both the output assembly file
     # and the output ELF
 
     $gcc_cmd -S > cpp_out.txt
     $gcc_cmd
+
+    $riscv_objdump -dx a.out > objdump_out.txt
 
     $riscv_objcopy -O binary a.out final
     python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32

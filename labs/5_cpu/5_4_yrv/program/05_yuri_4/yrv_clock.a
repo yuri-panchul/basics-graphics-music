@@ -1,0 +1,221 @@
+#  simple 24-hour clock for Alchrity Cu/Au/Au+ and Io
+
+# 0x00010000 port0 = {8'bxxxxxxxx, RDP, RA, RB, RC, RD, RE, RF, RG}
+# 0x00010002 port1 = {4'bxxxx, C46, C45, C43, C42, 4'bxxxx, AN4, AN3, AN2, AN1}
+# 0x00010004 port2 = L[16:1]
+# 0x00010006 port3 = {CLR_EI, 1'bx, INIT, ECALL, NMI, LINT, INT, EXCEPT, L[24:17]}
+# 0x00010008 port4 = DIP[16:1]
+# 0x0001000a port5 = {C9, C8, C6, S5, S4, S3, S2, S1, DIP[24:17]}
+# 0x0001000c port6 = {DIV_RATE, S_RESET, 3'bxxx}
+# 0x0001000e port7 = {4'bxxxx, EMPTY, DONE, FULL, OVR, SER_DATA}
+
+           .equ  mie,    0x304
+           .equ  mtvec,  0x305
+           .equ  mcause, 0x342
+
+           .equ  iobase, 0xffff0     # i/o at 0xffff0000
+
+_start :   li    t1, 0x3f            # all leds on
+eset_led:  lui   a7, iobase          # i/o page
+           lhu   t0, 6(a7)           # read port3
+           slli  t1, t1, 7           # align bit set data
+           or    t0, t0, t1          # set status led
+           sh    t0, 6(a7)           # write port3
+           beq   zero, zero, main
+
+           .zero 36
+
+trap_ack:  .word 0x342023f3          # csrr t2, mcause
+           blt   t2, x0, int_ack
+
+           slli  t2, t2, 1           # discard msb
+           li    t1, 0x16            # ecall
+           bne   t1, t2, n_ecall
+
+           li    t1, 0x20            # bit 12
+           beq   zero, zero, set_led
+
+n_ecall:   li    t1, 0x2             # bit 8
+           beq   zero, zero, set_led
+
+int_ack:   slli  t2, t2, 1           # discard msb
+           li    t1, 0x16            # eint
+           bne   t1, t2, n_eint
+
+clr_int:   lui   a7, iobase          # i/o page
+           lhu   t0, 6(a7)           # read port3
+           .word 0x28f29293          # bseti t0, t0, 15
+           sh    t0, 6(a7)           # write port3
+           .word 0x48f29293          # bclri t0, t0, 15
+           sh    t0, 6(a7)           # write port3
+           .word 0x30200073          # mret
+
+n_eint:    li    t1, 0x20            # li
+           blt   t2, t1, n_li
+
+           li    t1, 0x8             # bit 10
+           beq   zero, zero, set_led
+
+n_li:      li    t1, 0x4             # bit 9
+           beq   zero, zero, set_led
+
+           .zero 92
+
+nmi_vec:   li    t1, 0x10            # bit 11
+
+set_led:   lui   a7, iobase          # i/o page
+           lhu   t0, 6(a7)           # read port3
+           slli  t1, t1, 7           # align bit set data
+           or    t0, t0, t1          # set status led
+           sh    t0, 6(a7)           # write port3
+           beq   zero, zero, redo
+
+           .zero 36
+
+dbg_vec:   li    t1, 0x40            # bit 13
+dset_led:  lui   a7, iobase          # i/o page
+           lhu   t0, 6(a7)           # read port3
+           slli  t1, t1, 7           # align bit set data
+           or    t0, t0, t1          # set status led
+           sh    t0, 6(a7)           # write port3
+           .word 0x7b200073          # dret
+
+           .zero 100
+
+dex_vec:   li    t1, 0x50            # bits 13 and 11
+           beq   zero, zero, dset_led
+
+           .zero 56
+
+main:      lui   a7, iobase          # i/o page address
+           li    a5, 0xff
+           sh    a5, 0(a7)           # init port0 = 0x00ff
+           li    a5, 0xf
+           sh    a5, 2(a7)           # init port1 = 0x000f
+           li    a5, 0x8
+           sh    a5, 12(a7)          # init port6 = 0x0008 (ser reset)
+           sh    x0, 12(a7)          # init port6 = 0x0000
+           li    a5, 0x1
+           slli  a5, a5, 31
+           sw    a5, 4(a7)           # init port3/2 = 0x80000000 (clr int)
+           sw    x0, 4(a7)           # init port3/2 = 0x00000000
+           mv    s1, zero            # time starts at 00:00:00
+redo:      la    a5, trap_ack        # trap vector
+           .word 0x30579073          # csrw mtvec, a5
+           li    a5, 0x1
+           slli  a5, a5, 11
+           .word 0x30479073          # csrw mie, a5
+
+loop:      .word 0x10500073          # wfi
+           addi  s1, s1, 1           # increment ticks
+           andi  a2, s1, 0x7f
+           li    a3, 125
+           blt   a2, a3, adv_done    # branch if no rollover
+
+           srli  s1, s1, 8           # remove ticks
+           addi  s1, s1, 1           # increment seconds
+           andi  a2, s1, 0xf
+           li    a3, 10
+           blt   a2, a3, adv_sec     # branch if no rollover
+
+           srli  s1, s1, 4           # remove seconds
+           addi  s1, s1, 1           # increment 10's seconds
+           andi  a2, s1, 0xf
+           li    a3, 6
+           blt   a2, a3, adv_10s     # branch if no rollover
+
+           srli  s1, s1, 4           # remove 10's seconds
+           addi  s1, s1, 1           # increment minutes
+           andi  a2, s1, 0xf
+           li    a3, 10
+           blt   a2, a3, adv_min     # branch if no rollover
+
+           srli  s1, s1, 4           # remove minutes
+           addi  s1, s1, 1           # increment 10's minutes
+           andi  a2, s1, 0xf
+           li    a3, 6
+           blt   a2, a3, adv_10m     # branch if no rollover
+
+           srli  s1, s1, 4           # remove 10's minutes
+           addi  s1, s1, 1           # increment hour
+           andi  a2, s1, 0xf0
+           li    a3, 0x20
+           bge   a2, a3, spc_hr      # branch to special case
+
+           andi  a2, s1, 0xf
+           li    a3, 10
+           blt   a2, a3, adv_hr      # branch if no rollover
+
+           srli  s1, s1, 4           # remove hours
+           addi  s1, s1, 1           # increment 10's hours
+           beq   zero, zero, adv_10h
+
+spc_hr:    andi  a2, s1, 0xf
+           li    a3, 4
+           blt   a2, a3, adv_hr      # branch if no rollover
+
+           slli  s1, s1, 4           # clear time digits
+adv_10h:   slli  s1, s1, 4
+adv_hr:    slli  s1, s1, 4
+adv_10m:   slli  s1, s1, 4
+adv_min:   slli  s1, s1, 4
+adv_10s:   slli  s1, s1, 4
+adv_sec:   slli  s1, s1, 8
+
+adv_done:  lui   a7, iobase          # i/o page
+           lw    a4, 8(a7)           # read ports 5/4
+           srli  a3, a4, 16
+           andi  a3, a3, 0x80        # select DIP24
+           beq   a3, zero, out_led   # branch if no timeset
+
+           slli  a4, a4, 10          # clear out unused bits
+           srli  s1, a4, 2           # align time data
+
+out_led:   lw    a4, 4(a7)           # read port 3/2
+           srli  a4, a4, 24          # isolate p3[16:8]
+           slli  a4, a4, 24          # restore p3[16:8]
+           srli  a2, s1, 8           # align time to [23:0]
+           or    a5, a2, a4          # combine the two
+           sw    a5, 4(a7)           # update the LEDs
+
+out_disp:  lhu   a4, 2(a7)           # read digit selects
+           andi  a2, a4, 0xf         # select digit select bits
+           xori  a2, a2, 0xf         # invert to active-high
+           srli  a2, a2, 1           # next digit
+           bne   a2, zero, scan_d
+
+           li    a2, 0x8
+scan_d:    andi  a4, a4, 0xfffffff0
+           xori  a2, a2, 0xf         # invert to active-low
+           or    a4, a4, a2          # updated digit select
+           ori   a5, a4, 0xf
+           sh    a5, 2(a7)           # turn off all for now
+           xori  a2, a2, 0xf         # invert to active-high
+           mv    a3, s1              # retrieve time
+
+           srli  a2, a2, 1
+           beq   a2, zero, dsp_min
+           srli  a2, a2, 1
+           beq   a2, zero, dsp_10m
+           srli  a2, a2, 1
+           beq   a2, zero, dsp_hr
+
+dsp_10h:   srli  a3, a3, 4
+dsp_hr:    srli  a3, a3, 4
+dsp_10m:   srli  a3, a3, 4
+dsp_min:   srli  a3, a3, 16
+           andi  a3, a3, 0xf
+           la    a6, segtab
+           add   a6, a6, a3
+           lbu   a5, 0(a6)
+           slli  a4, a4, 16
+           or    a5, a5, a4
+           sw    a5, 0(a7)           # digit drive/seg drive
+           beq   zero, zero, loop
+                         
+segtab:    .word 0x8692cf81          # 3210  segment drive act-low
+           .word 0x8fa0a4cc          # 7654
+           .word 0xe0888480          # BA98
+           .word 0xb8b0c2b1          # FEDC
+
+           .zero 56
