@@ -35,7 +35,7 @@ SECTIONS
         . = DEX_VEC;
         KEEP (* (.text.dex_vec))
         . = RST_BASE;
-        KEEP (* (.text.init))
+        KEEP (* (.text.reset))
 
         * (.text.startup)
         * (.text)

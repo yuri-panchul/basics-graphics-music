@@ -34,4 +34,5 @@ void main ()
     define_thread (thread_3);
 
     start_running_threads ();
+    for (;;);
 }

@@ -1,0 +1,109 @@
+  //--------------------------------------------------------------------------
+  // Pin assignments
+
+  // The original board had port3_reg [13:8], debug_mode, wfi_state
+  assign led = { port3_reg [15:8], debug_mode, wfi_state };
+
+  //--------------------------------------------------------------------------
+
+  logic [5:0][7:0] hex_from_mcu;
+
+  always_ff @ (posedge clk)
+    for (int i = 0; i < 4; i ++)
+      if (~ port1_reg [i])
+        hex_from_mcu [i]
+          <= { port0_reg[7], port0_reg[0], port0_reg[1], port0_reg[2],
+               port0_reg[3], port0_reg[4], port0_reg[5], port0_reg[6] };
+
+  assign hex_from_mcu [5:4] = '1;
+
+  //--------------------------------------------------------------------------
+
+  logic [23:0] display_number;
+
+  always_comb
+    casez (sw)
+    default        : display_number = mem_addr         [23:0];
+    10'b????????1? : display_number = mem_rdata        [23:0];
+    10'b???????10? : display_number = mem_rdata        [31:8];
+    10'b??????100? : display_number = mem_wdata        [23:0];
+    10'b?????1000? : display_number = mem_wdata        [31:8];
+    10'b????10000? : display_number = extra_debug_data [23:0];
+    10'b???100000? : display_number = extra_debug_data [31:8];
+    endcase
+
+  //--------------------------------------------------------------------------
+
+  wire [5:0][7:0] hex_from_show_mode;
+
+  genvar gi;
+
+  generate
+    for (gi = 0; gi < 6; gi ++)
+    begin : gen
+      display_static_digit i_digit
+      (
+        display_number [gi * 4 +: 4],
+        hex_from_show_mode [gi][6:0]
+      );
+
+      assign hex_from_show_mode [gi][7] = 1'b1;
+    end
+  endgenerate
+
+  //--------------------------------------------------------------------------
+
+  assign { hex5, hex4, hex3, hex2, hex1, hex0 }
+    = slow_clk_mode ? hex_from_show_mode : hex_from_mcu;
+
+  //--------------------------------------------------------------------------
+
+  `ifdef OLD_INTERRUPT_CODE
+
+  //--------------------------------------------------------------------------
+  // 125Hz interrupt
+  // 50,000,000 Hz / 125 Hz = 40,000 cycles
+
+  logic [15:0] hz125_reg;
+  logic        hz125_lat;
+
+  assign ei_req    = hz125_lat;
+  wire   hz125_lim = hz125_reg == 16'd39999;
+
+  always_ff @ (posedge clk or negedge resetb)
+    if (~ resetb)
+    begin
+      hz125_reg <= 16'd0;
+      hz125_lat <= 1'b0;
+    end
+    else
+    begin
+      hz125_reg <= hz125_lim ? 16'd0 : hz125_reg + 1'b1;
+      hz125_lat <= ~ port3_reg [15] & (hz125_lim | hz125_lat);
+    end
+
+  `endif
+
+  //--------------------------------------------------------------------------
+  // 8 KHz interrupt
+  // 50,000,000 Hz / 8 KHz = 6250 cycles
+
+  logic [12:0] khz8_reg;
+  logic        khz8_lat;
+
+  assign ei_req    = khz8_lat;
+  wire   khz8_lim = khz8_reg == 13'd6249;
+
+  always_ff @ (posedge clk or negedge resetb)
+    if (~ resetb)
+    begin
+      khz8_reg <= 13'd0;
+      khz8_lat <= 1'b0;
+    end
+    else
+    begin
+      khz8_reg <= khz8_lim ? 13'd0 : khz8_reg + 1'b1;
+      khz8_lat <= ~ port3_reg [15] & (khz8_lim | khz8_lat);
+    end
+
+endmodule
