@@ -197,3 +197,7 @@ This repository was used during the following events:
 [Школа синтеза цифровых схем / The School of Synthesis of the Digital Circuits, 2020](https://engineer.yadro.com/chip-design-school)
 
 ![Школа синтеза цифровых схем / The School of Synthesis of the Digital Circuits, 2020](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2023_synthesis_school_russia_belarus.png)
+
+Здравствуйте, возможно, заинтересует
+https://transitional-writes.dreamwidth.org/45360.html
+Ряд задач по Verilog и не только
