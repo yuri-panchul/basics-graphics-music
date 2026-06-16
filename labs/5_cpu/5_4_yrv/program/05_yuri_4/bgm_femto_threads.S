@@ -4,7 +4,7 @@
 //----------------------------------------------------------------------------
 
         .bss
-        .align      2
+        .balign     4
 
 thread_contexts:
         .space      MAX_THREADS * THREAD_CONTEXT_SIZE
@@ -17,7 +17,7 @@ after_thread_contexts:
 // and requires writing ".section .sdata".
 
         .section    .sdata
-        .align      2
+        .balign     4
 
 threads_end_pointer:
         .word       thread_contexts
@@ -26,7 +26,7 @@ threads_end_pointer:
 
         .text
 
-        .align      2
+        .balign     4
         .global     define_thread
 
 define_thread:
