@@ -2,6 +2,7 @@
 
 //----------------------------------------------------------------------------
 // Handlers for NMI trap, DBG and DEX
+// Labels needs as debugging symbols
 
         .section    .text.nmi_vec
         mret
@@ -21,6 +22,17 @@ _start:
 
         csrc    mstatus, MSTATUS_MIE  // Disable all interrupts globally
 
+        // CPU cores can use different default trap 
+        // Use TRAP_ACK address from lionker script
+
+        // Select Direct mode for interrupt handling  vector
+        // Set TRAP_ACK as interrupt handler address        
+
+
+        la      t0, TRAP_ACK     
+        andi    t0, t0, ~3           
+        csrw    mtvec, t0           
+
         // Init the stack for the interrupt handler.
         // Such a stack is called a "trap frame"
         // and mentioned in the code as "trapframe".
@@ -28,9 +40,13 @@ _start:
         // Note that BGM Femto Threads does not use trapframe.
         // However other examples may use trapframe to store the registers
         // in the example's interrupt handlers.
+       
+        .option push
+        .option norelax
 
         la          t0, __trapframe_start
         csrw        mscratch, t0
+        .option pop
 
         // Fill sbss and bss sections with zeros. See:
         //
