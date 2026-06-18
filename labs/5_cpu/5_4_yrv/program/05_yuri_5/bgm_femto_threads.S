@@ -153,22 +153,17 @@ tp_is_advanced:
 
         // Saving registers changed in the trap handler
 
-        lw          t0, (t6)                // Restore t0
-        sw          t0, THREAD_CONTEXT_OFFSET_T0     (t2)
+        lw          t0  , (t6)                // Restore t0
+        sw          t0  , THREAD_CONTEXT_OFFSET_T0     (t2)
 
-        lw          t1, 1 * WORD_SIZE (t6)  // Restore t1
-        sw          t1, THREAD_CONTEXT_OFFSET_T1     (t2)
+        lw          t1  , 1 * WORD_SIZE (t6)  // Restore t1
+        sw          t1  , THREAD_CONTEXT_OFFSET_T1     (t2)
 
-        lw          t0, 2 * WORD_SIZE (t6)  // Restore t2 into t0
-        sw          t0, THREAD_CONTEXT_OFFSET_T2     (t2)
+        lw          t0  , 2 * WORD_SIZE (t6)  // Restore t2 into t0
+        sw          t0  , THREAD_CONTEXT_OFFSET_T2     (t2)
 
-        csrrw       t6, mscratch, t6        // Restore t6 by swap
-
-        sw          t6, THREAD_CONTEXT_OFFSET_T6     (t2)
-
-        csrrw       t6, mscratch, t6        // Swap t6 and mscratch again
-                                            // to match the code after
-                                            // restore_context.
+        csrr        t1  , mscratch            // Restore t6 into t1
+        sw          t1  , THREAD_CONTEXT_OFFSET_T6     (t2)
 
         // Saving registers not changed in the trap handler
 
@@ -205,17 +200,15 @@ tp_is_advanced:
         // and schedule the restoration of the program counter
         // for the next thread.
 
-        csrr        t0,   mepc  // Program counter before the interrupt
+        csrr        t0,   mepc    // Program counter before the interrupt
         sw          t0,   THREAD_CONTEXT_OFFSET_PC     (t2)
 
 restore_context:
 
-        csrrw       t6,   mscratch, t6  // Put trap frame pointer
-                                        // back to mscratch.
-                                        // The restored t6 will be overwriten.
+        csrw        mscratch, t6  // Put trap frame pointer back to mscratch
 
         lw          t0,   THREAD_CONTEXT_OFFSET_PC     (tp)
-        csrw        mepc, t0    // Program counter after mret
+        csrw        mepc, t0      // Program counter after mret
 
         //--------------------------------------------------------------------
         // Restore all the registers for the next thread
