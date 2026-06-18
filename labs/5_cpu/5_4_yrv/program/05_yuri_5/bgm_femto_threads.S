@@ -76,22 +76,22 @@ trap_ack:
         //--------------------------------------------------------------------
         // Check if interrupt
 
-        csrr        t0, mcause         // read exception cause
+        csrr        t0, mcause         // Read exception cause
         bgez        t0, not_interrupt
 
         //--------------------------------------------------------------------
         // Check if a timer interrupt
 
-        sw          t1, 1 * 4 (t6)     // Save t1
+        sw          t1, 1 * WORD_SIZE (t6)     // Save t1
         li          t1, MCAUSE_EXCCODE_MASK
-        and         t0, t0, t1         // isolate interrupt cause
+        and         t0, t0, t1                 // Isolate interrupt cause
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
         bne         t0, t1, not_timer_interrupt
 
         //--------------------------------------------------------------------
         // Check if there is more than one thread
 
-        sw          t2, 2 * 4 (t6)     // Save t2
+        sw          t2, 2 * WORD_SIZE (t6)     // Save t2
         lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, thread_contexts
         addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
@@ -102,14 +102,14 @@ trap_ack:
         // Recovery from no-switching situations.
 
 less_than_two_threads_defined:
-        lw          t2, 2 * 4 (t6)    // restore t2
+        lw          t2, 2 * WORD_SIZE (t6)    // Restore t2
 not_timer_interrupt:
-        lw          t1, 1 * 4 (t6)    // restore t1
+        lw          t1, 1 * WORD_SIZE (t6)    // Restore t1
 not_interrupt:
-        lw          t0, (t6)          // restore t0
+        lw          t0, (t6)                  // Restore t0
 
-        csrrw       t6, mscratch, t6  // Put trap frame pointer
-                                      // back to mscratch, restore t6
+        csrrw       t6, mscratch, t6          // Put trap frame pointer
+                                              // back to mscratch, restore t6
         mret
 
 //----------------------------------------------------------------------------
@@ -153,20 +153,22 @@ tp_is_advanced:
 
         // Saving registers changed in the trap handler
 
-        lw          t0, (t6)          // restore t0
+        lw          t0, (t6)                // Restore t0
         sw          t0, THREAD_CONTEXT_OFFSET_T0     (t2)
 
-        lw          t0, 1 * 4 (t6)    // restore t1 into t0
-        sw          t0, THREAD_CONTEXT_OFFSET_T1     (t2)
+        lw          t1, 1 * WORD_SIZE (t6)  // Restore t1
+        sw          t1, THREAD_CONTEXT_OFFSET_T1     (t2)
 
-        lw          t0, 2 * 4 (t6)    // restore t2 into t0
+        lw          t0, 2 * WORD_SIZE (t6)  // Restore t2 into t0
         sw          t0, THREAD_CONTEXT_OFFSET_T2     (t2)
 
-        csrrw       t6, mscratch, t6  // restore t6
+        csrrw       t6, mscratch, t6        // Restore t6 by swap
 
         sw          t6, THREAD_CONTEXT_OFFSET_T6     (t2)
 
-        csrrw       t6, mscratch, t6  // swap t6 and mscratch again
+        csrrw       t6, mscratch, t6        // Swap t6 and mscratch again
+                                            // to match the code after
+                                            // restore_context.
 
         // Saving registers not changed in the trap handler
 
@@ -209,7 +211,8 @@ tp_is_advanced:
 restore_context:
 
         csrrw       t6,   mscratch, t6  // Put trap frame pointer
-                                        // back to mscratch, restore t6
+                                        // back to mscratch.
+                                        // The restored t6 will be overwriten.
 
         lw          t0,   THREAD_CONTEXT_OFFSET_PC     (tp)
         csrw        mepc, t0    // Program counter after mret
