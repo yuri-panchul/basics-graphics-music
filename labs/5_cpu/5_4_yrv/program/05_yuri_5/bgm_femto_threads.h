@@ -10,13 +10,15 @@
 //----------------------------------------------------------------------------
 // The thread context words.
 // Most words are used to store registers,
-// however we do not need to store x0 (zero) and x4 (tp),
+// however we do not need to store x0 (zero), x3 (gp) and x4 (tp),
 // so we use the corresponding words for something else.
+// Or we don't use them at all to prevent confusing unrelated data
+// with the saved registers.
 
 #define THREAD_CONTEXT_WORD_RESERVED_0   0  // We do not to store x0
 #define THREAD_CONTEXT_WORD_RA           1
 #define THREAD_CONTEXT_WORD_SP           2
-#define THREAD_CONTEXT_WORD_GP           3
+#define THREAD_CONTEXT_WORD_RESERVED_3   3  // We do not need to store gp
 #define THREAD_CONTEXT_WORD_RESERVED_4   4  // We do not need to store tp
 #define THREAD_CONTEXT_WORD_T0           5
 #define THREAD_CONTEXT_WORD_T1           6
@@ -47,7 +49,9 @@
 #define THREAD_CONTEXT_WORD_T6          31
 #define THREAD_CONTEXT_WORD_PC          32
 
-#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_PC + 1)
+#define THREAD_CONTEXT_WORD_STATE       33
+
+#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_STATE + 1)
 
 //----------------------------------------------------------------------------
 
@@ -84,6 +88,7 @@
 #define THREAD_CONTEXT_OFFSET_T5          ( WORD_SIZE * THREAD_CONTEXT_WORD_T5         )
 #define THREAD_CONTEXT_OFFSET_T6          ( WORD_SIZE * THREAD_CONTEXT_WORD_T6         )
 #define THREAD_CONTEXT_OFFSET_PC          ( WORD_SIZE * THREAD_CONTEXT_WORD_PC         )
+#define THREAD_CONTEXT_OFFSET_STATE       ( WORD_SIZE * THREAD_CONTEXT_WORD_STATE      )
 
 #define THREAD_CONTEXT_SIZE               ( WORD_SIZE * NUM_THREAD_CONTEXT_WORDS       )
 

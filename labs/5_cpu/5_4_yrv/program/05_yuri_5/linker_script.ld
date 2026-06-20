@@ -26,6 +26,7 @@ SECTIONS
 {
     .text :
     {
+        KEEP (* (.text.zero))
         . = __TRAP_ACK;
         KEEP (* (.text.trap_ack))
         . = __NMI_VEC;
@@ -88,6 +89,13 @@ SECTIONS
     ASSERT (__sbss_end - __sdata_start <= 0x1000,
        ".sdata + .sbss exceed 4 KB gp range")
 
+    .heap (NOLOAD) : ALIGN (16)
+    {
+        __heap_start = .;
+        . += HEAP_SIZE;
+        __heap_end = .;
+    }
+
     # ALIGN (16) from https://docs.riscv.org/reference/abi/riscv-cc-c-cpp-type-details.html
     # https://riscv.org/wp-content/uploads/2024/12/riscv-calling.pdf similar stack
 
@@ -99,13 +107,6 @@ SECTIONS
     }
 
     # Heap is aligned by 16 because of a typical malloc library implementation
-
-    .heap (NOLOAD) : ALIGN (16)
-    {
-        __heap_start = .;
-        . += HEAP_SIZE;
-        __heap_end = .;
-    }
 
     .stack (NOLOAD) : ALIGN (4)
     {

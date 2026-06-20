@@ -43,6 +43,7 @@ _start:
         // https://github.com/riscvarchive/riscv-newlib/blob/riscv-newlib-3.2.0/libgloss/riscv/crt0.S
         // https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html
 
+        // TODO: Check what happen if we remove .option
         .option push     // Save the current assembler options configuration.
         .option norelax  // Disable linker relaxation to prevent relaxation of the GP initialization.
 

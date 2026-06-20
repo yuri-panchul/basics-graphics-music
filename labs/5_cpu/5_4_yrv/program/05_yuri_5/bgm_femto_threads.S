@@ -57,8 +57,8 @@ start_running_threads:
         // tp will be changed to thread_contexts after the first interrupt.
 
         li          tp, 0
-        li          t1,      MIP_MTIP     // Enable timer interrupt
-        csrw        mip,     t1
+        li          t1,      MIE_MTIE     // Enable timer interrupt
+        csrw        mie,     t1
 
         csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
         ret
@@ -165,12 +165,11 @@ tp_is_advanced:
         csrr        t1  , mscratch            // Restore t6 into t1
         sw          t1  , THREAD_CONTEXT_OFFSET_T6     (t2)
 
-        // Saving registers not changed in the trap handler
+        // Saving registers not changed in the trap handler.
+        // We don't need to save x0 (zero), x3 (gp) and x4 (tp).
 
         sw          ra  , THREAD_CONTEXT_OFFSET_RA     (t2)
         sw          sp  , THREAD_CONTEXT_OFFSET_SP     (t2)
-        sw          gp  , THREAD_CONTEXT_OFFSET_GP     (t2)
-
         sw          s0  , THREAD_CONTEXT_OFFSET_S0_FP  (t2)
         sw          s1  , THREAD_CONTEXT_OFFSET_S1     (t2)
         sw          a0  , THREAD_CONTEXT_OFFSET_A0     (t2)
@@ -213,10 +212,11 @@ restore_context:
         //--------------------------------------------------------------------
         // Restore all the registers for the next thread
         // from the next thread context.
+        //
+        // We don't need to restore x0 (zero), x3 (gp) and x4 (tp).
 
         lw          ra  , THREAD_CONTEXT_OFFSET_RA     (tp)
         lw          sp  , THREAD_CONTEXT_OFFSET_SP     (tp)
-        lw          gp  , THREAD_CONTEXT_OFFSET_GP     (tp)
         lw          t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
         lw          t1  , THREAD_CONTEXT_OFFSET_T1     (tp)
         lw          t2  , THREAD_CONTEXT_OFFSET_T2     (tp)
