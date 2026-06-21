@@ -209,21 +209,24 @@ riscv_software_toolchain_run ()
 
     cp "../$linker_script" linker_script.ld
 
-    gcc_cmd="$riscv_gcc -march=rv32i_zbs_zicsr -mabi=ilp32 \
-        -ffreestanding -fno-zero-initialized-in-bss -fverbose-asm \
+    # TODO: Consider removing -static since we already have -nostdlib
+    # Check with all variants of GCC
+
+    $riscv_gcc \
+        -ffreestanding \
+        -fverbose-asm \
+        -mabi=ilp32 \
+        -march=rv32i_zbs_zicsr \
+        -nostdlib \
         -O3 \
-        -nostdlib -static \
-        -Wa,-adhln=asm.lst \
+        -save-temps \
+        -static \
         -T linker_script.ld \
-        -Wl,--build-id=none -Wl,--no-warn-rwx-segments \
+        -Wa,-adhln=asm.lst \
+        -Wl,--build-id=none \
         -Wl,-M=map.txt \
-        $src"
-
-    # We build two times to get both the output assembly file
-    # and the output ELF
-
-    $gcc_cmd -S > cpp_out.txt
-    $gcc_cmd
+        -Wl,--no-warn-rwx-segments \
+        $src
 
     $riscv_objdump -dx a.out > objdump_out.txt
 

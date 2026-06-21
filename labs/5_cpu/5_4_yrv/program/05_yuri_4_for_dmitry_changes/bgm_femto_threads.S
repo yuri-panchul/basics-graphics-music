@@ -1,27 +1,6 @@
 #include "bgm_femto_threads.h"
 #include "csr_masks.h"
 
-
-.macro SAVE_TO_SCRATCH_T0
-        csrrw       t6, mscratch, t6
-        sw          t0, 0(t6)   
-        sw          t1, 4(t6)   
-        sw          t2, 8(t6)   
-        csrr        t0, mscratch  
-        sw          t0, 4(t6)
-        csrw        mscratch, t6 
-.endm
-
-.macro RESTORE_FROM_SCRATCH_T0
-        lw          t1, 4(t6)   
-        lw          t2, 8(t6)           
-        lw          t0, 0(t6)   
-        lw          t6, 4(t6)    
-        csrw        mscratch, t6 
-        csrrw       t6, mscratch, t6
-.endm
-
-
 //----------------------------------------------------------------------------
 
         .bss
@@ -52,11 +31,6 @@ threads_end_pointer:
 
 define_thread:
 
-        bne         tp, zero, tp_defined
-        la          tp, thread_contexts
-
-tp_defined:
-
         lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, after_thread_contexts
 
@@ -67,8 +41,6 @@ tp_defined:
 enough_space_for_new_thread:
 
         sw          a0, THREAD_CONTEXT_OFFSET_PC (t0)
-        la          t3, __IDLE
-        sw          t3, THREAD_CONTEXT_OFFSET_RA     (t0)
         addi        t2, t0, THREAD_CONTEXT_SIZE
         sw          t2, %lo (threads_end_pointer) (gp)
 
@@ -83,8 +55,8 @@ start_running_threads:
 
         // Initialize the thread pointer to 0.
         // tp will be changed to thread_contexts after the first interrupt.
-        mv          tp, zero
-        
+
+        li          tp, 0
         li          t1,      MIP_MTIP     // Enable timer interrupt
         csrw        mip,     t1
 
@@ -98,12 +70,12 @@ start_running_threads:
 
 trap_ack:
 
-        // Это код прерываний и мы не знаем откуда пришел вызов
-        // Поэтому для временного хранения используем mscratch
-        // mscratch ВСЕГДА содержит адрес __trapframe кроме коротких промежутков
+        // Save t0
+        // Instead of using mscratch and trapframe
+        // we use thread context to save registers.
 
-        SAVE_TO_SCRATCH_T0
-        
+        sw          t0, THREAD_CONTEXT_OFFSET_T0 (tp)  // save t0
+
         //--------------------------------------------------------------------
         // Check if interrupt
 
@@ -113,6 +85,7 @@ trap_ack:
         //--------------------------------------------------------------------
         // Check if a timer interrupt
 
+        sw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)  // save t1
         li          t1, MCAUSE_EXCCODE_MASK
         and         t0, t0, t1         // isolate interrupt cause
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
@@ -120,17 +93,23 @@ trap_ack:
 
         //--------------------------------------------------------------------
         // Check if there is more than one thread
-        // TODO
-        la          t1, switch_the_contexts
-        jalr        zero, 0(t1)
+
+        sw          t2, THREAD_CONTEXT_OFFSET_T2 (tp)  // save t2
+        lw          t0, %lo (threads_end_pointer) (gp)
+        la          t1, thread_contexts
+        addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
+        blt         t0, t2, less_than_two_threads_defined
+        j           switch_the_contexts
+
         //--------------------------------------------------------------------
         // Recovery from no-switching situations.
 
 less_than_two_threads_defined:
+        lw          t2, THREAD_CONTEXT_OFFSET_T2 (tp)  // restore t2
 not_timer_interrupt:
+        lw          t1, THREAD_CONTEXT_OFFSET_T1 (tp)  // restore t1
 not_interrupt:
-        
-        RESTORE_FROM_SCRATCH_T0
+        lw          t0, THREAD_CONTEXT_OFFSET_T0 (tp)  // restore t0
         mret
 
 //----------------------------------------------------------------------------
@@ -141,44 +120,32 @@ switch_the_contexts:
 
         // Checking if this context switch is not the first one.
         // Before the first context switch the thread pointer is set to 0.
-      
-        bne         tp, zero, already_started
-        la          tp, thread_contexts
-        j tp_round_robin
- 
- 
- already_started:        
-        
-        //--------------------------------------------------------------------
-        // Advance the thread pointer,
-        // wrapping to thread_contexts
-        // once it reaches threads_end_pointer
 
-        mv          t2, tp
-        addi        tp, tp, THREAD_CONTEXT_SIZE        
-        lw          t1, %lo (threads_end_pointer) (gp)
-        blt         tp, t1, tp_round_robin
-        la          tp, thread_contexts 
- 
- tp_round_robin:   
-
-        lw          t0, THREAD_CONTEXT_OFFSET_TS (t2)  //Статус текущего потока 0 неактивен 1 активен
-        bne         t0, zero, save_context // Если поток активен статус отличается от 0 
+        bne         tp, zero, advance_tp
 
         // The first context switch, no need to save the context.
         // We have to initialize the thread pointer
         // and restore the program counter
         // which contains the address of the function
         // with the body of the first thread.
-        // The program counter is restored in restore_context.       
-        // Set thread state running
-        
+        // The program counter is restored in restore_context.
 
+        la          tp, thread_contexts
         j           restore_context
 
+        //--------------------------------------------------------------------
+        // Advance the thread pointer,
+        // wrapping to thread_contexts
+        // once it reaches threads_end_pointer
 
+advance_tp:
 
-save_context:
+        mv          t2, tp
+        addi        tp, tp, THREAD_CONTEXT_SIZE
+        bne         tp, t0, tp_is_advanced
+        mv          tp, t1  // t1 contains thread_contexts
+
+tp_is_advanced:
 
         //--------------------------------------------------------------------
         // Now t2 is the previous/current thread and tp is the next thread.
@@ -188,18 +155,7 @@ save_context:
         sw            sp  , THREAD_CONTEXT_OFFSET_SP     (t2)
         sw            gp  , THREAD_CONTEXT_OFFSET_GP     (t2)
 
-        // In interrupt mode t6 hold mscratch
-        lw            t1  , 0(t6)                        // saved t0
-        sw            t1  , THREAD_CONTEXT_OFFSET_T0     (t2)
-
-        lw            t1  , 4(t6)                        // saved t1
-        sw            t1  , THREAD_CONTEXT_OFFSET_T1     (t2)
-
-        lw            t1  , 8(t6)                        // saved t2
-        sw            t1  , THREAD_CONTEXT_OFFSET_T2     (t2)
-
-        lw            t1  , 12(t6)                       // saved t6
-        sw            t1  , THREAD_CONTEXT_OFFSET_T6     (t2)
+        // Registers t0, t1 and t2 are already saved
 
         sw            s0  , THREAD_CONTEXT_OFFSET_S0_FP  (t2)
         sw            s1  , THREAD_CONTEXT_OFFSET_S1     (t2)
@@ -224,6 +180,7 @@ save_context:
         sw            t3  , THREAD_CONTEXT_OFFSET_T3     (t2)
         sw            t4  , THREAD_CONTEXT_OFFSET_T4     (t2)
         sw            t5  , THREAD_CONTEXT_OFFSET_T5     (t2)
+        sw            t6  , THREAD_CONTEXT_OFFSET_T6     (t2)
 
         //--------------------------------------------------------------------
         // Save the program counter of the previous/current thread
@@ -233,14 +190,7 @@ save_context:
         csrr          t0,   mepc  // Program counter before the interrupt
         sw            t0,   THREAD_CONTEXT_OFFSET_PC     (t2)
 
-        li            t0,   2
-        sw            t0,   THREAD_CONTEXT_OFFSET_TS     (t2)
-
 restore_context:
-
-        // Будим поток 
-        li            t0  , 1
-        sw            t0  , THREAD_CONTEXT_OFFSET_TS     (tp)
 
         lw            t0,   THREAD_CONTEXT_OFFSET_PC     (tp)
         csrw          mepc, t0    // Program counter after mret
@@ -252,6 +202,7 @@ restore_context:
         lw            ra  , THREAD_CONTEXT_OFFSET_RA     (tp)
         lw            sp  , THREAD_CONTEXT_OFFSET_SP     (tp)
         lw            gp  , THREAD_CONTEXT_OFFSET_GP     (tp)
+        lw            t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
         lw            t1  , THREAD_CONTEXT_OFFSET_T1     (tp)
         lw            t2  , THREAD_CONTEXT_OFFSET_T2     (tp)
         lw            s0  , THREAD_CONTEXT_OFFSET_S0_FP  (tp)
@@ -278,11 +229,5 @@ restore_context:
         lw            t4  , THREAD_CONTEXT_OFFSET_T4     (tp)
         lw            t5  , THREAD_CONTEXT_OFFSET_T5     (tp)
         lw            t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
-        
-        // NEDD REVIEW
-        li          t0, MSTATUS_MIE
-        csrs        mie, t0
-        csrs        mstatus, t0
-        lw          t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
 
         mret
