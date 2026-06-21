@@ -34,5 +34,11 @@ void main ()
     define_thread (thread_3);
 
     start_running_threads ();
-    for (;;);
+    asm volatile (
+        ".global __IDLE\n\t"
+        "__IDLE:\n\t"
+        "sw zero  , 33*4     (tp)\n\t"
+        "loop:\n\t"
+        "j loop" // Бесконечный цикл ожидания
+    );
 }

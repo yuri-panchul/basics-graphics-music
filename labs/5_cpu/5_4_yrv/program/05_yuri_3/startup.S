@@ -36,6 +36,15 @@
 
 .equ  iobase,            0xffff0     # i/o at 0xffff0000
 
+.section text.zero
+# ==============================================================================
+# SECTION: Goto to init
+# ==============================================================================
+# Some soft cores start from 0  
+    j __RST_BASE
+
+
+
 # ==============================================================================
 # SECTION: NMI HANDLER 0x100
 # ==============================================================================
@@ -76,6 +85,14 @@ dex_vec:
 
 _start:
 loop:
+
+# ------------------------------------------------------------------------------
+# Sub-section: Interrupt handler initialization
+# ------------------------------------------------------------------------------
+    la      t0, __TRAP_ACK        # CPU cores can use different default trap vector
+                                # Use TRAP_ACK address from lionker script
+    andi    t0, t0, ~3          # Select Direct mode for interrupt handling 
+    csrw    mtvec, t0           # Set TRAP_ACK as interrupt handler address
 
 # ------------------------------------------------------------------------------
 # Sub-section: mscratch initialization
