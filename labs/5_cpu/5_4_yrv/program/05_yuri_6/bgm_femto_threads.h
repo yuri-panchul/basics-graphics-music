@@ -49,9 +49,7 @@
 #define THREAD_CONTEXT_WORD_T6          31
 #define THREAD_CONTEXT_WORD_PC          32
 
-#define THREAD_CONTEXT_WORD_STATE       33
-
-#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_STATE + 1)
+#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_PA + 1)
 
 //----------------------------------------------------------------------------
 
@@ -88,7 +86,6 @@
 #define THREAD_CONTEXT_OFFSET_T5          ( WORD_SIZE * THREAD_CONTEXT_WORD_T5         )
 #define THREAD_CONTEXT_OFFSET_T6          ( WORD_SIZE * THREAD_CONTEXT_WORD_T6         )
 #define THREAD_CONTEXT_OFFSET_PC          ( WORD_SIZE * THREAD_CONTEXT_WORD_PC         )
-#define THREAD_CONTEXT_OFFSET_STATE       ( WORD_SIZE * THREAD_CONTEXT_WORD_STATE      )
 
 #define THREAD_CONTEXT_SIZE               ( WORD_SIZE * NUM_THREAD_CONTEXT_WORDS       )
 
