@@ -8,7 +8,7 @@
 // "__" is needed if a user wants to implement reset
 // as a C function "_RST_BASE".
 
-        .section text.zero
+        .section    .text.zero
 
         j           __RST_BASE
 
