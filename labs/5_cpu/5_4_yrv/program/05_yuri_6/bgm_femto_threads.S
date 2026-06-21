@@ -77,6 +77,9 @@ start_running_threads:
 
 trap_ack:
 
+        // TODO: Can we guarantee that all exceptions are disabled
+        // at this point?
+
         csrrw       t6, mscratch, t6   // Get trap frame pointer, save t6
         sw          t0, (t6)           // Save t0
 
@@ -256,5 +259,7 @@ restore_context:
         lw          t4  , THREAD_CONTEXT_OFFSET_T4     (tp)
         lw          t5  , THREAD_CONTEXT_OFFSET_T5     (tp)
         lw          t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
+
+        // TODO: Should we and can we enable the exceptions here?
 
         mret
