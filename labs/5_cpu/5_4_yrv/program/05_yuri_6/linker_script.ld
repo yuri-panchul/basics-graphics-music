@@ -27,8 +27,13 @@ SECTIONS
     .text :
     {
         KEEP (* (.text.zero))
+
+        # TODO: consider trap ack in a regular .text,
+        # since it is set using mtvec
+
         . = __TRAP_ACK;
         KEEP (* (.text.trap_ack))
+
         . = __NMI_VEC;
         KEEP (* (.text.nmi_vec))
         . = __DBG_VEC;

@@ -41,6 +41,13 @@ define_thread:
 enough_space_for_new_thread:
 
         sw          a0, THREAD_CONTEXT_OFFSET_PC (t0)
+
+        // By saving a0 into RA of the context we guarantee
+        // that if the thread finishes it loops
+        // to the beginning of the thread
+
+        sw          a0, THREAD_CONTEXT_OFFSET_RA (t0)
+
         addi        t2, t0, THREAD_CONTEXT_SIZE
         sw          t2, %lo (threads_end_pointer) (gp)
 
@@ -95,6 +102,9 @@ trap_ack:
         lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, thread_contexts
         addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
+
+        # TODO: consider one thread as a special case
+
         blt         t0, t2, less_than_two_threads_defined
         j           switch_the_contexts
 
@@ -167,6 +177,8 @@ tp_is_advanced:
 
         // Saving registers not changed in the trap handler.
         // We don't need to save x0 (zero), x3 (gp) and x4 (tp).
+
+        // TODO: use tp to save, change tp afterwards
 
         sw          ra  , THREAD_CONTEXT_OFFSET_RA     (t2)
         sw          sp  , THREAD_CONTEXT_OFFSET_SP     (t2)
