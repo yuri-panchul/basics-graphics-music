@@ -19,10 +19,10 @@ module fifo
 
     localparam ptr_width = $clog2(depth);
     localparam max_ptr   = ptr_width'(depth - 1);
-    localparam cnt_width = $clog2(depth + 1);
 
     logic [ptr_width - 1:0] wr_ptr, rd_ptr;
-    logic [cnt_width - 1:0] cnt;
+
+    logic wr_ptr_toggle, rd_ptr_toggle, ptr_equal;
 
     logic [width - 1:0] data [0:depth - 1];
 
@@ -30,12 +30,28 @@ module fifo
         if (rst) begin
             wr_ptr <= '0;
             rd_ptr <= '0;
+
+            wr_ptr_toggle <= 1'b0;
+            rd_ptr_toggle <= 1'b0;
         end
         else begin
-            if (push)
-                wr_ptr <= (wr_ptr == max_ptr) ? '0 : wr_ptr + 1'b1;
-            if (pop)
-                rd_ptr <= (rd_ptr == max_ptr) ? '0 : rd_ptr + 1'b1;
+            if (push) begin 
+                if (wr_ptr == max_ptr) begin 
+                    wr_ptr <= '0; 
+                    wr_ptr_toggle <= ~wr_ptr_toggle;
+                end 
+                else 
+                    wr_ptr <= wr_ptr + 1'b1;
+            end
+         
+            if (pop) begin 
+                if (rd_ptr == max_ptr) begin 
+                    rd_ptr <= '0; 
+                    rd_ptr_toggle <= ~rd_ptr_toggle;
+                end 
+                else  
+                    rd_ptr <= rd_ptr + 1'b1;
+            end
         end
     end
 
@@ -46,16 +62,9 @@ module fifo
 
     assign rd_data = data[rd_ptr];
 
-    always_ff @ (posedge clk or posedge rst) begin
-        if (rst)
-            cnt <= '0;
-        else if (push & ~pop)
-            cnt <= cnt + 1'b1;
-        else if (pop & ~push)
-            cnt <= cnt - 1'b1;
-    end
+    assign ptr_equal = (wr_ptr == rd_ptr);
 
-    assign empty = (cnt == '0);  
-    assign full  = (cnt == cnt_width'(depth));
+    assign empty = ptr_equal & wr_ptr_toggle == rd_ptr_toggle;
+    assign full  = ptr_equal & wr_ptr_toggle != rd_ptr_toggle;
     
 endmodule
