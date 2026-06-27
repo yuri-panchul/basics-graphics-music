@@ -145,8 +145,10 @@ switch_the_contexts:
         // once it reaches threads_end_pointer
 
 advance_tp:
-
+        
+        // t2 previous thread
         mv          t2, tp
+        //tp next thread
         addi        tp, tp, THREAD_CONTEXT_SIZE
         bne         tp, t0, tp_is_advanced
         mv          tp, t1  // t1 contains thread_contexts
