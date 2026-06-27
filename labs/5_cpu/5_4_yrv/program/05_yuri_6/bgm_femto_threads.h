@@ -49,7 +49,7 @@
 #define THREAD_CONTEXT_WORD_T6          31
 #define THREAD_CONTEXT_WORD_PC          32
 
-#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_PA + 1)
+#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_PC + 1)
 
 //----------------------------------------------------------------------------
 

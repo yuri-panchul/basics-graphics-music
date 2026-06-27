@@ -67,7 +67,7 @@ run_icarus_verilog ()
 
     shopt -s nullglob
 
-    iverilog -g2005-sv -s tb \
+    iverilog -g2023 -s tb \
          -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals" \
             ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv \
             ../*.v \
