@@ -16,8 +16,13 @@ after_thread_contexts:
 // For whatever reason GCC version we use does not recognize ".sdata"
 // and requires writing ".section .sdata".
 
-        .section    .sdata
-        .balign     4
+        .section .sdata, "aw", @progbits  // В противном случае линкер оптимизирует .sdata оставляя __sdata_start
+        .balign 4
+
+        // Даем линкеру всю возможную информацию
+        .global threads_end_pointer
+        .type threads_end_pointer, @object
+        .size threads_end_pointer, 4
 
 threads_end_pointer:
         .word       thread_contexts
@@ -41,6 +46,7 @@ define_thread:
 enough_space_for_new_thread:
 
         sw          a0, THREAD_CONTEXT_OFFSET_PC (t0)
+        sw          a0, THREAD_CONTEXT_OFFSET_RA (t0)
         addi        t2, t0, THREAD_CONTEXT_SIZE
         sw          t2, %lo (threads_end_pointer) (gp)
 
