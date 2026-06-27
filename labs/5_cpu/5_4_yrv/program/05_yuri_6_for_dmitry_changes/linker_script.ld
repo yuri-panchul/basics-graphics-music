@@ -123,6 +123,7 @@ SECTIONS
     /DISCARD/ :
     {
         * (.note.gnu.build-id)
+        * (.note.GNU-stack)
         * (.riscv.attributes)
         * (.comment)
     }

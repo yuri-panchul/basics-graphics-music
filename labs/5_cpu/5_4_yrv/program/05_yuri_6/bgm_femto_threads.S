@@ -13,11 +13,13 @@ after_thread_contexts:
 
 //----------------------------------------------------------------------------
 
+
 // For whatever reason GCC version we use does not recognize ".sdata"
 // and requires writing ".section .sdata".
+// It also does not assume allocatable "a" by default.
 
-        .section    .sdata
-        .balign     4
+        .section    .sdata, "a"
+        .balign 4
 
 threads_end_pointer:
         .word       thread_contexts
@@ -41,6 +43,7 @@ define_thread:
 enough_space_for_new_thread:
 
         sw          a0, THREAD_CONTEXT_OFFSET_PC (t0)
+        sw          a0, THREAD_CONTEXT_OFFSET_RA (t0)
 
         // By saving a0 into RA of the context we guarantee
         // that if the thread finishes it loops
