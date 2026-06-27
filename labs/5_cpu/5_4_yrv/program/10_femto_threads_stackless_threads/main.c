@@ -1,9 +1,7 @@
 #include "bgm_femto_threads.h"
 #include "memory_mapped_registers.h"
 
-int counter_1 = 123;
-
-#include "many_vars.h"
+int counter_1 = 0;
 
 void thread_1 ()
 {
