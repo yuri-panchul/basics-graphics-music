@@ -1,6 +1,18 @@
 #include "csr_masks.h"
 
 //----------------------------------------------------------------------------
+// The section at the beginning of the address space
+// is needed to accommodate QEMU
+// and some cores that have reset at address 0.
+//
+// "__" is needed if a user wants to implement reset
+// as a C function "_RST_BASE".
+
+        .section text.zero
+
+        j           __RST_BASE
+
+//----------------------------------------------------------------------------
 // Handlers for NMI trap, DBG and DEX
 
         .section    .text.nmi_vec
@@ -19,19 +31,42 @@
         .global     _start
 _start:
 
-        csrc    mstatus, MSTATUS_MIE  // Disable all interrupts globally
+        //--------------------------------------------------------------------
+        // Disable all interrupts globally
 
-        // Init the stack for the interrupt handler.
+        csrc    mstatus, MSTATUS_MIE
+
+        //--------------------------------------------------------------------
+        // Setup global pointer. See:
+        //
+        // https://sourceware.org/binutils/docs/as/RISC_002dV_002dDirectives.html
+        // https://github.com/riscvarchive/riscv-newlib/blob/riscv-newlib-3.2.0/libgloss/riscv/crt0.S
+        // https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html
+
+        // TODO: Check what happen if we remove .option
+        .option push     // Save the current assembler options configuration.
+        .option norelax  // Disable linker relaxation to prevent relaxation of the GP initialization.
+
+        la          gp, __global_pointer$
+
+
+        //--------------------------------------------------------------------
+        // __TRAP_ACK as an interrupt service routive
+
+        la          t0, __TRAP_ACK
+        csrw        mtvec, t0
+
+        //--------------------------------------------------------------------
+        // Initialize the stack for the interrupt handler.
         // Such a stack is called a "trap frame"
         // and mentioned in the code as "trapframe".
-        //
-        // Note that BGM Femto Threads does not use trapframe.
-        // However other examples may use trapframe to store the registers
-        // in the example's interrupt handlers.
 
         la          t0, __trapframe_start
         csrw        mscratch, t0
 
+        .option pop      // Restore the previously saved assembler options configuration.
+
+        //--------------------------------------------------------------------
         // Fill sbss and bss sections with zeros. See:
         //
         // https://eseo-tech.github.io/emulsiV/doc/
@@ -54,27 +89,15 @@ bss_clr:
 
 bss_clr_done:
 
+        //--------------------------------------------------------------------
+        // Setup the stack.
+        //
         // Inform the debugger that this is the root of the call stack
         // and there are no callers above.
         // See https://sourceware.org/binutils/docs/as/CFI-directives.html
 
         .cfi_startproc
         .cfi_undefined ra
-
-        // .option push     - Save the current assembler options configuration.
-        // .option norelax  - Disable linker relaxation to prevent relaxation of the GP initialization.
-        // .option pop      - Restore the previously saved assembler options configuration.
-        //
-        // https://sourceware.org/binutils/docs/as/RISC_002dV_002dDirectives.html
-        // https://github.com/riscvarchive/riscv-newlib/blob/riscv-newlib-3.2.0/libgloss/riscv/crt0.S
-        // https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html
-
-        .option push
-        .option norelax
-
-        la          gp, __global_pointer$
-
-        .option pop
 
         la          sp, __stack_top
 
