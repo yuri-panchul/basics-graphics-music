@@ -109,7 +109,7 @@ trap_ack:
         la          t1, thread_contexts
         addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
 
-        # TODO: consider one thread as a special case
+        // TODO: consider one thread as a special case
 
         blt         t0, t2, less_than_two_threads_defined
         j           switch_the_contexts
