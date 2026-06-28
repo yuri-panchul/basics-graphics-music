@@ -24,6 +24,9 @@ after_thread_contexts:
 threads_end_pointer:
         .word       thread_contexts
 
+next_thread_stack_bottom:
+        .word       __stack_bottom
+
 //----------------------------------------------------------------------------
 
         .text
@@ -36,14 +39,23 @@ define_thread:
         lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, after_thread_contexts
 
-        blt         t0, t1, enough_space_for_new_thread
-        li          a0, 0  // Error return
+        blt         t0, t1, enough_space_for_the_new_thread
+
+define_thread_error_return:
+
+        li          a0, 0  // Error return code
         ret
 
-enough_space_for_new_thread:
+enough_space_for_the_new_thread:
+
+        // Check we have enough memory for the thread's stack
+
+        lw          t2, %lo (next_thread_stack_bottom) (gp)
+        addi        t3, t2, THREAD_STACK_SIZE  // Thread stack top
+        la          t4, __stack_top - MAIN_STACK_SIZE
+        bgt         t3, t4, define_thread_error_return
 
         sw          a0, THREAD_CONTEXT_OFFSET_PC (t0)
-        sw          a0, THREAD_CONTEXT_OFFSET_RA (t0)
 
         // By saving a0 into RA of the context we guarantee
         // that if the thread finishes it loops
@@ -51,8 +63,10 @@ enough_space_for_new_thread:
 
         sw          a0, THREAD_CONTEXT_OFFSET_RA (t0)
 
-        addi        t2, t0, THREAD_CONTEXT_SIZE
-        sw          t2, %lo (threads_end_pointer) (gp)
+        sw          t3, THREAD_CONTEXT_OFFSET_SP (t0)
+
+        addi        t5, t0, THREAD_CONTEXT_SIZE
+        sw          t5, %lo (threads_end_pointer) (gp)
 
         li          a0, 1
         ret

@@ -4,8 +4,10 @@
 //----------------------------------------------------------------------------
 // Limits and sizes
 
-#define MAX_THREADS  8
-#define WORD_SIZE    4
+#define WORD_SIZE          4
+#define MAX_THREADS        8
+#define MAIN_STACK_SIZE    128
+#define THREAD_STACK_SIZE  128
 
 //----------------------------------------------------------------------------
 // The thread context words.
