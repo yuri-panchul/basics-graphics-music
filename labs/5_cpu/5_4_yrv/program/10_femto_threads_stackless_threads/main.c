@@ -33,7 +33,7 @@ void thread_3 ()
 
     #elif defined (METHOD2)
 
-    mmio_led_t led;
+    static mmio_led_t led;
 
     led.w = mmio.led.w;
 
@@ -51,7 +51,7 @@ void thread_3 ()
 
     #elif defined (METHOD3)
 
-    mmio_led_t led;
+    static mmio_led_t led;
 
     int c1 = counter_1;
     int c2 = counter_2;
