@@ -83,6 +83,9 @@ module lab_top
             wire external_interrupt = key [w_key - 3];
             wire local_interrupt_0  = key [w_key - 4];
             wire local_interrupt_1  = key [w_key - 5];
+
+            // TODO localparam w_user_key, w_user_sw
+            // wire user_key, user_sw
         end
         else if (w_sw >= 7)
         begin : switches_at_least_7
@@ -183,40 +186,6 @@ module lab_top
     wire  [31:0] extra_debug_data;
 
     //------------------------------------------------------------------------
-    // External interrupt and Local interrupts
-    //
-    // See
-    //
-    // Inside an Open-Source Processor by Monte Dalrympl
-    //
-    // 3.2.8 Machine Interrupt-Enable (mie)
-    // The Machine Local Interrupt-Enable bits (MLIE, bits 31-16)
-    // enable the individual Local interrupts
-    // that are custom additions for this design.
-    //
-    // 3.2.9 Machine Interrupt-Pending (mip)
-    // The Machine Local Interrupt-Pending bits (MLIP, bits 31-16)
-    // reflects the state of the individual Local interrupts.
-    //
-    // 3.2.16 Machine Exception Cause (mcause)
-    // Local interrupts are identified by mcause[31] interrupt bit
-    // and mcause[30:0] from 16 (Local Interrupt 0)
-    // to 31 (Local Interrupt 15).
-    //
-    // Listing 5.6: Local Interrupt Exception Code Definitions.
-    // Table 6.2: Interrupt-related Signals
-
-    assign ei_req = external_interrupt;
-
-    assign li_req =
-    {
-        13'b0,
-        local_interrupt_2,
-        local_interrupt_1,
-        local_interrupt_0
-    }
-
-    //------------------------------------------------------------------------
     // MCU instantiation
 
     yrv_mcu
@@ -226,6 +195,26 @@ module lab_top
 
     //------------------------------------------------------------------------
     // Pin assignments
+
+    //------------------------------------------------------------------------
+    // Keys and switches
+
+    // TODO localparam w_user_key, w_user_sw
+    // wire user_key, user_sw
+
+    //------------------------------------------------------------------------
+    // LED
+
+    localparam w_reduced_led = w_led - 1;
+
+    assign led =
+    {
+        muxed_clk,
+        w_reduced_led' ({ port3_reg [7:0], port2_reg })
+    };
+
+    //------------------------------------------------------------------------
+    // Seven-segment display
 
     wire [7:0] abcdefgh_from_mcu
         = { port0_reg [6:0], port0_reg [7] };
@@ -272,18 +261,47 @@ module lab_top
         end
 
     //------------------------------------------------------------------------
+    // External interrupt and Local interrupts
+    //
+    // See
+    //
+    // Inside an Open-Source Processor by Monte Dalrympl
+    //
+    // 3.2.8 Machine Interrupt-Enable (mie)
+    // The Machine Local Interrupt-Enable bits (MLIE, bits 31-16)
+    // enable the individual Local interrupts
+    // that are custom additions for this design.
+    //
+    // 3.2.9 Machine Interrupt-Pending (mip)
+    // The Machine Local Interrupt-Pending bits (MLIP, bits 31-16)
+    // reflects the state of the individual Local interrupts.
+    //
+    // 3.2.16 Machine Exception Cause (mcause)
+    // Local interrupts are identified by mcause[31] interrupt bit
+    // and mcause[30:0] from 16 (Local Interrupt 0)
+    // to 31 (Local Interrupt 15).
+    //
+    // Listing 5.6: Local Interrupt Exception Code Definitions.
+    // Table 6.2: Interrupt-related Signals
 
-    wire interrupt_raw;
+    assign nmi_req = 1'b0;
+    assign ei_req  = external_interrupt;
+
+    assign li_req  =
+    {
+        13'b0,
+        local_interrupt_2,
+        local_interrupt_1,
+        local_interrupt_0
+    }
 
     strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (125))
-    interrupt_gen
+    # (.clk_mhz (clk_mhz), .strobe_hz (100))
+    local_timer_interrupt_gen
     (
         .clk,
         .rst,
-        .strobe (interrupt_raw)
+        .strobe (local_interrupt_2)
     );
-
-    assign nmi_req = (interrupt_raw | key_ext [7]) &  port3_reg [0];
 
 endmodule

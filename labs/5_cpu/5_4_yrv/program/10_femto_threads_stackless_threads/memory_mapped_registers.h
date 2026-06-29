@@ -119,6 +119,8 @@ mmio_led_t;
 // # 0x00010008 port4 = DIP[16:1]
 // # 0x0001000a port5 = {C9, C8, C6, S5, S4, S3, S2, S1, DIP[24:17]}
 
+// TODO: Make union with fields
+
 typedef struct
 {
     unsigned
