@@ -114,9 +114,9 @@ trap_ack:
         li          t1, MCAUSE_EXCCODE_MASK
         and         t0, t0, t1                 // Isolate interrupt cause
 
-        #ifdef USE_EXTERNAL_INTERRUPT_AS_THE_TIMER_INTERRUPT
+        #ifdef USE_EXTERNAL_INTERRUPT_AS_TIMER_INTERRUPT
         li          t1, MCAUSE_EXCCODE_MACHINE_EXTERNAL_INTERRUPT
-        #elif  USE_YRV_PLATFORM_LOCAL_INTERRUPT_2_AS_THE_TIMER_INTERRUPT
+        #elif defined (USE_YRV_PLATFORM_LOCAL_INTERRUPT_2_AS_TIMER_INTERRUPT)
         li          t1, MCAUSE_EXCCODE_YRV_PLATFORM_LOCAL_INTERRUPT_2
         #else
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
