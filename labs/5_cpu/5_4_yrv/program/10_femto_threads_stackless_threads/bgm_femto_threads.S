@@ -1,5 +1,6 @@
-#include "bgm_femto_threads.h"
+#include "risc_v_cpu_config.h"
 #include "csr_masks.h"
+#include "bgm_femto_threads.h"
 
 //----------------------------------------------------------------------------
 
@@ -112,7 +113,15 @@ trap_ack:
         sw          t1, 1 * WORD_SIZE (t6)     // Save t1
         li          t1, MCAUSE_EXCCODE_MASK
         and         t0, t0, t1                 // Isolate interrupt cause
+
+        #ifdef USE_EXTERNAL_INTERRUPT_AS_THE_TIMER_INTERRUPT
+        li          t1, MCAUSE_EXCCODE_MACHINE_EXTERNAL_INTERRUPT
+        #elif  USE_YRV_PLATFORM_LOCAL_INTERRUPT_2_AS_THE_TIMER_INTERRUPT
+        li          t1, MCAUSE_EXCCODE_YRV_PLATFORM_LOCAL_INTERRUPT_2
+        #else
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
+        #endif
+
         bne         t0, t1, not_timer_interrupt
 
         //--------------------------------------------------------------------

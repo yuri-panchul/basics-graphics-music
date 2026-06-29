@@ -1,1 +1,2 @@
 1. Figure out what to do with INTEL_VERSION
+2. Make a version with user mode and machine mode (system calls).

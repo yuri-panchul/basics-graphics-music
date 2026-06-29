@@ -186,4 +186,4 @@ mmio_t;
 
 #define mmio (* (volatile mmio_t *) MMIO_BASE_ADDR)
 
-#endif
+#endif  // #ifndef MEMORY_MAPPED_REGISTERS_H
