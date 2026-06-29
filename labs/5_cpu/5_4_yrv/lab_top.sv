@@ -117,6 +117,8 @@ module lab_top
 
     endgenerate
 
+    wire local_interrupt_2;
+
     //------------------------------------------------------------------------
     // MCU clock
 
@@ -208,7 +210,8 @@ module lab_top
 
     assign li_req =
     {
-        14'b0,
+        13'b0,
+        local_interrupt_2,
         local_interrupt_1,
         local_interrupt_0
     }
@@ -224,44 +227,25 @@ module lab_top
     //------------------------------------------------------------------------
     // Pin assignments
 
-    wire [7:0] abcdefgh_from_mcu =
-    {
-        port0_reg [6],
-        port0_reg [5],
-        port0_reg [4],
-        port0_reg [3],
-        port0_reg [2],
-        port0_reg [1],
-        port0_reg [0],
-        port0_reg [7]
-    };
+    wire [7:0] abcdefgh_from_mcu
+        = { port0_reg [6:0], port0_reg [7] };
 
-    wire [7:0] digit_from_mcu =
-    {
-        port1_reg [7],
-        port1_reg [6],
-        port1_reg [5],
-        port1_reg [4],
-        port1_reg [3],
-        port1_reg [2],
-        port1_reg [1],
-        port1_reg [0]
-    };
+    wire [w_digit - 1:0] digit_from_mcu
+        = w_digit' (port1_reg [7:0]);
 
     //------------------------------------------------------------------------
 
-    wire [7:0] abcdefgh_from_show_mode;
-    wire [7:0] digit_from_show_mode;
+    wire [           7:0] abcdefgh_from_show_mode;
+    wire [w_digits - 1:0] digit_from_show_mode;
 
-    logic [15:0] display_number;
+    localparam w_display_number = w_digit * 4;
+    logic [w_display_number - 1:0] display_number;
 
     always_comb
-        casez (key_ext [3:0])
-        default  : display_number = mem_addr  [31: 0];
-        4'b0001? : display_number = mem_rdata [31: 0];
-        4'b0010? : display_number = mem_wdata [31: 0];
-        endcase
-
+        if (slow_addr_data_sel)
+            display_number = w_display_number' (mem_addr);
+        else
+            display_number = w_display_number' (mem_rdata);
 
     seven_segment_display # (w_digit) i_7segment
     (
