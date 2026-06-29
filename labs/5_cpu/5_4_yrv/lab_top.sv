@@ -73,16 +73,22 @@ module lab_top
     //------------------------------------------------------------------------
     // Board-specific key and switch assignments
 
+    wire slow_clk_mode;
+    wire slow_addr_data_sel;
+    wire external_interrupt;
+    wire local_interrupt_0;
+    wire local_interrupt_1;
+
     generate
 
         if (w_key >= 7)
         begin : keys_at_least_7
 
-            wire slow_clk_mode      = key [w_key - 1];
-            wire slow_addr_data_sel = key [w_key - 2];
-            wire external_interrupt = key [w_key - 3];
-            wire local_interrupt_0  = key [w_key - 4];
-            wire local_interrupt_1  = key [w_key - 5];
+            assign slow_clk_mode      = key [w_key - 1];
+            assign slow_addr_data_sel = key [w_key - 2];
+            assign external_interrupt = key [w_key - 3];
+            assign local_interrupt_0  = key [w_key - 4];
+            assign local_interrupt_1  = key [w_key - 5];
 
             // TODO localparam w_user_key, w_user_sw
             // wire user_key, user_sw
@@ -91,31 +97,31 @@ module lab_top
         begin : switches_at_least_7
             // Covers Terasic DE10-Lite (2 keys, 10 switches)
 
-            wire slow_clk_mode      = sw  [w_sw  - 1];
-            wire slow_addr_data_sel = sw  [w_sw  - 2];
-            wire external_interrupt = sw  [w_sw  - 3];
-            wire local_interrupt_0  = sw  [w_sw  - 4];
-            wire local_interrupt_1  = sw  [w_sw  - 5];
+            assign slow_clk_mode      = sw  [w_sw  - 1];
+            assign slow_addr_data_sel = sw  [w_sw  - 2];
+            assign external_interrupt = sw  [w_sw  - 3];
+            assign local_interrupt_0  = sw  [w_sw  - 4];
+            assign local_interrupt_1  = sw  [w_sw  - 5];
         end
         else if (w_key >= 4)
         begin : keys_at_least_4
             // Covers Omdazz Altera Cyclone IV board
             // (4 keys are combined with 4 switches)
 
-            wire slow_clk_mode      = key [w_key - 1];
-            wire slow_addr_data_sel = 1'b0;
-            wire external_interrupt = key [w_key - 2];
-            wire local_interrupt_0  = 1'b0;
-            wire local_interrupt_1  = 1'b0;
+            assign slow_clk_mode      = key [w_key - 1];
+            assign slow_addr_data_sel = 1'b0;
+            assign external_interrupt = key [w_key - 2];
+            assign local_interrupt_0  = 1'b0;
+            assign local_interrupt_1  = 1'b0;
         end
         else
         begin : few_keys_and_sw_available
 
-            wire slow_clk_mode      = 1'b0;
-            wire slow_addr_data_sel = 1'b0;
-            wire external_interrupt = 1'b0;
-            wire local_interrupt_0  = 1'b0;
-            wire local_interrupt_1  = 1'b0;
+            assign slow_clk_mode      = 1'b0;
+            assign slow_addr_data_sel = 1'b0;
+            assign external_interrupt = 1'b0;
+            assign local_interrupt_0  = 1'b0;
+            assign local_interrupt_1  = 1'b0;
         end
 
     endgenerate
@@ -224,8 +230,8 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [           7:0] abcdefgh_from_show_mode;
-    wire [w_digits - 1:0] digit_from_show_mode;
+    wire [          7:0] abcdefgh_from_show_mode;
+    wire [w_digit - 1:0] digit_from_show_mode;
 
     localparam w_display_number = w_digit * 4;
     logic [w_display_number - 1:0] display_number;
@@ -293,7 +299,7 @@ module lab_top
         local_interrupt_2,
         local_interrupt_1,
         local_interrupt_0
-    }
+    };
 
     strobe_gen
     # (.clk_mhz (clk_mhz), .strobe_hz (100))
