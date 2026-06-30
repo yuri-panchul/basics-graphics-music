@@ -1,4 +1,5 @@
 #include "csr_masks.h"
+#include "memory_mapped_registers.h"
 
 //----------------------------------------------------------------------------
 // The section at the beginning of the address space

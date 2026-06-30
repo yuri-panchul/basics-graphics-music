@@ -1,14 +1,23 @@
 #ifndef MEMORY_MAPPED_REGISTERS_H
 #define MEMORY_MAPPED_REGISTERS_H
 
-#include <stdint.h>
-
 #define MMIO_BASE_ADDR    0xffff0000
 
-#define MMIO_7SEG_ADDR    0xffff0000
-#define MMIO_LED_ADDR     0xffff0004
-#define MMIO_KEY_SW_ADDR  0xffff0008
-#define MMIO_SERIAL_ADDR  0xffff000c
+#define MMIO_7SEG_OFF     0x0
+#define MMIO_LED_OFF      0x4
+#define MMIO_KEY_SW_OFF   0x8
+#define MMIO_SERIAL_OFF   0xc
+
+#define MMIO_7SEG_ADDR    MMIO_BASE_ADDR + MMIO_7SEG_OFF
+#define MMIO_LED_ADDR     MMIO_BASE_ADDR + MMIO_LED_OFF
+#define MMIO_KEY_SW_ADDR  MMIO_BASE_ADDR + MMIO_KEY_SW_OFF
+#define MMIO_SERIAL_ADDR  MMIO_BASE_ADDR + MMIO_SERIAL_OFF
+
+//----------------------------------------------------------------------------
+
+#ifndef __ASSEMBLER__
+
+#include <stdint.h>
 
 #define MMIO(a) (* (volatile uint32_t *) (a))
 
@@ -255,5 +264,7 @@ typedef struct
 mmio_t;
 
 #define mmio (* (volatile mmio_t *) MMIO_BASE_ADDR)
+
+#endif  // #ifndef __ASSEMBLER__
 
 #endif  // #ifndef MEMORY_MAPPED_REGISTERS_H

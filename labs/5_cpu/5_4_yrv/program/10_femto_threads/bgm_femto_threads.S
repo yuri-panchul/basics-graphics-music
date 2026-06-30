@@ -1,6 +1,7 @@
 #include "risc_v_cpu_config.h"
 #include "csr_masks.h"
 #include "bgm_femto_threads.h"
+#include "memory_mapped_registers.h"
 
 //----------------------------------------------------------------------------
 
@@ -13,7 +14,6 @@ thread_contexts:
 after_thread_contexts:
 
 //----------------------------------------------------------------------------
-
 
 // For whatever reason GCC version we use does not recognize ".sdata"
 // and requires writing ".section .sdata".
@@ -82,8 +82,9 @@ start_running_threads:
         // tp will be changed to thread_contexts after the first interrupt.
 
         li          tp, 0
-        li          t1,      MIE_MTIE     // Enable timer interrupt
-        csrw        mie,     t1
+
+        li          t1, MASK_32           // Enable every type of interrupt
+        csrw        mie, t1
 
         csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
         ret
@@ -285,7 +286,5 @@ restore_context:
         lw          t4  , THREAD_CONTEXT_OFFSET_T4     (tp)
         lw          t5  , THREAD_CONTEXT_OFFSET_T5     (tp)
         lw          t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
-
-        // TODO: Should we and can we enable the exceptions here?
 
         mret

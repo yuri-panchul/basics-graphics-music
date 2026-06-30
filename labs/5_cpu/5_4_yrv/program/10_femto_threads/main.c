@@ -5,6 +5,7 @@ int counter_1 = 0;
 
 void thread_1 ()
 {
+    // for (;;) mmio.led.f.l24_0 = 0xa;
     counter_1 ++;
 }
 
@@ -12,11 +13,14 @@ int counter_2 = 0;
 
 void thread_2 ()
 {
+    // for (;;) mmio.led.f.l24_0 = 0xb;
     counter_2 ++;
 }
 
 void thread_3 ()
 {
+    // for (;;) mmio.led.f.l24_0 = 0xc;
+
     // Output to LED
 
     #if defined (METHOD1)
@@ -79,10 +83,17 @@ void thread_3 ()
 
 void main ()
 {
+    // mmio.led.f.l24_0 = 1;
+
     define_thread (thread_1);
     define_thread (thread_2);
     define_thread (thread_3);
 
+    // mmio.led.f.l24_0 = 2;
+
     start_running_threads ();
+
+    // mmio.led.f.l24_0 = 3;
+
     for (;;);
 }

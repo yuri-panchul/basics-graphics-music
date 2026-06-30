@@ -65,7 +65,10 @@
 // We have to use 0xffffffff and not ~0
 // because the assembly treats ~0 as a 64-bit 0xffffffffffffffff
 
+#define MASK_32                      0xffffffffu
 #define MASK_FROM_HI_LO_BIT(hi, lo)  ((0xffffffffu >> (31 - (hi))) & (0xffffffff << (lo)))
+
+// #define MASK_FROM_HI_LO_BIT(hi, lo)  ((MASK_32 >> (31 - (hi))) & (MASK_32 << (lo)))
 
 #define MSTATUS_MIE            MASK_FROM_BIT        ( MSTATUS_MIE_BIT                               )
 #define MSTATUS_MPIE           MASK_FROM_BIT        ( MSTATUS_MPIE_BIT                              )
