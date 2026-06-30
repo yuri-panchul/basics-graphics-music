@@ -208,11 +208,19 @@ module lab_top
     //------------------------------------------------------------------------
     // LED
 
+    logic sticky_local_interrupt_2;
+
+    always_ff @ (posedge clk)
+        if (rst)
+            sticky_local_interrupt_2 <= 1'b0;
+        else if (local_interrupt_2)
+            sticky_local_interrupt_2 <= ~ sticky_local_interrupt_2;
+
     localparam w_reduced_led = w_led - 1;
 
     assign led =
     {
-        slow_clk_mode ? muxed_clk : local_interrupt_2,
+        slow_clk_mode ? muxed_clk : sticky_local_interrupt_2,
         w_reduced_led' ({ port3_reg [7:0], port2_reg })
     };
 
