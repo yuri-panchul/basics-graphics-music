@@ -1,14 +1,14 @@
 #include "memory_mapped_registers.h"
 #include "bgm_femto_threads.h"
 
-int counter_1 = 0;
+int counter_1 = 1;
 
 void thread_1 ()
 {
     counter_1 ++;
 }
 
-int counter_2 = 0;
+int counter_2 = 2;
 
 void thread_2 ()
 {
