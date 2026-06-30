@@ -5,6 +5,7 @@ int counter_1 = 1;
 
 void thread_1 ()
 {
+    mmio.led.f.l24_0 = 1;
     counter_1 ++;
 }
 
@@ -12,6 +13,7 @@ int counter_2 = 2;
 
 void thread_2 ()
 {
+    mmio.led.f.l24_0 = 2;
     counter_2 ++;
 }
 
