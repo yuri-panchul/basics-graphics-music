@@ -17,8 +17,8 @@
 #define MMIO_KEY_SW  MMIO ( MMIO_KEY_SW_ADDR )
 #define MMIO_SERIAL  MMIO ( MMIO_SERIAL_ADDR )
 
-// # 0x00010002 port1 = { 4'bxxxx, C46, C45, C43, C42, 4'bxxxx, AN4, AN3, AN2, AN1 }
-// # 0x00010000 port0 = { 8'bxxxxxxxx, RDP, RA, RB, RC, RD, RE, RF, RG }
+// 0xffff0000 port0 = { 8'bxxxxxxxx, RDP, RA, RB, RC, RD, RE, RF, RG }
+// 0xffff0002 port1 = { 4'bxxxx, C46, C45, C43, C42, 4'bxxxx, AN4, AN3, AN2, AN1 }
 
 typedef struct
 {
@@ -46,8 +46,8 @@ typedef struct
 mmio_7seg_t;
 
 //----------------------------------------------------------------------------
-// # 0x00010004 port2 = L [16:1]
-// # 0x00010006 port3 = { CLR_EI, 1'bx, INIT, ECALL, NMI, LINT, INT, EXCEPT, L [24:17] }
+// 0xffff0004 port2 = L [16:1]
+// 0xffff0006 port3 = { CLR_EI, 1'bx, INIT, ECALL, NMI, LINT, INT, EXCEPT, L [24:17] }
 
 typedef struct
 {
@@ -116,10 +116,15 @@ typedef union
 mmio_led_t;
 
 //----------------------------------------------------------------------------
-// # 0x00010008 port4 = DIP[16:1]
-// # 0x0001000a port5 = {C9, C8, C6, S5, S4, S3, S2, S1, DIP[24:17]}
-
-// TODO: Make union with fields
+// Legacy layout from Monte Dalrymple's YRV:
+//
+// 0xffff0008 port4 = DIP[16:1]
+// 0xffff000a port5 = {C9, C8, C6, S5, S4, S3, S2, S1, DIP[24:17]}
+//
+// New layout:
+//
+// 0xffff0008 port4 = KEY
+// 0xffff000a port5 = SW
 
 typedef struct
 {
@@ -158,10 +163,73 @@ typedef struct
     c8          : 1,
     c9          : 1;
 }
+mmio_key_sw_legacy_bits_t;
+
+//----------------------------------------------------------------------------
+
+typedef struct
+{
+    unsigned
+    key0        : 1,
+    key1        : 1,
+    key2        : 1,
+    key3        : 1,
+    key4        : 1,
+    key5        : 1,
+    key6        : 1,
+    key7        : 1,
+    key8        : 1,
+    key9        : 1,
+    key10       : 1,
+    key11       : 1,
+    key12       : 1,
+    key13       : 1,
+    key14       : 1,
+    key15       : 1,
+
+    sw0         : 1,
+    sw1         : 1,
+    sw2         : 1,
+    sw3         : 1,
+    sw4         : 1,
+    sw5         : 1,
+    sw6         : 1,
+    sw7         : 1,
+    sw8         : 1,
+    sw9         : 1,
+    sw10        : 1,
+    sw11        : 1,
+    sw12        : 1,
+    sw13        : 1,
+    sw14        : 1,
+    sw15        : 1;
+}
+mmio_key_sw_bits_t;
+
+//----------------------------------------------------------------------------
+
+typedef struct
+{
+    unsigned
+    key         : 16,
+    sw          : 16;
+}
+mmio_key_sw_fields_t;
+
+//----------------------------------------------------------------------------
+
+typedef union
+{
+    mmio_key_sw_legacy_bits_t  lb;
+    mmio_key_sw_bits_t         b;
+    mmio_key_sw_fields_t       f;
+    uint32_t                   w;
+}
 mmio_key_sw_t;
 
-// # 0x0001000c port6 = {DIV_RATE, S_RESET, 3'bxxx}
-// # 0x0001000e port7 = {4'bxxxx, EMPTY, DONE, FULL, OVR, SER_DATA}
+//----------------------------------------------------------------------------
+// 0xffff000c port6 = {DIV_RATE, S_RESET, 3'bxxx}
+// 0xffff000e port7 = {4'bxxxx, EMPTY, DONE, FULL, OVR, SER_DATA}
 
 typedef struct
 {
