@@ -144,8 +144,6 @@ module lab_top
          `endif
     `endif
 
-    assign led [w_led - 1] = muxed_clk;
-
     //------------------------------------------------------------------------
     // MCU inputs
 
@@ -214,7 +212,7 @@ module lab_top
 
     assign led =
     {
-        muxed_clk,
+        slow_clk_mode ? muxed_clk : local_interrupt_2,
         w_reduced_led' ({ port3_reg [7:0], port2_reg })
     };
 
@@ -301,7 +299,7 @@ module lab_top
     };
 
     strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (100))
+    # (.clk_mhz (clk_mhz), .strobe_hz (1))
     local_timer_interrupt_gen
     (
         .clk,

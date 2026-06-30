@@ -96,9 +96,6 @@ start_running_threads:
 
 trap_ack:
 
-        // TODO: Can we guarantee that all exceptions are disabled
-        // at this point?
-
         csrrw       t6, mscratch, t6   // Get trap frame pointer, save t6
         sw          t0, (t6)           // Save t0
 
@@ -112,6 +109,17 @@ trap_ack:
         // Check if a timer interrupt
 
         sw          t1, 1 * WORD_SIZE (t6)     // Save t1
+
+        // #define LOCAL_DEBUG
+        #ifdef LOCAL_DEBUG
+
+        la          t0, MMIO_LED_ADDR
+        lw          t1, (t0)
+        neg         t1, t1
+        sw          t1, (t0)
+
+        #endif
+
         li          t1, MCAUSE_EXCCODE_MASK
         and         t0, t0, t1                 // Isolate interrupt cause
 
