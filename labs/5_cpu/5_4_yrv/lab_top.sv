@@ -79,60 +79,24 @@ module lab_top
     wire local_interrupt_0_raw;
     wire local_interrupt_1_raw;
 
-    // generate
+    generate
 
-    //     if (w_key >= 7)
-    //     begin : keys_at_least_7
+        if (w_key >= 7)
+        begin : keys_at_least_7
 
-<<<<<<< HEAD
-            assign slow_clk_mode       = key [w_key - 1];
-            assign slow_addr_data_sel  = key [w_key - 2];
-            assign local_interrupt_1   = key [w_key - 3];
-            assign external_interrupt  = key [w_key - 4];
-            assign local_interrupt_0   = key [w_key - 5];
-=======
             assign slow_clk_mode          = key [w_key - 1];
             assign slow_addr_data_sel     = key [w_key - 2];
             assign external_interrupt_raw = key [w_key - 3];
             assign local_interrupt_0_raw  = key [w_key - 4];
             assign local_interrupt_1_raw  = key [w_key - 5];
->>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 
-    //         // TODO localparam w_user_key, w_user_sw
-    //         // wire user_key, user_sw
-    //     end
-    //     else if (w_sw >= 7)
-    //     begin : switches_at_least_7
-    //         // Covers Terasic DE10-Lite (2 keys, 10 switches)
+            // TODO localparam w_user_key, w_user_sw
+            // wire user_key, user_sw
+        end
+        else if (w_sw >= 7)
+        begin : switches_at_least_7
+            // Covers Terasic DE10-Lite (2 keys, 10 switches)
 
-<<<<<<< HEAD
-    //         assign slow_clk_mode      = sw  [w_sw  - 1];
-    //         assign slow_addr_data_sel = sw  [w_sw  - 2];
-    //         assign local_interrupt_2  = sw  [w_sw  - 3];
-    //         assign external_interrupt  = sw  [w_sw  - 4];
-    //         assign local_interrupt_0  = sw  [w_sw  - 5];
-    //     end
-    //     else if (w_key >= 4)
-    //     begin : keys_at_least_4
-    //         // Covers Omdazz Altera Cyclone IV board
-    //         // (4 keys are combined with 4 switches)
-
-    //         assign slow_clk_mode      = key [w_key - 1];
-    //         assign slow_addr_data_sel = 1'b0;
-    //         assign external_interrupt = key [w_key - 2];
-    //         assign local_interrupt_0  = 1'b0;
-    //         assign local_interrupt_1  = 1'b0;
-    //     end
-    //     else
-    //     begin : few_keys_and_sw_available
-
-    //         assign slow_clk_mode      = 1'b0;
-    //         assign slow_addr_data_sel = 1'b0;
-    //         assign external_interrupt = 1'b0;
-    //         assign local_interrupt_0  = 1'b0;
-    //         assign local_interrupt_1  = 1'b0;
-    //     end
-=======
             assign slow_clk_mode          = sw  [w_sw  - 1];
             assign slow_addr_data_sel     = sw  [w_sw  - 2];
             assign external_interrupt_raw = sw  [w_sw  - 3];
@@ -159,9 +123,8 @@ module lab_top
             assign local_interrupt_0_raw  = 1'b0;
             assign local_interrupt_1_raw  = 1'b0;
         end
->>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 
-    // endgenerate
+    endgenerate
 
     //------------------------------------------------------------------------
     // MCU clock
@@ -188,14 +151,9 @@ module lab_top
 
     wire        resetb   = ~ rst;  // master reset
     wire        ser_rxd  = 1'b0;   // receive data input
-<<<<<<< HEAD
-    wire [15:0] port4_in ; //= '0;
-    wire [15:0] port5_in ; //= '0;
-=======
 
     wire [15:0] port4_in = 16' ( key );
     wire [15:0] port5_in = 16' ( sw  );
->>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 
     //------------------------------------------------------------------------
     // MCU outputs
@@ -239,22 +197,6 @@ module lab_top
     //------------------------------------------------------------------------
     // Pin assignments
     //------------------------------------------------------------------------
-<<<<<<< HEAD
-    // Keys and switches
-
-    assign port4_in = 16' ( key );
-    assign port5_in = 16' ( sw  );
-
-    //------------------------------------------------------------------------
-    // LED
-
-    localparam w_reduced_led = w_led - 2;
-
-    assign led =
-    {
-        muxed_clk,ei_req,
-        w_reduced_led' ({ port3_reg [6:0], port2_reg[15:0] })
-=======
     // LED
 
     logic local_interrupt_2_toggle;
@@ -265,7 +207,6 @@ module lab_top
     {
         slow_clk_mode ? muxed_clk : local_interrupt_2_toggle,
         w_reduced_led' ({ port3_reg [7:0], port2_reg })
->>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
     };
 
     //------------------------------------------------------------------------
@@ -286,7 +227,7 @@ module lab_top
     logic [w_display_number - 1:0] display_number;
 
     always_comb
-        if (~ slow_addr_data_sel)
+        if (slow_addr_data_sel)
             display_number = w_display_number' (mem_addr);
         else
             display_number = w_display_number' (mem_rdata);
@@ -375,7 +316,7 @@ module lab_top
             external_interrupt,
             local_interrupt_0,
             local_interrupt_1
-        }),
+        })
     );
 
     //------------------------------------------------------------------------
@@ -392,43 +333,26 @@ module lab_top
         .strobe (local_interrupt_2)
     );
 
-      pulse_to_level
+      pulse_on_0_to_1
     i_pulse_to_level
     (
         .clk,
         .rst,
-        .pulse (local_interrupt_2),
-        .level (local_interrupt_2_toggle)
+        .pulse (local_interrupt_2_toggle),
+        .level (local_interrupt_2)
     );
 
     //------------------------------------------------------------------------
 
     assign nmi_req = 1'b0;
-    assign ei_req  = ~slow_clk;
+    assign ei_req  = external_interrupt;
 
     assign li_req  =
     {
         13'b0,
-         1'b0,
-        1'b0,
-        1'b0
+        local_interrupt_2_toggle,
+        local_interrupt_1,
+        local_interrupt_0
     };
 
-<<<<<<< HEAD
-    // assign local_interrupt_2 = slow_clk;
-
-    // strobe_gen
-    // # (.clk_mhz (clk_mhz), .strobe_hz (10))
-    // local_timer_interrupt_gen
-    // (
-    //     .clk(muxed_clk),
-    //     .rst,
-    //     .strobe (local_interrupt_2)
-    // );
-
-
-
-
-=======
->>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 endmodule
