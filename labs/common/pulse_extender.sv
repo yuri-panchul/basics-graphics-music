@@ -14,23 +14,47 @@ module pulse_extender
 
     generate
     
-        for (i = 0; i < width; i ++)
-        begin : gen
+        if (depth == 0)
+        begin : depth_0
 
-            wire [depth - 1:0] par_out;
+            assign extended = pulse;
 
-              shift_reg # (.depth (depth))
-            i_shift_reg
-            (
-                .clk,
-                .rst,
-                .en      ( 1'b1      ),
-                .seq_in  ( pulse [i] ),
-                .seq_out (           ),
-                .par_out
-            );
+        end
+        else if (depth == 1)
+        begin : depth_1
 
-            assign extended [i] = | par_out;
+            logic [width - 1:0] pulse_r;
+
+            always_ff @ (posedge clk)
+                if (rst)
+                    pulse_r <= '0;
+                else
+                    pulse_r <= pulse;
+
+            assign extended = pulse | pulse_r;
+
+        end
+        else
+        begin : depth_gt_1
+
+            for (i = 0; i < width; i ++)
+            begin : for_depth_gt_1
+
+                wire [depth - 1:0] par_out;
+
+                  shift_reg # (.depth (depth))
+                i_shift_reg
+                (
+                    .clk,
+                    .rst,
+                    .en      ( 1'b1      ),
+                    .seq_in  ( pulse [i] ),
+                    .seq_out (           ),
+                    .par_out
+                );
+
+                assign extended [i] = | par_out;
+            end
         end
 
     endgenerate
