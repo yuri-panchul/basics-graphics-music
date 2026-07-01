@@ -151,8 +151,9 @@ module lab_top
 
     wire        resetb   = ~ rst;  // master reset
     wire        ser_rxd  = 1'b0;   // receive data input
-    wire [15:0] port4_in = '0;
-    wire [15:0] port5_in = '0;
+
+    wire [15:0] port4_in = 16' ( key );
+    wire [15:0] port5_in = 16' ( sw  );
 
     //------------------------------------------------------------------------
     // MCU outputs
@@ -165,8 +166,6 @@ module lab_top
     wire  [15:0] port1_reg;   // port 1
     wire  [15:0] port2_reg;   // port 2
     wire  [15:0] port3_reg;   // port 3
-    wire  [15:0] port4_reg;   // port 4
-    wire  [15:0] port5_reg;   // port 5
 
     // Auxiliary UART receive pin
 
@@ -197,12 +196,6 @@ module lab_top
 
     //------------------------------------------------------------------------
     // Pin assignments
-    //------------------------------------------------------------------------
-    // Keys and switches
-
-    assign port4_reg = 16' ( key );
-    assign port5_reg = 16' ( sw  );
-
     //------------------------------------------------------------------------
     // LED
 
