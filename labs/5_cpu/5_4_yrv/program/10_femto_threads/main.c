@@ -19,9 +19,13 @@ void thread_2 ()
 
 void thread_3 ()
 {
+    mmio.led.f.l24_0 = 3;
+
+    /*
     mmio.led.f.l24_0
       =   (((counter_1 >> 15) & 0xf) << 4)
         |  ((counter_2 >> 15) & 0xf);
+    */
 }
 
 void main ()

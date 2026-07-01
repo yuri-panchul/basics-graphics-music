@@ -75,20 +75,20 @@ module lab_top
 
     wire slow_clk_mode;
     wire slow_addr_data_sel;
-    wire external_interrupt;
-    wire local_interrupt_0;
-    wire local_interrupt_1;
+    wire external_interrupt_raw;
+    wire local_interrupt_0_raw;
+    wire local_interrupt_1_raw;
 
     generate
 
         if (w_key >= 7)
         begin : keys_at_least_7
 
-            assign slow_clk_mode      = key [w_key - 1];
-            assign slow_addr_data_sel = key [w_key - 2];
-            assign external_interrupt = key [w_key - 3];
-            assign local_interrupt_0  = key [w_key - 4];
-            assign local_interrupt_1  = key [w_key - 5];
+            assign slow_clk_mode          = key [w_key - 1];
+            assign slow_addr_data_sel     = key [w_key - 2];
+            assign external_interrupt_raw = key [w_key - 3];
+            assign local_interrupt_0_raw  = key [w_key - 4];
+            assign local_interrupt_1_raw  = key [w_key - 5];
 
             // TODO localparam w_user_key, w_user_sw
             // wire user_key, user_sw
@@ -97,36 +97,34 @@ module lab_top
         begin : switches_at_least_7
             // Covers Terasic DE10-Lite (2 keys, 10 switches)
 
-            assign slow_clk_mode      = sw  [w_sw  - 1];
-            assign slow_addr_data_sel = sw  [w_sw  - 2];
-            assign external_interrupt = sw  [w_sw  - 3];
-            assign local_interrupt_0  = sw  [w_sw  - 4];
-            assign local_interrupt_1  = sw  [w_sw  - 5];
+            assign slow_clk_mode          = sw  [w_sw  - 1];
+            assign slow_addr_data_sel     = sw  [w_sw  - 2];
+            assign external_interrupt_raw = sw  [w_sw  - 3];
+            assign local_interrupt_0_raw  = sw  [w_sw  - 4];
+            assign local_interrupt_1_raw  = sw  [w_sw  - 5];
         end
         else if (w_key >= 4)
         begin : keys_at_least_4
             // Covers Omdazz Altera Cyclone IV board
             // (4 keys are combined with 4 switches)
 
-            assign slow_clk_mode      = key [w_key - 1];
-            assign slow_addr_data_sel = 1'b0;
-            assign external_interrupt = key [w_key - 2];
-            assign local_interrupt_0  = 1'b0;
-            assign local_interrupt_1  = 1'b0;
+            assign slow_clk_mode          = key [w_key - 1];
+            assign slow_addr_data_sel     = 1'b0;
+            assign external_interrupt_raw = key [w_key - 2];
+            assign local_interrupt_0_raw  = 1'b0;
+            assign local_interrupt_1_raw  = 1'b0;
         end
         else
         begin : few_keys_and_sw_available
 
-            assign slow_clk_mode      = 1'b0;
-            assign slow_addr_data_sel = 1'b0;
-            assign external_interrupt = 1'b0;
-            assign local_interrupt_0  = 1'b0;
-            assign local_interrupt_1  = 1'b0;
+            assign slow_clk_mode          = 1'b0;
+            assign slow_addr_data_sel     = 1'b0;
+            assign external_interrupt_raw = 1'b0;
+            assign local_interrupt_0_raw  = 1'b0;
+            assign local_interrupt_1_raw  = 1'b0;
         end
 
     endgenerate
-
-    wire local_interrupt_2;
 
     //------------------------------------------------------------------------
     // MCU clock
@@ -208,19 +206,13 @@ module lab_top
     //------------------------------------------------------------------------
     // LED
 
-    logic sticky_local_interrupt_2;
-
-    always_ff @ (posedge clk)
-        if (rst)
-            sticky_local_interrupt_2 <= 1'b0;
-        else if (local_interrupt_2)
-            sticky_local_interrupt_2 <= ~ sticky_local_interrupt_2;
+    logic local_interrupt_2_toggle;
 
     localparam w_reduced_led = w_led - 1;
 
     assign led =
     {
-        slow_clk_mode ? muxed_clk : sticky_local_interrupt_2,
+        slow_clk_mode ? muxed_clk : local_interrupt_2_toggle,
         w_reduced_led' ({ port3_reg [7:0], port2_reg })
     };
 
@@ -272,7 +264,7 @@ module lab_top
         end
 
     //------------------------------------------------------------------------
-    // External interrupt and Local interrupts
+    // External interrupt and Local interrupts 0 and 1
     //
     // See
     //
@@ -295,6 +287,63 @@ module lab_top
     // Listing 5.6: Local Interrupt Exception Code Definitions.
     // Table 6.2: Interrupt-related Signals
 
+    wire [2:0] intr_debounced;
+
+    sync_and_debounce # (.w (3))
+    (
+        .clk,
+        .reset (rst),
+
+        .sw_in
+        ({
+            external_interrupt_raw,
+            local_interrupt_0_raw,
+            local_interrupt_1_raw
+        }),
+
+        .sw_out (intr_debounced)
+    );
+
+    //------------------------------------------------------------------------
+
+    logic [2:0] intr_debounced_r;
+
+    always_ff @ (posedge clk)
+        if (rst)
+            intr_debounced_r <= '0;
+        else
+            intr_debounced_r <= intr_debounced;
+
+    wire [2:0] intr_pulse = intr_debounced & ~ intr_debounced_r;
+
+    //------------------------------------------------------------------------
+
+    wire external_interrupt = intr_pulse [2];
+    wire local_interrupt_0  = intr_pulse [1];
+    wire local_interrupt_1  = intr_pulse [0];
+
+    //------------------------------------------------------------------------
+    // Local interrupt 2
+
+    wire local_interrupt_2;
+
+    strobe_gen
+    # (.clk_mhz (clk_mhz), .strobe_hz (1))
+    local_timer_interrupt_gen
+    (
+        .clk,
+        .rst,
+        .strobe (local_interrupt_2)
+    );
+
+    always_ff @ (posedge clk)
+        if (rst)
+            local_interrupt_2_toggle <= 1'b0;
+        else if (local_interrupt_2)
+            local_interrupt_2_toggle <= ~ local_interrupt_2_toggle;
+
+    //------------------------------------------------------------------------
+
     assign nmi_req = 1'b0;
     assign ei_req  = external_interrupt;
 
@@ -305,14 +354,5 @@ module lab_top
         local_interrupt_1,
         local_interrupt_0
     };
-
-    strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (1))
-    local_timer_interrupt_gen
-    (
-        .clk,
-        .rst,
-        .strobe (local_interrupt_2)
-    );
 
 endmodule
