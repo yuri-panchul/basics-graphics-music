@@ -307,21 +307,24 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic [2:0] intr_debounced_r;
+    wire external_interrupt;
+    wire local_interrupt_0;
+    wire local_interrupt_1;
 
-    always_ff @ (posedge clk)
-        if (rst)
-            intr_debounced_r <= '0;
-        else
-            intr_debounced_r <= intr_debounced;
+      pulse_on_0_to_1 # (3)
+    i_pulse_on_0_to_1
+    (
+        .clk,
+        .rst,
+        .level (intr_debounced),
 
-    wire [2:0] intr_pulse = intr_debounced & ~ intr_debounced_r;
-
-    //------------------------------------------------------------------------
-
-    wire external_interrupt = intr_pulse [2];
-    wire local_interrupt_0  = intr_pulse [1];
-    wire local_interrupt_1  = intr_pulse [0];
+        .pulse
+        ({
+            external_interrupt,
+            local_interrupt_0,
+            local_interrupt_1
+        }),
+    );
 
     //------------------------------------------------------------------------
     // Local interrupt 2
@@ -337,11 +340,14 @@ module lab_top
         .strobe (local_interrupt_2)
     );
 
-    always_ff @ (posedge clk)
-        if (rst)
-            local_interrupt_2_toggle <= 1'b0;
-        else if (local_interrupt_2)
-            local_interrupt_2_toggle <= ~ local_interrupt_2_toggle;
+      pulse_to_level
+    i_pulse_to_level
+    (
+        .clk,
+        .rst,
+        .pulse (local_interrupt_2),
+        .level (local_interrupt_2_toggle)
+    );
 
     //------------------------------------------------------------------------
 
