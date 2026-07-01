@@ -83,10 +83,12 @@ start_running_threads:
 
         li          tp, 0
 
-        li          t1, MASK_32           // Enable every type of interrupt
+        li          t1, MASK_32      // Enable every type of interrupt
         csrw        mie, t1
 
-        csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
+        li          t2, MSTATUS_MIE  // Enable interrupts
+        csrs        mstatus, t2
+
         ret
 
 //----------------------------------------------------------------------------
