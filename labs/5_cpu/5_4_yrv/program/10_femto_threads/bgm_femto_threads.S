@@ -82,10 +82,20 @@ start_running_threads:
         // tp will be changed to thread_contexts after the first interrupt.
 
         li          tp, 0
-        li          t1,      MIE_MTIE     // Enable timer interrupt
+//        li          t1,      MIE_MTIE     // Enable timer interrupt
+        li          t1, -1
         csrw        mie,     t1
 
-        csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
+        csrr    t0, mstatus      # 1. Читаем текущее значение mstatus
+        
+        # Маска для сброса MPIE (7-й бит): ~0x80 = 0xFFFFFF7F
+        li      t1, ~0x80        
+        and     t0, t0, t1       # 2. Очищаем бит MPIE в ноль
+        
+        # Маска для установки MIE (3-й бит): 0x08
+        ori     t0, t0, 0x08     # 3. Устанавливаем бит MIE в единицу
+        
+        csrw    mstatus, t0   
         ret
 
 //----------------------------------------------------------------------------
@@ -97,7 +107,8 @@ trap_ack:
 
         // TODO: Can we guarantee that all exceptions are disabled
         // at this point?
-
+        csrci   mstatus, 0x8 
+        
         csrrw       t6, mscratch, t6   // Get trap frame pointer, save t6
         sw          t0, (t6)           // Save t0
 
@@ -108,20 +119,13 @@ trap_ack:
         bgez        t0, not_interrupt
 
         //--------------------------------------------------------------------
-        // Check if a timer interrupt
+        // Check if an external interrupt
 
-        sw          t1, 1 * WORD_SIZE (t6)     // Save t1
-        li          t1, MCAUSE_EXCCODE_MASK
-        and         t0, t0, t1                 // Isolate interrupt cause
-
-        #ifdef USE_EXTERNAL_INTERRUPT_AS_TIMER_INTERRUPT
-        li          t1, MCAUSE_EXCCODE_MACHINE_EXTERNAL_INTERRUPT
-        #elif defined (USE_YRV_PLATFORM_LOCAL_INTERRUPT_2_AS_TIMER_INTERRUPT)
-        li          t1, MCAUSE_EXCCODE_YRV_PLATFORM_LOCAL_INTERRUPT_2
-        #else
-        li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
-        #endif
-
+        sw          t1, 1 * WORD_SIZE (t6)     
+        li          t1, 0x7FFFFFFF
+        and         t0, t0, t1                 
+        li          t1, 11 
+        
         bne         t0, t1, not_timer_interrupt
 
         //--------------------------------------------------------------------
@@ -258,7 +262,6 @@ restore_context:
 
         lw          ra  , THREAD_CONTEXT_OFFSET_RA     (tp)
         lw          sp  , THREAD_CONTEXT_OFFSET_SP     (tp)
-        lw          t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
         lw          t1  , THREAD_CONTEXT_OFFSET_T1     (tp)
         lw          t2  , THREAD_CONTEXT_OFFSET_T2     (tp)
         lw          s0  , THREAD_CONTEXT_OFFSET_S0_FP  (tp)
@@ -287,5 +290,6 @@ restore_context:
         lw          t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
 
         // TODO: Should we and can we enable the exceptions here?
+        lw          t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
 
         mret
