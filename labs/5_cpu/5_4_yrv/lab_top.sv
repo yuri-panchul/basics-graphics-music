@@ -75,20 +75,28 @@ module lab_top
 
     wire slow_clk_mode;
     wire slow_addr_data_sel;
-    wire external_interrupt;
-    wire local_interrupt_0;
-    wire local_interrupt_1;
+    wire external_interrupt_raw;
+    wire local_interrupt_0_raw;
+    wire local_interrupt_1_raw;
 
     // generate
 
     //     if (w_key >= 7)
     //     begin : keys_at_least_7
 
+<<<<<<< HEAD
             assign slow_clk_mode       = key [w_key - 1];
             assign slow_addr_data_sel  = key [w_key - 2];
             assign local_interrupt_1   = key [w_key - 3];
             assign external_interrupt  = key [w_key - 4];
             assign local_interrupt_0   = key [w_key - 5];
+=======
+            assign slow_clk_mode          = key [w_key - 1];
+            assign slow_addr_data_sel     = key [w_key - 2];
+            assign external_interrupt_raw = key [w_key - 3];
+            assign local_interrupt_0_raw  = key [w_key - 4];
+            assign local_interrupt_1_raw  = key [w_key - 5];
+>>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 
     //         // TODO localparam w_user_key, w_user_sw
     //         // wire user_key, user_sw
@@ -97,6 +105,7 @@ module lab_top
     //     begin : switches_at_least_7
     //         // Covers Terasic DE10-Lite (2 keys, 10 switches)
 
+<<<<<<< HEAD
     //         assign slow_clk_mode      = sw  [w_sw  - 1];
     //         assign slow_addr_data_sel = sw  [w_sw  - 2];
     //         assign local_interrupt_2  = sw  [w_sw  - 3];
@@ -123,10 +132,36 @@ module lab_top
     //         assign local_interrupt_0  = 1'b0;
     //         assign local_interrupt_1  = 1'b0;
     //     end
+=======
+            assign slow_clk_mode          = sw  [w_sw  - 1];
+            assign slow_addr_data_sel     = sw  [w_sw  - 2];
+            assign external_interrupt_raw = sw  [w_sw  - 3];
+            assign local_interrupt_0_raw  = sw  [w_sw  - 4];
+            assign local_interrupt_1_raw  = sw  [w_sw  - 5];
+        end
+        else if (w_key >= 4)
+        begin : keys_at_least_4
+            // Covers Omdazz Altera Cyclone IV board
+            // (4 keys are combined with 4 switches)
+
+            assign slow_clk_mode          = key [w_key - 1];
+            assign slow_addr_data_sel     = 1'b0;
+            assign external_interrupt_raw = key [w_key - 2];
+            assign local_interrupt_0_raw  = 1'b0;
+            assign local_interrupt_1_raw  = 1'b0;
+        end
+        else
+        begin : few_keys_and_sw_available
+
+            assign slow_clk_mode          = 1'b0;
+            assign slow_addr_data_sel     = 1'b0;
+            assign external_interrupt_raw = 1'b0;
+            assign local_interrupt_0_raw  = 1'b0;
+            assign local_interrupt_1_raw  = 1'b0;
+        end
+>>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 
     // endgenerate
-
-    wire local_interrupt_2;
 
     //------------------------------------------------------------------------
     // MCU clock
@@ -144,8 +179,6 @@ module lab_top
          `endif
     `endif
 
-    assign led [w_led - 1] = muxed_clk;
-
     //------------------------------------------------------------------------
     // MCU inputs
 
@@ -155,8 +188,14 @@ module lab_top
 
     wire        resetb   = ~ rst;  // master reset
     wire        ser_rxd  = 1'b0;   // receive data input
+<<<<<<< HEAD
     wire [15:0] port4_in ; //= '0;
     wire [15:0] port5_in ; //= '0;
+=======
+
+    wire [15:0] port4_in = 16' ( key );
+    wire [15:0] port5_in = 16' ( sw  );
+>>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 
     //------------------------------------------------------------------------
     // MCU outputs
@@ -169,8 +208,6 @@ module lab_top
     wire  [15:0] port1_reg;   // port 1
     wire  [15:0] port2_reg;   // port 2
     wire  [15:0] port3_reg;   // port 3
-    wire  [15:0] port4_reg;   // port 4
-    wire  [15:0] port5_reg;   // port 5
 
     // Auxiliary UART receive pin
 
@@ -202,6 +239,7 @@ module lab_top
     //------------------------------------------------------------------------
     // Pin assignments
     //------------------------------------------------------------------------
+<<<<<<< HEAD
     // Keys and switches
 
     assign port4_in = 16' ( key );
@@ -216,6 +254,18 @@ module lab_top
     {
         muxed_clk,ei_req,
         w_reduced_led' ({ port3_reg [6:0], port2_reg[15:0] })
+=======
+    // LED
+
+    logic local_interrupt_2_toggle;
+
+    localparam w_reduced_led = w_led - 1;
+
+    assign led =
+    {
+        slow_clk_mode ? muxed_clk : local_interrupt_2_toggle,
+        w_reduced_led' ({ port3_reg [7:0], port2_reg })
+>>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
     };
 
     //------------------------------------------------------------------------
@@ -266,7 +316,7 @@ module lab_top
         end
 
     //------------------------------------------------------------------------
-    // External interrupt and Local interrupts
+    // External interrupt and Local interrupts 0 and 1
     //
     // See
     //
@@ -289,6 +339,70 @@ module lab_top
     // Listing 5.6: Local Interrupt Exception Code Definitions.
     // Table 6.2: Interrupt-related Signals
 
+    wire [2:0] intr_debounced;
+
+      sync_and_debounce # (.w (3))
+    i_sync_and_debounce
+    (
+        .clk,
+        .reset (rst),
+
+        .sw_in
+        ({
+            external_interrupt_raw,
+            local_interrupt_0_raw,
+            local_interrupt_1_raw
+        }),
+
+        .sw_out (intr_debounced)
+    );
+
+    //------------------------------------------------------------------------
+
+    wire external_interrupt;
+    wire local_interrupt_0;
+    wire local_interrupt_1;
+
+      pulse_on_0_to_1 # (3)
+    i_pulse_on_0_to_1
+    (
+        .clk,
+        .rst,
+        .level (intr_debounced),
+
+        .pulse
+        ({
+            external_interrupt,
+            local_interrupt_0,
+            local_interrupt_1
+        }),
+    );
+
+    //------------------------------------------------------------------------
+    // Local interrupt 2
+
+    wire local_interrupt_2;
+
+    strobe_gen
+    # (.clk_mhz (clk_mhz), .strobe_hz (1))
+    local_timer_interrupt_gen
+    (
+        .clk,
+        .rst,
+        .strobe (local_interrupt_2)
+    );
+
+      pulse_to_level
+    i_pulse_to_level
+    (
+        .clk,
+        .rst,
+        .pulse (local_interrupt_2),
+        .level (local_interrupt_2_toggle)
+    );
+
+    //------------------------------------------------------------------------
+
     assign nmi_req = 1'b0;
     assign ei_req  = ~slow_clk;
 
@@ -300,6 +414,7 @@ module lab_top
         1'b0
     };
 
+<<<<<<< HEAD
     // assign local_interrupt_2 = slow_clk;
 
     // strobe_gen
@@ -314,4 +429,6 @@ module lab_top
 
 
 
+=======
+>>>>>>> 546c5a7a16777d07a6ae2d9724a4d55f4e73ad1e
 endmodule

@@ -1,6 +1,7 @@
 #include "risc_v_cpu_config.h"
 #include "csr_masks.h"
 #include "bgm_femto_threads.h"
+#include "memory_mapped_registers.h"
 
 //----------------------------------------------------------------------------
 
@@ -13,7 +14,6 @@ thread_contexts:
 after_thread_contexts:
 
 //----------------------------------------------------------------------------
-
 
 // For whatever reason GCC version we use does not recognize ".sdata"
 // and requires writing ".section .sdata".
@@ -82,12 +82,13 @@ start_running_threads:
         // tp will be changed to thread_contexts after the first interrupt.
 
         li          tp, 0
-//        li          t1,      MIE_MTIE     // Enable timer interrupt
-        li          t1, -1
-        csrw        mie,     t1
 
-        li      t0, 0x8
-        csrs    mstatus, t0 
+        li          t1, MASK_32      // Enable every type of interrupt
+        csrw        mie, t1
+
+        li          t2, MSTATUS_MIE  // Enable interrupts
+        csrs        mstatus, t2
+
         ret
 
 //----------------------------------------------------------------------------
@@ -97,10 +98,6 @@ start_running_threads:
 
 trap_ack:
 
-        // TODO: Can we guarantee that all exceptions are disabled
-        // at this point?
-        csrci   mstatus, 0x8 
-        
         csrrw       t6, mscratch, t6   // Get trap frame pointer, save t6
         sw          t0, (t6)           // Save t0
 
@@ -111,7 +108,30 @@ trap_ack:
         bgez        t0, not_interrupt
 
         //--------------------------------------------------------------------
-        // Check if an external interrupt
+        // Check if a timer interrupt
+
+        sw          t1, 1 * WORD_SIZE (t6)     // Save t1
+
+        // #define LOCAL_DEBUG
+        #ifdef LOCAL_DEBUG
+
+        la          t0, MMIO_LED_ADDR
+        lw          t1, (t0)
+        neg         t1, t1
+        sw          t1, (t0)
+
+        #endif
+
+        li          t1, MCAUSE_EXCCODE_MASK
+        and         t0, t0, t1                 // Isolate interrupt cause
+
+        #ifdef USE_EXTERNAL_INTERRUPT_AS_TIMER_INTERRUPT
+        li          t1, MCAUSE_EXCCODE_MACHINE_EXTERNAL_INTERRUPT
+        #elif defined (USE_YRV_PLATFORM_LOCAL_INTERRUPT_2_AS_TIMER_INTERRUPT)
+        li          t1, MCAUSE_EXCCODE_YRV_PLATFORM_LOCAL_INTERRUPT_2
+        #else
+        li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
+        #endif
 
         sw          t1, 1 * WORD_SIZE (t6)     
         li          t1, 0x7FFFFFFF
@@ -254,6 +274,7 @@ restore_context:
 
         lw          ra  , THREAD_CONTEXT_OFFSET_RA     (tp)
         lw          sp  , THREAD_CONTEXT_OFFSET_SP     (tp)
+        lw          t0  , THREAD_CONTEXT_OFFSET_T1     (tp)
         lw          t1  , THREAD_CONTEXT_OFFSET_T1     (tp)
         lw          t2  , THREAD_CONTEXT_OFFSET_T2     (tp)
         lw          s0  , THREAD_CONTEXT_OFFSET_S0_FP  (tp)
@@ -280,8 +301,5 @@ restore_context:
         lw          t4  , THREAD_CONTEXT_OFFSET_T4     (tp)
         lw          t5  , THREAD_CONTEXT_OFFSET_T5     (tp)
         lw          t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
-
-        // TODO: Should we and can we enable the exceptions here?
-        lw          t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
 
         mret
