@@ -319,7 +319,7 @@ module lab_top
             external_interrupt,
             local_interrupt_0,
             local_interrupt_1
-        }),
+        })
     );
 
     //------------------------------------------------------------------------
