@@ -15,7 +15,7 @@ module pulse_to_level
 
         genvar i;
 
-        for (i = 0; i < w); i ++)
+        for (i = 0; i < w; i ++)
         begin : g
             always_ff @ (posedge clk)
                 if (rst)
