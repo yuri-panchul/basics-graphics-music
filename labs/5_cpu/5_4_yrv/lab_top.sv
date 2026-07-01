@@ -289,7 +289,8 @@ module lab_top
 
     wire [2:0] intr_debounced;
 
-    sync_and_debounce # (.w (3))
+      sync_and_debounce # (.w (3))
+    i_sync_and_debounce
     (
         .clk,
         .reset (rst),
