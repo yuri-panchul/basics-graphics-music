@@ -86,16 +86,8 @@ start_running_threads:
         li          t1, -1
         csrw        mie,     t1
 
-        csrr    t0, mstatus      # 1. Читаем текущее значение mstatus
-        
-        # Маска для сброса MPIE (7-й бит): ~0x80 = 0xFFFFFF7F
-        li      t1, ~0x80        
-        and     t0, t0, t1       # 2. Очищаем бит MPIE в ноль
-        
-        # Маска для установки MIE (3-й бит): 0x08
-        ori     t0, t0, 0x08     # 3. Устанавливаем бит MIE в единицу
-        
-        csrw    mstatus, t0   
+        li      t0, 0x8
+        csrs    mstatus, t0 
         ret
 
 //----------------------------------------------------------------------------
