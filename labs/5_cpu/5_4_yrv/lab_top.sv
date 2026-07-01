@@ -135,10 +135,13 @@ module lab_top
     `ifdef SIMULATION
         assign muxed_clk = muxed_clk_raw;
     `else
-         `ifdef INTEL_VERSION
+         // TODO: Proper support for Gowin and Lattice/Yosys
+         // TODO: Consider clock mux macro
+
+         `ifdef ALTERA_RESERVED_QIS
              global i_global (.in (muxed_clk_raw), .out (muxed_clk));
         `else
-             BUFG   i_global (.I  (muxed_clk_raw), .O   (muxed_clk));
+             BUFG   i_bufg   (.I  (muxed_clk_raw), .O   (muxed_clk));
          `endif
     `endif
 
