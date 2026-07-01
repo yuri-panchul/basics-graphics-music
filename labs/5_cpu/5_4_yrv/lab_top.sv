@@ -135,10 +135,13 @@ module lab_top
     `ifdef SIMULATION
         assign muxed_clk = muxed_clk_raw;
     `else
-         `ifdef INTEL_VERSION
+         // TODO: Proper support for Gowin and Lattice/Yosys
+         // TODO: Consider clock mux macro
+
+         `ifdef ALTERA_RESERVED_QIS
              global i_global (.in (muxed_clk_raw), .out (muxed_clk));
         `else
-             BUFG   i_global (.I  (muxed_clk_raw), .O   (muxed_clk));
+             BUFG   i_bufg   (.I  (muxed_clk_raw), .O   (muxed_clk));
          `endif
     `endif
 
@@ -344,15 +347,52 @@ module lab_top
 
     //------------------------------------------------------------------------
 
+    wire external_interrupt_extended;
+    wire local_interrupt_0_extended;
+    wire local_interrupt_1_extended;
+    wire local_interrupt_2_extended;
+
+      pulse_extender
+    # (.width (4), .depth (6))
+    i_pulse_extender
+    (
+        .clk,
+        .rst,
+
+        .pulse
+        ({
+            external_interrupt,
+            local_interrupt_0,
+            local_interrupt_1,
+            local_interrupt_2
+        }),
+
+        .extended
+        ({
+            external_interrupt_extended,
+            local_interrupt_0_extended,
+            local_interrupt_1_extended,
+            local_interrupt_2_extended
+        })
+    );
+
+    //------------------------------------------------------------------------
+
     assign nmi_req = 1'b0;
-    assign ei_req  = external_interrupt;
+    assign ei_req  = external_interrupt_extended;
 
     assign li_req  =
     {
         13'b0,
+<<<<<<< HEAD
         local_interrupt_2_toggle,
         local_interrupt_1,
         local_interrupt_0
+=======
+        local_interrupt_2_extended,
+        local_interrupt_1_extended,
+        local_interrupt_0_extended
+>>>>>>> 9f2376cf4a024f53776b2883e36abe60c7bdb5b9
     };
 
 endmodule

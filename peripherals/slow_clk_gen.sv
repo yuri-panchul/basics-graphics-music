@@ -50,32 +50,39 @@ module slow_clk_gen
 
             //----------------------------------------------------------------
 
-            `ifdef ALTERA_RESERVED_QIS
-
-                // "global" is Intel FPGA-specific primitive to route
-                // a signal coming from data into clock tree
-
-                global i_global (.in (slow_clk_raw), .out (slow_clk));
-
-            `elsif XILINX_VIVADO
-
-                // "BUFG" is Xilinx-specific primitive to route
-                // a signal coming from data into clock tree
-
-                BUFG i_BUFG (.I (slow_clk_raw), .O (slow_clk));
-
-            `elsif SIMULATION
-
-                assign slow_clk = slow_clk_raw;
-
-            `else
-
-                // `error_Unsupported_synthesis_tool
-
-                assign slow_clk = slow_clk_raw;
-
+            `ifdef SIMULATION
+                `define NO_CLOCK_ROUTING_FOR_SLOW_CLOCK
             `endif
 
+            `ifndef CLOCK_ROUTING_FOR_SLOW_CLOCK
+                `define NO_CLOCK_ROUTING_FOR_SLOW_CLOCK
+            `endif
+
+            `ifdef NO_CLOCK_ROUTING_FOR_SLOW_CLOCK
+                assign slow_clk = slow_clk_raw;
+            `else
+                `ifdef ALTERA_RESERVED_QIS
+
+                    // "global" is Intel FPGA-specific primitive to route
+                    // a signal coming from data into clock tree
+
+                    global i_global (.in (slow_clk_raw), .out (slow_clk));
+
+                `elsif XILINX_VIVADO
+
+                    // "BUFG" is Xilinx-specific primitive to route
+                    // a signal coming from data into clock tree
+
+                    BUFG i_BUFG (.I (slow_clk_raw), .O (slow_clk));
+
+                `else
+
+                    // `error_Unsupported_synthesis_tool
+
+                    assign slow_clk = slow_clk_raw;
+
+                `endif
+            `endif
         end
     endgenerate
 
