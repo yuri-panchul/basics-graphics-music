@@ -19,6 +19,19 @@ module pulse_on_0_to_1
         else
             level_r <= level;
 
-    assign pulse = level & ~ level_r;
+    // Pulse extender
+
+    wire pulse_1;
+    assign pulse_1 = level & ~ level_r;
+
+    logic pulse_2;
+
+    always_ff @ (posedge clk)
+        if (rst)
+            pulse_2 <= '0;
+        else
+            pulse_2 <= pulse_1;
+            
+    assign pulse = pulse_1 | pulse_2;
 
 endmodule
