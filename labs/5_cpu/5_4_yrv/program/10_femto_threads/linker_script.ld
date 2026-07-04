@@ -94,6 +94,8 @@ SECTIONS
     ASSERT (__sbss_end - __sdata_start <= 0x1000,
        ".sdata + .sbss exceed 4 KB gp range")
 
+    # Heap is aligned by 16 because of a typical malloc library implementation
+
     .heap (NOLOAD) : ALIGN (16)
     {
         __heap_start = .;
@@ -111,14 +113,15 @@ SECTIONS
         __trapframe_end = .;
     }
 
-    # Heap is aligned by 16 because of a typical malloc library implementation
-
     .stack (NOLOAD) : ALIGN (4)
     {
         __stack_bottom = .;
         . = ABSOLUTE (MEMORY_SIZE);
         __stack_top = .;
     }
+
+    ASSERT ((__stack_top - __stack_bottom) >= MIN_STACK_SIZE,
+        "Not enough space for the stack: consider increasing MEMORY_SIZE or decreasing MIN_STACK_SIZE")
 
     /DISCARD/ :
     {
@@ -127,7 +130,4 @@ SECTIONS
         * (.riscv.attributes)
         * (.comment)
     }
-
-    ASSERT ((__stack_top - __stack_bottom) >= MIN_STACK_SIZE,
-        "Not enough space for the stack: consider increasing MEMORY_SIZE or decreasing MIN_STACK_SIZE")
 }
