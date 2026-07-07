@@ -298,3 +298,4 @@ restore_context:
         lw          t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
 
         mret
+        
