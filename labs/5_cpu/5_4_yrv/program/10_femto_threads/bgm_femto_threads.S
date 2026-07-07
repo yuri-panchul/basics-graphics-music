@@ -133,11 +133,6 @@ trap_ack:
         li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
         #endif
 
-        sw          t1, 1 * WORD_SIZE (t6)     
-        li          t1, 0x7FFFFFFF
-        and         t0, t0, t1                 
-        li          t1, 11 
-        
         bne         t0, t1, not_timer_interrupt
 
         //--------------------------------------------------------------------
@@ -274,7 +269,7 @@ restore_context:
 
         lw          ra  , THREAD_CONTEXT_OFFSET_RA     (tp)
         lw          sp  , THREAD_CONTEXT_OFFSET_SP     (tp)
-        lw          t0  , THREAD_CONTEXT_OFFSET_T1     (tp)
+        lw          t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
         lw          t1  , THREAD_CONTEXT_OFFSET_T1     (tp)
         lw          t2  , THREAD_CONTEXT_OFFSET_T2     (tp)
         lw          s0  , THREAD_CONTEXT_OFFSET_S0_FP  (tp)
