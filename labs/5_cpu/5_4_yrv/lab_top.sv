@@ -330,7 +330,7 @@ module lab_top
     wire local_interrupt_2;
 
     strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (1))
+    # (.clk_mhz (clk_mhz), .strobe_hz (100))
     local_timer_interrupt_gen
     (
         .clk,
@@ -386,15 +386,9 @@ module lab_top
     assign li_req  =
     {
         13'b0,
-<<<<<<< HEAD
-        local_interrupt_2_toggle,
-        local_interrupt_1,
-        local_interrupt_0
-=======
         local_interrupt_2_extended,
         local_interrupt_1_extended,
         local_interrupt_0_extended
->>>>>>> 9f2376cf4a024f53776b2883e36abe60c7bdb5b9
     };
 
 endmodule
