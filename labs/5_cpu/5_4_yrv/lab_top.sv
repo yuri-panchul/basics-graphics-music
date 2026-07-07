@@ -338,13 +338,13 @@ module lab_top
         .strobe (local_interrupt_2)
     );
 
-      pulse_on_0_to_1
+      pulse_to_level
     i_pulse_to_level
     (
         .clk,
         .rst,
-        .pulse (local_interrupt_2_toggle),
-        .level (local_interrupt_2)
+        .pulse (local_interrupt_2),
+        .level (local_interrupt_2_toggle)
     );
 
     //------------------------------------------------------------------------
