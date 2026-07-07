@@ -152,18 +152,45 @@ setup_uart ()
 
     stty -F $dev ${extra_stty_arg-}speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
     || error "USB-to-UART is not working"
-
-    #tio $dev || error "Error starting tio $dev"
-
-    #minicom -D $dev -b 115200
-    printf ABCD > $dev
 }
 
 #-----------------------------------------------------------------------------
 
 setup_terminal ()
 {
-    echo setup
+    terminals="minicom picocom putty"
+    available_terminals=
+
+    for term in $terminals 
+    do 
+        is_command_available $term && \
+        available_terminals="$available_terminals $term" 
+    done  
+
+    available_terminals=$(echo "$available_terminals" | sed 's/^ //')
+
+    [ -n "$available_terminals" ] ||
+    error "cannot find the terminal"
+
+    terminal="$available_terminals"
+
+    if [[ "$available_terminals" == *" "* ]]
+    then
+        info "Please select a program to open the terminal"
+        PS3="Your choice (a number): "
+
+        select terminal in $available_terminals
+        do 
+            if [ -z "$terminal" ]; then 
+                info "Invalid program choice, please choose one of the listed numbers again"
+                continue
+            fi
+
+            info "Terminal program selected: $terminal"
+            break
+        done 
+    fi
+
 }
 
 #-----------------------------------------------------------------------------
@@ -171,4 +198,19 @@ setup_terminal ()
 run_terminal_program ()
 {
     setup_uart
+    setup_terminal
+
+    case $terminal in 
+        minicom )
+            minicom -D "$dev" -b 115200
+        ;; 
+
+        picocom ) 
+        picocom -b 115200 --echo "$dev"
+        ;;
+
+        putty ) 
+        putty -serial "$dev" -sercfg 115200 -fn "Monospace 14"
+        ;;
+    esac
 }

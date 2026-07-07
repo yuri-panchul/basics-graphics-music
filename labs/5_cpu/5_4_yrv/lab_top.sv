@@ -140,8 +140,10 @@ module lab_top
 
          `ifdef ALTERA_RESERVED_QIS
              global i_global (.in (muxed_clk_raw), .out (muxed_clk));
-        `else
+         `elsif XILINX_VIVADO
              BUFG   i_bufg   (.I  (muxed_clk_raw), .O   (muxed_clk));
+         `else
+             assign muxed_clk = muxed_clk_raw;
          `endif
     `endif
 
