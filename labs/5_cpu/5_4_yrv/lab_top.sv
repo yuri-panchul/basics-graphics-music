@@ -330,7 +330,7 @@ module lab_top
     wire local_interrupt_2;
 
     strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (1))
+    # (.clk_mhz (clk_mhz), .strobe_hz (100))
     local_timer_interrupt_gen
     (
         .clk,
