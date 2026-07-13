@@ -125,12 +125,20 @@ trap_ack:
         li          t1, MCAUSE_EXCCODE_MASK
         and         t0, t0, t1                 // Isolate interrupt cause
 
-        #ifdef USE_EXTERNAL_INTERRUPT_AS_TIMER_INTERRUPT
-        li          t1, MCAUSE_EXCCODE_MACHINE_EXTERNAL_INTERRUPT
-        #elif defined (USE_YRV_PLATFORM_LOCAL_INTERRUPT_2_AS_TIMER_INTERRUPT)
-        li          t1, MCAUSE_EXCCODE_YRV_PLATFORM_LOCAL_INTERRUPT_2
-        #else
-        li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
+        #if   RISC_V_CORE == RISC_V_CORE_APS
+                li  t1, 32
+
+        #elif RISC_V_CORE == RISC_V_CORE_YRV
+
+            #if     TIMER_INTERRUPT == TIMER_INTERRUPT_USE_EXTERNAL_INTERRUPT
+                li  t1,             MCAUSE_EXCCODE_MACHINE_EXTERNAL_INTERRUPT
+
+            #elif   TIMER_INTERRUPT == TIMER_INTERRUPT_USE_YRV_PLATFORM_LOCAL_INTERRUPT_2
+                li  t1,                     MCAUSE_EXCCODE_YRV_PLATFORM_LOCAL_INTERRUPT_2
+            #else
+                li  t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
+            #endif
+
         #endif
 
         bne         t0, t1, not_timer_interrupt
