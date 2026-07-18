@@ -1,5 +1,3 @@
-// `include "decoder_pkg.sv"
-
 module processor_core (
 
   input  logic        clk_i,
@@ -8,7 +6,7 @@ module processor_core (
   input  logic        stall_i,
   input  logic [31:0] instr_i,
   input  logic [31:0] mem_rd_i,
-  input  logic        irq_req_i,
+  input  logic [15:0] irq_req_i,
 
   output logic [31:0] instr_addr_o,
   output logic [31:0] mem_addr_o,
@@ -16,8 +14,7 @@ module processor_core (
   output logic        mem_req_o,
   output logic        mem_we_o,
   output logic [31:0] mem_wd_o,
-  output logic        irq_ret_o,
-  output logic        trap_o
+  output logic [15:0] irq_ret_o
 );
 
 /*
@@ -160,14 +157,14 @@ csr_controller csr(
   .rs1_data_i(read_data1_o),
   .imm_data_i(imm_Z),
   .read_data_o(csr_wd),
-  .write_enable_i(csr_we_o),
+  .write_enable_i(csr_we_o & !(stall_i | trap)),
   .trap_i(trap),
   .opcode_i(csr_op_o)
 );
 interrupt_controller irq_ctrl(
   .*,
   .exception_i(illegal_instr_o),
-  .mie_i(mie_o[16]),
+  .mie_i(mie_o[31:16]),
   .mret_i(mret_o)
 );
 //=====================================================
@@ -233,7 +230,6 @@ assign instr_addr_o = PC;
 assign mem_wd_o     = read_data2_o;
 assign mem_we_o     = mem_we & !trap;
 assign mem_req_o    = mem_req & !trap;
-assign trap_o       = trap;
 //=====================================================
 
 endmodule

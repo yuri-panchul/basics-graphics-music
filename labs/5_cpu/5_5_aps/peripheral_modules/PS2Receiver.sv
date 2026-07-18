@@ -1,0 +1,93 @@
+//////////////////////////////////////////////////////////////////////////////////
+// Company: Digilent Inc.
+// Engineer: Thomas Kappenman
+//
+// Create Date: 03/03/2015 09:33:36 PM
+// Design Name:
+// Module Name: PS2Receiver
+// Project Name: Nexys4DDR Keyboard Demo
+// Target Devices: Nexys4DDR
+// Tool Versions:
+// Description: PS2 Receiver module used to shift in keycodes from a keyboard plugged into the PS2 port
+//
+// Dependencies:
+//
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// Modified in 2023 by engineers of
+// National Research University of Electronic Technology
+// Nikita Bulavin and Andrei Solodovnikov
+//
+//////////////////////////////////////////////////////////////////////////////////
+
+module PS2Receiver(
+  input  logic        clk_i,
+  input  logic        rst_i,
+  input  logic        kclk_i,
+  input  logic        kdata_i,
+  output logic [7:0]  keycode_o,
+  output              keycode_valid_o
+  );
+
+  logic       flag;
+  logic [3:0] flag_shift;
+  logic       kclkf, kdataf;
+  logic [3:0] cnt;
+
+  assign keycode_valid_o = flag_shift[0] && !flag_shift[2];
+
+debouncer#(100) debounce_kclk(
+  .*,
+  .din_i  (kclk_i),
+  .dout_o (kclkf)
+);
+debouncer#(100) debounce_kdata(
+  .*,
+  .din_i  (kdata_i),
+  .dout_o (kdataf)
+);
+
+always@(posedge clk_i) begin
+  if(rst_i) begin
+    flag_shift <= '0;
+  end
+  else begin
+    flag_shift <= {flag_shift[2:0], flag};
+  end
+end
+
+always_ff @(negedge kclkf or posedge rst_i)begin
+  if(rst_i) begin
+    cnt <= '0;
+  end
+  else if (cnt <= 9) begin
+    cnt <= cnt + 1;
+  end
+  else begin
+    cnt <= '0;
+  end
+end
+
+always_ff @(negedge kclkf or posedge rst_i) begin
+  if(rst_i) begin
+    keycode_o <= '0;
+  end
+  else begin
+    case(cnt)
+      1:keycode_o[0]<=kdataf;
+      2:keycode_o[1]<=kdataf;
+      3:keycode_o[2]<=kdataf;
+      4:keycode_o[3]<=kdataf;
+      5:keycode_o[4]<=kdataf;
+      6:keycode_o[5]<=kdataf;
+      7:keycode_o[6]<=kdataf;
+      8:keycode_o[7]<=kdataf;
+      default: keycode_o <= keycode_o;
+    endcase
+  end
+end
+
+assign flag = cnt == 9;
+
+endmodule

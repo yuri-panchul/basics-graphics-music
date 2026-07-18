@@ -56,167 +56,186 @@ module lab_top
 
     inout        [w_gpio  - 1:0] gpio
 );
-
-    //------------------------------------------------------------------------
-
-    // assign led        = '0;
-    assign abcdefgh   = '0;
-    assign digit      = '0;
-    assign red        = '0;
-    assign green      = '0;
-    assign blue       = '0;
     assign sound      = '0;
-    assign uart_tx    = '1;
 
-    //------------------------------------------------------------------------
-    logic [255:0] req;
-    logic [31:0]  rdata[9];
-    logic         ready[9];
+    /*
+    =====================================================
+    CLK/RST adapter
+    =====================================================
+    */
+    localparam APS_SYS_CLK_MHZ = 10;
+    localparam APS_VGA_CLK_MHZ = 25;
 
-    logic irq_req;
-    logic irq_ret;
-
-    // Instr mem ports signals
-    logic [31:0] instr_addr;
-    logic [31:0] instr;
-
-    // LSU ports signals
-    logic         core_stall;
-    logic         core_req;
-    logic         core_we;
-    logic [ 2:0]  core_size;
-    logic [31:0]  core_wd;
-    logic [31:0]  core_addr;
-    logic [31:0]  core_rd;
-    logic         mem_ready;
-    logic         mem_req;
-    logic         mem_we;
-    logic [ 3:0]  mem_be;
-    logic [31:0]  mem_wd;
-    logic [31:0]  mem_addr;
-    logic [31:0]  mem_rd;
-
-    // ----------------------
-    // Modules instantiations
-
-    instr_mem imem(
-        .read_addr_i(instr_addr),
-        .read_data_o(instr     )
+    logic clk10MHz, clk10MHz_raw;
+    logic clk25MHz, clk25MHz_raw;
+    logic sync_rst;
+    clock_divider #(
+        .FAST_CLK_FREQ(clk_mhz          ),
+        .SLOW_CLK_FREQ(APS_SYS_CLK_MHZ  )
+    ) sys_clk_div (
+        .clk_i(clk),
+        .aresetn_i(!rst),
+        .clk_o(clk10MHz_raw),
+        .rst_o(sync_rst)
     );
-
-    lsu lsu_inst (
-        .clk_i        (slow_clk   ),
-        .rst_i        (rst        ),
-        .core_req_i   (core_req   ),
-        .core_we_i    (core_we    ),
-        .core_size_i  (core_size  ),
-        .core_addr_i  (core_addr  ),
-        .core_wd_i    (core_wd    ),
-        .core_rd_o    (core_rd    ),
-        .core_stall_o (core_stall ),
-        .mem_req_o    (mem_req    ),
-        .mem_we_o     (mem_we     ),
-        .mem_be_o     (mem_be     ),
-        .mem_addr_o   (mem_addr   ),
-        .mem_wd_o     (mem_wd     ),
-        .mem_rd_i     (mem_rd     ),
-        .mem_ready_i  (mem_ready  )
+    clock_divider #(
+        .FAST_CLK_FREQ(clk_mhz          ),
+        .SLOW_CLK_FREQ(APS_VGA_CLK_MHZ  )
+    ) vga_clk_div (
+        .clk_i(clk),
+        .aresetn_i(!rst),
+        .clk_o(clk25MHz_raw),
+        .rst_o()
     );
+    `ifdef SIMULATION
+        `define NO_CLOCK_ROUTING_FOR_SLOW_CLOCK
+    `endif
 
-    logic [31:0] clear_addr;
-    assign clear_addr = {8'd0, mem_addr[23:0]};
+    `ifndef CLOCK_ROUTING_FOR_SLOW_CLOCK
+        `define NO_CLOCK_ROUTING_FOR_SLOW_CLOCK
+    `endif
 
-    logic trap;  // Exposed for demo
+    `ifdef NO_CLOCK_ROUTING_FOR_SLOW_CLOCK
+        assign clk10MHz = clk10MHz_raw;
+        assign clk25MHz = clk25MHz_raw;
+    `else
+        `ifdef ALTERA_RESERVED_QIS
 
-    processor_core core_inst(
-        .clk_i        (slow_clk   ),
-        .rst_i        (rst        ),
-        .instr_addr_o (instr_addr ),
-        .instr_i      (instr      ),
-        .stall_i      (core_stall ),
-        .mem_rd_i     (core_rd    ),
-        .irq_req_i    (irq_req    ),
-        .mem_req_o    (core_req   ),
-        .mem_we_o     (core_we    ),
-        .mem_size_o   (core_size  ),
-        .mem_wd_o     (core_wd    ),
-        .mem_addr_o   (core_addr  ),
-        .irq_ret_o    (irq_ret    ),
-        .trap_o       (trap       )
-    );
+            // "global" is Intel FPGA-specific primitive to route
+            // a signal coming from data into clock tree
 
-    data_mem dmem_inst(
-        .clk_i          (slow_clk   ),
-        .mem_req_i      (req[0]     ),
-        .write_enable_i (mem_we     ),
-        .byte_enable_i  (mem_be     ),
-        .write_data_i   (mem_wd     ),
-        .addr_i         (clear_addr ),
-        .read_data_o    (rdata[0]   ),
-        .ready_o        (ready[0]   )
-    );
+            global i_global (.in (clk10MHz_raw), .out (clk10MHz));
+            global i_global (.in (clk25MHz_raw), .out (clk25MHz));
 
-    sw_sb_ctrl #(.w_sw(w_sw)) sw_inst(
-        .clk_i          (slow_clk   ),
-        .deb_clk_i      (clk        ),
-        .rst_i          (rst        ),
-        .req_i          (req[1]     ),
-        .write_enable_i (mem_we     ),
-        .addr_i         (clear_addr ),
-        .write_data_i   (mem_wd     ),
-        .read_data_o    (rdata[1]   ),
-        .irq_ret_i      (irq_ret    ),
-        .irq_req_o      (irq_req    ),
-        .sw_i           (sw         )
-    );
+        `elsif XILINX_VIVADO
 
-    logic [w_led - 4:0] led_o;
+            // "BUFG" is Xilinx-specific primitive to route
+            // a signal coming from data into clock tree
 
-    led_sb_ctrl #(.w_led(w_led - 3)) led_inst(
-        .clk_i          (slow_clk   ),
-        .rst_i          (rst        ),
-        .req_i          (req[2]     ),
-        .write_enable_i (mem_we     ),
-        .addr_i         (clear_addr ),
-        .write_data_i   (mem_wd     ),
-        .read_data_o    (rdata[2]   ),
-        .led_o          (led_o      )
-    );
+            BUFG i_BUFG (.I (clk10MHz_raw), .O (clk10MHz));
+            BUFG i_BUFG (.I (clk25MHz_raw), .O (clk25MHz));
 
-    assign led = {led_o, trap, 1'(|req), slow_clk};
+        `else
 
-    //=====================================================
+            // `error_Unsupported_synthesis_tool
 
-    assign req = (255'd1 << mem_addr[31:24]) & {{256{mem_req}}};
+            assign clk25MHz = clk25MHz_raw;
 
-    always_comb begin
-    case(mem_addr[31:24])
-        8'd0: mem_rd = rdata[0];
-        8'd1: mem_rd = rdata[1];
-        8'd2: mem_rd = rdata[2];
-        // 8'd3: mem_rd = rdata[3];
-        // 8'd4: mem_rd = rdata[4];
-        // 8'd5: mem_rd = rdata[5];
-        // 8'd6: mem_rd = rdata[6];
-        // 8'd7: mem_rd = rdata[7];
-        // 8'd8: mem_rd = rdata[8];
-        default: mem_rd = '0;
-    endcase
+        `endif
+    `endif
+    //===================================================
+
+    /*
+    =====================================================
+    LED adapter
+    =====================================================
+    */
+    logic [15:0] aps_led;
+    if(w_led > 16) begin
+        assign led[w_led-1:16] = '0;
+        assign led[15:0] = aps_led;
     end
-
-    always_comb begin
-    case(mem_addr[31:24])
-        8'd0: mem_ready = ready[0];
-        8'd1: mem_ready = 1'b1;
-        8'd2: mem_ready = 1'b1;
-        // 8'd3: mem_ready = ready[3];
-        // 8'd4: mem_ready = ready[4];
-        // 8'd5: mem_ready = ready[5];
-        // 8'd6: mem_ready = ready[6];
-        // 8'd7: mem_ready = ready[7];
-        // 8'd8: mem_ready = ready[8];
-        default: mem_ready = '0;
-    endcase
+    else begin
+        assign led = aps_led[0+:w_led];
     end
+    //===================================================
+
+
+
+    /*
+    =====================================================
+    SW adapter
+    =====================================================
+    */
+    logic [15:0] aps_sw;
+    if(w_sw > 16) begin
+        assign aps_sw=sw[15:0];
+    end
+    else begin
+        assign aps_sw[0+:w_sw] = sw;
+    end
+    //===================================================
+
+
+
+    /*
+    =====================================================
+    7seg adapter
+    =====================================================
+    */
+    logic [6:0] hex_led;
+    logic [7:0] hex_sel;
+    assign abcdefgh   = ~{hex_led, 1'b0};
+
+    if(w_digit > 8) begin
+        assign digit[w_digit-1:8] = '0;
+        assign digit[7:0] = ~hex_sel;
+    end else begin
+        assign digit = ~hex_sel[0+:w_digit];
+    end
+    //===================================================
+
+
+
+    /*
+    =====================================================
+    VGA adapter
+    =====================================================
+    */
+    logic [3:0] vga_r;
+    logic [3:0] vga_g;
+    logic [3:0] vga_b;
+    if(w_red > 4) begin
+        assign red      = vga_r << (w_red - 4);
+    end else begin
+        assign red      = vga_r >> (4 - w_red);
+    end
+    if(w_green > 4) begin
+        assign green    = vga_g << (w_green - 4);
+    end else begin
+        assign green    = vga_g >> (4 - w_green);
+    end
+    if(w_blue > 4) begin
+        assign blue     = vga_b << (w_blue - 4);
+    end else begin
+        assign blue     = vga_b >> (4 - w_blue);
+    end
+    //===================================================
+
+
+    processor_system system(
+        .clk10mhz_i     (clk10MHz       ),
+        .clk25175khz_i  (clk25MHz       ),
+        .rst_i          (sync_rst       ),
+
+        .sw_i           (aps_sw         ),
+        .led_o          (aps_led        ),
+
+        .kclk_i         (kclk           ),
+        .kdata_i        (kdata          ),
+
+        .hex_led_o      (hex_led        ),
+        .hex_sel_o      (hex_sel        ),
+
+        .rx_i           (uart_rx        ),
+        .tx_o           (uart_tx        ),
+
+        .vga_r_o        (vga_r          ),
+        .vga_g_o        (vga_g          ),
+        .vga_b_o        (vga_b          ),
+`ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+        .vga_x_i        (x              ),
+        .vga_y_i        (y              ),
+`else
+        .vga_hs_o       (vga_hs         ),
+        .vga_vs_o       (vga_vs         ),
+`endif
+        .tck_i          (),
+        .tms_i          (),
+        .tdi_i          (),
+        .tdo_o          (),
+        .tdo_en_o       ()
+    );
+
 
 endmodule

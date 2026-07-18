@@ -1,7 +1,6 @@
-// `include "memory_pkg.sv"
-
 module data_mem
 import memory_pkg::DATA_MEM_SIZE_WORDS;
+import memory_pkg::DATA_MEM_FILE_NAME;
 (
   input  logic        clk_i,
   input  logic        mem_req_i,
@@ -15,7 +14,7 @@ import memory_pkg::DATA_MEM_SIZE_WORDS;
 assign ready_o = 1'b1;
 logic [31:0] ram [DATA_MEM_SIZE_WORDS];
 
-// TODO: Put here $readmemh
+initial $readmemh(DATA_MEM_FILE_NAME, ram);
 
 logic [31:0] addr;
 assign addr = addr_i[2+:$clog2(DATA_MEM_SIZE_WORDS)];

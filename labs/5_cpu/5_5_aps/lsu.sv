@@ -105,9 +105,7 @@ always_ff @(posedge clk_i) begin
   end
 end
 
-assign core_stall_o = (core_req_i & ~stall) ? 1'b1 :
-                      (mem_ready_i) ? 1'b0 :
-                      stall;
+assign core_stall_o = core_req_i & !(mem_ready_i & stall);
 assign mem_req_o  = core_req_i;
 assign mem_we_o   = core_we_i;
 assign mem_addr_o = core_addr_i;
