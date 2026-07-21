@@ -165,7 +165,7 @@ xilinx_setup_vivado ()
 
     if [ -z "$latest_version_dir" ]
     then
-        error "cannot find any version of Intel FPGA installed in "  \
+        error "cannot find any version of Xilinx Vivado installed in "  \
               "'$vivado_install_parent_dir/$vivado_install_dir'"
     fi
 
@@ -180,7 +180,7 @@ xilinx_setup_vivado ()
 
     if [ "$latest_version_dir" != "$all_version_dirs" ]
     then
-        warning "multiple Intel FPGA versions installed in"  \
+        warning "multiple Xilinx Vivado versions installed in"  \
                 "'$vivado_install_parent_dir/$vivado_install_dir':"  \
                 "'$all_version_dirs'"
 
