@@ -89,6 +89,15 @@ start_running_threads:
         li          t2, MSTATUS_MIE  // Enable interrupts
         csrs        mstatus, t2
 
+        #if   RISC_V_CORE == RISC_V_CORE_APS
+                // Configure timer
+                la  t3, APS_PLATFORM_TIMER_BASE_ADDR
+                li  t4, 10000000               // Timer will be set to 1s delay
+                li  t5, APS_TIMER_MODE_FOREVER // Timer will generate interrupts
+                                               // indefinitely
+                sw, t4, APS_PLATFORM_TIMER_DELAY_LOW_BITS_OFFSET(t3)
+                sw, t5, APS_PLATFORM_TIMER_MODE_OFFSET(t3)
+        #endif
         ret
 
 //----------------------------------------------------------------------------
@@ -127,12 +136,6 @@ trap_ack:
 
         #if   RISC_V_CORE == RISC_V_CORE_APS
                 li  t1, MCAUSE_EXCCODE_APS_PLATFORM_LOCAL_INTERRUPT_8
-                la  t2, APS_PLATFORM_TIMER_BASE_ADDR
-                li  t3, 10000000               // Timer will be set to 1s delay
-                li  t4, APS_TIMER_MODE_FOREVER // Timer will generate interrupts
-                                               // indefinitely
-                sw, t3, APS_PLATFORM_TIMER_DELAY_LOW_BITS_OFFSET(t2)
-                sw, t4, APS_PLATFORM_TIMER_MODE_OFFSET(t2)
 
         #elif RISC_V_CORE == RISC_V_CORE_YRV
 
