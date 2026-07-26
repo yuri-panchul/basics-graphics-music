@@ -301,7 +301,7 @@ end
       .read_data_o          (rdata[0]               ),
       .ready_o              (ready[0]               )
     );
-
+  generate
   if(PLATFORM_SUPPORT_SWITCHES) begin
     sw_sb_ctrl sw_sb_ctrl(
       .clk_i                (sysclk                 ),
@@ -527,5 +527,6 @@ end
     assign jtag2core_rst    = rst;
     assign jtag2bluster_rst = rst;
   end
+  endgenerate
 //=====================================================
 endmodule

@@ -19,7 +19,7 @@ package bluster_pkg;
     Lab_15 tb tasks
 *  -----------------------------------------------------------------------------
 */
-// cadence translate_off
+// synthesis translate_off
   task automatic send_data(input byte mem[$], ref logic clk_i, tx_valid, tx_busy, ref logic [7:0] tx_data);
     @(posedge clk_i);
     for(int i = mem.size()-1; i >=0; i--) begin
@@ -94,5 +94,5 @@ package bluster_pkg;
     send_data(mem, clk_i, tx_valid, tx_busy, tx_data);
     $display("Flashing is complete");
   endtask
-// cadence translate_on
+// synthesis translate_on
 endpackage

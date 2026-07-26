@@ -62,7 +62,7 @@ always_ff @(posedge clk_i) begin
     end
 end
 
-debouncer debouncer_sw[15:0] (
+aps_debouncer debouncer_sw[15:0] (
     .*,
     .din_i(sw_i),
     .dout_o(sw)

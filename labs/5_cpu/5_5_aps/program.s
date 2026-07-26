@@ -2,23 +2,24 @@
 .text
 
 main:
-    li s0, 0x00000001       # Initial pattern: 0b0000...1 (LSB set)
-    li s1, 0x02000000       # Set target address
-    li s2, 0x40             # Maximal shifted value, depends from w_leds
-    li s3, 1                # Timer delay
+    li      s0, 0x08000000      # Timer base address
+    li      s1, 0x02000000      # LEDs base address
+    li      s2, 1               # LED initial value
+    li      s3, 0x10000         # LED overlap value
+    li      t0, 10000000        # Timer incr value
+    mv      t1, t0              # Comparison value
 
-    mv t0, s3               # Reset delay timer
-
-delay_loop:
-    addi t0, t0, -1         # Decrement counter
-    bnez t0, delay_loop     # Loop until counter == 0
-
-    sw s0, 0(s1)            # Store current pattern to address in s1
-    slli s0, s0, 1          # Shift pattern left by 1 bit
-
-    mv t0, s3               # Reset delay timer
-
-    # Reset pattern if s0 == s2
-    bne s0, s2, delay_loop  # Continue if pattern != 0
-    li s0, 0x00000001       # Reset pattern
-    j delay_loop
+loop:                           # loop
+    lw      t2, 0x0(s0)         # until timer value
+    bltu    t2, t1, loop        # pass comparison value
+    add     t1, t1, t0          # then increment comp value
+    bgeu    t1, t0, int_handler # and update LED value
+    mv      t1, t0              # reset comparison value if
+                                # overflow
+int_handler:
+    sw      s2, 0x0(s1)         # set current value to LED
+    slli    s2, s2, 1           # then update next value
+    blt     s2, s3, done        # reset next value if
+    li      s2, 1               # overlap
+done:
+    j       loop                # back to loop

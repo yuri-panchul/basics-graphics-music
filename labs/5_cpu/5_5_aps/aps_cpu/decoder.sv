@@ -25,7 +25,7 @@ logic [6:0] func7;
 logic [4:0] opcode;
 
 logic is_ariphm_op, is_shamt, is_add, is_sr;
-assign is_add = func3 == ALU_ADD;
+assign is_add = func3 == alu_opcodes_pkg::ALU_ADD;
 assign is_shamt = func3[1:0] == 2'b01;
 assign is_sr = func3 == 3'b101;
 assign is_ariphm_op = is_add | is_sr;
@@ -36,7 +36,7 @@ assign opcode = fetched_instr_i[ 6: 2];
 always_comb begin
   a_sel_o         = OP_A_RS1;
   b_sel_o         = OP_B_RS2;
-  alu_op_o        = ALU_ADD;
+  alu_op_o        = alu_opcodes_pkg::ALU_ADD;
   csr_op_o        = 0;
   csr_we_o        = 0;
   mem_req_o       = 0;

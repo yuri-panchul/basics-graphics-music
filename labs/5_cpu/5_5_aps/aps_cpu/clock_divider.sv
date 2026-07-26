@@ -31,11 +31,13 @@ module clock_divider #(
     - FAST_CLK_FREQ должна быть кратна SLOW_CLK_FREQ
     - FAST_CLK_FREQ должна быть выше SLOW_CLK_FREQ
   */
+  generate
   if (FAST_CLK_FREQ % SLOW_CLK_FREQ != 0)
     fast_clk_is_not_multiple_of_slow_clk err1();
 
   if (FAST_CLK_FREQ <= SLOW_CLK_FREQ)
     fast_clk_must_be_greater_than_slow_clk err2();
+  endgenerate
 
   localparam int unsigned HIGH_CYCLES = (DIV + 1) / 2; // ceil(DIV/2)
   localparam int unsigned LOW_CYCLES  = DIV / 2;       // floor(DIV/2)
