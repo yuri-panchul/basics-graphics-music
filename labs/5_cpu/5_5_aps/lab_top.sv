@@ -1,4 +1,5 @@
 `include "config.svh"
+`include "include.svh"
 
 module lab_top
 # (
@@ -112,8 +113,8 @@ module lab_top
             // "BUFG" is Xilinx-specific primitive to route
             // a signal coming from data into clock tree
 
-            BUFG i_BUFG (.I (clk10MHz_raw), .O (clk10MHz));
-            BUFG i_BUFG (.I (clk25MHz_raw), .O (clk25MHz));
+            BUFG i_BUFG10 (.I (clk10MHz_raw), .O (clk10MHz));
+            BUFG i_BUFG25 (.I (clk25MHz_raw), .O (clk25MHz));
 
         `else
 
@@ -131,6 +132,8 @@ module lab_top
     =====================================================
     */
     logic [15:0] aps_led;
+
+generate
     if(w_led > 16) begin
         assign led[w_led-1:16] = '0;
         assign led[15:0] = aps_led;
@@ -138,6 +141,7 @@ module lab_top
     else begin
         assign led = aps_led[0+:w_led];
     end
+endgenerate
     //===================================================
 
 
@@ -148,12 +152,14 @@ module lab_top
     =====================================================
     */
     logic [15:0] aps_sw;
+generate
     if(w_sw > 16) begin
         assign aps_sw=sw[15:0];
     end
     else begin
         assign aps_sw[0+:w_sw] = sw;
     end
+endgenerate
     //===================================================
 
 
@@ -167,12 +173,14 @@ module lab_top
     logic [7:0] hex_sel;
     assign abcdefgh   = ~{hex_led, 1'b0};
 
+generate
     if(w_digit > 8) begin
         assign digit[w_digit-1:8] = '0;
         assign digit[7:0] = ~hex_sel;
     end else begin
         assign digit = ~hex_sel[0+:w_digit];
     end
+endgenerate
     //===================================================
 
 
@@ -185,6 +193,9 @@ module lab_top
     logic [3:0] vga_r;
     logic [3:0] vga_g;
     logic [3:0] vga_b;
+    logic vga_hs;
+    logic vga_vs;
+generate
     if(w_red > 4) begin
         assign red      = vga_r << (w_red - 4);
     end else begin
@@ -200,6 +211,18 @@ module lab_top
     end else begin
         assign blue     = vga_b >> (4 - w_blue);
     end
+endgenerate
+    //===================================================
+
+
+
+    /*
+    =====================================================
+    PS/2 adapter
+    =====================================================
+    */
+    logic kclk;
+    logic kdata;
     //===================================================
 
 

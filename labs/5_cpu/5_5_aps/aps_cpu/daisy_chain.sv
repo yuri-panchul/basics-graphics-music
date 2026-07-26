@@ -19,7 +19,7 @@ assign cause = ready & masked_irq_i;
 
 genvar i;
 generate
-  for(i = 0; i < 15; i++) begin
+  for(i = 0; i < 15; i++) begin : ready_blk
     assign ready[i+1] = ready[i] & !cause[i];
   end
 endgenerate

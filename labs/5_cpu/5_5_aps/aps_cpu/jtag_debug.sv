@@ -234,7 +234,7 @@ module jtag_debug (
     end
   end
 
-  assign tdo_en_o = state inside {SHIFT_IR, SHIFT_DR};
+  assign tdo_en_o = (state == SHIFT_IR) || (state == SHIFT_DR);
 
   always_ff @(negedge tck_i or posedge jtag_rst) begin
     if(jtag_rst) begin
