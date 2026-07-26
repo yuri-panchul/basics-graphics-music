@@ -7,6 +7,8 @@
     `default_nettype none
 `endif
 
+`include "define_gowin_or_nothing.svh"
+
 //----------------------------------------------------------------------------
 
 `ifdef VCS
