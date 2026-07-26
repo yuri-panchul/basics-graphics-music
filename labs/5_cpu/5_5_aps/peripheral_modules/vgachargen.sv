@@ -12,11 +12,11 @@ module vgachargen
   import vgachargen_pkg::*;
 #(
   parameter int unsigned  CLK_FACTOR_25M           = 100 / 25,
-  parameter               CH_T_INIT_FILE_NAME      = "lab_13_vga_ch_t.mem",
+  parameter               CH_T_INIT_FILE_NAME      = "../mem_files/vga_ch_t.mem",
   parameter bit           CH_T_INIT_FILE_IS_BIN    = 1'b1,
-  parameter               CH_MAP_INIT_FILE_NAME    = "lab_13_vga_ch_map.mem",
+  parameter               CH_MAP_INIT_FILE_NAME    = "../mem_files/vga_ch_map.mem",
   parameter bit           CH_MAP_INIT_FILE_IS_BIN  = 1'b0,
-  parameter               COL_MAP_INIT_FILE_NAME   = "lab_13_vga_col_map.mem",
+  parameter               COL_MAP_INIT_FILE_NAME   = "../mem_files/vga_col_map.mem",
   parameter bit           COL_MAP_INIT_FILE_IS_BIN = 1'b0
 ) (
   input  logic        clk_i,             // системный синхроимпульс
@@ -65,7 +65,9 @@ module vgachargen
 `endif
 );
 
+generate
 if (CLK_FACTOR_25M == 0 || CLK_FACTOR_25M > 4) error_unsupported_factor error_unsupported_factor ();
+endgenerate
 
   logic  [3:0] char_map_be_gated;
   assign       char_map_be_gated = char_map_be_i & {4{char_map_we_i & char_map_req_i}};
@@ -384,6 +386,7 @@ module delay #(
   logic [DELAY_BY-1:0][DATA_WIDTH-1:0] data_ff  ;
   logic [DELAY_BY-1:0][DATA_WIDTH-1:0] data_next;
 
+generate
   if   (DELAY_BY == 1) begin
     assign data_next = data_i;
     assign data_o    = data_ff;
@@ -391,6 +394,7 @@ module delay #(
     assign data_next = {data_ff[DELAY_BY-2:0], data_i};
     assign data_o    = data_ff[DELAY_BY-1];
   end
+endgenerate
 
   always_ff @(posedge clk_i or negedge arstn_i) begin
     if (!arstn_i) data_ff <= '0;
@@ -520,7 +524,9 @@ module timing_generator
   logic vga_vs_ff;
   logic vga_vs_next;
 
-  assign vga_vs_next = vstate_next inside {DISPLAY_S, FRONT_S, BACK_S};
+  assign vga_vs_next = (vstate_next == DISPLAY_S) ||
+                       (vstate_next == FRONT_S) ||
+                       (vstate_next == BACK_S);
 
   always_ff @(posedge clk_i or negedge arstn_i) begin
     if      (!arstn_i) vga_vs_ff <= 1'b1;
@@ -530,7 +536,9 @@ module timing_generator
   logic vga_hs_ff;
   logic vga_hs_next;
 
-  assign vga_hs_next = hstate_next inside {DISPLAY_S, FRONT_S, BACK_S};
+  assign vga_hs_next = (hstate_next == DISPLAY_S) ||
+                       (hstate_next == FRONT_S) ||
+                       (hstate_next == BACK_S);
 
   always_ff @(posedge clk_i or negedge arstn_i) begin
     if      (!arstn_i) vga_hs_ff <= 1'b1;
@@ -562,8 +570,8 @@ module true_dual_port_rw_bram #(
   parameter  int unsigned COL_WIDTH        = 8,
   parameter  int unsigned NUM_COLS         = 4,
   parameter  int unsigned ADDR_WIDTH       = 4,
-  localparam int unsigned DATA_WIDTH       = NUM_COLS * COL_WIDTH,
-  localparam int unsigned DEPTH_WORDS      = 2 ** ADDR_WIDTH
+  parameter  int unsigned DATA_WIDTH       = NUM_COLS * COL_WIDTH,
+  parameter  int unsigned DEPTH_WORDS      = 2 ** ADDR_WIDTH
 ) (
   input  logic                  clka_i,
   input  logic                  clkb_i,
@@ -576,6 +584,7 @@ module true_dual_port_rw_bram #(
 );
   logic [DATA_WIDTH-1:0] mem[DEPTH_WORDS];
 
+generate
   if (INIT_FILE_NAME != "") begin                                                     : use_init_file
     if   (INIT_FILE_IS_BIN) initial  $readmemb(INIT_FILE_NAME, mem, 0, DEPTH_WORDS-1);
     else                    initial  $readmemh(INIT_FILE_NAME, mem, 0, DEPTH_WORDS-1);
@@ -584,6 +593,7 @@ module true_dual_port_rw_bram #(
       for (int unsigned i = 0; i < DEPTH_WORDS; ++i) mem[i] = '0;
     end
   end
+endgenerate
 
   always_ff @(posedge clka_i) begin
     for (int i = 0; i < NUM_COLS; ++i) begin
@@ -616,6 +626,7 @@ module vga_block
 );
   logic clk_divider_strb;
 
+generate
 if (CLK_FACTOR_25M > 1) begin
   clk_divider # (
     .DIVISOR (CLK_FACTOR_25M)
@@ -627,6 +638,7 @@ if (CLK_FACTOR_25M > 1) begin
 end else begin
   assign clk_divider_strb = 1'b1;
 end
+endgenerate
 
   timing_generator timing_generator (
     .clk_i,

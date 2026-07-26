@@ -1,8 +1,4 @@
-module rw_instr_mem
-import memory_pkg::INSTR_MEM_SIZE_BYTES;
-import memory_pkg::INSTR_MEM_SIZE_WORDS;
-import memory_pkg::INSTR_MEM_FILE_NAME;
-(
+module rw_instr_mem(
   input  logic        clk_i,
   input  logic [31:0] read_addr_i,
   output logic [31:0] read_data_o,
@@ -11,7 +7,9 @@ import memory_pkg::INSTR_MEM_FILE_NAME;
   input  logic [31:0] write_data_i,
   input  logic        write_enable_i
 );
-
+  import memory_pkg::INSTR_MEM_SIZE_BYTES;
+  import memory_pkg::INSTR_MEM_SIZE_WORDS;
+  import memory_pkg::INSTR_MEM_FILE_NAME;
   logic [31:0] ROM [INSTR_MEM_SIZE_WORDS];
 
   initial $readmemh(INSTR_MEM_FILE_NAME, ROM);

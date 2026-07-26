@@ -1,4 +1,4 @@
-module debouncer #(
+module aps_debouncer #(
     parameter int unsigned DEBOUNCE_CYCLES = 1000
 )(
     input  logic clk_i,

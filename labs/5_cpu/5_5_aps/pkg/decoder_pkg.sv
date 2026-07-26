@@ -53,40 +53,40 @@ package decoder_pkg;
   localparam WB_CSR_DATA     = 2'd2;
 
 
-  /*
-    Hack that makes nested opcodes be
-    visible with just one import of
-    decoder_pkg
-  */
+  // /*
+  //   Hack that makes nested opcodes be
+  //   visible with just one import of
+  //   decoder_pkg
+  // */
 
-  export alu_opcodes_pkg::ALU_OP_WIDTH;
-  export alu_opcodes_pkg::ALU_ADD;
-  export alu_opcodes_pkg::ALU_SUB;
-  export alu_opcodes_pkg::ALU_XOR;
-  export alu_opcodes_pkg::ALU_OR;
-  export alu_opcodes_pkg::ALU_AND;
-  export alu_opcodes_pkg::ALU_SRA;
-  export alu_opcodes_pkg::ALU_SRL;
-  export alu_opcodes_pkg::ALU_SLL;
-  export alu_opcodes_pkg::ALU_LTS;
-  export alu_opcodes_pkg::ALU_LTU;
-  export alu_opcodes_pkg::ALU_GES;
-  export alu_opcodes_pkg::ALU_GEU;
-  export alu_opcodes_pkg::ALU_EQ;
-  export alu_opcodes_pkg::ALU_NE;
-  export alu_opcodes_pkg::ALU_SLTS;
-  export alu_opcodes_pkg::ALU_SLTU;
+  // export alu_opcodes_pkg::ALU_OP_WIDTH;
+  // export alu_opcodes_pkg::ALU_ADD;
+  // export alu_opcodes_pkg::ALU_SUB;
+  // export alu_opcodes_pkg::ALU_XOR;
+  // export alu_opcodes_pkg::ALU_OR;
+  // export alu_opcodes_pkg::ALU_AND;
+  // export alu_opcodes_pkg::ALU_SRA;
+  // export alu_opcodes_pkg::ALU_SRL;
+  // export alu_opcodes_pkg::ALU_SLL;
+  // export alu_opcodes_pkg::ALU_LTS;
+  // export alu_opcodes_pkg::ALU_LTU;
+  // export alu_opcodes_pkg::ALU_GES;
+  // export alu_opcodes_pkg::ALU_GEU;
+  // export alu_opcodes_pkg::ALU_EQ;
+  // export alu_opcodes_pkg::ALU_NE;
+  // export alu_opcodes_pkg::ALU_SLTS;
+  // export alu_opcodes_pkg::ALU_SLTU;
 
-  export csr_pkg::CSR_RW;
-  export csr_pkg::CSR_RS;
-  export csr_pkg::CSR_RC;
-  export csr_pkg::CSR_RWI;
-  export csr_pkg::CSR_RSI;
-  export csr_pkg::CSR_RCI;
-  export csr_pkg::MIE_ADDR;
-  export csr_pkg::MTVEC_ADDR;
-  export csr_pkg::MSCRATCH_ADDR;
-  export csr_pkg::MEPC_ADDR;
-  export csr_pkg::MCAUSE_ADDR;
+  // export csr_pkg::CSR_RW;
+  // export csr_pkg::CSR_RS;
+  // export csr_pkg::CSR_RC;
+  // export csr_pkg::CSR_RWI;
+  // export csr_pkg::CSR_RSI;
+  // export csr_pkg::CSR_RCI;
+  // export csr_pkg::MIE_ADDR;
+  // export csr_pkg::MTVEC_ADDR;
+  // export csr_pkg::MSCRATCH_ADDR;
+  // export csr_pkg::MEPC_ADDR;
+  // export csr_pkg::MCAUSE_ADDR;
 
 endpackage

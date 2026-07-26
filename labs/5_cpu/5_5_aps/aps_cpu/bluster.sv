@@ -56,7 +56,7 @@ logic [7:0] [7:0] flash_size_ascii, flash_addr_ascii;
 // время синтеза схемы развернется в четыре четверки непрерывных присваиваний.
 genvar i;
 generate
-  for(i=0; i < 4; i=i+1) begin
+  for(i=0; i < 4; i=i+1) begin : flash_ascii_blk
     // Данная логика преобразовывает сигналы flash_size и flash_addr,
     // которые представляют собой "сырые" двоичные числа в ASCII-символы[1]
 
@@ -196,7 +196,11 @@ uart_tx tx(
     end
   end
 
-  assign tx_valid = !tx_busy & (state inside {INIT_MSG, SIZE_ACK, FLASH_ACK});
+  assign tx_valid = !tx_busy && (
+    (state == INIT_MSG) ||
+    (state == SIZE_ACK) ||
+    (state == FLASH_ACK)
+  );
 
   always_comb begin
     case(state)

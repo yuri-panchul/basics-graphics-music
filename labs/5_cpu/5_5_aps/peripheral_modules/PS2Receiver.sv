@@ -37,12 +37,12 @@ module PS2Receiver(
 
   assign keycode_valid_o = flag_shift[0] && !flag_shift[2];
 
-debouncer#(100) debounce_kclk(
+aps_debouncer#(100) debounce_kclk(
   .*,
   .din_i  (kclk_i),
   .dout_o (kclkf)
 );
-debouncer#(100) debounce_kdata(
+aps_debouncer#(100) debounce_kdata(
   .*,
   .din_i  (kdata_i),
   .dout_o (kdataf)
