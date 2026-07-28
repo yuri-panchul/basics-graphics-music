@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module daisy_chain(
   input  logic        clk_i,
   input  logic        rst_i,

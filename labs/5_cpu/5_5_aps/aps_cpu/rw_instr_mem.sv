@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module rw_instr_mem(
   input  logic        clk_i,
   input  logic [31:0] read_addr_i,

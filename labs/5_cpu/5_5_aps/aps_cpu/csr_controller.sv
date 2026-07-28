@@ -1,4 +1,4 @@
-// `include "csr_pkg.sv"
+`include "config.svh"
 
 module csr_controller(
 

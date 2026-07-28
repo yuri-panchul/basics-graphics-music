@@ -1,4 +1,4 @@
-// `include "alu_opcodes_pkg.sv"
+`include "config.svh"
 
 module alu(
   input  logic [31:0] a_i,

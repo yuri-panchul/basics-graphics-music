@@ -8,6 +8,8 @@
 See https://github.com/MPSU/APS/blob/master/LICENSE file for licensing details.
 * ------------------------------------------------------------------------------
 */
+`include "config.svh"
+
 module hex_digits(
   input  logic       clk_i,
   input  logic       rst_i,

@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module register_file(
   input  logic        clk_i,
   input  logic        write_enable_i,

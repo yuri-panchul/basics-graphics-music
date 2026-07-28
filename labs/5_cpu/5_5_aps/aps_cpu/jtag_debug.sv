@@ -5,6 +5,8 @@
 // - DR: deterministic scan registers
 //============================================================
 
+`include "config.svh"
+
 module jtag_debug (
   // JTAG
   input  logic trst_i,

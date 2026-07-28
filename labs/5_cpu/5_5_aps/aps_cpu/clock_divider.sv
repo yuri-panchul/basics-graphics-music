@@ -8,6 +8,8 @@
 See https://github.com/MPSU/APS/blob/master/LICENSE file for licensing details.
 * ------------------------------------------------------------------------------
 */
+`include "config.svh"
+
 module clock_divider #(
   parameter int unsigned FAST_CLK_FREQ = 50_000_000,
   parameter int unsigned SLOW_CLK_FREQ = 10_000_000

@@ -20,6 +20,7 @@
 // Nikita Bulavin and Andrei Solodovnikov
 //
 //////////////////////////////////////////////////////////////////////////////////
+`include "config.svh"
 
 module PS2Receiver(
   input  logic        clk_i,

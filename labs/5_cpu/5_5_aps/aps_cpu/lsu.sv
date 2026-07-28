@@ -1,4 +1,4 @@
-// `include "decoder_pkg.sv"
+`include "config.svh"
 
 module lsu(
   input logic clk_i,

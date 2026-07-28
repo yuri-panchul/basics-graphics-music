@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module interrupt_controller(
   input  logic        clk_i,
   input  logic        rst_i,

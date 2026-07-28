@@ -17,6 +17,7 @@
 // cfg_div_i input has been replaced by baudrate_i input signal.
 // The signal cfg_div_i is now controled by baudrate_i input, and this control
 // logic is work from assumption that clk_i is 10 MHz.
+`include "config.svh"
 
 module uart_rx (
         input  logic            clk_i,
