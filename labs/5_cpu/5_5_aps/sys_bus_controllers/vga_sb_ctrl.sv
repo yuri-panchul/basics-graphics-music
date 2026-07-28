@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module vga_sb_ctrl (
   input  logic        clk_i,
   input  logic        rst_i,

@@ -8,6 +8,8 @@
 See https://github.com/MPSU/APS/blob/master/LICENSE file for licensing details.
 * ------------------------------------------------------------------------------
 */
+`include "config.svh"
+
 module vgachargen
   import vgachargen_pkg::*;
 #(

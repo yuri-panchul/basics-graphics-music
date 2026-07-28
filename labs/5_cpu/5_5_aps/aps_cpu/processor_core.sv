@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module processor_core (
 
   input  logic        clk_i,

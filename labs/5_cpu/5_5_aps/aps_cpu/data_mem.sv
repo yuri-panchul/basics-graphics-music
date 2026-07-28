@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module data_mem(
   input  logic        clk_i,
   input  logic        mem_req_i,

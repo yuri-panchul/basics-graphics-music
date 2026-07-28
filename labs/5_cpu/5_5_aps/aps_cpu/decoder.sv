@@ -1,4 +1,4 @@
-// `include "decoder_pkg.sv"
+`include "config.svh"
 
 module decoder (
   input  logic [31:0]  fetched_instr_i,
