@@ -95,8 +95,8 @@ start_running_threads:
                 li  t4, 10000000               // Timer will be set to 1s delay
                 li  t5, APS_TIMER_MODE_FOREVER // Timer will generate interrupts
                                                // indefinitely
-                sw, t4, APS_PLATFORM_TIMER_DELAY_LOW_BITS_OFFSET(t3)
-                sw, t5, APS_PLATFORM_TIMER_MODE_OFFSET(t3)
+                sw  t4, APS_PLATFORM_TIMER_DELAY_LOW_BITS_OFFSET(t3)
+                sw  t5, APS_PLATFORM_TIMER_MODE_OFFSET(t3)
         #endif
         ret
 
