@@ -27,6 +27,19 @@ foreach file [glob ../*.{v,sv}] {
     }
 }
 
+set filelist "../filelist.f"
+
+if {[file exists $filelist]} {
+    set fp [open $filelist r]
+    while {[gets $fp line] >= 0} {
+        if {$line ne ""} {
+            read_verilog -sv ../$line
+        }
+    }
+    close $fp
+}
+
+
 read_verilog -sv [glob $extra_dot_dot../../../peripherals/*.sv]
 
 read_verilog -sv [glob $extra_dot_dot../../../boards/$fpga_board/*.{v,sv}]

@@ -436,7 +436,7 @@ EOF
     $find_to_run  \
         "$main_src_dir" "$board_dir/$fpga_board" "$peripheral_dir" "$lab_dir/common"  \
         -type f -name '*.sv' -not -name tb.sv  \
-        -printf "set_global_assignment -name SYSTEMVERILOG_FILE %f\n"  \
+        -printf "set_global_assignment -name SYSTEMVERILOG_FILE %P\n"  \
         >> "$dir/fpga_project.qsf"
 
     if [ -f "$main_src_dir/extra_project_files.qsf" ] ; then
