@@ -95,8 +95,8 @@ module lab_top
         .w_blue        ( w_blue        ),
 
     // Frequency bands of the spectrum analyzer
-        .freq          ('{132, 152, 174, 200, 230, 264,
-                          303, 348, 400, 458, 525, 600})
+        .freq          ({14'd600, 14'd525, 14'd458, 14'd400, 14'd348, 14'd303,
+                         14'd264, 14'd230, 14'd200, 14'd174, 14'd152, 14'd132})
     )
     i_spectrum
     (
