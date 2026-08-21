@@ -191,9 +191,112 @@ riscv_software_toolchain_setup ()
 
 #-----------------------------------------------------------------------------
 
+riscv_create_core_select_file ()
+{
+    > "$select_file"
+
+    for i_riscv_core in $available_riscv_cores
+    do
+        comment="# "
+        [ $i_riscv_core == $riscv_core ] && comment=""
+        printf "$comment%s\n" "$i_riscv_core" >> "$select_file"
+    done
+
+    info "Created a RISC-V core selection file: \"$select_file\""
+}
+
+#-----------------------------------------------------------------------------
+
+riscv_setup_core_for_software ()
+{
+    # Check path if inside CPU core tree
+
+    #-------------------------------------------------------------------------
+
+    # Outside CPU code tree
+
+    select_file="$package_dir/riscv_core_selection"
+
+    #-------------------------------------------------------------------------
+
+    if [[ $script =~ choose.*riscv_core ]]
+    then
+        offer_to_create_a_new_riscv_core_select_file=1
+    else
+        offer_to_create_a_new_riscv_core_select_file=0
+    fi
+
+    #-------------------------------------------------------------------------
+
+    current_board_message=
+
+    if [ -f "$select_file" ]
+    then
+        # Consider making it more simple
+        # riscv_core=$(grep -m 1 -o '^[[:alnum:]_]*$' "$select_file" || true)
+
+        riscv_core=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
+        select_file_contents=$(cat "$select_file")
+
+        if [ -z "$riscv_core" ] ; then
+            offer_to_create_a_new_riscv_core_select_file=1
+        elif [ $offer_to_create_a_new_riscv_core_select_file = 1 ] ; then
+            current_board_message="The currently selected RISC-V cores: $riscv_core. "
+        fi
+    fi
+
+    #-------------------------------------------------------------------------
+
+    # TODO: Remove else after testing on Linux and Windows
+
+    riscv_core_dir="$package_dir/labs/5_cpu"
+
+    if [[ "$OSTYPE" = "darwin"*   ]] ; then
+      available_riscv_cores=$($find_to_run "$riscv_core_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % -L 1 basename '%' | sort | tr "\r\n" " ")
+    else
+      available_riscv_cores=$($find_to_run "$riscv_core_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
+    fi
+
+    if    ! [ -f "$select_file" ]  \
+       ||   [ $offer_to_create_a_new_riscv_core_select_file = 1 ]
+    then
+        info "${current_board_message}Please select a RISC-V core amoung the following supported:"
+        PS3="Your choice (a number): "
+
+        select riscv_core in $available_riscv_cores exit
+        do
+            if [ -z "$riscv_core" ] ; then
+                info "Invalid RISC-V core choice, please choose one of the listed numbers again"
+                continue
+            fi
+
+            if [ $riscv_core == "exit" ] ; then
+                info "a new RISC-V core is not selected, please run the script again"
+                exit 0
+            fi
+
+            info "RISC-V core selected: $riscv_core"
+            break
+        done
+
+        riscv_create_core_select_file
+    fi
+
+    if ! [[ " $available_riscv_cores " =~ " $riscv_core " ]] ; then
+        # This error may happen if people mess with the selection file
+
+        error "The selected RISC-V core $riscv_core"  \
+              "is not one of the available boards: $available_riscv_cores"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
 riscv_software_toolchain_run ()
 {
     [ -f ../$linker_script ] || error "no $linker_script in the directory"
+
+    riscv_setup_core_for_software
 
     src=
 
