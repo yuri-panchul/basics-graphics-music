@@ -368,3 +368,10 @@ riscv_upload_software_to_the_board_using_uart ()
 
     cat $program_mem32 > $dev || error "Error sending '$program_mem32' to $dev"
 }
+
+#-----------------------------------------------------------------------------
+
+riscv_choose_another_core_for_software
+{
+    echo $0 riscv_choose_another_core_for_software
+}

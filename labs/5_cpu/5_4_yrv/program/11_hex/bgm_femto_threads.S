@@ -1,4 +1,4 @@
-#include "risc_v_cpu_config.h"
+#include "riscv_cpu_config.h"
 #include "csr_masks.h"
 #include "bgm_femto_threads.h"
 #include "memory_mapped_registers.h"
