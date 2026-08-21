@@ -193,6 +193,8 @@ riscv_software_toolchain_setup ()
 
 riscv_create_core_select_file ()
 {
+    local select_file="$0"
+
     > "$select_file"
 
     for i_riscv_core in $available_riscv_cores
@@ -209,13 +211,25 @@ riscv_create_core_select_file ()
 
 riscv_setup_core_for_software ()
 {
-    # Check path if inside CPU core tree
+    available_riscv_cores="aps yrv picorv32"
+
+    #-------------------------------------------------------------------------
+
+    for riscv_core in $available_riscv_cores
+    do
+        if [[ "$PWD" =~ ^$lab_dir ]] &&
+           [[ "$PWD" =~ _$riscv_core/program ]]
+        then
+            info "RISC-V core selected: $riscv_core, based on directory '$PWD'"
+            return
+        fi
+    done
 
     #-------------------------------------------------------------------------
 
     # Outside CPU code tree
 
-    select_file="$package_dir/riscv_core_selection"
+    local select_file="$package_dir/riscv_core_selection"
 
     #-------------------------------------------------------------------------
 
@@ -247,16 +261,6 @@ riscv_setup_core_for_software ()
 
     #-------------------------------------------------------------------------
 
-    # TODO: Remove else after testing on Linux and Windows
-
-    riscv_core_dir="$package_dir/labs/5_cpu"
-
-    if [[ "$OSTYPE" = "darwin"*   ]] ; then
-      available_riscv_cores=$($find_to_run "$riscv_core_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % -L 1 basename '%' | sort | tr "\r\n" " ")
-    else
-      available_riscv_cores=$($find_to_run "$riscv_core_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
-    fi
-
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_riscv_core_select_file = 1 ]
     then
@@ -278,8 +282,6 @@ riscv_setup_core_for_software ()
             info "RISC-V core selected: $riscv_core"
             break
         done
-
-        riscv_create_core_select_file
     fi
 
     if ! [[ " $available_riscv_cores " =~ " $riscv_core " ]] ; then
@@ -288,6 +290,8 @@ riscv_setup_core_for_software ()
         error "The selected RISC-V core $riscv_core"  \
               "is not one of the available boards: $available_riscv_cores"
     fi
+
+    info "RISC-V core selected: $riscv_core"
 }
 
 #-----------------------------------------------------------------------------
@@ -316,6 +320,7 @@ riscv_software_toolchain_run ()
     # Check with all variants of GCC
 
     $riscv_gcc \
+        -DRISC_V_CORE=RISC_V_CORE_${riscv_core^^} \
         -ffreestanding \
         -fverbose-asm \
         -mabi=ilp32 \
