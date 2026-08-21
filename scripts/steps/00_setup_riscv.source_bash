@@ -279,7 +279,7 @@ riscv_setup_core_for_software ()
                 exit 0
             fi
 
-            info "RISC-V core selected: $riscv_core"
+            riscv_create_core_select_file "$select_file"
             break
         done
     fi
