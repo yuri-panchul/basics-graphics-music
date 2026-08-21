@@ -371,7 +371,7 @@ riscv_upload_software_to_the_board_using_uart ()
 
 #-----------------------------------------------------------------------------
 
-riscv_choose_another_core_for_software
+riscv_choose_another_core_for_software ()
 {
     echo $0 riscv_choose_another_core_for_software
 }
