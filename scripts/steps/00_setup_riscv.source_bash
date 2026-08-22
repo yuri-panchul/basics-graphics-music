@@ -191,9 +191,116 @@ riscv_software_toolchain_setup ()
 
 #-----------------------------------------------------------------------------
 
+riscv_create_core_select_file ()
+{
+    local select_file="$1"
+
+    > "$select_file"
+
+    for i_riscv_core in $available_riscv_cores
+    do
+        comment="# "
+        [ $i_riscv_core == $riscv_core ] && comment=""
+        printf "$comment%s\n" "$i_riscv_core" >> "$select_file"
+    done
+
+    info "Created a RISC-V core selection file: \"$select_file\""
+}
+
+#-----------------------------------------------------------------------------
+
+riscv_setup_core_for_software ()
+{
+    available_riscv_cores="aps yrv picorv32"
+
+    #-------------------------------------------------------------------------
+
+    for riscv_core in $available_riscv_cores
+    do
+        if [[ "$PWD" =~ ^$lab_dir ]] &&
+           [[ "$PWD" =~ _$riscv_core/program ]]
+        then
+            info "RISC-V core selected: $riscv_core, based on directory '$PWD'"
+            return
+        fi
+    done
+
+    #-------------------------------------------------------------------------
+
+    # Outside CPU code tree
+
+    local select_file="$package_dir/riscv_core_selection"
+
+    #-------------------------------------------------------------------------
+
+    if [[ $script =~ choose.*riscv_core ]]
+    then
+        offer_to_create_a_new_riscv_core_select_file=1
+    else
+        offer_to_create_a_new_riscv_core_select_file=0
+    fi
+
+    #-------------------------------------------------------------------------
+
+    current_board_message=
+
+    if [ -f "$select_file" ]
+    then
+        # Consider making it more simple
+        # riscv_core=$(grep -m 1 -o '^[[:alnum:]_]*$' "$select_file" || true)
+
+        riscv_core=$(grep -o '^[^#/-]*' "$select_file" | grep -m 1 -o '^[[:alnum:]_]*' || true)
+        select_file_contents=$(cat "$select_file")
+
+        if [ -z "$riscv_core" ] ; then
+            offer_to_create_a_new_riscv_core_select_file=1
+        elif [ $offer_to_create_a_new_riscv_core_select_file = 1 ] ; then
+            current_board_message="The currently selected RISC-V cores: $riscv_core. "
+        fi
+    fi
+
+    #-------------------------------------------------------------------------
+
+    if    ! [ -f "$select_file" ]  \
+       ||   [ $offer_to_create_a_new_riscv_core_select_file = 1 ]
+    then
+        info "${current_board_message}Please select a RISC-V core amoung the following supported:"
+        PS3="Your choice (a number): "
+
+        select riscv_core in $available_riscv_cores exit
+        do
+            if [ -z "$riscv_core" ] ; then
+                info "Invalid RISC-V core choice, please choose one of the listed numbers again"
+                continue
+            fi
+
+            if [ $riscv_core == "exit" ] ; then
+                info "a new RISC-V core is not selected, please run the script again"
+                exit 0
+            fi
+
+            riscv_create_core_select_file "$select_file"
+            break
+        done
+    fi
+
+    if ! [[ " $available_riscv_cores " =~ " $riscv_core " ]] ; then
+        # This error may happen if people mess with the selection file
+
+        error "The selected RISC-V core $riscv_core"  \
+              "is not one of the available boards: $available_riscv_cores"
+    fi
+
+    info "RISC-V core selected: $riscv_core"
+}
+
+#-----------------------------------------------------------------------------
+
 riscv_software_toolchain_run ()
 {
     [ -f ../$linker_script ] || error "no $linker_script in the directory"
+
+    riscv_setup_core_for_software
 
     src=
 
@@ -213,6 +320,7 @@ riscv_software_toolchain_run ()
     # Check with all variants of GCC
 
     $riscv_gcc \
+        -DRISC_V_CORE=RISC_V_CORE_${riscv_core^^} \
         -ffreestanding \
         -fverbose-asm \
         -mabi=ilp32 \
@@ -367,4 +475,11 @@ riscv_upload_software_to_the_board_using_uart ()
     || error "USB-to-UART is not working"
 
     cat $program_mem32 > $dev || error "Error sending '$program_mem32' to $dev"
+}
+
+#-----------------------------------------------------------------------------
+
+riscv_choose_another_core_for_software ()
+{
+    echo $0 riscv_choose_another_core_for_software
 }
