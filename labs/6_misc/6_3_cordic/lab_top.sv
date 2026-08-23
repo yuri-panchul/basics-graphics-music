@@ -81,7 +81,7 @@ module lab_top
     wire signed [15:0] cos_out;
     wire signed [15:0] sin_out;
 
-    cordic i_cordic 
+    cordic i_cordic
     (
         .clk     ( slow_clk ),
         .rst,
@@ -95,6 +95,9 @@ module lab_top
         .cos_out,
         .sin_out
     );
+
+    assign led [2] = key [0];
+    assign led [7] = slow_clk;
 
     //------------------------------------------------------------------------
 
@@ -140,7 +143,9 @@ module lab_top
 
     wire [angle_array_index_width - 1:0] angle_index;
 
-    counter_with_enable # (angle_array_index_width) i_counter
+    counter_with_enable
+    # (angle_array_index_width)
+    i_counter
     (
         .clk    (slow_clk),
         .rst,
