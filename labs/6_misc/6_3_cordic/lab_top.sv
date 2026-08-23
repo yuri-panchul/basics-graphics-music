@@ -72,76 +72,113 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    localparam width = 12;
+    logic              start;
+    logic       [15:0] angle;
 
-    // Upstream
+    wire               calc;
+    wire               finish;
 
-    wire               up_vld   = key [1];
-    wire               up_rdy;
-    wire [width - 1:0] up_data;
+    wire signed [15:0] cos_out;
+    wire signed [15:0] sin_out;
 
-    // Downstream
-
-    wire               down_vld;
-    wire               down_rdy = key [0];
-    wire [width - 1:0] down_data;
-
-    //--------------------------------------------------------------------------
-
-    localparam max_cnt   = 5,
-               cnt_width = $clog2 (max_cnt);
-
-    logic [cnt_width - 1:0] cnt;
-
-    always_ff @ (posedge slow_clk or posedge rst)
-        if (rst)
-            cnt <= '0;
-        else if (up_vld & up_rdy)
-            cnt <= (cnt == max_cnt ? '0 : cnt + 1'd1);
-
-    assign up_data = width' (cnt);
-
-    //--------------------------------------------------------------------------
-
-    pow_5_pipelined_with_credit_counter
-    # (.width (width))
-    pow_5
+    cordic i_cordic (.*);
     (
-        .clk        ( slow_clk  ),
-        .rst        ( rst       ),
+        .clk     ( slow_clk ),
+        .rst,
 
-        .up_vld     ( up_vld    ),
-        .up_rdy     ( up_rdy    ),
-        .up_data    ( up_data   ),
+        .start   ( key [0]  ),
+        .angle,
 
-        .down_vld   ( down_vld  ),
-        .down_rdy   ( down_rdy  ),
-        .down_data  ( down_data )
+        .calc    ( led [1]  ),
+        .finish  ( led [0]  ),
+
+        .cos_out,
+        .sin_out
     );
 
-    //--------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-    wire [7:0] abcdefgh_pre;
+    `ifdef __ICARUS__
+
+        localparam angle_array_index_width = 4,
+                   angle_array_length      = 1 << angle_array_index_width;
+
+        logic [15:0] angle_const_array [0:angle_array_length - 1];
+
+        assign angle_const_array [ 0] = 4'h0002;
+        assign angle_const_array [ 1] = 4'h0006;
+        assign angle_const_array [ 2] = 4'h000d;
+        assign angle_const_array [ 3] = 4'h000b;
+        assign angle_const_array [ 4] = 4'h0007;
+        assign angle_const_array [ 5] = 4'h000e;
+        assign angle_const_array [ 6] = 4'h000c;
+        assign angle_const_array [ 7] = 4'h0004;
+        assign angle_const_array [ 8] = 4'h0001;
+        assign angle_const_array [ 9] = 4'h0000;
+        assign angle_const_array [10] = 4'h0009;
+        assign angle_const_array [11] = 4'h000a;
+        assign angle_const_array [12] = 4'h000f;
+        assign angle_const_array [13] = 4'h0005;
+        assign angle_const_array [14] = 4'h0008;
+        assign angle_const_array [15] = 4'h0003;
+
+    `else
+
+        // New SystemVerilog syntax for array assignment
+
+        wire [15:0] angle_const_array [0:angle_array_length - 1] =
+        '{
+            4'h0002, 4'h0006, 4'h000d, 4'h000b,
+            4'h0007, 4'h000e, 4'h000c, 4'h0004,
+            4'h0001, 4'h0000, 4'h0009, 4'h000a,
+            4'h000f, 4'h0005, 4'h0008, 4'h0003
+        };
+
+    `endif
+
+    //------------------------------------------------------------------------
+
+    wire [width - 1:0] angle_index;
+
+    counter_with_enable # (width) i_counter
+    (
+        .clk    (slow_clk),
+        .rst,
+        .enable (start),
+        .cnt    (angle_index)
+    );
+
+    assign angle = angle_const_array [angle_index];
+
+    //------------------------------------------------------------------------
+
+    logic [15:0] angle_sticky;
+    logic [15:0] sin_out_sticky;
+
+    always_ff @ (posedge clk)
+        if (rst)
+        begin
+            angle_sticky   <= '0;
+            sin_out_sticky <= '0;
+        end
+        else
+        begin
+            if (start)
+                angle_sticky <= angle;
+
+             if (calc | finish)
+                sin_out_sticky <= sin_out;
+        end
 
     seven_segment_display # (w_digit) i_display
     (
-        .clk      (clk),
-        .number   ({ up_data [3:0], down_data [11:0] }),
-        .dots     ('0),
-        .abcdefgh (abcdefgh_pre),
-        .digit    (digit),
-        .*
+        .clk,
+        .rst,
+        .number ({ angle_sticky, sin_out_sticky }),
+        .dots ('0),
+        .abcdefgh,
+        .digit
     );
-
-    localparam sign_nothing = 8'b00000000;
-
-    assign abcdefgh =
-          ( digit [3]   != 1'b0    & ~ up_rdy   )
-        | ( digit [2:0] !=  3'b000 & ~ down_vld )
-        |   digit [3:0] == 4'b0000
-      ? sign_nothing : abcdefgh_pre;
-
-    assign led = w_led' ({ up_vld, up_rdy, down_vld, down_rdy });
 
 endmodule
 
