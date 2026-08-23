@@ -72,7 +72,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic              start;
+    wire               start = key [0];
     logic       [15:0] angle;
 
     wire               calc;
@@ -81,12 +81,12 @@ module lab_top
     wire signed [15:0] cos_out;
     wire signed [15:0] sin_out;
 
-    cordic i_cordic (.*);
+    cordic i_cordic 
     (
         .clk     ( slow_clk ),
         .rst,
 
-        .start   ( key [0]  ),
+        .start,
         .angle,
 
         .calc    ( led [1]  ),
@@ -98,10 +98,10 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    `ifdef __ICARUS__
+    localparam angle_array_index_width = 4,
+               angle_array_length      = 1 << angle_array_index_width;
 
-        localparam angle_array_index_width = 4,
-                   angle_array_length      = 1 << angle_array_index_width;
+    `ifdef __ICARUS__
 
         logic [15:0] angle_const_array [0:angle_array_length - 1];
 
@@ -138,9 +138,9 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [width - 1:0] angle_index;
+    wire [angle_array_index_width - 1:0] angle_index;
 
-    counter_with_enable # (width) i_counter
+    counter_with_enable # (angle_array_index_width) i_counter
     (
         .clk    (slow_clk),
         .rst,
@@ -155,7 +155,7 @@ module lab_top
     logic [15:0] angle_sticky;
     logic [15:0] sin_out_sticky;
 
-    always_ff @ (posedge clk)
+    always_ff @ (posedge slow_clk)
         if (rst)
         begin
             angle_sticky   <= '0;
@@ -166,7 +166,7 @@ module lab_top
             if (start)
                 angle_sticky <= angle;
 
-             if (calc | finish)
+            if (calc | finish)
                 sin_out_sticky <= sin_out;
         end
 
