@@ -1,0 +1,4 @@
+DEVICE_PART="up5k"
+DEVICE_PACK="sg48"
+BOARD="ice40_generic"
+SYNTH_CMD="synth_ice40 -dsp -noabc9"
