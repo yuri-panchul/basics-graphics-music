@@ -84,19 +84,21 @@ module lab_top
     cordic i_cordic
     (
         .clk     ( slow_clk ),
-        .rst,
+        .rst     ( rst ),
 
-        .start,
-        .angle,
+        .start   ( start ),
+        .angle   ( angle ),
 
-        .calc    ( led [1]  ),
-        .finish  ( led [0]  ),
+        .calc    ( calc ),
+        .finish  ( finish ),
 
-        .cos_out,
-        .sin_out
+        .cos_out ( cos_out ),
+        .sin_out ( sin_out )
     );
 
-    assign led [2] = key [0];
+    assign led [0] = finish;
+    assign led [1] = calc;
+    assign led [2] = start;
     assign led [7] = slow_clk;
 
     //------------------------------------------------------------------------
@@ -108,22 +110,22 @@ module lab_top
 
         logic [15:0] angle_const_array [0:angle_array_length - 1];
 
-        assign angle_const_array [ 0] = 4'h0002;
-        assign angle_const_array [ 1] = 4'h0006;
-        assign angle_const_array [ 2] = 4'h000d;
-        assign angle_const_array [ 3] = 4'h000b;
-        assign angle_const_array [ 4] = 4'h0007;
-        assign angle_const_array [ 5] = 4'h000e;
-        assign angle_const_array [ 6] = 4'h000c;
-        assign angle_const_array [ 7] = 4'h0004;
-        assign angle_const_array [ 8] = 4'h0001;
-        assign angle_const_array [ 9] = 4'h0000;
-        assign angle_const_array [10] = 4'h0009;
-        assign angle_const_array [11] = 4'h000a;
-        assign angle_const_array [12] = 4'h000f;
-        assign angle_const_array [13] = 4'h0005;
-        assign angle_const_array [14] = 4'h0008;
-        assign angle_const_array [15] = 4'h0003;
+            assign angle_const_array [ 0] = 16'h0000; //  0 degrees
+            assign angle_const_array [ 1] = 16'h0444; //  6 degrees
+            assign angle_const_array [ 2] = 16'h0889; // 12 degrees
+            assign angle_const_array [ 3] = 16'h0ccd; // 18 degrees
+            assign angle_const_array [ 4] = 16'h1111; // 24 degrees
+            assign angle_const_array [ 5] = 16'h1555; // 30 degrees
+            assign angle_const_array [ 6] = 16'h199a; // 36 degrees
+            assign angle_const_array [ 7] = 16'h1dde; // 42 degrees
+            assign angle_const_array [ 8] = 16'h2222; // 48 degrees
+            assign angle_const_array [ 9] = 16'h2666; // 54 degrees
+            assign angle_const_array [10] = 16'h2aab; // 60 degrees
+            assign angle_const_array [11] = 16'h2eef; // 66 degrees
+            assign angle_const_array [12] = 16'h3333; // 72 degrees
+            assign angle_const_array [13] = 16'h3777; // 78 degrees
+            assign angle_const_array [14] = 16'h3bbc; // 84 degrees
+            assign angle_const_array [15] = 16'h4000; // 90 degrees
 
     `else
 
@@ -131,10 +133,22 @@ module lab_top
 
         wire [15:0] angle_const_array [0:angle_array_length - 1] =
         '{
-            4'h0002, 4'h0006, 4'h000d, 4'h000b,
-            4'h0007, 4'h000e, 4'h000c, 4'h0004,
-            4'h0001, 4'h0000, 4'h0009, 4'h000a,
-            4'h000f, 4'h0005, 4'h0008, 4'h0003
+            16'h0000, //  0 degrees
+            16'h0444, //  6 degrees
+            16'h0889, // 12 degrees
+            16'h0ccd, // 18 degrees
+            16'h1111, // 24 degrees
+            16'h1555, // 30 degrees
+            16'h199a, // 36 degrees
+            16'h1dde, // 42 degrees
+            16'h2222, // 48 degrees
+            16'h2666, // 54 degrees
+            16'h2aab, // 60 degrees
+            16'h2eef, // 66 degrees
+            16'h3333, // 72 degrees
+            16'h3777, // 78 degrees
+            16'h3bbc, // 84 degrees
+            16'h4000  // 90 degrees
         };
 
     `endif
@@ -142,15 +156,16 @@ module lab_top
     //------------------------------------------------------------------------
 
     wire [angle_array_index_width - 1:0] angle_index;
+    wire accept_start = start & ~calc;
 
     counter_with_enable
     # (angle_array_index_width)
     i_counter
     (
-        .clk    (slow_clk),
-        .rst,
-        .enable (start),
-        .cnt    (angle_index)
+        .clk    ( slow_clk ),
+        .rst    ( rst ),
+        .enable ( accept_start ),
+        .cnt    ( angle_index )
     );
 
     assign angle = angle_const_array [angle_index];
@@ -161,6 +176,7 @@ module lab_top
     logic [15:0] sin_out_sticky;
 
     always_ff @ (posedge slow_clk)
+    begin
         if (rst)
         begin
             angle_sticky   <= '0;
@@ -168,12 +184,13 @@ module lab_top
         end
         else
         begin
-            if (start)
+            if (accept_start)
                 angle_sticky <= angle;
 
-            if (calc | finish)
+            if (finish)
                 sin_out_sticky <= sin_out;
         end
+    end
 
     seven_segment_display # (w_digit) i_display
     (
