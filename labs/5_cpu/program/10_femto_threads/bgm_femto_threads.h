@@ -1,5 +1,6 @@
 #ifndef BGM_FEMTO_THREADS_H
 #define BGM_FEMTO_THREADS_H
+#include <stdbool.h>
 
 //----------------------------------------------------------------------------
 // Limits and sizes
@@ -96,7 +97,7 @@
 #ifndef __ASSEMBLER__
 
 typedef void (* pointer_to_void_function_no_arguments) ();
-#include <stdbool.h>
+
 extern bool define_thread (void (* func) ());
 extern bool define_thread (pointer_to_void_function_no_arguments func);
 

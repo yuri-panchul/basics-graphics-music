@@ -6,7 +6,7 @@
 #define RISCV_CORE_PICORV32  3
 
 #ifndef RISCV_CORE
-  #define RISCV_CORE RISCV_CORE_APS
+    #define RISCV_CORE RISCV_CORE_APS
 #endif
 
 #define TIMER_INTERRUPT_USE_EXTERNAL_INTERRUPT              1
