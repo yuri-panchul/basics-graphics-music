@@ -52,17 +52,31 @@ SECTIONS
 
     = 0
 
-    # TODO: Consider ALIGN (8) to be compatible with 64-bit cores
+    # ------------------------------------------------------------------
+    # Data image
+    #
+    # VMA: data_mem (RAM), starting at 0x00000000
+    # LMA: 0x00800000
+    #
+    # .rodata, .data and .sdata form one contiguous load image.
+    # ------------------------------------------------------------------
 
-    .rodata : AT (0x00800000)
+    .data_image : AT (0x00800000)
     {
+        __data_image_start = .;
+
+        # .rodata
+
+        __rodata_start = .;
         * (.rodata)
-    } > data_mem
+        __rodata_end = .;
 
-    .data : ALIGN (4)
-    {
+        # .data
+
+        . = ALIGN (4);
+        __data_start = .;
         * (.data)
-    }
+        __data_end = .;
 
     # .sdata and .sbss must be contiguous for the Linker Relaxation to work
     #
@@ -71,11 +85,13 @@ SECTIONS
     # https://github.com/bouffalolab/bl_iot_sdk/blob/master/components/platform/soc/bl602/bl602/evb/ld/ram.ld
     # https://github.com/riscv-mcu/GD32VF103_Firmware_Library/blob/master/Firmware/RISCV/env_Eclipse/GD32VF103x4.lds
 
-    .sdata : ALIGN (4)
-    {
+        . = ALIGN (4);
         __sdata_start = .;
         PROVIDE (__global_pointer$ = . + 0x800);
         * (.sdata)
+        __sdata_end = .;
+
+        __data_image_end = .;
     } > data_mem
 
     .sbss : ALIGN (4)
@@ -106,7 +122,7 @@ SECTIONS
     # ALIGN (16) from https://docs.riscv.org/reference/abi/riscv-cc-c-cpp-type-details.html
     # https://riscv.org/wp-content/uploads/2024/12/riscv-calling.pdf similar stack
 
-    .trapframe (NOLOAD) : ALIGN (16)  # inspired by xv6, a core from MIT
+    .trapframe (NOLOAD) : ALIGN (16) # inspired by xv6, a core from MIT
     {
         __trapframe_start = .;
         . += TRAPFRAME_SIZE;
@@ -125,6 +141,8 @@ SECTIONS
 
     /DISCARD/ :
     {
+        * (.eh_frame)
+        * (.eh_frame_hdr)
         * (.note.gnu.build-id)
         * (.note.GNU-stack)
         * (.riscv.attributes)

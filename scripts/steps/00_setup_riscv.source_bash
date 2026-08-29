@@ -35,14 +35,13 @@ program_mem32=program.mem32
 
 riscv_find_linker_script ()
 {
+    # First argument if present, otherwise ..
+    local dir="${1:-..}"
     find_opt="-mindepth 1 -maxdepth 1 -type f -name *.ld -print"
-
-    linker_script=$($find_to_run .. $find_opt | head -1)
+    linker_script=$($find_to_run "$dir" $find_opt | head -1)
     [ -n "$linker_script" ] || return 0
 
-    linker_script=$(basename "$linker_script")
-
-    all_linker_scripts=$($find_to_run .. $find_opt | xargs basename | xargs echo)
+    all_linker_scripts=$($find_to_run "$dir" $find_opt | xargs echo)
 
     if [ "$linker_script" != "$all_linker_scripts" ]
     then
@@ -113,6 +112,7 @@ riscv_try_install_dir ()
 
 riscv_software_toolchain_setup ()
 {
+    # REMOVE?
     riscv_find_linker_script
 
     [ -n "${linker_script-}" ] || return 0
@@ -264,7 +264,7 @@ riscv_setup_core_for_software ()
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_riscv_core_select_file = 1 ]
     then
-        info "${current_board_message}Please select a RISC-V core amoung the following supported:"
+        info "${current_board_message}Please select a RISC-V core among the following supported:"
         PS3="Your choice (a number): "
 
         select riscv_core in $available_riscv_cores exit
@@ -292,15 +292,17 @@ riscv_setup_core_for_software ()
     fi
 
     info "RISC-V core selected: $riscv_core"
+    cpu_dirs=( "$lab_dir"/5_cpu/5_*"$riscv_core" )
+    cpu_dir="${cpu_dirs[0]:-0}"
 }
 
 #-----------------------------------------------------------------------------
 
 riscv_software_toolchain_run ()
 {
-    [ -f ../$linker_script ] || error "no $linker_script in the directory"
-
     riscv_setup_core_for_software
+    riscv_find_linker_script $cpu_dir/program
+    [ -f $linker_script ] || error "no $linker_script in the directory"
 
     src=
 
@@ -314,13 +316,14 @@ riscv_software_toolchain_run ()
 
     [ -n "$src" ] || error "no .s, .S, .c or .C files in the directory"
 
-    cp "../$linker_script" linker_script.ld
+    cp "$linker_script" linker_script.ld
 
     # TODO: Consider removing -static since we already have -nostdlib
     # Check with all variants of GCC
 
     $riscv_gcc \
         -DRISC_V_CORE=RISC_V_CORE_${riscv_core^^} \
+        -I $cpu_dir/program \
         -ffreestanding \
         -fverbose-asm \
         -mabi=ilp32 \
