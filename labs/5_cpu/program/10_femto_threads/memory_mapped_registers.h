@@ -1,6 +1,11 @@
 #ifndef MEMORY_MAPPED_REGISTERS_H
 #define MEMORY_MAPPED_REGISTERS_H
 
+#include "riscv_cpu_config.h"
+#if RISCV_CORE == RISCV_CORE_APS
+    #include "aps_mmio_defines.h"
+#endif
+
 #define MMIO_BASE_ADDR    0xffff0000
 
 #define MMIO_7SEG_OFFSET     0x0
@@ -9,8 +14,8 @@
 #define MMIO_SERIAL_OFFSET   0xc
 
 #define MMIO_7SEG_ADDR    MMIO_BASE_ADDR + MMIO_7SEG_OFFSET
-#if RISC_V_CORE == RISC_V_CORE_APS
-    #include "aps_mmio_defines.h"
+
+#if RISCV_CORE == RISCV_CORE_APS
     #define MMIO_LED_ADDR (APS_PLATFORM_LED_BASE_ADDR + APS_PLATFORM_LED_VAL_OFFSET)
 #else
     #define MMIO_LED_ADDR     MMIO_BASE_ADDR + MMIO_LED_OFFSET

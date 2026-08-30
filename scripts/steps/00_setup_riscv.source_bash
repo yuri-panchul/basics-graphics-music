@@ -35,14 +35,15 @@ program_mem32=program.mem32
 
 riscv_find_linker_script ()
 {
-    find_opt="-mindepth 1 -maxdepth 1 -type f -name *.ld -print"
+    # First argument if present, otherwise ..
+    local dir="${1:-..}"
+    # find_opt is an array of variables. It allows to pass '*.ld' (with quotes)
+    # as an argument which is important for finding all linker scripts.
+    find_opt=(-mindepth 1 -maxdepth 1 -type f -name '*.ld' -print)
+    linker_script=$("$find_to_run" "$dir" "${find_opt[@]}" | head -1)
+    [ -n "$linker_script" ] || error "Linker script not found in '$dir'"
 
-    linker_script=$($find_to_run .. $find_opt | head -1)
-    [ -n "$linker_script" ] || return 0
-
-    linker_script=$(basename "$linker_script")
-
-    all_linker_scripts=$($find_to_run .. $find_opt | xargs basename | xargs echo)
+    all_linker_scripts=$($find_to_run "$dir" "${find_opt[@]}" | xargs echo)
 
     if [ "$linker_script" != "$all_linker_scripts" ]
     then
@@ -113,9 +114,6 @@ riscv_try_install_dir ()
 
 riscv_software_toolchain_setup ()
 {
-    riscv_find_linker_script
-
-    [ -n "${linker_script-}" ] || return 0
 
     #-------------------------------------------------------------------------
 
@@ -264,7 +262,7 @@ riscv_setup_core_for_software ()
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_riscv_core_select_file = 1 ]
     then
-        info "${current_board_message}Please select a RISC-V core amoung the following supported:"
+        info "${current_board_message}Please select a RISC-V core among the following supported:"
         PS3="Your choice (a number): "
 
         select riscv_core in $available_riscv_cores exit
@@ -292,15 +290,43 @@ riscv_setup_core_for_software ()
     fi
 
     info "RISC-V core selected: $riscv_core"
+    cpu_dirs=( "$lab_dir"/5_cpu/5_*"$riscv_core" )
+    cpu_dir="${cpu_dirs[0]:-0}"
+
+    # If there is no file or directory, that meets specified glob expression,
+    # this expression will be proceed as is (with asterisk).
+    # This command changes this behavior to make an expression to be empty
+    # so this 'for' cycle will execute only if there is some path that meets
+    # this glob expression
+    shopt -s nullglob
+
+    matches=()
+    for path in "$lab_dir"/5_cpu/5_*$riscv_core; do
+        [[ -d "$path" ]] && matches+=("$path")
+    done
+
+    # after the cycle we restore default glob behavior
+    shopt -u nullglob
+
+    case ${#matches[@]} in
+        0)
+            error "Can't find directory that meets 5_*$riscv_core expression inside '$lab_dir/5_cpu/'"
+            ;;
+        1)
+            dir="${matches[0]}"
+            ;;
+        *)
+            error "Found more than one directory, that meets 5_*$riscv_core expression inside '$lab_dir/5_cpu/': ${matches[*]}"
+            ;;
+    esac
 }
 
 #-----------------------------------------------------------------------------
 
 riscv_software_toolchain_run ()
 {
-    [ -f ../$linker_script ] || error "no $linker_script in the directory"
-
     riscv_setup_core_for_software
+    riscv_find_linker_script "$cpu_dir/program"
 
     src=
 
@@ -314,13 +340,14 @@ riscv_software_toolchain_run ()
 
     [ -n "$src" ] || error "no .s, .S, .c or .C files in the directory"
 
-    cp "../$linker_script" linker_script.ld
+    cp "$linker_script" linker_script.ld
 
     # TODO: Consider removing -static since we already have -nostdlib
     # Check with all variants of GCC
 
     $riscv_gcc \
         -DRISC_V_CORE=RISC_V_CORE_${riscv_core^^} \
+        -I "$cpu_dir/program" \
         -ffreestanding \
         -fverbose-asm \
         -mabi=ilp32 \
@@ -338,8 +365,15 @@ riscv_software_toolchain_run ()
 
     $riscv_objdump -dx a.out > objdump_out.txt
 
-    $riscv_objcopy -O binary a.out final
-    python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32
+    case $riscv_core in
+        "aps")
+            $riscv_objcopy -O verilog --verilog-data-width=4 a.out final
+            ;;
+        *)
+            $riscv_objcopy -O binary a.out final
+            python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32
+            ;;
+    esac
 
     riscv_upload_software_to_the_board_using_uart
 }
@@ -463,18 +497,35 @@ riscv_upload_software_to_the_board_using_uart ()
         fi
     fi
 
-    [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
+    case $riscv_core in
+        "aps")
+            [ -f final ] || error "Cannot find 'final'"
+            if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]] ; then
+                dev="COM$((uart_port + 1))"
+            fi
+            if ! python3 -c "import serial" 2>/dev/null; then
+                error "Python package 'serial' is not installed." \
+                      "Please install it via 'pip install pyserial'."
+            fi
+            python3 "$cpu_dir/program/flash.py" final $dev
+            ;;
+        *)
+            [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
 
-    info "uploading '$program_mem32' to $dev"
+            info "uploading '$program_mem32' to $dev"
 
-    if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" = "darwin"* ]] ; then
-        extra_stty_arg="raw "
-    fi
+            if [[ "$OSTYPE" == "linux-gnu"* ]] \
+                || [[ "$OSTYPE" = "darwin"* ]] ; then
+                extra_stty_arg="raw "
+            fi
+            stty -F $dev ${extra_stty_arg-}speed 115200 \
+                -crtscts cs8 -parenb -cstopb > /dev/null \
+                || error "USB-to-UART is not working"
+            cat $program_mem32 > $dev \
+                || error "Error sending '$program_mem32' to $dev"
+            ;;
+    esac
 
-    stty -F $dev ${extra_stty_arg-}speed 115200 -crtscts cs8 -parenb -cstopb > /dev/null  \
-    || error "USB-to-UART is not working"
-
-    cat $program_mem32 > $dev || error "Error sending '$program_mem32' to $dev"
 }
 
 #-----------------------------------------------------------------------------
