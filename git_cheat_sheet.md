@@ -107,7 +107,7 @@ Undoing committed and especially pushed changes is more difficult than undoing u
 **Important Note 2: Please put a meaningful comment for each commit.**
 
 ```bash
-git commit -a -m "A meaningful comment"
+git commit -am "A meaningful comment"
 ```
 
 ### 2.11. Officially publish all your committed changes in git repository (such as GitHub).
@@ -130,7 +130,7 @@ Please read about .gitignore in Git documentation before doing it.
 ### 3.3. If you want to see the files in your tree untracked by Git, use:
 
 ```bash
-git clean -d -n
+git clean -dn
 ```
 
 This command works from the current directory all the way down.
@@ -138,7 +138,7 @@ This command works from the current directory all the way down.
 After reviewing (be careful!), you can remove the files by running:
 
 ```bash
-git clean -d -f
+git clean -df
 ```
 
 ### 3.4. If you want to see the files in your tree ignored by Git
@@ -148,17 +148,17 @@ ignored by git based on .gitignore list.
 You definitely need to remove them before preparing a release package.
 
 ```bash
-git clean -d -x -n
+git clean -dxn
 ```
 
 After reviewing (be careful!), you can remove the files by running:
 
 ```bash
-git clean -d -x -f
+git clean -dxf
 ```
 
 ### 3.5. If you need to do anything non-trivial (merging, undoing committed or pushed changes), please carefully consult Git documentation.
 
 Otherwise you may introduce mess, bugs, or checkin some large binary files polluting the repository.
 
-Updated on 2023.09.16
+Updated on 2026.08.28

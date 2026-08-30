@@ -1,5 +1,6 @@
 #ifndef BGM_FEMTO_THREADS_H
 #define BGM_FEMTO_THREADS_H
+#include <stdbool.h>
 
 //----------------------------------------------------------------------------
 // Limits and sizes
