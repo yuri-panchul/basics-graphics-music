@@ -83,7 +83,7 @@ module lab_top
 
     cordic i_cordic
     (
-        .clk     ( slow_clk ),
+        .clk     ( clk ),
         .rst     ( rst ),
 
         .start   ( start ),
@@ -162,7 +162,7 @@ module lab_top
     # (angle_array_index_width)
     i_counter
     (
-        .clk    ( slow_clk ),
+        .clk    ( clk ),
         .rst    ( rst ),
         .enable ( accept_start ),
         .cnt    ( angle_index )
@@ -175,7 +175,7 @@ module lab_top
     logic [15:0] angle_sticky;
     logic [15:0] sin_out_sticky;
 
-    always_ff @ (posedge slow_clk)
+    always_ff @ (posedge clk)
     begin
         if (rst)
         begin
