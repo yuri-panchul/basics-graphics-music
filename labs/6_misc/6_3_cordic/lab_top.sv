@@ -106,30 +106,14 @@ module lab_top
     localparam angle_array_index_width = 4,
                angle_array_length      = 1 << angle_array_index_width;
 
-    `ifdef __ICARUS__
 
-        logic [15:0] angle_const_array [0:angle_array_length - 1];
+    `ifdef SYNOPSYS_CADENCE_MENTOR
 
-            assign angle_const_array [ 0] = 16'h0000; //  0 degrees
-            assign angle_const_array [ 1] = 16'h0444; //  6 degrees
-            assign angle_const_array [ 2] = 16'h0889; // 12 degrees
-            assign angle_const_array [ 3] = 16'h0ccd; // 18 degrees
-            assign angle_const_array [ 4] = 16'h1111; // 24 degrees
-            assign angle_const_array [ 5] = 16'h1555; // 30 degrees
-            assign angle_const_array [ 6] = 16'h199a; // 36 degrees
-            assign angle_const_array [ 7] = 16'h1dde; // 42 degrees
-            assign angle_const_array [ 8] = 16'h2222; // 48 degrees
-            assign angle_const_array [ 9] = 16'h2666; // 54 degrees
-            assign angle_const_array [10] = 16'h2aab; // 60 degrees
-            assign angle_const_array [11] = 16'h2eef; // 66 degrees
-            assign angle_const_array [12] = 16'h3333; // 72 degrees
-            assign angle_const_array [13] = 16'h3777; // 78 degrees
-            assign angle_const_array [14] = 16'h3bbc; // 84 degrees
-            assign angle_const_array [15] = 16'h4000; // 90 degrees
-
-    `else
-
-        // New SystemVerilog syntax for array assignment
+        // New SystemVerilog syntax for array assignment.
+        // As of 2026.08.31 it works neither with YOSYS nor with Icarus 12.0.
+        //
+        // This syntax probably works only with Synopsys VCS, Cadence Xselium
+        // and QuestaSim from Siemens EDA (former Mentor Graphics).
 
         wire [15:0] angle_const_array [0:angle_array_length - 1] =
         '{
@@ -150,6 +134,27 @@ module lab_top
             16'h3bbc, // 84 degrees
             16'h4000  // 90 degrees
         };
+
+    `else
+
+        logic [15:0] angle_const_array [0:angle_array_length - 1];
+
+            assign angle_const_array [ 0] = 16'h0000; //  0 degrees
+            assign angle_const_array [ 1] = 16'h0444; //  6 degrees
+            assign angle_const_array [ 2] = 16'h0889; // 12 degrees
+            assign angle_const_array [ 3] = 16'h0ccd; // 18 degrees
+            assign angle_const_array [ 4] = 16'h1111; // 24 degrees
+            assign angle_const_array [ 5] = 16'h1555; // 30 degrees
+            assign angle_const_array [ 6] = 16'h199a; // 36 degrees
+            assign angle_const_array [ 7] = 16'h1dde; // 42 degrees
+            assign angle_const_array [ 8] = 16'h2222; // 48 degrees
+            assign angle_const_array [ 9] = 16'h2666; // 54 degrees
+            assign angle_const_array [10] = 16'h2aab; // 60 degrees
+            assign angle_const_array [11] = 16'h2eef; // 66 degrees
+            assign angle_const_array [12] = 16'h3333; // 72 degrees
+            assign angle_const_array [13] = 16'h3777; // 78 degrees
+            assign angle_const_array [14] = 16'h3bbc; // 84 degrees
+            assign angle_const_array [15] = 16'h4000; // 90 degrees
 
     `endif
 
