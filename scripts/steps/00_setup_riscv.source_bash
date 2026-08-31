@@ -216,9 +216,11 @@ riscv_setup_core_for_software ()
     for riscv_core in $available_riscv_cores
     do
         if [[ "$PWD" =~ ^$lab_dir ]] &&
-           [[ "$PWD" =~ _$riscv_core/program ]]
+        [[ "$PWD" =~ (.*_$riscv_core)/program(/.*)?$ ]]
         then
-            info "RISC-V core selected: $riscv_core, based on directory '$PWD'"
+            info "RISC-V core selected: $riscv_core"
+            cpu_dir="${BASH_REMATCH[1]}/"
+            echo $cpu_dir
             return
         fi
     done
@@ -290,8 +292,6 @@ riscv_setup_core_for_software ()
     fi
 
     info "RISC-V core selected: $riscv_core"
-    cpu_dirs=( "$lab_dir"/5_cpu/5_*"$riscv_core" )
-    cpu_dir="${cpu_dirs[0]:-0}"
 
     # If there is no file or directory, that meets specified glob expression,
     # this expression will be proceed as is (with asterisk).
@@ -313,7 +313,7 @@ riscv_setup_core_for_software ()
             error "Can't find directory that meets 5_*$riscv_core expression inside '$lab_dir/5_cpu/'"
             ;;
         1)
-            dir="${matches[0]}"
+            cpu_dir="${matches[0]}"
             ;;
         *)
             error "Found more than one directory, that meets 5_*$riscv_core expression inside '$lab_dir/5_cpu/': ${matches[*]}"
