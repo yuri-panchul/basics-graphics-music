@@ -107,6 +107,12 @@ module lab_top
                angle_array_length      = 1 << angle_array_index_width;
 
     `ifdef __ICARUS__
+        `define ICARUS_OR_YOSYS
+    `elsif YOSYS
+        `define ICARUS_OR_YOSYS
+    `endif
+
+    `ifdef ICARUS_OR_YOSYS
 
         logic [15:0] angle_const_array [0:angle_array_length - 1];
 

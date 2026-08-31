@@ -346,7 +346,7 @@ riscv_software_toolchain_run ()
     # Check with all variants of GCC
 
     $riscv_gcc \
-        -DRISC_V_CORE=RISC_V_CORE_${riscv_core^^} \
+        -DRISCV_CORE=RISC_V_CORE_${riscv_core^^} \
         -I "$cpu_dir/program" \
         -ffreestanding \
         -fverbose-asm \
