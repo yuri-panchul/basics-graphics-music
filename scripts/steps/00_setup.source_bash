@@ -525,4 +525,4 @@ if [ -f ../program.s ] ; then
     rars_setup
 fi
 
-riscv_software_toolchain_setup
+#riscv_software_toolchain_setup
