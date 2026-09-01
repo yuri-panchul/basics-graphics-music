@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module processor_system(
 
   input  logic        clk10mhz_i,

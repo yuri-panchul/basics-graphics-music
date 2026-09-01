@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module bluster
 (
   input   logic clk_i,

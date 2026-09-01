@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module cdc_pulse_sync(
   input logic src_clk_i,
   input logic src_rst_i,
