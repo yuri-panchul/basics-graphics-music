@@ -10,8 +10,8 @@ module spectrum
                w_y                 = $clog2 ( screen_height ),
 
     // Frequency bands of the spectrum analyzer
-        logic  [0:7][13:0] freq  = '{200, 230, 264, 303,
-                                     348, 400, 458, 525}
+               freq = {14'd525, 14'd458, 14'd400, 14'd348,
+                       14'd303, 14'd264, 14'd230, 14'd200}
 )
 (
     input                        clk,
@@ -54,7 +54,7 @@ module spectrum
 
     initial begin
         for (int i = 0; i < 8; i = i + 1) begin
-            band_count[i] = b(freq[i]);
+            band_count[i] = b(freq[i * 14 +: 14]);
         end
     end
 
