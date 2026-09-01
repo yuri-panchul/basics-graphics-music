@@ -216,11 +216,10 @@ riscv_setup_core_for_software ()
     for riscv_core in $available_riscv_cores
     do
         if [[ "$PWD" =~ ^$lab_dir ]] &&
-        [[ "$PWD" =~ (.*_$riscv_core)/program(/.*)?$ ]]
+            [[ "$PWD" =~ ^(.*_$riscv_core)/program(/.*)?$ ]]
         then
             info "RISC-V core selected: $riscv_core"
             cpu_dir="${BASH_REMATCH[1]}/"
-            echo $cpu_dir
             return
         fi
     done
