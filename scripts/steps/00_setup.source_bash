@@ -525,4 +525,6 @@ if [ -f ../program.s ] ; then
     rars_setup
 fi
 
-#riscv_software_toolchain_setup
+if find .. -type f -name '*.[chS]' -print -quit | grep -q . ; then
+    riscv_software_toolchain_setup
+fi
