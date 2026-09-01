@@ -1,5 +1,4 @@
 `include "config.svh"
-`include "include.svh"
 
 module lab_top
 # (
