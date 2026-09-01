@@ -168,8 +168,17 @@ EOF
     elif [[ "$fpga_board" =~ "ecp5" ]]
     then
 
-        printf "TODO"
-        exit 0
+        cat << EOF >> "$dir/synth.source_bash"
+nextpnr-ecp5 --json netlist.json             \\
+             --textcfg pnr.config            \\
+             --\${DEVICE_PART}               \\
+             --package \${DEVICE_PACK}       \\
+             --speed \${SPEED}               \\
+             --lpf board_specific.lpf        \\
+             --lpf-allow-unconstrained \${GUI_OPT}
+
+ecppack --compress --input pnr.config --bit bitstream.bin
+EOF
 
     # Sipeed (Gowin) boards
     elif [[ "$fpga_board" =~ "tang" ]]
@@ -250,12 +259,33 @@ configure_fpga_yosys ()
 
     #-------------------------------------------------------------------------
 
-    # Bitstream file extention depends on vendor packer and is used by
-    # openFPGALoader to determine bitstream file type
-    if ! openFPGALoader -b "${BOARD}" bitstream.*
+    if [[ "$fpga_board" =~ "colorlight75b" ]]
+    then
+        # Bitstream file extention depends on vendor packer and is used by
+        # openFPGALoader to determine bitstream file type
+        if [[ -z $CABLE ]]
+        then
+            echo "Cable option is not set."
+            echo "Set you cable name in $board_dir/$fpga_board/board_info.source_bash"
+            read -n 1 -r -p "Press any key "
+            exit 1
+        fi
+
+        if ! openFPGALoader --cable "${CABLE}" bitstream.*
+        then
+            error "configuration failed"
+        fi
+    elif [[ "$fpga_board" =~ "ecp5" ]]
+    then
+        if ! openFPGALoader -v --ftdi-channel "${FTDI_CHANNEL}" bitstream.*
+        then
+            error "configuration failed"
+        fi
+    elif ! openFPGALoader -b "${BOARD}" bitstream.*
     then
         error "configuration failed"
     fi
+
 }
 
 #-----------------------------------------------------------------------------
