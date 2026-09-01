@@ -1,0 +1,7 @@
+DEVICE_PART="25k"
+DEVICE_PACK="CSFBGA285"
+SPEED="8"
+SYNTH_CMD="synth_ecp5 -noabc9"
+
+# FT2232 has two channels, select 0 for channel A or 1 for channel B
+FTDI_CHANNEL="1"
