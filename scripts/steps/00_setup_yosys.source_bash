@@ -31,8 +31,9 @@ fi
 
 setup_yosys ()
 {
-    if ! is_command_available yosys &&
-       [ -d ~/oss-cad-suite ]
+    # OSS-CAD-SUITE most likely has a more recent version of tools,
+    # so we should prioritize that over system install
+    if [ -d ~/oss-cad-suite ]
     then
         if [[ "$OSTYPE" = "darwin"* ]] ; then
             remove_macos_quarantine_attr ~/oss-cad-suite
@@ -41,8 +42,7 @@ setup_yosys ()
         source ~/oss-cad-suite/environment
     fi
 
-    if ! is_command_available yosys &&
-       [ -d ~/Downloads/oss-cad-suite ]
+    if [ -d ~/Downloads/oss-cad-suite ]
     then
         if [[ "$OSTYPE" = "darwin"* ]] ; then
             remove_macos_quarantine_attr ~/Downloads/oss-cad-suite
@@ -51,19 +51,25 @@ setup_yosys ()
         source ~/Downloads/oss-cad-suite/environment
     fi
 
-    is_command_available_or_error "yosys" "" ". Either install it using 'sudo apt-get install yosys' or get it installed manually from repository: https://github.com/YosysHQ/yosys.git or from https://github.com/YosysHQ/oss-cad-suite-build/releases/latest"
+    is_command_available_or_error "yosys" "" ". Either install it from \
+        OSS-CAD-SUITE: https://github.com/YosysHQ/oss-cad-suite-build  \
+        (recommended) or get it installed manually from repository:    \
+        https://github.com/YosysHQ/yosys.git or from                   \
+        https://github.com/YosysHQ/oss-cad-suite-build/releases/latest"
 
-    if [[ "$fpga_board" =~ "ice40" ]]
+    if [[ "$fpga_board" =~ "ice" ]]
     then
         echo "Configuring for Lattice iCE40..."
 
-        is_command_available_or_error "nextpnr-ice40" "" ". Either install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Lattice iCE40 chips which is not enabled by default!"
+        is_command_available_or_error "nextpnr-ice40" "" ". Either install it      \
+            using OSS-CAD-SUITE: https://github.com/YosysHQ/oss-cad-suite-build or \
+            get it installed manually from repository:                             \
+            https://github.com/YosysHQ/nextpnr.git. Make sure to configure support \
+            for Lattice iCE40 chips which is not enabled by default!" 
 
-        is_command_available_or_error "icepack" "" ". Either install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
-
-        is_command_available_or_error "icebram" "" ". Either install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
-
-        is_command_available_or_error "iceprog" "" ". Either install it using 'sudo apt-get install icestorm' or get it installed manually from repository: https://github.com/YosysHQ/icestorm.git"
+        is_command_available_or_error "icepack" "" ". Either install it using   \
+            using OSS-CAD-SUITE: https://github.com/YosysHQ/oss-cad-suite-build \
+            or repository: https://github.com/YosysHQ/icestorm.git"
 
         echo "OK"
     fi
@@ -72,34 +78,38 @@ setup_yosys ()
     then
     echo "Configuring for Lattice ECP5..."
 
-        is_command_available_or_error "nextpnr-ecp5" "" "Either install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Lattice ECP5 chips which is not enabled by default!"
+        is_command_available_or_error "nextpnr-ecp5" "" "Either install it         \
+            using OSS-CAD-SUITE: https://github.com/YosysHQ/oss-cad-suite-build or \
+            get it installed manually from repository:                             \
+            https://github.com/YosysHQ/nextpnr.git. Make sure to configure         \
+            support for Lattice ECP5 chips which is not enabled by default!"
 
-        is_command_available_or_error "ecppack" "" ". Project Trellis is not installed in the system. Either install it using 'sudo apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
+        is_command_available_or_error "ecppack" "" ". Project Trellis is not   \
+            installed in the system. Either install it using OSS-CAD-SUITE:    \
+            https://github.com/YosysHQ/oss-cad-suite-build or get it installed \
+            manually from repository: https://github.com/YosysHQ/prjtrellis.git"
 
-        is_command_available_or_error "ecpbram" "" ". Project Trellis is not installed in the system. Either install it using 'sudo apt-get install prjtrellis' or get it installed manually from repository: https://github.com/YosysHQ/prjtrellis.git"
-
-        is_command_available_or_error "dfu-util" "" ". DFU utils are not installed in the system. Either install them using 'sudo apt-get install dfu-util' or get it installed manually from repository: https://dfu-util.sourceforge.net/"
         echo "OK"
     fi
 
-    if [[ "$fpga_board" =~ "gowin" ]]
+    if [[ "$fpga_board" =~ "tang" ]]
     then
     echo "Configuring for Gowin chips..."
 
-        is_command_available_or_error "nextpnr-himbaechel" "" ". Either install it using 'sudo apt-get install nextpnr' or get it installed manually from repository: https://github.com/YosysHQ/nextpnr.git. Make sure to configure support for Gowin chips which is not enabled by default!"
+        is_command_available_or_error "nextpnr-himbaechel" "" ". Either install    \
+            it using OSS-CAD-SUITE: https://github.com/YosysHQ/oss-cad-suite-build \
+            or get it installed manually from repository:                          \
+            https://github.com/YosysHQ/nextpnr.git. Make sure to configure support \
+            for Gowin chips which is not enabled by default!"
 
-        is_command_available_or_error "gowin_pack" "" ". Project Apicula is not installed. Either install it using 'pip3 install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
-
-        is_command_available_or_error "gowin_bba" "" ". Project Apycula is not installed. Either install it using 'sudo apt-get install apycula' or get it installed manually from repository: https://github.com/YosysHQ/apicula.git"
+        is_command_available_or_error "gowin_pack" "" ". Project Apicula is not
+            installed. Either install it using OSS-CAD-SUITE:
+            https://github.com/YosysHQ/oss-cad-suite-build or get it installed
+            manually from repository: https://github.com/YosysHQ/apicula.git"
 
         echo "OK"
     fi
 
-    is_command_available_or_error "make" "" ". GNU make is not installed in the system. Either install it using 'sudo apt-get install make' or get it installed manually from repository: https://github.com/mirror/make.git"
-
-
-
-###    is_command_available_or_error "firefox" "" ". Firefox is not installed in the system. It is used to display SVG graphics. Either install it using 'sudo apt-get install firefox' or get it installed manually from web site: https://www.mozilla.org/en-US/firefox/download/thanks/. Note: you may fake it by creating empty bash script with name 'firefox' in /usr/bin. ;-)"
 }
 
 #-------------------------------------------------------------------------
@@ -108,65 +118,84 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 {
     dir="$1"
     main_src_dir="$2"
+    sources=""
 
-    > "$dir/Makefile"
-    echo "NAME = `basename $main_src_dir`" >> "$dir/Makefile"
+    > "$dir/synth.source_bash"
 
-    echo "INC = $(adj_path_for_gowin_win "$main_src_dir"):$(adj_path_for_gowin_win "$peripheral_dir"):$(adj_path_for_gowin_win $lab_dir)/common" >> "$dir/Makefile"
-
-    echo "BOARD = $fpga_board" >> "$dir/Makefile"
-
-    for verilog_src_dir in  \
-        "$main_src_dir"  \
-        "$board_dir/$fpga_board"  \
-        "$peripheral_dir"  \
+    for verilog_src_dir in       \
+        "$main_src_dir"          \
+        "$board_dir/$fpga_board" \
+        "$peripheral_dir"        \
         "$lab_dir/common"
     do
         # TODO: Check if we really need adj_path_for_gowin_win here
 
-        if [[ "$OSTYPE" = "darwin"* ]]
-        then
-            $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-                -type f -name '*.sv' -not -name tb.sv  \
-                | xargs -L 1 -I % echo "READ_VERILOG += -p \"read_verilog -sv -formal %\"" \
-                >> "$dir/Makefile"
-
-            $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-                -type f -name '*.sv' -not -name tb.sv  \
-                | xargs -L 1 -I % echo "DEPS += %" \
-                >> "$dir/Makefile"
-
-            $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-                -type f -name '*.v' \
-                | xargs -L 1 -I % echo "READ_VERILOG += -p \"read_verilog %\"" \
-                >> "$dir/Makefile"
-
-            $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-                -type f -name '*.v' \
-                | xargs -L 1 -I % echo "DEPS += %" \
-                >> "$dir/Makefile"
-         else
-            $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-                -type f -name '*.sv' -not -name tb.sv  \
-                -printf "READ_VERILOG += -p \"read_verilog -sv -formal %p\"\n" \
-                -printf "DEPS += %p\n" \
-                >> "$dir/Makefile"
-
-            $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")"  \
-                -type f -name '*.v' \
-                -printf "READ_VERILOG += -p \"read_verilog %p\"\n" \
-                -printf "DEPS += %p\n" \
-                >> "$dir/Makefile"
-         fi
+        sources="$sources$($find_to_run $(adj_path_for_gowin_win "$verilog_src_dir")  \
+                            -type f \( -name '*.sv' -or -name '*.v' \) -not -name tb.sv | tr '\n' ' ')"
     done
 
-    cat "$board_dir/$fpga_board/Makefile" >> "$dir/Makefile"
+    sources=$(echo "$sources" | sed 's/ / \\\n/g')
+    sources=${sources::-2}
+
+    printf "source %s/%s/board_info.source_bash\n\n" $board_dir $fpga_board >> "$dir/synth.source_bash"
+
+    cat << EOF >> "$dir/synth.source_bash"
+yosys -p "read_verilog                         \\
+-I $(adj_path_for_gowin_win "$main_src_dir")   \\
+-I $(adj_path_for_gowin_win "$peripheral_dir") \\
+-I $(adj_path_for_gowin_win "$lab_dir")/common \\
+-sv $sources;                                  \\
+\${SYNTH_CMD} -json netlist.json -top board_specific_top"
+
+EOF
+
+    # ICE40 boards
+    if [[ "$fpga_board" =~ "ice" ]]
+    then
+
+        cat << EOF >> "$dir/synth.source_bash"
+nextpnr-ice40 --\${DEVICE_PART}         \\
+              --package \${DEVICE_PACK} \\
+              --json netlist.json       \\
+              --pcf board_specific.pcf  \\
+              --asc pnr.asc \${GUI_OPT}
+
+icepack pnr.asc bitstream.bin
+icetime -d \${DEVICE_PART} -mt pnr.asc
+EOF
+
+    # ECP5 boards
+    elif [[ "$fpga_board" =~ "ecp5" ]]
+    then
+
+        cat << EOF >> "$dir/synth.source_bash"
+nextpnr-ecp5 --json netlist.json             \\
+             --textcfg pnr.config            \\
+             --\${DEVICE_PART}               \\
+             --package \${DEVICE_PACK}       \\
+             --speed \${SPEED}               \\
+             --lpf board_specific.lpf        \\
+             --lpf-allow-unconstrained \${GUI_OPT}
+
+ecppack --compress --input pnr.config --bit bitstream.bin
+EOF
+
+    # Sipeed (Gowin) boards
+    elif [[ "$fpga_board" =~ "tang" ]]
+    then
+
+        cat << EOF >> "$dir/synth.source_bash"
+nextpnr-himbaechel --json netlist.json             \\
+                   --write pnr.pack                \\
+                   --device \${DEVICE_PART}        \\
+                   --vopt family=\${DEVICE_FAMILY} \\
+                   --vopt cst=board_specific.cst   \\
+                   --sdc board_specific.sdc \${GUI_OPT}
+
+gowin_pack -d \${DEVICE_PACK} -o bitstream.fs pnr.pack
+EOF
+
+    fi
 
     # Copy pin config file for Lattice iCE40 boards
     if [ -f "$board_dir/$fpga_board/board_specific.pcf" ]
@@ -186,6 +215,11 @@ setup_run_directory_for_fpga_synthesis_yosys ()
         cat "$board_dir/$fpga_board/board_specific.cst" > "$dir/board_specific.cst"
     fi
 
+    # Copy sdc file if exists
+    if [ -f "$board_dir/$fpga_board/board_specific.sdc" ]
+    then
+        cat "$board_dir/$fpga_board/board_specific.sdc" > "$dir/board_specific.sdc"
+    fi
 
 }
 
@@ -193,73 +227,72 @@ setup_run_directory_for_fpga_synthesis_yosys ()
 
 synthesize_for_fpga_yosys ()
 {
-    make
+    GUI_OPT=""
+    source "synth.source_bash"
 }
 
 #-----------------------------------------------------------------------------
 
 configure_fpga_yosys ()
 {
-    configure_fpga_yosys_all
-}
+    source "$board_dir/$fpga_board/board_info.source_bash"
 
-#-----------------------------------------------------------------------------
+    is_command_available_or_error openFPGALoader \
+        " openFPGALoader utility is not installed in your system. You can get \
+        it here: https://trabucayre.github.io/openFPGALoader/guide/install.html"
 
-configure_fpga_yosys_all ()
-{
+    #-------------------------------------------------------------------------
 
-    if [[ "$fpga_board" =~ "orangecrab" ]]; then
-        printf "This board supports the following upload methods:\n"
-        printf "[o] for openFPGALoader using JTAG based on FTDI FT2232\n"
-        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n"
-        printf "[d] for dfu-util over USB using bootloader\n"
+    if [ "$OSTYPE" = "linux-gnu" ] && [[ "$fpga_board" =~ "tang" ]]
+    then
+        rules_dir=/etc/udev/rules.d
+        rules_file="$script_dir/fpga/91-sipeed.rules"
 
-        read -n 1 -r -p "Which upload method do you prefer ? "
-        printf "\n"
-
-        if [[ "$REPLY" =~ ^[Dd]$ ]] ; then
-            upload_method="dfu"
-        elif [[ "$REPLY" =~ ^[Ee]$ ]] ; then
-            upload_method="ecpprog"
-        else
-            upload_method="openloader"
+        if ! grep -q 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010"' $rules_dir/*
+        then
+            error "No rules for Sipeed FPGA loader detected in $rules_dir."  \
+                  "Please put it there and reboot: sudo cp $rules_file $rules_dir"
         fi
-    elif [[ "$fpga_board" =~ "karnix" ]]; then
-        printf "This board supports the following upload methods:\n"
-        printf "[o] for openFPGALoader using JTAG based on FTDI FT2232\n"
-        printf "[e] for ecpprog using JTAG based on FTDI FT2232\n"
 
-        read -n 1 -r -p "Which upload method do you prefer ? "
-        printf "\n"
-
-        if [[ "$REPLY" =~ ^[Ee]$ ]] ; then
-            upload_method="ecpprog"
-        elif [[ "$REPLY" =~ ^[Oo]$ ]] ; then
-            upload_method="openloader"
-        else
-            printf "Unsupported method: $REPLY\n"
-            upload_method="openloader"
-        fi
-    elif [[ "$fpga_board" =~ "ice40" ]]; then
-        upload_method="iceprog"
-    else
-        upload_method="openloader"
+        killall jtagd 2>/dev/null || true
     fi
 
-    printf "Upload method for this board is: $upload_method\n"
+    #-------------------------------------------------------------------------
 
-    flash_method="sram"
+    if [[ "$fpga_board" =~ "colorlight75b" ]]
+    then
+        # Bitstream file extention depends on vendor packer and is used by
+        # openFPGALoader to determine bitstream file type
+        if [[ -z $CABLE ]]
+        then
+            echo "Cable option is not set."
+            echo "Set you cable name in $board_dir/$fpga_board/board_info.source_bash"
+            read -n 1 -r -p "Press any key "
+            exit 1
+        fi
 
-    echo "$flash_method" > flash_method
-    echo "$upload_method" > upload_method
+        if ! openFPGALoader --cable "${CABLE}" bitstream.*
+        then
+            error "configuration failed"
+        fi
+    elif [[ "$fpga_board" =~ "ecp5" ]]
+    then
+        if ! openFPGALoader -v --ftdi-channel "${FTDI_CHANNEL}" bitstream.*
+        then
+            error "configuration failed"
+        fi
+    elif ! openFPGALoader -b "${BOARD}" bitstream.*
+    then
+        error "configuration failed"
+    fi
 
-    make upload
 }
 
 #-----------------------------------------------------------------------------
-
 
 run_fpga_synthesis_gui_yosys ()
 {
-    make gui
+    # Runs nextpnr GUI
+    GUI_OPT="--gui"
+    source "synth.source_bash"
 }

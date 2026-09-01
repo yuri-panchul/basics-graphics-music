@@ -1,0 +1,4 @@
+DEVICE_PART="hx8k"
+DEVICE_PACK="ct256"
+BOARD="ice40_generic"
+SYNTH_CMD="synth_ice40 -dsp -noabc9"

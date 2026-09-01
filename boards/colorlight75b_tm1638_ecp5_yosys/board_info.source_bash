@@ -1,0 +1,9 @@
+DEVICE_PART="25k"
+DEVICE_PACK="CABGA256"
+SPEED="6"
+SYNTH_CMD="synth_ecp5 -noabc9"
+
+# Set your programmer cable name.
+# You can find available options and cable names here:
+# https://trabucayre.github.io/openFPGALoader/compatibility/cable.html
+CABLE=""
