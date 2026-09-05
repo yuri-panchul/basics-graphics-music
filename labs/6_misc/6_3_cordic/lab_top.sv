@@ -1,7 +1,5 @@
 `include "config.svh"
 
-`ifndef SIMULATION
-
 module lab_top
 # (
     parameter  clk_mhz       = 50,
@@ -61,7 +59,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    // assign led        = '0;
+       assign led        = '0;
     // assign abcdefgh   = '0;
     // assign digit      = '0;
        assign red        = '0;
@@ -105,10 +103,6 @@ module lab_top
         .cos_out ( cos_out ),
         .sin_out ( sin_out )
     );
-
-    assign led [0] = finish;
-    assign led [1] = calc;
-    assign led [2] = start;
 
     //------------------------------------------------------------------------
 
@@ -218,5 +212,3 @@ module lab_top
     );
 
 endmodule
-
-`endif
