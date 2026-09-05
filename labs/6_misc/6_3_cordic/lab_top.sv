@@ -72,7 +72,17 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire               start = key [0];
+    logic key_0_r;
+
+    always_ff @ (posedge clk)
+        if (rst) key_0_r <= 1'b0;
+        else     key_0_r <= key [0];
+
+    wire press_key_0 = ~ key_0_r & key [0];
+
+    //------------------------------------------------------------------------
+
+    wire               start = press_key_0;
     logic       [15:0] angle;
 
     wire               calc;
@@ -83,7 +93,7 @@ module lab_top
 
     cordic i_cordic
     (
-        .clk     ( slow_clk ),
+        .clk     ( clk ),
         .rst     ( rst ),
 
         .start   ( start ),
@@ -99,7 +109,6 @@ module lab_top
     assign led [0] = finish;
     assign led [1] = calc;
     assign led [2] = start;
-    assign led [7] = slow_clk;
 
     //------------------------------------------------------------------------
 
@@ -168,7 +177,7 @@ module lab_top
     # (angle_array_index_width)
     i_counter
     (
-        .clk    ( slow_clk ),
+        .clk    ( clk ),
         .rst    ( rst ),
         .enable ( accept_start ),
         .cnt    ( angle_index )
@@ -181,7 +190,7 @@ module lab_top
     logic [15:0] angle_sticky;
     logic [15:0] sin_out_sticky;
 
-    always_ff @ (posedge slow_clk)
+    always_ff @ (posedge clk)
     begin
         if (rst)
         begin

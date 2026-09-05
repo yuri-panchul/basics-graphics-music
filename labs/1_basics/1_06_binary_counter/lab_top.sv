@@ -59,8 +59,6 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-     assign led        = key;
-/*
        assign abcdefgh   = '0;
        assign digit      = '0;
        assign red        = '0;
@@ -98,7 +96,7 @@ module lab_top
     //
     // 2. Two counters controlled by different keys
     // displayed in different groups of LEDs.
-*/
+
     /*
 
     wire any_key = | key;
