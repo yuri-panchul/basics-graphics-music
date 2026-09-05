@@ -329,16 +329,19 @@ setup_run_directory_for_fpga_synthesis_gowin ()
         "$lab_dir/common"
     do
         # TODO: Remove else after testing on Linux and Windows
-        set filelist=$verilog_src_dir/filelist.f
-        set max_depth_opt=''
+
+        filelist="$verilog_src_dir/filelist.f"
+        max_depth_opt=""
 
         # If current directory contains filelist.f, then we import files
         # placed in subdirectories according to this file
         # and restrict find command to maxdepth=1
-        if [[ -f "$filelist" ]]; then
-            echo "import_files -fileList $filelist" >> "$dir/fpga_project.tcl"
-            max_depth_opt='-maxdepth 1'
+
+        if [ -f "$filelist" ] ; then
+            echo "import_files -fileList $(adj_path_for_gowin_win "$filelist")" >> "$dir/fpga_project.tcl"
+            max_depth_opt="-maxdepth 1"
         fi
+
         if [[ "$OSTYPE" = "darwin"* ]]
         then
             $find_to_run  \
@@ -348,7 +351,7 @@ setup_run_directory_for_fpga_synthesis_gowin ()
                 >> "$dir/fpga_project.tcl"
         else
             $find_to_run  \
-                "$(adj_path_for_gowin_win "$verilog_src_dir")" max_depth_opt \
+                "$(adj_path_for_gowin_win "$verilog_src_dir")" $max_depth_opt \
                 -type f \( -name '*.sv' -not -name tb.sv -o -name '*.v' \)  \
                 -printf "add_file -type verilog %p\n"  \
                 >> "$dir/fpga_project.tcl"
