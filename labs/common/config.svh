@@ -3,9 +3,11 @@
 
 `timescale 1 ns / 1 ps
 
-`ifdef ALTERA_RESERVED_QIS
-    `default_nettype none
-`endif
+// Unfortunately this setting causes errors in Quartus 25.1 Lite
+//
+// `ifdef ALTERA_RESERVED_QIS
+//    `default_nettype none
+// `endif
 
 `include "define_gowin_or_nothing.svh"
 

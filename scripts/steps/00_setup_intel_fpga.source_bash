@@ -360,12 +360,22 @@ run_questa ()
     || [ "$OSTYPE" = "msys"      ]  \
     || error "$error_prefix this simulator does not run under OS / platform '$OSTYPE'"
 
-    if [ -z "${LM_LICENSE_FILE-}" ] && ! [ -f "$MGLS_LICENSE_FILE" ]
+    if [ -z "${LM_LICENSE_FILE-}" ]
     then
-        warning "$error_prefix your variable LM_LICENSE_FILE is not set"  \
-                "and the default license file '$MGLS_LICENSE_FILE'"       \
-                "does not exist."                                         \
-                "You may need to resolve the licensing issues."
+        if [ -z "${MGLS_LICENSE_FILE-}" ]
+        then
+            warning "$error_prefix neither variable LM_LICENSE_FILE"  \
+                    "nor MGLS_LICENSE_FILE is set."                   \
+                    "Probably script got confused"                    \
+                    "with multiple Quartus directories."
+
+        elif ! [ -f "$MGLS_LICENSE_FILE" ]
+        then
+            warning "$error_prefix your variable LM_LICENSE_FILE is not set"  \
+                    "and the default license file '$MGLS_LICENSE_FILE'"       \
+                    "does not exist."                                         \
+                    "You may need to resolve the licensing issues."
+        fi
     fi
 
     if ! is_command_available "$vsim_command"
