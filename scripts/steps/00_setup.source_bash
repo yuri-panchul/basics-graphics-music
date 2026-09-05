@@ -503,8 +503,8 @@ fpga_board_setup ()
 
 fpga_board_setup
 
-# fpga_toolchain=quartus
-# use_old_version_of_quartus=0
+fpga_toolchain=quartus
+use_old_version_of_quartus=0
 
 case $fpga_toolchain in
     quartus  )
