@@ -4,7 +4,7 @@ module tb;
 
    localparam width = 16;
 
-   localparam real accuracy = 0.01,
+   localparam real accuracy = 0.001,
                    pi       = 3.14159265358979323846;
 
     //--------------------------------------------------------------------------
