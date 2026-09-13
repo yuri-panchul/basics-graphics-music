@@ -1,0 +1,100 @@
+// The pin assignments
+
+// CLK
+IO_LOC  "CLK"         H11;
+IO_PORT "CLK" IO_TYPE=LVCMOS33;
+
+// LED
+IO_LOC  "LED[5]"      L16;
+IO_LOC  "LED[4]"      L14;
+IO_LOC  "LED[3]"      N14;
+IO_LOC  "LED[2]"      N16;
+IO_LOC  "LED[1]"      A13;
+IO_LOC  "LED[0]"      C13;
+IO_PORT "LED[5]"      IO_TYPE=LVCMOS33;
+IO_PORT "LED[4]"      IO_TYPE=LVCMOS33;
+IO_PORT "LED[3]"      IO_TYPE=LVCMOS33;
+IO_PORT "LED[2]"      IO_TYPE=LVCMOS33;
+
+// UART
+IO_LOC  "UART_TX"     M11;
+IO_LOC  "UART_RX"     T13;
+
+// SWITCH
+IO_LOC  "SW[3]"       T5;
+IO_LOC  "SW[2]"       T4;
+IO_LOC  "SW[1]"       E8;
+IO_LOC  "SW[0]"       E9;
+
+// KEY
+IO_LOC  "KEY[4]"      C7;
+IO_LOC  "KEY[3]"      D7;
+IO_LOC  "KEY[2]"      T2;
+IO_LOC  "KEY[1]"      T3;
+IO_LOC  "KEY[0]"      T10;
+
+// HDMI
+IO_LOC  "TMDS_CLK_P"  G16,H15;
+IO_LOC  "TMDS_D_P[0]" H14,H16;
+IO_LOC  "TMDS_D_P[1]" J15,K16;
+IO_LOC  "TMDS_D_P[2]" K14,K15;
+
+// GPIO
+IO_LOC  "GPIO_3[7]"   N8;
+IO_LOC  "GPIO_3[6]"   N7;
+IO_LOC  "GPIO_3[5]"   D11;
+IO_LOC  "GPIO_3[4]"   B11;
+IO_LOC  "GPIO_3[3]"   L9;
+IO_LOC  "GPIO_3[2]"   N9;
+IO_LOC  "GPIO_3[1]"   N6;
+IO_LOC  "GPIO_3[0]"   A11;
+
+IO_LOC  "GPIO_2[7]"   C12;
+IO_LOC  "GPIO_2[6]"   A14;
+IO_LOC  "GPIO_2[5]"   A15;
+IO_LOC  "GPIO_2[4]"   E15;
+IO_LOC  "GPIO_2[3]"   B12;
+IO_LOC  "GPIO_2[2]"   B13;
+IO_LOC  "GPIO_2[1]"   B14;
+IO_LOC  "GPIO_2[0]"   D14;
+IO_PORT "GPIO_2[4]"   IO_TYPE=LVCMOS33;
+IO_PORT "GPIO_2[0]"   IO_TYPE=LVCMOS33;
+
+IO_LOC  "GPIO_1[0]"   P11;
+
+IO_LOC  "GPIO_0[7]"   P9;
+IO_LOC  "GPIO_0[6]"   T8;
+IO_LOC  "GPIO_0[5]"   R8;
+IO_LOC  "GPIO_0[4]"   T6;
+
+// Microphone in Pmod 0
+IO_LOC  "GPIO_0[3]"   T9;  // ws
+IO_LOC  "GPIO_0[2]"   P8;  // lr
+IO_LOC  "GPIO_0[1]"   T7;  // sck
+IO_LOC  "GPIO_0[0]"   P6;  // sd
+IO_PORT "GPIO_0[0]"   PULL_MODE=DOWN;
+
+// On-board sound DAC
+IO_LOC  "PA_EN"       R16;
+IO_LOC  "HP_DIN"      P15;
+IO_LOC  "HP_WS"       P16;
+IO_LOC  "HP_BCK"      N15;
+IO_PORT "PA_EN"       IO_TYPE=LVCMOS33;
+IO_PORT "HP_DIN"      IO_TYPE=LVCMOS33;
+IO_PORT "HP_WS"       IO_TYPE=LVCMOS33;
+IO_PORT "HP_BCK"      IO_TYPE=LVCMOS33;
+
+// External sound DAC in Pmod 1
+IO_LOC  "GPIO_1[7]"   J14; // lrck
+IO_LOC  "GPIO_1[6]"   M14; // din
+IO_LOC  "GPIO_1[5]"   T12; // bck
+IO_LOC  "GPIO_1[4]"   T11; // sck
+IO_PORT "GPIO_1[7]"   IO_TYPE=LVCMOS33;
+IO_PORT "GPIO_1[6]"   IO_TYPE=LVCMOS33;
+
+// TM1638 in Pmod 1
+IO_LOC  "GPIO_1[3]"   J16; // sio_stb
+IO_LOC  "GPIO_1[2]"   M15; // sio_clk
+IO_LOC  "GPIO_1[1]"   R11; // sio_data
+IO_PORT "GPIO_1[3]"   IO_TYPE=LVCMOS33;
+IO_PORT "GPIO_1[2]"   IO_TYPE=LVCMOS33;

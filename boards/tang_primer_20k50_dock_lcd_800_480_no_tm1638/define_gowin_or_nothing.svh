@@ -1,0 +1,3 @@
+`ifndef GOWIN_SYNTHESIS
+`define GOWIN_SYNTHESIS
+`endif

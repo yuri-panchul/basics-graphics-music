@@ -600,12 +600,17 @@ endgenerate
   always_ff @(posedge clka_i) begin
     for (int i = 0; i < NUM_COLS; ++i) begin
       if (wea_i[i]) mem[addra_i][i*COL_WIDTH+:COL_WIDTH] <= dina_i[i*COL_WIDTH+:COL_WIDTH];
+`ifdef GOWIN_SYNTHESIS
+      else douta_o[i*COL_WIDTH+:COL_WIDTH] <= mem[addra_i][i*COL_WIDTH+:COL_WIDTH];
+`endif
     end
   end
 
+`ifndef GOWIN_SYNTHESIS
   always_ff @(posedge clka_i) begin
     douta_o <= mem[addra_i];
   end
+`endif
 
   always_ff @(posedge clkb_i) begin
     doutb_o <= mem[addrb_i];

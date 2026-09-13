@@ -117,7 +117,15 @@ riscv_software_toolchain_setup ()
 
     #-------------------------------------------------------------------------
 
-    is_command_available_or_error_and_install python3
+    PY3=""
+    if python3 -c "print('Ok')" 2>/dev/null; then
+      PY3=python3
+    elif python -c "print('Ok')" 2>/dev/null; then
+      PY3=python
+    else
+      error "Python is not installed." \
+            "Please install it."
+    fi
 
     #-------------------------------------------------------------------------
 
@@ -370,7 +378,7 @@ riscv_software_toolchain_run ()
             ;;
         *)
             $riscv_objcopy -O binary a.out final
-            python3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32
+            $PY3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32
             ;;
     esac
 
@@ -502,11 +510,18 @@ riscv_upload_software_to_the_board_using_uart ()
             if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]] ; then
                 dev="COM$((uart_port + 1))"
             fi
-            if ! python3 -c "import serial" 2>/dev/null; then
-                error "Python package 'serial' is not installed." \
+
+            PY3=""
+            if python3 -c "import serial" 2>/dev/null; then
+              PY3=python3
+            elif python -c "import serial" 2>/dev/null; then
+              PY3=python
+            else
+                error "Python or package 'serial' is not installed." \
                       "Please install it via 'pip install pyserial'."
             fi
-            python3 "$cpu_dir/program/flash.py" final $dev
+
+            $PY3 "$cpu_dir/program/flash.py" final $dev
             ;;
         *)
             [ -f $program_mem32 ] || error "Cannot find '$program_mem32'"
