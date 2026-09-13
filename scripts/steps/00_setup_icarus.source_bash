@@ -57,9 +57,61 @@ icarus_verilog_setup ()
 
 #-----------------------------------------------------------------------------
 
+# Sets icarus_language_option, which the caller declares local.
+
+icarus_verilog_choose_language_option ()
+{
+    icarus_language_option=-g2012
+
+    local version_output
+    version_output=$(iverilog -V 2>&1)
+
+    if [[ $version_output =~ Icarus[[:space:]]Verilog[[:space:]]version[[:space:]]([0-9]+)\. ]]
+    then
+        local major=${BASH_REMATCH[1]}
+
+        if (( major < 11 ))
+        then
+            warning "Icarus Verilog $major is too old for reliable"   \
+                    "simulation of the examples in this repository."  \
+                    "Upgrade to version 12 or preferably newer."      \
+                    "Continuing with -g2012."
+
+        elif (( major == 11 ))
+        then
+            warning "Icarus Verilog 11 detected. We recommend"     \
+                    "switching to version 12, preferably 13 or"    \
+                    "the current development version, future 14."  \
+                    "Continuing with -g2012."
+
+        elif (( major >= 14 ))
+        then
+            # Stable 13.0 supports language generations only through 2012.
+            # Development builds numbered 14 may predate -g2023, so probe it.
+
+            if iverilog -g2023 -E -o /dev/null /dev/null > /dev/null 2>&1
+            then
+                icarus_language_option=-g2023
+            else
+                warning "This build of Icarus Verilog $major"  \
+                        "does not accept -g2023."              \
+                        "Continuing with -g2012."
+            fi
+        fi
+    else
+        warning "Cannot determine the Icarus Verilog version."  \
+                "Continuing with -g2012."
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
 run_icarus_verilog ()
 {
     is_command_available_or_error_and_install iverilog
+
+    local icarus_language_option
+    icarus_verilog_choose_language_option
 
     rars_assembly
 
@@ -67,12 +119,10 @@ run_icarus_verilog ()
 
     shopt -s nullglob
 
-    # TODO: Set option depending on iverilog version
-
-    iverilog -g2012 -s tb \
-         -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals" \
-            ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv \
-            ../*.v \
+    iverilog "$icarus_language_option" -s tb                                 \
+         -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals"  \
+            ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv   \
+            ../*.v                                                           \
         2>&1 | tee "$log"
 
     shopt -u nullglob
