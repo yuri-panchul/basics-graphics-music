@@ -135,7 +135,7 @@ setup_run_directory_for_fpga_synthesis_yosys ()
     done
 
     sources=$(echo "$sources" | sed 's/ / \\\n/g')
-    sources=${sources::-2}
+    sources=${sources::${#sources}-2}
 
     printf "source %s/%s/board_info.source_bash\n\n" $board_dir $fpga_board >> "$dir/synth.source_bash"
 
