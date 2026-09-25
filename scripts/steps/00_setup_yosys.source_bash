@@ -277,9 +277,27 @@ configure_fpga_yosys ()
         fi
     elif [[ "$fpga_board" =~ "ecp5" ]]
     then
-        if ! openFPGALoader -v --ftdi-channel "${FTDI_CHANNEL}" bitstream.*
+        if [[ -n "$CABLE" ]]
         then
-            error "configuration failed"
+            # Boards with a custom cable (e.g. iCESugar-pro / iCELink via CMSIS-DAP)
+            # require a udev rule to allow non-root access to the USB device.
+            if [[ "$CABLE" == "cmsisdap" ]] && [ ! -f /etc/udev/rules.d/99-icesugar-pro.rules ]
+            then
+                error "udev rule for iCESugar-pro is not installed."                    \
+                      "Please run once: sudo $script_dir/setup_icesugar_udev.bash"       \
+                      "and then replug the board."
+            fi
+
+            if ! openFPGALoader --cable "${CABLE}" ${OPENFPGALOADER_VID_PID} bitstream.*
+            then
+                error "configuration failed"
+            fi
+        else
+            # Legacy path: FTDI-based ECP5 boards (unchanged behaviour)
+            if ! openFPGALoader -v --ftdi-channel "${FTDI_CHANNEL}" bitstream.*
+            then
+                error "configuration failed"
+            fi
         fi
     elif ! openFPGALoader -b "${BOARD}" bitstream.*
     then
