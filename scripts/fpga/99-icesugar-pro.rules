@@ -1,0 +1,6 @@
+# iCESugar-pro (iCELink / MuseLab DAPLink CMSIS-DAP)
+# Rule for USB-interface
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d50", ATTR{idProduct}=="602b", MODE="0666", TAG+="uaccess"
+
+# Rule for HID-interface
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="602b", MODE="0666", TAG+="uaccess"
