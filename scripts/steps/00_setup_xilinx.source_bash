@@ -40,6 +40,7 @@ xilinx_setup_vivado ()
 
     local parent vendor candidate version latest_version_dir
     local candidates sorted_candidates
+    local sort_to_run sort_candidate sort_probe
     local -a search_parents
 
     if [ -n "${XILINX_VIVADO-}" ]
@@ -99,8 +100,37 @@ xilinx_setup_vivado ()
 
         if [ -n "$candidates" ]
         then
+            # Prefer the Unix utility over Windows sort.exe on PATH.
+            # Check behavior as well as option acceptance before using it.
+            sort_to_run=
+            for sort_candidate in /usr/bin/sort /bin/sort sort
+            do
+                if sort_probe=$(printf '2026.10\tb\n2026.2\ta\n' |
+                    LC_ALL=C "$sort_candidate" -t $'\t' -k1,1V 2>/dev/null)
+                then
+                    if [ "$sort_probe" = $'2026.2\ta\n2026.10\tb' ]
+                    then
+                        sort_to_run=$sort_candidate
+                        break
+                    fi
+                fi
+            done
+
+            if [ -z "$sort_to_run" ]
+            then
+                error "Vivado discovery requires a Unix sort with version sorting support." \
+                      "Install GNU coreutils (provided by Git Bash, MSYS, or Cygwin),"    \
+                      "or set XILINX_VIVADO to a specific installation."
+                return 1
+            fi
+
             # Compare versions across vendors and layouts within this parent.
-            sorted_candidates=$(printf '%s' "$candidates" | LC_ALL=C sort -t $'\t' -k1,1V)
+            if ! sorted_candidates=$(printf '%s' "$candidates" |
+                LC_ALL=C "$sort_to_run" -t $'\t' -k1,1V)
+            then
+                error "Failed to sort Vivado versions using '$sort_to_run'."
+                return 1
+            fi
             latest_version_dir=${sorted_candidates##*$'\n'}
             latest_version_dir=${latest_version_dir#*$'\t'}
             export XILINX_VIVADO="$latest_version_dir"

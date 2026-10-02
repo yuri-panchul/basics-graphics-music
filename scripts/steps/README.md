@@ -71,4 +71,6 @@ TODO: This is inconsistent with Linux, Altera and Xilinx. Need to review.
 
 5. Use the first parent containing an installation. Within that parent, select the newest version across all supported vendors and layouts using version-aware sorting (`sort -V`), so `2026.10` sorts after `2026.2`.
 
+   Discovery tries `/usr/bin/sort`, `/bin/sort`, then `sort` from `PATH`, checking version-sorting support before use. This avoids Windows' native `sort.exe`. If no compatible utility is available or sorting fails, discovery reports an error.
+
 For example, `/home/verilog/AMD/2026.1/Vivado` is discovered when `$HOME` is `/home/verilog`. To select it explicitly, set `XILINX_VIVADO=/home/verilog/AMD/2026.1/Vivado`; to search its parent, set `XILINX_HOME=/home/verilog`.
