@@ -114,6 +114,31 @@ xilinx_try_install_dir ()
 
 #-----------------------------------------------------------------------------
 
+# Finds out how to sort version numbers and sets "sort_versions".
+#
+# "sort -V" compares the numbers between the dots, plain "sort" compares
+# the version strings character by character.
+
+xilinx_sort_discovery ()
+{
+    if printf '' | sort -V > /dev/null 2>&1
+    then
+        sort_versions="sort -V"
+        return
+    fi
+
+    sort_versions=sort
+
+    warning "this version of 'sort' does not support the '-V' option,"   \
+            "so the versions of Vivado are compared as plain strings."   \
+            "A version such as 2026.9 is going to be mistakenly"         \
+            "considered newer than 2026.10."                             \
+            "You can use XILINX_VIVADO variable to point to"             \
+            "a specific version of Vivado."
+}
+
+#-----------------------------------------------------------------------------
+
 xilinx_setup_vivado ()
 {
        [ "$OSTYPE" = "linux-gnu" ]  \
@@ -209,14 +234,7 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    # "sort -V" orders 2026.9 before 2026.10, plain "sort" does not
-
-    if printf '' | sort -V > /dev/null 2>&1
-    then
-        sort_versions="sort -V"
-    else
-        sort_versions=sort
-    fi
+    xilinx_sort_discovery
 
     sorted_candidates=$(printf '%s\n' "$vivado_candidates" | $sort_versions)
 
