@@ -178,14 +178,14 @@ xilinx_setup_vivado ()
     done
 
     error "Cannot find Vivado under: ${search_parents[*]}."                 \
-          "Expected <parent>/<vendor>/Vivado/bin,"                         \
-          "<parent>/<vendor>/Vivado/<version>/bin or"                      \
-          "<parent>/<vendor>/<version>/Vivado/bin,"                        \
+          "Expected <parent>/<vendor>/Vivado/bin,"                          \
+          "<parent>/<vendor>/Vivado/<version>/bin or"                       \
+          "<parent>/<vendor>/<version>/Vivado/bin,"                         \
           "where <vendor> is Xilinx, AMD, or AMDDesignTools."               \
-          "Set XILINX_HOME to <parent>, or XILINX_VIVADO to the directory"   \
+          "Set XILINX_HOME to <parent>, or XILINX_VIVADO to the directory"  \
           "containing bin for a specific Vivado installation."
-    return 1
 
+    return 1
 }
 
 #-----------------------------------------------------------------------------
@@ -200,7 +200,7 @@ setup_run_directory_for_fpga_synthesis_xilinx ()
         > "$dir/fpga_project_synthesize.tcl"
 
     cat "$board_dir/$fpga_board/board_specific.tcl"      \
-        "$script_dir/fpga/xilinx_vivado_configure.tcl"  \
+        "$script_dir/fpga/xilinx_vivado_configure.tcl"   \
         > "$dir/fpga_project_configure.tcl"
 }
 
