@@ -31,10 +31,14 @@ fi
 
 # Vendor directories created by the Xilinx / AMD installers.
 #
-# Two installation tree layouts are supported:
+# Three installation tree layouts are supported:
 #
+#     <parent>/<vendor>/Vivado            - no version directory
 #     <parent>/<vendor>/Vivado/<version>  - Vivado 2024.1 and older
 #     <parent>/<vendor>/<version>/Vivado  - Vivado 2024.2 and newer
+#
+# An installation without a version directory is used in preference to
+# the versioned ones found under the same parent directory.
 
 xilinx_vendor_dirs="Xilinx AMD AMDDesignTools"
 
@@ -51,15 +55,24 @@ xilinx_newline=$'\n'
 
 #-----------------------------------------------------------------------------
 
-# Remembers "$version $vivado_dir" if the directory looks like a usable
-# Vivado installation. The version goes first to make the list sortable.
+# Remembers a directory if it looks like a usable Vivado installation.
+#
+# When a version is given, it is remembered as "$version $vivado_dir",
+# the version first, to make the list sortable. An installation without
+# a version is remembered in a separate list.
 
 xilinx_add_vivado_candidate ()
 {
     local vivado_dir="$1"
-    local version="$2"
+    local version="${2-}"
 
     [ -d "$vivado_dir/bin" ] || return 0
+
+    if [ -z "$version" ]
+    then
+        vivado_candidates_without_version="${vivado_candidates_without_version:+$vivado_candidates_without_version$xilinx_newline}$vivado_dir"
+        return
+    fi
 
     vivado_candidates="${vivado_candidates:+$vivado_candidates$xilinx_newline}$version $vivado_dir"
 }
@@ -80,12 +93,17 @@ xilinx_try_install_dir ()
     # The first parent directory with an installation wins, so that
     # XILINX_HOME takes precedence over the standard locations
 
-    [ -z "${vivado_candidates-}" ] || return 0
+    [ -z "${vivado_candidates-}${vivado_candidates_without_version-}" ] || return 0
 
     attempt_vivado_install_parent_dirs="${attempt_vivado_install_parent_dirs:+$attempt_vivado_install_parent_dirs or }'$parent_dir'"
 
     for vendor in $xilinx_vendor_dirs
     do
+        # An installation without a version directory,
+        # such as /opt/Xilinx/Vivado/bin
+
+        xilinx_add_vivado_candidate "$parent_dir/$vendor/Vivado"
+
         if [ -d "$parent_dir/$vendor/Vivado" ]
         then
             while IFS= read -r version_dir
@@ -182,13 +200,14 @@ xilinx_setup_vivado ()
     #-------------------------------------------------------------------------
 
     vivado_candidates=
+    vivado_candidates_without_version=
     attempt_vivado_install_parent_dirs=
 
     if [ -n "${XILINX_HOME-}" ]
     then
         xilinx_try_install_dir "$XILINX_HOME"
 
-        if [ -z "$vivado_candidates" ]
+        if [ -z "$vivado_candidates$vivado_candidates_without_version" ]
         then
             warning "XILINX_HOME variable is set to '$XILINX_HOME',"  \
                     "but there is no Vivado installation under it"    \
@@ -218,11 +237,11 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    if [ -z "$vivado_candidates" ]
+    if [ -z "$vivado_candidates$vivado_candidates_without_version" ]
     then
         extra_msg="A vendor directory $xilinx_vendor_dirs_msg"
-        extra_msg+=" is expected to contain either"
-        extra_msg+=" 'Vivado/<version>' or '<version>/Vivado'."
+        extra_msg+=" is expected to contain 'Vivado'"
+        extra_msg+=" or 'Vivado/<version>' or '<version>/Vivado'."
         extra_msg+=" Its location (parent directory) can be set"
         extra_msg+=" by the environment variable XILINX_HOME."
         extra_msg+=" $msg_for_XILINX_VIVADO"
@@ -234,27 +253,41 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    xilinx_sort_discovery
+    # The candidates are listed from the lowest priority to the highest:
+    # the versioned installations from the oldest to the newest, then the
+    # installations without a version directory, which take precedence.
 
-    sorted_candidates=$(printf '%s\n' "$vivado_candidates" | $sort_versions)
+    all_vivado_dirs=
 
-    latest_version_dir=$(printf '%s\n' "$sorted_candidates" | tail -1)
-    latest_version_dir=${latest_version_dir#* }
+    if [ -n "$vivado_candidates" ]
+    then
+        xilinx_sort_discovery
+
+        all_vivado_dirs=$(printf '%s\n' "$vivado_candidates"  \
+            | $sort_versions | sed 's/^[^ ]* //')
+    fi
+
+    if [ -n "$vivado_candidates_without_version" ]
+    then
+        all_vivado_dirs="${all_vivado_dirs:+$all_vivado_dirs$xilinx_newline}$vivado_candidates_without_version"
+    fi
+
+    chosen_vivado_dir=$(printf '%s\n' "$all_vivado_dirs" | tail -1)
 
     #-------------------------------------------------------------------------
 
-    export XILINX_VIVADO="$latest_version_dir"
+    export XILINX_VIVADO="$chosen_vivado_dir"
     export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
 
     #-------------------------------------------------------------------------
 
-    all_version_dirs=$(printf '%s\n' "$sorted_candidates"  \
-        | sed 's/^[^ ]* //' | xargs echo)
+    all_vivado_dirs_in_one_line=$(printf '%s\n' "$all_vivado_dirs" | xargs echo)
 
-    if [ "$XILINX_VIVADO" != "$all_version_dirs" ]
+    if [ "$XILINX_VIVADO" != "$all_vivado_dirs_in_one_line" ]
     then
-        warning "multiple Xilinx Vivado versions installed:"  \
-                "'$all_version_dirs'"
+        warning "multiple Xilinx Vivado installations found:"  \
+                "'$all_vivado_dirs_in_one_line'."              \
+                "Using '$XILINX_VIVADO'"
 
         info "XILINX_VIVADO=$XILINX_VIVADO"
         info "PATH=$PATH"
