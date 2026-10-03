@@ -67,9 +67,9 @@ TODO: This is inconsistent with Linux, Altera and Xilinx. Need to review.
 
 3. On Linux, search `$HOME`, `/opt`, and `/tools`, in that order, after the explicit parent. On Cygwin/MSYS, search `/c`, `/d`, and `/e` instead.
 
-4. Under each parent, recognize `<parent>/<vendor>/Vivado`, `<parent>/<vendor>/Vivado/<version>`, and `<parent>/<vendor>/<version>/Vivado`, where `<vendor>` can be `Xilinx`, `AMD`, or `AMDDesignTools`. An installation must contain a `bin` directory.
+4. Under each parent, recognize `<parent>/<vendor>/Vivado/<version>` and `<parent>/<vendor>/<version>/Vivado`, where `<vendor>` can be `Xilinx`, `AMD`, or `AMDDesignTools`. An installation must contain a `bin` directory.
 
-5. Use the first parent containing an installation. Within that parent, prefer unversioned installations, checking `Xilinx`, `AMD`, then `AMDDesignTools`. If none exists, select the newest version across all supported vendors and layouts using version-aware sorting (`sort -V`), so `2026.10` sorts after `2026.2`.
+5. Use the first parent containing an installation. Within that parent, select the newest version across all supported vendors and layouts using version-aware sorting (`sort -V`), so `2026.10` sorts after `2026.2`.
 
    Discovery tries `/usr/bin/sort`, `/bin/sort`, then `sort` from `PATH`, checking version-sorting support before use. This avoids Windows' native `sort.exe`. If no compatible Unix utility is available, it warns and uses `sort` from `PATH` without options as a Windows fallback. This alphabetical ordering may select an older version; set `XILINX_VIVADO` to override it. Sorting failures still report an error.
 
