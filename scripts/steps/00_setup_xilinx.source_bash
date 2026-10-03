@@ -41,12 +41,12 @@ xilinx_sort_discovery ()
     for sort_candidate in /usr/bin/sort /bin/sort sort
     do
         if sort_probe=$(printf '2026.10\tb\n2026.2\ta\n' |
-            LC_ALL=C "$sort_candidate" -t $'\t' -k1,1V 2>/dev/null)
+            LC_ALL=C "$sort_candidate" -t $'\t' -k1,1V -k2,2 2>/dev/null)
         then
             if [ "$sort_probe" = $'2026.2\ta\n2026.10\tb' ]
             then
                 sort_to_run=$sort_candidate
-                sort_options=(-t $'\t' -k1,1V)
+                sort_options=(-t $'\t' -k1,1V -k2,2)
                 return
             fi
         fi
@@ -60,6 +60,36 @@ xilinx_sort_discovery ()
 
 #-----------------------------------------------------------------------------
 
+# Arguments: parent directory, then vendor names. Prints version/path records.
+xilinx_collect_vivado_candidates ()
+{
+    local parent="$1"
+    local vendor candidate version
+    shift
+
+    for vendor in "$@"
+    do
+        # Globs retain support for symlinked version directories.
+        # Only names beginning with a digit are treated as versions.
+        for candidate in "$parent/$vendor/Vivado/"[0-9]*
+        do
+            [ -d "$candidate/bin" ] || continue
+            version=${candidate##*/}
+            printf '%s\t%s\n' "$version" "$candidate"
+        done
+
+        for candidate in "$parent/$vendor/"[0-9]*/Vivado
+        do
+            [ -d "$candidate/bin" ] || continue
+            version=${candidate%/Vivado}
+            version=${version##*/}
+            printf '%s\t%s\n' "$version" "$candidate"
+        done
+    done
+}
+
+#-----------------------------------------------------------------------------
+
 xilinx_setup_vivado ()
 {
        [ "$OSTYPE" = "linux-gnu" ]  \
@@ -69,11 +99,12 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    local parent vendor candidate version latest_version_dir
+    local parent latest_version_dir
     local candidates sorted_candidates
     local sort_to_run
     local -a sort_options
     local -a search_parents
+    local -a vendor_dirs=(Xilinx AMD AMDDesignTools)
 
     if [ -n "${XILINX_VIVADO-}" ]
     then
@@ -109,33 +140,15 @@ xilinx_setup_vivado ()
 
     for parent in "${search_parents[@]}"
     do
-        candidates=
-        for vendor in Xilinx AMD AMDDesignTools
-        do
-            # Legacy layout: <parent>/<vendor>/Vivado/<version>.
-            for candidate in "$parent/$vendor/Vivado/"*
-            do
-                [ -d "$candidate/bin" ] || continue
-                version=${candidate##*/}
-                candidates+="$version"$'\t'"$candidate"$'\n'
-            done
-
-            # New layout: <parent>/<vendor>/<version>/Vivado.
-            for candidate in "$parent/$vendor/"*/Vivado
-            do
-                [ -d "$candidate/bin" ] || continue
-                version=${candidate%/Vivado}
-                version=${version##*/}
-                candidates+="$version"$'\t'"$candidate"$'\n'
-            done
-        done
+        candidates=$(xilinx_collect_vivado_candidates "$parent" "${vendor_dirs[@]}")
 
         if [ -n "$candidates" ]
         then
             xilinx_sort_discovery
 
-            # Compare versions across vendors and layouts within this parent.
-            if ! sorted_candidates=$(printf '%s' "$candidates" |
+            # Compare versions within this parent, then paths in C locale.
+            # The alphabetically last path wins an equal-version tie.
+            if ! sorted_candidates=$(printf '%s\n' "$candidates" |
                 LC_ALL=C "$sort_to_run" "${sort_options[@]}")
             then
                 error "Failed to sort Vivado versions using '$sort_to_run'."
@@ -168,7 +181,7 @@ xilinx_setup_vivado ()
     error "Cannot find Vivado under: ${search_parents[*]}."                 \
           "Expected <parent>/<vendor>/Vivado/<version>/bin or"              \
           "<parent>/<vendor>/<version>/Vivado/bin,"                         \
-          "where <vendor> is Xilinx, AMD, or AMDDesignTools."               \
+          "where <vendor> is one of: ${vendor_dirs[*]}."                    \
           "Set XILINX_HOME to <parent>, or XILINX_VIVADO to the directory"  \
           "containing bin for a specific Vivado installation."
 
