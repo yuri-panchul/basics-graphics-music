@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Два робота и один скрипт на Bash</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap">
+<style>
+  :root {
+    --ground:   #fbfaf9;
+    --surface:  #ffffff;
+    --ink:      #1c1a18;
+    --muted:    #5f5a54;
+    --faint:    #918b83;
+    --rule:     #e4e0da;
+    --rule2:    #c4bdb3;
+    --accent:   #7b2233;
+    --accent-bg:#f8eeef;
+    --codex:    #3f5566;
+    --code-bg:  #f0edea;
+
+    --display: "PT Serif", Georgia, serif;
+    --body:    "PT Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #161514;
+      --surface:  #1e1c1a;
+      --ink:      #ece8e3;
+      --muted:    #a9a29a;
+      --faint:    #7b746c;
+      --rule:     #2d2a27;
+      --rule2:    #433e39;
+      --accent:   #e08a93;
+      --accent-bg:#271a1c;
+      --codex:    #9db4c6;
+      --code-bg:  #1a1917;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #161514;
+    --surface:  #1e1c1a;
+    --ink:      #ece8e3;
+    --muted:    #a9a29a;
+    --faint:    #7b746c;
+    --rule:     #2d2a27;
+    --rule2:    #433e39;
+    --accent:   #e08a93;
+    --accent-bg:#271a1c;
+    --codex:    #9db4c6;
+    --code-bg:  #1a1917;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17.5px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 3rem 5rem;
+  }
+
+  .kicker {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.9rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2rem, 7vw, 3.1rem);
+    line-height: 1.08;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    margin: 0 0 1.1rem;
+  }
+
+  .byline {
+    font-size: 0.92rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  .byline b { color: var(--ink); font-weight: 700; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.008em;
+    text-wrap: balance;
+    margin: 2.8rem 0 0.8rem;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.12rem;
+    margin: 1.9rem 0 0.5rem;
+  }
+
+  p { margin: 0 0 1.1rem; }
+  .lead { font-size: 1.14rem; color: var(--muted); }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.84em;
+    background: var(--code-bg);
+    padding: 0.1em 0.32em;
+    border-radius: 2px;
+  }
+
+  blockquote {
+    margin: 1.6rem 0;
+    padding: 0 0 0 1.2rem;
+    border-left: 3px solid var(--accent);
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 1.48;
+    color: var(--ink);
+  }
+  blockquote p { margin: 0; }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.79rem;
+    line-height: 1.75;
+    background: var(--code-bg);
+    padding: 0.9rem 1.05rem;
+    margin: 0 0 1.3rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre .cm { color: var(--faint); }
+
+  .scroll { overflow-x: auto; margin-bottom: 1.4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 0.5rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.5rem 0.85rem 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  thead th {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule2);
+    white-space: nowrap;
+  }
+  .k-claude { color: var(--accent); font-weight: 700; }
+  .k-codex  { color: var(--codex);  font-weight: 700; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  ul, ol { margin: 0 0 1.2rem; padding-left: 1.4rem; }
+  li { margin-bottom: 0.5rem; }
+
+  .reports {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 1.1rem 1.3rem;
+    margin: 1.6rem 0;
+  }
+  .reports h3 { margin-top: 0; }
+  .reports ul { margin-bottom: 0; list-style: none; padding-left: 0; }
+  .reports li {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    margin-bottom: 0.3rem;
+  }
+  .reports .tag {
+    display: inline-block;
+    min-width: 4.2rem;
+    font-family: var(--body);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .events {
+    font-size: 0.93rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding-block: 1rem;
+    margin: 1.5rem 0;
+  }
+  .events ul { margin: 0; padding-left: 1.3rem; }
+  .events li { margin-bottom: 0.3rem; }
+
+  footer {
+    margin-top: 3.2rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.84rem;
+    color: var(--faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="kicker">Разработка с помощью ИИ</p>
+  <h1>Два робота и один скрипт на Bash</h1>
+  <p class="byline">
+    <b>Юрий Панчуль</b> · октябрь 2026 года · о проекте
+    <code>basics-graphics-music</code>
+  </p>
+
+  <p class="lead">
+    Я не виртуоз Bash-скриптинга, но оценить качество кода на Bash я могу.
+    Как выяснилось, этого достаточно, чтобы поставить полезный опыт: дать двум
+    ИИ-агентам одну и ту же задачу в двух отдельных клонах одного репозитория,
+    заставить каждого разобрать работу другого — и посмотреть, к чему они придут.
+  </p>
+
+  <h2>Сначала — о репозитории</h2>
+
+  <p>
+    <code>basics-graphics-music</code>, или BGM, — это коллекция переносимых
+    примеров на SystemVerilog для проектирования на ПЛИС и для заказных
+    микросхем. Берёте плату, запускаете один скрипт, чтобы её выбрать, и другой,
+    который синтезирует проект, разместит и разведёт его и прошьёт плату.
+    Нажимаете кнопки, смотрите, как загораются светодиоды, видите картинку на
+    VGA или HDMI, слышите звук из аудиовыхода.
+  </p>
+
+  <p>
+    Смысл проекта в том, что примеры переносимы, а переносимыми их делает самая
+    неблагодарная его часть: скрипты и обёртки для плат. Сейчас BGM поддерживает
+    <strong>54 разные платы</strong>: платы Terasic серии DE, Digilent Arty,
+    Nexys и Basys, очень большое семейство Sipeed Tang, iCEBreaker, OrangeCrab,
+    Karnix, «Марсоход», ALINX, OMDAZZ и другие. За ними стоят пять разных
+    наборов инструментов: Intel Quartus, AMD Vivado, Gowin EDA, инструменты
+    Lattice и открытый поток на основе Yosys.
+  </p>
+
+  <p>
+    Эти 54 платы занимают <strong>112 каталогов</strong>, и разница между двумя
+    числами сама по себе стоит отдельного абзаца, потому что в ней и состоит
+    суть задачи. У платы редко бывает одна конфигурация. На одну только Tang
+    Nano 9K приходится восемнадцать каталогов: с модулем TM1638 (клавиатура плюс
+    индикатор) и без него, с выводом на HDMI или на один из трёх разных
+    ЖК-экранов, со сборкой штатными инструментами вендора или через Yosys, а в
+    одном случае — с тактированием на 50&nbsp;МГц через дополнительный PLL
+    вместо родных 27. Ещё четырнадцать каталогов приходится на Tang Primer 20K
+    Dock и по семь — на iCEBreaker и Tang Nano 20K.
+  </p>
+
+  <blockquote>
+    <p>
+      Пятьдесят четыре платы, сто двенадцать конфигураций, пять наборов
+      инструментов. Этот зверинец не нужно уничтожать — он и есть реальность
+      преподавания цифровой схемотехники, а скрипты существуют, чтобы его
+      спрятать.
+    </p>
+  </blockquote>
+
+  <p>
+    Всё это важно из-за того, как проектом пользуются на практике. Когда я веду
+    семинар, в аудитории не одна разновидность плат. Там то, что есть у
+    университета, то, что принесли студенты, и то, что я привёз с собой.
+    Студент с Tang Nano 9K и студент с Nexys A7 должны уметь запустить одну и ту
+    же лабораторную из одного и того же репозитория одними и теми же двумя
+    командами. В этом и состоит цель, и каждый час, потраченный на слой
+    Bash-скриптов, возвращается сотней часов, которые другие люди не потратят на
+    борьбу с инструментами.
+  </p>
+
+  <div class="events">
+    Где это использовалось — в частности:
+    <ul>
+      <li>2022 — Американский университет в Центральной Азии, Бишкек, Киргизия</li>
+      <li>2023 — LaLambda, Тбилиси, Грузия; школа синтеза в России и Белоруссии</li>
+      <li>2024 — Университет ADA, Баку, Азербайджан; Hacker Dojo, Кремниевая долина</li>
+      <li>2025 — Автономный университет Нижней Калифорнии, Тихуана, Мексика;
+      Российско-Армянский университет и Институт проблем информатики и
+      автоматизации НАН РА, Ереван, Армения</li>
+    </ul>
+  </div>
+
+  <p>
+    Преподаватели берут BGM потому, что он убирает сложность вендорских
+    инструментов из первой недели курса. Никто не узнаёт ничего нового о
+    конечных автоматах за сорок минут возни с диалогами лицензий и структурой
+    каталогов.
+  </p>
+
+  <h2>Задача, которую нам подарила AMD</h2>
+
+  <p>
+    Теперь о самом скрипте. Много лет Vivado устанавливался в каталог, который
+    выглядел так:
+  </p>
+
+<pre>&lt;родительский каталог&gt;/Xilinx/Vivado/2023.1</pre>
+
+  <p>
+    Наш скрипт настройки искал именно это — в <code>$HOME</code>,
+    <code>/opt</code> и <code>/tools</code>. Потом, начиная с версии 2024.2, AMD
+    поставила номер версии <em>выше</em> названия продукта, да и каталог вендора
+    теперь называется не обязательно Xilinx:
+  </p>
+
+<pre>&lt;родительский каталог&gt;/AMD/2026.1/Vivado</pre>
+
+  <p>
+    Скрипт перестал находить Vivado. Хуже того, позже я узнал, что он делал
+    кое-что более стыдное, чем просто не находить. Если установка была вообще без
+    каталога версии, скрипт послушно перебирал внутренние подкаталоги самого
+    Vivado, как будто это номера версий, сортировал их по алфавиту и выбирал
+    последний:
+  </p>
+
+<pre>XILINX_VIVADO=.../Xilinx/Vivado/tps
+PATH=...:.../Xilinx/Vivado/tps/bin</pre>
+
+  <p>
+    После чего уверенно печатал предупреждение, что установлено несколько версий
+    Vivado, и перечислял среди них <code>tps</code>, <code>scripts</code> и
+    <code>lib</code>. Студент, наступивший на это, получил бы сообщение о том,
+    что <code>vivado</code> не найден в пути, — на несколько шагов позже и совсем
+    не в том месте, где настоящая причина.
+  </p>
+
+  <h2>Эксперимент</h2>
+
+  <p>
+    У меня рядом лежат два клона репозитория: <code>~/claude</code> и
+    <code>~/codex</code>. Я дал одну и ту же задачу Claude в одном и Codex в
+    другом, в отдельных ветках, так что про существование друг друга они не
+    знали. А потом несколько раз повторил три действия:
+  </p>
+
+  <ol>
+    <li>Попросить каждого реализовать или улучшить поиск.</li>
+    <li>Попросить каждого прочитать чужой клон и написать отчёт со сравнением
+    двух реализаций — с достоинствами и недостатками каждой.</li>
+    <li>Попросить каждого улучшить свой код по итогам этого сравнения.</li>
+  </ol>
+
+  <p>
+    Вот здесь и перестаёт иметь значение то, что я не виртуоз Bash. Мне не нужно
+    было придумывать правильную реализацию. Мне нужно было прочитать два довода
+    об одном и том же коде и решить, который лучше, — а это навык, которым
+    обладать гораздо проще и который гораздо проще применять быстро.
+  </p>
+
+  <h2>Первый раунд: они оказались разными</h2>
+
+  <p>
+    С раскладкой каталогов справились оба. Интересные различия были в другом, и
+    каждый нашёл то, что упустил другой.
+  </p>
+
+  <p>
+    Codex обеспокоился случаем, который мне бы в голову не пришёл. Под Cygwin и
+    MSYS — а ими пользуется немало студентов — командой <code>sort</code> в пути
+    может оказаться виндовый <code>sort.exe</code>, который про сортировку версий
+    не знает ничего. Поэтому Codex сначала пробует
+    <code>/usr/bin/sort</code> и <code>/bin/sort</code>, а <code>sort</code> из
+    пути — только в последнюю очередь. И он не просто проверяет, что опция
+    <code>-V</code> принимается: он подсовывает кандидату два номера версий и
+    смотрит на ответ.
+  </p>
+
+<pre>printf '2026.10\tb\n2026.2\ta\n' | LC_ALL=C "$sort_candidate" -t $'\t' -k1,1V
+<span class="cm"># принять этот sort только если 2026.2 действительно вышло раньше 2026.10</span></pre>
+
+  <p>
+    Версия Claude проверяла только то, что <code>sort -V</code> не завершился
+    ошибкой. Когда я попросил Claude протестировать собственный код против
+    намеренно испорченного <code>sort</code>, он выбрал Vivado
+    <strong>2026.9</strong> вместо <strong>2026.10</strong> и всего лишь напечатал
+    предупреждение. Это как раз та разновидность ошибки, из которой получается
+    озадаченный студент и впустую потраченный вечер.
+  </p>
+
+  <p>
+    Claude тоже кое-что нашёл. Эти скрипты не выполняются, а подключаются через
+    <code>source</code> в интерактивную оболочку пользователя, поэтому каждая
+    переменная, которую забыли объявить как <code>local</code>, остаётся потом в
+    вашей сессии. Claude это измерил: исходный скрипт оставлял после себя
+    <strong>семь</strong> переменных, его собственная первая попытка —
+    <strong>одиннадцать</strong>, а Codex — <strong>ни одной</strong>. После чего
+    Claude исправил свой код, и вот это самое полезное.
+  </p>
+
+  <p>
+    И на одном поведении Claude настоял, а у Codex его до сих пор нет. Если
+    каталог похож на установку Vivado, но его имя начинается не с цифры, Codex
+    молча его пропускает. Claude его называет:
+  </p>
+
+<pre>warning: ignoring '.../Xilinx/Vivado/mybuild', because the name
+         of a version directory is expected to start with a digit.
+         You can also use XILINX_VIVADO variable to specify a directory ...</pre>
+
+  <p>
+    Для учебного репозитория такое сообщение стоит реальных денег. Молчаливый
+    вариант превращает исправление на пять секунд в обращение в поддержку.
+  </p>
+
+  <h2>Второй раунд: они сошлись</h2>
+
+  <p>
+    А дальше произошло то, чего я не ожидал. Каждый агент прочитал разбор от
+    другого и взял оттуда удачные идеи. За пару раундов оба перешли с
+    <code>find</code> на шаблоны оболочки, оба стали требовать, чтобы имя
+    каталога версии начиналось с цифры, оба начали искать <code>sort</code>,
+    который действительно работает, оба отказались от поддержки установок без
+    каталога версии, когда я решил, что этот случай нам не нужен, и оба пришли к
+    одному и тому же стилю сообщений.
+  </p>
+
+  <p>
+    К последнему раунду Claude прогнал обе реализации через один стенд на
+    одинаковых поддельных деревьях установки — включая совпадение версий в двух
+    разных каталогах вендора, каталог версии, сделанный символьной ссылкой, и
+    подменённый <code>sort</code> — и доложил, что в
+    <strong>одиннадцати случаях из одиннадцати</strong> оба скрипта выбирают один
+    и тот же каталог. Две независимые реализации, ни строчки общего кода,
+    одинаковый ответ каждый раз.
+  </p>
+
+  <blockquote>
+    <p>
+      Когда два решения расходятся, одно из них вас чему-то учит. Когда они
+      перестают расходиться — скорее всего, работа закончена.
+    </p>
+  </blockquote>
+
+  <p>
+    Сравнивать осталось уже не поведение, а размер, диагностику и вкус:
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>После сближения</caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="k-codex">codex</th>
+          <th class="k-claude">claude</th>
+          <th>исходный</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Строк в файле</td><td class="num">284</td><td class="num">403</td><td class="num">255</td></tr>
+        <tr><td>Функций</td><td class="num">3</td><td class="num">6</td><td class="num">1</td></tr>
+        <tr><td>Переменных, оставленных в вашей оболочке</td><td class="num">0</td><td class="num">1</td><td class="num">7</td></tr>
+        <tr><td>Объясняет, почему пропустил каталог</td><td>нет</td><td>да</td><td>нет</td></tr>
+        <tr><td>Выживает при подменённом <code>sort</code></td><td>да</td><td>да</td><td>—</td></tr>
+        <tr><td>Расхождений в выборе из 11</td><td class="num">0</td><td class="num">0</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Версия Codex на 119 строк короче, функций в ней вдвое меньше, и она не
+    оставляет за собой переменных. Версия Claude — единственная, которая
+    объясняет студенту, почему его установку проигнорировали. Это настоящий
+    инженерный компромисс, и такое решение я с удовольствием приму сам — а
+    именно туда я и хотел прийти.
+  </p>
+
+  <h2>Отчёты</h2>
+
+  <p>
+    Все шесть отчётов лежат в репозитории, по три с каждой стороны, написанные на
+    последовательных этапах соревнования. Их стоит читать по порядку, потому что
+    видно, как сокращается разрыв:
+  </p>
+
+  <div class="reports">
+    <h3>
+      <a href="https://github.com/yuri-panchul/basics-graphics-music/tree/main/misc/ai_sessions/20261003_xilinx_support">misc/ai_sessions/20261003_xilinx_support</a>
+    </h3>
+    <ul>
+      <li><span class="tag k-claude">claude</span> claude_report_1.html</li>
+      <li><span class="tag k-claude">claude</span> claude_report_2.html</li>
+      <li><span class="tag k-claude">claude</span> claude_report_3.html</li>
+      <li><span class="tag k-codex">codex</span> codex_report_1.html</li>
+      <li><span class="tag k-codex">codex</span> codex_report_2.html</li>
+      <li><span class="tag k-codex">codex</span> codex_report_3.html</li>
+    </ul>
+  </div>
+
+  <p>
+    В каждом отчёте простым языком и по шагам разобрано, как именно выбирается
+    установка Vivado, — а такой документации у проекта до этого просто не было, и
+    появилась она как побочный результат соревнования.
+  </p>
+
+  <h2>Что я из этого вынес</h2>
+
+  <p>
+    Несколько вещей, в порядке важности — как я её вижу.
+  </p>
+
+  <h3>Соревнование показывает слепые зоны, которых не видит обзор кода</h3>
+
+  <p>
+    Если бы я попросил одного агента написать скрипт, а потом попросил его же
+    проверить свою работу, я получил бы уверенный отчёт — и ошибку с виндовым
+    <code>sort.exe</code> в придачу. Слабые места первой реализации стали видны
+    именно из-за второй, потому что она сделала другой выбор, а не просто
+    внимательнее посмотрела на тот же самый.
+  </p>
+
+  <h3>Заставляйте их тестировать, а не только писать</h3>
+
+  <p>
+    Самое ценное, что сделал каждый из агентов, — это стенд для тестов: заглушки
+    вместо вспомогательных функций, поддельные деревья установки и прогон обоих
+    скриптов по одинаковым случаям. Именно так ошибка с <code>2026.9</code> против
+    <code>2026.10</code> перестала быть теорией. «Оно синтезируется» и «оно
+    работает» — разные утверждения, и агент с радостью выдаст вам первое тоном,
+    которым произносят второе.
+  </p>
+
+  <h3>Судить — навык меньший, чем писать, и он хорошо масштабируется</h3>
+
+  <p>
+    Я бы не написал по памяти ту проверку <code>sort</code>, которую придумал
+    Codex. Но у меня не возникло ни малейших затруднений с тем, чтобы признать её
+    лучше решения Claude, когда оба лежали передо мной с пояснениями. Для
+    человека, который поддерживает проект, в этой асимметрии и состоит вся
+    возможность.
+  </p>
+
+  <h3>Сохраняйте отчёты</h3>
+
+  <p>
+    Положить отчёты со сравнением в <code>misc/ai_sessions/</code> оказалось
+    полезнее, чем я думал. Через полгода, когда кто-нибудь спросит, зачем скрипт
+    пробует три разных двоичных файла <code>sort</code>, ответ будет лежать в
+    репозитории, а не в моей памяти.
+  </p>
+
+  <p>
+    Сейчас скрипт находит Vivado в каталогах <code>Xilinx</code>,
+    <code>AMD</code> и <code>AMDDesignTools</code>, в обеих раскладках — старой и
+    новой, правильно сравнивает номера версий и говорит что-то осмысленное, когда
+    не находит ничего. Для этого понадобились два робота, спорящих друг с другом,
+    и человек, решающий, кто из них прав.
+  </p>
+
+  <footer>
+    <code>basics-graphics-music</code> находится по адресу
+    <a href="https://github.com/yuri-panchul/basics-graphics-music">github.com/yuri-panchul/basics-graphics-music</a>.
+    Число плат, список инструментов и приведённые в тексте цифры взяты из
+    репозитория на момент написания.
+  </footer>
+
+</div>
+</body>
+</html>
