@@ -52,14 +52,18 @@ xilinx_sort_discovery ()
         fi
     done
 
-    warning "No Unix sort with version sorting support found."          \
-            "Using sort from PATH without options (Windows fallback)." \
-            "Alphabetical sorting may select an older Vivado version;" \
+    warning "no Unix sort with version sorting support found."          \
+            "Using sort from PATH without options (Windows fallback)."  \
+            "Alphabetical sorting may select an older Vivado version;"  \
             "set XILINX_VIVADO to select a specific installation."
 }
 
 #-----------------------------------------------------------------------------
 
+# Supported installation layouts:
+#   <parent>/<vendor>/Vivado/<version>/bin
+#   <parent>/<vendor>/<version>/Vivado/bin
+#
 # Arguments: parent directory, then vendor names. Prints version/path records.
 xilinx_collect_vivado_candidates ()
 {
@@ -100,7 +104,8 @@ xilinx_setup_vivado ()
     #-------------------------------------------------------------------------
 
     local parent latest_version_dir
-    local candidates sorted_candidates
+    local candidates sorted_candidates candidate_record candidate_path
+    local candidate_paths parent_paths
     local sort_to_run
     local -a sort_options
     local -a search_parents
@@ -114,8 +119,8 @@ xilinx_setup_vivado ()
             return
         fi
 
-        warning "XILINX_VIVADO variable is set to '$XILINX_VIVADO'," \
-                "but there is no directory '$XILINX_VIVADO/bin'."    \
+        warning "XILINX_VIVADO variable is set to '$XILINX_VIVADO',"  \
+                "but there is no directory '$XILINX_VIVADO/bin'."     \
                 "Trying to find Vivado directory elsewhere."
     fi
 
@@ -151,9 +156,9 @@ xilinx_setup_vivado ()
             if ! sorted_candidates=$(printf '%s\n' "$candidates" |
                 LC_ALL=C "$sort_to_run" "${sort_options[@]}")
             then
-                error "Failed to sort Vivado versions using '$sort_to_run'."
-                return 1
+                error "failed to sort Vivado versions using '$sort_to_run'."
             fi
+
             # Windows sort emits CRLF line endings.
             sorted_candidates=${sorted_candidates//$'\r'/}
             latest_version_dir=${sorted_candidates##*$'\n'}
@@ -163,8 +168,15 @@ xilinx_setup_vivado ()
 
             if [[ "$sorted_candidates" == *$'\n'* ]]
             then
-                warning "multiple Vivado versions installed under '$parent':" \
-                        "$sorted_candidates"
+                candidate_paths=
+                while IFS= read -r candidate_record
+                do
+                    candidate_path=${candidate_record#*$'\t'}
+                    candidate_paths+="${candidate_paths:+, }'$candidate_path'"
+                done <<< "$sorted_candidates"
+
+                warning "multiple Vivado installations found: $candidate_paths."  \
+                        "Using '$XILINX_VIVADO'."
                 info "XILINX_VIVADO=$XILINX_VIVADO"
                 info "PATH=$PATH"
             fi
@@ -173,19 +185,23 @@ xilinx_setup_vivado ()
 
         if [ -n "${XILINX_HOME-}" ] && [ "$parent" = "$XILINX_HOME" ]
         then
-            warning "No Vivado installation found under XILINX_HOME='$XILINX_HOME'." \
+            warning "no Vivado installation found under XILINX_HOME='$XILINX_HOME'."  \
                     "Trying the default installation parents."
         fi
     done
 
-    error "Cannot find Vivado under: ${search_parents[*]}."                 \
+    parent_paths=
+    for parent in "${search_parents[@]}"
+    do
+        parent_paths+="${parent_paths:+, }'$parent'"
+    done
+
+    error "cannot find Vivado under: $parent_paths."                        \
           "Expected <parent>/<vendor>/Vivado/<version>/bin or"              \
           "<parent>/<vendor>/<version>/Vivado/bin,"                         \
           "where <vendor> is one of: ${vendor_dirs[*]}."                    \
           "Set XILINX_HOME to <parent>, or XILINX_VIVADO to the directory"  \
           "containing bin for a specific Vivado installation."
-
-    return 1
 }
 
 #-----------------------------------------------------------------------------
