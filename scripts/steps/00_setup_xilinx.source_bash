@@ -30,6 +30,7 @@ fi
 #-----------------------------------------------------------------------------
 
 # Sets sort_to_run and sort_options in the caller.
+
 xilinx_sort_discovery ()
 {
     local sort_candidate sort_probe
@@ -38,6 +39,7 @@ xilinx_sort_discovery ()
     sort_options=()
 
     # Prefer the Unix utility over Windows sort.exe on PATH.
+
     for sort_candidate in /usr/bin/sort /bin/sort sort
     do
         if sort_probe=$(printf '2026.10\tb\n2026.2\ta\n' |
@@ -65,6 +67,7 @@ xilinx_sort_discovery ()
 #   <parent>/<vendor>/<version>/Vivado/bin
 #
 # Arguments: parent directory, then vendor names. Prints version/path records.
+
 xilinx_collect_vivado_candidates ()
 {
     local parent="$1"
@@ -73,8 +76,10 @@ xilinx_collect_vivado_candidates ()
 
     for vendor in "$@"
     do
+
         # Globs retain support for symlinked version directories.
         # Only names beginning with a digit are treated as versions.
+
         for candidate in "$parent/$vendor/Vivado/"[0-9]*
         do
             [ -d "$candidate/bin" ] || continue
@@ -131,6 +136,7 @@ xilinx_setup_vivado ()
 
     # Explicit parent first, then the platform's default installation parents.
     search_parents=()
+
     if [ -n "${XILINX_HOME-}" ]
     then
         search_parents+=("$XILINX_HOME")
@@ -158,6 +164,7 @@ xilinx_setup_vivado ()
 
             # Compare versions within this parent, then paths in C locale.
             # The alphabetically last path wins an equal-version tie.
+
             if ! sorted_candidates=$(printf '%s\n' "$candidates" |
                 LC_ALL=C "$sort_to_run" "${sort_options[@]}")
             then
@@ -174,6 +181,7 @@ xilinx_setup_vivado ()
             if [[ "$sorted_candidates" == *$'\n'* ]]
             then
                 candidate_paths=
+
                 while IFS= read -r candidate_record
                 do
                     candidate_path=${candidate_record#*$'\t'}
@@ -196,6 +204,7 @@ xilinx_setup_vivado ()
     done
 
     parent_paths=
+
     for parent in "${search_parents[@]}"
     do
         parent_paths+="${parent_paths:+, }'$parent'"
