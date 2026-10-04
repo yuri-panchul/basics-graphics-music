@@ -31,11 +31,11 @@ void thread_3 ()
 
 void main ()
 {
-    define_thread (thread_1);
-    define_thread (thread_2);
-    define_thread (thread_3);
+    rr_thread_define (thread_1);
+    rr_thread_define (thread_2);
+    rr_thread_define (thread_3);
 
-    start_running_threads ();
+    rr_threads_start_running_all ();
 
     for (;;);
 }

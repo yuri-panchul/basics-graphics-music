@@ -34,16 +34,16 @@ next_thread_stack_bottom:
         .text
 
         .balign     4
-        .global     define_thread
+        .global     rr_thread_define
 
-define_thread:
+rr_thread_define:
 
         lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, after_thread_contexts
 
         blt         t0, t1, enough_space_for_the_new_thread
 
-define_thread_error_return:
+rr_thread_define_error_return:
 
         li          a0, 0  // Error return code
         ret
@@ -55,7 +55,7 @@ enough_space_for_the_new_thread:
         lw          t2, %lo (next_thread_stack_bottom) (gp)
         addi        t3, t2, THREAD_STACK_SIZE  // Thread stack top
         la          t4, __stack_top - MAIN_STACK_SIZE
-        bgt         t3, t4, define_thread_error_return
+        bgt         t3, t4, rr_thread_define_error_return
 
         sw          a0, THREAD_CONTEXT_OFFSET_PC (t0)
 
@@ -75,9 +75,9 @@ enough_space_for_the_new_thread:
 
 //----------------------------------------------------------------------------
 
-        .global     start_running_threads
+        .global     rr_threads_start_running_all
 
-start_running_threads:
+rr_threads_start_running_all:
 
         // Initialize the thread pointer to 0.
         // tp will be changed to thread_contexts after the first interrupt.

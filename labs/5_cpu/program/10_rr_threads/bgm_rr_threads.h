@@ -100,10 +100,10 @@
 
 typedef void (* pointer_to_void_function_no_arguments) ();
 
-extern bool define_thread (void (* func) ());
-extern bool define_thread (pointer_to_void_function_no_arguments func);
+extern bool rr_thread_define (void (* func) ());
+extern bool rr_thread_define (pointer_to_void_function_no_arguments func);
 
-extern void start_running_threads ();
+extern void rr_threads_start_running_all ();
 
 #endif  // #ifndef __ASSEMBLER__
 
