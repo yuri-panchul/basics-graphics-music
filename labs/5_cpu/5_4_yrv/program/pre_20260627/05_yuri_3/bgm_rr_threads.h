@@ -1,26 +1,22 @@
-#ifndef BGM_FEMTO_THREADS_H
-#define BGM_FEMTO_THREADS_H
+#ifndef BGM_RR_THREADS_H
+#define BGM_RR_THREADS_H
 
 //----------------------------------------------------------------------------
 // Limits and sizes
 
-#define WORD_SIZE          4
-#define MAX_THREADS        8
-#define MAIN_STACK_SIZE    128
-#define THREAD_STACK_SIZE  128
+#define MAX_THREADS  8
+#define WORD_SIZE    4
 
 //----------------------------------------------------------------------------
 // The thread context words.
 // Most words are used to store registers,
-// however we do not need to store x0 (zero), x3 (gp) and x4 (tp),
+// however we do not need to store x0 (zero) and x4 (tp),
 // so we use the corresponding words for something else.
-// Or we don't use them at all to prevent confusing unrelated data
-// with the saved registers.
 
 #define THREAD_CONTEXT_WORD_RESERVED_0   0  // We do not to store x0
 #define THREAD_CONTEXT_WORD_RA           1
 #define THREAD_CONTEXT_WORD_SP           2
-#define THREAD_CONTEXT_WORD_RESERVED_3   3  // We do not need to store gp
+#define THREAD_CONTEXT_WORD_GP           3
 #define THREAD_CONTEXT_WORD_RESERVED_4   4  // We do not need to store tp
 #define THREAD_CONTEXT_WORD_T0           5
 #define THREAD_CONTEXT_WORD_T1           6
@@ -104,4 +100,4 @@ extern void start_running_threads ();
 
 #endif  // #ifndef __ASSEMBLER__
 
-#endif  // #ifndef BGM_FEMTO_THREADS_H
+#endif  // #ifndef BGM_RR_THREADS_H

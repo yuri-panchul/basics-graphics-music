@@ -1,7 +1,5 @@
-#include "riscv_cpu_config.h"
+#include "bgm_rr_threads.h"
 #include "csr_masks.h"
-#include "bgm_femto_threads.h"
-#include "memory_mapped_registers.h"
 
 //----------------------------------------------------------------------------
 
@@ -17,16 +15,17 @@ after_thread_contexts:
 
 // For whatever reason GCC version we use does not recognize ".sdata"
 // and requires writing ".section .sdata".
-// It also does not assume allocatable "a" by default.
 
-        .section    .sdata, "a"
+        .section .sdata, "aw", @progbits  // В противном случае линкер оптимизирует .sdata оставляя __sdata_start
         .balign 4
+
+        // Даем линкеру всю возможную информацию
+        .global threads_end_pointer
+        .type threads_end_pointer, @object
+        .size threads_end_pointer, 4
 
 threads_end_pointer:
         .word       thread_contexts
-
-next_thread_stack_bottom:
-        .word       __stack_bottom
 
 //----------------------------------------------------------------------------
 
@@ -40,23 +39,14 @@ define_thread:
         lw          t0, %lo (threads_end_pointer) (gp)
         la          t1, after_thread_contexts
 
-        blt         t0, t1, enough_space_for_the_new_thread
-
-define_thread_error_return:
-
-        li          a0, 0  // Error return code
+        blt         t0, t1, enough_space_for_new_thread
+        li          a0, 0  // Error return
         ret
 
-enough_space_for_the_new_thread:
-
-        // Check we have enough memory for the thread's stack
-
-        lw          t2, %lo (next_thread_stack_bottom) (gp)
-        addi        t3, t2, THREAD_STACK_SIZE  // Thread stack top
-        la          t4, __stack_top - MAIN_STACK_SIZE
-        bgt         t3, t4, define_thread_error_return
+enough_space_for_new_thread:
 
         sw          a0, THREAD_CONTEXT_OFFSET_PC (t0)
+        sw          a0, THREAD_CONTEXT_OFFSET_RA (t0)
 
         // By saving a0 into RA of the context we guarantee
         // that if the thread finishes it loops
@@ -64,10 +54,8 @@ enough_space_for_the_new_thread:
 
         sw          a0, THREAD_CONTEXT_OFFSET_RA (t0)
 
-        sw          t3, THREAD_CONTEXT_OFFSET_SP (t0)
-
-        addi        t5, t0, THREAD_CONTEXT_SIZE
-        sw          t5, %lo (threads_end_pointer) (gp)
+        addi        t2, t0, THREAD_CONTEXT_SIZE
+        sw          t2, %lo (threads_end_pointer) (gp)
 
         li          a0, 1
         ret
@@ -82,13 +70,10 @@ start_running_threads:
         // tp will be changed to thread_contexts after the first interrupt.
 
         li          tp, 0
+        li          t1,      MIE_MTIE     // Enable timer interrupt
+        csrw        mie,     t1
 
-        li          t1, MASK_32      // Enable every type of interrupt
-        csrw        mie, t1
-
-        li          t2, MSTATUS_MIE  // Enable interrupts
-        csrs        mstatus, t2
-
+        csrwi       mstatus, MSTATUS_MIE  // Enable interrupts
         ret
 
 //----------------------------------------------------------------------------
@@ -97,8 +82,10 @@ start_running_threads:
         .global     trap_ack
 
 trap_ack:
-        //csrc    mstatus, MSTATUS_MIE
-        
+
+        // TODO: Can we guarantee that all exceptions are disabled
+        // at this point?
+
         csrrw       t6, mscratch, t6   // Get trap frame pointer, save t6
         sw          t0, (t6)           // Save t0
 
@@ -112,22 +99,9 @@ trap_ack:
         // Check if a timer interrupt
 
         sw          t1, 1 * WORD_SIZE (t6)     // Save t1
-
-        // #define LOCAL_DEBUG
-        #ifdef LOCAL_DEBUG
-
-        la          t0, MMIO_LED_ADDR
-        lw          t1, (t0)
-        neg         t1, t1
-        sw          t1, (t0)
-
-        #endif
-
         li          t1, MCAUSE_EXCCODE_MASK
-        and         t0, t0, t1                 // Isolate interrupt cause                
-        li          t1, MCAUSE_EXCCODE_YRV_PLATFORM_LOCAL_INTERRUPT_2 
-
-        
+        and         t0, t0, t1                 // Isolate interrupt cause
+        li          t1, MCAUSE_EXCCODE_MACHINE_TIMER_INTERRUPT
         bne         t0, t1, not_timer_interrupt
 
         //--------------------------------------------------------------------
@@ -138,7 +112,7 @@ trap_ack:
         la          t1, thread_contexts
         addi        t2, t1, 2 * THREAD_CONTEXT_SIZE
 
-        // TODO: consider one thread as a special case
+        # TODO: consider one thread as a special case
 
         blt         t0, t2, less_than_two_threads_defined
         j           switch_the_contexts
@@ -264,7 +238,7 @@ restore_context:
 
         lw          ra  , THREAD_CONTEXT_OFFSET_RA     (tp)
         lw          sp  , THREAD_CONTEXT_OFFSET_SP     (tp)
-        lw          t0  , THREAD_CONTEXT_OFFSET_T1     (tp)
+        lw          t0  , THREAD_CONTEXT_OFFSET_T0     (tp)
         lw          t1  , THREAD_CONTEXT_OFFSET_T1     (tp)
         lw          t2  , THREAD_CONTEXT_OFFSET_T2     (tp)
         lw          s0  , THREAD_CONTEXT_OFFSET_S0_FP  (tp)
@@ -291,5 +265,7 @@ restore_context:
         lw          t4  , THREAD_CONTEXT_OFFSET_T4     (tp)
         lw          t5  , THREAD_CONTEXT_OFFSET_T5     (tp)
         lw          t6  , THREAD_CONTEXT_OFFSET_T6     (tp)
+
+        // TODO: Should we and can we enable the exceptions here?
 
         mret

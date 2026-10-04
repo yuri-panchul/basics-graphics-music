@@ -1,14 +1,11 @@
-#ifndef BGM_FEMTO_THREADS_H
-#define BGM_FEMTO_THREADS_H
-#include <stdbool.h>
+#ifndef BGM_RR_THREADS_H
+#define BGM_RR_THREADS_H
 
 //----------------------------------------------------------------------------
 // Limits and sizes
 
-#define WORD_SIZE          4
-#define MAX_THREADS        8
-#define MAIN_STACK_SIZE    128
-#define THREAD_STACK_SIZE  128
+#define MAX_THREADS  8
+#define WORD_SIZE    4
 
 //----------------------------------------------------------------------------
 // The thread context words.
@@ -105,4 +102,4 @@ extern void start_running_threads ();
 
 #endif  // #ifndef __ASSEMBLER__
 
-#endif  // #ifndef BGM_FEMTO_THREADS_H
+#endif  // #ifndef BGM_RR_THREADS_H

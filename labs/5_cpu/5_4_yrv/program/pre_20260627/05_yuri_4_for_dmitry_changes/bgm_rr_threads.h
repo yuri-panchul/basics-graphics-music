@@ -1,5 +1,5 @@
-#ifndef BGM_FEMTO_THREADS_H
-#define BGM_FEMTO_THREADS_H
+#ifndef BGM_RR_THREADS_H
+#define BGM_RR_THREADS_H
 
 //----------------------------------------------------------------------------
 // Limits and sizes
@@ -46,9 +46,8 @@
 #define THREAD_CONTEXT_WORD_T5          30
 #define THREAD_CONTEXT_WORD_T6          31
 #define THREAD_CONTEXT_WORD_PC          32
-#define THREAD_CONTEXT_WORD_TS          33  //THREAD STATE  0 - new 
 
-#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_TS + 1)
+#define NUM_THREAD_CONTEXT_WORDS        (THREAD_CONTEXT_WORD_PC + 1)
 
 //----------------------------------------------------------------------------
 
@@ -85,7 +84,6 @@
 #define THREAD_CONTEXT_OFFSET_T5          ( WORD_SIZE * THREAD_CONTEXT_WORD_T5         )
 #define THREAD_CONTEXT_OFFSET_T6          ( WORD_SIZE * THREAD_CONTEXT_WORD_T6         )
 #define THREAD_CONTEXT_OFFSET_PC          ( WORD_SIZE * THREAD_CONTEXT_WORD_PC         )
-#define THREAD_CONTEXT_OFFSET_TS          ( WORD_SIZE * THREAD_CONTEXT_WORD_TS         )
 
 #define THREAD_CONTEXT_SIZE               ( WORD_SIZE * NUM_THREAD_CONTEXT_WORDS       )
 
@@ -102,4 +100,4 @@ extern void start_running_threads ();
 
 #endif  // #ifndef __ASSEMBLER__
 
-#endif  // #ifndef BGM_FEMTO_THREADS_H
+#endif  // #ifndef BGM_RR_THREADS_H
