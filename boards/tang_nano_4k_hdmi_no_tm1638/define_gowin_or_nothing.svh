@@ -1,0 +1,10 @@
+`ifndef GOWIN_SYNTHESIS
+`define GOWIN_SYNTHESIS
+`endif
+
+
+`ifndef APS_MEM_CONFIG
+`define APS_MEM_CONFIG
+`define INSTR_MEM_SIZE_BYTES 32'h100
+`define DATA_MEM_SIZE_BYTES  32'h100
+`endif
