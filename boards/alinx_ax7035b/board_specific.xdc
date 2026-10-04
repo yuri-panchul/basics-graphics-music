@@ -56,28 +56,22 @@ set_property PACKAGE_PIN M17 [get_ports {Scan_Sig[5]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {SMG_Data[*]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {Scan_Sig[*]}]
 ############## HDMIOUT define#########################
-#set_property IOSTANDARD TMDS_33 [get_ports TMDS_clk_n]
-#
-#set_property PACKAGE_PIN E1 [get_ports TMDS_clk_p]
-#set_property IOSTANDARD TMDS_33 [get_ports TMDS_clk_p]
-#
-#set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_n[0]}]
-#
-#set_property PACKAGE_PIN G1 [get_ports {TMDS_data_p[0]}]
-#set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_p[0]}]
-#
-#set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_n[1]}]
-#
-#set_property PACKAGE_PIN H2 [get_ports {TMDS_data_p[1]}]
-#set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_p[1]}]
-#
-#set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_n[2]}]
-#
-#set_property PACKAGE_PIN K1 [get_ports {TMDS_data_p[2]}]
-#set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_p[2]}]
-#
-#set_property PACKAGE_PIN M6 [get_ports {HDMI_OEN[0]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {HDMI_OEN[0]}]
+# HDMI1 output (J6), ALINX AX7035B manual, section 9.
+set_property PACKAGE_PIN E1 [get_ports TMDS_clk_p]
+set_property PACKAGE_PIN D1 [get_ports TMDS_clk_n]
+set_property PACKAGE_PIN G1 [get_ports {TMDS_data_p[0]}]
+set_property PACKAGE_PIN F1 [get_ports {TMDS_data_n[0]}]
+set_property PACKAGE_PIN H2 [get_ports {TMDS_data_p[1]}]
+set_property PACKAGE_PIN G2 [get_ports {TMDS_data_n[1]}]
+set_property PACKAGE_PIN K1 [get_ports {TMDS_data_p[2]}]
+set_property PACKAGE_PIN J1 [get_ports {TMDS_data_n[2]}]
+set_property IOSTANDARD TMDS_33 [get_ports {TMDS_clk_p TMDS_clk_n TMDS_data_p[*] TMDS_data_n[*]}]
+
+set_property PACKAGE_PIN M6 [get_ports {HDMI_OEN[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {HDMI_OEN[0]}]
+
+# The external reset asserts asynchronously; release is synchronized for HDMI.
+set_false_path -from [get_ports rst_n]
 ############## usb uart define########################
 set_property IOSTANDARD LVCMOS33 [get_ports uart_rx]
 set_property PACKAGE_PIN G15 [get_ports uart_rx]

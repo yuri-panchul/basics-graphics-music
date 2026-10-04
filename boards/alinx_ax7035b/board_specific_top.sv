@@ -2,10 +2,6 @@
 `include "lab_specific_board_config.svh"
 `include "swap_bits.svh"
 
-`ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-`undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-`endif
-
 `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 `undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 `endif
@@ -45,11 +41,11 @@ module board_specific_top
     output [           7:0] SMG_Data,
     output [w_digit  - 1:0] Scan_Sig,
 
-//    output                  TMDS_clk_n,
-//    output                  TMDS_clk_p,
-//    output [           2:0] TMDS_data_n,
-//    output [           2:0] TMDS_data_p,
-//    output [           0:0] HDMI_OEN,
+    output                  TMDS_clk_n,
+    output                  TMDS_clk_p,
+    output [           2:0] TMDS_data_n,
+    output [           2:0] TMDS_data_p,
+    output [           0:0] HDMI_OEN,
 
     input                   uart_rx,
     output                  uart_tx
@@ -68,8 +64,8 @@ module board_specific_top
 
     // Clock and reset
 
-    wire clk =   sys_clk;
-    wire rst = ~ rst_n;
+    wire clk;
+    wire rst;
 
     // Keys and LEDs
 
@@ -89,18 +85,12 @@ module board_specific_top
 
     // Graphics
 
-    wire                 display_on;
-
     wire [w_x     - 1:0] x;
     wire [w_y     - 1:0] y;
 
     wire [w_red   - 1:0] red;
     wire [w_green - 1:0] green;
     wire [w_blue  - 1:0] blue;
-
-    // REMOVE assign vgaRed   = display_on ? red   : '0;
-    // REMOVE assign vgaGreen = display_on ? green : '0;
-    // REMOVE assign vgaBlue  = display_on ? blue  : '0;
 
     // Sound
 
@@ -166,25 +156,42 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire [9:0] x10; assign x = x10;
-        wire [9:0] y10; assign y = y10;
-
-        vga
-        # (
-            .CLK_MHZ     ( clk_mhz     ),
-            .PIXEL_MHZ   ( pixel_mhz   )
-        )
-        i_vga
+        // 50 MHz lab clock, 25 MHz pixels, 640x480 DVI video over HDMI1.
+        ax7035b_hdmi i_hdmi
         (
+            .clk_in      ( sys_clk     ),
+            .rst_in      ( ~ rst_n     ),
             .clk         ( clk         ),
             .rst         ( rst         ),
-            .vsync       ( Vsync       ),
-            .hsync       ( Hsync       ),
-            .display_on  ( display_on  ),
-            .hpos        ( x10         ),
-            .vpos        ( y10         ),
-            .pixel_clk   (             )
+            .x           ( x           ),
+            .y           ( y           ),
+            .red         ( red         ),
+            .green       ( green       ),
+            .blue        ( blue        ),
+            .tmds_clk_p  ( TMDS_clk_p  ),
+            .tmds_clk_n  ( TMDS_clk_n  ),
+            .tmds_data_p ( TMDS_data_p ),
+            .tmds_data_n ( TMDS_data_n ),
+            .hdmi_enable ( HDMI_OEN[0] )
         );
+
+    `else
+
+        assign clk = sys_clk;
+        assign rst = ~ rst_n;
+        assign x = '0;
+        assign y = '0;
+        assign HDMI_OEN = '0;
+
+        // Keep the HDMI outputs differential even in non-graphics labs.
+        OBUFDS # (.IOSTANDARD ("TMDS_33")) i_idle_clock
+            (.I (1'b0), .O (TMDS_clk_p), .OB (TMDS_clk_n));
+
+        for (genvar lane = 0; lane < 3; lane++)
+        begin : g_idle_data
+            OBUFDS # (.IOSTANDARD ("TMDS_33")) i_idle_data
+                (.I (1'b0), .O (TMDS_data_p[lane]), .OB (TMDS_data_n[lane]));
+        end
 
     `endif
 
