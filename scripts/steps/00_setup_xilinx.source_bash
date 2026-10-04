@@ -139,8 +139,13 @@ xilinx_setup_vivado ()
     if [ "$OSTYPE" = "linux-gnu" ]
     then
         search_parents+=("$HOME" /opt /tools)
-    else
+
+    elif  [ "$OSTYPE" = "cygwin" ]  \
+       || [ "$OSTYPE" = "msys"   ]
+    then
         search_parents+=(/c /d /e)
+    else
+        error "this script does not support your OS / platform '$OSTYPE'"
     fi
 
     for parent in "${search_parents[@]}"
