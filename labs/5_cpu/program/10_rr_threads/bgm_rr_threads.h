@@ -1,3 +1,5 @@
+// BGM (Basics-Graphics-Music) RR (Round Robin) Threads
+
 #ifndef BGM_RR_THREADS_H
 #define BGM_RR_THREADS_H
 #include <stdbool.h>

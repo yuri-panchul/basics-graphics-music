@@ -37,7 +37,7 @@ _start:
         // Such a stack is called a "trap frame"
         // and mentioned in the code as "trapframe".
         //
-        // Note that BGM Femto Threads does not use trapframe.
+        // Note that BGM RR Threads does not use trapframe.
         // However other examples may use trapframe to store the registers
         // in the example's interrupt handlers.
        
