@@ -29,231 +29,527 @@ fi
 
 #-----------------------------------------------------------------------------
 #
-#   Intel FPGA Quartus, formerly from Altera
+#   Altera Quartus discovery. See scripts/README.md for the selection policy.
 #
 #-----------------------------------------------------------------------------
 
-intel_fpga_info_where_quartus_is_found ()
+# Print a numeric version key. Edition markers are not edition evidence.
+
+quartus_version_key ()
 {
-    # info "Found Quartus$1:"
-    # info "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
-    # info "PATH=$PATH"
-    # info "quartus_full_real_path=$quartus_full_real_path"
+    local quartus_value="$1"
 
-    printf "%s\n" "$script: Found Quartus$1:"
-    printf "%s\n" "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
-    printf "%s\n" "PATH=$PATH"
-    printf "%s\n" "quartus_full_real_path=$quartus_full_real_path"
+    # // removes every std marker, as in the Lite version 25.1std.0.
+    quartus_value=${quartus_value//std/}
 
-                [ -d "$QUARTUS_ROOTDIR" ] ||
-    error "directory '$QUARTUS_ROOTDIR' expected"
+    # / replaces the first sp marker: 13.0sp1 becomes 13.0.1.
+    quartus_value=${quartus_value/sp/.}
 
-                [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir" ]  ||
-    error "directory '$QUARTUS_ROOTDIR/$quartus_bin_dir' expected"
-
-                      [ -f "$quartus_full_real_path" ] &&
-                      [ -x "$quartus_full_real_path" ] ||
-    error "executable file '$quartus_full_real_path' expected"
-
-                      [ -f "$quartus_sh_full_real_path" ] &&
-                      [ -x "$quartus_sh_full_real_path" ] ||
-    error "executable file '$quartus_sh_full_real_path' expected"
-
-                      [ -f "$quartus_pgm_full_real_path" ] &&
-                      [ -x "$quartus_pgm_full_real_path" ] ||
-    error "executable file '$quartus_pgm_full_real_path' expected"
+    [[ "$quartus_value" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]] || return 1
+    printf '%s\n' "$quartus_value"
 }
 
-#-----------------------------------------------------------------------------
+# Return success when the first numeric version is newer than the second.
 
-intel_fpga_try_install_dir ()
+quartus_version_newer ()
 {
-    local dir="$1"
+    local quartus_index quartus_left_number quartus_right_number
+    local -a quartus_left quartus_right
+    IFS=. read -r -a quartus_left <<< "$1"
+    IFS=. read -r -a quartus_right <<< "$2"
 
-    [ -z "${intelfpga_install_dir-}" ] && [ -n "${dir-}" ] || return 0
+    for quartus_index in 0 1 2 3
+    do
+        # :- supplies zero for missing components; 10# means decimal.
+        quartus_left_number=$((10#${quartus_left[quartus_index]:-0}))
 
-    if [ $use_old_version_of_quartus = 1 ]
-    then
-        if [ -z "${intelfpga_install_dir-}" ] &&
-           [ -d "$dir/altera" ]
-        then
-            intelfpga_install_dir=altera
-        fi
-    else
-        if [ -d "$dir/intelFPGA_lite" ]
-        then
-            intelfpga_install_dir=intelFPGA_lite
+        # Missing components compare as zero on the right side as well.
+        quartus_right_number=$((10#${quartus_right[quartus_index]:-0}))
 
-        elif [ -d "$dir/intelFPGA" ]
-        then
-            intelfpga_install_dir=intelFPGA
-        fi
-    fi
+        [ "$quartus_left_number" -gt "$quartus_right_number" ] && return 0
+        [ "$quartus_left_number" -lt "$quartus_right_number" ] && return 1
+    done
 
-    if [ -n "${intelfpga_install_dir-}" ] ; then
-        intelfpga_install_parent_dir="$dir"
-    fi
-
-    if [ $use_old_version_of_quartus = 1 ]
-    then
-        attempt_intelfpga_install_dirs="'altera'"
-    else
-        attempt_intelfpga_install_dirs="'intelFPGA_lite' or 'intelFPGA' or 'altera'"
-    fi
-
-    attempt_intelfpga_install_parent_dirs="${attempt_intelfpga_install_parent_dirs:+$attempt_intelfpga_install_parent_dirs or }'$dir'"
+    return 1
 }
 
-#-----------------------------------------------------------------------------
+# Sets quartus_candidate_version and quartus_candidate_edition in the caller.
 
-intel_fpga_setup_quartus ()
+quartus_read_identity ()
 {
-       [ "$OSTYPE" = "linux-gnu" ]  \
-    || [ "$OSTYPE" = "cygwin"    ]  \
-    || [ "$OSTYPE" = "msys"      ]  \
-    || return
+    local quartus_root="$1" quartus_bin="$2"
+    local quartus_line quartus_version= quartus_edition= quartus_banner quartus_build
+    local quartus_version_pattern='Version[[:space:]]+([0-9]+\.[0-9]+(std)?(\.[0-9]+)*)'
+    local quartus_build_pattern='Build[[:space:]]+([0-9]+)'
 
-    #-------------------------------------------------------------------------
+    if [ -r "$quartus_root/version.txt" ]
+    then
+        while IFS= read -r quartus_line || [ -n "$quartus_line" ]
+        do
+            # // removes CR characters from Windows CRLF metadata.
+            quartus_line=${quartus_line//$'\r'/}
 
-    # Workarounds for Quartus library problems
-    # that are uncovered under RED OS from https://www.red-soft.ru
+            case "$quartus_line" in
+                Version=*)
+                    # # removes the first key= prefix, leaving its value.
+                    quartus_version=${quartus_line#*=}
+                ;;
+                Edition=*)
+                    # # removes the first key= prefix, leaving its value.
+                    quartus_edition=${quartus_line#*=}
+                ;;
+            esac
+        done < "$quartus_root/version.txt"
+    fi
 
-    if      [ "${inside_run_dir-}" = 1    ]  \
-       && ! [ -f /usr/lib64/libcrypt.so.1 ]  \
-       &&   [ -f /usr/lib64/libcrypt.so   ]
+    case "$quartus_edition" in
+        lite) quartus_candidate_edition=Lite ;;
+        web) quartus_candidate_edition=Web ;;
+        standard | std) quartus_candidate_edition=Standard ;;
+        subscription) quartus_candidate_edition=Subscription ;;
+        pro) quartus_candidate_edition=Pro ;;
+        *) quartus_candidate_edition= ;;
+    esac
+
+    if quartus_candidate_version=$(quartus_version_key "$quartus_version") &&
+       [ -n "$quartus_candidate_edition" ]
+    then
+        return 0
+    fi
+
+    # The banner handles old Web/Subscription installations without edition metadata.
+
+    if ! quartus_banner=$(QUARTUS_ROOTDIR="$quartus_root" \
+        "$quartus_root/$quartus_bin/quartus_sh$exe" --version 2>&1)
+    then
+        quartus_rejection="Cannot run quartus_sh --version."
+        return 1
+    fi
+
+    if [[ "$quartus_banner" =~ $quartus_version_pattern ]]
+    then
+        quartus_version=${BASH_REMATCH[1]}
+    else
+        quartus_rejection="Cannot read the Quartus version."
+        return 1
+    fi
+
+    if [[ "$quartus_banner" =~ $quartus_build_pattern ]]
+    then
+        quartus_build=${BASH_REMATCH[1]}
+
+        if [[ "$quartus_version" =~ ^[0-9]+\.[0-9]+(std)?$ ]]
+        then
+            quartus_version+=.0
+        fi
+
+        quartus_version+=".$quartus_build"
+    fi
+
+    case "$quartus_banner" in
+        *"Lite Edition"*) quartus_candidate_edition=Lite ;;
+        *"Web Edition"*) quartus_candidate_edition=Web ;;
+        *"Standard Edition"*) quartus_candidate_edition=Standard ;;
+        *"Subscription Edition"*) quartus_candidate_edition=Subscription ;;
+        *"Pro Edition"*) quartus_candidate_edition=Pro ;;
+        *)
+            quartus_rejection="Cannot identify the Quartus edition."
+            return 1
+        ;;
+    esac
+
+    if ! quartus_candidate_version=$(quartus_version_key "$quartus_version")
+    then
+        quartus_rejection="Cannot normalize version '$quartus_version'."
+        return 1
+    fi
+}
+
+# Read literal QSF data without executing arbitrary Tcl from the board file.
+
+quartus_read_target ()
+{
+    local quartus_line
+    local quartus_pattern='^[[:space:]]*set_global_assignment[[:space:]]+-name[[:space:]]+DEVICE[[:space:]]+"?([[:alnum:]]+)"?([[:space:]]|$)'
+    quartus_target_part=
+
+    while IFS= read -r quartus_line || [ -n "$quartus_line" ]
+    do
+        if [[ "$quartus_line" =~ $quartus_pattern ]]
+        then
+            quartus_target_part=${BASH_REMATCH[1]}
+        fi
+    done < "$board_dir/$fpga_board/board_specific.qsf"
+
+    if [ -z "$quartus_target_part" ]
+    then
+        error "cannot read a literal DEVICE assignment for board '$fpga_board'."
+
+        return 1
+    fi
+}
+
+quartus_free_edition ()
+{
+    [ "$1" = Lite ] || [ "$1" = Web ]
+}
+
+# The device database provides the final exact-part check, including old updates.
+# Family limits: https://www.altera.com/design/guidance/software/device-support
+
+quartus_family_compatible ()
+{
+    local quartus_version="$1" quartus_edition="$2" quartus_limit=
+
+    case "$quartus_target_part" in
+        EP1C*)
+            if quartus_free_edition "$quartus_edition"
+            then
+                quartus_limit=11.0.1.999999
+            else
+                quartus_limit=13.0.1.999999
+            fi
+        ;;
+        EP2C*) quartus_limit=13.0.1.999999 ;;
+        EP3C*) quartus_limit=13.1.0.999999 ;;
+        A3*)
+            [ "$quartus_edition" = Pro ] || return 1
+            quartus_version_newer 25.1 "$quartus_version" && return 1
+        ;;
+        10M*)
+            quartus_version_newer 14.0 "$quartus_version" && return 1
+        ;;
+    esac
+
+    case "$quartus_target_part" in
+        EP1C* | EP2C* | EP3C* | EP4C* | 5C* | 10M* | EPM*)
+            [ "$quartus_edition" = Pro ] && return 1
+        ;;
+    esac
+
+    if [ "$fpga_board" = omdazz_epm570_quartus_13_1_or_older ]
+    then
+        quartus_limit=13.1.0.999999
+    fi
+
+    if [ -n "$quartus_limit" ] && quartus_version_newer "$quartus_version" "$quartus_limit"
+    then
+        return 1
+    fi
+
+    return 0
+}
+
+quartus_warn_install_path ()
+{
+    local quartus_path="$1"
+    local LC_ALL=C
+    local quartus_safe_path='^[A-Za-z0-9_./:\\-]+$'
+
+    if ! [[ "$quartus_path" =~ $quartus_safe_path ]]
+    then
+        warning "Quartus installation path '$quartus_path' contains spaces,"    \
+                "non-ASCII text, or special characters unsupported by Altera."  \
+                'Examples include ! $ % @ ^ & * < > , quotes and parentheses.'  \
+                "Quartus may fail; relocate it to a simple ASCII path."
+    fi
+}
+
+# Arrays are local to quartus_setup; helpers append without splitting path names.
+
+quartus_collect_parent ()
+{
+    local quartus_parent="$1" quartus_vendor quartus_root
+    [ -n "$quartus_parent" ] || return 0
+
+    if [ "$OSTYPE" = cygwin ] || [ "$OSTYPE" = msys ]
+    then
+        quartus_parent=$(cygpath -u "$quartus_parent") || return 1
+    fi
+
+    for quartus_vendor in altera altera_lite altera_std altera_pro \
+        intelFPGA intelFPGA_lite intelFPGA_pro intelFPGA_std
+    do
+        for quartus_root in "$quartus_parent/$quartus_vendor/"[0-9]*/quartus
+        do
+            [ -d "$quartus_root" ] || continue
+            quartus_candidates+=("$quartus_root")
+        done
+    done
+}
+
+# Prefer Lite/Web; otherwise compare versions before the Standard/Pro tie-break.
+
+quartus_candidate_better ()
+{
+    [ -n "$quartus_best_root" ] || return 0
+
+    if quartus_free_edition "$quartus_candidate_edition" && ! quartus_free_edition "$quartus_best_edition"
+    then
+        return 0
+    fi
+
+    if ! quartus_free_edition "$quartus_candidate_edition" && quartus_free_edition "$quartus_best_edition"
+    then
+        return 1
+    fi
+
+    quartus_version_newer "$quartus_candidate_version" "$quartus_best_version" && return 0
+    quartus_version_newer "$quartus_best_version" "$quartus_candidate_version" && return 1
+
+    if [ "$quartus_candidate_edition" != Pro ] && [ "$quartus_best_edition" = Pro ]
+    then
+        return 0
+    fi
+
+    # Stable collection order resolves all remaining ties.
+    return 1
+}
+
+quartus_consider_candidate ()
+{
+    local quartus_root="$1" quartus_bin quartus_seen quartus_output
+    local quartus_candidate_version= quartus_candidate_edition=
+    local quartus_rejection= quartus_query="$script_dir/fpga/quartus_has_device.tcl"
+    local -a quartus_bins=(bin)
+
+    if [ "$OSTYPE" = cygwin ] || [ "$OSTYPE" = msys ]
+    then
+        quartus_root=$(cygpath -u "$quartus_root") || return 1
+        quartus_query=$(cygpath -m "$quartus_query") || return 1
+        quartus_bins=(bin64 bin)
+    fi
+
+    if ! quartus_root=$(readlink -f "$quartus_root") || [ ! -d "$quartus_root" ]
+    then
+        warning "Quartus directory '$1' does not exist."
+
+        return 0
+    fi
+
+    for quartus_seen in "${quartus_seen_roots[@]}"
+    do
+        [ "$quartus_seen" = "$quartus_root" ] && return 0
+    done
+
+    quartus_seen_roots+=("$quartus_root")
+    quartus_warn_install_path "$quartus_root"
+
+    for quartus_bin in "${quartus_bins[@]}"
+    do
+        if [ ! -x "$quartus_root/$quartus_bin/quartus$exe" ] ||
+           [ ! -x "$quartus_root/$quartus_bin/quartus_sh$exe" ] ||
+           [ ! -x "$quartus_root/$quartus_bin/quartus_pgm$exe" ]
+        then
+            if [ -z "$quartus_rejection" ]
+            then
+                quartus_rejection="Missing executable GUI, shell, or programmer in ${quartus_bins[*]}."
+            fi
+
+            continue
+        fi
+
+        quartus_read_identity "$quartus_root" "$quartus_bin" || continue
+
+        if ! quartus_family_compatible "$quartus_candidate_version" "$quartus_candidate_edition"
+        then
+            quartus_rejection="$quartus_candidate_edition $quartus_candidate_version is incompatible with $quartus_target_part or the wrapper's version limit."
+            break
+        fi
+
+        # Scope QUARTUS_ROOTDIR to this process; an incoming override must not redirect it.
+        # The Tcl helper checks installed parts only, without checking licenses.
+
+        if ! quartus_output=$(QUARTUS_ROOTDIR="$quartus_root" \
+            "$quartus_root/$quartus_bin/quartus_sh$exe" -t "$quartus_query" "$quartus_target_part" 2>&1) ||
+           [[ "$quartus_output" != *"BGM_DEVICE_SUPPORTED=$quartus_target_part"* ]]
+        then
+            quartus_rejection="Device database query failed for $quartus_target_part; check installed device packages and tool dependencies."
+            continue
+        fi
+
+        if quartus_candidate_better
+        then
+            quartus_best_root="$quartus_root"
+            quartus_best_bin="$quartus_bin"
+            quartus_best_version="$quartus_candidate_version"
+            quartus_best_edition="$quartus_candidate_edition"
+        fi
+
+        return 0
+    done
+
+    warning "Skipping Quartus '$quartus_root'." "$quartus_rejection"
+}
+
+quartus_choose_candidates ()
+{
+    local quartus_candidate
+
+    for quartus_candidate in "${quartus_candidates[@]}"
+    do
+        quartus_consider_candidate "$quartus_candidate"
+    done
+
+    [ -n "$quartus_best_root" ]
+}
+
+quartus_activate ()
+{
+    local quartus_selected_bin="$quartus_best_root/$quartus_best_bin"
+    local quartus_entry quartus_remaining="${PATH-}" quartus_new_path="$quartus_selected_bin"
+
+    # Retain the original PATH order and empty entries, removing duplicate selected bins.
+
+    while [ -n "$quartus_remaining" ]
+    do
+        # %% removes the longest colon suffix, leaving the first PATH entry.
+        quartus_entry=${quartus_remaining%%:*}
+
+        if [ "$quartus_entry" != "$quartus_selected_bin" ]
+        then
+            quartus_new_path+=":$quartus_entry"
+        fi
+
+        [[ "$quartus_remaining" = *:* ]] || break
+
+        # # removes the first PATH entry and its colon separator.
+        quartus_remaining=${quartus_remaining#*:}
+
+        [ -n "$quartus_remaining" ] || quartus_new_path+=:
+    done
+
+    export QUARTUS_ROOTDIR="$quartus_best_root"
+    export PATH="$quartus_new_path"
+    quartus_bin_dir="$quartus_best_bin"
+    quartus_full_real_path="$quartus_selected_bin/quartus$exe"
+    quartus_sh_full_real_path="$quartus_selected_bin/quartus_sh$exe"
+    quartus_pgm_full_real_path="$quartus_selected_bin/quartus_pgm$exe"
+
+    # %/* strips the final path component, like dirname here; Questa still needs this name.
+    choosen_version_dir=${quartus_best_root%/*}
+
+    info "Selected Quartus $quartus_best_edition $quartus_best_version for"   \
+         "'$fpga_board' ($quartus_target_part), using $quartus_source."       \
+         "QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR"
+}
+
+quartus_setup ()
+{
+    local quartus_target_part quartus_parent quartus_override quartus_path_command
+    local quartus_best_root= quartus_best_bin= quartus_best_version= quartus_best_edition=
+    local quartus_source
+    local -a quartus_candidates=() quartus_seen_roots=() quartus_default_parents=()
+
+    if [ "$OSTYPE" = linux-gnu ]
+    then
+        quartus_default_parents=("$HOME" /opt /tools)
+
+    elif [ "$OSTYPE" = cygwin ] || [ "$OSTYPE" = msys ]
+    then
+        # These paths correspond to Windows drives C:, D: and E:.
+        quartus_default_parents=(/c /d /e)
+    else
+        error "Quartus discovery does not support OS / platform '$OSTYPE'."
+
+        return 1
+    fi
+
+    # Preserve the existing RED OS workaround when called from a run directory.
+
+    if [ "${inside_run_dir-}" = 1 ] && [ ! -f /usr/lib64/libcrypt.so.1 ] &&
+       [ -f /usr/lib64/libcrypt.so ]
     then
         ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
+
+        # :+ adds the existing library path and separator only when it is nonempty.
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD"
     fi
 
-    #-------------------------------------------------------------------------
+    quartus_read_target || return 1
 
-    if [ "$OSTYPE" = "linux-gnu" ]
+    if [ -n "${QUARTUS_ROOTDIR-}" ]
     then
-        quartus_bin_dir=bin
+        quartus_candidates=("$QUARTUS_ROOTDIR")
+        quartus_source=QUARTUS_ROOTDIR
 
-    elif  [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
-    then
-        if [ $use_old_version_of_quartus = 1 ] ; then
-            quartus_bin_dir=bin
-        else
-            quartus_bin_dir=bin64
-        fi
-    fi
-
-    #-------------------------------------------------------------------------
-
-    if    [ -n "${QUARTUS_ROOTDIR-}"                   ]  \
-       && [ -d "$QUARTUS_ROOTDIR"                      ]  \
-       && [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir"     ]  \
-       && [ $(basename "$QUARTUS_ROOTDIR") = "quartus" ]
-    then
-        choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
-        export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
-
-        quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
-        quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
-        quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
-
-        intel_fpga_info_where_quartus_is_found " using QUARTUS_ROOTDIR"
-        return
-    fi
-
-    #-------------------------------------------------------------------------
-
-    if is_command_available quartus$exe
-    then
-        quartus_full_real_path=$(readlink -f "$(command -v quartus$exe)")
-
-        if [ "$(basename           $(dirname "$quartus_full_real_path"))"  = $quartus_bin_dir ] &&
-           [ "$(basename $(dirname $(dirname "$quartus_full_real_path")))" = quartus          ]
+        if quartus_choose_candidates
         then
-            export QUARTUS_ROOTDIR=$(dirname $(dirname "$quartus_full_real_path"))
-            choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
-
-            quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
-            quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
-
-            intel_fpga_info_where_quartus_is_found " using PATH"
-            return
-        else
-            warning "quartus is in the path outside the usual installation directory"
+            quartus_activate
+            return 0
         fi
     fi
 
-    #-------------------------------------------------------------------------
+    if quartus_path_command=$(type -P "quartus$exe")
+    then
+        quartus_path_command=$(readlink -f "$quartus_path_command")
 
-    if [ $use_old_version_of_quartus = 0 ] ; then
-        intel_fpga_try_install_dir "${INTEL_FPGA_HOME-}"
+        case "$quartus_path_command" in
+            */quartus/bin/quartus"$exe" | */quartus/bin64/quartus"$exe")
+                # %/* removes the executable filename, equivalent to dirname here.
+                quartus_path_command=${quartus_path_command%/*}
+
+                # %/* removes bin or bin64, leaving the Quartus root directory.
+                quartus_path_command=${quartus_path_command%/*}
+
+                quartus_candidates=("$quartus_path_command")
+                quartus_source=PATH
+
+                if quartus_choose_candidates
+                then
+                    quartus_activate
+                    return 0
+                fi
+            ;;
+            *)
+                warning "Quartus on PATH is outside a quartus/bin or quartus/bin64 installation."  \
+                        "Set QUARTUS_ROOTDIR to identify its installation; continuing discovery."
+            ;;
+        esac
     fi
 
-    intel_fpga_try_install_dir "${ALTERA_HOME-}"
-    intel_fpga_try_install_dir "${QUARTUS_HOME-}"
+    for quartus_override in INTEL_FPGA_HOME ALTERA_HOME QUARTUS_HOME
+    do
+        # ! performs indirect expansion; - tolerates an unset public override.
+        quartus_parent=${!quartus_override-}
 
-    #-------------------------------------------------------------------------
+        [ -n "$quartus_parent" ] || continue
+        quartus_candidates=()
+        quartus_collect_parent "$quartus_parent"
+        quartus_source="$quartus_override='$quartus_parent'"
 
-    if    [ "$OSTYPE" = "linux-gnu" ]
+        if quartus_choose_candidates
+        then
+            quartus_activate
+            return 0
+        fi
+
+        warning "No compatible Quartus installation under $quartus_source."  \
+                "Continuing with lower-priority locations."
+    done
+
+    quartus_candidates=()
+
+    for quartus_parent in "${quartus_default_parents[@]}"
+    do
+        quartus_collect_parent "$quartus_parent"
+    done
+
+    quartus_source="default installation parents: ${quartus_default_parents[*]}"
+
+    if quartus_choose_candidates
     then
-        intel_fpga_try_install_dir "$HOME"
-        intel_fpga_try_install_dir /opt
-        intel_fpga_try_install_dir /tools
-
-    elif  [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
-    then
-        intel_fpga_try_install_dir /c
-        intel_fpga_try_install_dir /d
-        intel_fpga_try_install_dir /e
+        quartus_activate
+        return 0
     fi
 
-    #-------------------------------------------------------------------------
+    error "cannot find a compatible Quartus installation for '$fpga_board'"   \
+          "($quartus_target_part) under ${quartus_default_parents[*]}."       \
+          "Set QUARTUS_ROOTDIR to a specific quartus directory, or set"       \
+          "INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME to the parent of"     \
+          "the altera*, intelFPGA* installation directories."
 
-    if [ -z "${intelfpga_install_parent_dir-}" ]
-    then
-        error "expected to find $attempt_intelfpga_install_dirs"             \
-              "in ${attempt_intelfpga_install_parent_dirs}."                 \
-              "The Quartus installation home location"                       \
-              " can be set by one of the following environment variables:"   \
-              " INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME."              \
-              " You can also use QUARTUS_ROOTDIR"                            \
-              " to specify the version subtree location."
-    fi
-
-    #-------------------------------------------------------------------------
-
-    find_dir="$intelfpga_install_parent_dir/$intelfpga_install_dir"
-    find_opt="-mindepth 1 -maxdepth 1 -type d -print"
-
-    choosen_version_dir=$($find_to_run "$find_dir" -name '[0-9]*' $find_opt | sort | tail -1)
-
-    if [ -z "$choosen_version_dir" ]
-    then
-        error "cannot find any version of Intel FPGA installed in "     \
-              "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
-    fi
-
-    #-------------------------------------------------------------------------
-
-    export QUARTUS_ROOTDIR="$choosen_version_dir/quartus"
-    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
-
-    quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
-    quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
-    quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
-
-    #-------------------------------------------------------------------------
-
-    all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
-
-    if [ "$choosen_version_dir" != "$all_version_dirs" ]
-    then
-        warning "multiple Intel FPGA versions installed in"                \
-                "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
-                "'$all_version_dirs'"
-    fi
-
-    intel_fpga_info_where_quartus_is_found " in one of the standard locations"
+    return 1
 }
 
 #-----------------------------------------------------------------------------
