@@ -66,42 +66,305 @@ intel_fpga_info_where_quartus_is_found ()
 
 #-----------------------------------------------------------------------------
 
-intel_fpga_try_install_dir ()
+# Directory names the Altera and Intel FPGA installers have used over the
+# years. The name says nothing about either the age or the edition of what
+# is inside it: altera_lite/25.1std holds the Lite edition, and altera/13.1
+# holds a Web edition, which is what Lite used to be called.
+
+quartus_vendor_dirs="altera altera_lite altera_pro"
+quartus_vendor_dirs="$quartus_vendor_dirs intelFPGA intelFPGA_lite intelFPGA_pro"
+
+quartus_newline=$'\n'
+quartus_tab=$'\t'
+
+quartus_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/basics-graphics-music"
+
+#-----------------------------------------------------------------------------
+
+# The part this board needs, taken from the board's own project file, so
+# that there is no list of board names to keep in step with the boards
+# directory.
+
+quartus_part_of_board ()
 {
-    local dir="$1"
+    local qsf="$board_dir/$fpga_board/board_specific.qsf"
 
-    [ -z "${intelfpga_install_dir-}" ] && [ -n "${dir-}" ] || return 0
+    [ -f "$qsf" ] || return 1
 
-    if [ $use_old_version_of_quartus = 1 ]
-    then
-        if [ -z "${intelfpga_install_dir-}" ] &&
-           [ -d "$dir/altera" ]
+    grep -oiE '^[^#]*-name +DEVICE +[^ ]+' "$qsf"  \
+        | awk 'NR == 1 { print $NF }'
+}
+
+#-----------------------------------------------------------------------------
+
+# Where the executables of an installation live. Under Microsoft Windows a
+# recent Quartus uses bin64 and an old one uses bin, so both are tried
+# rather than deduced from the version.
+
+quartus_bin_dir_of ()
+{
+    local version_dir="$1"
+    local dir
+
+    for dir in bin64 bin
+    do
+        if [ -x "$version_dir/quartus/$dir/quartus_sh$exe" ]
         then
-            intelfpga_install_dir=altera
+            printf '%s' "$dir"
+            return 0
         fi
-    else
-        if [ -d "$dir/intelFPGA_lite" ]
-        then
-            intelfpga_install_dir=intelFPGA_lite
+    done
 
-        elif [ -d "$dir/intelFPGA" ]
+    return 1
+}
+
+#-----------------------------------------------------------------------------
+
+# Every installation under the given parent directories. A directory counts
+# only when it really contains quartus_sh.
+
+quartus_find_installations ()
+{
+    local parent
+    local vendor
+    local version_dir
+
+    quartus_installations=
+    quartus_parents_tried=
+
+    for parent in "$@"
+    do
+        [ -n "$parent" ] || continue
+        [ -d "$parent" ] || continue
+
+        quartus_parents_tried="${quartus_parents_tried:+$quartus_parents_tried or }'$parent'"
+
+        for vendor in $quartus_vendor_dirs
+        do
+            for version_dir in "$parent/$vendor"/*
+            do
+                quartus_bin_dir_of "$version_dir" > /dev/null || continue
+
+                quartus_installations="${quartus_installations:+$quartus_installations$quartus_newline}$version_dir"
+            done
+        done
+    done
+}
+
+#-----------------------------------------------------------------------------
+
+# Asks an installation what it is and what it can build, and remembers the
+# answer.
+#
+# Quartus is the only authority here. The directory names do not record the
+# edition, and the device data inside an installation is filed under
+# internal code names, so MAX 10 for instance appears nowhere as "max10".
+# One run of quartus_sh answers all three questions, because
+# $quartus(version) carries the edition name as well as the number.
+#
+# The run costs between one and five seconds, so the answer is cached and
+# keyed by the timestamp of quartus_sh itself.
+#
+# Sets quartus_probe_version, quartus_probe_edition and
+# quartus_probe_parts_file in the caller.
+
+quartus_probe ()
+{
+    local version_dir="$1"
+    local bin_dir
+    local quartus_sh
+    local stamp
+    local cache_file
+    local tcl_file
+    local header
+    local output
+    local version_line
+
+    bin_dir=$(quartus_bin_dir_of "$version_dir") || return 1
+    quartus_sh="$version_dir/quartus/$bin_dir/quartus_sh$exe"
+
+    stamp=$(date -r "$quartus_sh" +%s 2> /dev/null) || stamp=0
+
+    cache_file="$quartus_cache_dir/parts"
+    cache_file="$cache_file$(printf '%s' "$version_dir" | tr -c 'A-Za-z0-9._-' '_')"
+
+    if [ -r "$cache_file" ]
+    then
+        header=$(head -1 "$cache_file")
+
+        if [ "${header%% *}" = "$stamp" ]
         then
-            intelfpga_install_dir=intelFPGA
+            header=${header#* }
+
+            quartus_probe_version=${header%% *}
+            quartus_probe_edition=${header##* }
+            quartus_probe_parts_file="$cache_file"
+
+            return 0
         fi
     fi
 
-    if [ -n "${intelfpga_install_dir-}" ] ; then
-        intelfpga_install_parent_dir="$dir"
-    fi
+    mkdir -p "$quartus_cache_dir" 2> /dev/null
 
-    if [ $use_old_version_of_quartus = 1 ]
-    then
-        attempt_intelfpga_install_dirs="'altera'"
-    else
-        attempt_intelfpga_install_dirs="'intelFPGA_lite' or 'intelFPGA' or 'altera'"
-    fi
+    tcl_file="$quartus_cache_dir/probe.tcl"
 
-    attempt_intelfpga_install_parent_dirs="${attempt_intelfpga_install_parent_dirs:+$attempt_intelfpga_install_parent_dirs or }'$dir'"
+    cat > "$tcl_file" << 'TCL_EOF'
+load_package device
+puts "BGM_VERSION $quartus(version)"
+foreach bgm_part [get_part_list] { puts "BGM_PART $bgm_part" }
+TCL_EOF
+
+    output=$("$quartus_sh" -t "$tcl_file" 2> /dev/null) || return 1
+
+    # No command in these pipelines may exit early: this script runs under
+    # "set -o pipefail", where a downstream exit would make a successful
+    # lookup look like a failure
+
+    version_line=$(printf '%s\n' "$output"  \
+        | sed -n 's/^BGM_VERSION //p' | sed -n '1p')
+
+    [ -n "$version_line" ] || return 1
+
+    # "Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition" becomes the
+    # comparable number 25.1.0 and the edition word "Lite"
+
+    quartus_probe_version=$(printf '%s\n' "$version_line"  \
+        | sed -n 's/^Version \([0-9][^ ]*\).*/\1/p' | tr -cd '0-9.')
+
+    quartus_probe_edition=$(printf '%s\n' "$version_line"  \
+        | grep -oE 'Web|Lite|Standard|Pro' | sed -n '1p')
+
+    [ -n "$quartus_probe_version" ] || return 1
+    [ -n "$quartus_probe_edition" ] || quartus_probe_edition=Unknown
+
+    {
+        printf '%s %s %s\n'  \
+            "$stamp" "$quartus_probe_version" "$quartus_probe_edition"
+
+        printf '%s\n' "$output" | sed -n 's/^BGM_PART //p'
+
+    } > "$cache_file"
+
+    quartus_probe_parts_file="$cache_file"
+}
+
+#-----------------------------------------------------------------------------
+
+# Does this installation list this exact part?
+#
+# The question has to be about the part and not about the device family:
+# both installations of Quartus II 13 support the Cyclone III family, yet
+# neither carries EP3C120F780C6, the part of the dk_dev_3c120n board.
+#
+# The first line of the file is the header, which cannot be mistaken for a
+# part name because it contains spaces, so the whole file is searched and
+# no pipeline is needed.
+
+quartus_lists_part ()
+{
+    local parts_file="$1"
+    local part="$2"
+
+    grep -q -x -F "$part" "$parts_file"
+}
+
+#-----------------------------------------------------------------------------
+
+# The installations in order of preference, best first. A free edition wins
+# over a paid one even when it is older; after that the newer version wins;
+# and Standard comes before Pro only when the versions are equal.
+#
+# With a part given, only the installations that list it compete.
+
+quartus_best_installation ()
+{
+    local part="$1"
+    local version_dir
+    local records=
+    local free_rank
+    local edition_rank
+    local sorted
+    local first
+
+    while IFS= read -r version_dir
+    do
+        [ -n "$version_dir" ] || continue
+
+        quartus_probe "$version_dir" || continue
+
+        if [ -n "$part" ]
+        then
+            quartus_lists_part "$quartus_probe_parts_file" "$part" || continue
+        fi
+
+        case $quartus_probe_edition in
+            Web | Lite ) free_rank=0 ; edition_rank=0 ;;
+            Standard   ) free_rank=1 ; edition_rank=1 ;;
+            Pro        ) free_rank=1 ; edition_rank=2 ;;
+            *          ) free_rank=2 ; edition_rank=3 ;;
+        esac
+
+        records="${records:+$records$quartus_newline}$free_rank$quartus_tab$quartus_probe_version$quartus_tab$edition_rank$quartus_tab$version_dir"
+
+    done <<< "$quartus_installations"
+
+    [ -n "$records" ] || return 1
+
+    sorted=$(printf '%s\n' "$records"  \
+        | sort -t "$quartus_tab" -k1,1n -k2,2Vr -k3,3n)
+
+    first=${sorted%%"$quartus_newline"*}
+
+    printf '%s' "$first" | cut -f4-
+}
+
+#-----------------------------------------------------------------------------
+
+# What each installation is, for the message shown when none of them can
+# build the board
+
+quartus_installation_summary ()
+{
+    local version_dir
+    local summary=
+
+    while IFS= read -r version_dir
+    do
+        [ -n "$version_dir" ] || continue
+
+        quartus_probe "$version_dir" || continue
+
+        summary="${summary:+$summary, }'$version_dir' is $quartus_probe_edition $quartus_probe_version"
+
+    done <<< "$quartus_installations"
+
+    printf '%s' "$summary"
+}
+
+#-----------------------------------------------------------------------------
+
+# The variables the rest of this file and the Questa setup expect
+
+quartus_export_paths ()
+{
+    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
+
+    quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
+    quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
+    quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
+}
+
+#-----------------------------------------------------------------------------
+
+quartus_warn_part_is_not_listed ()
+{
+    local part="$1"
+    local chosen_by="$2"
+
+    warning "the version of Quartus chosen by $chosen_by,"             \
+            "'$choosen_version_dir', does not list the part '$part'"    \
+            "of the board '$fpga_board'. Proceeding, because you asked"  \
+            "for this installation, but the synthesis is likely to fail."
 }
 
 #-----------------------------------------------------------------------------
@@ -128,33 +391,36 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
-    if [ "$OSTYPE" = "linux-gnu" ]
-    then
-        quartus_bin_dir=bin
+    local board_part
+    local overridden=0
+    local summary
+    local found_path
+    local found_bin_dir
+    local found_root
 
-    elif  [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
-    then
-        if [ $use_old_version_of_quartus = 1 ] ; then
-            quartus_bin_dir=bin
-        else
-            quartus_bin_dir=bin64
-        fi
-    fi
+    board_part=$(quartus_part_of_board) || board_part=
 
     #-------------------------------------------------------------------------
 
+    # QUARTUS_ROOTDIR names one installation and is obeyed as it stands
+
     if    [ -n "${QUARTUS_ROOTDIR-}"                   ]  \
        && [ -d "$QUARTUS_ROOTDIR"                      ]  \
-       && [ -d "$QUARTUS_ROOTDIR/$quartus_bin_dir"     ]  \
        && [ $(basename "$QUARTUS_ROOTDIR") = "quartus" ]
     then
         choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
-        export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
 
-        quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
-        quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
-        quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
+        quartus_bin_dir=$(quartus_bin_dir_of "$choosen_version_dir")  ||
+        error "directory '$QUARTUS_ROOTDIR' has no bin or bin64"  \
+              "with quartus_sh$exe in it"
+
+        quartus_export_paths
+
+        if [ -n "$board_part" ] && quartus_probe "$choosen_version_dir"
+        then
+            quartus_lists_part "$quartus_probe_parts_file" "$board_part"  ||
+            quartus_warn_part_is_not_listed "$board_part" "QUARTUS_ROOTDIR"
+        fi
 
         intel_fpga_info_where_quartus_is_found " using QUARTUS_ROOTDIR"
         return
@@ -162,16 +428,21 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
+    # Quartus already in the path is left alone
+
     if is_command_available quartus$exe
     then
-        quartus_full_real_path=$(readlink -f "$(command -v quartus$exe)")
+        found_path=$(readlink -f "$(command -v quartus$exe)")
+        found_bin_dir=$(basename "$(dirname "$found_path")")
+        found_root=$(dirname "$(dirname "$found_path")")
 
-        if [ "$(basename           $(dirname "$quartus_full_real_path"))"  = $quartus_bin_dir ] &&
-           [ "$(basename $(dirname $(dirname "$quartus_full_real_path")))" = quartus          ]
+        if [ "$(basename "$found_root")" = quartus ]
         then
-            export QUARTUS_ROOTDIR=$(dirname $(dirname "$quartus_full_real_path"))
+            quartus_bin_dir=$found_bin_dir
+            export QUARTUS_ROOTDIR="$found_root"
             choosen_version_dir=$(dirname "$QUARTUS_ROOTDIR")
 
+            quartus_full_real_path="$found_path"
             quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
             quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
 
@@ -184,78 +455,88 @@ intel_fpga_setup_quartus ()
 
     #-------------------------------------------------------------------------
 
-    if [ $use_old_version_of_quartus = 0 ] ; then
-        intel_fpga_try_install_dir "${INTEL_FPGA_HOME-}"
+    if    [ -n "${INTEL_FPGA_HOME-}" ]  \
+       || [ -n "${ALTERA_HOME-}"     ]  \
+       || [ -n "${QUARTUS_HOME-}"    ]
+    then
+        overridden=1
     fi
 
-    intel_fpga_try_install_dir "${ALTERA_HOME-}"
-    intel_fpga_try_install_dir "${QUARTUS_HOME-}"
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+        quartus_find_installations                                  \
+            "${INTEL_FPGA_HOME-}" "${ALTERA_HOME-}" "${QUARTUS_HOME-}"  \
+            "$HOME" /opt /tools
+    else
+        quartus_find_installations                                  \
+            "${INTEL_FPGA_HOME-}" "${ALTERA_HOME-}" "${QUARTUS_HOME-}"  \
+            /c /d /e
+    fi
+
+    [ -n "$quartus_installations" ]  ||
+    error "cannot find any installation of Quartus under"                 \
+          "$quartus_parents_tried."                                       \
+          "A directory named one of: $quartus_vendor_dirs"                \
+          "is expected there, with a version directory inside it."        \
+          "The location can also be set by the environment variables"     \
+          "INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME, or a particular"  \
+          "installation by QUARTUS_ROOTDIR."
+
+    summary=$(quartus_installation_summary)
 
     #-------------------------------------------------------------------------
 
-    if    [ "$OSTYPE" = "linux-gnu" ]
-    then
-        intel_fpga_try_install_dir "$HOME"
-        intel_fpga_try_install_dir /opt
-        intel_fpga_try_install_dir /tools
-
-    elif  [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
-    then
-        intel_fpga_try_install_dir /c
-        intel_fpga_try_install_dir /d
-        intel_fpga_try_install_dir /e
-    fi
-
-    #-------------------------------------------------------------------------
-
-    if [ -z "${intelfpga_install_parent_dir-}" ]
-    then
-        error "expected to find $attempt_intelfpga_install_dirs"             \
-              "in ${attempt_intelfpga_install_parent_dirs}."                 \
-              "The Quartus installation home location"                       \
-              " can be set by one of the following environment variables:"   \
-              " INTELFPGA_HOME or ALTERA_HOME or QUARTUS_HOME."              \
-              " You can also use QUARTUS_ROOTDIR"                            \
-              " to specify the version subtree location."
-    fi
-
-    #-------------------------------------------------------------------------
-
-    find_dir="$intelfpga_install_parent_dir/$intelfpga_install_dir"
-    find_opt="-mindepth 1 -maxdepth 1 -type d -print"
-
-    choosen_version_dir=$($find_to_run "$find_dir" -name '[0-9]*' $find_opt | sort | tail -1)
+    choosen_version_dir=$(quartus_best_installation "$board_part")  ||
+        choosen_version_dir=
 
     if [ -z "$choosen_version_dir" ]
     then
-        error "cannot find any version of Intel FPGA installed in "     \
-              "'$intelfpga_install_parent_dir/$intelfpga_install_dir'"
+        # No installation lists the part of this board. An installation
+        # asked for by an environment variable is used anyway, with a
+        # warning; without such a request this is an error.
+
+        if [ $overridden = 1 ]
+        then
+            quartus_find_installations  \
+                "${INTEL_FPGA_HOME-}" "${ALTERA_HOME-}" "${QUARTUS_HOME-}"
+
+            choosen_version_dir=$(quartus_best_installation "")  ||
+                choosen_version_dir=
+        fi
+
+        [ -n "$choosen_version_dir" ]  ||
+        error "no installed version of Quartus lists the part"           \
+              "'$board_part' of the board '$fpga_board'."                 \
+              "Found: $summary."                                          \
+              "Point QUARTUS_ROOTDIR at an installation to use it"        \
+              "regardless, or INTEL_FPGA_HOME, ALTERA_HOME or"            \
+              "QUARTUS_HOME at a directory that holds one."
+
+        quartus_warn_part_is_not_listed "$board_part"  \
+            "INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME"
     fi
 
     #-------------------------------------------------------------------------
 
+    quartus_bin_dir=$(quartus_bin_dir_of "$choosen_version_dir")  ||
+    error "'$choosen_version_dir' has no bin or bin64 with quartus_sh$exe"
+
     export QUARTUS_ROOTDIR="$choosen_version_dir/quartus"
-    export PATH="${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir"
 
-    quartus_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe"
-    quartus_sh_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe"
-    quartus_pgm_full_real_path="$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe"
+    quartus_export_paths
 
-    #-------------------------------------------------------------------------
-
-    all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
-
-    if [ "$choosen_version_dir" != "$all_version_dirs" ]
+    if quartus_probe "$choosen_version_dir"
     then
-        warning "multiple Intel FPGA versions installed in"                \
-                "'$intelfpga_install_parent_dir/$intelfpga_install_dir':"  \
-                "'$all_version_dirs'"
+        # The version directory is named the way Altera labels the
+        # release, such as 13.0sp1 or 25.1std, while the number used for
+        # comparison is normalized, so the directory is what gets shown
+
+        info "using Quartus $quartus_probe_edition"  \
+             "from '$choosen_version_dir' for the board '$fpga_board'"
     fi
 
     intel_fpga_info_where_quartus_is_found " in one of the standard locations"
 }
-
 #-----------------------------------------------------------------------------
 #
 #   Intel FPGA version of Questa by Siemens EDA (former Mentor Graphics)
