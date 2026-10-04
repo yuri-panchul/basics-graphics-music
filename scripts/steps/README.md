@@ -65,7 +65,7 @@ TODO: This is inconsistent with Linux, Altera and Xilinx. Need to review.
 
 2. If `XILINX_HOME` is defined, search that parent directory first.
 
-3. On Linux, search `$HOME`, `/opt`, and `/tools`, in that order, after the explicit parent. On Cygwin/MSYS, search `/c`, `/d`, and `/e` instead.
+3. On Linux, search `$HOME`, `/opt`, and `/tools`, in that order, after the explicit parent. On Cygwin/MSYS, search `/c`, `/d`, and `/e` instead. These paths correspond to Windows drives `C:\`, `D:\`, and `E:\`, respectively.
 
 4. Under each parent, recognize `<parent>/<vendor>/Vivado/<version>` and `<parent>/<vendor>/<version>/Vivado`, where `<vendor>` can be `Xilinx`, `AMD`, or `AMDDesignTools`. A version-directory name must begin with a digit, and an installation must contain a `bin` directory. Symlinked version directories are supported; names such as `backup` are ignored.
 
