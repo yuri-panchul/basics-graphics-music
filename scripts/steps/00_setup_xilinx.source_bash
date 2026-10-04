@@ -29,6 +29,76 @@ fi
 
 #-----------------------------------------------------------------------------
 
+# Sets sort_to_run and sort_options in the caller.
+
+xilinx_sort_discovery ()
+{
+    local sort_candidate sort_probe
+
+    sort_to_run=sort
+    sort_options=()
+
+    # Prefer the Unix utility over Windows sort.exe on PATH.
+
+    for sort_candidate in /usr/bin/sort /bin/sort sort
+    do
+        if sort_probe=$(printf '2026.10\tb\n2026.2\ta\n' |
+            LC_ALL=C "$sort_candidate" -t $'\t' -k1,1V -k2,2 2>/dev/null)
+        then
+            if [ "$sort_probe" = $'2026.2\ta\n2026.10\tb' ]
+            then
+                sort_to_run=$sort_candidate
+                sort_options=(-t $'\t' -k1,1V -k2,2)
+                return
+            fi
+        fi
+    done
+
+    warning "no Unix sort with version sorting support found."          \
+            "Using sort from PATH without options (Windows fallback)."  \
+            "Alphabetical sorting may select an older Vivado version;"  \
+            "set XILINX_VIVADO to select a specific installation."
+}
+
+#-----------------------------------------------------------------------------
+
+# Supported installation layouts:
+#   <parent>/<vendor>/Vivado/<version>/bin
+#   <parent>/<vendor>/<version>/Vivado/bin
+#
+# Arguments: parent directory, then vendor names. Prints version/path records.
+
+xilinx_collect_vivado_candidates ()
+{
+    local parent="$1"
+    local vendor candidate version
+    shift
+
+    for vendor in "$@"
+    do
+
+        # Globs retain support for symlinked version directories.
+        # Only names beginning with a digit are treated as versions.
+
+        for candidate in "$parent/$vendor/Vivado/"[0-9]*
+        do
+            [ -d "$candidate/bin" ] || continue
+            version=${candidate##*/}
+            printf '%s\t%s\n' "$version" "$candidate"
+        done
+
+        for candidate in "$parent/$vendor/"[0-9]*/Vivado
+        do
+            [ -d "$candidate/bin" ] || continue
+            version=${candidate%/Vivado}
+            version=${version##*/}
+            printf '%s\t%s\n' "$version" "$candidate"
+        done
+    done
+}
+
+#-----------------------------------------------------------------------------
+
 xilinx_setup_vivado ()
 {
        [ "$OSTYPE" = "linux-gnu" ]  \
@@ -38,155 +108,114 @@ xilinx_setup_vivado ()
 
     #-------------------------------------------------------------------------
 
-    vivado_install_dir=Xilinx/Vivado
+    local parent latest_version_dir
+    local candidates sorted_candidates candidate_record candidate_path
+    local candidate_paths parent_paths
+    local sort_to_run
+    local -a sort_options
+    local -a search_parents
+    local -a vendor_dirs=(Xilinx AMD AMDDesignTools)
 
     if [ -n "${XILINX_VIVADO-}" ]
     then
-       if [ -d "$XILINX_VIVADO/bin" ]
-       then
-           export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
-           return
-       fi
+        if [ -d "$XILINX_VIVADO/bin" ]
+        then
+            export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
+            return
+        fi
 
-       warning "XILINX_VIVADO variable is set to '$XILINX_VIVADO',"  \
-               "but there is no directory '$XILINX_VIVADO/bin'."     \
-               "Trying to find Vivado directory elsewhere."          \
-               "You can also use XILINX_HOME variable to specify"    \
-               "a parent directory for '$vivado_install_dir'."
+        warning "XILINX_VIVADO variable is set to '$XILINX_VIVADO',"  \
+                "but there is no directory '$XILINX_VIVADO/bin'."     \
+                "Trying to find Vivado directory elsewhere."
     fi
 
-    #-------------------------------------------------------------------------
-
-    if is_command_available vivado ; then
+    if is_command_available vivado
+    then
         return  # Already set up
     fi
 
-    #-------------------------------------------------------------------------
-
-    msg_for_XILINX_VIVADO="You can also use XILINX_VIVADO variable"
-    msg_for_XILINX_VIVADO+=" to specify a directory"
-    msg_for_XILINX_VIVADO+=" for a specific version of Vivado, such as"
-    msg_for_XILINX_VIVADO+=" XILINX_VIVADO=/tools/Xilinx/Vivado/2023.1."
+    # Explicit parent first, then the platform's default installation parents.
+    search_parents=()
 
     if [ -n "${XILINX_HOME-}" ]
     then
-        if [ -d "$XILINX_HOME/$vivado_install_dir" ]
-        then
-            vivado_install_parent_dir="$XILINX_HOME"
-        else
-            warning "XILINX_HOME variable is set to '$XILINX_HOME',"   \
-                    "but there is no directory"                        \
-                    "'$XILINX_HOME/$vivado_install_dir'."              \
-                    "Trying to find Xilinx home directory elsewhere."  \
-                    "$msg_for_XILINX_VIVADO"
-       fi
+        search_parents+=("$XILINX_HOME")
     fi
-
-    #-------------------------------------------------------------------------
 
     if [ "$OSTYPE" = "linux-gnu" ]
     then
-        if [ -z "${vivado_install_parent_dir-}" ]
-        then
-            vivado_install_parent_dir="$HOME"
-        fi
+        search_parents+=("$HOME" /opt /tools)
 
-        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
-        then
-            vivado_install_parent_dir_first="$vivado_install_parent_dir"
-            vivado_install_parent_dir=/opt
-        fi
-
-        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
-        then
-            vivado_install_parent_dir_second="$vivado_install_parent_dir"
-            vivado_install_parent_dir=/tools
-        fi
-
-    elif  [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
+    elif  [ "$OSTYPE" = "cygwin" ]  \
+       || [ "$OSTYPE" = "msys"   ]
     then
-        if [ -z "${vivado_install_parent_dir-}" ]
-        then
-            vivado_install_parent_dir=/c
-        fi
-
-        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
-        then
-            vivado_install_parent_dir_first="$vivado_install_parent_dir"
-            vivado_install_parent_dir=/d
-        fi
-
-        if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
-        then
-            vivado_install_parent_dir_second="$vivado_install_parent_dir"
-            vivado_install_parent_dir=/e
-        fi
+        search_parents+=(/c /d /e)
     else
         error "this script does not support your OS / platform '$OSTYPE'"
     fi
 
-    #-------------------------------------------------------------------------
+    for parent in "${search_parents[@]}"
+    do
+        candidates=$(xilinx_collect_vivado_candidates "$parent" "${vendor_dirs[@]}")
 
-    if ! [ -d "$vivado_install_parent_dir/$vivado_install_dir" ]
-    then
-        extra_msg="'$vivado_install_dir'"
-        extra_msg+=" location (parent directory) can be set"
-        extra_msg+=" by the environment variable XILINX_HOME."
-        extra_msg+=" $msg_for_XILINX_VIVADO"
-
-        if [ -z "${vivado_install_parent_dir_first-}" ]
+        if [ -n "$candidates" ]
         then
-            error "expected to find '$vivado_install_dir' directory"  \
-                  "under '$vivado_install_parent_dir'."               \
-                  "$extra_msg"
+            xilinx_sort_discovery
 
-        elif [ -z "${vivado_install_parent_dir_second-}" ]
-        then
-            error "expected to find '$vivado_install_dir' directory"  \
-                  "under either '$vivado_install_parent_dir_first'"   \
-                  "or '$vivado_install_parent_dir'."                  \
-                  "$extra_msg"
-        else
-            error "expected to find '$vivado_install_dir' directory"  \
-                  "under either '$vivado_install_parent_dir_first'"   \
-                  "or '$vivado_install_parent_dir_second'"            \
-                  "or '$vivado_install_parent_dir'."                  \
-                  "$extra_msg"
+            # Compare versions within this parent, then paths in C locale.
+            # The alphabetically last path wins an equal-version tie.
+
+            if ! sorted_candidates=$(printf '%s\n' "$candidates" |
+                LC_ALL=C "$sort_to_run" "${sort_options[@]}")
+            then
+                error "failed to sort Vivado versions using '$sort_to_run'."
+            fi
+
+            # Windows sort emits CRLF line endings.
+            sorted_candidates=${sorted_candidates//$'\r'/}
+            latest_version_dir=${sorted_candidates##*$'\n'}
+            latest_version_dir=${latest_version_dir#*$'\t'}
+            export XILINX_VIVADO="$latest_version_dir"
+            export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
+
+            if [[ "$sorted_candidates" == *$'\n'* ]]
+            then
+                candidate_paths=
+
+                while IFS= read -r candidate_record
+                do
+                    candidate_path=${candidate_record#*$'\t'}
+                    candidate_paths+="${candidate_paths:+, }'$candidate_path'"
+                done <<< "$sorted_candidates"
+
+                warning "multiple Vivado installations found: $candidate_paths."  \
+                        "Using '$XILINX_VIVADO'."
+                info "XILINX_VIVADO=$XILINX_VIVADO"
+                info "PATH=$PATH"
+            fi
+            return
         fi
-    fi
 
-    #-------------------------------------------------------------------------
+        if [ -n "${XILINX_HOME-}" ] && [ "$parent" = "$XILINX_HOME" ]
+        then
+            warning "no Vivado installation found under XILINX_HOME='$XILINX_HOME'."  \
+                    "Trying the default installation parents."
+        fi
+    done
 
-    find_dir="$vivado_install_parent_dir/$vivado_install_dir"
-    find_opt="-mindepth 1 -maxdepth 1 -type d -print"
+    parent_paths=
 
-    latest_version_dir=$($find_to_run "$find_dir" $find_opt | sort | tail -1)
+    for parent in "${search_parents[@]}"
+    do
+        parent_paths+="${parent_paths:+, }'$parent'"
+    done
 
-    if [ -z "$latest_version_dir" ]
-    then
-        error "cannot find any version of Xilinx Vivado installed in "  \
-              "'$vivado_install_parent_dir/$vivado_install_dir'"
-    fi
-
-    #-------------------------------------------------------------------------
-
-    export XILINX_VIVADO="$latest_version_dir"
-    export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
-
-    #-------------------------------------------------------------------------
-
-    all_version_dirs=$($find_to_run "$find_dir" $find_opt | xargs echo)
-
-    if [ "$latest_version_dir" != "$all_version_dirs" ]
-    then
-        warning "multiple Xilinx Vivado versions installed in"  \
-                "'$vivado_install_parent_dir/$vivado_install_dir':"  \
-                "'$all_version_dirs'"
-
-        info "XILINX_VIVADO=$XILINX_VIVADO"
-        info "PATH=$PATH"
-    fi
+    error "cannot find Vivado under: $parent_paths."                        \
+          "Expected <parent>/<vendor>/Vivado/<version>/bin or"              \
+          "<parent>/<vendor>/<version>/Vivado/bin,"                         \
+          "where <vendor> is one of: ${vendor_dirs[*]}."                    \
+          "Set XILINX_HOME to <parent>, or XILINX_VIVADO to the directory"  \
+          "containing bin for a specific Vivado installation."
 }
 
 #-----------------------------------------------------------------------------
@@ -201,7 +230,7 @@ setup_run_directory_for_fpga_synthesis_xilinx ()
         > "$dir/fpga_project_synthesize.tcl"
 
     cat "$board_dir/$fpga_board/board_specific.tcl"      \
-        "$script_dir/fpga/xilinx_vivado_configure.tcl"  \
+        "$script_dir/fpga/xilinx_vivado_configure.tcl"   \
         > "$dir/fpga_project_configure.tcl"
 }
 

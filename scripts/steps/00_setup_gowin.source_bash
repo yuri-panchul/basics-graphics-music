@@ -233,14 +233,14 @@ gowin_setup_ide ()
 
     if [ -z "${GOWIN_VERSION_DIR-}" ]
     then
-        error "expected to find 'Gowin/IDE' or 'gowin/IDE',            \
-              or 'Gowin/*/IDE' or 'gowin/*/IDE'"                       \
+        error "expected to find 'Gowin/IDE' or 'gowin/IDE',"             \
+              "or 'Gowin/*/IDE' or 'gowin/*/IDE'"                       \
               "in ${attempt_gowin_install_parent_dirs}."               \
-              "The Gowin installation home location"                   \
+              "The Gowin installation home location"                  \
               "can be set by GOWIN_HOME environment variable,"         \
-              "such as 'GOWIN_HOME=/home/verilog'."                    \
-              " You can also use GOWIN_VERSION_DIR"                    \
-              " to specify the version subtree location,"              \
+              "such as 'GOWIN_HOME=/home/verilog'."                     \
+              "You can also use GOWIN_VERSION_DIR"                     \
+              "to specify the version subtree location,"              \
               "such as 'GOWIN_VERSION_DIR=/home/verilog/gowin/0.99'."
     fi
 

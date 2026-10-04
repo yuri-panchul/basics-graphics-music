@@ -61,20 +61,16 @@ TODO: This is inconsistent with Linux, Altera and Xilinx. Need to review.
 
 ## Xilinx
 
-1. If "vivado" executable is in the path, we consider the setup done.
+1. If `XILINX_VIVADO` names a directory containing `bin`, append that `bin` directory to `PATH` and consider setup done. Otherwise, if `vivado` is already in `PATH`, consider setup done.
 
-2. If environment variable XILINX_HOME is defined, we assume $XILINX_HOME as the location for "Xilinx/Vivado" subdirectory that contains Vivado product.
+2. If `XILINX_HOME` is defined, search that parent directory first.
 
-3. Linux: If XILINX_HOME is not defined, and $HOME/Xilinx/Vivado exists, we use this location.
+3. On Linux, search `$HOME`, `/opt`, and `/tools`, in that order, after the explicit parent. On Cygwin/MSYS, search `/c`, `/d`, and `/e` instead.
 
-4. Linux: If {XILINX_HOME|HOME}/Xilinx/Vivado does not exist, we try to use "/opt" as a home dir. Note that the user has to use sudo/root priviledges in order to install Xilinx into /opt.
+4. Under each parent, recognize `<parent>/<vendor>/Vivado/<version>` and `<parent>/<vendor>/<version>/Vivado`, where `<vendor>` can be `Xilinx`, `AMD`, or `AMDDesignTools`. A version-directory name must begin with a digit, and an installation must contain a `bin` directory. Symlinked version directories are supported; names such as `backup` are ignored.
 
-5. Linux: If {XILINX_HOME|HOME|/opt}/Xilinx/Vivado does not exist, we try to use "/tools" as a home dir. Note that the user has to use sudo/root priviledges in order to install Xilinx into /tools. Also note that /tools is the default location used by Xilinx Vivado installer.
+5. Use the first parent containing an installation. Within that parent, select the newest version across all supported vendors and layouts using version-aware sorting (`sort -V`), so `2026.10` sorts after `2026.2`. Equal versions are ordered by installation path in the C locale; the alphabetically last path wins. There is no vendor preference.
 
-6. Windows, Cygwin or MSys or MSys from Git: If XILINX_HOME is not defined, we try to use "/c", "/d", and "/e" (i.e. "C:\", "D:\" and "E:\") as the locations for the Xilinx/Vivado.
+   Discovery tries `/usr/bin/sort`, `/bin/sort`, then `sort` from `PATH`, checking version-sorting support before use. This avoids Windows' native `sort.exe`. If no compatible Unix utility is available, it warns and uses `sort` from `PATH` without options as a Windows fallback. The fallback utility controls alphabetical ordering and equal-version ties, which may differ from Unix sort. This ordering may select an older version; set `XILINX_VIVADO` to override it. Sorting failures still report an error.
 
-7. After determining the location of Xilinx/Vivado, we try to find the latest version in it. I.e. Xilinx/Vivado/2023.1.
-
-8. When we find this version, we set XILINX_VIVADO, an environment variable used by Vivado, to this location.
-
-TODO: Consider skipping the setup process if XILINX_VIVADO is already defined.
+For example, `/home/verilog/AMD/2026.1/Vivado` is discovered when `$HOME` is `/home/verilog`. To select it explicitly, set `XILINX_VIVADO=/home/verilog/AMD/2026.1/Vivado`; to search its parent, set `XILINX_HOME=/home/verilog`.

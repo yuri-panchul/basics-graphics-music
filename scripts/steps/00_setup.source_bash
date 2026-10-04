@@ -104,7 +104,7 @@ info ()
 
 error ()
 {
-    info error: $*
+    info error: "$@"
 
     # Alternative way to check for MacOS:
     # [ ${OSTYPE/[0-9]*/} = "darwin" ]
@@ -124,7 +124,7 @@ error ()
 
 warning ()
 {
-    info warning: $*
+    info warning: "$@"
 }
 
 #-----------------------------------------------------------------------------
