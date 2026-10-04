@@ -2,10 +2,6 @@
 `include "lab_specific_board_config.svh"
 `include "swap_bits.svh"
 
-`ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-`undef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-`endif
-
 `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 `undef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
 `endif
@@ -45,11 +41,11 @@ module board_specific_top
     output [           7:0] SMG_Data,
     output [w_digit  - 1:0] Scan_Sig,
 
-//    output                  TMDS_clk_n,
-//    output                  TMDS_clk_p,
-//    output [           2:0] TMDS_data_n,
-//    output [           2:0] TMDS_data_p,
-//    output [           0:0] HDMI_OEN,
+    output                  TMDS_clk_n,
+    output                  TMDS_clk_p,
+    output [           2:0] TMDS_data_n,
+    output [           2:0] TMDS_data_p,
+    output                  HDMI_OEN,
 
     input                   uart_rx,
     output                  uart_tx
@@ -66,10 +62,52 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
+    // The HDMI connector of the board has an output buffer enabled by
+    // HDMI_OEN. The name suggests an active low enable, which is the value
+    // used here; if the screen stays dark with everything else working,
+    // this is the first thing to invert.
+
+    localparam hdmi_output_enable = 1'b0;
+
+    //------------------------------------------------------------------------
+
     // Clock and reset
 
-    wire clk =   sys_clk;
-    wire rst = ~ rst_n;
+    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+
+        // The serializer of hdmi_tx needs a clock 5 times the pixel clock,
+        // and both clocks have to come from the same MMCM. The lab itself
+        // runs on the pixel clock, as it does on the other HDMI boards.
+
+        localparam lab_mhz = pixel_mhz;
+
+        wire pixel_clk, serial_clk, mmcm_locked;
+
+        hdmi_clk_gen
+        # (
+            .clk_mhz    ( clk_mhz     ),
+            .pixel_mhz  ( pixel_mhz   )
+        )
+        i_hdmi_clk_gen
+        (
+            .clk_in     ( sys_clk     ),
+            .rst        ( ~ rst_n     ),
+            .pixel_clk  ( pixel_clk   ),
+            .serial_clk ( serial_clk  ),
+            .locked     ( mmcm_locked )
+        );
+
+        wire clk = pixel_clk;
+        wire rst = ~ rst_n | ~ mmcm_locked;
+
+    `else
+
+        localparam lab_mhz = clk_mhz;
+
+        wire clk =   sys_clk;
+        wire rst = ~ rst_n;
+
+    `endif
 
     // Keys and LEDs
 
@@ -98,10 +136,6 @@ module board_specific_top
     wire [w_green - 1:0] green;
     wire [w_blue  - 1:0] blue;
 
-    // REMOVE assign vgaRed   = display_on ? red   : '0;
-    // REMOVE assign vgaGreen = display_on ? green : '0;
-    // REMOVE assign vgaBlue  = display_on ? blue  : '0;
-
     // Sound
 
     wire [         23:0] mic;
@@ -111,14 +145,14 @@ module board_specific_top
 
     wire slow_clk;
 
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
+    slow_clk_gen # (.fast_clk_mhz (lab_mhz), .slow_clk_hz (1))
     i_slow_clk_gen (.slow_clk (slow_clk), .*);
 
     //------------------------------------------------------------------------
 
     lab_top
     # (
-        .clk_mhz       ( clk_mhz        ),
+        .clk_mhz       ( lab_mhz        ),
         .w_key         ( w_key          ),
         .w_sw          ( w_key          ),
         .w_led         ( w_led          ),
@@ -166,24 +200,72 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        wire hsync, vsync;
+
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
         vga
         # (
-            .CLK_MHZ     ( clk_mhz     ),
-            .PIXEL_MHZ   ( pixel_mhz   )
+            .CLK_MHZ      ( lab_mhz     ),
+            .PIXEL_MHZ    ( pixel_mhz   )
         )
         i_vga
         (
-            .clk         ( clk         ),
-            .rst         ( rst         ),
-            .vsync       ( Vsync       ),
-            .hsync       ( Hsync       ),
-            .display_on  ( display_on  ),
-            .hpos        ( x10         ),
-            .vpos        ( y10         ),
-            .pixel_clk   (             )
+            .clk          ( clk         ),
+            .rst          ( rst         ),
+            .hsync        ( hsync       ),
+            .vsync        ( vsync       ),
+            .display_on   ( display_on  ),
+            .hpos         ( x10         ),
+            .vpos         ( y10         ),
+            .pixel_clk    (             )
+        );
+
+        //--------------------------------------------------------------------
+
+        assign HDMI_OEN = hdmi_output_enable;
+
+        hdmi_tx i_hdmi_tx
+        (
+            .pixel_clk    ( clk         ),
+            .serial_clk   ( serial_clk  ),
+            .rst          ( rst         ),
+
+            .hsync        ( hsync       ),
+            .vsync        ( vsync       ),
+
+            .display_on   ( display_on  ),
+            .red          ( red         ),
+            .green        ( green       ),
+            .blue         ( blue        ),
+
+            .tmds_clk_p   ( TMDS_clk_p  ),
+            .tmds_clk_n   ( TMDS_clk_n  ),
+            .tmds_data_p  ( TMDS_data_p ),
+            .tmds_data_n  ( TMDS_data_n )
+        );
+
+    `else
+
+        // The HDMI pins are constrained as TMDS_33 and need differential
+        // buffers even when nothing is sent, so they are driven low with
+        // the output buffer of the board disabled.
+
+        assign HDMI_OEN = ~ hdmi_output_enable;
+
+        OBUFDS i_tmds_clk_idle
+        (
+            .I  ( 1'b0       ),
+            .O  ( TMDS_clk_p ),
+            .OB ( TMDS_clk_n )
+        );
+
+        OBUFDS i_tmds_data_idle [2:0]
+        (
+            .I  ( 3'b000      ),
+            .O  ( TMDS_data_p ),
+            .OB ( TMDS_data_n )
         );
 
     `endif
