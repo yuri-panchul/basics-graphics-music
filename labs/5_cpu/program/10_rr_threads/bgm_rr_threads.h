@@ -1,5 +1,5 @@
-#ifndef BGM_FEMTO_THREADS_H
-#define BGM_FEMTO_THREADS_H
+#ifndef BGM_RR_THREADS_H
+#define BGM_RR_THREADS_H
 #include <stdbool.h>
 
 //----------------------------------------------------------------------------
@@ -105,4 +105,4 @@ extern void start_running_threads ();
 
 #endif  // #ifndef __ASSEMBLER__
 
-#endif  // #ifndef BGM_FEMTO_THREADS_H
+#endif  // #ifndef BGM_RR_THREADS_H
