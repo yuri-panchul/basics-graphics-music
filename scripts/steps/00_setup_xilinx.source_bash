@@ -76,22 +76,29 @@ xilinx_collect_vivado_candidates ()
 
     for vendor in "$@"
     do
-
         # Globs retain support for symlinked version directories.
         # Only names beginning with a digit are treated as versions.
 
         for candidate in "$parent/$vendor/Vivado/"[0-9]*
         do
             [ -d "$candidate/bin" ] || continue
+
+            # ##*/ strips the directory prefix, like basename for this path.
             version=${candidate##*/}
+
             printf '%s\t%s\n' "$version" "$candidate"
         done
 
         for candidate in "$parent/$vendor/"[0-9]*/Vivado
         do
             [ -d "$candidate/bin" ] || continue
+
+            # %/Vivado removes the trailing /Vivado suffix from the path.
             version=${candidate%/Vivado}
+
+            # ##*/ strips the directory prefix, like basename for this path.
             version=${version##*/}
+
             printf '%s\t%s\n' "$version" "$candidate"
         done
     done
@@ -171,10 +178,15 @@ xilinx_setup_vivado ()
                 error "failed to sort Vivado versions using '$sort_to_run'."
             fi
 
-            # Windows sort emits CRLF line endings.
+            # // replaces every match; $'\r' is CR, removed to normalize CRLF.
             sorted_candidates=${sorted_candidates//$'\r'/}
+
+            # ## removes the longest prefix through a newline, leaving the last row.
             latest_version_dir=${sorted_candidates##*$'\n'}
+
+            # # removes the shortest prefix through a tab, leaving the path.
             latest_version_dir=${latest_version_dir#*$'\t'}
+
             export XILINX_VIVADO="$latest_version_dir"
             export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
 
@@ -184,15 +196,20 @@ xilinx_setup_vivado ()
 
                 while IFS= read -r candidate_record
                 do
+                    # # removes the shortest prefix through a tab: the version field.
                     candidate_path=${candidate_record#*$'\t'}
+
+                    # :+ adds a comma only to a nonempty list; += appends the quoted path.
                     candidate_paths+="${candidate_paths:+, }'$candidate_path'"
                 done <<< "$sorted_candidates"
 
                 warning "multiple Vivado installations found: $candidate_paths."  \
                         "Using '$XILINX_VIVADO'."
+
                 info "XILINX_VIVADO=$XILINX_VIVADO"
                 info "PATH=$PATH"
             fi
+
             return
         fi
 
@@ -207,6 +224,7 @@ xilinx_setup_vivado ()
 
     for parent in "${search_parents[@]}"
     do
+        # :+ adds a comma only to a nonempty list; += appends the quoted parent.
         parent_paths+="${parent_paths:+, }'$parent'"
     done
 
