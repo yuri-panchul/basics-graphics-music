@@ -62,12 +62,12 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    // The HDMI connector of the board has an output buffer enabled by
-    // HDMI_OEN. The name suggests an active low enable, which is the value
-    // used here; if the screen stays dark with everything else working,
-    // this is the first thing to invert.
+    // Pin M6, called HDMI_OEN in the constraints of the vendor, switches
+    // the +5 V supply of the HDMI connector. It is active high, despite
+    // the name: see the HDMI section of the ALINX AX7035B user manual,
+    // https://alinx.com/public/upload/file/AX7035B_UG.pdf
 
-    localparam hdmi_output_enable = 1'b0;
+    localparam hdmi_output_enable = 1'b1;
 
     //------------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ module board_specific_top
 
         localparam lab_mhz = pixel_mhz;
 
-        wire pixel_clk, serial_clk, mmcm_locked;
+        wire pixel_clk, serial_clk, mmcm_locked, pixel_rst;
 
         hdmi_clk_gen
         # (
@@ -94,11 +94,15 @@ module board_specific_top
             .rst        ( ~ rst_n     ),
             .pixel_clk  ( pixel_clk   ),
             .serial_clk ( serial_clk  ),
-            .locked     ( mmcm_locked )
+            .locked     ( mmcm_locked ),
+            .rst_out    ( pixel_rst   )
         );
 
+        // The lab and the video share the pixel clock, so the reset that
+        // the serializer needs serves the whole design
+
         wire clk = pixel_clk;
-        wire rst = ~ rst_n | ~ mmcm_locked;
+        wire rst = pixel_rst;
 
     `else
 
@@ -224,7 +228,7 @@ module board_specific_top
 
         //--------------------------------------------------------------------
 
-        assign HDMI_OEN = hdmi_output_enable;
+        assign HDMI_OEN = rst ? ~ hdmi_output_enable : hdmi_output_enable;
 
         hdmi_tx i_hdmi_tx
         (
@@ -250,18 +254,20 @@ module board_specific_top
 
         // The HDMI pins are constrained as TMDS_33 and need differential
         // buffers even when nothing is sent, so they are driven low with
-        // the output buffer of the board disabled.
+        // the +5 V supply of the connector switched off.
 
         assign HDMI_OEN = ~ hdmi_output_enable;
 
-        OBUFDS i_tmds_clk_idle
+        OBUFDS # (.IOSTANDARD ("TMDS_33"))
+        i_tmds_clk_idle
         (
             .I  ( 1'b0       ),
             .O  ( TMDS_clk_p ),
             .OB ( TMDS_clk_n )
         );
 
-        OBUFDS i_tmds_data_idle [2:0]
+        OBUFDS # (.IOSTANDARD ("TMDS_33"))
+        i_tmds_data_idle [2:0]
         (
             .I  ( 3'b000      ),
             .O  ( TMDS_data_p ),

@@ -57,31 +57,37 @@ set_property IOSTANDARD LVCMOS33 [get_ports {SMG_Data[*]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {Scan_Sig[*]}]
 ############## HDMIOUT define#########################
 
-# Only the positive pin of a differential pair is given a location,
-# the negative one is implied by the pair
-
-set_property IOSTANDARD TMDS_33 [get_ports TMDS_clk_n]
+# HDMI1 output (J6). Pin numbers and the polarity of the power switch on
+# M6 follow the HDMI section of the ALINX AX7035B user manual,
+# https://alinx.com/public/upload/file/AX7035B_UG.pdf
+#
+# Vivado derives the negative pin of a differential pair on its own, but
+# naming both of them documents the intent and does not depend on that.
 
 set_property PACKAGE_PIN E1 [get_ports TMDS_clk_p]
-set_property IOSTANDARD TMDS_33 [get_ports TMDS_clk_p]
-
-set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_n[0]}]
+set_property PACKAGE_PIN D1 [get_ports TMDS_clk_n]
 
 set_property PACKAGE_PIN G1 [get_ports {TMDS_data_p[0]}]
-set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_p[0]}]
-
-set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_n[1]}]
+set_property PACKAGE_PIN F1 [get_ports {TMDS_data_n[0]}]
 
 set_property PACKAGE_PIN H2 [get_ports {TMDS_data_p[1]}]
-set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_p[1]}]
-
-set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_n[2]}]
+set_property PACKAGE_PIN G2 [get_ports {TMDS_data_n[1]}]
 
 set_property PACKAGE_PIN K1 [get_ports {TMDS_data_p[2]}]
-set_property IOSTANDARD TMDS_33 [get_ports {TMDS_data_p[2]}]
+set_property PACKAGE_PIN J1 [get_ports {TMDS_data_n[2]}]
+
+set_property IOSTANDARD TMDS_33  \
+    [get_ports {TMDS_clk_p TMDS_clk_n TMDS_data_p[*] TMDS_data_n[*]}]
+
+# M6 switches the +5 V supply of the connector and is active high
 
 set_property PACKAGE_PIN M6 [get_ports HDMI_OEN]
 set_property IOSTANDARD LVCMOS33 [get_ports HDMI_OEN]
+
+# The reset button is asynchronous; its release is synchronized in
+# hdmi_clk_gen, so there is nothing to time from the pin itself
+
+set_false_path -from [get_ports rst_n]
 
 ############## usb uart define########################
 set_property IOSTANDARD LVCMOS33 [get_ports uart_rx]

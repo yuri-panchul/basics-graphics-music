@@ -6,6 +6,12 @@
 //  serializer in hdmi_tx requires: its CLK and CLKDIV inputs have to have
 //  a known phase relationship.
 //
+//  The reset output is asserted asynchronously, on the reset input or on
+//  a loss of lock, and released synchronously with the pixel clock. The
+//  OSERDESE2 primitives of hdmi_tx need that: a reset released
+//  asynchronously could let the master and the slave of a pair start on
+//  different edges of CLKDIV.
+//
 //  For the 50 MHz board clock and a 25 MHz pixel clock the numbers are
 //
 //      VCO         = 50 MHz * 20     = 1000 MHz
@@ -31,7 +37,10 @@ module hdmi_clk_gen
 
     output wire pixel_clk,
     output wire serial_clk,
-    output wire locked
+    output wire locked,
+
+    // Asserted asynchronously, released synchronously with pixel_clk
+    output wire rst_out
 );
 
     localparam real vco_mhz        = 1000.0,
@@ -82,6 +91,21 @@ module hdmi_clk_gen
 
     BUFG i_bufg_serial (.I (serial_clk_raw), .O (serial_clk));
     BUFG i_bufg_pixel  (.I (pixel_clk_raw ), .O (pixel_clk ));
+
+    //------------------------------------------------------------------------
+
+    wire reset_request = rst | ~ locked;
+
+    (* ASYNC_REG = "TRUE" *)
+    logic [2:0] reset_chain = '1;
+
+    always_ff @ (posedge pixel_clk or posedge reset_request)
+        if (reset_request)
+            reset_chain <= '1;
+        else
+            reset_chain <= { reset_chain [1:0], 1'b0 };
+
+    assign rst_out = reset_chain [2];
 
 endmodule
 
