@@ -324,9 +324,9 @@ update_fpga_toolchain_var ()
         omdazz_epm570_quartus_13_1_or_older  )
 
             fpga_toolchain=quartus
-            use_old_version_of_quartus=1
         ;;
 
+        alinx_ax301                      | \
         alinx_ax4010*                    | \
         c5gx*                            | \
         de0_cv                           | \
@@ -348,7 +348,6 @@ update_fpga_toolchain_var ()
         zeowaa*                          )
 
             fpga_toolchain=quartus
-            use_old_version_of_quartus=0
         ;;
 
         runber                           | \
@@ -504,11 +503,10 @@ fpga_board_setup ()
 fpga_board_setup
 
 # fpga_toolchain=quartus
-# use_old_version_of_quartus=0
 
 case $fpga_toolchain in
     quartus  )
-        intel_fpga_setup_quartus
+        quartus_setup
 
         if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
             intel_fpga_setup_questa
