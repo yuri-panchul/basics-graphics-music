@@ -1,0 +1,58 @@
+Create a new branch claude_quartus branching from main. You need to rewrite
+the script code that supports discovering a proper version of Quartus. The
+main reasons for it:
+
+1. Altera changed directory names from intelFPGA back to altera, so both old
+and new versions of Quartus may be in altera directory. They current script
+assumes that altera are old versions and intelFPGA is new version which is
+not correct.
+
+2. There is a new board, Terasic DE23-Lite that uses not light educational
+version, but Pro version with a free license. When synthesizing a project for
+that board we have to use Pro version even if Light is installed as well. In
+most other cases we should have preference for free Light version.
+
+3. Note that boards with Cyclone II and Cyclone III chips (such as DE0
+(without CV), DE1 (without SoC), DE2 (without 114) require old versions of
+Quartus, such as 13.0sp1 ord 13.1.
+
+4. Also note that Cyclone IV and V are supported by both new and older (13.0sp1 ord
+13.1) versions, while for example MAX10 in DE10-Lite is not supported by
+older boards.
+
+5. Use the most recent version installed that is compatible with the board.
+However free (Light) version preference should override recent version
+preference, i.e. 21 Lite should win over 25 Pro if a board can be supported
+by the Lite.
+
+6. There is a preference between Standard and Pro (Standard is better) but
+this preference should not override the version preference (i.e. standard
+wins over pro only within the same version or its version is more recent).
+But Arria board DE23 should be used with Pro clearly because Altera gives a
+promotional free license.
+
+7. Also create a table that lists all Altera/Intel FPGA boards in boards
+directory. The table should list the FPGA family; a specific chip; board
+manifacturer and board name; number of CLB, year of introduction, supported
+versions of Quartus, graphics on the board (VGA, HDMI, LCD), whether it has
+sound (microphone and/or DAC in the board), whether our board wrappers use
+embedded mic or dac or add external; whether is uses or requires TM1638
+accoring to code; clock frequency; number of buttons, switches and LEDs and
+other notes useful for the user. The table should be generated as HDMI, MD
+and CSV. Put these files in a local directory.
+
+8. Keep preferences associated with QUARTUS_ROOTDIR, INTEL_FPGA_HOME,
+ALTERA_HOME, QUARTUS_HOME and PATH.
+
+9. Avoid using names for the Bash variables like inter_fpga or intelFPGA or
+INTEL_FPGA. However do not rename the whole file
+00_setup_intel_fpga.source_bash yet, becase I want to check the edits in
+git.
+
+10. I also eventually want to dis-bundle Quartus and Questa (no need for old
+ModelSim support at all). I want to create a separate file
+00_setup_questa.source_bash. But don't do this yet. I want to finalize
+everything with Quartus synthesis first.
+
+11. Before doing anything check the correctness of the requirements and
+present a plan of actions in quartus_plan.html file stired locally.

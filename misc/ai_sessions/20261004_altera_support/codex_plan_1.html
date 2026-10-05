@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quartus discovery: requirements review and implementation plan</title>
+<style>
+:root{color-scheme:light;--ink:#203144;--muted:#526478;--line:#d7e0e8;--accent:#176b60;--page:#f2f5f8;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1180px;margin:30px auto;padding:42px;background:var(--paper);border:1px solid var(--line);border-radius:10px}h1{font-size:32px;line-height:1.2;margin:8px 0 18px}h2{font-size:22px;margin:38px 0 14px}h3{font-size:17px;margin:24px 0 10px}p{margin:0 0 15px}a{color:var(--accent);overflow-wrap:anywhere}code{font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;background:#edf2f6;padding:2px 4px;border-radius:3px;overflow-wrap:anywhere}pre{padding:18px;background:#203144;color:white;white-space:pre-wrap;font:13px/1.7 ui-monospace,monospace;border-radius:6px}pre code{background:transparent;color:inherit;padding:0}.meta{color:var(--muted);font-size:13px}.notice{padding:18px 22px;background:#edf7f3;border-left:4px solid var(--accent);margin:20px 0}.decision{background:#fff8e8;border-left:4px solid #b57b15;padding:18px 22px;margin:20px 0}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px;margin:18px 0 24px}caption{text-align:left;font-weight:700;margin-bottom:8px}th,td{padding:11px 13px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf2f6}tr:nth-child(even) td{background:#fafcfd}ul,ol{padding-left:25px}li{margin:8px 0}.steps>li{margin-bottom:20px}.pill{display:inline-block;padding:3px 9px;border:1px solid var(--line);border-radius:5px;font-size:12px;margin:0 8px 6px 0}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.fact{padding:16px;background:#f3f6f8;border:1px solid var(--line);border-radius:6px}.fact strong{display:block;font-size:23px}.fact span{font-size:13px;color:var(--muted)}footer{margin-top:30px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:13px}details{border:1px solid var(--line);padding:14px 18px;border-radius:6px;margin:20px 0}summary{cursor:pointer;font-weight:650}nav{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-top:20px}
+@media(max-width:750px){main{margin:0;padding:24px 17px;border:0}.facts{grid-template-columns:1fr}h1{font-size:27px}table{font-size:12px}th,td{padding:8px}}
+@media print{body{background:#fff;font-size:10pt}main{max-width:none;margin:0;border:0;padding:0}nav{display:none}h2,h3{break-after:avoid}tr,.notice,.decision{break-inside:avoid}.scroll{overflow:visible}a{color:inherit}table{font-size:9pt}pre{background:#eee;color:#000}}
+</style>
+</head>
+<body><main>
+<p class="meta">Requirements review · 4 October 2026 · Input: <a href="quartus_prompt_codex.txt">quartus_prompt_codex.txt</a></p>
+<h1>Quartus discovery: verified requirements and a plan</h1>
+<p>The rewrite should select a <strong>compatible installation before applying edition and version preferences</strong>. Directory branding must not determine device support, age, or edition. The board catalog should describe both the physical hardware and the behavior of its BGM wrapper.</p>
+<div class="notice"><strong>This is the pre-implementation deliverable requested in item 11.</strong> Repository files and official documentation have been inspected, and five installed Quartus executables have reported their versions. Branch creation, the discovery rewrite, and the complete board catalog are the implementation steps below; they have not been performed as part of this review.</div>
+<div class="facts"><div class="fact"><strong>36</strong><span>Quartus wrapper directories found</span></div><div class="fact"><strong>33 + 3</strong><span>Active wrappers and retired variants</span></div><div class="fact"><strong>5</strong><span>Installed Quartus versions identified</span></div></div>
+<p class="meta">Repository inspected: <code>~/codex/basics-graphics-music</code>, branch <code>xilinx_codex</code>, HEAD <code>a67af903</code>. The cached <code>origin/main</code> also contains 36 board-specific QSF files. The implementation must refresh the main-branch baseline before editing.</p>
+<nav aria-label="Plan contents"><a href="#requirements">Requirement corrections</a><a href="#selection">Selection rules</a><a href="#local">Local findings</a><a href="#work">Implementation steps</a><a href="#catalog">Catalog fields</a><a href="#tests">Acceptance checks</a></nav>
+
+<h2 id="requirements">Requirements checked</h2>
+<div class="scroll"><table>
+<thead><tr><th>Prompt item</th><th>Assessment</th><th>Rule to implement</th></tr></thead>
+<tbody>
+<tr><td>1 · Installation names</td><td>Correct motivation; the search needs more than bare <code>altera</code>.</td><td>Search legacy <code>altera</code>, <code>altera_lite</code>, <code>altera_std</code>, <code>altera_pro</code>, <code>intelFPGA</code>, <code>intelFPGA_lite</code>, and <code>intelFPGA_pro</code> layouts. New documented defaults use the three edition-suffixed Altera names. Read edition/version metadata instead of inferring them from those names. <a href="https://docs.altera.com/r/docs/683472/26.1/altera-fpga-software-installation-and-licensing/selecting-the-installation-path">Official installation paths</a>.</td></tr>
+<tr><td>2, 6 · DE23-Lite</td><td><strong>Agilex 3, not Arria.</strong> The configured part is <code>A3CZ135BB18AE7S</code>. The board’s “Lite” name does not mean Quartus Lite.</td><td>Require Pro with Agilex 3 support. Terasic’s demonstrations specify Pro 25.1, and newer candidates must still contain the exact device. Terasic advertises a no-cost Pro license for this board; Altera describes the Agilex 3 enablement license. Do not treat all Pro installations as free or licensed. <a href="https://www.mouser.com/pdfDocs/DE23_Lite_User_manual.pdf">Terasic manual</a>, <a href="https://www.terasic.com.tw/cgi-bin/page/archive.pl?CategoryNo=44&amp;Language=English&amp;No=1383&amp;PartNo=4">Terasic licensing information</a>, <a href="https://docs.altera.com/r/docs/683472/26.1/altera-fpga-software-installation-and-licensing/evaluating-the-quartus-prime-software">Altera licensing options</a>.</td></tr>
+<tr><td>3 · Cyclone II</td><td><strong>13.1 is incompatible.</strong> DE1 and the original DE2 use Cyclone II.</td><td>The final supported release line is 13.0 SP1. Quartus II 13.1 explicitly removed Cyclone II support. Prefer a compatible Web Edition installation over a newer paid candidate within the applicable search tier. <a href="https://cdrdv2-public.intel.com/682216/rn_qts_131_dev_support.pdf">Quartus II 13.1 release notes</a>.</td></tr>
+<tr><td>3 · Cyclone III</td><td>13.1 is supported; it must not share Cyclone II’s ceiling.</td><td>The original DE0, <code>dk_dev_3c120n</code>, and <code>marsohod_mcy316</code> need the Cyclone III rule. Prefer 13.1 over 13.0 SP1 when both are compatible and in the same edition-preference group. <a href="https://www.altera.com/downloads/fpga-development-tools/quartus-ii-web-edition-design-software-version-13-1-windows">13.1 Web Edition device list</a>.</td></tr>
+<tr><td>4 · Cyclone IV/V</td><td>Broadly correct, but exact part and edition still matter.</td><td>Both 13.0 SP1 and 13.1 list Cyclone IV and V device packages. Modern support belongs to Lite/Standard, not Pro. Check the selected part rather than assuming every release supports every member of a family. <a href="https://www.altera.com/downloads/fpga-development-tools/quartus-ii-web-edition-design-software-version-13-0sp1-windows">13.0 SP1 packages</a>, <a href="https://www.altera.com/design/guidance/software/device-support">edition/device support matrix</a>.</td></tr>
+<tr><td>4 · MAX 10 / DE10-Lite</td><td>The intended distinction is between older <em>Quartus versions</em>, not older boards.</td><td>Reject 13.x for <code>10M50DAF484C7G</code>. MAX 10 arrived in the 14.x generation; do not invent a universal minimum covering every part and update. Establish the exact installed-part support and document verified version bounds during implementation. <a href="https://www.intel.com/content/dam/support/us/en/programmable/support-resources/fpga-wiki/asset01/bemicrom10-full-featured-reference-user-guide.pdf">MAX 10 reference design using 14.0.2</a>.</td></tr>
+<tr><td>5 · Free edition preference</td><td>Use the product name <strong>Lite</strong>. Legacy free Quartus II is <strong>Web Edition</strong>.</td><td>Group Lite and Web as the preferred editions, then choose their newest compatible installation. The proposed “21 Lite versus 25 Pro” example is an abstract ranking rule: Pro is already ineligible for Cyclone IV/V and MAX 10. A practical test is Lite 21 versus Standard 25 on a device supported by both. <a href="https://docs.altera.com/r/docs/683472/26.1/altera-fpga-software-installation-and-licensing/quartus-prime-design-suite-overview">Edition overview</a>.</td></tr>
+<tr><td>6 · Standard versus Pro</td><td>Consistent when both editions support the target.</td><td>Among eligible Standard/Subscription and Pro candidates, version takes precedence; Standard wins an equal-version tie. Newer Pro beats older Standard. Arria 10 is an example of overlapping support; no Arria 10 target was found in this inventory. DE23-Lite has only the Pro route. <a href="https://www.altera.com/design/guidance/software/device-support">Device support matrix</a>.</td></tr>
+<tr><td>7 · Table terminology</td><td>Interpret “HDMI, MD and CSV” as <strong>HTML, Markdown and CSV</strong>.</td><td>Report native logic capacity and units, such as LEs and ALMs, instead of relabeling everything “CLBs.” Separate board introduction year from FPGA-family introduction year. Unknown or unverified facts must be marked as such.</td></tr>
+<tr><td>8, 9 · Variables</td><td>Preserve the existing public override names despite the internal naming cleanup.</td><td>Continue accepting <code>QUARTUS_ROOTDIR</code>, <code>INTEL_FPGA_HOME</code>, <code>ALTERA_HOME</code>, <code>QUARTUS_HOME</code>, and <code>PATH</code>. New internal state and Quartus helper names use <code>quartus_*</code>. Legacy directory names remain literal data. Keep the filename <code>00_setup_intel_fpga.source_bash</code>.</td></tr>
+<tr><td>10 · Questa</td><td>Separate future task.</td><td>No new <code>00_setup_questa.source_bash</code>, no ModelSim support work, and no simulator redesign. Preserve the small interface needed by the existing Questa setup while replacing Quartus discovery.</td></tr>
+</tbody></table></div>
+
+<p><strong>Additional legacy cases found in the repository:</strong> <code>marsohod_mcy112</code> uses first-generation Cyclone <code>EP1C12Q240C8</code>. The vendor matrix lists Web Edition support through 11.0 SP1 and Subscription support through 13.0 SP1—another reason edition matters. The EPM570 wrappers target MAX II, a CPLD family. One wrapper is explicitly named <code>omdazz_epm570_quartus_13_1_or_older</code>; preserve its board-specific ceiling separately from general MAX II device support until its purpose has been checked. <a href="https://www.altera.com/design/guidance/software/device-support">Official legacy support limits</a>.</p>
+
+<h2 id="selection">Proposed selection rules</h2>
+<p>Compatibility is mandatory at every stage, including explicit overrides. An incompatible installation is never selected merely because it is first on <code>PATH</code>, newest, free, or under a preferred parent.</p>
+<div class="decision"><strong>Interpretation of requirements 5 and 8:</strong> explicit environment and PATH choices retain priority over automatic discovery. Within each eligible search tier, prefer Lite/Web and then newer versions. Automatic default directories form one candidate pool, so a compatible newer installation under <code>/opt</code> can beat an older one under <code>$HOME</code>. This deliberately fixes the current first-directory behavior while retaining explicit override priorities.</div>
+<ol>
+<li><strong>Determine the target.</strong> Read the board’s configured <code>DEVICE</code>, determine the family, and apply any documented wrapper-specific restriction. Missing or ambiguous board metadata must produce an actionable error.</li>
+<li><strong>Try <code>QUARTUS_ROOTDIR</code>.</strong> Validate its tools, version, edition, and exact target support. A usable compatible choice wins. Warn clearly about a missing, unidentifiable, or incompatible override before continuing.</li>
+<li><strong>Try the existing Quartus on <code>PATH</code>.</strong> Resolve its installation and perform the same checks. Preserve the preference for an already configured compatible environment; do not assume successful command lookup proves compatibility.</li>
+<li><strong>Try named parent locations in order:</strong> <code>INTEL_FPGA_HOME</code>, <code>ALTERA_HOME</code>, then <code>QUARTUS_HOME</code>. These keep their current parent-of-installation-directories meaning. Scan all recognized vendor/edition folders and versions under each parent. Apply this to old and new boards; do not ignore <code>INTEL_FPGA_HOME</code> for legacy devices.</li>
+<li><strong>Collect automatic defaults.</strong> Linux: <code>$HOME</code>, <code>/opt</code>, <code>/tools</code>. Cygwin/MSYS: <code>/c</code>, <code>/d</code>, <code>/e</code> (Windows drives C:, D:, E:). Deduplicate installations reached through repeated parents or symlinks.</li>
+<li><strong>Filter and rank within the winning tier.</strong> If there are eligible Lite/Web candidates, choose the newest of them. Otherwise choose the newest eligible Standard/Subscription or Pro candidate; prefer Standard/Subscription only for equal versions. Resolve any remaining tie by stable parent order and canonical path.</li>
+<li><strong>Publish one coherent toolchain.</strong> Set <code>QUARTUS_ROOTDIR</code> and the absolute paths to its GUI, shell, and programmer. Put that selected executable directory first on <code>PATH</code>, without duplicate insertion, so later commands agree with the choice. Inspect incoming PATH before changing it.</li>
+<li><strong>Explain the outcome.</strong> Report selected edition, version, part, path, and selection source. On failure, list rejected candidates with reasons such as incompatible family, missing device package, missing tools, or an unreadable version. Discovery must distinguish device support from availability of a valid compilation license.</li>
+</ol>
+<p>Ranking example within a single search tier, assuming all listed candidates support the same part:</p>
+<pre><code>Lite 21.1 + Standard 25.1             → Lite 21.1
+Lite 21.1 + Lite 25.1                 → Lite 25.1
+Standard 24.1 + Pro 25.1              → Pro 25.1
+Standard 25.1 + Pro 25.1              → Standard 25.1
+DE23-Lite: Lite 25.1 + Pro 26.1.1     → Pro 26.1.1, if its device package is installed
+DE1: Web 13.0 SP1 + Web 13.1          → Web 13.0 SP1
+DE0: Web 13.0 SP1 + Web 13.1          → Web 13.1</code></pre>
+<p class="meta">The Standard/Pro examples exercise the general policy for overlapping device support. They are not claims that Pro supports the Cyclone or MAX devices currently used by most BGM boards.</p>
+
+<h2 id="local">What the local inspection established</h2>
+<div class="scroll"><table>
+<thead><tr><th>Installation</th><th>Reported version</th><th>Reported edition</th></tr></thead>
+<tbody>
+<tr><td><code>~/altera/13.0sp1</code></td><td>13.0.1, build 232, Service Pack 1</td><td>Quartus II Web, 32-bit shell</td></tr>
+<tr><td><code>~/altera/13.1</code></td><td>13.1.0, build 162</td><td>Quartus II Web, 32-bit shell</td></tr>
+<tr><td><code>~/altera_lite/25.1std</code></td><td>25.1std.0, build 1129</td><td>Quartus Prime Lite</td></tr>
+<tr><td><code>~/altera_pro/26.1.1</code></td><td>26.1.1, build 130</td><td>Quartus Prime Pro</td></tr>
+<tr><td><code>/opt/intelFPGA_lite/21.1</code></td><td>21.1.1, build 850</td><td>Quartus Prime Lite</td></tr>
+</tbody></table></div>
+<p>All five executables completed <code>quartus_sh --version</code>. The two legacy versions required running outside the execution sandbox. These are version probes, not synthesis, licensing, or installed-part validation. In particular, <code>25.1std</code> in a path is <strong>not evidence of Standard Edition</strong>: the local metadata and executable both identify this installation as Lite.</p>
+<ul>
+<li>The existing discovery helper chooses a vendor directory before comparing versions; new-board discovery checks <code>intelFPGA_lite</code> and <code>intelFPGA</code> but does not actually select modern Altera paths.</li>
+<li>The single <code>use_old_version_of_quartus</code> flag collapses distinct family limits and determines the Windows executable subdirectory too broadly.</li>
+<li>It sorts directory names alphabetically, uses <code>xargs</code> for path reporting, and leaves several discovery variables in the sourced shell.</li>
+<li>Most QSF files contain a literal device assignment but omit <code>FAMILY</code>. The device identifier must be sufficient to determine compatibility.</li>
+<li><code>alinx_ax301</code> has a Quartus QSF but is missing from the current Quartus board-selection case. Coverage checks must catch this kind of dispatch omission.</li>
+<li>The existing Questa helper consumes <code>choosen_version_dir</code>. Preserve that bridge while deferring the requested simulator separation.</li>
+</ul>
+
+<h2 id="work">Implementation sequence</h2>
+<ol class="steps">
+<li><strong>Create the correct branch baseline.</strong> Check for unrelated work, fetch the current main branch, and create <code>codex_quartus</code> from the refreshed <code>origin/main</code>. Do not branch from <code>xilinx_codex</code> or blindly use the stale local <code>main</code>. If the requested branch already exists, inspect it rather than resetting it. Re-read the applicable repository instructions on that baseline.</li>
+<li><strong>Build the board and compatibility inventory.</strong> Enumerate every Quartus wrapper, including retired variants. Extract literal device assignments, follow included wrapper sources, and establish device-family rules from official documentation. Record wrapper-specific restrictions separately. Use this inventory to check the board-dispatch code.</li>
+<li><strong>Separate discovery responsibilities.</strong> Keep helpers small and explicit: locate candidate roots, identify version/edition, check target support, compare candidates, and activate the winner. Use local <code>quartus_*</code> variables and Bash arrays. Preserve filenames and public overrides, and update the caller in <code>00_setup.source_bash</code> where necessary.</li>
+<li><strong>Read actual installation identity.</strong> Parse <code>quartus/version.txt</code> as data where available, with <code>quartus_sh --version</code> as the authoritative fallback for missing or incomplete metadata. Handle repeated metadata entries and legacy Web/Subscription banners. Do not execute metadata files with <code>source</code> or <code>eval</code>. Probe <code>bin</code> and <code>bin64</code> based on actual executable availability and platform.</li>
+<li><strong>Verify installed device support.</strong> Use a small Quartus Tcl query against the candidate’s device database for the exact configured part, after inexpensive family/edition checks. The vendor documents <code>get_part_info</code> and <code>get_part_list</code> in both legacy and current releases. Missing device packages must disqualify a candidate even if the release normally supports that family. <a href="https://cdrdv2-public.intel.com/654662/tclscriptrefmnl.pdf">Quartus II scripting reference</a>, <a href="https://docs.altera.com/r/docs/683432/26.1/quartus-prime-pro-edition-user-guide/quartus-device?contentId=1gi6_VJ_3t2y_MscWRtEwA">Current device-query package</a>.</li>
+<li><strong>Implement the ranking and diagnostics.</strong> Normalize real version numbers, service packs, updates, and builds. In particular, compare <code>13.0sp1</code> consistently with reported <code>13.0.1</code>, and remove edition markers such as <code>std</code> from the numeric comparison. Use a numeric Bash comparator rather than an alphabetical or platform-dependent <code>sort</code>. Guard expected probe failures under <code>set -Eeuo pipefail</code>.</li>
+<li><strong>Preserve the surrounding workflow.</strong> Keep synthesis, GUI launch, and programming bound to the same selected installation. Preserve current Questa integration without moving it or adding ModelSim support. Retain useful existing platform/library handling unless a concrete problem requires a targeted correction.</li>
+<li><strong>Generate the catalog from one data source.</strong> Combine machine-extracted wrapper facts with reviewed manufacturer facts and per-field sources. Produce matching HTML, Markdown, and CSV locally, with stable wrapper identifiers and clearly marked unknowns.</li>
+<li><strong>Run focused verification and review the final diff.</strong> Exercise the selection cases below using temporary fake installations, then run actual device queries and representative synthesis where the installed packages and licenses allow. Keep generated projects in temporary directories. Report which combinations were compiled and which remain documentation-based.</li>
+</ol>
+<p>Expected code scope: <code>scripts/steps/00_setup_intel_fpga.source_bash</code>, its Quartus call/board-dispatch integration in <code>scripts/steps/00_setup.source_bash</code>, a small device-query helper if needed, focused regression tests, and relevant script documentation. Apply the Bash spacing, comment, and diagnostic conventions in <code>AGENTS.md</code>.</p>
+
+<h2 id="catalog">Board catalog specification</h2>
+<p>Planned local output directory: <code>~/codex/quartus_board_inventory/</code>.</p>
+<pre><code>quartus_board_inventory/
+    altera_boards.html
+    altera_boards.md
+    altera_boards.csv
+    board_data.json
+    generate_board_catalog.py</code></pre>
+<p>One row represents one repository wrapper. Variants of the same physical board retain separate rows because peripherals, TM1638 usage, clocking, and legacy restrictions can differ. The three retired wrappers remain in the exports with a status column.</p>
+<div class="scroll"><table>
+<thead><tr><th>Field group</th><th>What will be recorded</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td>Identity</td><td>Wrapper directory, active/retired status, manufacturer, board name, hardware revision where identifiable, FPGA/CPLD family, full configured device code.</td><td>QSF and manufacturer manual; report conflicting claims rather than silently replacing the configured part.</td></tr>
+<tr><td>Capacity and dates</td><td>LE count, ALM count where published, native unit, and relevant memory/DSP notes; separate board-introduction and device-family-introduction years.</td><td>Manufacturer specifications and dated announcements. A manual date can establish an “available by” date but must not be labeled a proven launch year.</td></tr>
+<tr><td>Quartus compatibility</td><td>Supported editions, documented release limits, board-specific restrictions, installed device-package requirement, and separately labeled locally tested versions.</td><td>Official device matrix, release notes, installed device queries, and actual builds. Do not imply every BGM lab works in every release that supports the chip.</td></tr>
+<tr><td>Graphics</td><td>Onboard VGA, HDMI input/output, LCD or LCD connector; what the wrapper drives; external adapters required; implemented video mode where meaningful.</td><td>Hardware manuals plus top-level ports, constraints, instantiated logic, and lab feature macros.</td></tr>
+<tr><td>Audio</td><td>Onboard microphone, codec/ADC input, DAC/output or HDMI audio capability; which is used by the wrapper; required external microphone or DAC modules.</td><td>Keep “hardware present,” “implemented,” “disabled,” and “external module” separate.</td></tr>
+<tr><td>TM1638</td><td>Required, optional, absent, or dependent on lab configuration; physical versus virtual display/control behavior and any shared-pin implications.</td><td>Controller instantiations, conditional defines, board ports, and the common/lab configuration headers—not the directory name alone.</td></tr>
+<tr><td>Clock and controls</td><td>Physical oscillator(s), wrapper lab/pixel clock; physical buttons, switches, user LEDs and RGB LEDs; reset controls; counts actually available to the lab.</td><td>Document polarity and reservations, including switches used for reset and LEDs reused for decimal points.</td></tr>
+<tr><td>Useful notes</td><td>Programming interface, storage/memory and SoC features where relevant; source links, code references, uncertainty, and verification date.</td><td>Use “unknown / unverified” when an obscure or relabeled board has no reliable specification.</td></tr>
+</tbody></table></div>
+<p><strong>Concrete example:</strong> the DE23-Lite wrapper uses a 50 MHz lab clock, reserves one of ten switch inputs for reset, and reuses six of ten LED outputs for display decimal points. Its HDMI audio signals are tied low, while microphone reception and audio output use external GPIO interfaces when enabled. The catalog must convey those code-level facts without equating them to all the capabilities of the physical board.</p>
+<details open><summary>Initial wrapper inventory: 33 active and 3 retired</summary>
+<p class="meta">Parts below come from the current QSF files. Family labels are derived from part identifiers and the explicit family assignments where present. This is the scope list, not the completed hardware catalog.</p>
+<div class="scroll"><table><thead><tr><th>Wrapper</th><th>Family</th><th>Configured device</th></tr></thead><tbody>
+<tr><td>alinx_ax301</td><td>Cyclone IV E</td><td>EP4CE6F17C8</td></tr>
+<tr><td>alinx_ax4010</td><td>Cyclone IV E</td><td>EP4CE10F17C8</td></tr>
+<tr><td>c5gx</td><td>Cyclone V GX</td><td>5CGXFC5C6F27C7</td></tr>
+<tr><td>de0</td><td>Cyclone III</td><td>EP3C16F484C6</td></tr>
+<tr><td>de0_cv</td><td>Cyclone V E</td><td>5CEBA4F23C7</td></tr>
+<tr><td>de0_nano_soc_vga666</td><td>Cyclone V SoC</td><td>5CSEMA4U23C6</td></tr>
+<tr><td>de0_nano_soc_vga_pmod</td><td>Cyclone V SoC</td><td>5CSEMA4U23C6</td></tr>
+<tr><td>de0_nano_vga666</td><td>Cyclone IV E</td><td>EP4CE22F17C6</td></tr>
+<tr><td>de0_nano_vga_pmod</td><td>Cyclone IV E</td><td>EP4CE22F17C6</td></tr>
+<tr><td>de1</td><td>Cyclone II</td><td>EP2C20F484C7</td></tr>
+<tr><td>de10_lite</td><td>MAX 10</td><td>10M50DAF484C7G</td></tr>
+<tr><td>de10_lite_tm1638_virtual_switches</td><td>MAX 10</td><td>10M50DAF484C7G</td></tr>
+<tr><td>de10_nano</td><td>Cyclone V SoC</td><td>5CSEBA6U23I7</td></tr>
+<tr><td>de1_soc</td><td>Cyclone V SoC</td><td>5CSEMA5F31C6</td></tr>
+<tr><td>de2</td><td>Cyclone II</td><td>EP2C35F672C6</td></tr>
+<tr><td>de23_lite</td><td>Agilex 3</td><td>A3CZ135BB18AE7S</td></tr>
+<tr><td>de2_115</td><td>Cyclone IV E</td><td>EP4CE115F29C7</td></tr>
+<tr><td>dk_dev_3c120n</td><td>Cyclone III</td><td>EP3C120F780C6</td></tr>
+<tr><td>emooc_cc</td><td>Cyclone IV E</td><td>EP4CE6F17C8</td></tr>
+<tr><td>marsohod_mcy112</td><td>Cyclone (first generation)</td><td>EP1C12Q240C8</td></tr>
+<tr><td>marsohod_mcy316</td><td>Cyclone III</td><td>EP3C16Q240C8</td></tr>
+<tr><td>omdazz</td><td>Cyclone IV E</td><td>EP4CE6E22C8</td></tr>
+<tr><td>omdazz_epm570</td><td>MAX II CPLD</td><td>EPM570T100C5</td></tr>
+<tr><td>omdazz_epm570_quartus_13_1_or_older</td><td>MAX II CPLD</td><td>EPM570T100C5</td></tr>
+<tr><td>omdazz_pmod_mic3</td><td>Cyclone IV E</td><td>EP4CE6E22C8</td></tr>
+<tr><td>piswords6</td><td>Cyclone IV E</td><td>EP4CE6E22C8</td></tr>
+<tr><td>rzrd</td><td>Cyclone IV E</td><td>EP4CE6E22C8</td></tr>
+<tr><td>rzrd_pmod_mic3</td><td>Cyclone IV E</td><td>EP4CE6E22C8</td></tr>
+<tr><td>saylinx</td><td>Cyclone IV E</td><td>EP4CE6F17C8</td></tr>
+<tr><td>saylinx_pmod_mic3</td><td>Cyclone IV E</td><td>EP4CE6F17C8</td></tr>
+<tr><td>terasic_sockit</td><td>Cyclone V SoC</td><td>5CSXFC6D6F31C6</td></tr>
+<tr><td>zeowaa</td><td>Cyclone IV E</td><td>EP4CE6E22C8</td></tr>
+<tr><td>zeowaa_wo_dig_0</td><td>Cyclone IV E</td><td>EP4CE6E22C8</td></tr>
+<tr><td>zzz_postponed_and_retired/omdazz10_vga16_camera</td><td>Cyclone IV E · retired</td><td>EP4CE10E22C8</td></tr>
+<tr><td>zzz_postponed_and_retired/qmtech_c4_starter</td><td>Cyclone IV E · retired</td><td>EP4CE15F23C8</td></tr>
+<tr><td>zzz_postponed_and_retired/step_max10</td><td>MAX 10 · retired</td><td>10M08SCM153C8G</td></tr>
+</tbody></table></div></details>
+
+<h2 id="tests">Acceptance checks</h2>
+<div class="scroll"><table><thead><tr><th>Test group</th><th>Required outcome</th></tr></thead><tbody>
+<tr><td>Family boundaries</td><td>Cyclone II rejects 13.1; Cyclone III accepts 13.1 and rejects modern Prime; MAX 10 rejects 13.x; Agilex 3 rejects Lite/Standard; first-generation Cyclone distinguishes Web and Subscription support.</td></tr>
+<tr><td>Edition ranking</td><td>Older eligible Lite/Web beats newer Standard/Pro; latest eligible free version wins; Standard versus Pro is version-first with a Standard tie-break; paid fallback works when no compatible free edition exists.</td></tr>
+<tr><td>Location precedence</td><td>Each public override keeps its priority; incompatible overrides are diagnosed; default directories compete as one pool; all vendor folders under the same parent participate.</td></tr>
+<tr><td>Version normalization</td><td>13.0 &lt; 13.0 SP1 &lt; 13.1; 25.1 &lt; 25.1.1; minor version 10 beats 2; <code>25.1std</code> does not set the edition; metadata patch/build numbers are retained.</td></tr>
+<tr><td>Path and shell handling</td><td>Symlinked installs, repeated parents, spaces, apostrophes, empty PATH, CRLF metadata/output, unavailable probes, and strict Bash mode are handled predictably. No reliance on Windows <code>sort.exe</code> behavior.</td></tr>
+<tr><td>Tool completeness</td><td>Programmer-only installations, missing GUI/shell/programmer, incompatible executables, absent device packs, and unknown edition/version are rejected with useful reasons. Use the same installation for every downstream tool.</td></tr>
+<tr><td>Repository integration</td><td>All 33 active Quartus wrappers are dispatched correctly; retired wrappers are documented; board-specific legacy limits survive; the existing Questa path still receives the selected version directory.</td></tr>
+<tr><td>Real-tool checks</td><td>Query installed device databases and compile a small representative design for Cyclone II, Cyclone III, Cyclone IV/V, MAX 10, and Agilex 3 when available. Report missing licenses/packages explicitly. Do not describe simulated Windows tests as native Windows validation.</td></tr>
+<tr><td>Catalog consistency</td><td>HTML, Markdown, and CSV contain identical row keys and values; every discovered wrapper is covered; unknown fields remain marked; code-derived values cite their source; the generator produces reproducible output.</td></tr>
+</tbody></table></div>
+<p>Altera’s current installation guide disallows spaces and several special characters in installation paths. The discovery code should nevertheless preserve such names in diagnostics and avoid shell parsing failures; tests for safe handling are not a promise that Quartus itself supports those paths. <a href="https://docs.altera.com/r/docs/683472/26.1/altera-fpga-software-installation-and-licensing/selecting-the-installation-path">Installation path requirements</a>.</p>
+
+<h2>Decisions and evidence to finish during implementation</h2>
+<ul>
+<li>Verify exact MAX 10 minimum updates and any part-specific limits using official release notes and installed device databases.</li>
+<li>Check why the EPM570 legacy wrapper has a 13.1 ceiling; preserve the existing behavior until there is evidence to change it.</li>
+<li>Research board manufacturers, launch years, capacities, and peripheral specifications. Distinguish hardware revisions and mark unavailable evidence.</li>
+<li>Confirm license availability only through supported tool diagnostics or compilation; do not infer entitlement from an edition name or a random license file.</li>
+<li>Keep the explicitly proposed override-versus-global-ranking interpretation visible in the code documentation and regression tests.</li>
+</ul>
+<footer>The request’s initial validation and planning step is complete. This document records verified facts, local observations, proposed policy, and remaining research separately. It does not claim that discovery has been rewritten, that the full board catalog is finished, or that synthesis has been validated.</footer>
+</main></body></html>

@@ -1,0 +1,1948 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Quartus discovery comparison: Codex and Claude, search steps, tested differences, pros, cons and features to adopt.">
+<title>Quartus discovery: Codex and Claude compared</title><style>
+:root{color-scheme:light;--ink:#172b3a;--muted:#536576;--line:#d5dfe6;--blue:#175f91}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f3f6f8;color:var(--ink);font:17px/1.62 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1220px;margin:auto;padding:38px 34px 72px}header{border-top:7px solid var(--blue);padding:24px 0 16px}
+h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.12;letter-spacing:-.035em;margin:.3em 0}h2{font-size:1.65rem;line-height:1.25;margin-top:0}h3{font-size:1.13rem}
+p{max-width:100ch}a{color:#095c94;text-underline-offset:3px}a:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #bd6100;outline-offset:3px}
+section{background:white;border:1px solid var(--line);border-radius:12px;padding:28px;margin:22px 0;scroll-margin-top:20px}
+.kicker{text-transform:uppercase;letter-spacing:.1em;font-size:.78rem;font-weight:750;color:var(--blue)}.muted{color:var(--muted)}.small{font-size:.88rem}.lead{font-size:1.17rem}
+.callout{background:#eaf3fa;border-left:5px solid var(--blue);padding:16px 20px;border-radius:0 8px 8px 0}.caution{background:#fff4de;border-color:#b67613}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}.card{padding:18px;background:#f6f9fb;border-radius:8px}
+nav{display:flex;flex-wrap:wrap;gap:10px 24px;padding:18px 0}nav a{font-weight:650;font-size:.95rem}li{margin:.65em 0}li::marker{color:var(--blue);font-weight:bold}
+code{font:.9em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#edf2f5;padding:.12em .25em;border-radius:3px}
+pre{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;background:#edf2f5;padding:16px;overflow:auto;border-radius:6px}
+.table-wrap{overflow-x:auto;margin:16px 0}table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line)}
+thead th{background:#e8f0f5}tbody tr:nth-child(even){background:#f8fafb}td:first-child{font-weight:600}details{margin:16px 0}summary{cursor:pointer;font-weight:650}details pre{max-height:650px}
+.pill{display:inline-block;background:#e8f1f7;border-radius:20px;padding:3px 10px;margin:3px 5px 3px 0;font-size:.86rem}
+input[type=search]{width:100%;font:inherit;padding:10px 12px;border:1px solid #91aabb;border-radius:6px}.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.9rem}.flow b{background:#e8f1f7;border:1px solid #c5d7e4;border-radius:5px;padding:8px}
+footer{font-size:.86rem;color:var(--muted);padding:16px 0}.line{display:block;white-space:pre}.line:target{background:#fff1b8}.ln{display:inline-block;width:4em;color:#647985;text-decoration:none}
+@media(max-width:760px){main{padding:20px 12px 40px}section{padding:20px 16px}.grid{grid-template-columns:1fr}th,td{padding:9px}table{min-width:660px}h1{font-size:2rem}}
+@media print{body{background:white;font-size:10pt}main{max-width:none;padding:0}section{border-radius:0}nav,.controls{display:none}a{color:inherit}details:not([open]){display:none}h2,h3{break-after:avoid}.table-wrap{overflow:visible}thead{display:table-header-group}tr{break-inside:avoid}pre{white-space:pre-wrap}}
+</style></head>
+<body><main><header>
+<div class="kicker">BGM · Bash discovery review · 4 October 2026</div>
+<h1>How Codex and Claude choose Quartus</h1>
+<p class="lead">The current implementations, their practical differences, and the features each should adopt from the other.</p>
+<p class="muted">Scope: Quartus discovery in basics-graphics-music, including the setup caller, device helper, documentation and committed tests.</p>
+<div class="grid">
+<div class="card"><strong>Codex</strong><br><code>codex_quartus · d4c57284</code><br><span class="small">/home/verilog/codex/basics-graphics-music<br>Committed and pushed before this comparison.</span></div>
+<div class="card"><strong>Claude</strong><br><code>claude_quartus · 02c8c779</code><br><span class="small">/home/verilog/claude/basics-graphics-music<br>Includes “Ask Quartus two questions about a part, not one.”</span></div>
+</div>
+<nav aria-label="Report sections"><a href="#assessment">Assessment</a><a href="#steps">Search steps</a><a href="#behavior">Different outcomes</a><a href="#devices">Device checks</a><a href="#tradeoffs">Pros and cons</a><a href="#adopt">Ideas to adopt</a><a href="#evidence">Evidence and diffs</a></nav>
+</header>
+
+<section id="assessment"><h2>The strongest solution combines features from both</h2>
+<p><strong>Codex has stronger selection mechanics:</strong> numeric comparison includes builds, discovery does not depend on GNU sort, the QSF parser handles more literal forms, failed candidates fall through consistently, and the chosen binary directory becomes first on PATH. Its main weakness is that the device helper mistakes “Quartus knows this part's family” for “this installation supports the part.” Handwritten release rules mask some of that weakness.</p>
+<p><strong>Claude has a better source of installed-device information and avoids repeated launches through caching.</strong> Its latest revision checks both listed parts and installed families. However, the cache can be stale or collide between paths, GNU sort remains a dependency, and appending the chosen directory to PATH can leave another Quartus first.</p>
+<div class="callout"><strong>The revisions have already converged.</strong> Both now honor parent-directory priority, recognize eight vendor-directory names, reject incomplete auto-discovered installations, deduplicate aliases during discovery, add the AX301 board to Quartus dispatch, and remove the obsolete old/new-version flag. Claims that Claude still lacks those fixes apply to its earlier commit, not the revision reviewed here.</div>
+<p class="small">These are code and behavior findings, not a ranking of the LLMs in general. Both worktrees were clean when frozen. Full commits and file hashes are in <a href="quartus_compare_2/snapshots.json">the snapshot manifest</a>.</p></section>
+
+<section id="steps"><h2>Search behavior in plain English</h2>
+<p>A board's QSF file names its FPGA part. The scripts try to find an installed Quartus that can handle it. The board name “DE23-Lite” does not mean Quartus Lite: Codex explicitly requires Pro for its Agilex 3 part; Claude asks the tools which parts and families they provide.</p>
+<p><strong>Both use this normal order of locations.</strong> Stop at the first tier with a usable candidate; choose the preferred installation within that tier.</p>
+<div class="flow" aria-label="Search order"><b>QUARTUS_ROOTDIR</b><span>→</span><b>first Quartus on PATH</b><span>→</span><b>INTEL_FPGA_HOME</b><span>→</span><b>ALTERA_HOME</b><span>→</span><b>QUARTUS_HOME</b><span>→</span><b>default parents together</b></div>
+<p>On Linux, the defaults are the user's home directory, <code>/opt</code> and <code>/tools</code>. On Cygwin/MSYS, they are <code>/c</code>, <code>/d</code> and <code>/e</code>, corresponding to Windows drives <code>C:\</code>, <code>D:\</code> and <code>E:\</code>. This searches known directory shapes, not the entire computer recursively.</p>
+<p>A parent override names the directory <em>above</em> a vendor directory. Both recognize <code>altera</code>, <code>altera_lite</code>, <code>altera_std</code>, <code>altera_pro</code>, <code>intelFPGA</code>, <code>intelFPGA_lite</code>, <code>intelFPGA_std</code> and <code>intelFPGA_pro</code>. A typical result is <code>/opt/altera_lite/25.1std/quartus</code>. Both read edition information from the installation rather than assuming that “altera” means old or “std” means Standard.</p>
+<div class="grid"><div><h3>Codex: validate every candidate, then select</h3><ol>
+<li><strong>Read the board's part.</strong> Accept a literal DEVICE assignment, including optional double quotes and tabs. Use the last matching assignment. Error if no literal part can be read.</li>
+<li><strong>Try QUARTUS_ROOTDIR, then the first Quartus on PATH.</strong> Apply the same executable, identity and compatibility checks as automatic discovery. Warn and continue if the candidate fails.</li>
+<li><strong>Try each parent override separately.</strong> INTEL_FPGA_HOME, then ALTERA_HOME, then QUARTUS_HOME. The first parent with a compatible candidate wins over all later tiers.</li>
+<li><strong>Otherwise pool all defaults.</strong> Look for <code>&lt;parent&gt;/&lt;vendor&gt;/[0-9]*/quartus</code>. The version directory must start with a digit. Resolve aliases and avoid probing the same canonical root twice in this setup.</li>
+<li><strong>Check each installation.</strong> Require GUI, shell and programmer. Linux uses bin; Windows tries bin64, then bin. Read version.txt, falling back to the version banner. Apply handwritten family/release limits and the legacy EPM570 wrapper's 13.1 ceiling, then run the Tcl family-name query. Warn about problematic path characters.</li>
+<li><strong>Rank survivors in the winning tier.</strong> Lite/Web wins over other editions even if older. Otherwise compare numeric version, including build. Standard/Subscription wins a tie against Pro. Remaining ties keep collection order.</li>
+<li><strong>Activate the result.</strong> Set QUARTUS_ROOTDIR and the three absolute tool paths. Put the selected bin first on PATH, removing duplicate copies of it. Error if no candidate survives.</li>
+</ol><p class="small"><a href="quartus_compare_2/codex/scripts/steps/00_setup_intel_fpga.source_bash.html#L437">Codex: quartus_setup</a> · <a href="quartus_compare_2/codex/scripts/steps/00_setup_intel_fpga.source_bash.html#L283">Codex: quartus_candidate_better</a></p></div>
+<div><h3>Claude: ask the tools, cache answers, allow overrides</h3><ol>
+<li><strong>Read the board's part.</strong> A grep/awk pipeline takes the first matching DEVICE value. It expects spaces, retains quotes, and a missing/unreadable assignment leaves the part empty. An empty part disables compatibility filtering.</li>
+<li><strong>Honor QUARTUS_ROOTDIR.</strong> Require the executables. If probing succeeds but says unsupported, warn and still use it. A failed probe does not prevent use. This is a force-override policy.</li>
+<li><strong>Try the first Quartus on PATH.</strong> Use it if the device check succeeds, if no part was parsed, <em>or if probing fails</em>. Only a definite unsupported result causes a warning and continued search.</li>
+<li><strong>Search parent tiers, then pooled defaults.</strong> The order matches Codex. Under each vendor, accept any child directory containing a complete installation, including current. Canonicalize and deduplicate within the collection.</li>
+<li><strong>Ask each installation what it contains.</strong> Try bin64 before bin. Fetch the version banner, available families and listed parts. Cache them by transformed path and quartus_sh timestamp. An exact listed part passes; otherwise find its family and check that the family is installed.</li>
+<li><strong>Rank survivors.</strong> Prefer Lite/Web, then newest release, then Standard over Pro on equal releases. Use GNU sort. Discard build numbers. Subscription becomes Unknown and ranks below recognized editions. Remaining ties use sort's whole-line comparison.</li>
+<li><strong>Allow a final override if nothing is compatible.</strong> If a parent override was supplied, rank its installations without the part check and use the best with a warning. Otherwise error.</li>
+<li><strong>Activate the result.</strong> Set the root and absolute tool variables, but append the selected bin to PATH. Earlier Quartus entries remain ahead of it.</li>
+</ol><p class="small"><a href="quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash.html#L521">Claude: intel_fpga_setup_quartus</a> · <a href="quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash.html#L384">Claude: quartus_best_installation</a></p></div></div>
+<p class="callout caution"><strong>“Newest” is qualified twice:</strong> location priority comes first, then edition preference within the successful tier. Older Standard under INTEL_FPGA_HOME can beat newer Lite elsewhere. Within one tier, older Lite beats newer Standard. Neither implementation checks license availability; edition classification is only a selection preference.</p></section>
+
+<section id="behavior"><h2>Where observed behavior differs</h2>
+<p>These cases execute frozen Bash code against controlled installations. Mock tools return chosen device/version data; they test discovery behavior, not the capabilities of fictional releases. Agreements are included so that earlier defects are not attributed to updated Claude code.</p>
+<div class="controls"><label for="filter"><strong>Filter scenarios</strong></label><input id="filter" type="search" placeholder="Try PATH, cache, override, version…" aria-controls="comparison-table"><p id="row-count" class="small muted" aria-live="polite"></p></div>
+<div class="table-wrap"><table id="comparison-table"><thead><tr><th scope="col">Scenario</th><th scope="col">Codex</th><th scope="col">Claude</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>Two Lite releases in different default parents</td><td>Selects 25.1 in /opt.</td><td>Selects the same 25.1.</td><td>Both treat defaults as one pool.</td></tr><tr><td>Repeat that search</td><td>Launches two device queries again.</td><td>Launches no Quartus process.</td><td>Cache saves launches; this is not a timing benchmark.</td></tr><tr><td>QUARTUS_ROOTDIR is incompatible</td><td>Warns, skips it, selects compatible 21.1.</td><td>Warns and keeps requested 25.1.</td><td>Validated preference versus forced override.</td></tr><tr><td>First Quartus on PATH cannot support the part</td><td>Selects fallback and puts it first on PATH.</td><td>Selects fallback but leaves rejected Quartus earlier on PATH.</td><td>Absolute tool variables agree; bare commands can differ.</td></tr><tr><td>Quartus on PATH exists but its probe fails</td><td>Rejects it and selects the working installation.</td><td>Accepts the failing installation.</td><td>Claude treats an unknown answer as acceptable.</td></tr><tr><td>21.1 Standard under INTEL_FPGA_HOME; newer Lite elsewhere</td><td>Selects 21.1 from the first successful parent.</td><td>Selects the same 21.1.</td><td>Location priority comes before within-tier edition ranking.</td></tr><tr><td>Installation under altera_std</td><td>Found.</td><td>Found.</td><td>The newer Claude revision supports this directory too.</td></tr><tr><td>25.1 build 9 in altera; build 10 in intelFPGA</td><td>Selects build 10.</td><td>Selects build 9 in this fixture.</td><td>Claude discards Build; the remaining tie resolves by path.</td></tr><tr><td>Legacy EPM570 wrapper; 13.1 and 25.1 installed</td><td>Selects 13.1.</td><td>Selects 25.1.</td><td>Device support alone does not preserve a wrapper restriction.</td></tr><tr><td>altera/21.1 plus altera/current containing 25.1</td><td>Discovers only 21.1.</td><td>Discovers current and selects its 25.1.</td><td>Digit-prefixed names versus any child directory.</td></tr><tr><td>Parent path with spaces and an apostrophe</td><td>Finds it and warns about the path.</td><td>Finds it without that warning.</td><td>Discovery quoting works in both; downstream tool support was not tested.</td></tr><tr><td>25.1 lacks quartus_pgm; 21.1 is complete</td><td>Skips 25.1 and selects 21.1.</td><td>Also skips 25.1 and selects 21.1.</td><td>Claude fixed its earlier late-validation issue.</td></tr><tr><td>Synthetic overlap: Subscription 26.1 versus Pro 25.1</td><td>Recognizes Subscription and selects 26.1.</td><td>Labels Subscription Unknown and selects Pro 25.1.</td><td>A fictional shared part isolates the ranking rule.</td></tr><tr><td>sort rejects GNU options</td><td>Works without sort.</td><td>Fails to select an installation.</td><td>Models Windows-sort failure; no native Windows test.</td></tr><tr><td>QSF says DEVICE &quot;EP4CE6E22C8&quot;</td><td>Parses the part and succeeds.</td><td>Retains quotes in the part string; selection fails.</td><td>Different handling of an equivalent literal QSF value.</td></tr><tr><td>Tabbed QSF assignment for Agilex 3; Lite and Pro installed</td><td>Reads the part and selects Pro.</td><td>Misses DEVICE and selects Lite without a part check.</td><td>Parse failure silently removes Claude&#x27;s compatibility filter.</td></tr><tr><td>QSF has no DEVICE assignment</td><td>Reports an error.</td><td>Selects without a target filter.</td><td>Fail clearly versus continue without target information.</td></tr><tr><td>13.1 recognizes EP3C120F780C6; part unlisted, family installed</td><td>Accepts after its version rule.</td><td>Accepts through installed-family fallback.</td><td>Models real query results below; does not prove a successful build.</td></tr><tr><td>Known Cyclone IV part, no listed part or installed family</td><td>Accepts the nonempty family-name answer.</td><td>Rejects it.</td><td>Exposes the gap in Codex&#x27;s claimed exact-part check.</td></tr><tr><td>Warm cache; device data removed without changing quartus_sh mtime</td><td>Rechecks and falls back to 21.1.</td><td>Uses old cache and selects 25.1.</td><td>Launcher timestamp does not validate device data.</td></tr><tr><td>Distinct paths a+b and a b; equal launcher timestamps</td><td>Reads second version as 25.1.0.1.</td><td>Reuses first version, 21.1.0.</td><td>Claude&#x27;s path-to-cache-name conversion loses information.</td></tr><tr><td>ALTERA_HOME contains only incompatible Quartus</td><td>Errors when no compatible candidate exists.</td><td>Uses it anyway with a warning.</td><td>Parent override provides a last-resort escape hatch.</td></tr><tr><td>Lite 21.1 and Standard 25.1 in one tier</td><td>Selects Lite 21.1.</td><td>Selects Lite 21.1.</td><td>Both implement the free-edition preference.</td></tr><tr><td>Synthetic overlap: equal-version Standard and Pro</td><td>Selects Standard.</td><td>Selects Standard.</td><td>Both implement the edition tie-break.</td></tr><tr><td>XDG_CACHE_HOME is a regular file</td><td>Unaffected.</td><td>Fails to select otherwise usable Quartus.</td><td>No uncached fallback for a broken cache location.</td></tr><tr><td>Root selects 21.1; PATH initially points to 25.1</td><td>Tool variables and first PATH match are 21.1.</td><td>Tool variables select 21.1; PATH still finds 25.1.</td><td>Prepending the chosen bin avoids this inconsistency.</td></tr></tbody></table></div>
+<p class="small">All 27 observations, including the cache warm-up, are in <a href="quartus_compare_2/behavior_results.json">the captured results</a>. “Current” is an extra directory-name capability of Claude; neither scan discovers a direct <code>&lt;vendor&gt;/quartus/bin</code> layout with no intervening directory.</p></section>
+
+<section id="devices"><h2>The device check needs careful wording</h2>
+<p><strong>A family name is not proof that the family is installed.</strong> In real read-only queries, local Quartus 25.1 Lite recognized the families of Cyclone II and III parts even though those families were not installed. Codex's helper accepts a nonempty family name; its separate release limits reject these particular old-family examples before that helper runs.</p>
+<p><strong>An unlisted part is not automatically unusable either.</strong> Quartus 13.1 Web does not enumerate EP3C120F780C6 but reports its Cyclone III family as installed. Claude's newer fallback accepts this case. Claude's local report describes a successful compile/fit, but this comparison did not repeat compilation and does not treat database queries as proof of a completed build.</p>
+<div class="table-wrap"><table><thead><tr><th>Local installation</th><th>Part</th><th>In get_part_list?</th><th>get_part_info family</th><th>In get_family_list?</th></tr></thead><tbody><tr><td>13.1 Web</td><td>EP3C16F484C6</td><td>Yes</td><td>Cyclone III</td><td>Yes</td></tr><tr><td>13.1 Web</td><td>EP3C120F780C6</td><td>No</td><td>Cyclone III</td><td>Yes</td></tr><tr><td>13.1 Web</td><td>EP1C12Q240C8</td><td>No</td><td>Cyclone</td><td>No</td></tr><tr><td>25.1 Lite</td><td>EP4CE6E22C8</td><td>Yes</td><td>Cyclone IV E</td><td>Yes</td></tr><tr><td>25.1 Lite</td><td>EP3C120F780C6</td><td>No</td><td>Cyclone III</td><td>No</td></tr><tr><td>25.1 Lite</td><td>EP2C20F484C7</td><td>No</td><td>Cyclone II</td><td>No</td></tr></tbody></table></div>
+<p class="small">Actual output: <a href="quartus_compare_2/device_probe_13_1.txt">13.1 Web</a> and <a href="quartus_compare_2/device_probe_25_1.txt">25.1 Lite</a>. The <a href="quartus_compare_2/device_probe.tcl">probe</a> creates no project, compiles no design and checks no license availability.</p>
+<div class="grid"><div class="card"><h3>Codex's check</h3><pre>get_part_info -family $part
+Accept if the call succeeds and its result is nonempty.</pre><p>The “exact-part check” comment overstates what this proves. A known part with missing device support can escape it when no handwritten rule blocks the candidate. The controlled missing-family case exposes the gap.</p><a href="quartus_compare_2/codex/scripts/fpga/quartus_has_device.tcl.html#L1">Codex Tcl helper</a></div>
+<div class="card"><h3>Claude's check</h3><pre>part appears in get_part_list
+OR
+its known family appears in get_family_list</pre><p>This distinguishes recognition from installed-family availability. The fallback is still broader than exact package/device verification. Document it as evidence of likely support, not a universal compile guarantee.</p><a href="quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash.html#L361">Claude: quartus_can_build_part</a></div></div>
+<p>Installed-family data can replace some broad release assumptions after verification. A wrapper deliberately intended for 13.1 or older still needs an explicit restriction even if a newer tool supports its FPGA.</p></section>
+
+<section id="tradeoffs"><h2>Advantages and disadvantages</h2><div class="grid"><div>
+<h3>Codex advantages</h3><ul>
+<li><strong>Consistent validation and fallback.</strong> Overrides and PATH candidates face the same checks as automatic candidates; failed queries do not silently qualify a tool.</li>
+<li><strong>Predictable ranking.</strong> Builds participate, Subscription is recognized, no external sort is needed, and remaining ties have stable collection order.</li>
+<li><strong>Better input and path handling.</strong> The literal QSF parser accepts quotes/tabs and refuses a missing target. Arrays preserve paths; character warnings implement the requested behavior; PATH starts with the selected tools.</li>
+<li><strong>Review support.</strong> A small separate Tcl helper, updated scripts/README.md policy and 30 committed regression tests help future changes.</li>
+<li><strong>No cache dependency.</strong> Rechecking sees current device answers and requires no writable cache directory.</li></ul>
+<h3>Codex disadvantages</h3><ul>
+<li><strong>Device validation is weaker than advertised.</strong> Family recognition does not establish installed support. Current mocks do not expose the real API distinction.</li>
+<li><strong>Handwritten compatibility knowledge can age.</strong> Family prefixes and version ceilings need maintenance and may reject a valid new combination before querying Quartus.</li>
+<li><strong>Repeated startups.</strong> Every setup re-probes eligible candidates. The two-candidate repeat test still launches Quartus twice.</li>
+<li><strong>No force override.</strong> Consistent validation helps automation but can frustrate a user deliberately choosing a release the policy rejects.</li>
+<li><strong>Narrower accepted inputs.</strong> Collection requires digit-prefixed directories; QSF parsing is not a general Tcl interpreter; unknown editions are rejected. Valid version.txt metadata is trusted without comparing the executable banner.</li></ul>
+</div><div><h3>Claude advantages</h3><ul>
+<li><strong>More informative device queries.</strong> Listed parts plus installed families avoid depending only on known family names or only on enumerated parts.</li>
+<li><strong>Cached answers save startup.</strong> Repeating the two-candidate search launches zero Quartus processes. Identity, families and parts are gathered together.</li>
+<li><strong>Less handwritten device knowledge.</strong> Ordinary support comes from the installation, so later releases and new families can participate without new prefix/version rules.</li>
+<li><strong>User escape hatches.</strong> Explicit roots can proceed with a warning despite an unsupported result. Parent overrides also offer last-resort selection.</li>
+<li><strong>Flexible names and useful summaries.</strong> Non-numeric children can participate; no-match diagnostics can list editions and versions. Recent fixes preserve priority and skip incomplete installations.</li></ul>
+<h3>Claude disadvantages</h3><ul>
+<li><strong>Cache correctness.</strong> Device-data changes can stay stale; path normalization can collide; a broken cache directory prevents discovery. Shared temporary Tcl filenames and direct cache writes also create concurrency risks visible in code, not reproduced here.</li>
+<li><strong>PATH inconsistency.</strong> Appending the chosen bin leaves another tool first. Absolute synthesis/programming variables mitigate this, but bare commands can still use a different Quartus.</li>
+<li><strong>Failures can remove protection.</strong> Missing/tabbed DEVICE assignments disable filtering. Failed PATH probes are accepted. An empty family answer is cached and may hide support added later.</li>
+<li><strong>Ranking loses information.</strong> Builds disappear, Subscription becomes Unknown, and GNU sort is required. Newline/tab record separators constrain unusual path names.</li>
+<li><strong>Missing requested safeguards.</strong> No installation-path character warning, no legacy-wrapper ceiling, no committed Quartus tests found, and no updated discovery policy in scripts/README.md. Discovery function names retain intel_fpga despite the requested naming direction.</li></ul>
+</div></div>
+<p class="small">The discovery source file is 886 lines in Codex and 1,036 in this Claude revision; totals include the shared Questa/synthesis/programming tail and do not measure correctness. Both retain stale Quartus instructions in scripts/steps/README.md; Codex's newer README does not remove that conflicting guidance.</p></section>
+
+<section id="adopt"><h2>Good features each implementation can adopt</h2>
+<div class="table-wrap"><table><thead><tr><th>Direction</th><th>Adopt</th><th>Preserve the benefit, address the weakness</th></tr></thead><tbody>
+<tr><td>Codex ← Claude</td><td>Installed-family and listed-part queries</td><td>Distinguish known from installed families; handle unlisted but recognized parts explicitly. Keep true wrapper restrictions separate and document the family fallback's limits.</td></tr>
+<tr><td>Codex ← Claude</td><td>Reuse identity and device answers</td><td>Make caching optional. Use a collision-resistant canonical-path key, meaningful device-data fingerprint, refresh option and uncached fallback. Write atomically; avoid shared temporary Tcl filenames.</td></tr>
+<tr><td>Codex ← Claude</td><td>Clear no-match summaries</td><td>List discovered releases/editions and rejection reasons. Combine that overview with Codex's existing per-candidate diagnostics.</td></tr>
+<tr><td>Codex ← Claude, policy choice</td><td>Intentional force override</td><td>Distinguish “prefer this location” from “use it even if validation fails.” A dedicated force control is clearer than changing QUARTUS_ROOTDIR semantics implicitly.</td></tr>
+<tr><td>Claude ← Codex</td><td>Numeric Bash version comparison</td><td>Include builds and Subscription. Remove GNU-sort dependence; retain free-edition priority and the equal-version Standard/Subscription tie-break.</td></tr>
+<tr><td>Claude ← Codex</td><td>QSF parsing and validation</td><td>Accept tabs/quotes, define repeated-assignment behavior, and error when no part can be read. Avoid executing arbitrary QSF Tcl just to obtain the part.</td></tr>
+<tr><td>Claude ← Codex</td><td>Consistent PATH and probe failure handling</td><td>Prepend/deduplicate the chosen bin. Continue ordinary discovery when a probe fails; reserve bypass behavior for an explicit force policy.</td></tr>
+<tr><td>Claude ← Codex</td><td>Warnings, wrapper policy, tests and documentation</td><td>Warn without splitting or rejecting quoted paths; preserve the 13.1 legacy-wrapper restriction; commit behavioral tests and document the final search policy.</td></tr>
+<tr><td>Both</td><td>Regression cases grounded in real API behavior</td><td>Cover known-but-uninstalled families, unlisted parts with installed families, changed device packages, cache collisions and malformed QSF values. Mocks must not assume a family query proves exact availability.</td></tr>
+</tbody></table></div>
+<p><strong>Suggested order:</strong> fix device-support semantics and Claude's PATH/parser failure paths first; strengthen cache validity and remove GNU-sort dependence next; then reconcile override policy and stale documentation. Preserve the shared progress on parent tiers, vendor names, completeness checks and board dispatch.</p>
+<p class="small">This report makes no implementation changes. Force overrides and accepting non-numeric directory names are policy choices, not automatic wins for either side.</p></section>
+
+<section id="evidence"><h2>Evidence, scope and exact differences</h2>
+<p><span class="pill">30 Codex tests passed</span><span class="pill">27 comparison observations</span><span class="pill">2 real device-database probes</span><span class="pill">Bash syntax checks passed</span></p>
+<p>The harness sources frozen scripts under Bash strict mode. It redirects only default-parent collection into temporary fixtures, supplies controlled executables, and gives each side its own cache. It does not modify HOME, either repository, or ranking/activation functions. The cache-collision case invokes identity/probe helpers directly; the other scenarios run discovery entry points.</p>
+<p>Windows behavior is source review plus a simulated incompatible-sort case, not a native Cygwin/MSYS run. Mock cases establish control flow, not compilation or complete device support. No new builds or license checks were performed. Claude's earlier local report mixes old implementation descriptions with later amendments; this report instead uses frozen source and fresh observations.</p>
+<ul>
+<li><a href="quartus_compare_2/snapshots.json">Full commits, branches, clean-worktree status and SHA-256 hashes</a>.</li>
+<li><a href="quartus_compare_2/codex/scripts/steps/00_setup_intel_fpga.source_bash.html#L1">Codex: scripts/steps/00_setup_intel_fpga.source_bash</a> · <a href="quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash.html#L1">Claude: scripts/steps/00_setup_intel_fpga.source_bash</a>.</li>
+<li><a href="quartus_compare_2/compare_behavior.py">Comparison harness</a> · <a href="quartus_compare_2/behavior_results.json">complete captured results</a> · <a href="quartus_compare_2/behavior_summary.txt">compact result log</a>.</li>
+<li><a href="quartus_compare_2/codex_tests.txt">Codex test output</a> · <a href="quartus_compare_2/codex/scripts/tests/test_quartus_discovery.py.html#L1">Committed Codex tests</a>.</li>
+<li><a href="quartus_compare_2/codex/scripts/README.md.html#L1">Codex policy documentation</a> · <a href="quartus_compare_2/claude/scripts/README.md.html#L1">Claude README</a>.</li>
+<li><a href="quartus_compare_2/discovery.diff">Full discovery diff</a> · <a href="quartus_compare_2/integration.diff">Caller diff</a>. The current callers differ only in the setup function name; AX301 dispatch and old-flag removal agree.</li>
+</ul>
+<h3>Small excerpts with large behavioral effects</h3>
+<div class="grid"><div><h3>Codex: compare in Bash</h3><pre>Compare major, minor, patch and build as decimal numbers.
+Keep collection order when all comparison keys tie.</pre><a href="quartus_compare_2/codex/scripts/steps/00_setup_intel_fpga.source_bash.html#L54">Codex: quartus_version_newer</a></div>
+<div><h3>Claude: call GNU sort</h3><pre>sort -t "$quartus_tab" -k1,1n -k2,2Vr -k3,3n</pre><a href="quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash.html#L384">Claude: quartus_best_installation</a></div>
+<div><h3>Codex: selected tools first</h3><pre>Start the new PATH with the chosen bin.
+Append existing entries except duplicate copies of that bin.</pre><a href="quartus_compare_2/codex/scripts/steps/00_setup_intel_fpga.source_bash.html#L397">Codex: quartus_activate</a></div>
+<div><h3>Claude: existing tools first</h3><pre>Append "$QUARTUS_ROOTDIR/$quartus_bin_dir" to PATH.</pre><a href="quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash.html#L453">Claude: quartus_export_paths</a></div></div>
+<details><summary>Show integration.diff (Claude → Codex)</summary><pre>--- claude/scripts/steps/00_setup.source_bash
++++ codex/scripts/steps/00_setup.source_bash
+@@ -506,7 +506,7 @@
+ 
+ case $fpga_toolchain in
+     quartus  )
+-        intel_fpga_setup_quartus
++        quartus_setup
+ 
+         if [ -z &quot;${MGLS_LICENSE_FILE-}&quot; ] ; then
+             intel_fpga_setup_questa
+</pre></details><details><summary>Show discovery.diff (Claude → Codex)</summary><pre>--- claude/scripts/steps/00_setup_intel_fpga.source_bash
++++ codex/scripts/steps/00_setup_intel_fpga.source_bash
+@@ -29,679 +29,529 @@
+ 
+ #-----------------------------------------------------------------------------
+ #
+-#   Intel FPGA Quartus, formerly from Altera
++#   Altera Quartus discovery. See scripts/README.md for the selection policy.
+ #
+ #-----------------------------------------------------------------------------
+ 
+-intel_fpga_info_where_quartus_is_found ()
+-{
+-    # info &quot;Found Quartus$1:&quot;
+-    # info &quot;QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR&quot;
+-    # info &quot;PATH=$PATH&quot;
+-    # info &quot;quartus_full_real_path=$quartus_full_real_path&quot;
+-
+-    printf &quot;%s\n&quot; &quot;$script: Found Quartus$1:&quot;
+-    printf &quot;%s\n&quot; &quot;QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR&quot;
+-    printf &quot;%s\n&quot; &quot;PATH=$PATH&quot;
+-    printf &quot;%s\n&quot; &quot;quartus_full_real_path=$quartus_full_real_path&quot;
+-
+-                [ -d &quot;$QUARTUS_ROOTDIR&quot; ] ||
+-    error &quot;directory &#x27;$QUARTUS_ROOTDIR&#x27; expected&quot;
+-
+-                [ -d &quot;$QUARTUS_ROOTDIR/$quartus_bin_dir&quot; ]  ||
+-    error &quot;directory &#x27;$QUARTUS_ROOTDIR/$quartus_bin_dir&#x27; expected&quot;
+-
+-                      [ -f &quot;$quartus_full_real_path&quot; ] &amp;&amp;
+-                      [ -x &quot;$quartus_full_real_path&quot; ] ||
+-    error &quot;executable file &#x27;$quartus_full_real_path&#x27; expected&quot;
+-
+-                      [ -f &quot;$quartus_sh_full_real_path&quot; ] &amp;&amp;
+-                      [ -x &quot;$quartus_sh_full_real_path&quot; ] ||
+-    error &quot;executable file &#x27;$quartus_sh_full_real_path&#x27; expected&quot;
+-
+-                      [ -f &quot;$quartus_pgm_full_real_path&quot; ] &amp;&amp;
+-                      [ -x &quot;$quartus_pgm_full_real_path&quot; ] ||
+-    error &quot;executable file &#x27;$quartus_pgm_full_real_path&#x27; expected&quot;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# Directory names the Altera and Intel FPGA installers have used over the
+-# years. The name says nothing about either the age or the edition of what
+-# is inside it: altera_lite/25.1std holds the Lite edition, and altera/13.1
+-# holds a Web edition, which is what Lite used to be called.
+-
+-quartus_vendor_dirs=&quot;altera altera_lite altera_std altera_pro&quot;
+-quartus_vendor_dirs=&quot;$quartus_vendor_dirs intelFPGA intelFPGA_lite&quot;
+-quartus_vendor_dirs=&quot;$quartus_vendor_dirs intelFPGA_std intelFPGA_pro&quot;
+-
+-quartus_newline=$&#x27;\n&#x27;
+-quartus_tab=$&#x27;\t&#x27;
+-
+-quartus_cache_dir=&quot;${XDG_CACHE_HOME:-$HOME/.cache}/basics-graphics-music&quot;
+-
+-#-----------------------------------------------------------------------------
+-
+-# The part this board needs, taken from the board&#x27;s own project file, so
+-# that there is no list of board names to keep in step with the boards
+-# directory.
+-
+-quartus_part_of_board ()
+-{
+-    local qsf=&quot;$board_dir/$fpga_board/board_specific.qsf&quot;
+-
+-    [ -f &quot;$qsf&quot; ] || return 1
+-
+-    grep -oiE &#x27;^[^#]*-name +DEVICE +[^ ]+&#x27; &quot;$qsf&quot;  \
+-        | awk &#x27;NR == 1 { print $NF }&#x27;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# Where the executables of an installation live. All three of them have to
+-# be there, otherwise the directory is an incomplete installation and is
+-# better skipped than chosen and found wanting later.
+-#
+-# Under Microsoft Windows a recent Quartus uses bin64 and an old one uses
+-# bin, so both are tried rather than deduced from the version.
+-
+-quartus_bin_dir_of ()
+-{
+-    local version_dir=&quot;$1&quot;
+-    local dir
+-
+-    for dir in bin64 bin
++# Print a numeric version key. Edition markers are not edition evidence.
++
++quartus_version_key ()
++{
++    local quartus_value=&quot;$1&quot;
++
++    # // removes every std marker, as in the Lite version 25.1std.0.
++    quartus_value=${quartus_value//std/}
++
++    # / replaces the first sp marker: 13.0sp1 becomes 13.0.1.
++    quartus_value=${quartus_value/sp/.}
++
++    [[ &quot;$quartus_value&quot; =~ ^[0-9]+(\.[0-9]+){1,3}$ ]] || return 1
++    printf &#x27;%s\n&#x27; &quot;$quartus_value&quot;
++}
++
++# Return success when the first numeric version is newer than the second.
++
++quartus_version_newer ()
++{
++    local quartus_index quartus_left_number quartus_right_number
++    local -a quartus_left quartus_right
++    IFS=. read -r -a quartus_left &lt;&lt;&lt; &quot;$1&quot;
++    IFS=. read -r -a quartus_right &lt;&lt;&lt; &quot;$2&quot;
++
++    for quartus_index in 0 1 2 3
+     do
+-           [ -x &quot;$version_dir/quartus/$dir/quartus$exe&quot;     ]  \
+-        &amp;&amp; [ -x &quot;$version_dir/quartus/$dir/quartus_sh$exe&quot;  ]  \
+-        &amp;&amp; [ -x &quot;$version_dir/quartus/$dir/quartus_pgm$exe&quot; ]  \
+-        || continue
+-
+-        printf &#x27;%s&#x27; &quot;$dir&quot;
++        # :- supplies zero for missing components; 10# means decimal.
++        quartus_left_number=$((10#${quartus_left[quartus_index]:-0}))
++
++        # Missing components compare as zero on the right side as well.
++        quartus_right_number=$((10#${quartus_right[quartus_index]:-0}))
++
++        [ &quot;$quartus_left_number&quot; -gt &quot;$quartus_right_number&quot; ] &amp;&amp; return 0
++        [ &quot;$quartus_left_number&quot; -lt &quot;$quartus_right_number&quot; ] &amp;&amp; return 1
++    done
++
++    return 1
++}
++
++# Sets quartus_candidate_version and quartus_candidate_edition in the caller.
++
++quartus_read_identity ()
++{
++    local quartus_root=&quot;$1&quot; quartus_bin=&quot;$2&quot;
++    local quartus_line quartus_version= quartus_edition= quartus_banner quartus_build
++    local quartus_version_pattern=&#x27;Version[[:space:]]+([0-9]+\.[0-9]+(std)?(\.[0-9]+)*)&#x27;
++    local quartus_build_pattern=&#x27;Build[[:space:]]+([0-9]+)&#x27;
++
++    if [ -r &quot;$quartus_root/version.txt&quot; ]
++    then
++        while IFS= read -r quartus_line || [ -n &quot;$quartus_line&quot; ]
++        do
++            # // removes CR characters from Windows CRLF metadata.
++            quartus_line=${quartus_line//$&#x27;\r&#x27;/}
++
++            case &quot;$quartus_line&quot; in
++                Version=*)
++                    # # removes the first key= prefix, leaving its value.
++                    quartus_version=${quartus_line#*=}
++                ;;
++                Edition=*)
++                    # # removes the first key= prefix, leaving its value.
++                    quartus_edition=${quartus_line#*=}
++                ;;
++            esac
++        done &lt; &quot;$quartus_root/version.txt&quot;
++    fi
++
++    case &quot;$quartus_edition&quot; in
++        lite) quartus_candidate_edition=Lite ;;
++        web) quartus_candidate_edition=Web ;;
++        standard | std) quartus_candidate_edition=Standard ;;
++        subscription) quartus_candidate_edition=Subscription ;;
++        pro) quartus_candidate_edition=Pro ;;
++        *) quartus_candidate_edition= ;;
++    esac
++
++    if quartus_candidate_version=$(quartus_version_key &quot;$quartus_version&quot;) &amp;&amp;
++       [ -n &quot;$quartus_candidate_edition&quot; ]
++    then
++        return 0
++    fi
++
++    # The banner handles old Web/Subscription installations without edition metadata.
++
++    if ! quartus_banner=$(QUARTUS_ROOTDIR=&quot;$quartus_root&quot; \
++        &quot;$quartus_root/$quartus_bin/quartus_sh$exe&quot; --version 2&gt;&amp;1)
++    then
++        quartus_rejection=&quot;Cannot run quartus_sh --version.&quot;
++        return 1
++    fi
++
++    if [[ &quot;$quartus_banner&quot; =~ $quartus_version_pattern ]]
++    then
++        quartus_version=${BASH_REMATCH[1]}
++    else
++        quartus_rejection=&quot;Cannot read the Quartus version.&quot;
++        return 1
++    fi
++
++    if [[ &quot;$quartus_banner&quot; =~ $quartus_build_pattern ]]
++    then
++        quartus_build=${BASH_REMATCH[1]}
++
++        if [[ &quot;$quartus_version&quot; =~ ^[0-9]+\.[0-9]+(std)?$ ]]
++        then
++            quartus_version+=.0
++        fi
++
++        quartus_version+=&quot;.$quartus_build&quot;
++    fi
++
++    case &quot;$quartus_banner&quot; in
++        *&quot;Lite Edition&quot;*) quartus_candidate_edition=Lite ;;
++        *&quot;Web Edition&quot;*) quartus_candidate_edition=Web ;;
++        *&quot;Standard Edition&quot;*) quartus_candidate_edition=Standard ;;
++        *&quot;Subscription Edition&quot;*) quartus_candidate_edition=Subscription ;;
++        *&quot;Pro Edition&quot;*) quartus_candidate_edition=Pro ;;
++        *)
++            quartus_rejection=&quot;Cannot identify the Quartus edition.&quot;
++            return 1
++        ;;
++    esac
++
++    if ! quartus_candidate_version=$(quartus_version_key &quot;$quartus_version&quot;)
++    then
++        quartus_rejection=&quot;Cannot normalize version &#x27;$quartus_version&#x27;.&quot;
++        return 1
++    fi
++}
++
++# Read literal QSF data without executing arbitrary Tcl from the board file.
++
++quartus_read_target ()
++{
++    local quartus_line
++    local quartus_pattern=&#x27;^[[:space:]]*set_global_assignment[[:space:]]+-name[[:space:]]+DEVICE[[:space:]]+&quot;?([[:alnum:]]+)&quot;?([[:space:]]|$)&#x27;
++    quartus_target_part=
++
++    while IFS= read -r quartus_line || [ -n &quot;$quartus_line&quot; ]
++    do
++        if [[ &quot;$quartus_line&quot; =~ $quartus_pattern ]]
++        then
++            quartus_target_part=${BASH_REMATCH[1]}
++        fi
++    done &lt; &quot;$board_dir/$fpga_board/board_specific.qsf&quot;
++
++    if [ -z &quot;$quartus_target_part&quot; ]
++    then
++        error &quot;cannot read a literal DEVICE assignment for board &#x27;$fpga_board&#x27;.&quot;
++
++        return 1
++    fi
++}
++
++quartus_free_edition ()
++{
++    [ &quot;$1&quot; = Lite ] || [ &quot;$1&quot; = Web ]
++}
++
++# The device database provides the final exact-part check, including old updates.
++# Family limits: https://www.altera.com/design/guidance/software/device-support
++
++quartus_family_compatible ()
++{
++    local quartus_version=&quot;$1&quot; quartus_edition=&quot;$2&quot; quartus_limit=
++
++    case &quot;$quartus_target_part&quot; in
++        EP1C*)
++            if quartus_free_edition &quot;$quartus_edition&quot;
++            then
++                quartus_limit=11.0.1.999999
++            else
++                quartus_limit=13.0.1.999999
++            fi
++        ;;
++        EP2C*) quartus_limit=13.0.1.999999 ;;
++        EP3C*) quartus_limit=13.1.0.999999 ;;
++        A3*)
++            [ &quot;$quartus_edition&quot; = Pro ] || return 1
++            quartus_version_newer 25.1 &quot;$quartus_version&quot; &amp;&amp; return 1
++        ;;
++        10M*)
++            quartus_version_newer 14.0 &quot;$quartus_version&quot; &amp;&amp; return 1
++        ;;
++    esac
++
++    case &quot;$quartus_target_part&quot; in
++        EP1C* | EP2C* | EP3C* | EP4C* | 5C* | 10M* | EPM*)
++            [ &quot;$quartus_edition&quot; = Pro ] &amp;&amp; return 1
++        ;;
++    esac
++
++    if [ &quot;$fpga_board&quot; = omdazz_epm570_quartus_13_1_or_older ]
++    then
++        quartus_limit=13.1.0.999999
++    fi
++
++    if [ -n &quot;$quartus_limit&quot; ] &amp;&amp; quartus_version_newer &quot;$quartus_version&quot; &quot;$quartus_limit&quot;
++    then
++        return 1
++    fi
++
++    return 0
++}
++
++quartus_warn_install_path ()
++{
++    local quartus_path=&quot;$1&quot;
++    local LC_ALL=C
++    local quartus_safe_path=&#x27;^[A-Za-z0-9_./:\\-]+$&#x27;
++
++    if ! [[ &quot;$quartus_path&quot; =~ $quartus_safe_path ]]
++    then
++        warning &quot;Quartus installation path &#x27;$quartus_path&#x27; contains spaces,&quot;    \
++                &quot;non-ASCII text, or special characters unsupported by Altera.&quot;  \
++                &#x27;Examples include ! $ % @ ^ &amp; * &lt; &gt; , quotes and parentheses.&#x27;  \
++                &quot;Quartus may fail; relocate it to a simple ASCII path.&quot;
++    fi
++}
++
++# Arrays are local to quartus_setup; helpers append without splitting path names.
++
++quartus_collect_parent ()
++{
++    local quartus_parent=&quot;$1&quot; quartus_vendor quartus_root
++    [ -n &quot;$quartus_parent&quot; ] || return 0
++
++    if [ &quot;$OSTYPE&quot; = cygwin ] || [ &quot;$OSTYPE&quot; = msys ]
++    then
++        quartus_parent=$(cygpath -u &quot;$quartus_parent&quot;) || return 1
++    fi
++
++    for quartus_vendor in altera altera_lite altera_std altera_pro \
++        intelFPGA intelFPGA_lite intelFPGA_pro intelFPGA_std
++    do
++        for quartus_root in &quot;$quartus_parent/$quartus_vendor/&quot;[0-9]*/quartus
++        do
++            [ -d &quot;$quartus_root&quot; ] || continue
++            quartus_candidates+=(&quot;$quartus_root&quot;)
++        done
++    done
++}
++
++# Prefer Lite/Web; otherwise compare versions before the Standard/Pro tie-break.
++
++quartus_candidate_better ()
++{
++    [ -n &quot;$quartus_best_root&quot; ] || return 0
++
++    if quartus_free_edition &quot;$quartus_candidate_edition&quot; &amp;&amp; ! quartus_free_edition &quot;$quartus_best_edition&quot;
++    then
++        return 0
++    fi
++
++    if ! quartus_free_edition &quot;$quartus_candidate_edition&quot; &amp;&amp; quartus_free_edition &quot;$quartus_best_edition&quot;
++    then
++        return 1
++    fi
++
++    quartus_version_newer &quot;$quartus_candidate_version&quot; &quot;$quartus_best_version&quot; &amp;&amp; return 0
++    quartus_version_newer &quot;$quartus_best_version&quot; &quot;$quartus_candidate_version&quot; &amp;&amp; return 1
++
++    if [ &quot;$quartus_candidate_edition&quot; != Pro ] &amp;&amp; [ &quot;$quartus_best_edition&quot; = Pro ]
++    then
++        return 0
++    fi
++
++    # Stable collection order resolves all remaining ties.
++    return 1
++}
++
++quartus_consider_candidate ()
++{
++    local quartus_root=&quot;$1&quot; quartus_bin quartus_seen quartus_output
++    local quartus_candidate_version= quartus_candidate_edition=
++    local quartus_rejection= quartus_query=&quot;$script_dir/fpga/quartus_has_device.tcl&quot;
++    local -a quartus_bins=(bin)
++
++    if [ &quot;$OSTYPE&quot; = cygwin ] || [ &quot;$OSTYPE&quot; = msys ]
++    then
++        quartus_root=$(cygpath -u &quot;$quartus_root&quot;) || return 1
++        quartus_query=$(cygpath -m &quot;$quartus_query&quot;) || return 1
++        quartus_bins=(bin64 bin)
++    fi
++
++    if ! quartus_root=$(readlink -f &quot;$quartus_root&quot;) || [ ! -d &quot;$quartus_root&quot; ]
++    then
++        warning &quot;Quartus directory &#x27;$1&#x27; does not exist.&quot;
++
++        return 0
++    fi
++
++    for quartus_seen in &quot;${quartus_seen_roots[@]}&quot;
++    do
++        [ &quot;$quartus_seen&quot; = &quot;$quartus_root&quot; ] &amp;&amp; return 0
++    done
++
++    quartus_seen_roots+=(&quot;$quartus_root&quot;)
++    quartus_warn_install_path &quot;$quartus_root&quot;
++
++    for quartus_bin in &quot;${quartus_bins[@]}&quot;
++    do
++        if [ ! -x &quot;$quartus_root/$quartus_bin/quartus$exe&quot; ] ||
++           [ ! -x &quot;$quartus_root/$quartus_bin/quartus_sh$exe&quot; ] ||
++           [ ! -x &quot;$quartus_root/$quartus_bin/quartus_pgm$exe&quot; ]
++        then
++            if [ -z &quot;$quartus_rejection&quot; ]
++            then
++                quartus_rejection=&quot;Missing executable GUI, shell, or programmer in ${quartus_bins[*]}.&quot;
++            fi
++
++            continue
++        fi
++
++        quartus_read_identity &quot;$quartus_root&quot; &quot;$quartus_bin&quot; || continue
++
++        if ! quartus_family_compatible &quot;$quartus_candidate_version&quot; &quot;$quartus_candidate_edition&quot;
++        then
++            quartus_rejection=&quot;$quartus_candidate_edition $quartus_candidate_version is incompatible with $quartus_target_part or the wrapper&#x27;s version limit.&quot;
++            break
++        fi
++
++        # Scope QUARTUS_ROOTDIR to this process; an incoming override must not redirect it.
++        # The Tcl helper checks installed parts only, without checking licenses.
++
++        if ! quartus_output=$(QUARTUS_ROOTDIR=&quot;$quartus_root&quot; \
++            &quot;$quartus_root/$quartus_bin/quartus_sh$exe&quot; -t &quot;$quartus_query&quot; &quot;$quartus_target_part&quot; 2&gt;&amp;1) ||
++           [[ &quot;$quartus_output&quot; != *&quot;BGM_DEVICE_SUPPORTED=$quartus_target_part&quot;* ]]
++        then
++            quartus_rejection=&quot;Device database query failed for $quartus_target_part; check installed device packages and tool dependencies.&quot;
++            continue
++        fi
++
++        if quartus_candidate_better
++        then
++            quartus_best_root=&quot;$quartus_root&quot;
++            quartus_best_bin=&quot;$quartus_bin&quot;
++            quartus_best_version=&quot;$quartus_candidate_version&quot;
++            quartus_best_edition=&quot;$quartus_candidate_edition&quot;
++        fi
++
+         return 0
+     done
+ 
++    warning &quot;Skipping Quartus &#x27;$quartus_root&#x27;.&quot; &quot;$quartus_rejection&quot;
++}
++
++quartus_choose_candidates ()
++{
++    local quartus_candidate
++
++    for quartus_candidate in &quot;${quartus_candidates[@]}&quot;
++    do
++        quartus_consider_candidate &quot;$quartus_candidate&quot;
++    done
++
++    [ -n &quot;$quartus_best_root&quot; ]
++}
++
++quartus_activate ()
++{
++    local quartus_selected_bin=&quot;$quartus_best_root/$quartus_best_bin&quot;
++    local quartus_entry quartus_remaining=&quot;${PATH-}&quot; quartus_new_path=&quot;$quartus_selected_bin&quot;
++
++    # Retain the original PATH order and empty entries, removing duplicate selected bins.
++
++    while [ -n &quot;$quartus_remaining&quot; ]
++    do
++        # %% removes the longest colon suffix, leaving the first PATH entry.
++        quartus_entry=${quartus_remaining%%:*}
++
++        if [ &quot;$quartus_entry&quot; != &quot;$quartus_selected_bin&quot; ]
++        then
++            quartus_new_path+=&quot;:$quartus_entry&quot;
++        fi
++
++        [[ &quot;$quartus_remaining&quot; = *:* ]] || break
++
++        # # removes the first PATH entry and its colon separator.
++        quartus_remaining=${quartus_remaining#*:}
++
++        [ -n &quot;$quartus_remaining&quot; ] || quartus_new_path+=:
++    done
++
++    export QUARTUS_ROOTDIR=&quot;$quartus_best_root&quot;
++    export PATH=&quot;$quartus_new_path&quot;
++    quartus_bin_dir=&quot;$quartus_best_bin&quot;
++    quartus_full_real_path=&quot;$quartus_selected_bin/quartus$exe&quot;
++    quartus_sh_full_real_path=&quot;$quartus_selected_bin/quartus_sh$exe&quot;
++    quartus_pgm_full_real_path=&quot;$quartus_selected_bin/quartus_pgm$exe&quot;
++
++    # %/* strips the final path component, like dirname here; Questa still needs this name.
++    choosen_version_dir=${quartus_best_root%/*}
++
++    info &quot;Selected Quartus $quartus_best_edition $quartus_best_version for&quot;   \
++         &quot;&#x27;$fpga_board&#x27; ($quartus_target_part), using $quartus_source.&quot;       \
++         &quot;QUARTUS_ROOTDIR=$QUARTUS_ROOTDIR&quot;
++}
++
++quartus_setup ()
++{
++    local quartus_target_part quartus_parent quartus_override quartus_path_command
++    local quartus_best_root= quartus_best_bin= quartus_best_version= quartus_best_edition=
++    local quartus_source
++    local -a quartus_candidates=() quartus_seen_roots=() quartus_default_parents=()
++
++    if [ &quot;$OSTYPE&quot; = linux-gnu ]
++    then
++        quartus_default_parents=(&quot;$HOME&quot; /opt /tools)
++
++    elif [ &quot;$OSTYPE&quot; = cygwin ] || [ &quot;$OSTYPE&quot; = msys ]
++    then
++        # These paths correspond to Windows drives C:, D: and E:.
++        quartus_default_parents=(/c /d /e)
++    else
++        error &quot;Quartus discovery does not support OS / platform &#x27;$OSTYPE&#x27;.&quot;
++
++        return 1
++    fi
++
++    # Preserve the existing RED OS workaround when called from a run directory.
++
++    if [ &quot;${inside_run_dir-}&quot; = 1 ] &amp;&amp; [ ! -f /usr/lib64/libcrypt.so.1 ] &amp;&amp;
++       [ -f /usr/lib64/libcrypt.so ]
++    then
++        ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
++
++        # :+ adds the existing library path and separator only when it is nonempty.
++        export LD_LIBRARY_PATH=&quot;${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD&quot;
++    fi
++
++    quartus_read_target || return 1
++
++    if [ -n &quot;${QUARTUS_ROOTDIR-}&quot; ]
++    then
++        quartus_candidates=(&quot;$QUARTUS_ROOTDIR&quot;)
++        quartus_source=QUARTUS_ROOTDIR
++
++        if quartus_choose_candidates
++        then
++            quartus_activate
++            return 0
++        fi
++    fi
++
++    if quartus_path_command=$(type -P &quot;quartus$exe&quot;)
++    then
++        quartus_path_command=$(readlink -f &quot;$quartus_path_command&quot;)
++
++        case &quot;$quartus_path_command&quot; in
++            */quartus/bin/quartus&quot;$exe&quot; | */quartus/bin64/quartus&quot;$exe&quot;)
++                # %/* removes the executable filename, equivalent to dirname here.
++                quartus_path_command=${quartus_path_command%/*}
++
++                # %/* removes bin or bin64, leaving the Quartus root directory.
++                quartus_path_command=${quartus_path_command%/*}
++
++                quartus_candidates=(&quot;$quartus_path_command&quot;)
++                quartus_source=PATH
++
++                if quartus_choose_candidates
++                then
++                    quartus_activate
++                    return 0
++                fi
++            ;;
++            *)
++                warning &quot;Quartus on PATH is outside a quartus/bin or quartus/bin64 installation.&quot;  \
++                        &quot;Set QUARTUS_ROOTDIR to identify its installation; continuing discovery.&quot;
++            ;;
++        esac
++    fi
++
++    for quartus_override in INTEL_FPGA_HOME ALTERA_HOME QUARTUS_HOME
++    do
++        # ! performs indirect expansion; - tolerates an unset public override.
++        quartus_parent=${!quartus_override-}
++
++        [ -n &quot;$quartus_parent&quot; ] || continue
++        quartus_candidates=()
++        quartus_collect_parent &quot;$quartus_parent&quot;
++        quartus_source=&quot;$quartus_override=&#x27;$quartus_parent&#x27;&quot;
++
++        if quartus_choose_candidates
++        then
++            quartus_activate
++            return 0
++        fi
++
++        warning &quot;No compatible Quartus installation under $quartus_source.&quot;  \
++                &quot;Continuing with lower-priority locations.&quot;
++    done
++
++    quartus_candidates=()
++
++    for quartus_parent in &quot;${quartus_default_parents[@]}&quot;
++    do
++        quartus_collect_parent &quot;$quartus_parent&quot;
++    done
++
++    quartus_source=&quot;default installation parents: ${quartus_default_parents[*]}&quot;
++
++    if quartus_choose_candidates
++    then
++        quartus_activate
++        return 0
++    fi
++
++    error &quot;cannot find a compatible Quartus installation for &#x27;$fpga_board&#x27;&quot;   \
++          &quot;($quartus_target_part) under ${quartus_default_parents[*]}.&quot;       \
++          &quot;Set QUARTUS_ROOTDIR to a specific quartus directory, or set&quot;       \
++          &quot;INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME to the parent of&quot;     \
++          &quot;the altera*, intelFPGA* installation directories.&quot;
++
+     return 1
+ }
+ 
+-#-----------------------------------------------------------------------------
+-
+-# Every installation under the given parent directories.
+-#
+-# The paths are resolved, and one already seen is not added again, because
+-# the same installation is often reachable two ways at once, such as when
+-# ALTERA_HOME is set to the home directory.
+-
+-quartus_find_installations ()
+-{
+-    local parent
+-    local vendor
+-    local version_dir
+-    local resolved
+-
+-    quartus_installations=
+-    quartus_parents_tried=
+-
+-    for parent in &quot;$@&quot;
+-    do
+-        [ -n &quot;$parent&quot; ] || continue
+-        [ -d &quot;$parent&quot; ] || continue
+-
+-        quartus_parents_tried=&quot;${quartus_parents_tried:+$quartus_parents_tried or }&#x27;$parent&#x27;&quot;
+-
+-        for vendor in $quartus_vendor_dirs
+-        do
+-            for version_dir in &quot;$parent/$vendor&quot;/*
+-            do
+-                quartus_bin_dir_of &quot;$version_dir&quot; &gt; /dev/null || continue
+-
+-                resolved=$(readlink -f &quot;$version_dir&quot;) || continue
+-
+-                case &quot;$quartus_newline$quartus_installations$quartus_newline&quot; in
+-                    *&quot;$quartus_newline$resolved$quartus_newline&quot;*) continue ;;
+-                esac
+-
+-                quartus_installations=&quot;${quartus_installations:+$quartus_installations$quartus_newline}$resolved&quot;
+-            done
+-        done
+-    done
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# A path as the Quartus of this platform wants to see it. Under Cygwin and
+-# MSYS the Windows executable cannot follow a Unix path.
+-
+-quartus_native_path ()
+-{
+-    if [ &quot;$OSTYPE&quot; = &quot;cygwin&quot; ] || [ &quot;$OSTYPE&quot; = &quot;msys&quot; ]
+-    then
+-        cygpath -m &quot;$1&quot;
+-    else
+-        printf &#x27;%s&#x27; &quot;$1&quot;
+-    fi
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# Asks an installation what it is and what it can build, and remembers the
+-# answer.
+-#
+-# Quartus is the only authority here. The directory names do not record the
+-# edition, and the device data inside an installation is filed under
+-# internal code names, so MAX 10 for instance appears nowhere as &quot;max10&quot;.
+-# One run answers all of it, because $quartus(version) carries the edition
+-# name as well as the number.
+-#
+-# The run costs between one and five seconds, so the answer is cached and
+-# keyed by the timestamp of quartus_sh itself.
+-#
+-# Sets quartus_probe_version, quartus_probe_edition and
+-# quartus_probe_cache_file in the caller.
+-
+-quartus_probe ()
+-{
+-    local version_dir=&quot;$1&quot;
+-    local bin_dir
+-    local quartus_sh
+-    local stamp
+-    local cache_file
+-    local tcl_file
+-    local header
+-    local output
+-    local version_line
+-
+-    bin_dir=$(quartus_bin_dir_of &quot;$version_dir&quot;) || return 1
+-    quartus_sh=&quot;$version_dir/quartus/$bin_dir/quartus_sh$exe&quot;
+-
+-    stamp=$(date -r &quot;$quartus_sh&quot; +%s 2&gt; /dev/null) || stamp=0
+-
+-    cache_file=&quot;$quartus_cache_dir/install&quot;
+-    cache_file=&quot;$cache_file$(printf &#x27;%s&#x27; &quot;$version_dir&quot; | tr -c &#x27;A-Za-z0-9._-&#x27; &#x27;_&#x27;)&quot;
+-
+-    if [ -r &quot;$cache_file&quot; ]
+-    then
+-        header=$(head -1 &quot;$cache_file&quot;)
+-
+-        if [ &quot;${header%% *}&quot; = &quot;$stamp&quot; ]
+-        then
+-            header=${header#* }
+-
+-            quartus_probe_version=${header%% *}
+-            quartus_probe_edition=${header##* }
+-            quartus_probe_cache_file=&quot;$cache_file&quot;
+-
+-            return 0
+-        fi
+-    fi
+-
+-    mkdir -p &quot;$quartus_cache_dir&quot; 2&gt; /dev/null
+-
+-    tcl_file=&quot;$quartus_cache_dir/identify.tcl&quot;
+-
+-    cat &gt; &quot;$tcl_file&quot; &lt;&lt; &#x27;TCL_EOF&#x27;
+-load_package device
+-puts &quot;BGM_VERSION $quartus(version)&quot;
+-foreach bgm_item [get_family_list] { puts &quot;BGM_FAMILY $bgm_item&quot; }
+-foreach bgm_item [get_part_list]   { puts &quot;BGM_PART $bgm_item&quot;   }
+-TCL_EOF
+-
+-    # QUARTUS_ROOTDIR is set for this one command, so that a value
+-    # inherited from the environment cannot make this installation answer
+-    # questions about a different one
+-
+-    output=$(QUARTUS_ROOTDIR=&quot;$version_dir/quartus&quot; &quot;$quartus_sh&quot;  \
+-        -t &quot;$(quartus_native_path &quot;$tcl_file&quot;)&quot; 2&gt; /dev/null) || return 1
+-
+-    # No command in these pipelines may exit early: this script runs under
+-    # &quot;set -o pipefail&quot;, where a downstream exit would make a successful
+-    # lookup look like a failure
+-
+-    version_line=$(printf &#x27;%s\n&#x27; &quot;$output&quot;  \
+-        | sed -n &#x27;s/^BGM_VERSION //p&#x27; | sed -n &#x27;1p&#x27;)
+-
+-    [ -n &quot;$version_line&quot; ] || return 1
+-
+-    # &quot;Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition&quot; becomes the
+-    # comparable number 25.1.0 and the edition word &quot;Lite&quot;
+-
+-    quartus_probe_version=$(printf &#x27;%s\n&#x27; &quot;$version_line&quot;  \
+-        | sed -n &#x27;s/^Version \([0-9][^ ]*\).*/\1/p&#x27; | tr -cd &#x27;0-9.&#x27;)
+-
+-    quartus_probe_edition=$(printf &#x27;%s\n&#x27; &quot;$version_line&quot;  \
+-        | grep -oE &#x27;Web|Lite|Standard|Pro&#x27; | sed -n &#x27;1p&#x27;)
+-
+-    [ -n &quot;$quartus_probe_version&quot; ] || return 1
+-    [ -n &quot;$quartus_probe_edition&quot; ] || quartus_probe_edition=Unknown
+-
+-    {
+-        printf &#x27;%s %s %s\n&#x27;  \
+-            &quot;$stamp&quot; &quot;$quartus_probe_version&quot; &quot;$quartus_probe_edition&quot;
+-
+-        printf &#x27;%s\n&#x27; &quot;$output&quot; | sed -n &#x27;s/^BGM_FAMILY /F /p&#x27;
+-        printf &#x27;%s\n&#x27; &quot;$output&quot; | sed -n &#x27;s/^BGM_PART /P /p&#x27;
+-
+-    } &gt; &quot;$cache_file&quot;
+-
+-    quartus_probe_cache_file=&quot;$cache_file&quot;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# The device family a part belongs to, asked of the installations until one
+-# of them recognizes the part. The answer belongs to the part and not to
+-# any installation, so it is cached on its own.
+-#
+-# Prints nothing when no installation has heard of the part at all.
+-
+-quartus_family_of_part ()
+-{
+-    local part=&quot;$1&quot;
+-    local cache_file=&quot;$quartus_cache_dir/family_$part&quot;
+-    local tcl_file=&quot;$quartus_cache_dir/family.tcl&quot;
+-    local version_dir
+-    local bin_dir
+-    local family
+-
+-    if [ -r &quot;$cache_file&quot; ]
+-    then
+-        cat &quot;$cache_file&quot;
+-        return 0
+-    fi
+-
+-    mkdir -p &quot;$quartus_cache_dir&quot; 2&gt; /dev/null
+-
+-    cat &gt; &quot;$tcl_file&quot; &lt;&lt; &#x27;TCL_EOF&#x27;
+-load_package device
+-set bgm_raw &quot;&quot;
+-catch { set bgm_raw [get_part_info -family [lindex $quartus(args) 0]] }
+-
+-# get_part_info returns a one element list, and the element is the name.
+-# Comparing the list itself against get_family_list never matches.
+-
+-puts &quot;BGM_PART_FAMILY [lindex $bgm_raw 0]&quot;
+-TCL_EOF
+-
+-    family=
+-
+-    while IFS= read -r version_dir
+-    do
+-        [ -n &quot;$version_dir&quot; ] || continue
+-
+-        bin_dir=$(quartus_bin_dir_of &quot;$version_dir&quot;) || continue
+-
+-        family=$(QUARTUS_ROOTDIR=&quot;$version_dir/quartus&quot;  \
+-            &quot;$version_dir/quartus/$bin_dir/quartus_sh$exe&quot;  \
+-            -t &quot;$(quartus_native_path &quot;$tcl_file&quot;)&quot; &quot;$part&quot; 2&gt; /dev/null  \
+-            | sed -n &#x27;s/^BGM_PART_FAMILY //p&#x27; | sed -n &#x27;1p&#x27;) || family=
+-
+-        [ -n &quot;$family&quot; ] &amp;&amp; break
+-
+-    done &lt;&lt;&lt; &quot;$quartus_installations&quot;
+-
+-    printf &#x27;%s&#x27; &quot;$family&quot; &gt; &quot;$cache_file&quot;
+-    printf &#x27;%s&#x27; &quot;$family&quot;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# Can this installation build this exact part?
+-#
+-# Two questions, because neither alone is right. An installation lists the
+-# parts it offers outright, and that is the usual answer. But the list is
+-# narrower than what the tool can really target: Quartus II 13.1 does not
+-# list EP3C120F780C6, the part of the dk_dev_3c120n board, and yet compiles
+-# and fits for it. What 13.1 does have is the Cyclone III family installed,
+-# and that is the second question.
+-#
+-# Asking only for the family of the part would be far too generous: every
+-# installation here names a family for a Cyclone II part, including the
+-# ones that cannot build one.
+-
+-quartus_can_build_part ()
+-{
+-    local cache_file=&quot;$1&quot;
+-    local part=&quot;$2&quot;
+-    local family
+-
+-    grep -q -x -F &quot;P $part&quot; &quot;$cache_file&quot; &amp;&amp; return 0
+-
+-    family=$(quartus_family_of_part &quot;$part&quot;)
+-
+-    [ -n &quot;$family&quot; ] || return 1
+-
+-    grep -q -x -F &quot;F $family&quot; &quot;$cache_file&quot;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# The installations in order of preference, best first. A free edition wins
+-# over a paid one even when it is older; after that the newer version wins;
+-# and Standard comes before Pro only when the versions are equal.
+-#
+-# With a part given, only the installations that can build it compete.
+-
+-quartus_best_installation ()
+-{
+-    local part=&quot;$1&quot;
+-    local version_dir
+-    local records=
+-    local free_rank
+-    local edition_rank
+-    local sorted
+-    local first
+-
+-    while IFS= read -r version_dir
+-    do
+-        [ -n &quot;$version_dir&quot; ] || continue
+-
+-        quartus_probe &quot;$version_dir&quot; || continue
+-
+-        if [ -n &quot;$part&quot; ]
+-        then
+-            quartus_can_build_part &quot;$quartus_probe_cache_file&quot; &quot;$part&quot; || continue
+-        fi
+-
+-        case $quartus_probe_edition in
+-            Web | Lite ) free_rank=0 ; edition_rank=0 ;;
+-            Standard   ) free_rank=1 ; edition_rank=1 ;;
+-            Pro        ) free_rank=1 ; edition_rank=2 ;;
+-            *          ) free_rank=2 ; edition_rank=3 ;;
+-        esac
+-
+-        records=&quot;${records:+$records$quartus_newline}$free_rank$quartus_tab$quartus_probe_version$quartus_tab$edition_rank$quartus_tab$version_dir&quot;
+-
+-    done &lt;&lt;&lt; &quot;$quartus_installations&quot;
+-
+-    [ -n &quot;$records&quot; ] || return 1
+-
+-    sorted=$(printf &#x27;%s\n&#x27; &quot;$records&quot;  \
+-        | sort -t &quot;$quartus_tab&quot; -k1,1n -k2,2Vr -k3,3n)
+-
+-    first=${sorted%%&quot;$quartus_newline&quot;*}
+-
+-    printf &#x27;%s&#x27; &quot;$first&quot; | cut -f4-
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# What each installation is, for the message shown when none of them can
+-# build the board
+-
+-quartus_installation_summary ()
+-{
+-    local version_dir
+-    local summary=
+-
+-    while IFS= read -r version_dir
+-    do
+-        [ -n &quot;$version_dir&quot; ] || continue
+-
+-        quartus_probe &quot;$version_dir&quot; || continue
+-
+-        summary=&quot;${summary:+$summary, }&#x27;$version_dir&#x27; is $quartus_probe_edition $quartus_probe_version&quot;
+-
+-    done &lt;&lt;&lt; &quot;$quartus_installations&quot;
+-
+-    printf &#x27;%s&#x27; &quot;$summary&quot;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# The variables the rest of this file and the Questa setup expect
+-
+-quartus_export_paths ()
+-{
+-    export PATH=&quot;${PATH:+$PATH:}$QUARTUS_ROOTDIR/$quartus_bin_dir&quot;
+-
+-    quartus_full_real_path=&quot;$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus$exe&quot;
+-    quartus_sh_full_real_path=&quot;$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_sh$exe&quot;
+-    quartus_pgm_full_real_path=&quot;$QUARTUS_ROOTDIR/$quartus_bin_dir/quartus_pgm$exe&quot;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-quartus_warn_cannot_build ()
+-{
+-    local part=&quot;$1&quot;
+-    local chosen_by=&quot;$2&quot;
+-
+-    warning &quot;the version of Quartus chosen by $chosen_by,&quot;              \
+-            &quot;&#x27;$choosen_version_dir&#x27;, cannot build the part &#x27;$part&#x27;&quot;      \
+-            &quot;of the board &#x27;$fpga_board&#x27;. Proceeding, because you asked&quot;   \
+-            &quot;for this installation, but the synthesis is likely to fail.&quot;
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-# Takes the best installation under one group of parent directories, and
+-# makes it the one in use. Fails without choosing anything when none of
+-# them can build the board.
+-#
+-# Each group is tried in turn and the first that succeeds ends the search,
+-# so pointing ALTERA_HOME somewhere is an instruction and not merely a
+-# hint: a newer Quartus elsewhere does not override it.
+-
+-quartus_use_best_under ()
+-{
+-    local described_as=&quot;$1&quot;
+-    shift
+-
+-    local candidate
+-
+-    quartus_find_installations &quot;$@&quot;
+-
+-    [ -n &quot;$quartus_installations&quot; ] || return 1
+-
+-    candidate=$(quartus_best_installation &quot;$quartus_target_part&quot;) || return 1
+-
+-    [ -n &quot;$candidate&quot; ] || return 1
+-
+-    choosen_version_dir=&quot;$candidate&quot;
+-
+-    quartus_bin_dir=$(quartus_bin_dir_of &quot;$choosen_version_dir&quot;)  ||
+-    error &quot;&#x27;$choosen_version_dir&#x27; has no bin or bin64 with the Quartus executables&quot;
+-
+-    export QUARTUS_ROOTDIR=&quot;$choosen_version_dir/quartus&quot;
+-
+-    quartus_export_paths
+-
+-    if quartus_probe &quot;$choosen_version_dir&quot;
+-    then
+-        info &quot;using Quartus $quartus_probe_edition&quot;                      \
+-             &quot;from &#x27;$choosen_version_dir&#x27; for the board &#x27;$fpga_board&#x27;,&quot;   \
+-             &quot;found through $described_as&quot;
+-    fi
+-
+-    return 0
+-}
+-
+-#-----------------------------------------------------------------------------
+-
+-intel_fpga_setup_quartus ()
+-{
+-       [ &quot;$OSTYPE&quot; = &quot;linux-gnu&quot; ]  \
+-    || [ &quot;$OSTYPE&quot; = &quot;cygwin&quot;    ]  \
+-    || [ &quot;$OSTYPE&quot; = &quot;msys&quot;      ]  \
+-    || return
+-
+-    #-------------------------------------------------------------------------
+-
+-    # Workarounds for Quartus library problems
+-    # that are uncovered under RED OS from https://www.red-soft.ru
+-
+-    if      [ &quot;${inside_run_dir-}&quot; = 1    ]  \
+-       &amp;&amp; ! [ -f /usr/lib64/libcrypt.so.1 ]  \
+-       &amp;&amp;   [ -f /usr/lib64/libcrypt.so   ]
+-    then
+-        ln -sf /usr/lib64/libcrypt.so libcrypt.so.1
+-        export LD_LIBRARY_PATH=&quot;${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$PWD&quot;
+-    fi
+-
+-    #-------------------------------------------------------------------------
+-
+-    local quartus_target_part
+-    local overridden=0
+-    local summary
+-    local found_path
+-    local found_bin_dir
+-    local found_root
+-
+-    quartus_target_part=$(quartus_part_of_board) || quartus_target_part=
+-
+-    #-------------------------------------------------------------------------
+-
+-    # QUARTUS_ROOTDIR names one installation and is obeyed as it stands
+-
+-    if    [ -n &quot;${QUARTUS_ROOTDIR-}&quot;                   ]  \
+-       &amp;&amp; [ -d &quot;$QUARTUS_ROOTDIR&quot;                      ]  \
+-       &amp;&amp; [ $(basename &quot;$QUARTUS_ROOTDIR&quot;) = &quot;quartus&quot; ]
+-    then
+-        choosen_version_dir=$(dirname &quot;$QUARTUS_ROOTDIR&quot;)
+-
+-        quartus_bin_dir=$(quartus_bin_dir_of &quot;$choosen_version_dir&quot;)  ||
+-        error &quot;directory &#x27;$QUARTUS_ROOTDIR&#x27; has no bin or bin64&quot;  \
+-              &quot;with the Quartus executables in it&quot;
+-
+-        quartus_export_paths
+-
+-        quartus_installations=&quot;$choosen_version_dir&quot;
+-
+-        if    [ -n &quot;$quartus_target_part&quot; ]  \
+-           &amp;&amp; quartus_probe &quot;$choosen_version_dir&quot;
+-        then
+-            quartus_can_build_part  \
+-                &quot;$quartus_probe_cache_file&quot; &quot;$quartus_target_part&quot;  ||
+-            quartus_warn_cannot_build &quot;$quartus_target_part&quot; &quot;QUARTUS_ROOTDIR&quot;
+-        fi
+-
+-        intel_fpga_info_where_quartus_is_found &quot; using QUARTUS_ROOTDIR&quot;
+-        return
+-    fi
+-
+-    #-------------------------------------------------------------------------
+-
+-    # Quartus already in the path is a hint rather than an instruction: it
+-    # is used when it can build the board, and reported and passed over
+-    # when it cannot, because it is often there by accident
+-
+-    if is_command_available quartus$exe
+-    then
+-        found_path=$(readlink -f &quot;$(command -v quartus$exe)&quot;)
+-        found_bin_dir=$(basename &quot;$(dirname &quot;$found_path&quot;)&quot;)
+-        found_root=$(dirname &quot;$(dirname &quot;$found_path&quot;)&quot;)
+-
+-        if [ &quot;$(basename &quot;$found_root&quot;)&quot; = quartus ]
+-        then
+-            choosen_version_dir=$(dirname &quot;$found_root&quot;)
+-            quartus_installations=&quot;$choosen_version_dir&quot;
+-
+-            if    [ -z &quot;$quartus_target_part&quot; ]  \
+-               || ! quartus_probe &quot;$choosen_version_dir&quot;  \
+-               || quartus_can_build_part  \
+-                      &quot;$quartus_probe_cache_file&quot; &quot;$quartus_target_part&quot;
+-            then
+-                quartus_bin_dir=$found_bin_dir
+-                export QUARTUS_ROOTDIR=&quot;$found_root&quot;
+-
+-                quartus_export_paths
+-
+-                intel_fpga_info_where_quartus_is_found &quot; using PATH&quot;
+-                return
+-            fi
+-
+-            warning &quot;the Quartus in the path, &#x27;$choosen_version_dir&#x27;,&quot;       \
+-                    &quot;cannot build the part &#x27;$quartus_target_part&#x27; of the&quot;     \
+-                    &quot;board &#x27;$fpga_board&#x27;, so it is passed over.&quot;              \
+-                    &quot;Set QUARTUS_ROOTDIR to use it regardless.&quot;
+-        else
+-            warning &quot;quartus is in the path outside the usual installation directory&quot;
+-        fi
+-    fi
+-
+-    #-------------------------------------------------------------------------
+-
+-    if    [ -n &quot;${INTEL_FPGA_HOME-}&quot; ]  \
+-       || [ -n &quot;${ALTERA_HOME-}&quot;     ]  \
+-       || [ -n &quot;${QUARTUS_HOME-}&quot;    ]
+-    then
+-        overridden=1
+-    fi
+-
+-    quartus_use_best_under &quot;INTEL_FPGA_HOME&quot; &quot;${INTEL_FPGA_HOME-}&quot; &amp;&amp; return
+-    quartus_use_best_under &quot;ALTERA_HOME&quot;     &quot;${ALTERA_HOME-}&quot;     &amp;&amp; return
+-    quartus_use_best_under &quot;QUARTUS_HOME&quot;    &quot;${QUARTUS_HOME-}&quot;    &amp;&amp; return
+-
+-    if [ &quot;$OSTYPE&quot; = &quot;linux-gnu&quot; ]
+-    then
+-        quartus_use_best_under &quot;the standard locations&quot;  \
+-            &quot;$HOME&quot; /opt /tools &amp;&amp; return
+-    else
+-        quartus_use_best_under &quot;the standard locations&quot;  \
+-            /c /d /e &amp;&amp; return
+-    fi
+-
+-    #-------------------------------------------------------------------------
+-
+-    # Nothing anywhere can build this board. An installation asked for by
+-    # an environment variable is used anyway, with a warning; without such
+-    # a request this is an error.
+-
+-    if [ &quot;$OSTYPE&quot; = &quot;linux-gnu&quot; ]
+-    then
+-        quartus_find_installations  \
+-            &quot;${INTEL_FPGA_HOME-}&quot; &quot;${ALTERA_HOME-}&quot; &quot;${QUARTUS_HOME-}&quot;  \
+-            &quot;$HOME&quot; /opt /tools
+-    else
+-        quartus_find_installations  \
+-            &quot;${INTEL_FPGA_HOME-}&quot; &quot;${ALTERA_HOME-}&quot; &quot;${QUARTUS_HOME-}&quot;  \
+-            /c /d /e
+-    fi
+-
+-    [ -n &quot;$quartus_installations&quot; ]  ||
+-    error &quot;cannot find any installation of Quartus under&quot;                 \
+-          &quot;$quartus_parents_tried.&quot;                                       \
+-          &quot;A directory named one of: $quartus_vendor_dirs&quot;                \
+-          &quot;is expected there, with a version directory inside it.&quot;        \
+-          &quot;The location can also be set by the environment variables&quot;     \
+-          &quot;INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME, or a particular&quot;  \
+-          &quot;installation by QUARTUS_ROOTDIR.&quot;
+-
+-    summary=$(quartus_installation_summary)
+-
+-    if [ $overridden = 1 ]
+-    then
+-        quartus_find_installations  \
+-            &quot;${INTEL_FPGA_HOME-}&quot; &quot;${ALTERA_HOME-}&quot; &quot;${QUARTUS_HOME-}&quot;
+-
+-        choosen_version_dir=$(quartus_best_installation &quot;&quot;)  ||
+-            choosen_version_dir=
+-
+-        if [ -n &quot;$choosen_version_dir&quot; ]
+-        then
+-            quartus_bin_dir=$(quartus_bin_dir_of &quot;$choosen_version_dir&quot;)  ||
+-            error &quot;&#x27;$choosen_version_dir&#x27; has no bin or bin64&quot;  \
+-                  &quot;with the Quartus executables&quot;
+-
+-            export QUARTUS_ROOTDIR=&quot;$choosen_version_dir/quartus&quot;
+-
+-            quartus_export_paths
+-
+-            quartus_warn_cannot_build &quot;$quartus_target_part&quot;  \
+-                &quot;INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME&quot;
+-
+-            intel_fpga_info_where_quartus_is_found &quot; using an environment variable&quot;
+-            return
+-        fi
+-    fi
+-
+-    error &quot;no installed version of Quartus can build the part&quot;            \
+-          &quot;&#x27;$quartus_target_part&#x27; of the board &#x27;$fpga_board&#x27;.&quot;             \
+-          &quot;Found: $summary.&quot;                                               \
+-          &quot;Point QUARTUS_ROOTDIR at an installation to use it regardless,&quot;  \
+-          &quot;or INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME at a directory&quot;   \
+-          &quot;that holds one.&quot;
+-}
+ #-----------------------------------------------------------------------------
+ #
+ #   Intel FPGA version of Questa by Siemens EDA (former Mentor Graphics)
+</pre></details>
+<details><summary>Expand captured comparison transcripts</summary><details><summary>Default pool, cold cache</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_opt/altera_lite/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Default pool, warm cache</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 0,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_opt/altera_lite/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_opt/altera_lite/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Incompatible explicit root</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/override/altera/25.1/quartus&#x27;. Device database query failed for EP4CE6E22C8; check installed device packages and tool dependencies.\nSelected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/override/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;comparison: Found Quartus using QUARTUS_ROOTDIR:\nQUARTUS_ROOTDIR=&lt;fixture&gt;/override/altera/25.1/quartus\nPATH=/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin\nquartus_full_real_path=&lt;fixture&gt;/override/altera/25.1/quartus/bin/quartus\nRESULT_ROOT=&lt;fixture&gt;/override/altera/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: the version of Quartus chosen by QUARTUS_ROOTDIR, &#x27;&lt;fixture&gt;/override/altera/25.1&#x27;, cannot build the part &#x27;EP4CE6E22C8&#x27; of the board &#x27;comparison_board&#x27;. Proceeding, because you asked for this installation, but the synthesis is likely to fail.\n&quot;
+}</pre></details><details><summary>Incompatible PATH candidate</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/override/altera/25.1/quartus&#x27;. Device database query failed for EP4CE6E22C8; check installed device packages and tool dependencies.\nSelected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/21.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/21.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: the Quartus in the path, &#x27;&lt;fixture&gt;/override/altera/25.1&#x27;, cannot build the part &#x27;EP4CE6E22C8&#x27; of the board &#x27;comparison_board&#x27;, so it is passed over. Set QUARTUS_ROOTDIR to use it regardless.\nusing Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera/21.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>PATH candidate whose query fails</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/override/altera/25.1/quartus&#x27;. Device database query failed for EP4CE6E22C8; check installed device packages and tool dependencies.\nSelected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/override/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;comparison: Found Quartus using PATH:\nQUARTUS_ROOTDIR=&lt;fixture&gt;/override/altera/25.1/quartus\nPATH=&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin\nquartus_full_real_path=&lt;fixture&gt;/override/altera/25.1/quartus/bin/quartus\nRESULT_ROOT=&lt;fixture&gt;/override/altera/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/override/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;&quot;
+}</pre></details><details><summary>Parent priority beats a newer free edition elsewhere</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/first/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/first/altera/21.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/first/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/first/altera/21.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Standard 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using INTEL_FPGA_HOME=&#x27;&lt;fixture&gt;/first&#x27;. QUARTUS_ROOTDIR=&lt;fixture&gt;/first/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/first/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/first/altera/21.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/first/altera/21.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/first/altera/21.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Standard from &#x27;&lt;fixture&gt;/first/altera/21.1&#x27; for the board &#x27;comparison_board&#x27;, found through INTEL_FPGA_HOME\n&quot;
+}</pre></details><details><summary>Standard vendor directory</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_std/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_std/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Standard 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera_std/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_std/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_std/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Standard from &#x27;&lt;fixture&gt;/default_home/altera_std/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Equal release, different builds</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/intelFPGA/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/intelFPGA/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/intelFPGA/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/intelFPGA/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.10 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/intelFPGA/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Wrapper explicitly limited to 13.1 or older</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/13.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/13.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/13.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/13.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/default_home/altera_lite/25.1/quartus&#x27;. Lite 25.1.0.1 is incompatible with EPM570T100C5 or the wrapper&#x27;s version limit.\nSelected Quartus Web 13.1.0.1 for &#x27;omdazz_epm570_quartus_13_1_or_older&#x27; (EPM570T100C5), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/13.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_lite/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_lite/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_lite/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_lite/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera_lite/25.1&#x27; for the board &#x27;omdazz_epm570_quartus_13_1_or_older&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Version directory called current</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/current/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/current/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/current/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/current/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera/current&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Spaces and an apostrophe in installation path</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Quartus installation path &#x27;&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus&#x27; contains spaces, non-ASCII text, or special characters unsupported by Altera. Examples include ! $ % @ ^ &amp; * &lt; &gt; , quotes and parentheses. Quartus may fail; relocate it to a simple ASCII path.\nSelected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using ALTERA_HOME=&#x27;&lt;fixture&gt;/space quote&#x27;&#x27;. QUARTUS_ROOTDIR=&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/space quote&#x27;/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/space quote&#x27;/altera/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through ALTERA_HOME\n&quot;
+}</pre></details><details><summary>Newer installation missing programmer</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/default_home/altera/25.1/quartus&#x27;. Missing executable GUI, shell, or programmer in bin.\nSelected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/21.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/21.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera/21.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Synthetic shared part, Subscription versus Pro</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/26.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/26.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/26.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/26.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Subscription 26.1.0.1 for &#x27;comparison_board&#x27; (OVERLAPTESTPART), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/26.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_pro/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_pro/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_pro/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_pro/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Pro from &#x27;&lt;fixture&gt;/default_home/altera_pro/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>sort rejects GNU options</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 1,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {},
+  &quot;stdout&quot;: &quot;&quot;,
+  &quot;stderr&quot;: &quot;sort: options unsupported\nERROR: no installed version of Quartus can build the part &#x27;EP4CE6E22C8&#x27; of the board &#x27;comparison_board&#x27;. Found: &#x27;&lt;fixture&gt;/default_home/altera/25.1&#x27; is Lite 25.1.0. Point QUARTUS_ROOTDIR at an installation to use it regardless, or INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME at a directory that holds one.\n&quot;
+}</pre></details><details><summary>Quoted DEVICE assignment</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 1,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {},
+  &quot;stdout&quot;: &quot;&quot;,
+  &quot;stderr&quot;: &quot;ERROR: no installed version of Quartus can build the part &#x27;\&quot;EP4CE6E22C8\&quot;&#x27; of the board &#x27;comparison_board&#x27;. Found: &#x27;&lt;fixture&gt;/default_home/altera/25.1&#x27; is Lite 25.1.0. Point QUARTUS_ROOTDIR at an installation to use it regardless, or INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME at a directory that holds one.\n&quot;
+}</pre></details><details><summary>Tabs in DEVICE assignment</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_pro/26.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera_pro/26.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_pro/26.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera_pro/26.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/default_home/altera_lite/25.1/quartus&#x27;. Lite 25.1.0.1 is incompatible with A3CZ135BB18AE7S or the wrapper&#x27;s version limit.\nSelected Quartus Pro 26.1.0.1 for &#x27;comparison_board&#x27; (A3CZ135BB18AE7S), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera_pro/26.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_lite/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_lite/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_lite/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_lite/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera_lite/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Missing DEVICE assignment</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 1,
+  &quot;calls&quot;: 0,
+  &quot;result&quot;: {},
+  &quot;stdout&quot;: &quot;&quot;,
+  &quot;stderr&quot;: &quot;ERROR: cannot read a literal DEVICE assignment for board &#x27;comparison_board&#x27;.\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Part unlisted but family installed</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/13.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/13.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/13.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/13.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Web 13.1.0.1 for &#x27;comparison_board&#x27; (EP3C120F780C6), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/13.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/13.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/13.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/13.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/13.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Web from &#x27;&lt;fixture&gt;/default_home/altera/13.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Part recognized but family not installed</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 1,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {},
+  &quot;stdout&quot;: &quot;&quot;,
+  &quot;stderr&quot;: &quot;ERROR: no installed version of Quartus can build the part &#x27;EP4CE6E22C8&#x27; of the board &#x27;comparison_board&#x27;. Found: &#x27;&lt;fixture&gt;/default_home/altera/25.1&#x27; is Lite 25.1.0. Point QUARTUS_ROOTDIR at an installation to use it regardless, or INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME at a directory that holds one.\n&quot;
+}</pre></details><details><summary>Before device database update</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>After device removal without launcher timestamp change</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/21.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/default_home/altera/25.1/quartus&#x27;. Device database query failed for EP4CE6E22C8; check installed device packages and tool dependencies.\nSelected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 0,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Cache filename collision for a+b and a b</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 0,
+  &quot;result&quot;: {
+    &quot;RESULT_VERSION&quot;: &quot;25.1.0.1&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_VERSION=25.1.0.1\n&quot;,
+  &quot;stderr&quot;: &quot;&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_VERSION&quot;: &quot;21.1.0&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_VERSION=21.1.0\n&quot;,
+  &quot;stderr&quot;: &quot;&quot;
+}</pre></details><details><summary>Only incompatible candidates under explicit parent</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 1,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {},
+  &quot;stdout&quot;: &quot;&quot;,
+  &quot;stderr&quot;: &quot;WARNING: Skipping Quartus &#x27;&lt;fixture&gt;/override/altera/25.1/quartus&#x27;. Device database query failed for EP4CE6E22C8; check installed device packages and tool dependencies.\nWARNING: No compatible Quartus installation under ALTERA_HOME=&#x27;&lt;fixture&gt;/override&#x27;. Continuing with lower-priority locations.\nERROR: cannot find a compatible Quartus installation for &#x27;comparison_board&#x27; (EP4CE6E22C8) under /home/verilog /opt /tools. Set QUARTUS_ROOTDIR to a specific quartus directory, or set INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME to the parent of the altera*, intelFPGA* installation directories.\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/override/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;comparison: Found Quartus using an environment variable:\nQUARTUS_ROOTDIR=&lt;fixture&gt;/override/altera/25.1/quartus\nPATH=/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin\nquartus_full_real_path=&lt;fixture&gt;/override/altera/25.1/quartus/bin/quartus\nRESULT_ROOT=&lt;fixture&gt;/override/altera/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/override/altera/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;WARNING: the version of Quartus chosen by INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME, &#x27;&lt;fixture&gt;/override/altera/25.1&#x27;, cannot build the part &#x27;EP4CE6E22C8&#x27; of the board &#x27;comparison_board&#x27;. Proceeding, because you asked for this installation, but the synthesis is likely to fail.\n&quot;
+}</pre></details><details><summary>Older Lite beats newer Standard within a tier</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_lite/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera_lite/21.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_lite/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera_lite/21.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera_lite/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_lite/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_lite/21.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_lite/21.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_lite/21.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Lite from &#x27;&lt;fixture&gt;/default_home/altera_lite/21.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Standard beats Pro on an equal-version synthetic shared part</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_std/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_std/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Standard 25.1.0.1 for &#x27;comparison_board&#x27; (OVERLAPTESTPART), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera_std/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera_std/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera_std/25.1/quartus\nRESULT_PATH=/usr/bin:/bin:&lt;fixture&gt;/default_home/altera_std/25.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;using Quartus Standard from &#x27;&lt;fixture&gt;/default_home/altera_std/25.1&#x27; for the board &#x27;comparison_board&#x27;, found through the standard locations\n&quot;
+}</pre></details><details><summary>Cache location is not writable as a directory</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/default_home/altera/25.1/quartus\nRESULT_PATH=&lt;fixture&gt;/default_home/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 25.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using default installation parents: /home/verilog /opt /tools. QUARTUS_ROOTDIR=&lt;fixture&gt;/default_home/altera/25.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 1,
+  &quot;calls&quot;: 2,
+  &quot;result&quot;: {},
+  &quot;stdout&quot;: &quot;&quot;,
+  &quot;stderr&quot;: &quot;/home/verilog/codex/quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash: line 242: &lt;fixture&gt;/cache_claude/basics-graphics-music/identify.tcl: Not a directory\n/home/verilog/codex/quartus_compare_2/claude/scripts/steps/00_setup_intel_fpga.source_bash: line 242: &lt;fixture&gt;/cache_claude/basics-graphics-music/identify.tcl: Not a directory\nERROR: no installed version of Quartus can build the part &#x27;EP4CE6E22C8&#x27; of the board &#x27;comparison_board&#x27;. Found: . Point QUARTUS_ROOTDIR at an installation to use it regardless, or INTEL_FPGA_HOME, ALTERA_HOME or QUARTUS_HOME at a directory that holds one.\n&quot;
+}</pre></details><details><summary>Explicit root conflicts with a preexisting PATH entry</summary><pre>CODEX
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/one/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/one/altera/21.1/quartus/bin:&lt;fixture&gt;/two/altera/25.1/quartus/bin:/usr/bin:/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;RESULT_ROOT=&lt;fixture&gt;/one/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/one/altera/21.1/quartus/bin:&lt;fixture&gt;/two/altera/25.1/quartus/bin:/usr/bin:/bin\n&quot;,
+  &quot;stderr&quot;: &quot;Selected Quartus Lite 21.1.0.1 for &#x27;comparison_board&#x27; (EP4CE6E22C8), using QUARTUS_ROOTDIR. QUARTUS_ROOTDIR=&lt;fixture&gt;/one/altera/21.1/quartus\n&quot;
+}
+
+CLAUDE
+{
+  &quot;exit_code&quot;: 0,
+  &quot;calls&quot;: 1,
+  &quot;result&quot;: {
+    &quot;RESULT_ROOT&quot;: &quot;&lt;fixture&gt;/one/altera/21.1/quartus&quot;,
+    &quot;RESULT_PATH&quot;: &quot;&lt;fixture&gt;/two/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/one/altera/21.1/quartus/bin&quot;
+  },
+  &quot;stdout&quot;: &quot;comparison: Found Quartus using QUARTUS_ROOTDIR:\nQUARTUS_ROOTDIR=&lt;fixture&gt;/one/altera/21.1/quartus\nPATH=&lt;fixture&gt;/two/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/one/altera/21.1/quartus/bin\nquartus_full_real_path=&lt;fixture&gt;/one/altera/21.1/quartus/bin/quartus\nRESULT_ROOT=&lt;fixture&gt;/one/altera/21.1/quartus\nRESULT_PATH=&lt;fixture&gt;/two/altera/25.1/quartus/bin:/usr/bin:/bin:&lt;fixture&gt;/one/altera/21.1/quartus/bin\n&quot;,
+  &quot;stderr&quot;: &quot;&quot;
+}</pre></details></details>
+</section>
+<footer>Prepared from local snapshots on 4 October 2026. Readable offline; evidence links use the adjacent quartus_compare_2 directory. Later commits are outside this snapshot.</footer>
+</main>
+<script>
+const input = document.getElementById('filter');
+const rows = Array.from(document.querySelectorAll('#comparison-table tbody tr'));
+const count = document.getElementById('row-count');
+function updateRows() {
+  const query = input.value.toLowerCase().trim();
+  let visible = 0;
+  rows.forEach(row => { row.hidden = !row.textContent.toLowerCase().includes(query); if (!row.hidden) visible++; });
+  count.textContent = visible + ' of ' + rows.length + ' scenarios shown';
+}
+input.addEventListener('input', updateRows);
+updateRows();
+</script>
+</body></html>
