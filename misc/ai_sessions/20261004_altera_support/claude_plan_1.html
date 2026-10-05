@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quartus Discovery Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Karla:wght@400;600&family=Manrope:wght@600;800&display=swap">
+<style>
+  :root {
+    --ground:   #f4f6f5;
+    --surface:  #ffffff;
+    --ink:      #15201b;
+    --muted:    #566159;
+    --faint:    #8a948c;
+    --rule:     #dde3df;
+    --rule2:    #bcc5be;
+    --ok:       #1f5c3d;
+    --ok-bg:    #e9f2ec;
+    --fix:      #8f2f2f;
+    --fix-bg:   #f8edec;
+    --ask:      #946100;
+    --ask-bg:   #faf2e2;
+    --code-bg:  #e8ece9;
+
+    --display: Manrope, "Helvetica Neue", Arial, sans-serif;
+    --body:    Karla, "Helvetica Neue", Arial, sans-serif;
+    --mono:    "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #111614;
+      --surface: #18201c;
+      --ink:     #e6ebe7;
+      --muted:   #a2aca5;
+      --faint:   #737d76;
+      --rule:    #262e29;
+      --rule2:   #3a443d;
+      --ok:      #76bd93;
+      --ok-bg:   #14241b;
+      --fix:     #e08b86;
+      --fix-bg:  #251716;
+      --ask:     #d6a84f;
+      --ask-bg:  #231c10;
+      --code-bg: #141a17;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:  #111614;
+    --surface: #18201c;
+    --ink:     #e6ebe7;
+    --muted:   #a2aca5;
+    --faint:   #737d76;
+    --rule:    #262e29;
+    --rule2:   #3a443d;
+    --ok:      #76bd93;
+    --ok-bg:   #14241b;
+    --fix:     #e08b86;
+    --fix-bg:  #251716;
+    --ask:     #d6a84f;
+    --ask-bg:  #231c10;
+    --code-bg: #141a17;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16.5px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 2.75rem 5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 0.75rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 2.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+
+  .standfirst {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 40rem;
+    margin: 0 0 1.8rem;
+  }
+
+  .tally {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 2.4rem;
+  }
+  .tally div { background: var(--surface); padding: 0.7rem 0.85rem; }
+  .tally .n {
+    display: block;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tally .l {
+    font-family: var(--display);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .tally .c-ok  .n { color: var(--ok); }
+  .tally .c-fix .n { color: var(--fix); }
+  .tally .c-ask .n { color: var(--ask); }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 2.7rem 0 0.9rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin: 1.7rem 0 0.5rem;
+  }
+
+  p { margin: 0 0 0.95rem; max-width: 42rem; }
+  strong { font-weight: 600; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.84em;
+    background: var(--code-bg);
+    padding: 0.08em 0.3em;
+    border-radius: 2px;
+  }
+
+  /* requirement blocks */
+
+  .req {
+    border: 1px solid var(--rule);
+    border-left-width: 4px;
+    background: var(--surface);
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .req.ok  { border-left-color: var(--ok); }
+  .req.fix { border-left-color: var(--fix); }
+  .req.ask { border-left-color: var(--ask); }
+
+  .req-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 0.7rem;
+    margin-bottom: 0.45rem;
+  }
+  .req-id {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: var(--faint);
+  }
+  .req-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.02rem;
+  }
+  .status {
+    font-family: var(--display);
+    font-size: 0.63rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.45rem;
+    border-radius: 2px;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .s-ok  { background: var(--ok); }
+  .s-fix { background: var(--fix); }
+  .s-ask { background: var(--ask); }
+
+  .req p { margin: 0 0 0.6rem; font-size: 0.95rem; max-width: 40rem; }
+  .req p:last-child { margin-bottom: 0; }
+  .evidence {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    line-height: 1.7;
+    background: var(--code-bg);
+    padding: 0.55rem 0.75rem;
+    margin: 0.55rem 0;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.77rem;
+    line-height: 1.7;
+    background: var(--code-bg);
+    padding: 0.8rem 1rem;
+    margin: 0 0 1.2rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre .cm { color: var(--faint); }
+
+  .scroll { overflow-x: auto; margin-bottom: 1.3rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--display);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 0.45rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.42rem 0.8rem 0.42rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  thead th {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule2);
+    white-space: nowrap;
+  }
+  td.mono { font-family: var(--mono); font-size: 0.78rem; white-space: nowrap; }
+  .yes { color: var(--ok); font-weight: 600; }
+  .no  { color: var(--fix); font-weight: 600; }
+
+  ol.steps { margin: 0 0 1.2rem; padding-left: 1.5rem; }
+  ol.steps > li { margin-bottom: 0.7rem; }
+  ol.steps > li::marker { font-family: var(--mono); font-size: 0.82rem; color: var(--faint); }
+  ul { margin: 0 0 1rem; padding-left: 1.2rem; }
+  li { margin-bottom: 0.4rem; }
+
+  .decide {
+    background: var(--ask-bg);
+    border-left: 4px solid var(--ask);
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .decide h3 { margin: 0 0 0.35rem; color: var(--ask); }
+  .decide p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--faint);
+    line-height: 1.85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="eyebrow">basics-graphics-music &middot; branch claude_quartus</p>
+  <h1>Rewriting Quartus Discovery</h1>
+  <p class="standfirst">
+    Requirements checked against the repository and against the four Quartus
+    installations on this machine, then a plan. No code has been changed yet;
+    the branch exists and is identical to <code>main</code>.
+  </p>
+
+  <div class="tally">
+    <div class="c-ok"><span class="n">5</span><span class="l">confirmed</span></div>
+    <div class="c-fix"><span class="n">4</span><span class="l">need correction</span></div>
+    <div class="c-ask"><span class="n">2</span><span class="l">need your decision</span></div>
+    <div><span class="n">33</span><span class="l">Altera boards</span></div>
+    <div><span class="n">4</span><span class="l">Quartus installs</span></div>
+  </div>
+
+  <h2>What is actually installed</h2>
+
+  <p>
+    Everything below rests on this. The edition comes from the tool itself, not
+    from any directory name:
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>quartus_sh --version, run on each installation</caption>
+      <thead>
+        <tr>
+          <th>Directory</th>
+          <th>Reported version</th>
+          <th>Edition</th>
+          <th>Device families installed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">~/altera/13.0sp1</td>
+          <td class="mono">13.0.1 Build 232, SP 1</td>
+          <td><strong>Web</strong></td>
+          <td class="mono">cycloneii cycloneiii cycloneive cycloneivgx cyclonev arriaii maxii maxv max3000a max7000*</td>
+        </tr>
+        <tr>
+          <td class="mono">~/altera/13.1</td>
+          <td class="mono">13.1.0 Build 162</td>
+          <td><strong>Web</strong></td>
+          <td class="mono">cycloneiii cycloneive cycloneivgx cyclonev maxii maxv</td>
+        </tr>
+        <tr>
+          <td class="mono">~/altera_lite/25.1std</td>
+          <td class="mono">25.1std.0 Build 1129</td>
+          <td><strong>Lite</strong></td>
+          <td class="mono">cycloneive cycloneivgx cyclonev cyclone10lp maxii maxv 55nm</td>
+        </tr>
+        <tr>
+          <td class="mono">~/altera_pro/26.1.1</td>
+          <td class="mono">26.1.1 Build 130</td>
+          <td><strong>Pro</strong></td>
+          <td class="mono">10nm node data; Agilex 3 / 5 / 7, Stratix 10 presets present</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Three things in that table matter more than the rest.
+    <strong><code>altera_lite/25.1std</code> is Lite Edition</strong> &mdash; the
+    <code>std</code> is the release <em>line</em>, not the edition.
+    <strong>13.1 has no <code>cycloneii</code></strong> while 13.0sp1 does.
+    And <strong>no Standard edition is installed at all</strong>.
+  </p>
+
+  <h2>Requirement by requirement</h2>
+
+  <div class="req ok">
+    <div class="req-head">
+      <span class="req-id">R1</span>
+      <span class="req-title">altera / intelFPGA no longer indicate old / new</span>
+      <span class="status s-ok">confirmed, and worse than stated</span>
+    </div>
+    <p>
+      The current script treats <code>altera</code> as the old-version directory
+      and <code>intelFPGA_lite</code> / <code>intelFPGA</code> as the new one. On
+      this machine <code>~/altera/</code> does hold 13.0sp1 and 13.1 &mdash; but
+      the parent directory is not evidence of anything, and neither is the version
+      directory name:
+    </p>
+    <div class="evidence">~/altera_lite/25.1std  -&gt;  "Version 25.1std.0 ... <strong>Lite Edition</strong>"</div>
+    <p>
+      So a directory called <code>_lite</code> holding a version called
+      <code>std</code> contains the Lite edition. Any rule built on names is
+      guessing. <code>quartus_sh --version</code> is the only authority, and it
+      also reveals that 13.x calls itself <strong>Web Edition</strong> &mdash; the
+      old name for Lite, which the free-edition test must accept as well.
+    </p>
+  </div>
+
+  <div class="req fix">
+    <div class="req-head">
+      <span class="req-id">R2, R6</span>
+      <span class="req-title">DE23-Lite is Agilex 3, not Arria</span>
+      <span class="status s-fix">correction</span>
+    </div>
+    <p>
+      R6 calls it &ldquo;Arria board DE23&rdquo;. The board file says otherwise:
+    </p>
+    <div class="evidence">boards/de23_lite/board_specific.qsf:  DEVICE A3CZ135BB18AE7S   -&gt;  Agilex 3</div>
+    <p>
+      The Pro installation carries Agilex 3 support (three
+      <code>agilex3_*</code> board presets). The useful consequence is that
+      <strong>no special case is needed for DE23-Lite</strong>: Agilex 3 exists
+      only in the Pro line, so a correct compatibility filter leaves Pro as the
+      only candidate and selects it on its own. R6's &ldquo;DE23 should be used
+      with Pro clearly&rdquo; falls out of the algorithm instead of being bolted
+      onto it.
+    </p>
+    <p>
+      Note also that the board is currently listed in
+      <code>00_setup.source_bash</code> among the boards with
+      <code>use_old_version_of_quartus=0</code>, which under the present script
+      means &ldquo;prefer <code>intelFPGA_lite</code>&rdquo; &mdash; i.e. today it
+      asks for a Lite install that cannot target the part.
+    </p>
+  </div>
+
+  <div class="req fix">
+    <div class="req-head">
+      <span class="req-id">R3</span>
+      <span class="req-title">Cyclone II needs 13.0sp1 specifically, not &ldquo;13.0sp1 or 13.1&rdquo;</span>
+      <span class="status s-fix">correction</span>
+    </div>
+    <p>
+      13.1 dropped Cyclone II. Measured from the device-support directories:
+    </p>
+    <div class="evidence">13.0sp1  devinfo/  ... <strong>cycloneii</strong> cycloneiii cycloneive cyclonev maxii maxv ...
+13.1     devinfo/  ...            cycloneiii cycloneive cyclonev maxii maxv</div>
+    <p>
+      So the three boards split rather than forming one group:
+      <strong>DE1 (EP2C20) and DE2 (EP2C35) can only use 13.0sp1</strong>, while
+      <strong>DE0 (EP3C16) can use 13.0sp1 or 13.1</strong> and should take 13.1
+      under the newest-compatible rule. A single &ldquo;old versions&rdquo; bucket
+      cannot express this, which is the core reason the mechanism has to change
+      rather than be patched.
+    </p>
+    <p>
+      Minor: R3 writes &ldquo;DE2 (without 114)&rdquo;; the board with the suffix
+      is DE2-115.
+    </p>
+  </div>
+
+  <div class="req fix">
+    <div class="req-head">
+      <span class="req-id">R3+</span>
+      <span class="req-title">A board the requirements do not cover: Cyclone I</span>
+      <span class="status s-fix">gap</span>
+    </div>
+    <p>
+      <code>marsohod_mcy112</code> is <code>EP1C12Q240C8</code> &mdash; original
+      Cyclone, a generation older than anything R3 mentions. Neither installed
+      13.x carries a <code>cyclone</code> family directory, and 13.0sp1's
+      <code>legacy/</code> folder holds only ACEX, APEX, FLEX and MAX 9000
+      descriptors. The board is currently mapped to the
+      &ldquo;old&rdquo; bucket, which will hand it 13.1 &mdash; a version that
+      cannot target it.
+    </p>
+    <p>
+      I cannot tell from here whether this is a version limit or simply device
+      support that was never installed. Either way the new code should
+      <em>say so</em> rather than pick something that fails later in synthesis.
+    </p>
+  </div>
+
+  <div class="req fix">
+    <div class="req-head">
+      <span class="req-id">R4</span>
+      <span class="req-title">MAX 10 is missing from the Lite install too</span>
+      <span class="status s-fix">correction</span>
+    </div>
+    <p>
+      R4 is right that MAX 10 is absent from 13.x. It is also absent from
+      <code>25.1std</code> on this machine:
+    </p>
+    <div class="evidence">25.1std devinfo/  cyclone10lp cycloneive cycloneivgx cyclonev maxii maxv   <span class="cm"># no max10</span></div>
+    <p>
+      Quartus Prime Lite 25.1 does support MAX 10, so this is missing device
+      support in the installation, not a version limit. The practical effect is
+      that <strong>DE10-Lite cannot be built on this machine right now</strong>,
+      and that is a fact the script should report clearly. It is also the
+      strongest argument for the design below: compatibility must be computed
+      from <em>what is installed</em>, not from a table of what each version
+      could in principle support.
+    </p>
+  </div>
+
+  <div class="req ok">
+    <div class="req-head">
+      <span class="req-id">R5</span>
+      <span class="req-title">Free edition beats recency; recency beats everything else</span>
+      <span class="status s-ok">confirmed, implementable</span>
+    </div>
+    <p>
+      Unambiguous and expressible as a sort key. With what is installed here,
+      the rule means 25.1std (Lite) wins over 26.1.1 (Pro) for every board either
+      can build &mdash; which is every Cyclone IV and V board in the repository.
+    </p>
+  </div>
+
+  <div class="req ask">
+    <div class="req-head">
+      <span class="req-id">R6</span>
+      <span class="req-title">Standard over Pro, but only within a version</span>
+      <span class="status s-ask">needs your decision</span>
+    </div>
+    <p>
+      No Standard edition is installed here, so this preference cannot be tested
+      on this machine &mdash; it will be written from the specification and left
+      unexercised. R6 also says the preference applies &ldquo;within the same
+      version or its version is more recent&rdquo;, which reads two ways. I plan
+      to implement the simpler reading: <em>Standard and Pro are ranked only when
+      their versions are equal; otherwise the newer version wins</em>. See the
+      decision list at the end.
+    </p>
+  </div>
+
+  <div class="req ask">
+    <div class="req-head">
+      <span class="req-id">R7</span>
+      <span class="req-title">The board table: three of its columns are not in the repository</span>
+      <span class="status s-ask">needs your decision</span>
+    </div>
+    <p>
+      Reading &ldquo;HDMI, MD and CSV&rdquo; as <strong>HTML</strong>, MD and CSV.
+      I checked what each requested column can be sourced from:
+    </p>
+    <div class="scroll">
+      <table>
+        <caption>Column feasibility</caption>
+        <thead><tr><th>Column</th><th>Source</th><th>Reliable?</th></tr></thead>
+        <tbody>
+          <tr><td>Specific chip</td><td class="mono">board_specific.qsf DEVICE</td><td class="yes">yes, mechanical</td></tr>
+          <tr><td>FPGA family</td><td>derived from the device prefix</td><td class="yes">yes, mechanical</td></tr>
+          <tr><td>Clock frequency</td><td class="mono">clk_mhz parameter</td><td class="yes">yes, mechanical</td></tr>
+          <tr><td>Buttons / switches / LEDs / digits</td><td class="mono">w_key, w_sw, w_led, w_digit</td><td class="yes">yes, mechanical</td></tr>
+          <tr><td>Supported Quartus versions</td><td>device family vs installed families</td><td class="yes">yes, for installs present here</td></tr>
+          <tr><td>TM1638 used or required</td><td>wrapper code and board config</td><td>needs real parsing, not grep</td></tr>
+          <tr><td>Graphics: VGA / HDMI / LCD</td><td>wrapper ports and constraints</td><td>needs real parsing</td></tr>
+          <tr><td>Sound: on-board mic / DAC vs external</td><td>wrapper instantiations and PMOD variants</td><td>needs real parsing</td></tr>
+          <tr><td>Board manufacturer and name</td><td>not in the repository</td><td class="no">my knowledge</td></tr>
+          <tr><td>Number of CLBs</td><td>not in the repository</td><td class="no">my knowledge</td></tr>
+          <tr><td>Year of introduction</td><td>not in the repository</td><td class="no">my knowledge</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      The last three columns cannot be derived and would come from me. I will
+      fill them, but I want them <strong>visibly marked as unverified</strong> in
+      all three outputs, so that nobody later treats a logic-element count I
+      recalled as a repository fact. &ldquo;Number of CLB&rdquo; is also not an
+      Altera term &mdash; I will report logic elements (LE) or ALMs, whichever
+      the family uses, and label the column accordingly.
+    </p>
+  </div>
+
+  <div class="req ok">
+    <div class="req-head">
+      <span class="req-id">R8, R9, R10</span>
+      <span class="req-title">Environment variables, naming, and the Questa split</span>
+      <span class="status s-ok">confirmed</span>
+    </div>
+    <p>
+      R8: <code>QUARTUS_ROOTDIR</code>, <code>INTEL_FPGA_HOME</code>,
+      <code>ALTERA_HOME</code>, <code>QUARTUS_HOME</code> and <code>PATH</code>
+      keep their current meanings and precedence.
+    </p>
+    <p>
+      R9: internal Bash identifiers will avoid <code>intel_fpga</code>,
+      <code>intelFPGA</code> and <code>INTEL_FPGA</code>. Note these are not in
+      conflict with R8 &mdash; <code>INTEL_FPGA_HOME</code> is a user-facing
+      environment variable and keeps its name; only our own variables are
+      renamed. The file keeps the name
+      <code>00_setup_intel_fpga.source_bash</code> so the diff stays reviewable.
+    </p>
+    <p>
+      R10: no Questa or ModelSim changes, and no new
+      <code>00_setup_questa.source_bash</code>. Untouched this round.
+    </p>
+  </div>
+
+  <h2>The design that follows</h2>
+
+  <p>
+    The present code asks one yes/no question per board &mdash;
+    <code>use_old_version_of_quartus</code>, set from a hardcoded list of board
+    names in <code>00_setup.source_bash</code>. R3 alone breaks that: DE1 and DE0
+    are both &ldquo;old&rdquo; and need different versions. So the flag goes, and
+    with it the board list.
+  </p>
+
+  <h3>Each board states its own requirement</h3>
+
+  <p>
+    Every Altera board already declares its exact part in its own
+    <code>board_specific.qsf</code>, and the setup script already knows
+    <code>$fpga_board</code>. Reading the device from the board directory removes
+    the hardcoded list entirely and cannot drift out of date when a board is
+    added.
+  </p>
+
+  <h3>Each installation states what it can build</h3>
+
+  <p>
+    For the standard release line the installed families are directory names
+    under <code>&lt;root&gt;/quartus/common/devinfo/</code>, which matched reality
+    exactly in every case I tested &mdash; including the two that a version table
+    would have got wrong (13.1 without Cyclone II, 25.1std without MAX 10). The
+    Pro line keeps its device data under <code>&lt;root&gt;/devices/</code>
+    instead, grouped by process node, so Pro needs its own small mapping.
+  </p>
+
+  <p>
+    One attractive-looking shortcut is wrong and I want it recorded so nobody
+    tries it again: <code>quartus/linux64/pgm_parts.txt</code> exists in every
+    installation and lists part names, but it is the <em>programmer's</em> JTAG
+    device list, not the synthesis device support. It claims 13.1 knows
+    <code>EP2C20F484C7</code>, which 13.1 cannot synthesise for.
+  </p>
+
+  <h3>Selection, in order</h3>
+
+  <ol class="steps">
+    <li>
+      If <code>QUARTUS_ROOTDIR</code> is set and usable, take it and stop
+      &mdash; the explicit override, exactly as now.
+    </li>
+    <li>
+      Otherwise collect candidate installation roots from
+      <code>INTEL_FPGA_HOME</code>, <code>ALTERA_HOME</code>,
+      <code>QUARTUS_HOME</code>, then the standard parents, under every vendor
+      directory name: <code>altera</code>, <code>altera_lite</code>,
+      <code>altera_pro</code>, <code>intelFPGA</code>,
+      <code>intelFPGA_lite</code>, <code>intelFPGA_pro</code>.
+    </li>
+    <li>
+      For each candidate, read its version and edition from
+      <code>quartus_sh --version</code> and its installed families from the
+      device data. Cache the answers &mdash; one probe per installation, not per
+      board.
+    </li>
+    <li>
+      Map the board's device to a family, and keep only installations whose
+      installed families include it. <strong>This is the step that makes R2, R3
+      and R4 work without special cases.</strong>
+    </li>
+    <li>
+      Sort the survivors by, in order: free edition first (Lite or Web before
+      Standard or Pro); then newest version; then Standard before Pro. Take the
+      first.
+    </li>
+    <li>
+      If nothing survives, fail with a message naming the board's part and
+      family, which installations were examined, and what each one does support
+      &mdash; so that &ldquo;install MAX 10 support in 25.1std&rdquo; is
+      obvious from the error rather than discovered during synthesis.
+    </li>
+  </ol>
+
+  <p>
+    Worth stating plainly: on this machine that algorithm sends DE1 and DE2 to
+    13.0sp1, DE0 to 13.1, every Cyclone IV and V board to 25.1std, DE23-Lite to
+    26.1.1 Pro, and reports a clear failure for DE10-Lite and
+    <code>marsohod_mcy112</code>. The last two are real gaps in the installation,
+    not in the script.
+  </p>
+
+  <h2>Order of work</h2>
+
+  <ol class="steps">
+    <li>
+      <strong>Build the harness first.</strong> Stub helpers, fake installation
+      trees, and a table of board&nbsp;&rarr;&nbsp;expected version, so the
+      selection rules are testable before the rewrite exists. Also exercise the
+      real four installations.
+    </li>
+    <li>
+      Rewrite the discovery in
+      <code>scripts/steps/00_setup_intel_fpga.source_bash</code>: probe, cache,
+      filter, sort. Commit on its own.
+    </li>
+    <li>
+      Remove <code>use_old_version_of_quartus</code> and its board list from
+      <code>00_setup.source_bash</code>, and from
+      <code>scripts/admin/generate_all_packages.bash</code>, which also sets it.
+      Separate commit, because this one touches shared files.
+    </li>
+    <li>
+      Rename our own variables per R9. Separate commit, so the rename is a
+      diff you can skim rather than read.
+    </li>
+    <li>
+      Verify by actually synthesising: a Cyclone IV board on 25.1std and, if you
+      want the old path proven, DE0 on 13.1. I can run these here.
+    </li>
+    <li>
+      Generate the board table as <code>quartus_boards.html</code>,
+      <code>.md</code> and <code>.csv</code> in a local directory, outside the
+      repository unless you want them committed.
+    </li>
+  </ol>
+
+  <h2>What I need from you</h2>
+
+  <div class="decide">
+    <h3>1. R6, the Standard versus Pro reading</h3>
+    <p>
+      Confirm the simple reading: rank Standard above Pro only when the versions
+      are equal, and otherwise let the newer version win. The alternative
+      reading &mdash; that Standard also wins when it is newer &mdash; is the
+      same thing, so the only case in doubt is a newer Pro against an older
+      Standard, where I propose the newer Pro wins.
+    </p>
+  </div>
+
+  <div class="decide">
+    <h3>2. The unverifiable table columns</h3>
+    <p>
+      Manufacturer, LE count and year of introduction come from me, not from the
+      repository. Shall I mark them as unverified in the output, or leave the
+      table looking uniform?
+    </p>
+  </div>
+
+  <div class="decide">
+    <h3>3. Two boards with no usable toolchain</h3>
+    <p>
+      DE10-Lite needs MAX 10 support installed into 25.1std;
+      <code>marsohod_mcy112</code> needs a Quartus old enough for original
+      Cyclone, which may be older than 13.0sp1. Do you want the script to fail
+      loudly for these, or to keep today's behaviour of choosing something and
+      letting synthesis fail later? I recommend failing loudly.
+    </p>
+  </div>
+
+  <footer>
+    Device families read from &lt;root&gt;/quartus/common/devinfo and
+    &lt;root&gt;/devices; editions from quartus_sh --version on each of the four
+    installations; board parts from boards/*/board_specific.qsf, 33 Altera boards.<br>
+    Branch claude_quartus created from origin/main at b1a711f8. No repository file
+    modified.
+  </footer>
+
+</div>
+</body>
+</html>

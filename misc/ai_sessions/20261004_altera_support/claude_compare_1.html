@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Quartus, and Who Is Right</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Figtree:wght@600;800&family=Inconsolata:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground:  #f2f4f8;
+    --surface: #ffffff;
+    --ink:     #171b24;
+    --muted:   #5a6372;
+    --faint:   #8d95a3;
+    --rule:    #dde1e9;
+    --rule2:   #b9c0cc;
+    --mine:    #b3306b;
+    --mine-bg: #fbeef4;
+    --codex:   #1f6f8b;
+    --codex-bg:#e9f3f6;
+    --proved:  #2f6b3a;
+    --code-bg: #e7eaf0;
+
+    --display: Figtree, "Helvetica Neue", Arial, sans-serif;
+    --body:    "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono:    Inconsolata, ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #111419;
+      --surface: #181c23;
+      --ink:     #e8eaef;
+      --muted:   #a4abb8;
+      --faint:   #737b88;
+      --rule:    #262b33;
+      --rule2:   #3b424d;
+      --mine:    #e88ab2;
+      --mine-bg: #26151e;
+      --codex:   #7cc0d6;
+      --codex-bg:#121f25;
+      --proved:  #8cc497;
+      --code-bg: #151a20;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:  #111419;
+    --surface: #181c23;
+    --ink:     #e8eaef;
+    --muted:   #a4abb8;
+    --faint:   #737b88;
+    --rule:    #262b33;
+    --rule2:   #3b424d;
+    --mine:    #e88ab2;
+    --mine-bg: #26151e;
+    --codex:   #7cc0d6;
+    --codex-bg:#121f25;
+    --proved:  #8cc497;
+    --code-bg: #151a20;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 2.75rem 5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 0.75rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 2.85rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+
+  .standfirst {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 40rem;
+    margin: 0 0 1.8rem;
+  }
+
+  .verdict {
+    border-left: 4px solid var(--proved);
+    background: var(--surface);
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 2.2rem;
+  }
+  .verdict h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    border: 0;
+    color: var(--proved);
+  }
+  .verdict p { margin: 0 0 0.6rem; max-width: 40rem; }
+  .verdict p:last-child { margin-bottom: 0; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 2.7rem 0 0.9rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin: 1.7rem 0 0.5rem;
+  }
+
+  p { margin: 0 0 0.95rem; max-width: 42rem; }
+  strong { font-weight: 700; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: var(--code-bg);
+    padding: 0.08em 0.3em;
+    border-radius: 2px;
+  }
+
+  .m { color: var(--mine);  font-weight: 700; }
+  .c { color: var(--codex); font-weight: 700; }
+
+  /* steps */
+
+  ol.steps { margin: 0 0 1.3rem; padding: 0; list-style: none; }
+  ol.steps > li {
+    display: grid;
+    grid-template-columns: 2.1rem 1fr;
+    gap: 0 0.85rem;
+    padding-block: 0.85rem;
+    border-top: 1px solid var(--rule);
+  }
+  ol.steps > li:last-child { border-bottom: 1px solid var(--rule); }
+  .sn {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--faint);
+    padding-top: 0.2rem;
+  }
+  .steps h3 { margin: 0 0 0.3rem; font-size: 1rem; }
+  .steps p { margin: 0 0 0.5rem; font-size: 0.96rem; max-width: 40rem; }
+  .steps p:last-child { margin-bottom: 0; }
+
+  .split {
+    border-left: 3px solid var(--rule2);
+    padding: 0.45rem 0 0.45rem 0.85rem;
+    margin-top: 0.6rem;
+    font-size: 0.93rem;
+  }
+  .split.diff { border-left-color: var(--mine); background: var(--mine-bg); padding-right: 0.7rem; }
+  .split .who {
+    display: block;
+    font-family: var(--display);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 0.15rem;
+  }
+  .split p { margin: 0; max-width: 38rem; }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.84rem;
+    line-height: 1.65;
+    background: var(--code-bg);
+    padding: 0.8rem 1rem;
+    margin: 0 0 1.2rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre .cm { color: var(--faint); }
+  pre .good { color: var(--proved); font-weight: 600; }
+
+  .scroll { overflow-x: auto; margin-bottom: 1.3rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.89rem; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 0.45rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.45rem 0.8rem 0.45rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  thead th {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.71rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule2);
+    white-space: nowrap;
+  }
+  td.mono { font-family: var(--mono); font-size: 0.85rem; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.row-diff td { background: var(--surface); }
+  .tag {
+    font-family: var(--display);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .t-same  { color: var(--faint); }
+  .t-codex { color: var(--codex); }
+  .t-mine  { color: var(--mine); }
+  .t-spec  { color: var(--proved); }
+
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 2rem;
+    margin-bottom: 1rem;
+  }
+  .impl { border-top: 3px solid var(--rule2); padding-top: 0.8rem; }
+  .impl.mine-side  { border-top-color: var(--mine); }
+  .impl.codex-side { border-top-color: var(--codex); }
+  .impl-name {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 0.1rem;
+  }
+  .mine-side  .impl-name { color: var(--mine); }
+  .codex-side .impl-name { color: var(--codex); }
+  .impl-sub {
+    font-family: var(--display);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 1rem;
+  }
+  .label {
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 1.3rem 0 0.5rem;
+  }
+  .label:first-of-type { margin-top: 0; }
+  ul.findings { margin: 0; padding-left: 1.1rem; }
+  ul.findings li { margin-bottom: 0.6rem; font-size: 0.94rem; }
+
+  ol.plan { margin: 0 0 1rem; padding-left: 1.5rem; }
+  ol.plan li { margin-bottom: 0.55rem; }
+  ol.plan li::marker { font-family: var(--mono); font-size: 0.85rem; color: var(--faint); }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--faint);
+    line-height: 1.8;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="eyebrow">basics-graphics-music &middot; Quartus discovery &middot; head to head &middot; revision 2</p>
+  <h1>Which Quartus, and Who Is Right</h1>
+  <p class="standfirst">
+    Two rewrites of the code that decides which installed Quartus can build a
+    board. They agree on most boards. Where they disagree, I settled it by
+    compiling for the disputed device rather than by reading documentation
+    &mdash; and on the question that matters, I was wrong.
+  </p>
+
+  <div class="verdict">
+    <h2>The short version</h2>
+    <p>
+      <strong>Both part tests are wrong, in opposite directions.</strong> Mine
+      asks whether the part is in <code>get_part_list</code> and so refuses
+      <code>dk_dev_3c120n</code>, a board that in fact compiles. Codex asks
+      <code>get_part_info -family</code>, which answers yes for parts an
+      installation cannot build at all &mdash; so codex's correct answers for the
+      old boards come from its hand-written table of family and version limits,
+      not from its probe.
+    </p>
+    <p>
+      There is a rule that needs no table and is right on every case I could
+      verify: <strong>the part is buildable if it appears in
+      <code>get_part_list</code>, or if its family appears in
+      <code>get_family_list</code></strong>. That is what I am adopting.
+    </p>
+    <p>
+      Beyond that, I lose the precedence of <code>ALTERA_HOME</code> and its
+      siblings, I do not deduplicate installations, and worst of all I take a
+      <code>quartus</code> found on <code>PATH</code> without checking it at all.
+      Codex re-probes on every invocation &mdash;
+      <strong>4.19&nbsp;s against my 0.13&nbsp;s</strong> &mdash; and does not
+      honour <code>QUARTUS_ROOTDIR</code> when it cannot build the board,
+      contrary to the instruction I was given.
+    </p>
+  </div>
+
+  <h2>How the search works, in plain English</h2>
+
+  <p>
+    Both implementations follow the same outline. The steps run in order and the
+    first that produces an answer wins. Where they differ, the difference is
+    marked.
+  </p>
+
+  <ol class="steps">
+    <li>
+      <span class="sn">01</span>
+      <div>
+        <h3>Find out what the board needs</h3>
+        <p>
+          Read the device string out of the board's own Quartus project file,
+          <code>boards/&lt;board&gt;/board_specific.qsf</code> &mdash; for
+          example <code>EP4CE115F29C7</code> for DE2-115. Both read it as plain
+          text rather than executing the file, and neither keeps a list of board
+          names, so adding a board needs no change to the search.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <span class="sn">02</span>
+      <div>
+        <h3>If <code>QUARTUS_ROOTDIR</code> is set, that is the installation</h3>
+        <p>
+          It names one installation directly, so there is nothing to search.
+        </p>
+        <div class="split diff">
+          <span class="who">this is where they part company</span>
+          <p>
+            <span class="m">claude</span> uses it whatever happens, and warns if
+            that Quartus does not list the board's part.
+            <span class="c">codex</span> puts it through the same compatibility
+            test as everything else: if it fails, codex abandons it and carries on
+            searching.
+          </p>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <span class="sn">03</span>
+      <div>
+        <h3>If <code>quartus</code> is already on the <code>PATH</code>, leave it alone</h3>
+        <p>
+          Someone who has set up their own environment is assumed to mean it. Both
+          check that the executable really sits in a
+          <code>quartus/bin</code> or <code>quartus/bin64</code> directory, and
+          warn rather than guess if it does not.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <span class="sn">04</span>
+      <div>
+        <h3>Otherwise look in the usual places</h3>
+        <p>
+          First wherever <code>INTEL_FPGA_HOME</code>, <code>ALTERA_HOME</code> or
+          <code>QUARTUS_HOME</code> point, then <code>$HOME</code>,
+          <code>/opt</code> and <code>/tools</code> &mdash; or the
+          <code>C:</code>, <code>D:</code> and <code>E:</code> drives under
+          Windows. In each, directories named <code>altera</code>,
+          <code>altera_lite</code>, <code>altera_pro</code>,
+          <code>intelFPGA</code>, <code>intelFPGA_lite</code> and so on, each
+          holding version directories.
+        </p>
+        <p>
+          A directory counts as an installation only if the Quartus executables
+          are actually in it.
+        </p>
+        <div class="split diff">
+          <span class="who">they part company again</span>
+          <p>
+            <span class="c">codex</span> treats the locations as ranked tiers and
+            stops at the first tier that yields anything usable, so the place you
+            pointed at wins even if somewhere further down the list has something
+            newer. <span class="m">claude</span> pools every location together and
+            picks the globally best, which means it can quietly ignore where you
+            pointed.
+          </p>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <span class="sn">05</span>
+      <div>
+        <h3>Ask each installation whether it can build this part</h3>
+        <p>
+          Not which families it supports &mdash; which <em>part</em>. The
+          distinction is not academic: both installations of Quartus&nbsp;II 13
+          support the Cyclone&nbsp;III family, and only one of them can build the
+          particular Cyclone&nbsp;III on the <code>dk_dev_3c120n</code> board.
+        </p>
+        <p>
+          Neither implementation looks at a licence. They ask the tool and believe
+          the answer.
+        </p>
+        <div class="split diff">
+          <span class="who">the difference that actually matters</span>
+          <p>
+            The two ask different questions, and get different answers. See the
+            next section.
+          </p>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <span class="sn">06</span>
+      <div>
+        <h3>Among those that can, pick the best one</h3>
+        <p>
+          A free edition wins over a paid one even when it is older, because a
+          student who has Lite installed should not be sent to Pro. Then the newer
+          version wins. Then, only when two versions are equal, Standard comes
+          before Pro. Both implement this identically.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <span class="sn">07</span>
+      <div>
+        <h3>If nothing can build it, say so</h3>
+        <p>
+          The message names the board, the part, and what was found, so that the
+          missing piece is visible at once instead of surfacing as a confusing
+          failure later in synthesis.
+        </p>
+      </div>
+    </li>
+  </ol>
+
+  <h2>The question each one asks, and the experiment that settles it</h2>
+
+  <p>
+    Run on the same installation, Quartus&nbsp;II 13.1, for the same part:
+  </p>
+
+<pre><span class="cm"># codex</span>
+get_part_info -family EP3C120F780C6     &rarr; {Cyclone III}   <span class="cm"># usable</span>
+
+<span class="cm"># claude</span>
+lsearch -exact [get_part_list] EP3C120F780C6   &rarr; -1        <span class="cm"># not usable</span></pre>
+
+  <p>
+    Documentation would not have settled that, so I built a one-gate project for
+    the device and compiled it with 13.1:
+  </p>
+
+<pre>$ quartus_map t
+Info: Quartus II 32-bit Analysis &amp; Synthesis was successful. 0 errors, 1 warning
+
+$ quartus_fit t
+<span class="good">Info (170137): Fitter placement was successful</span></pre>
+
+  <p>
+    So <code>get_part_list</code> returns a narrower set than the tool can
+    actually target, and my test rejects a board that works.
+    <strong>That is a real defect in my implementation, not a difference of
+    taste.</strong>
+  </p>
+
+  <p>
+    For completeness I ran the same experiment on the other board that neither
+    implementation accepts, <code>marsohod_mcy112</code> with its
+    Cyclone&nbsp;I device:
+  </p>
+
+<pre>$ quartus_map t      <span class="cm"># EP1C12Q240C8 on 13.0sp1</span>
+Error (20005): A license file is required to enable compilation of your design
+               for the Cyclone family of devices</pre>
+
+  <p>
+    Here both are right to decline, by different routes: codex from its table,
+    which caps Cyclone&nbsp;I at a much older release for a free edition, and
+    mine from the part list. Neither inspects the licence; the tool simply
+    refuses.
+  </p>
+
+  <h2>Both part tests are wrong, in opposite directions</h2>
+
+  <p>
+    Having been caught out once, I asked both questions of every disputed
+    combination rather than assuming codex's was simply the better one:
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>The two queries against verified reality</caption>
+      <thead>
+        <tr>
+          <th>Installation</th>
+          <th>Part</th>
+          <th class="m">in get_part_list</th>
+          <th class="c">get_part_info family</th>
+          <th>family installed</th>
+          <th>Can it really?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">13.0sp1</td><td class="mono">EP1C12Q240C8</td>
+            <td>no</td><td class="mono">Cyclone</td><td>no</td>
+            <td><strong>no</strong> &mdash; licence error</td></tr>
+        <tr><td class="mono">13.1</td><td class="mono">EP2C20F484C7</td>
+            <td>no</td><td class="mono">Cyclone II</td><td>no</td>
+            <td><strong>no</strong></td></tr>
+        <tr class="row-diff"><td class="mono">13.1</td><td class="mono">EP3C120F780C6</td>
+            <td>no</td><td class="mono">Cyclone III</td><td><strong>yes</strong></td>
+            <td><strong>yes</strong> &mdash; compiles and fits</td></tr>
+        <tr><td class="mono">25.1std</td><td class="mono">EP2C20F484C7</td>
+            <td>no</td><td class="mono">Cyclone II</td><td>no</td>
+            <td><strong>no</strong></td></tr>
+        <tr><td class="mono">25.1std</td><td class="mono">A3CZ135BB18AE7S</td>
+            <td>no</td><td class="mono">&mdash;</td><td>no</td>
+            <td><strong>no</strong></td></tr>
+        <tr><td class="mono">25.1std</td><td class="mono">10M50DAF484C7G</td>
+            <td><strong>yes</strong></td><td class="mono">MAX 10</td><td>yes</td>
+            <td><strong>yes</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Read the middle columns. <span class="m">My test</span> says no in five of
+    six rows and is wrong in exactly one of them, the third.
+    <span class="c">Codex's test</span> says yes in five of six rows and is wrong
+    in three &mdash; it answers with a family name for parts that an
+    installation plainly cannot build, such as a Cyclone&nbsp;II on 25.1std. So
+    codex's right answers for the old boards do not come from its probe at all.
+    They come from its hand-written table of family and version limits. Remove
+    the table and codex would send DE1 to the newest Quartus it could find.
+  </p>
+
+  <h3>A rule that needs no table</h3>
+
+  <p>
+    The last column of the table above is the discriminator. A part is buildable
+    when:
+  </p>
+
+<pre>the part is in  get_part_list        <span class="cm"># the installation offers it outright</span>
+            or
+the part's family is in  get_family_list   <span class="cm"># the installation has that family installed</span></pre>
+
+  <p>
+    That is right in all six rows, and in every other case I tested. It accepts
+    <code>EP3C120F780C6</code> on 13.1, because Cyclone&nbsp;III is installed
+    there; it refuses a Cyclone&nbsp;II on 13.1 and on 25.1std, because that
+    family is not; it refuses Cyclone&nbsp;I on 13.0sp1 for the same reason; and
+    it refuses Agilex&nbsp;3 on a Lite installation, which does not even know the
+    part. <strong>No family list, no version limits, no board names</strong>
+    &mdash; both facts come out of the same single probe per installation, so it
+    costs nothing extra.
+  </p>
+
+  <p>
+    One detail cost me a wrong conclusion for several minutes and is worth
+    recording: <code>get_part_info -family</code> returns a one-element Tcl list,
+    so comparing it against <code>get_family_list</code> with
+    <code>lsearch -exact</code> fails unless you take
+    <code>[lindex $raw 0]</code> first. My first run of this experiment reported
+    that the rule did not work, when in fact my Tcl did not.
+  </p>
+
+  <h2>The <code>PATH</code> case, which is worse than everything above</h2>
+
+  <p>
+    Put a Quartus on <code>PATH</code> that cannot build the board &mdash;
+    25.1std, with <code>de1</code> and its Cyclone&nbsp;II:
+  </p>
+
+<pre><span class="cm"># codex</span>
+WARNING: Skipping Quartus '$HOME/altera_lite/25.1std/quartus'. Lite 25.1.0.1129 is
+         incompatible with EP2C20F484C7 or the wrapper's version limit.
+WARNING: Skipping Quartus '$HOME/altera/13.1/quartus'. Web 13.1.0.162 is incompatible ...
+WARNING: Skipping Quartus '$HOME/altera_pro/26.1.1/quartus'. Pro 26.1.1.130 is incompatible ...
+WARNING: Skipping Quartus '/opt/intelFPGA_lite/21.1/quartus'. Lite 21.1.1.850 is incompatible ...
+INFO:    Selected Quartus Web 13.0.1.232 for 'de1' (EP2C20F484C7) ...
+         <span class="good">QUARTUS_ROOTDIR=$HOME/altera/13.0sp1/quartus</span>
+
+<span class="cm"># claude</span>
+CHOSEN $HOME/altera_lite/25.1std          <span class="cm"># silently wrong, no warning at all</span></pre>
+
+  <p>
+    Codex treats <code>PATH</code> as a hint: tier two of the search, subject to
+    the same test as everything else, and when it fails the search moves on and
+    lands correctly on 13.0sp1. Four warnings on a successful run is noisy, but
+    each one says exactly why it skipped.
+  </p>
+
+  <p>
+    Mine takes <code>PATH</code> unconditionally, with no compatibility check and
+    <strong>no warning of any kind</strong>, and proceeds with a Quartus that
+    cannot build the board. The failure then appears much later, as a device
+    error in synthesis, pointing nowhere near its cause.
+  </p>
+
+  <p>
+    What marks this as an oversight rather than a decision: my
+    <code>QUARTUS_ROOTDIR</code> branch does probe and does warn. The
+    <code>PATH</code> branch simply omits the same check. It is also the more
+    dangerous of my two defects:
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>My two defects compared</caption>
+      <thead><tr><th></th><th>get_part_list</th><th>PATH</th></tr></thead>
+      <tbody>
+        <tr><td>Visibility</td><td>loud: an error naming the part</td><td><strong>silent</strong></td></tr>
+        <tr><td>Who meets it</td><td>one board, dk_dev_3c120n</td><td><strong>anyone with Quartus on PATH</strong></td></tr>
+        <tr><td>Outcome</td><td>a working board refused</td><td>the wrong tool used, failing later</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>A worked example of the tier difference</h3>
+
+  <p>
+    The same shape of problem appears with the override variables. Point
+    <code>ALTERA_HOME</code> at a directory holding only the oldest Quartus,
+    while <code>$HOME</code> holds four including the newest, and ask for a board
+    that all of them can build:
+  </p>
+
+<pre>ALTERA_HOME=$TMP/oldonly   holds:  13.0sp1
+$HOME                      holds:  altera/13.0sp1  altera/13.1
+                                   altera_lite/25.1std  altera_pro/26.1.1
+board zeowaa needs EP4CE6E22C8, which all four can build
+
+<span class="cm"># codex</span>
+Selected Quartus Web 13.0.1.232 ... using ALTERA_HOME='$TMP/oldonly'
+
+<span class="cm"># claude</span>
+using Quartus Lite from '$HOME/altera_lite/25.1std'</pre>
+
+  <p>
+    Codex walks the locations as ranked tiers and stops at the first that yields
+    anything usable: <code>QUARTUS_ROOTDIR</code>, then <code>PATH</code>, then
+    <code>INTEL_FPGA_HOME</code>, then <code>ALTERA_HOME</code>, then
+    <code>QUARTUS_HOME</code>, then the default places as one tier. The
+    newest-version preference applies <em>within</em> a tier, so tier four wins
+    outright and 25.1std is never considered. Mine pools all six locations and
+    sorts globally, which turns <code>ALTERA_HOME</code> from an instruction into
+    merely one more place to look.
+  </p>
+
+  <p>
+    Why codex is right: someone setting <code>ALTERA_HOME</code> usually means
+    &ldquo;use that tree&rdquo; &mdash; to reproduce a build with a particular
+    version, or because the newer installation is incomplete. If something newer
+    elsewhere can overrule it, the variable has no force at all.
+  </p>
+
+  <h2>Where the behaviour differs</h2>
+
+  <p>
+    Every row measured by running both implementations through the same harness
+    against the five installations on this machine.
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>Measured outcomes</caption>
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th class="m">claude</th>
+          <th class="c">codex</th>
+          <th>Right</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>de1, de2 (Cyclone II)</td>
+          <td class="mono" colspan="2">both: altera/13.0sp1</td>
+          <td class="tag t-same">agree</td>
+        </tr>
+        <tr>
+          <td>de0 (Cyclone III)</td>
+          <td class="mono" colspan="2">both: altera/13.1</td>
+          <td class="tag t-same">agree</td>
+        </tr>
+        <tr>
+          <td>de2_115, de10_lite</td>
+          <td class="mono" colspan="2">both: altera_lite/25.1std</td>
+          <td class="tag t-same">agree</td>
+        </tr>
+        <tr>
+          <td>de23_lite (Agilex 3)</td>
+          <td class="mono" colspan="2">both: altera_pro/26.1.1</td>
+          <td class="tag t-same">agree</td>
+        </tr>
+        <tr class="row-diff">
+          <td><strong>dk_dev_3c120n</strong> (EP3C120)</td>
+          <td class="mono">error: no version lists the part</td>
+          <td class="mono">altera/13.1</td>
+          <td class="tag t-codex">codex, proved by compiling</td>
+        </tr>
+        <tr>
+          <td>marsohod_mcy112 (Cyclone I)</td>
+          <td class="mono" colspan="2">both: error</td>
+          <td class="tag t-same">agree, and correct</td>
+        </tr>
+        <tr class="row-diff">
+          <td><code>QUARTUS_ROOTDIR</code> set to a Quartus that cannot build the board</td>
+          <td class="mono">used anyway, with a warning</td>
+          <td class="mono">skipped, search continues</td>
+          <td class="tag t-spec">claude, per the brief</td>
+        </tr>
+        <tr class="row-diff">
+          <td><code>ALTERA_HOME</code> holds 13.1; <code>$HOME</code> holds a newer 25.1std; board works with both</td>
+          <td class="mono">altera_lite/25.1std</td>
+          <td class="mono">altera/13.1</td>
+          <td class="tag t-codex">codex</td>
+        </tr>
+        <tr class="row-diff">
+          <td><code>quartus</code> on <code>PATH</code> cannot build the board</td>
+          <td class="mono">used silently, no warning</td>
+          <td class="mono">warned, skipped, search continues</td>
+          <td class="tag t-codex">codex</td>
+        </tr>
+        <tr class="row-diff">
+          <td>One installation reachable through two parents at once</td>
+          <td class="mono">listed twice, probed twice</td>
+          <td class="mono">deduplicated</td>
+          <td class="tag t-codex">codex</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Five divergences. Codex is right about three of them. I am right about one,
+    and only because you told me which behaviour you wanted for
+    <code>QUARTUS_ROOTDIR</code>, not because it follows from anything in the
+    tools. The fifth, the part test, neither of us gets right on its own.
+  </p>
+
+  <h2>The two implementations</h2>
+
+  <div class="pair">
+    <div class="impl codex-side">
+      <p class="impl-name">codex_quartus</p>
+      <p class="impl-sub">886 lines &middot; 14 functions &middot; 309 lines of tests</p>
+
+      <p class="label">Advantages</p>
+      <ul class="findings">
+        <li><strong>The part test is correct</strong>, which is the whole job. <code>get_part_info -family</code> matches what the tool can really compile.</li>
+        <li><strong>Keeps the precedence of the override variables.</strong> <code>INTEL_FPGA_HOME</code>, then <code>ALTERA_HOME</code>, then <code>QUARTUS_HOME</code>, then the default places, each tried as a tier. That is what the original script did and what the brief asked to preserve.</li>
+        <li><strong>Deduplicates and canonicalises</strong> installation paths with <code>readlink -f</code>, so the same Quartus reached two ways is considered once.</li>
+        <li><strong>Requires all three executables</strong> &mdash; the GUI, the shell and the programmer &mdash; and skips an incomplete installation rather than choosing it and failing later.</li>
+        <li><strong>Scopes <code>QUARTUS_ROOTDIR</code> around each probe</strong>, so an inherited value cannot make one installation answer questions about another.</li>
+        <li><strong>Translates paths with <code>cygpath</code></strong> under Cygwin and MSYS, where a Unix path handed to the Windows tool would not resolve.</li>
+        <li><strong>Validates the device string</strong> in the Tcl helper before using it.</li>
+        <li><strong>Ships tests and documentation</strong>: a Python suite and 57 lines of README.</li>
+        <li><strong>Found a board I missed</strong> &mdash; <code>alinx_ax301</code> was absent from the toolchain list in <code>00_setup.source_bash</code>, and codex added it.</li>
+        <li><strong>Finished the job</strong>: it removed <code>use_old_version_of_quartus</code> from the shared files in the same commit.</li>
+      </ul>
+
+      <p class="label">Disadvantages</p>
+      <ul class="findings">
+        <li><strong>The table is doing the real work.</strong> Its probe, <code>get_part_info -family</code>, answers yes for parts the installation cannot build, so correctness for the old boards rests on the hardcoded limits rather than on asking the tool.</li>
+        <li><strong>Carries a hand-written table</strong> of family and version limits &mdash; Cyclone&nbsp;I, II, III caps, Agilex needing Pro, MAX&nbsp;10 needing 14.0 and later &mdash; which is exactly the kind of knowledge the rewrite was meant to stop encoding by hand, and which can fall out of step with reality.</li>
+        <li><strong>Still has a board-name special case</strong>, <code>omdazz_epm570_quartus_13_1_or_older</code>, hardcoded in the compatibility function.</li>
+        <li><strong>No caching.</strong> Every lab command re-probes every candidate: <strong>4.19 s</strong> against 0.13 s, and it grows with the number of installations.</li>
+        <li><strong>Does not honour <code>QUARTUS_ROOTDIR</code></strong> when the installation cannot build the board, contrary to the instruction to trust an explicit override and warn.</li>
+        <li><strong>Chatty</strong>: a warning for every installation it skips, so a machine with five Quartus versions prints several warnings on a normal, successful run.</li>
+      </ul>
+    </div>
+
+    <div class="impl mine-side">
+      <p class="impl-name">claude_quartus</p>
+      <p class="impl-sub">871 lines &middot; 12 functions &middot; no committed tests</p>
+
+      <p class="label">Advantages</p>
+      <ul class="findings">
+        <li><strong>No table of any kind.</strong> No family limits, no version limits, no board names. Everything comes from the board's own project file and from the installation itself, so there is nothing to maintain as devices and releases come and go.</li>
+        <li><strong>Caches what it learns</strong>, keyed by the timestamp of <code>quartus_sh</code>, so the cost is paid once and a normal run spends <strong>0.13 s</strong> instead of 4.19 s. That is 32 times faster on every single lab command.</li>
+        <li><strong>Trusts an explicit override</strong> and says plainly that synthesis may fail, which is the behaviour asked for.</li>
+        <li><strong>Quieter and smaller</strong>: one line naming the chosen edition and directory, 12 functions rather than 14, and no Bash arrays.</li>
+        <li><strong>Nothing is passed into Tcl</strong>, because the part list is fetched once and searched in the shell, so there is no device string to validate.</li>
+      </ul>
+
+      <p class="label">Disadvantages</p>
+      <ul class="findings">
+        <li><strong>A <code>quartus</code> on <code>PATH</code> is taken without any check and without a warning</strong>, so the wrong tool gets used silently. The most dangerous defect of the two, because it is quiet and common.</li>
+        <li><strong>The part test is wrong</strong>, and it is the central mechanism. It rejects <code>dk_dev_3c120n</code>, a board that builds.</li>
+        <li><strong>Loses the precedence of the override variables</strong> by pooling every location and taking the global best, so pointing <code>ALTERA_HOME</code> somewhere can be silently overruled.</li>
+        <li><strong>Does not deduplicate</strong>: with <code>ALTERA_HOME=$HOME</code> it finds nine installations where there are five, and probes each twice.</li>
+        <li><strong>Does not canonicalise paths</strong>, which is why the duplicates slip through.</li>
+        <li><strong>Does not scope <code>QUARTUS_ROOTDIR</code></strong> when probing, so an inherited value could in principle redirect the answer.</li>
+        <li><strong>No <code>cygpath</code> handling</strong>, so the Tcl file path may not resolve under Cygwin and MSYS.</li>
+        <li><strong>Checks only <code>quartus_sh</code></strong> when deciding that a directory is an installation, leaving a missing programmer to surface later.</li>
+        <li><strong>No committed tests and no documentation</strong>; the harness I used lives outside the repository.</li>
+        <li><strong>Unfinished</strong>: <code>use_old_version_of_quartus</code> is still set in the shared files, now dead, and the <code>alinx_ax301</code> gap is still there.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Measurements</h2>
+
+  <div class="scroll">
+    <table>
+      <caption>Both run against the same five installations</caption>
+      <thead>
+        <tr><th></th><th class="num c">codex</th><th class="num m">claude</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Time for one board, warm</td><td class="num">4.19 s</td><td class="num">0.13 s</td></tr>
+        <tr><td>Lines in the setup file</td><td class="num">886</td><td class="num">871</td></tr>
+        <tr><td>Functions</td><td class="num">14</td><td class="num">12</td></tr>
+        <tr><td>Lines of committed tests</td><td class="num">309</td><td class="num">0</td></tr>
+        <tr><td>Hardcoded family or version limits</td><td class="num">6</td><td class="num">0</td></tr>
+        <tr><td>Hardcoded board names</td><td class="num">1</td><td class="num">0</td></tr>
+        <tr><td>Boards wrongly refused, of 33</td><td class="num">0</td><td class="num">1</td></tr>
+        <tr><td>Silent misselection via <code>PATH</code></td><td class="num">no</td><td class="num">yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>What I should change</h2>
+
+  <p>
+    In order of how much it matters:
+  </p>
+
+  <ol class="plan">
+    <li>
+      <strong>Check the <code>PATH</code> installation</strong> like any other,
+      and when it cannot build the board, say so and carry on searching instead
+      of using it in silence.
+    </li>
+    <li>
+      <strong>Replace the part test with the two-part rule</strong>: the part is
+      in <code>get_part_list</code>, or its family is in
+      <code>get_family_list</code>. Both come from the one probe already being
+      made, so the cache and the speed survive, and no table appears.
+    </li>
+    <li>
+      <strong>Restore the tiers.</strong> Try <code>INTEL_FPGA_HOME</code>, then
+      <code>ALTERA_HOME</code>, then <code>QUARTUS_HOME</code>, then the default
+      places, and stop at the first tier that yields a usable installation,
+      instead of pooling them.
+    </li>
+    <li>
+      <strong>Canonicalise and deduplicate</strong> installation paths.
+    </li>
+    <li>
+      <strong>Scope <code>QUARTUS_ROOTDIR</code></strong> around each probe, and
+      require all three executables before calling a directory an installation.
+    </li>
+    <li>
+      <strong>Add <code>cygpath</code> translation</strong> for Cygwin and MSYS.
+    </li>
+    <li>
+      <strong>Commit the harness as a test</strong>, and add the
+      <code>alinx_ax301</code> entry and the removal of
+      <code>use_old_version_of_quartus</code> from the shared files.
+    </li>
+  </ol>
+
+  <p>
+    Keep from mine: no tables, the cache, and honouring an explicit override with
+    a warning. Take from codex: everything in the list above. The result is
+    codex's correctness with my absence of hardcoded knowledge, which is better
+    than either as it stands.
+  </p>
+
+  <footer>
+    Both implementations run through harnesses with stubbed info, warning and
+    error helpers against the five installations on this machine: altera/13.0sp1
+    and 13.1, /opt/intelFPGA_lite/21.1, altera_lite/25.1std, altera_pro/26.1.1.<br>
+    The disputed devices were settled by building a one-gate project with
+    quartus_map and quartus_fit, not from documentation. Timings measured with
+    /usr/bin/time on a warm cache.
+  </footer>
+
+</div>
+</body>
+</html>
