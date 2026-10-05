@@ -1,68 +1,77 @@
-# Board Support
+# FPGA boards in basics-graphics-music
 
-## Altera Terasic
+54 boards, one line each. The Quartus ranges are **measured**: each installed version was asked whether it can build the board's exact part. A range marked with a dagger reaches past the versions available here, so its boundary is not measured.
 
-* Cyclone V Starter Kit - c5gx
-* DE0
-* DE0-CV
-* DE0-Nano-SoC
-* DE0-Nano
-* DE1
-* DE10-Lite
-* DE10-Nano
-* DE1-SoC
-* DE2
-* DE2-115
-* DE23-Lite (Altera Agilex-3)
-* DK DEV 3C120N
-* Terasic SoC-it
+Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under /opt, and 26.1.1 Pro. The repository states no version requirement for Vivado, Gowin EDA or the Yosys flow, so those entries are the author's knowledge.
 
-## Altera non-Terasic
+| FPGA Manufacturer | Board Manufacturer | Board | FPGA family | Toolchain with acceptable versions | TM1638 | Graphics wired |
+| --- | --- | --- | --- | --- | --- | --- |
+| Altera | ALINX | alinx_ax301 | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | ALINX | alinx_ax4010 | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | Altera | dk_dev_3c120n | Cyclone III | Quartus 13.1 and older | never | none |
+| Altera | Marsohod | marsohod_mcy112 | Cyclone | Quartus 9.1 SP2; a licence is needed from 13.0sp1 on † | never | none |
+| Altera | Marsohod | marsohod_mcy316 | Cyclone III | Quartus 13.1 and older | never | none |
+| Altera | OMDAZZ | omdazz | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA + LCD |
+| Altera | OMDAZZ | omdazz_epm570 | MAX II | Quartus 13.0sp1 through 25.1std | never | VGA + LCD |
+| Altera | Piswords | piswords6 | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | Terasic | c5gx | Cyclone V | Quartus 13.0sp1 through 25.1std | never | HDMI/DVI |
+| Altera | Terasic | de0 | Cyclone III | Quartus 13.1 and older | never | VGA |
+| Altera | Terasic | de0_cv | Cyclone V | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | Terasic | de0_nano | Cyclone IV E | Quartus 13.0sp1 through 25.1std | always | VGA |
+| Altera | Terasic | de0_nano_soc | Cyclone V | Quartus 13.0sp1 through 25.1std | always | VGA |
+| Altera | Terasic | de1 | Cyclone II | Quartus 13.0sp1 and older | never | VGA |
+| Altera | Terasic | de10_lite | MAX 10 | Quartus 14.0.2 and newer † | either | VGA |
+| Altera | Terasic | de10_nano | Cyclone V | Quartus 13.0sp1 through 25.1std | always | HDMI/DVI |
+| Altera | Terasic | de1_soc | Cyclone V | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | Terasic | de2 | Cyclone II | Quartus 13.0sp1 and older | never | VGA |
+| Altera | Terasic | de23_lite | Agilex 3 | Quartus Pro 26.1.1 | never | HDMI/DVI |
+| Altera | Terasic | de2_115 | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | Terasic | terasic_sockit | Cyclone V | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | ZEOWAA | zeowaa | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | unknown | emooc_cc | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | none |
+| Altera | unknown | rzrd | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA + LCD |
+| Altera | unknown | saylinx | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Gowin | Marsohod | marsohod3gw2 | GW1NR-9 | Gowin EDA, any version † | never | HDMI/DVI |
+| Gowin | Sipeed | tang_mega_138k | GW5AST | Gowin EDA, 1.9.9 and newer † | always | HDMI/DVI + LCD |
+| Gowin | Sipeed | tang_mega_138k_pro | GW5AST-138 | Gowin EDA, any version † | always | HDMI/DVI + LCD |
+| Gowin | Sipeed | tang_nano_20k | GW2AR-18 | Gowin EDA, any version † | always | HDMI/DVI + LCD |
+| Gowin | Sipeed | tang_nano_4k | GW1NSR-4 | Gowin EDA, any version † | always | HDMI/DVI |
+| Gowin | Sipeed | tang_nano_9k | GW1NR-9 | Gowin EDA, any version; Yosys/OSS † | always | HDMI/DVI + LCD |
+| Gowin | Sipeed | tang_primer_20k_dock | GW2A-18C | Gowin EDA, any version; Yosys/OSS † | always | HDMI/DVI + LCD |
+| Gowin | Sipeed | tang_primer_20k_lite | GW2A-18 | Gowin EDA, any version † | always | none |
+| Gowin | Sipeed | tang_primer_25k | GW5A | Gowin EDA, 1.9.9 and newer † | always | HDMI/DVI + VGA |
+| Gowin | Xunlong | orangepi_msoc | GW5AT-138B | Gowin EDA, any version † | always | none |
+| Lattice | 1BitSquared | icebreaker | iCE40 | no toolchain assigned; Yosys/OSS † | either | HDMI/DVI |
+| Lattice | Colorlight | colorlight75b | ECP5 | Yosys/OSS † | always | none |
+| Lattice | Colorlight | colorlightI5 | ECP5 | Yosys/OSS † | always | none |
+| Lattice | Fabmicro | karnix | ECP5 | Yosys/OSS † | always | none |
+| Lattice | Greg Davill | orangecrab | ECP5 | Yosys/OSS † | always | none |
+| Lattice | Olimex | ice40hx8k_evb | iCE40 | Yosys/OSS † | always | VGA |
+| Xilinx | ALINX | alinx_ax7035b | Artix-7 | Vivado, any version † | never | none |
+| Xilinx | Digilent | arty_a7_100 | Artix-7 | Vivado, any version † | never | none |
+| Xilinx | Digilent | arty_a7_35 | Artix-7 | Vivado, any version † | never | none |
+| Xilinx | Digilent | basys3 | Artix-7 | Vivado, any version † | never | VGA |
+| Xilinx | Digilent | cmod_s7 | Spartan-7 | Vivado, any version † | never | none |
+| Xilinx | Digilent | eclypse_z7 | Zynq-7000 | Vivado, any version † | always | none |
+| Xilinx | Digilent | nexys4 | Artix-7 | Vivado, any version † | never | VGA |
+| Xilinx | Digilent | nexys4_ddr | Artix-7 | Vivado, any version † | never | none |
+| Xilinx | Digilent | nexys_a7_100 | Artix-7 | Vivado, any version † | never | none |
+| Xilinx | Digilent | nexys_a7_50 | Artix-7 | Vivado, any version † | never | none |
+| Xilinx | Digilent | zybo_z7 | Zynq-7000 | Vivado, any version † | never | none |
+| Xilinx | QMTech | qmtech_kintex_7 | Kintex-7 | Vivado, any version † | never | none |
+| Xilinx | unknown | a7_lite_35t | Artix-7 | Vivado, any version † | always | HDMI/DVI |
 
-* ALINX AX301
-* ALINX AX4010
-* emooc.cc - Cyclone IV - based board
-* Marsohod MCY112
-* Marsohod MCY316
-* Omdazz Cyclone IV
-* Omdazz EPM570
-* Piswords-6
-* RzRd - Cyclone IV
-* Saylinx - Cyclone IV
-* Zeowaa - Cyclone IV
+† A boundary of this range was not measured here.
 
-## Xilinx
+## How each range was established
 
-* ALINX AX7035B
-* Digilent Arty A7 (several variants)
-* Digilent Basys3
-* Eclypse Z7 (Xilinx Zynq-7000)
-* MicroPhase A7-Lite (Xilinx Artix-7 XC7A35T)
-* Nexys4
-* Nexys4-DDR
-* Nexys A7
-* QMtech Kintex-7 (partial support?)
-* Zybo Z7
+* **Agilex 3** — only the Pro edition builds it; no older Pro installed
+* **Cyclone** — every installed version refuses it with error 20005, a licence is required; the board's own project file was written by 9.1 SP2 Web Edition
+* **Cyclone II** — 13.0sp1 builds it, 13.1 does not
+* **Cyclone III** — 13.1 builds it, 21.1 does not
+* **Cyclone IV E** — all four free editions build it
+* **Cyclone V** — all four free editions build it
+* **MAX 10** — 21.1 and 25.1std build it, 13.x do not; the 14.0.2 bound is not measured here
+* **MAX II** — all four free editions build it
 
-## Gowin
-
-* Marsohod3 GW2 (Gowin GW1NR)
-* Tang Mega 138k
-* Tang Mega 138k Pro
-* Orange Pi MSOC (Gowin GW5AT)
-* Tang Nano 20k
-* Tang Nano 4k
-* Tang Nano 9k
-* Tang Primer 20k Dock
-* Tang Primer 20k Lite
-* Tang Primer 25k
-
-## Lattice
-
-* Colorlight 5A-75B (Lattice ECP5-25)
-* ice40hx8k_evb_yosys
-* iCEBreaker (Lattice iCE40UP5K)
-* karnix_ecp5_yosys
-* orangecrab_ecp5_yosys
-
-## Efinix (partial support)
+Ranges fully measured for 23 of 54 boards.
