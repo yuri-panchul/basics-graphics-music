@@ -558,7 +558,7 @@ quartus_setup ()
 #
 #-----------------------------------------------------------------------------
 
-intel_fpga_setup_questa ()
+altera_setup_questa ()
 {
        [ "$OSTYPE" = "linux-gnu" ]  \
     || [ "$OSTYPE" = "cygwin"    ]  \

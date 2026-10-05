@@ -223,7 +223,7 @@ remove_macos_quarantine_attr ()
 #
 #-----------------------------------------------------------------------------
 
-source "$script_dir/steps/00_setup_intel_fpga.source_bash"
+source "$script_dir/steps/00_setup_altera.source_bash"
 source "$script_dir/steps/00_setup_gowin.source_bash"
 source "$script_dir/steps/00_setup_efinity.source_bash"
 source "$script_dir/steps/00_setup_xilinx.source_bash"
@@ -509,7 +509,7 @@ case $fpga_toolchain in
         quartus_setup
 
         if [ -z "${MGLS_LICENSE_FILE-}" ] ; then
-            intel_fpga_setup_questa
+            altera_setup_questa
         fi
     ;;
 

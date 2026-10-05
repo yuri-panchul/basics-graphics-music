@@ -2,7 +2,7 @@
 
 ## Choosing Quartus
 
-`steps/00_setup_intel_fpga.source_bash` reads the selected board's literal
+`steps/00_setup_altera.source_bash` reads the selected board's literal
 `DEVICE` assignment from `board_specific.qsf`. It checks release/edition
 compatibility and asks each candidate's installed device database about that
 exact part. A release without the necessary device package is skipped. This

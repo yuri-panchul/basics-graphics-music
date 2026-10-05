@@ -9,7 +9,7 @@ import unittest
 
 
 REPO = Path(__file__).resolve().parents[2]
-SCRIPT = REPO / "scripts/steps/00_setup_intel_fpga.source_bash"
+SCRIPT = REPO / "scripts/steps/00_setup_altera.source_bash"
 PART = "EP4CE6E22C8"
 
 
