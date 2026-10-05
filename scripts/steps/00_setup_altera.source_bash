@@ -792,6 +792,9 @@ configure_fpga_quartus ()
         # TODO: Proposed change
         # if ! grep -q "USB[- ]Blaster" $rules_dir/*
 
+        # We updated this file for USB Blaster III.
+        # TODO: We have to figure out how to update the users
+
         if ! grep -q USB-Blaster $rules_dir/*
         then
             error "No rules for USB Blaster detected in $rules_dir."  \
