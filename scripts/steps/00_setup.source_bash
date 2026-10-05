@@ -526,6 +526,8 @@ if [ -f ../program.s ] ; then
     rars_setup
 fi
 
-if find .. -type f -name '*.[chS]' -print -quit | grep -q . ; then
+if ! [ "$script" = "clean_all.bash" ] &&
+    find .. -type f -name '*.[chS]' -print -quit | grep -q .
+then
     riscv_software_toolchain_setup
 fi

@@ -114,13 +114,13 @@ riscv_try_install_dir ()
 
 riscv_software_toolchain_setup ()
 {
-
     #-------------------------------------------------------------------------
 
-    PY3=""
-    if python3 -c "print('Ok')" 2>/dev/null; then
+    PY3=
+
+    if python3 -c "print('Ok')" &>/dev/null; then
       PY3=python3
-    elif python -c "print('Ok')" 2>/dev/null; then
+    elif python -c "print('Ok')" &>/dev/null; then
       PY3=python
     else
       error "Python is not installed." \
@@ -308,6 +308,7 @@ riscv_setup_core_for_software ()
     shopt -s nullglob
 
     matches=()
+
     for path in "$lab_dir"/5_cpu/5_*$riscv_core; do
         [[ -d "$path" ]] && matches+=("$path")
     done
