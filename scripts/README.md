@@ -1,5 +1,55 @@
 # Notes on Bash scripts
 
+## Choosing an FPGA board
+
+The board menu in `steps/00_setup.source_bash` first lists board models, then
+lists the selected board's configurations using their complete directory names.
+A board with only one configuration is selected immediately. The second menu
+has `back` and `exit`; invalid input retries the current menu. Exiting or closing
+standard input leaves an existing selection file untouched.
+
+`fpga_board_base_name` groups directory names by removing a trailing sequence of
+known configuration suffixes. For example,
+`tang_nano_9k_50mhz_hdmi_no_tm1638` belongs to `tang_nano_9k`. Matching the whole
+sequence prevents overlapping suffixes such as `_no_hdmi` and `_hdmi_tm1638`
+from leaving a bogus board name ending in `_no`. The suffix list also recognizes
+the existing `_no_dvi`, `_pmod_hub75e_led_matrix`, and `_ecp5_yosys` forms.
+Unknown endings remain part of the board name; adding a new configuration naming
+convention may require extending this list.
+
+Hardware names such as `de0`, `de0_nano`, `de0_nano_soc`, `de1`, `de1_soc`,
+`de2`, `de2_115`, `omdazz`, and `omdazz_epm570` remain separate. Directory names
+alone build the menu; board constraints and installed EDA tools are not needed
+to group the choices. Board and variant order follow the existing sorted
+directory list, without introducing another external sorting command.
+
+The selected value is still the exact original configuration directory name.
+`fpga_board_selection` retains its flat format with every original entry and
+only the selected configuration uncommented. Saved selections, hackathon
+overrides, and the subsequent toolchain selection retain their existing roles.
+The original 113 directory choices are reachable through 56 board entries,
+including the existing `nexys_a7` and `zzz_postponed_and_retired` entries that
+are not models in the board catalog.
+
+Run the menu tests without installing EDA tools:
+
+```sh
+python3 -B scripts/tests/test_board_menu.py
+```
+
+The tests run the actual setup script in a temporary repository with empty
+board directories and stubbed EDA setup functions. Expected board groups come
+from the independent board catalog, not the suffix-matching implementation.
+They select every configuration and check its saved file and toolchain, along
+with retries, Back/Exit, EOF, saved choices, and hackathon overrides.
+
+To compare all successful selections directly with the original flat menu:
+
+```sh
+git show 77959f67:scripts/steps/00_setup.source_bash > /tmp/bgm-flat-board-setup.source_bash
+python3 -B scripts/tests/test_board_menu.py --baseline /tmp/bgm-flat-board-setup.source_bash
+```
+
 ## Choosing Quartus
 
 `steps/00_setup_altera.source_bash` reads the selected board's literal

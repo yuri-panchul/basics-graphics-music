@@ -240,6 +240,151 @@ source "$script_dir/steps/00_setup_terminal.source_bash"
 #
 #-----------------------------------------------------------------------------
 
+fpga_board_base_name ()
+{
+    local base="$1" suffix_pattern IFS='|'
+
+    # Match a complete suffix sequence, including overlapping combinations such
+    # as no_hdmi + no_tm1638, without leaving a spurious board name ending in no.
+
+    local -a variant_suffixes=(
+        _pmod_hub75e_led_matrix
+        _quartus_13_1_or_older
+        _hdmi_no_ip_tm1638
+        _hub75e_led_matrix
+        _virtual_switches
+        _no_tm1638_yosys
+        _hdmi_no_tm1638
+        _tm1638_yosys
+        _hdmi_tm1638
+        _lcd_480_272
+        _lcd_800_480
+        _ecp5_yosys
+        _lcd_ml6485
+        _hackathon
+        _no_tm1638
+        _pmod_hdmi
+        _pmod_mic3
+        _tm1638_sd
+        _pmod_vga
+        _vga_pmod
+        _wo_dig_0
+        _dvi_12b
+        _dvi_24b
+        _no_hdmi
+        _bright
+        _no_dvi
+        _tm1638
+        _vga666
+        _50mhz
+        _yosys
+        _bare
+        _hdmi
+        _alt
+    )
+
+    # [*] joins the suffixes using IFS; the regex accepts one or more at the end.
+    suffix_pattern="(${variant_suffixes[*]})+$"
+
+    # Bash regex matching finds the earliest start of the trailing suffix sequence.
+
+    if [[ "$base" =~ $suffix_pattern ]] && [ "$base" != "${BASH_REMATCH[0]}" ]
+    then
+        # % removes the literal matched suffix sequence held in BASH_REMATCH[0].
+        base=${base%"${BASH_REMATCH[0]}"}
+    fi
+
+    printf '%s\n' "$base"
+}
+
+#-----------------------------------------------------------------------------
+
+choose_fpga_board ()
+{
+    local board_name configuration index
+    local seen_boards=" " PS3 REPLY
+    local -a board_names=() configurations=() configuration_boards=() variants=()
+
+    for configuration in $available_fpga_boards
+    do
+        board_name=$(fpga_board_base_name "$configuration")
+        configurations+=("$configuration")
+        configuration_boards+=("$board_name")
+
+        if [[ "$seen_boards" != *" $board_name "* ]]
+        then
+            board_names+=("$board_name")
+            seen_boards+="$board_name "
+        fi
+    done
+
+    while true
+    do
+        info "${current_board_message}Please select an FPGA board:"
+        PS3="Board (a number): "
+        board_name=
+
+        select board_name in "${board_names[@]}" exit
+        do
+            if [ -n "$board_name" ]
+            then
+                break
+            fi
+
+            info "Invalid FPGA board choice, please choose one of the listed numbers again"
+        done
+
+        if [ -z "$board_name" ] || [ "$board_name" = exit ]
+        then
+            return 1
+        fi
+
+        variants=()
+
+        # !array[@] expands to array indices, keeping each group paired with its directory.
+
+        for index in "${!configurations[@]}"
+        do
+            if [ "${configuration_boards[index]}" = "$board_name" ]
+            then
+                variants+=("${configurations[index]}")
+            fi
+        done
+
+        # #array[@] is the number of elements in the array.
+
+        if [ "${#variants[@]}" -eq 1 ]
+        then
+            configuration="${variants[0]}"
+        else
+            info "Please select a variant of '$board_name':"
+            PS3="Variant (a number): "
+            configuration=
+
+            select configuration in "${variants[@]}" back exit
+            do
+                if [ -n "$configuration" ]
+                then
+                    break
+                fi
+
+                info "Invalid FPGA board variant, please choose one of the listed numbers again"
+            done
+        fi
+
+        case "$configuration" in
+            back ) continue ;;
+            "" | exit ) return 1 ;;
+        esac
+
+        fpga_board="$configuration"
+        info "FPGA board selected: $fpga_board"
+        return 0
+    done
+}
+
+#-----------------------------------------------------------------------------
+
 create_fpga_board_select_file()
 {
     > "$select_file"
@@ -439,7 +584,7 @@ fpga_board_setup ()
     # TODO: Remove else after testing on Linux and Windows
 
     if [[ "$OSTYPE" = "darwin"*   ]] ; then
-      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % -L 1 basename '%' | sort | tr "\r\n" " ")
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % basename '%' | sort | tr "\r\n" " ")
     else
       available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
     fi
@@ -447,24 +592,11 @@ fpga_board_setup ()
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
     then
-        info "${current_board_message}Please select an FPGA board amoung the following supported:"
-        PS3="Your choice (a number): "
-
-        select fpga_board in $available_fpga_boards exit
-        do
-            if [ -z "$fpga_board" ] ; then
-                info "Invalid FPGA board choice, please choose one of the listed numbers again"
-                continue
-            fi
-
-            if [ $fpga_board == "exit" ] ; then
-                info "a new FPGA board is not selected, please run the script again"
-                exit 0
-            fi
-
-            info "FPGA board selected: $fpga_board"
-            break
-        done
+        choose_fpga_board ||
+        {
+            info "A new FPGA board is not selected, please run the script again"
+            exit 0
+        }
 
         create_fpga_board_select_file
 
