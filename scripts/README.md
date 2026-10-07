@@ -55,6 +55,40 @@ Run the isolated regression suite without Quartus installed:
 python3 scripts/tests/test_quartus_discovery.py
 ```
 
+## Choosing a board
+
+`steps/00_setup.source_bash` asks for a board with a two-level menu. The
+first level lists the boards, the second one the configurations of the board
+chosen on the first level. A board with a single configuration is listed
+under the name of that configuration and does not open a second menu.
+
+The two levels come from the directory names under `boards` alone:
+`fpga_board_config_suffixes` lists the suffixes that mark a configuration
+rather than a different board, and `fpga_board_base` removes them. Board
+files are not examined, because configurations of the same board comment out
+different pins and some Gowin boards have separate configurations for Gowin
+EDA and for Yosys.
+
+Removing the longest matching suffix at each step is not enough, because the
+suffixes overlap: `tang_primer_20k_dock_no_hdmi_no_tm1638` ends with the
+listed suffix `_hdmi_no_tm1638`, while the correct split is `_no_hdmi`
+followed by `_no_tm1638`. `fpga_board_base` therefore tries every way to
+split the tail and keeps the shortest board name. A consequence is that a
+component such as `_pmod`, `_no_hdmi` or `_no_dvi` needs no combined entry of
+its own in the list.
+
+Boards that differ by more than a listed suffix stay separate first-level
+entries: `de0`, `de0_cv`, `de0_nano` and `de0_nano_soc`; `de1` and `de1_soc`;
+`de2` and `de2_115`; `omdazz` and `omdazz_epm570`; `nexys_a7`, `nexys_a7_50`
+and `nexys_a7_100`; `tang_mega_138k` and `tang_mega_138k_pro`.
+
+Run the menu regression suite, which checks that the two levels select
+exactly the same boards as the one-level menu they replaced:
+
+```sh
+python3 scripts/tests/test_fpga_board_menu.py
+```
+
 ## Strict Bash settings
 
 [The article about these settings.](https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail)

@@ -236,6 +236,298 @@ source "$script_dir/steps/00_setup_terminal.source_bash"
 
 #-----------------------------------------------------------------------------
 #
+#   Two-level FPGA board menu
+#
+#-----------------------------------------------------------------------------
+
+# The suffixes that mark a configuration of a board rather than a different
+# board. The first level of the menu lists the board names with these
+# suffixes removed, the second level lists the configurations of the board
+# chosen on the first level.
+#
+# The split is based on the suffixes alone and does not look into
+# board_specific.qsf, .xdc, .lpf, .pcf or .cst files. Such a check would be
+# unreliable anyway: configurations of the same board comment out different
+# pins, and some Gowin boards have separate configurations for Gowin EDA and
+# for Yosys.
+#
+# fpga_board_base tries all the combinations of the suffixes below, so a
+# component such as _pmod or _no_hdmi does not need a combined entry of its
+# own. Keep the list sorted to make it easy to compare with the directory
+# names in "boards".
+
+fpga_board_config_suffixes="
+    _50mhz
+    _alt
+    _bare
+    _bright
+    _dvi_12b
+    _dvi_24b
+    _hackathon
+    _hdmi
+    _hdmi_no_ip_tm1638
+    _hdmi_no_tm1638
+    _hdmi_tm1638
+    _hub75e_led_matrix
+    _lcd_480_272
+    _lcd_800_480
+    _lcd_ml6485
+    _no_dvi
+    _no_hdmi
+    _no_tm1638
+    _no_tm1638_yosys
+    _pmod
+    _pmod_hdmi
+    _pmod_mic3
+    _pmod_vga
+    _quartus_13_1_or_older
+    _tm1638
+    _tm1638_sd
+    _tm1638_yosys
+    _vga666
+    _vga_pmod
+    _virtual_switches
+    _wo_dig_0
+    _yosys
+"
+
+#-----------------------------------------------------------------------------
+
+# The board name that remains after removing a sequence of the suffixes
+# above: the shortest such name, searching all the ways to split the tail.
+#
+# Taking the longest matching suffix at each step would not work, because the
+# suffixes overlap. For example, tang_primer_20k_dock_no_hdmi_no_tm1638 ends
+# with the listed suffix _hdmi_no_tm1638, which leaves
+# tang_primer_20k_dock_no, while the correct split is _no_hdmi followed by
+# _no_tm1638, which leaves tang_primer_20k_dock.
+#
+# The result is returned in a global variable rather than printed, to avoid
+# a subshell for every board of the menu.
+
+fpga_board_base_result=
+
+fpga_board_base ()
+{
+    local name="$1"
+    local suffix stripped candidate best="$1"
+
+    for suffix in $fpga_board_config_suffixes
+    do
+        case "$name" in
+            *"$suffix")
+                # ${name%$suffix} - $name without the matched suffix
+
+                stripped="${name%$suffix}"
+
+                if [ -n "$stripped" ]
+                then
+                    fpga_board_base "$stripped"
+                    candidate=$fpga_board_base_result
+
+                    if [ ${#candidate} -lt ${#best} ]
+                    then
+                        best=$candidate
+                    fi
+                fi
+            ;;
+        esac
+    done
+
+    fpga_board_base_result=$best
+}
+
+#-----------------------------------------------------------------------------
+
+# Asks the user for a board and sets the global $fpga_board, or exits if the
+# user chooses "exit". The boards to choose from are in
+# $available_fpga_boards.
+
+select_fpga_board ()
+{
+    local i_fpga_board board base label pair n single unique_bases
+    local chosen_base chosen_config
+    local pairs level1_labels level1_bases level2_labels configs
+
+    # "<board> <base>" for every available board, computed once
+
+    pairs=()
+
+    for i_fpga_board in $available_fpga_boards
+    do
+        fpga_board_base "$i_fpga_board"
+        pairs[${#pairs[@]}]="$i_fpga_board $fpga_board_base_result"
+    done
+
+    if [ ${#pairs[@]} = 0 ]
+    then
+        error "found no FPGA board directories in \"$board_dir\""
+    fi
+
+    # The first level of the menu: the unique board names, sorted. A board
+    # with a single configuration is listed under the name of that
+    # configuration, so that choosing such a board does not open a second
+    # menu with one item in it.
+
+    # ${pair#* } - the part after the first space: the base name
+
+    unique_bases=$(
+        for pair in "${pairs[@]}"
+        do
+            printf "%s\n" "${pair#* }"
+        done | sort -u
+    )
+
+    level1_bases=()
+    level1_labels=()
+
+    for base in $unique_bases
+    do
+        n=0
+        single=
+
+        for pair in "${pairs[@]}"
+        do
+            if [ "${pair#* }" == "$base" ]
+            then
+                n=$(( n + 1 ))
+
+                # ${pair%% *} - the part before the first space: the board
+
+                single=${pair%% *}
+            fi
+        done
+
+        level1_bases[${#level1_bases[@]}]=$base
+
+        if [ $n = 1 ]
+        then
+            level1_labels[${#level1_labels[@]}]=$single
+        else
+            level1_labels[${#level1_labels[@]}]="$base ($n configurations)"
+        fi
+    done
+
+    while true
+    do
+        info "${current_board_message}Please select an FPGA board amoung the following supported:"
+        PS3="Your choice (a number): "
+
+        chosen_base=
+
+        select label in "${level1_labels[@]}" exit
+        do
+            if [ -z "$label" ]
+            then
+                info "Invalid FPGA board choice, please choose one of the listed numbers again"
+                continue
+            fi
+
+            # $label is not empty, so $REPLY is the number of a menu item.
+            # Comparing the numbers rather than the labels keeps the menu
+            # working even for a board directory named "exit".
+
+            if [ $REPLY -gt ${#level1_labels[@]} ]
+            then
+                info "a new FPGA board is not selected, please run the script again"
+                exit 0
+            fi
+
+            # The items are numbered from 1, so $REPLY-1 is the array index
+
+            chosen_base=${level1_bases[$(( REPLY - 1 ))]}
+            break
+        done
+
+        if [ -z "$chosen_base" ]
+        then
+            # The input ended: "select" exited its loop without a choice
+
+            info "a new FPGA board is not selected, please run the script again"
+            exit 0
+        fi
+
+        # The configurations of the chosen board, in the same order as in
+        # $available_fpga_boards
+
+        configs=()
+
+        for pair in "${pairs[@]}"
+        do
+            [ "${pair#* }" == "$chosen_base" ] && configs[${#configs[@]}]=${pair%% *}
+        done
+
+        if [ ${#configs[@]} = 1 ]
+        then
+            fpga_board=${configs[0]}
+
+            info "FPGA board selected: $fpga_board"
+            return
+        fi
+
+        # The second level of the menu. The configuration without a suffix,
+        # if there is one, is listed under the board name itself; the others
+        # under the suffix that distinguishes them.
+
+        level2_labels=()
+
+        for board in "${configs[@]}"
+        do
+            if [ "$board" == "$chosen_base" ]
+            then
+                level2_labels[${#level2_labels[@]}]=$board
+            else
+                # ${board#${chosen_base}_} - the board name without the
+                # leading board name and the underscore after it
+
+                level2_labels[${#level2_labels[@]}]=${board#${chosen_base}_}
+            fi
+        done
+
+        info "Please select a configuration of the board $chosen_base:"
+        PS3="Your choice (a number): "
+
+        chosen_config=
+
+        select label in "${level2_labels[@]}" back exit
+        do
+            if [ -z "$label" ]
+            then
+                info "Invalid configuration choice, please choose one of the listed numbers again"
+                continue
+            fi
+
+            # The two items after the configurations are "back" and "exit"
+
+            if [ $REPLY -gt $(( ${#level2_labels[@]} + 1 )) ]
+            then
+                info "a new FPGA board is not selected, please run the script again"
+                exit 0
+            fi
+
+            if [ $REPLY == $(( ${#level2_labels[@]} + 1 )) ]
+            then
+                break
+            fi
+
+            chosen_config=${configs[$(( REPLY - 1 ))]}
+            break
+        done
+
+        if [ -n "$chosen_config" ]
+        then
+            fpga_board=$chosen_config
+
+            info "FPGA board selected: $fpga_board"
+            return
+        fi
+
+        # "back" or the end of the input: ask for the board again
+    done
+}
+
+#-----------------------------------------------------------------------------
+#
 #   FPGA board setup
 #
 #-----------------------------------------------------------------------------
@@ -447,25 +739,7 @@ fpga_board_setup ()
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
     then
-        info "${current_board_message}Please select an FPGA board amoung the following supported:"
-        PS3="Your choice (a number): "
-
-        select fpga_board in $available_fpga_boards exit
-        do
-            if [ -z "$fpga_board" ] ; then
-                info "Invalid FPGA board choice, please choose one of the listed numbers again"
-                continue
-            fi
-
-            if [ $fpga_board == "exit" ] ; then
-                info "a new FPGA board is not selected, please run the script again"
-                exit 0
-            fi
-
-            info "FPGA board selected: $fpga_board"
-            break
-        done
-
+        select_fpga_board
         create_fpga_board_select_file
 
         if [ $offer_to_create_all_run_dirs = 1 ]
