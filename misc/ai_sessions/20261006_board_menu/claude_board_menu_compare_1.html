@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two-Level Board Menu: Claude vs Codex</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Figtree:wght@600;800&family=Inconsolata:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground:  #f2f4f8;
+    --surface: #ffffff;
+    --ink:     #171b24;
+    --muted:   #5a6372;
+    --faint:   #8d95a3;
+    --rule:    #dde1e9;
+    --rule2:   #b9c0cc;
+    --mine:    #b3306b;
+    --mine-bg: #fbeef4;
+    --codex:   #1f6f8b;
+    --codex-bg:#e9f3f6;
+    --proved:  #2f6b3a;
+    --warn:    #9a4a12;
+    --code-bg: #e7eaf0;
+
+    --display: Figtree, "Helvetica Neue", Arial, sans-serif;
+    --body:    "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono:    Inconsolata, ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #111419;
+      --surface: #181c23;
+      --ink:     #e8eaef;
+      --muted:   #a4abb8;
+      --faint:   #737b88;
+      --rule:    #262b33;
+      --rule2:   #3b424d;
+      --mine:    #e88ab2;
+      --mine-bg: #26151e;
+      --codex:   #7cc0d6;
+      --codex-bg:#121f25;
+      --proved:  #8cc497;
+      --warn:    #e0a46a;
+      --code-bg: #151a20;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:  #111419;
+    --surface: #181c23;
+    --ink:     #e8eaef;
+    --muted:   #a4abb8;
+    --faint:   #737b88;
+    --rule:    #262b33;
+    --rule2:   #3b424d;
+    --mine:    #e88ab2;
+    --mine-bg: #26151e;
+    --codex:   #7cc0d6;
+    --codex-bg:#121f25;
+    --proved:  #8cc497;
+    --warn:    #e0a46a;
+    --code-bg: #151a20;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 2.75rem 5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 0.75rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 2.85rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+
+  .standfirst {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 40rem;
+    margin: 0 0 1.8rem;
+  }
+
+  .verdict {
+    border-left: 4px solid var(--proved);
+    background: var(--surface);
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 2.2rem;
+  }
+  .verdict h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    border: 0;
+    color: var(--proved);
+  }
+  .verdict p { margin: 0 0 0.6rem; max-width: 40rem; }
+  .verdict p:last-child { margin-bottom: 0; }
+
+  .alarm { border-left-color: var(--warn); }
+  .alarm h2 { color: var(--warn); }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 2.7rem 0 0.9rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin: 1.7rem 0 0.5rem;
+  }
+
+  p { margin: 0 0 0.95rem; max-width: 42rem; }
+  strong { font-weight: 700; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: var(--code-bg);
+    padding: 0.08em 0.3em;
+    border-radius: 2px;
+  }
+
+  .m { color: var(--mine);  font-weight: 700; }
+  .c { color: var(--codex); font-weight: 700; }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.84rem;
+    line-height: 1.65;
+    background: var(--code-bg);
+    padding: 0.8rem 1rem;
+    margin: 0 0 1.2rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre .cm   { color: var(--faint); }
+  pre .good { color: var(--proved); font-weight: 600; }
+  pre .bad  { color: var(--warn); font-weight: 600; }
+
+  .scroll { overflow-x: auto; margin-bottom: 1.3rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.89rem; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 0.45rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.45rem 0.8rem 0.45rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  thead th {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.71rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule2);
+    white-space: nowrap;
+  }
+  td.mono { font-family: var(--mono); font-size: 0.85rem; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tag {
+    font-family: var(--display);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .t-same  { color: var(--faint); }
+  .t-codex { color: var(--codex); }
+  .t-mine  { color: var(--mine); }
+  .t-spec  { color: var(--proved); }
+
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 2rem;
+    margin-bottom: 1rem;
+  }
+  .impl { border-top: 3px solid var(--rule2); padding-top: 0.8rem; }
+  .impl.mine-side  { border-top-color: var(--mine); }
+  .impl.codex-side { border-top-color: var(--codex); }
+  .impl-name {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 0.1rem;
+  }
+  .mine-side  .impl-name { color: var(--mine); }
+  .codex-side .impl-name { color: var(--codex); }
+  .impl-sub {
+    font-family: var(--display);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 1rem;
+  }
+  .label {
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 1.3rem 0 0.5rem;
+  }
+  .label:first-of-type { margin-top: 0; }
+  ul.findings { margin: 0; padding-left: 1.1rem; }
+  ul.findings li { margin-bottom: 0.6rem; font-size: 0.94rem; }
+  ul.findings li.plus::marker  { content: "+ "; }
+  ul.findings li.minus::marker { content: "- "; }
+  ul.findings.pm { list-style: none; padding-left: 0; }
+  ul.findings.pm li { padding-left: 1.3rem; position: relative; }
+  ul.findings.pm li::before {
+    position: absolute; left: 0; top: 0;
+    font-family: var(--mono); font-weight: 600;
+  }
+  ul.findings.pm li.plus::before  { content: "+"; color: var(--proved); }
+  ul.findings.pm li.minus::before { content: "\2212"; color: var(--warn); }
+
+  ol.plan { margin: 0 0 1rem; padding-left: 1.5rem; }
+  ol.plan li { margin-bottom: 0.55rem; }
+  ol.plan li::marker { font-family: var(--mono); font-size: 0.85rem; color: var(--faint); }
+
+  .screens { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.4rem; margin-bottom: 1.3rem; }
+  .screens pre { margin-bottom: 0.3rem; font-size: 0.76rem; }
+  .screens .cap { font-family: var(--display); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--faint);
+    line-height: 1.8;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="eyebrow">basics-graphics-music &middot; board selection menu</p>
+<h1>Two menus, one partition</h1>
+<p class="standfirst">Claude and Codex were given the same task on separate clones: turn the
+113-entry flat board menu into two levels. Both branched from
+<code>77959f67</code>. They arrived at the same 56 boards by different
+algorithms &mdash; and one of them picked up a macOS bug on the way.</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p><strong>The groupings are identical.</strong> 113 board directories, 56
+boards, same partition, verified name by name. The only divergence is the
+<em>label</em> of four single-configuration boards. Every board remains
+selectable in both, so both satisfy the equivalence requirement.</p>
+<p><strong>Codex found a real bug I missed:</strong> the macOS branch of the
+board scan has been emitting <code>%</code> instead of board names under GNU
+findutils for as long as that line has existed. Codex fixed it as a drive-by;
+my branch still carries it. That is the single most consequential difference
+in the two diffs.</p>
+<p><strong>I have the better selection logic, Codex has the better test
+harness.</strong> Mine sorts the first level and picks items by number;
+Codex's runs the entire real setup script in a stubbed sandbox and can diff
+itself against the old flat menu for all 113 boards.</p>
+</div>
+
+<h2>What each side shipped</h2>
+
+<div class="pair">
+<div class="impl mine-side">
+  <p class="impl-name">claude_board_menu</p>
+  <p class="impl-sub">df723431 &middot; 681 insertions</p>
+  <p class="label">Algorithm</p>
+  <p><code>fpga_board_base</code> &mdash; recursive search over <em>every</em>
+  way to split the tail into listed suffixes, keeping the shortest board name.
+  Returns through a global, no subshell.</p>
+  <p class="label">First level</p>
+  <p>Sorted board names. A board with one configuration is shown under its full
+  directory name; a board with several is shown as
+  <code>tang_nano_9k (18 configurations)</code>.</p>
+  <p class="label">Second level</p>
+  <p>Only the distinguishing suffix &mdash; <code>hdmi_tm1638</code>,
+  <code>lcd_800_480_no_tm1638</code> &mdash; plus <code>back</code> and
+  <code>exit</code>.</p>
+  <p class="label">Test</p>
+  <p><code>test_fpga_board_menu.py</code>, 354 lines, 17 tests, ~27&nbsp;s.
+  Extracts the menu section from the script and drives it with numbers only.</p>
+</div>
+<div class="impl codex-side">
+  <p class="impl-name">codex_board_menu</p>
+  <p class="impl-sub">5e39006d &middot; 458 insertions</p>
+  <p class="label">Algorithm</p>
+  <p><code>fpga_board_base_name</code> &mdash; one POSIX regex,
+  <code>(_a|_b|&hellip;)+$</code>, whose leftmost-longest match is the whole
+  trailing suffix run. One pass, result printed through <code>$( )</code>.</p>
+  <p class="label">First level</p>
+  <p>Board names in order of first appearance, bare. No hint that a second
+  menu follows, which keeps labels short enough for two columns.</p>
+  <p class="label">Second level</p>
+  <p>Full directory names &mdash;
+  <code>tang_nano_9k_hdmi_tm1638</code> &mdash; plus <code>back</code> and
+  <code>exit</code>.</p>
+  <p class="label">Test</p>
+  <p><code>test_board_menu.py</code>, 257 lines, 10 tests, ~29&nbsp;s. Builds a
+  fake repo in a tempdir and runs the whole real setup script inside it.</p>
+</div>
+</div>
+
+<h2>The trap both had to avoid</h2>
+
+<p>The task supplied 29 suffixes. Stripping the <em>longest</em> matching one
+repeatedly looks obvious and is wrong, because the suffixes overlap:</p>
+
+<pre>tang_primer_20k_dock_no_hdmi_no_tm1638
+
+  longest match is _hdmi_no_tm1638   <span class="bad">&rarr; tang_primer_20k_dock_no</span>   <span class="cm">a board that does not exist</span>
+  correct split   is _no_hdmi + _no_tm1638   <span class="good">&rarr; tang_primer_20k_dock</span></pre>
+
+<p>Both sides solved it, by opposite routes. I search all decompositions and
+keep the shortest remainder. Codex lets the regex engine do it: in a POSIX
+ERE, <code>(&hellip;)+$</code> matches leftmost-longest, so the match starts as
+early as it still can while reaching the end of the string &mdash; which is
+exactly &ldquo;strip as much as possible&rdquo;. Codex's route is principled,
+not lucky, and it is one regex instead of a recursion.</p>
+
+<p>Both sides also discovered, independently, that the supplied list is
+incomplete:</p>
+
+<div class="scroll">
+<table>
+<caption>Suffixes added beyond the 29 in the task</caption>
+<thead><tr><th>Added</th><th>Claude</th><th>Codex</th><th>Without it</th></tr></thead>
+<tbody>
+<tr><td class="mono">_no_dvi</td><td class="m">yes</td><td class="c">yes</td>
+    <td><code>icebreaker_no_dvi</code> splits off from <code>icebreaker</code></td></tr>
+<tr><td class="mono">_no_hdmi</td><td class="m">yes</td><td class="c">yes</td>
+    <td><code>tang_primer_20k_dock_no</code> splits off</td></tr>
+<tr><td class="mono">_pmod</td><td class="m">yes</td><td>&mdash;</td>
+    <td rowspan="2"><code>tang_primer_25k_pmod</code> splits off from
+    <code>tang_primer_25k</code></td></tr>
+<tr><td class="mono">_pmod_hub75e_led_matrix</td><td>&mdash;</td><td class="c">yes</td></tr>
+<tr><td class="mono">_ecp5_yosys</td><td>&mdash;</td><td class="c">yes</td>
+    <td>cosmetic only: shortens 4 first-level labels</td></tr>
+<tr><td colspan="4" style="border-bottom:0"><span class="tag t-spec">Converged</span>
+    Two independent implementations found the same two genuine gaps. Neither
+    dropped any supplied suffix.</td></tr>
+</tbody></table>
+</div>
+
+<p>The component-versus-compound choice is worth noting: I added the component
+<code>_pmod</code>, which composes with anything; Codex added the single
+compound <code>_pmod_hub75e_led_matrix</code>. Mine needs no new entry when a
+<code>_pmod_something_else</code> board arrives; Codex's needs one, but cannot
+over-strip a future board whose name genuinely ends in <code>_pmod</code>.</p>
+
+<h2>Measured: do they agree?</h2>
+
+<div class="scroll">
+<table>
+<caption>All numbers below were measured on this machine, not estimated</caption>
+<thead><tr><th>Check</th><th>Claude</th><th>Codex</th><th></th></tr></thead>
+<tbody>
+<tr><td>Board directories</td><td class="num">113</td><td class="num">113</td><td><span class="tag t-same">same</span></td></tr>
+<tr><td>First-level entries</td><td class="num">56</td><td class="num">56</td><td><span class="tag t-same">same</span></td></tr>
+<tr><td>Partition of the 113 into groups</td><td colspan="2" class="num">identical, group for group</td><td><span class="tag t-same">same</span></td></tr>
+<tr><td>Group names that differ</td><td colspan="2" class="num">4 of 56</td><td><span class="tag t-codex">codex shorter</span></td></tr>
+<tr><td>Agreement with an independent oracle built from
+    <code>boards/README.csv</code></td><td colspan="2" class="num">both match exactly</td><td><span class="tag t-spec">proved</span></td></tr>
+<tr><td>Base-name cost, 5&times;113 names</td><td class="num">265 ms</td><td class="num">779 ms</td><td><span class="tag t-mine">claude 2.9&times;</span></td></tr>
+<tr><td>&hellip; same, with Codex's <code>$( )</code> removed</td><td class="num">265 ms</td><td class="num">240 ms</td><td><span class="tag t-codex">codex 1.1&times;</span></td></tr>
+<tr><td>A board directory named <code>exit</code> is selectable</td><td class="num">yes</td><td class="num">no</td><td><span class="tag t-mine">claude</span></td></tr>
+<tr><td>macOS branch of the board scan works under GNU findutils</td><td class="num">no</td><td class="num">yes</td><td><span class="tag t-codex">codex</span></td></tr>
+<tr><td>An aborted menu damages an existing <code>fpga_board_selection</code></td><td class="num">no</td><td class="num">no</td><td><span class="tag t-same">same</span></td></tr>
+<tr><td>Old flat menu vs new menu, 113 boards, selected board and
+    selection-file bytes</td><td class="num">0 mismatches</td><td class="num">0 mismatches</td><td><span class="tag t-spec">proved</span></td></tr>
+</tbody></table>
+</div>
+
+<p>The four differing group names all come from Codex's extra
+<code>_ecp5_yosys</code>. They change what the first level reads, not what gets
+selected:</p>
+
+<div class="scroll">
+<table>
+<thead><tr><th>Directory</th><th>Claude's first-level label</th><th>Codex's</th></tr></thead>
+<tbody>
+<tr><td class="mono">colorlight75b_tm1638_ecp5_yosys</td><td class="mono">colorlight75b_tm1638_ecp5_yosys</td><td class="mono">colorlight75b</td></tr>
+<tr><td class="mono">colorlightI5_tm1638_ecp5_yosys</td><td class="mono">colorlightI5_tm1638_ecp5_yosys</td><td class="mono">colorlightI5</td></tr>
+<tr><td class="mono">karnix_ecp5_yosys</td><td class="mono">karnix_ecp5_yosys</td><td class="mono">karnix</td></tr>
+<tr><td class="mono">orangecrab_ecp5_yosys</td><td class="mono">orangecrab_ecp5_yosys</td><td class="mono">orangecrab</td></tr>
+</tbody></table>
+</div>
+
+<p>Codex's labels read better. Mine are longer but tell you the exact directory
+you are about to select, with no second screen to confirm it. This is a
+presentation preference rather than a correctness question, and Codex's is the
+nicer of the two.</p>
+
+<h2>What the user actually sees</h2>
+
+<div class="screens">
+<div>
+<pre> 5) arty_a7_100 (2 configurations)
+ 6) arty_a7_35 (2 configurations)
+ 7) basys3
+...
+14) de0_nano (2 configurations)
+15) de0_nano_soc (2 configurations)
+...
+49) tang_nano_9k (18 configurations)
+50) tang_primer_20k_dock (14 configurations)
+<span class="cm">one column, 57 lines</span></pre>
+<p class="cap"><span class="m">Claude</span> &mdash; first level</p>
+</div>
+<div>
+<pre> 5) arty_a7_100       34) nexys_a7
+ 6) arty_a7_35        35) nexys_a7_100
+ 7) basys3            36) nexys_a7_50
+...
+14) de0_nano_soc      43) rzrd
+15) de0_nano          44) saylinx
+...
+49) tang_nano_9k      ...
+<span class="cm">two columns, 29 lines</span></pre>
+<p class="cap"><span class="c">Codex</span> &mdash; first level</p>
+</div>
+</div>
+
+<div class="screens">
+<div>
+<pre>Please select a configuration of
+the board tang_nano_9k:
+ 1) 50mhz_hdmi_no_tm1638   11) lcd_800_480_no_tm1638
+ 2) 50mhz_hdmi_tm1638      12) lcd_800_480_no_tm1638_yosys
+ 3) hdmi_no_ip_tm1638      13) lcd_800_480_tm1638
+...
+10) lcd_480_272_tm1638_yosys  20) exit
+<span class="cm">two columns, 10 lines</span></pre>
+<p class="cap"><span class="m">Claude</span> &mdash; second level</p>
+</div>
+<div>
+<pre>Please select a variant of
+'tang_nano_9k':
+ 1) tang_nano_9k_50mhz_hdmi_no_tm1638
+ 2) tang_nano_9k_50mhz_hdmi_tm1638
+ 3) tang_nano_9k_hdmi_no_ip_tm1638
+...
+20) exit
+<span class="cm">one column, 20 lines</span></pre>
+<p class="cap"><span class="c">Codex</span> &mdash; second level</p>
+</div>
+</div>
+
+<p>The two sides made opposite calls and each pays for it on the other screen.
+Codex's short first-level labels let <code>select</code> use two columns, so
+the whole board list fits a terminal; my count hints push it to one column and
+57 lines. On the second level it reverses: my suffix-only labels fit two
+columns in 10 lines, while Codex repeats <code>tang_nano_9k_</code> eighteen
+times down a single column.</p>
+
+<p>One ordering difference is not a preference. Codex lists the first level in
+order of first appearance in the directory scan, so
+<code>de0_nano_soc</code> comes <em>before</em> <code>de0_nano</code> &mdash;
+because <code>de0_nano_soc_vga666</code> sorts before
+<code>de0_nano_vga666</code>. I sort the derived board names, so
+<code>de0_nano</code> comes first. In a list people scan alphabetically, mine
+is the correct order.</p>
+
+<div class="verdict alarm">
+<h2>The bug Codex found and I did not</h2>
+<p>The macOS branch of the board scan reads:</p>
+<pre>available_fpga_boards=$(find "$board_dir" ... -type d | xargs -I % <span class="bad">-L 1</span> basename '%' | ...)</pre>
+<p>Under GNU findutils, <code>-I</code> and <code>-L</code> are mutually
+exclusive; <code>xargs</code> warns, drops <code>-I</code>, and prints the
+literal replacement string:</p>
+<pre>original darwin line -&gt; first 6 entries: <span class="bad">% % % % % %</span>
+codex's fixed line   -&gt; first 6 entries: <span class="good">a7_lite_35t alinx_ax301 alinx_ax4010 ...</span></pre>
+<p>Codex deleted <code>-L 1</code>, which <code>-I</code> implies anyway. The
+reason they saw it and I did not is their test: it forces
+<code>OSTYPE=darwin23</code> on Linux and runs the real discovery line, so the
+<code>%</code> list made a test fail. My test injects the board list directly
+and never touches that line. On a stock macOS with BSD <code>xargs</code> the
+old line is harmless, which is why this survived for so long &mdash; but
+anyone with GNU <code>findutils</code> ahead of <code>/usr/bin</code> on a Mac
+gets a menu of percent signs. <strong>I should take this fix.</strong></p>
+</div>
+
+<h2>How each side proved equivalence</h2>
+
+<p>The task asked for a check that the two-level selection is equivalent to the
+original. Both sides built one; they are instruments of different strength.</p>
+
+<div class="pair">
+<div class="impl mine-side">
+  <p class="impl-name">Claude's instrument</p>
+  <p class="impl-sub">walk the menu, learn nothing in advance</p>
+  <p>The test extracts the menu section verbatim from the script, then explores
+  it by typing numbers and reading what comes back. It never computes the
+  expected grouping, so it cannot be fooled by a bug my own test code
+  reproduces. It asserts that the reachable set equals the directory listing,
+  that each board is reachable by <strong>exactly one</strong> pair of answers,
+  and that nothing else is reachable.</p>
+  <p>Because it injects <code>available_fpga_boards</code> directly, it can
+  test board lists that do not exist on disk: a directory named
+  <code>exit</code>, a directory named <code>back</code>, hypothetical
+  suffix combinations.</p>
+  <p>I mutation-tested it: deleting <code>_no_hdmi</code> from the list, and
+  swapping the search for greedy longest-match, each make a named test fail.</p>
+</div>
+<div class="impl codex-side">
+  <p class="impl-name">Codex's instrument</p>
+  <p class="impl-sub">run the whole script, and diff against the old one</p>
+  <p>The test builds a fake repository in a tempdir &mdash; 113 empty board
+  directories, stub toolchain modules &mdash; and runs the real, unmodified
+  <code>00_setup.source_bash</code> inside it. That covers everything around
+  the menu as well: the exact bytes of <code>fpga_board_selection</code>, the
+  saved-selection bypass, the <code>hackathon_top.sv</code> override, the
+  run-directory question, <code>fpga_toolchain</code> dispatch, and all four
+  <code>OSTYPE</code> branches.</p>
+  <p>Its grouping oracle is independent of the suffix list: it derives the
+  board models from <code>boards/README.csv</code> and groups by the longest
+  catalog model that is a prefix.</p>
+  <p>And <code>--baseline old_setup.source_bash</code> replays every one of the
+  113 selections through <em>both</em> the old flat menu and the new two-level
+  menu and demands identical output and identical selection files.</p>
+</div>
+</div>
+
+<p>Codex's <code>--baseline</code> is the stronger claim, so I borrowed it. I
+rebuilt their stubbed-tempdir harness around my implementation and compared
+the original flat menu with my two-level menu for all 113 boards:</p>
+
+<pre>two-level paths discovered: 113 boards
+boards compared : 113
+mismatches      : <span class="good">0</span>     <span class="cm">selected board and selection-file bytes both identical</span></pre>
+
+<p>I also ran their catalog-derived oracle against my grouping:</p>
+
+<pre>catalog models in README.csv : 54
+configurations               : 113
+groups: codex oracle 56, claude impl 56
+PARTITIONS IDENTICAL         : <span class="good">True</span></pre>
+
+<p>And I ran their whole suite against my branch. Five test methods fail; four
+of the five are coupling rather than defect:</p>
+
+<div class="scroll">
+<table>
+<thead><tr><th>Failure</th><th>Cause</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td><code>test_platform_discovery_branches</code>, darwin</td>
+    <td>the <code>xargs</code> bug &mdash; my branch produces a menu of <code>%</code></td>
+    <td><span class="tag t-codex">real defect in mine</span></td></tr>
+<tr><td><code>test_every_original_configuration_remains_selectable</code>, 4 de0_nano subtests</td>
+    <td>their expected index assumes first-appearance order; I sort</td>
+    <td><span class="tag t-same">ordering coupling</span></td></tr>
+<tr><td><code>test_grouping_keeps_distinct_models&hellip;</code></td>
+    <td>calls <code>fpga_board_base_name</code>; mine is <code>fpga_board_base</code></td>
+    <td><span class="tag t-same">naming coupling</span></td></tr>
+<tr><td><code>test_invalid_input_retries_each_level</code></td>
+    <td>greps for &ldquo;Invalid FPGA board variant&rdquo;; mine says &ldquo;Invalid configuration choice&rdquo;</td>
+    <td><span class="tag t-same">message coupling</span></td></tr>
+<tr><td><code>test_back_redisplays_boards&hellip;</code></td>
+    <td>counts &ldquo;Please select an FPGA board:&rdquo;; mine kept the original wording</td>
+    <td><span class="tag t-same">message coupling</span></td></tr>
+</tbody></table>
+</div>
+
+<h2>Pros and cons</h2>
+
+<div class="pair">
+<div class="impl mine-side">
+  <p class="impl-name">Claude</p>
+  <p class="impl-sub">pros</p>
+  <ul class="findings pm">
+  <li class="plus">First level sorted by board name, so <code>de0_nano</code>
+  precedes <code>de0_nano_soc</code>.</li>
+  <li class="plus">Items chosen by menu <em>number</em>, never by label text:
+  a board directory called <code>exit</code> or <code>back</code> is
+  selectable. The original menu could not do this either.</li>
+  <li class="plus">Count hint <code>(18 configurations)</code> tells the user a
+  second menu is coming, and how big it is.</li>
+  <li class="plus">Second level shows only what differs, so 18 variants fit in
+  10 lines.</li>
+  <li class="plus">A board with one configuration is listed under its exact
+  directory name &mdash; what you pick is what gets written to the selection
+  file.</li>
+  <li class="plus">No subshell per board: 2.9&times; faster than Codex's
+  function as written.</li>
+  <li class="plus">Test can inject board lists that do not exist on disk, and
+  discovers the menu structure instead of assuming it.</li>
+  <li class="plus">Original user-visible strings preserved, so existing
+  screenshots and course notes still match.</li>
+  </ul>
+  <p class="impl-sub">cons</p>
+  <ul class="findings pm">
+  <li class="minus">Missed the <code>xargs -I % -L 1</code> bug on the macOS
+  path.</li>
+  <li class="minus">294 added lines in the setup script against Codex's 152 for
+  the same behaviour.</li>
+  <li class="minus">Recursive search is harder to read than one regex, and its
+  worst case is exponential in the number of suffixes that match a tail (today:
+  at most 5).</li>
+  <li class="minus">Four first-level labels are long and ugly
+  (<code>colorlight75b_tm1638_ecp5_yosys</code>).</li>
+  <li class="minus">Count hints force a single column, 57 lines on the first
+  screen.</li>
+  <li class="minus">Test never exercises the selection file, the toolchain
+  dispatch, the hackathon override or the <code>OSTYPE</code> branches.</li>
+  <li class="minus">Same <code>PS3</code> prompt on both levels, so the prompt
+  line does not say which level you are on.</li>
+  <li class="minus">Keeps the typo &ldquo;amoung&rdquo; in the first-level
+  prompt.</li>
+  </ul>
+</div>
+<div class="impl codex-side">
+  <p class="impl-name">Codex</p>
+  <p class="impl-sub">pros</p>
+  <ul class="findings pm">
+  <li class="plus">Fixed the macOS <code>xargs</code> bug, found because the
+  test forces every <code>OSTYPE</code> branch.</li>
+  <li class="plus">One regex instead of a recursion: shorter, and marginally
+  the faster algorithm once the subshell is removed.</li>
+  <li class="plus">Half the code for the same behaviour.</li>
+  <li class="plus">Short first-level labels, so the 56 boards fit two columns
+  and one screen.</li>
+  <li class="plus">Second level shows full directory names &mdash; unambiguous,
+  and identical to what lands in <code>fpga_board_selection</code>.</li>
+  <li class="plus">Distinct <code>PS3</code> per level
+  (&ldquo;Board&nbsp;(a&nbsp;number)&rdquo; /
+  &ldquo;Variant&nbsp;(a&nbsp;number)&rdquo;), so the prompt itself says where
+  you are.</li>
+  <li class="plus"><code>local PS3 REPLY</code>: the function does not leak
+  either variable.</li>
+  <li class="plus">Returns a status and lets the caller decide to exit, instead
+  of calling <code>exit</code> from inside the menu.</li>
+  <li class="plus">Test runs the entire real script in a sandbox and checks the
+  selection file byte for byte, plus the saved-selection bypass, the hackathon
+  override and the toolchain dispatch.</li>
+  <li class="plus">Grouping oracle derived from <code>boards/README.csv</code>,
+  independent of the suffix list.</li>
+  <li class="plus"><code>--baseline</code> compares old menu against new menu
+  for all 113 boards.</li>
+  <li class="plus">Dropped the &ldquo;amoung&rdquo; typo from the prompt.</li>
+  </ul>
+  <p class="impl-sub">cons</p>
+  <ul class="findings pm">
+  <li class="minus">First level in first-appearance order, so
+  <code>de0_nano_soc</code> is listed before <code>de0_nano</code>.</li>
+  <li class="minus">Compares the label text, so a board directory named
+  <code>exit</code> or <code>back</code> cannot be selected &mdash; it is read
+  as the command.</li>
+  <li class="minus"><code>$( )</code> per board makes the whole menu build
+  2.9&times; slower than it needs to be; the suffix array is also rebuilt on
+  every call.</li>
+  <li class="minus">No hint that a board opens a second menu, so the user
+  cannot tell a one-step choice from a two-step one.</li>
+  <li class="minus">Second level repeats the board prefix on every line: 18
+  variants in 18 lines.</li>
+  <li class="minus">Test's expected indices assume the unsorted order, so the
+  suite is coupled to that choice; adopting sorted order means updating the
+  oracle.</li>
+  <li class="minus">Its oracle raises <code>ValueError</code> for a new board
+  directory missing from <code>README.csv</code>, so adding a board means
+  touching the catalog first.</li>
+  <li class="minus">Reworded two user-visible messages, which invalidates
+  existing screenshots and notes.</li>
+  <li class="minus">Relies on POSIX leftmost-longest matching in
+  <code>[[ =~ ]]</code> &mdash; correct on glibc and BSD, but an unstated
+  dependency on the platform regex engine.</li>
+  </ul>
+</div>
+</div>
+
+<h2>What each side should adopt</h2>
+
+<h3><span class="m">Claude should take from Codex</span></h3>
+<ol class="plan">
+<li><strong>The <code>xargs</code> fix.</strong> Drop <code>-L 1</code> from
+the darwin branch. One character range, and it repairs the board menu for any
+Mac with GNU findutils on <code>PATH</code>.</li>
+<li><strong>The stubbed-tempdir harness.</strong> Running the real script
+against a fake <code>boards/</code> tree costs 0.12&nbsp;s per run against
+2.4&nbsp;s for the real repository &mdash; 20&times; &mdash; and it covers the selection file, the toolchain
+dispatch, the hackathon override and the <code>OSTYPE</code> branches &mdash;
+all of which my test skips entirely.</li>
+<li><strong><code>--baseline</code>.</strong> Fold the old-versus-new
+comparison into the test file instead of leaving it as the one-off script I
+wrote for this report, so the equivalence claim is re-checkable by anyone.</li>
+<li><strong>The independent oracle.</strong> Grouping expectations derived from
+<code>boards/README.csv</code> rather than from the suffix list &mdash; it
+catches a wrong grouping that a suffix-based expectation would happily
+confirm.</li>
+<li><strong>Per-level <code>PS3</code>, and <code>local PS3 REPLY</code>.</strong>
+Cheap, and the prompt then tells the user which level they are answering.</li>
+<li><strong>Return a status instead of calling <code>exit</code>.</strong>
+Leaving the exit decision to the caller is the cleaner contract.</li>
+<li><strong>Consider <code>_ecp5_yosys</code>,</strong> or an equivalent, so
+the four Lattice entries read <code>karnix</code> rather than
+<code>karnix_ecp5_yosys</code>.</li>
+</ol>
+
+<h3><span class="c">Codex should take from Claude</span></h3>
+<ol class="plan">
+<li><strong>Sort the first level.</strong> One <code>sort -u</code> over the
+derived names puts <code>de0_nano</code> before <code>de0_nano_soc</code>.
+Their test's expected indices need the same sort applied to the oracle.</li>
+<li><strong>Select by number, not by label.</strong> Comparing
+<code>$REPLY</code> against the item count removes the
+<code>exit</code>/<code>back</code> collision for good, and it is no longer
+code than the string comparison.</li>
+<li><strong>Return through a variable, not <code>$( )</code>.</strong> Same
+algorithm, 2.9&times; faster menu build. Hoisting the 33-element suffix array
+out of the function saves a little more.</li>
+<li><strong>A hint that a second menu follows.</strong> Some marker on the
+multi-configuration entries &mdash; even a bare asterisk, which would keep the
+two-column layout.</li>
+<li><strong>Shorten the second level</strong> to the distinguishing suffix, so
+18 variants do not consume 18 lines.</li>
+<li><strong>Walk the menu in at least one test</strong> rather than computing
+the indices, so the test cannot agree with a wrong grouping; and inject
+synthetic board lists, including names that collide with menu commands.</li>
+<li><strong>Mutation-test the suffix logic.</strong> Removing
+<code>_no_hdmi</code> should make a named test fail; it is the cheapest proof
+that the test has teeth.</li>
+</ol>
+
+<h3>Both should fix</h3>
+<p>The menu numbering is locale-dependent, and neither side noticed. The board
+list comes from <code>sort</code>, whose collation follows the locale:</p>
+<pre><span class="cm">LC_ALL=C          -&gt;</span> item 26 = de23_lite   item 27 = de2_115
+<span class="cm">LC_ALL=en_US.UTF-8 -&gt;</span> item 26 = de2_115     item 27 = de23_lite</pre>
+<p>Two boards swap places, so &ldquo;choose number 26&rdquo; means different
+things on a C-locale machine and a UTF-8 one. That matters for a course where
+an instructor reads numbers out loud. <code>LC_ALL=C sort</code> (or
+<code>LC_COLLATE=C</code>) fixes it for both, and the original flat menu has
+the same flaw. I checked the related worry &mdash; whether locale collation
+could make <code>sort -u</code> silently merge two distinct board names &mdash;
+and it does not on this glibc: all 56 names survive under C,
+<code>en_US.UTF-8</code> and <code>ru_RU.UTF-8</code>.</p>
+
+<h2>If the two were merged</h2>
+<p>The best single version is mostly Codex's shape with my selection logic:
+their regex and their 152-line footprint, their per-level prompts and
+status-return, their test harness and <code>--baseline</code>; my sorted first
+level, number-based selection, variable-return calling convention, short
+second level and count hints; their <code>xargs</code> fix; and
+<code>LC_ALL=C</code> on the sort, which neither has. The grouping needs no
+reconciliation at all &mdash; both already produce the same 56 boards.</p>
+
+<footer>
+claude branch: claude_board_menu @ df723431 &middot; codex branch: codex_board_menu @ 5e39006d<br>
+both from main @ 77959f67 &middot; prompts identical except for the branch name<br>
+measured on ALT Linux, bash 5, GNU findutils 4.8.0, glibc collation &middot; 113 board directories<br>
+report written 2026-10-06 &middot; every number above was produced by running both implementations
+</footer>
+
+</div>
+</body>
+</html>
