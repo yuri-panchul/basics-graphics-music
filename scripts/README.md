@@ -59,8 +59,9 @@ python3 scripts/tests/test_quartus_discovery.py
 
 `steps/00_setup.source_bash` asks for a board with a two-level menu. The
 first level lists the boards, the second one the configurations of the board
-chosen on the first level. A board with a single configuration is listed
-under the name of that configuration and does not open a second menu.
+chosen on the first level. A star marks a board with several configurations;
+a board with one configuration does not open a second menu, and choosing it
+selects that configuration directly.
 
 The two levels come from the directory names under `boards` alone.
 `fpga_board_config_suffixes` lists the suffixes that mark a configuration

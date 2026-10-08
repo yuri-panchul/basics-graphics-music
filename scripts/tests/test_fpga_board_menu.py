@@ -445,6 +445,60 @@ class OrderTests(unittest.TestCase):
         self.assertEqual(items, ["de2_115", "de2_115_tm1638", "back", "exit"])
 
 
+class FirstLevelLabelTests(unittest.TestCase):
+    """The first level lists bare board names, with a star on the ones that
+    open a second menu."""
+
+    def labels_and_groups(self):
+        boards = all_directories()
+        menu = MenuSection(boards)
+        reached = menu.walk()
+        sizes = {}
+
+        for board, paths in reached.items():
+            sizes[paths[0][0]] = sizes.get(paths[0][0], 0) + 1
+
+        text = menu.run([1])[2]
+        text = text.split("Please select an FPGA board", 1)[1]
+        text = text.split(CONFIG_PROMPT, 1)[0]
+        labels = {int(n): label for n, label in
+                  re.findall(r"(?:^|\s)(\d+)\) (\S+(?: \*)?)", text)}
+
+        return labels, sizes
+
+    def test_a_star_marks_exactly_the_boards_with_several_configurations(self):
+        labels, sizes = self.labels_and_groups()
+
+        for position, count in sizes.items():
+            with self.subTest(item=position, label=labels[position]):
+                self.assertEqual(labels[position].endswith(" *"), count > 1)
+
+    def test_the_labels_carry_no_configuration_counts(self):
+        labels, _ = self.labels_and_groups()
+
+        for label in labels.values():
+            self.assertNotIn("configurations", label)
+
+    def test_a_single_configuration_board_is_listed_under_the_board_name(self):
+        # karnix_ecp5_yosys is the only configuration of karnix_ecp5, so the
+        # first level says karnix_ecp5 and selects the directory directly
+
+        menu = MenuSection(["de0", "karnix_ecp5_yosys"])
+        text = menu.run([1])[2]
+        items = re.findall(r"(?:^|\s)\d+\) (\S+)", text)
+
+        self.assertIn("karnix_ecp5", items)
+        self.assertNotIn("karnix_ecp5_yosys", items)
+        self.assertEqual(menu.selected([2]), "karnix_ecp5_yosys")
+
+    def test_the_star_is_not_part_of_the_selected_name(self):
+        menu = MenuSection(["de0_nano_vga666", "de0_nano_vga_pmod"])
+        text = menu.run([1])[2]
+
+        self.assertIn("de0_nano *", text)
+        self.assertEqual(menu.selected([1, 1]), "de0_nano_vga666")
+
+
 class IgnoredDirectoryTests(unittest.TestCase):
     """Directories that are not boards, and configurations that are chosen
     through hackathon_top.sv, must not appear in the menu."""

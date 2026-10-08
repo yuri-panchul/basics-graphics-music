@@ -487,7 +487,7 @@ fpga_board_alias_target ()
 
 select_fpga_board ()
 {
-    local i_fpga_board board base label pair n single
+    local i_fpga_board board base label pair n
     local chosen_base chosen_config choice
     local pairs level1_labels level1_bases level2_labels configs seen
     local unique_bases
@@ -531,9 +531,10 @@ select_fpga_board ()
     # listing has de0_nano_soc_vga666 before de0_nano_vga666, because "s"
     # comes before "v".
     #
-    # A board with a single configuration is listed under the name of that
-    # configuration, so that choosing such a board does not open a second
-    # menu with one item in it.
+    # A board with more than one configuration is marked with a star, so that
+    # the user can tell which choices open a second menu. The names are kept
+    # bare otherwise, because that is what lets "select" lay the whole list
+    # out in two or three columns.
 
     seen=" "
     unique_bases=()
@@ -560,25 +561,17 @@ select_fpga_board ()
     for base in $(fpga_board_sort "${unique_bases[@]}")
     do
         n=0
-        single=
 
         for i_fpga_board in "${pairs[@]}"
         do
-            if [ "${i_fpga_board#* }" == "$base" ]
-            then
-                n=$(( n + 1 ))
-
-                # ${i_fpga_board%% *} - the part before the first space
-
-                single=${i_fpga_board%% *}
-            fi
+            [ "${i_fpga_board#* }" == "$base" ] && n=$(( n + 1 ))
         done
 
         if [ $n = 1 ]
         then
-            level1_labels[${#level1_labels[@]}]=$single
+            level1_labels[${#level1_labels[@]}]=$base
         else
-            level1_labels[${#level1_labels[@]}]="$base ($n configurations)"
+            level1_labels[${#level1_labels[@]}]="$base *"
         fi
 
         level1_bases[${#level1_bases[@]}]=$base
@@ -586,7 +579,8 @@ select_fpga_board ()
 
     while true
     do
-        info "${current_board_message}Please select an FPGA board amoung the following supported:"
+        info "${current_board_message}Please select an FPGA board amoung the following supported."  \
+             "A star marks a board with several configurations:"
         PS3="Your choice (a number): "
 
         chosen_base=
