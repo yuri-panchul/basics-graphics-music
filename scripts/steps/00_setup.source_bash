@@ -333,7 +333,7 @@ fpga_board_base_name ()
 
 choose_fpga_board ()
 {
-    local board_name configuration index
+    local board_name configuration index sorted_board_names
     local seen_boards=" " PS3 REPLY
     local -a board_names=() configurations=() configuration_boards=() variants=() variant_labels=()
 
@@ -359,6 +359,15 @@ choose_fpga_board ()
         info "No FPGA board configurations are available in '$board_dir'."
         return 1
     fi
+
+    sorted_board_names=$(printf '%s\n' "${board_names[@]}" |
+        LC_ALL=C "$board_sort_to_run") || return 1
+    board_names=()
+
+    while IFS= read -r board_name
+    do
+        board_names+=("$board_name")
+    done <<< "$sorted_board_names"
 
     while true
     do

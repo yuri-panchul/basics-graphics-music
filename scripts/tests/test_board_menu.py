@@ -52,6 +52,9 @@ for configuration in CONFIGURATIONS:
     CONFIGURATION_MODELS[configuration] = model
     GROUPS.setdefault(MENU_NAMES.get(model, model), []).append(configuration)
 
+# Board names, rather than the first configuration encountered, define the order.
+GROUPS = dict(sorted(GROUPS.items()))
+
 BASELINE = None
 
 
@@ -331,6 +334,11 @@ class BoardMenuTests(unittest.TestCase):
                 self.assertEqual(self.menus(result)[0], original)
                 result = self.run_setup(self.choices_for("de0_nano_soc_vga666"), locale=locale)
                 self.assert_selection(result, "de0_nano_soc_vga666")
+
+    def test_first_menu_is_sorted_by_board_name(self):
+        boards = self.menus(self.run_setup(columns="1"))[0][:-1]
+        self.assertEqual(boards, list(GROUPS))
+        self.assertLess(boards.index("de0_nano"), boards.index("de0_nano_soc"))
 
     def run_helpers(self, body, choices=""):
         wrapper = self.lab / "test_helpers.bash"

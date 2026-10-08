@@ -40,9 +40,9 @@ verified command. The probe rejects failing or incompatible utilities, including
 Windows sort with different ordering. No `sort -u` support is required; Bash
 deduplicates board names. If no compatible sorter exists, setup reports the
 missing dependency. The caller's locale and menu prompt variables are preserved.
-Board order follows the first occurrence in the sorted directory list; variants
-retain that directory order. Names alone build the menu, without reading pin
-constraints or requiring installed EDA tools.
+The first menu is sorted by the derived board names, so `de0_nano` precedes
+`de0_nano_soc`. Variants retain directory-name order. Names alone build the menu,
+without reading pin constraints or requiring installed EDA tools.
 
 The current 110 eligible directory choices appear in 52 board/family groups.
 `fpga_board_selection` retains its flat format: the selected configuration's
