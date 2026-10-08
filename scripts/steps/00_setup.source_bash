@@ -289,19 +289,20 @@ fpga_board_config_suffixes="
     _yosys
 "
 
-# Suffixes that name the size of the FPGA rather than a feature of the board.
-# The same product is sold in two sizes - Nexys A7-50T and A7-100T, Arty
-# A7-35T and A7-100T - differing in the part number in board_specific.tcl, so
-# these are configurations of one board rather than two boards.
+# The two products that are sold in two sizes: Nexys A7-50T and A7-100T, and
+# Arty A7-35T and A7-100T. They differ in the part number in
+# board_specific.tcl, so each pair is one board with two configurations.
 #
-# They are kept apart from the list above because a bare number is a risky
-# thing to strip. Do not grow this list without checking that the number
-# really names a size of one product and not a different product.
+# This is a list of the directories rather than a suffix such as _100,
+# because a number at the end of a name does not reliably mean a size: a
+# future new_board_100 may well be a different product from new_board.
+# Written as "<configuration>:<the board it belongs to>".
 
-fpga_board_size_suffixes="
-    _35
-    _50
-    _100
+fpga_board_families="
+    nexys_a7_50:nexys_a7
+    nexys_a7_100:nexys_a7
+    arty_a7_35:arty_a7
+    arty_a7_100:arty_a7
 "
 
 # Directories under "boards" that are not boards at all and must not appear
@@ -337,12 +338,12 @@ fpga_board_legacy_aliases="
 
 fpga_board_base_result=
 
-fpga_board_base ()
+fpga_board_base_search ()
 {
     local name="$1"
     local suffix stripped candidate best="$1"
 
-    for suffix in $fpga_board_config_suffixes $fpga_board_size_suffixes
+    for suffix in $fpga_board_config_suffixes
     do
         case "$name" in
             *"$suffix")
@@ -352,7 +353,7 @@ fpga_board_base ()
 
                 if [ -n "$stripped" ]
                 then
-                    fpga_board_base "$stripped"
+                    fpga_board_base_search "$stripped"
                     candidate=$fpga_board_base_result
 
                     if [ ${#candidate} -lt ${#best} ]
@@ -365,6 +366,35 @@ fpga_board_base ()
     done
 
     fpga_board_base_result=$best
+}
+
+#-----------------------------------------------------------------------------
+
+# The board that the configuration $1 belongs to: the name left by
+# fpga_board_base_search, with the two-size products of
+# $fpga_board_families mapped onto the board they are a size of.
+#
+# The mapping is applied here rather than inside the search so that it
+# happens once, to the finished name, and cannot change which way an
+# overlapping suffix is split.
+
+fpga_board_base ()
+{
+    local pair
+
+    fpga_board_base_search "$1"
+
+    for pair in $fpga_board_families
+    do
+        case "$pair" in
+            "$fpga_board_base_result":*)
+                # ${pair#*:} - the part after the colon: the board
+
+                fpga_board_base_result=${pair#*:}
+                return
+            ;;
+        esac
+    done
 }
 
 #-----------------------------------------------------------------------------

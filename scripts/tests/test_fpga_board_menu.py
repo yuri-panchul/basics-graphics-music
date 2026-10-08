@@ -47,9 +47,14 @@ NOT_SELECTED = "a new FPGA board is not selected"
 NON_BOARDS = ("zzz_postponed_and_retired",)
 HACKATHON_SUFFIX = "_hackathon"
 
-# Suffixes that name the size of the FPGA; see fpga_board_size_suffixes
+# The two products sold in two sizes; see fpga_board_families
 
-SIZE_SUFFIXES = ("_35", "_50", "_100")
+FAMILIES = {
+    "nexys_a7_50": "nexys_a7",
+    "nexys_a7_100": "nexys_a7",
+    "arty_a7_35": "arty_a7",
+    "arty_a7_100": "arty_a7",
+}
 
 STUBS = {
     "altera": ["quartus_setup", "altera_setup_questa"],
@@ -98,12 +103,13 @@ def menu_source():
     text = "".join(lines[begin:end])
 
     for name in ("fpga_board_config_suffixes=",
-                 "fpga_board_size_suffixes=",
+                 "fpga_board_families=",
                  "fpga_board_non_boards=",
                  "fpga_board_legacy_aliases=",
                  "fpga_board_drop_non_boards ()",
                  "fpga_board_menu_choice ()",
                  "fpga_board_alias_target ()",
+                 "fpga_board_base_search ()",
                  "fpga_board_base ()",
                  "select_fpga_board ()"):
         if name not in text:
@@ -684,6 +690,20 @@ class SuffixTests(unittest.TestCase):
 
         self.assertEqual(self.base_of("new_board_pmod"), "new_board_pmod")
 
+    def test_a_number_at_the_end_is_not_a_size_by_itself(self):
+        # The two-size products are listed by name in fpga_board_families, so
+        # a different product whose name ends in a number keeps its name
+
+        self.assertEqual(self.base_of("new_board_100"), "new_board_100")
+        self.assertEqual(self.base_of("new_board_35_tm1638"), "new_board_35")
+        self.assertEqual(self.base_of("new_board_50"), "new_board_50")
+
+    def test_a_third_size_is_not_grouped_until_it_is_listed(self):
+        # nexys_a7_200 does not exist; if it ever does, it has to be added to
+        # fpga_board_families on purpose rather than appear there by accident
+
+        self.assertEqual(self.base_of("nexys_a7_200"), "nexys_a7_200")
+
     def test_50mhz_in_the_middle(self):
         self.assertEqual(self.base_of("tang_nano_9k_50mhz_hdmi_no_tm1638"),
                          "tang_nano_9k")
@@ -880,12 +900,7 @@ class CatalogTests(unittest.TestCase):
 
         for row in rows:
             model = row["Board"]
-
-            for suffix in SIZE_SUFFIXES:
-                if model.endswith(suffix):
-                    model = model[:-len(suffix)]
-
-            models.add(model)
+            models.add(FAMILIES.get(model, model))
 
         # nexys_a7 has no catalogue row of its own: it is the legacy alias
 

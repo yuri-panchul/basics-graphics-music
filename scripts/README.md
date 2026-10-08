@@ -76,12 +76,15 @@ listed suffix `_hdmi_no_tm1638`, while the correct split is `_no_hdmi`
 followed by `_no_tm1638`. `fpga_board_base` therefore tries every way to
 split the tail and keeps the shortest board name.
 
-`fpga_board_size_suffixes` is a second, deliberately short list: `_35`, `_50`
-and `_100` name the size of the FPGA rather than a feature of the board. Nexys
-A7-50T and A7-100T, and Arty A7-35T and A7-100T, are one product in two sizes,
-differing in the part number in `board_specific.tcl`, so they share a
-first-level entry. Do not grow that list without checking that the number
-really names a size of one product.
+`fpga_board_families` handles the two products that are sold in two sizes:
+Nexys A7-50T and A7-100T, and Arty A7-35T and A7-100T. They differ in the part
+number in `board_specific.tcl`, so each pair is one board with two
+configurations. It lists the four directories by name rather than a suffix
+such as `_100`, because a number at the end of a name does not reliably mean a
+size - a future `new_board_100` may well be a different product from
+`new_board`. The mapping is applied by `fpga_board_base` after
+`fpga_board_base_search` has removed the suffixes, so it happens once and
+cannot change which way an overlapping suffix is split.
 
 Boards that differ by more than a listed suffix stay separate first-level
 entries: `de0`, `de0_cv`, `de0_nano` and `de0_nano_soc`; `de1` and `de1_soc`;
