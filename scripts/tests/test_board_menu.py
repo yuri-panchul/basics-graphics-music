@@ -6,10 +6,12 @@ Optionally compare every selection with an original flat-menu setup script:
 """
 
 import argparse
+from collections import Counter
 import csv
 import io
 import os
 from pathlib import Path
+import re
 import shlex
 import subprocess
 import sys
@@ -19,13 +21,27 @@ import unittest
 
 REPO = Path(__file__).resolve().parents[2]
 SETUP = REPO / "scripts/steps/00_setup.source_bash"
-CONFIGURATIONS = sorted(path.name for path in (REPO / "boards").iterdir() if path.is_dir())
+ALL_CONFIGURATIONS = sorted(path.name for path in (REPO / "boards").iterdir() if path.is_dir())
+CONFIGURATIONS = [name for name in ALL_CONFIGURATIONS
+                  if name != "zzz_postponed_and_retired" and not name.endswith("_hackathon")]
 CATALOG = {
     row["Board"]: row["FPGA Manufacturer"]
     for row in csv.DictReader(io.StringIO((REPO / "boards/README.csv").read_text().replace("\\r\\n", "\n")))
 }
-# These directories appeared in the original menu but are not catalog models.
-MODELS = set(CATALOG) | {"nexys_a7", "zzz_postponed_and_retired"}
+# Independent expected results: the catalog describes models, while the menu
+# groups the specified chip families and keeps ECP5 in these board names.
+MODELS = set(CATALOG) | {"nexys_a7"}
+MENU_NAMES = {
+    "colorlight75b": "colorlight75b_ecp5",
+    "colorlightI5": "colorlightI5_ecp5",
+    "karnix": "karnix_ecp5",
+    "orangecrab": "orangecrab_ecp5",
+    "nexys_a7_50": "nexys_a7",
+    "nexys_a7_100": "nexys_a7",
+    "arty_a7_35": "arty_a7",
+    "arty_a7_100": "arty_a7",
+}
+CONFIGURATION_MODELS = {}
 GROUPS = {}
 for configuration in CONFIGURATIONS:
     matches = [model for model in MODELS
@@ -33,7 +49,8 @@ for configuration in CONFIGURATIONS:
     if not matches:
         raise ValueError(f"Add {configuration} to the independent board catalog before testing its grouping")
     model = max(matches, key=len)
-    GROUPS.setdefault(model, []).append(configuration)
+    CONFIGURATION_MODELS[configuration] = model
+    GROUPS.setdefault(MENU_NAMES.get(model, model), []).append(configuration)
 
 BASELINE = None
 
@@ -47,7 +64,7 @@ class BoardMenuTests(unittest.TestCase):
         self.steps.mkdir(parents=True)
         self.setup = self.steps / SETUP.name
         self.setup.write_text(SETUP.read_text())
-        for configuration in CONFIGURATIONS:
+        for configuration in ALL_CONFIGURATIONS:
             (self.root / "boards" / configuration).mkdir(parents=True)
         self.lab = self.root / "labs/example"
         self.lab.mkdir(parents=True)
@@ -72,7 +89,8 @@ class BoardMenuTests(unittest.TestCase):
                 "".join(f"{name} () {{ :; }}\n" for name in functions)
             )
 
-    def run_setup(self, choices="", script="06_choose_another_fpga_board.bash", ostype=None):
+    def run_setup(self, choices="", script="06_choose_another_fpga_board.bash", ostype=None,
+                  locale="C", columns="120", extra_env=None):
         wrapper = self.lab / script
         wrapper.write_text(
             (f"OSTYPE={shlex.quote(ostype)}\n" if ostype else "")
@@ -82,7 +100,8 @@ class BoardMenuTests(unittest.TestCase):
         env = os.environ.copy()
         for name in ("BASH_ENV", "ENV", "CDPATH"):
             env.pop(name, None)
-        env.update(PATH="/usr/bin:/bin", LC_ALL="C", COLUMNS="120")
+        env.update(PATH="/usr/bin:/bin", LC_ALL=locale, COLUMNS=columns)
+        env.update(extra_env or {})
         return subprocess.run(["bash", str(wrapper)], input=choices, text=True,
                               capture_output=True, cwd=self.lab, env=env, timeout=15)
 
@@ -93,14 +112,14 @@ class BoardMenuTests(unittest.TestCase):
             choices += f"{GROUPS[model].index(configuration) + 1}\n"
         return choices
 
-    def expected_file(self, configuration):
+    def expected_file(self, configuration, names=None):
         return "".join(("" if name == configuration else "# ") + name + "\n"
-                       for name in CONFIGURATIONS)
+                       for name in (CONFIGURATIONS if names is None else names))
 
-    def assert_selection(self, result, configuration):
+    def assert_selection(self, result, configuration, names=None):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn(f"RESULT_BOARD={configuration}\n", result.stdout)
-        self.assertEqual(self.selection.read_text(), self.expected_file(configuration))
+        self.assertEqual(self.selection.read_text(), self.expected_file(configuration, names))
 
     def test_every_original_configuration_remains_selectable(self):
         for model, variants in GROUPS.items():
@@ -114,14 +133,14 @@ class BoardMenuTests(unittest.TestCase):
                         toolchain = "xilinx"
                     else:
                         toolchain = {"Altera": "quartus", "Xilinx": "xilinx", "Gowin": "gowin"}.get(
-                            CATALOG.get(model), "none")
+                            CATALOG.get(CONFIGURATION_MODELS[configuration]), "none")
                     self.assertIn(f"RESULT_TOOLCHAIN={toolchain}\n", result.stdout)
 
                     if BASELINE is not None:
                         self.setup.write_text(BASELINE)
                         try:
-                            old = self.run_setup(f"{CONFIGURATIONS.index(configuration) + 1}\n")
-                            self.assert_selection(old, configuration)
+                            old = self.run_setup(f"{ALL_CONFIGURATIONS.index(configuration) + 1}\n")
+                            self.assert_selection(old, configuration, ALL_CONFIGURATIONS)
                             self.assertEqual(old.stdout, result.stdout)
                         finally:
                             self.setup.write_text(SETUP.read_text())
@@ -138,7 +157,7 @@ class BoardMenuTests(unittest.TestCase):
             "omdazz": "omdazz",
             "omdazz_epm570_quartus_13_1_or_older": "omdazz_epm570",
             "tang_nano_9k_50mhz_hdmi_no_tm1638": "tang_nano_9k",
-            "tang_nano_9k_lcd_800_480_tm1638_hackathon": "tang_nano_9k",
+            "new_board_hackathon": "new_board_hackathon",
             "tang_nano_9k_lcd_ml6485_no_tm1638_yosys": "tang_nano_9k",
             "tang_nano_9k_hdmi_no_ip_tm1638": "tang_nano_9k",
             "tang_nano_9k_tm1638_sd": "tang_nano_9k",
@@ -147,7 +166,20 @@ class BoardMenuTests(unittest.TestCase):
             "tang_primer_20k_dock_no_hdmi_tm1638": "tang_primer_20k_dock",
             "tang_primer_20k_dock_no_hdmi_no_tm1638": "tang_primer_20k_dock",
             "tang_primer_25k_pmod_hub75e_led_matrix_bright": "tang_primer_25k",
-            "colorlight75b_tm1638_ecp5_yosys": "colorlight75b",
+            "colorlight75b_ecp5_tm1638_yosys": "colorlight75b_ecp5",
+            "colorlightI5_ecp5_tm1638_yosys": "colorlightI5_ecp5",
+            "karnix_ecp5_yosys": "karnix_ecp5",
+            "orangecrab_ecp5_yosys": "orangecrab_ecp5",
+            "nexys_a7": "nexys_a7",
+            "nexys_a7_50": "nexys_a7",
+            "nexys_a7_100": "nexys_a7",
+            "arty_a7_35_pmod_mic3": "arty_a7",
+            "arty_a7_100": "arty_a7",
+            "nexys4": "nexys4",
+            "nexys4_ddr": "nexys4_ddr",
+            "new_board_pmod": "new_board_pmod",
+            "new_board_50": "new_board_50",
+            "new_board_100": "new_board_100",
             "new_board_unknown": "new_board_unknown",
             "new_hdmi_board": "new_hdmi_board",
             "new_board_hub75e_led_matrix": "new_board",
@@ -231,14 +263,139 @@ class BoardMenuTests(unittest.TestCase):
         self.assert_selection(result, "basys3")
 
     def test_hackathon_override_bypasses_menu_and_selection_file(self):
-        chosen = "tang_nano_9k_lcd_480_272_tm1638_hackathon"
-        (self.lab / "hackathon_top.sv").write_text(f"// Board configuration: {chosen}\n")
-        result = self.run_setup(script="03_synthesize_for_fpga.bash")
+        for chosen in (name for name in ALL_CONFIGURATIONS if name.endswith("_hackathon")):
+            with self.subTest(configuration=chosen):
+                (self.lab / "hackathon_top.sv").write_text(f"// Board configuration: {chosen}\n")
+                result = self.run_setup(script="03_synthesize_for_fpga.bash")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn(f"RESULT_BOARD={chosen}\n", result.stdout)
+                self.assertIn("RESULT_TOOLCHAIN=gowin\n", result.stdout)
+                self.assertNotIn("Please select", result.stderr)
+                self.assertFalse(self.selection.exists())
+
+    @staticmethod
+    def menus(result):
+        menus = []
+        for number, label in re.findall(r"^\s*(\d+)\) (.+)$", result.stderr, re.M):
+            if number == "1":
+                menus.append([])
+            menus[-1].append(label)
+        return menus
+
+    def test_walk_menu_reaches_only_eligible_configurations_once(self):
+        first_menu = self.menus(self.run_setup(columns="1"))[0]
+        self.assertEqual(first_menu[-1], "exit")
+        self.assertNotIn("zzz_postponed_and_retired", first_menu)
+        reached = []
+        for first in range(1, len(first_menu)):
+            result = self.run_setup(f"{first}\n", columns="1")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            selected = re.search(r"^RESULT_BOARD=(.*)$", result.stdout, re.M)
+            if selected:
+                reached.append(selected.group(1))
+                continue
+            variants = self.menus(result)[1]
+            self.assertEqual(variants[-2:], ["back", "exit"])
+            self.assertFalse(any("_hackathon" in label for label in variants))
+            for second in range(1, len(variants) - 1):
+                result = self.run_setup(f"{first}\n{second}\n")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                selected = re.search(r"^RESULT_BOARD=(.*)$", result.stdout, re.M)
+                self.assertIsNotNone(selected, result.stderr)
+                reached.append(selected.group(1))
+        self.assertEqual(Counter(reached), Counter(CONFIGURATIONS))
+
+    def test_legacy_alias_label_does_not_change_saved_identifier(self):
+        result = self.run_setup(self.choices_for("nexys_a7"))
+        self.assert_selection(result, "nexys_a7")
+        self.assertIn("nexys_a7 (alias of nexys_a7_100)", result.stderr)
+
+    def test_numbers_with_leading_zero_are_decimal(self):
+        for first in (8, 9, 10):
+            group = list(GROUPS)[first - 1]
+            result = self.run_setup(f"0{first}\n1\n")
+            self.assert_selection(result, GROUPS[group][0])
+        first = list(GROUPS).index("tang_nano_9k") + 1
+        for second in (8, 9, 10):
+            result = self.run_setup(f"{first}\n0{second}\n")
+            self.assert_selection(result, GROUPS["tang_nano_9k"][second - 1])
+
+    def test_menu_order_is_independent_of_callers_locale(self):
+        locales = subprocess.check_output(["locale", "-a"], text=True).splitlines()
+        original = self.menus(self.run_setup(columns="1"))[0]
+        for locale in ("C.utf8", "en_US.utf8", "ru_RU.utf8"):
+            if locale not in locales:
+                continue
+            with self.subTest(locale=locale):
+                result = self.run_setup(columns="1", locale=locale)
+                self.assertEqual(self.menus(result)[0], original)
+                result = self.run_setup(self.choices_for("de0_nano_soc_vga666"), locale=locale)
+                self.assert_selection(result, "de0_nano_soc_vga666")
+
+    def run_helpers(self, body, choices=""):
+        wrapper = self.lab / "test_helpers.bash"
+        wrapper.write_text(f"source {shlex.quote(str(self.setup))}\n" + body)
+        env = os.environ.copy()
+        for name in ("BASH_ENV", "ENV", "CDPATH"):
+            env.pop(name, None)
+        env.update(PATH="/usr/bin:/bin", LC_ALL="C")
+        return subprocess.run(["bash", str(wrapper)], input=choices, cwd=self.lab,
+                              env=env, text=True, capture_output=True, timeout=15)
+
+    def test_helper_cancellation_returns_and_preserves_prompt_state(self):
+        for choices in ("2\n", ""):
+            result = self.run_helpers(
+                'PS3=original_prompt\nREPLY=original_reply\nfpga_board=original_board\n'
+                'current_board_message=\navailable_fpga_boards=basys3\n'
+                'fpga_board_sort_discovery\n'
+                'if choose_fpga_board; then status=0; else status=$?; fi\n'
+                'printf "AFTER=%s,%s,%s,%s,%s\\n" "$status" "$PS3" "$REPLY" "$fpga_board" "$LC_ALL"\n',
+                choices)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("AFTER=1,original_prompt,original_reply,original_board,C", result.stdout)
+
+    def test_no_eligible_configurations_reports_and_returns(self):
+        result = self.run_helpers(
+            'current_board_message=\navailable_fpga_boards="zzz_postponed_and_retired board_hackathon"\n'
+            'fpga_board_sort_discovery\n'
+            'if choose_fpga_board; then exit 9; else printf "RETURNED\\n"; fi\n')
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn(f"RESULT_BOARD={chosen}\n", result.stdout)
-        self.assertIn("RESULT_TOOLCHAIN=gowin\n", result.stdout)
-        self.assertNotIn("Please select", result.stderr)
-        self.assertFalse(self.selection.exists())
+        self.assertIn("No FPGA board configurations", result.stderr)
+        self.assertIn("RETURNED", result.stdout)
+
+    def test_sort_discovery_checks_behavior_and_preserves_locale(self):
+        # Bash functions can shadow these command names without changing /usr/bin.
+        cases = {
+            "failed_first": ('/usr/bin/sort () { return 1; }\n', "/bin/sort"),
+            "wrong_first": ('/usr/bin/sort () { printf "wrong order\\n"; }\n', "/bin/sort"),
+            "path_fallback": ('/usr/bin/sort () { return 1; }\n/bin/sort () { return 1; }\n'
+                              'sort () { command /usr/bin/sort "$@"; }\n', "sort"),
+            "no_compatible_sort": ('/usr/bin/sort () { return 1; }\n/bin/sort () { return 1; }\n'
+                                   'sort () { printf "wrong order\\n"; }\n', None),
+        }
+        for name, (fakes, expected) in cases.items():
+            with self.subTest(case=name):
+                result = self.run_helpers(fakes + 'LC_ALL=POSIX\n'
+                    'if fpga_board_sort_discovery; then printf "SORT=%s\\n" "$board_sort_to_run"; '
+                    'else printf "NO_SORT\\n"; fi\nprintf "LOCALE=%s\\n" "$LC_ALL"\n')
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("LOCALE=POSIX", result.stdout)
+                if expected:
+                    self.assertIn(f"SORT={expected}\n", result.stdout)
+                else:
+                    self.assertIn("NO_SORT", result.stdout)
+                    self.assertIn("no Unix-compatible sort", result.stderr)
+
+    def test_windows_sort_on_path_does_not_replace_unix_sort(self):
+        tools = self.root / "fake-tools"
+        tools.mkdir()
+        fake_sort = tools / "sort"
+        fake_sort.write_text('#!/bin/sh\nprintf "WINDOWS_SORT_USED\\n" >&2\nexit 1\n')
+        fake_sort.chmod(0o755)
+        result = self.run_setup(self.choices_for("nexys_a7_50"),
+                                extra_env={"PATH": f"{tools}:/usr/bin:/bin"})
+        self.assert_selection(result, "nexys_a7_50")
+        self.assertNotIn("WINDOWS_SORT_USED", result.stderr)
 
     def test_platform_discovery_branches(self):
         for ostype in ("linux-gnu", "msys", "cygwin", "darwin23"):

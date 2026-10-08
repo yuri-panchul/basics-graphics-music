@@ -240,6 +240,33 @@ source "$script_dir/steps/00_setup_terminal.source_bash"
 #
 #-----------------------------------------------------------------------------
 
+fpga_board_sort_discovery ()
+{
+    local sort_candidate sort_probe
+
+    # Verify C ordering instead of assuming PATH contains the Unix sort utility.
+
+    for sort_candidate in /usr/bin/sort /bin/sort sort
+    do
+        if sort_probe=$(printf 'de0_nano_soc\na\nZ\nde0_nano\na\n_\n' |
+            LC_ALL=C "$sort_candidate" 2>/dev/null)
+        then
+            if [ "$sort_probe" = $'Z\n_\na\na\nde0_nano\nde0_nano_soc' ]
+            then
+                board_sort_to_run=$sort_candidate
+                return 0
+            fi
+        fi
+    done
+
+    info "error: no Unix-compatible sort with C ordering was found."  \
+         "Put the Unix, MSYS or Cygwin sort utility on PATH."
+
+    return 1
+}
+
+#-----------------------------------------------------------------------------
+
 fpga_board_base_name ()
 {
     local base="$1" suffix_pattern IFS='|'
@@ -259,9 +286,7 @@ fpga_board_base_name ()
         _hdmi_tm1638
         _lcd_480_272
         _lcd_800_480
-        _ecp5_yosys
         _lcd_ml6485
-        _hackathon
         _no_tm1638
         _pmod_hdmi
         _pmod_mic3
@@ -294,6 +319,13 @@ fpga_board_base_name ()
         base=${base%"${BASH_REMATCH[0]}"}
     fi
 
+    # Group these chip variants for navigation without changing their directories.
+
+    case "$base" in
+        nexys_a7_50 | nexys_a7_100 ) base=nexys_a7 ;;
+        arty_a7_35  | arty_a7_100  ) base=arty_a7  ;;
+    esac
+
     printf '%s\n' "$base"
 }
 
@@ -303,10 +335,14 @@ choose_fpga_board ()
 {
     local board_name configuration index
     local seen_boards=" " PS3 REPLY
-    local -a board_names=() configurations=() configuration_boards=() variants=()
+    local -a board_names=() configurations=() configuration_boards=() variants=() variant_labels=()
 
     for configuration in $available_fpga_boards
     do
+        case "$configuration" in
+            zzz_postponed_and_retired | *_hackathon ) continue ;;
+        esac
+
         board_name=$(fpga_board_base_name "$configuration")
         configurations+=("$configuration")
         configuration_boards+=("$board_name")
@@ -317,6 +353,12 @@ choose_fpga_board ()
             seen_boards+="$board_name "
         fi
     done
+
+    if [ "${#board_names[@]}" -eq 0 ]
+    then
+        info "No FPGA board configurations are available in '$board_dir'."
+        return 1
+    fi
 
     while true
     do
@@ -357,11 +399,23 @@ choose_fpga_board ()
         then
             configuration="${variants[0]}"
         else
+            variant_labels=()
+
+            for configuration in "${variants[@]}"
+            do
+                if [ "$configuration" = nexys_a7 ]
+                then
+                    variant_labels+=("nexys_a7 (alias of nexys_a7_100)")
+                else
+                    variant_labels+=("$configuration")
+                fi
+            done
+
             info "Please select a variant of '$board_name':"
             PS3="Variant (a number): "
             configuration=
 
-            select configuration in "${variants[@]}" back exit
+            select configuration in "${variant_labels[@]}" back exit
             do
                 if [ -n "$configuration" ]
                 then
@@ -377,6 +431,11 @@ choose_fpga_board ()
             "" | exit ) return 1 ;;
         esac
 
+        if [ "$configuration" = "nexys_a7 (alias of nexys_a7_100)" ]
+        then
+            configuration=nexys_a7
+        fi
+
         fpga_board="$configuration"
         info "FPGA board selected: $fpga_board"
         return 0
@@ -391,6 +450,10 @@ create_fpga_board_select_file()
 
     for i_fpga_board in $available_fpga_boards
     do
+        case "$i_fpga_board" in
+            *_hackathon ) continue ;;
+        esac
+
         comment="# "
         [ $i_fpga_board == $fpga_board ] && comment=""
         printf "$comment%s\n" "$i_fpga_board" >> "$select_file"
@@ -536,6 +599,7 @@ update_fpga_toolchain_var ()
 
 fpga_board_setup ()
 {
+    local board_sort_to_run
     fpga_toolchain=none
 
     if ! [[ $script =~ fpga ]] ; then
@@ -581,12 +645,14 @@ fpga_board_setup ()
 
     #-------------------------------------------------------------------------
 
+    fpga_board_sort_discovery || return 1
+
     # TODO: Remove else after testing on Linux and Windows
 
     if [[ "$OSTYPE" = "darwin"*   ]] ; then
-      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % basename '%' | sort | tr "\r\n" " ")
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d ! -name zzz_postponed_and_retired | xargs -I % basename '%' | LC_ALL=C "$board_sort_to_run" | tr "\r\n" " ")
     else
-      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d ! -name zzz_postponed_and_retired -printf '%f\n' | LC_ALL=C "$board_sort_to_run" | tr "\r\n" " ")
     fi
 
     if    ! [ -f "$select_file" ]  \

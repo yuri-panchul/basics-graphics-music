@@ -2,34 +2,52 @@
 
 ## Choosing an FPGA board
 
-The board menu in `steps/00_setup.source_bash` first lists board models, then
-lists the selected board's configurations using their complete directory names.
+The board menu in `steps/00_setup.source_bash` first lists board names or
+families, then lists their configurations using complete directory names.
 A board with only one configuration is selected immediately. The second menu
 has `back` and `exit`; invalid input retries the current menu. Exiting or closing
-standard input leaves an existing selection file untouched.
+standard input leaves an existing selection file untouched. Numbers with leading
+zeros are decimal: `08`, `09`, and `010` select items 8, 9, and 10.
 
-`fpga_board_base_name` groups directory names by removing a trailing sequence of
+`fpga_board_base_name` groups names by removing a complete trailing sequence of
 known configuration suffixes. For example,
 `tang_nano_9k_50mhz_hdmi_no_tm1638` belongs to `tang_nano_9k`. Matching the whole
-sequence prevents overlapping suffixes such as `_no_hdmi` and `_hdmi_tm1638`
-from leaving a bogus board name ending in `_no`. The suffix list also recognizes
-the existing `_no_dvi`, `_pmod_hub75e_led_matrix`, and `_ecp5_yosys` forms.
-Unknown endings remain part of the board name; adding a new configuration naming
-convention may require extending this list.
+sequence handles overlapping suffixes such as `_no_hdmi` and `_hdmi_tm1638`
+without leaving a bogus board name ending in `_no`.
 
-Hardware names such as `de0`, `de0_nano`, `de0_nano_soc`, `de1`, `de1_soc`,
-`de2`, `de2_115`, `omdazz`, and `omdazz_epm570` remain separate. Directory names
-alone build the menu; board constraints and installed EDA tools are not needed
-to group the choices. Board and variant order follow the existing sorted
-directory list, without introducing another external sorting command.
+`_ecp5` is part of the board name, so `colorlight75b_ecp5_tm1638_yosys`
+belongs to `colorlight75b_ecp5`, and `karnix_ecp5_yosys` to `karnix_ecp5`.
+Only specific PMOD compounds such as `_pmod_hdmi` and
+`_pmod_hub75e_led_matrix` are suffixes; an unknown ending such as `_pmod`
+is retained. `_hackathon` is not a configuration suffix for grouping.
 
-The selected value is still the exact original configuration directory name.
-`fpga_board_selection` retains its flat format with every original entry and
-only the selected configuration uncommented. Saved selections, hackathon
-overrides, and the subsequent toolchain selection retain their existing roles.
-The original 113 directory choices are reachable through 56 board entries,
-including the existing `nexys_a7` and `zzz_postponed_and_retired` entries that
-are not models in the board catalog.
+Explicit family rules group `nexys_a7`, `nexys_a7_50`, and `nexys_a7_100`
+under `nexys_a7`, and the `arty_a7_35` and `arty_a7_100` configurations
+under `arty_a7`. These chip variants keep their original directories and
+board files. The legacy `nexys_a7` entry is displayed as
+`nexys_a7 (alias of nexys_a7_100)`; selecting it still saves `nexys_a7`.
+`nexys4` and `nexys4_ddr` remain separate, as do `de0`, `de0_nano`,
+`de0_nano_soc`, `de1`/`de1_soc`, `de2`/`de2_115`, and `omdazz`/`omdazz_epm570`.
+
+The retired container `zzz_postponed_and_retired` is ignored. Directories
+ending in `_hackathon` are hidden from the menu; the existing
+`hackathon_top.sv` override can still select them before menu discovery.
+Saved valid selections retain their existing role.
+
+`fpga_board_sort_discovery` checks `/usr/bin/sort`, `/bin/sort`, then PATH's
+`sort` for correct C ordering. Every directory sort uses `LC_ALL=C` with the
+verified command. The probe rejects failing or incompatible utilities, including
+Windows sort with different ordering. No `sort -u` support is required; Bash
+deduplicates board names. If no compatible sorter exists, setup reports the
+missing dependency. The caller's locale and menu prompt variables are preserved.
+Board order follows the first occurrence in the sorted directory list; variants
+retain that directory order. Names alone build the menu, without reading pin
+constraints or requiring installed EDA tools.
+
+The current 110 eligible directory choices appear in 52 board/family groups.
+`fpga_board_selection` retains its flat format: the selected configuration's
+original name is uncommented and other eligible choices are commented. Display
+annotations never enter the saved name or toolchain dispatch.
 
 Run the menu tests without installing EDA tools:
 
@@ -37,18 +55,24 @@ Run the menu tests without installing EDA tools:
 python3 -B scripts/tests/test_board_menu.py
 ```
 
-The tests run the actual setup script in a temporary repository with empty
-board directories and stubbed EDA setup functions. Expected board groups come
-from the independent board catalog, not the suffix-matching implementation.
-They select every configuration and check its saved file and toolchain, along
-with retries, Back/Exit, EOF, saved choices, and hackathon overrides.
+The tests run the actual setup script in temporary repositories with empty board
+directories and stubbed EDA setup functions. Independent expected results come
+from the board catalog plus explicit family and ECP5 naming rules. They check
+all retained configurations, exact saved files, toolchains, menu traversal,
+aliases, filtering, decimal input, locale independence, sort discovery, caller
+state, retries, cancellation, saved choices, and file-driven hackathon overrides.
+Platform-branch tests on Linux emulate `OSTYPE`; they are not native Windows or
+macOS verification.
 
-To compare all successful selections directly with the original flat menu:
+To compare retained selections with the original flat menu:
 
 ```sh
-git show 77959f67:scripts/steps/00_setup.source_bash > /tmp/bgm-flat-board-setup.source_bash
+git show c055dfe3:scripts/steps/00_setup.source_bash > /tmp/bgm-flat-board-setup.source_bash
 python3 -B scripts/tests/test_board_menu.py --baseline /tmp/bgm-flat-board-setup.source_bash
 ```
+
+The baseline check accounts for the intentionally hidden entries in the new
+selection file while requiring the same selected identifier and toolchain.
 
 ## Choosing Quartus
 
