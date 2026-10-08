@@ -6,8 +6,10 @@ The board menu in `steps/00_setup.source_bash` first lists board names or
 families, then lists their configurations using complete directory names.
 A trailing ` *` marks a group with multiple visible configurations; a short
 legend explains it. A board with only one configuration is selected immediately.
-The second menu
-has `back` and `exit`; invalid input retries the current menu. Exiting or closing
+The second menu has numbered `back` and `exit` entries. Type `e` or `E` to exit
+at either level, or `b` or `B` to return from the variant menu. At the first
+level, `b/B` is invalid because there is no parent menu. Other invalid input
+retries the current menu. Exiting or closing
 standard input leaves an existing selection file untouched. Numbers with leading
 zeros are decimal: `08`, `09`, and `010` select items 8, 9, and 10.
 

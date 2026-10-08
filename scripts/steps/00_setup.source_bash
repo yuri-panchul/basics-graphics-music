@@ -387,11 +387,15 @@ choose_fpga_board ()
     while true
     do
         info "${current_board_message}Please select an FPGA board:"
-        PS3="Board (a number): "
+        PS3="Board (a number, e/E to exit): "
         board_name=
 
         select board_name in "${board_labels[@]}" exit
         do
+            case "$REPLY" in
+                e | E ) return 1 ;;
+            esac
+
             if [ -n "$board_name" ]
             then
                 break
@@ -439,11 +443,16 @@ choose_fpga_board ()
             done
 
             info "Please select a variant of '$board_name':"
-            PS3="Variant (a number): "
+            PS3="Variant (a number, b/B to go back, e/E to exit): "
             configuration=
 
             select configuration in "${variant_labels[@]}" back exit
             do
+                case "$REPLY" in
+                    e | E ) return 1 ;;
+                    b | B ) configuration=back; break ;;
+                esac
+
                 if [ -n "$configuration" ]
                 then
                     break

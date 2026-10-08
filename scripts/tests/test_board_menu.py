@@ -229,6 +229,12 @@ class BoardMenuTests(unittest.TestCase):
         inputs = {
             "exit_board": f"{len(GROUPS) + 1}\n",
             "exit_variant": f"{board}\n{back + 1}\n",
+            "exit_board_lowercase": "e\n",
+            "exit_board_uppercase": "E\n",
+            "exit_variant_lowercase": f"{board}\ne\n",
+            "exit_variant_uppercase": f"{board}\nE\n",
+            "exit_after_back_lowercase": f"{board}\nb\ne\n",
+            "exit_after_back_uppercase": f"{board}\nB\nE\n",
             "eof_board": "",
             "eof_invalid_board": "invalid\n",
             "eof_variant": f"{board}\n",
@@ -259,6 +265,19 @@ class BoardMenuTests(unittest.TestCase):
         self.assert_selection(result, chosen)
         self.assertNotIn("Please select", result.stderr)
         self.assertEqual(self.selection.read_text(), contents)
+
+    def test_back_letters_return_to_board_menu(self):
+        first = list(GROUPS).index("icebreaker") + 1
+        for letter in ("b", "B"):
+            with self.subTest(letter=letter):
+                result = self.run_setup(f"{first}\n{letter}\n" + self.choices_for("nexys_a7_50"))
+                self.assert_selection(result, "nexys_a7_50")
+                self.assertEqual(result.stderr.count("Please select an FPGA board:"), 2)
+
+    def test_back_letters_on_first_level_are_invalid(self):
+        result = self.run_setup("b\nB\n" + self.choices_for("basys3"))
+        self.assert_selection(result, "basys3")
+        self.assertEqual(result.stderr.count("Invalid FPGA board choice"), 2)
 
     def test_initial_setup_retains_the_run_directory_question(self):
         result = self.run_setup(self.choices_for("basys3") + "n\n",
@@ -365,10 +384,12 @@ class BoardMenuTests(unittest.TestCase):
                               env=env, text=True, capture_output=True, timeout=15)
 
     def test_helper_cancellation_returns_and_preserves_prompt_state(self):
-        for choices in ("2\n", ""):
+        cases = [("basys3", choices) for choices in ("2\n", "", "e\n", "E\n")]
+        cases += [("nexys_a7_100 nexys_a7_50", f"1\n{letter}\n") for letter in ("e", "E")]
+        for boards, choices in cases:
             result = self.run_helpers(
                 'PS3=original_prompt\nREPLY=original_reply\nfpga_board=original_board\n'
-                'current_board_message=\navailable_fpga_boards=basys3\n'
+                f'current_board_message=\navailable_fpga_boards={shlex.quote(boards)}\n'
                 'fpga_board_sort_discovery\n'
                 'if choose_fpga_board; then status=0; else status=$?; fi\n'
                 'printf "AFTER=%s,%s,%s,%s,%s\\n" "$status" "$PS3" "$REPLY" "$fpga_board" "$LC_ALL"\n',
