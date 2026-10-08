@@ -499,6 +499,63 @@ class FirstLevelLabelTests(unittest.TestCase):
         self.assertEqual(menu.selected([1, 1]), "de0_nano_vga666")
 
 
+class LetterShortcutTests(unittest.TestCase):
+    """e exits, b goes back, in either case."""
+
+    BOARDS = ["de0", "de0_nano_vga666", "de0_nano_vga_pmod"]
+
+    def menu(self):
+        return MenuSection(self.BOARDS)
+
+    def test_e_exits_from_the_first_level(self):
+        for reply in ("e", "E"):
+            with self.subTest(reply=reply):
+                board, out, err = self.menu().run([reply])
+
+                self.assertIsNone(board)
+                self.assertIn("CANCELLED=", out)
+                self.assertNotIn(INVALID_BOARD, err)
+
+    def test_e_exits_from_the_second_level(self):
+        for reply in ("e", "E"):
+            with self.subTest(reply=reply):
+                board, out, err = self.menu().run([2, reply])
+
+                self.assertIsNone(board)
+                self.assertIn("CANCELLED=", out)
+                self.assertNotIn(INVALID_CONFIG, err)
+
+    def test_b_goes_back_from_the_second_level(self):
+        for reply in ("b", "B"):
+            with self.subTest(reply=reply):
+                board, out, err = self.menu().run([2, reply, 1])
+
+                self.assertEqual(board, "de0")
+                self.assertEqual(err.count("Please select an FPGA board"), 2)
+                self.assertNotIn(INVALID_CONFIG, err)
+
+    def test_b_is_not_a_shortcut_on_the_first_level(self):
+        # There is nothing to go back to, so b is just an invalid answer
+
+        board, out, err = self.menu().run(["b", 1])
+
+        self.assertEqual(board, "de0")
+        self.assertIn(INVALID_BOARD, err)
+
+    def test_other_letters_are_still_rejected(self):
+        for reply in ("x", "q", "exit", "back", "ee"):
+            with self.subTest(reply=reply):
+                err = self.menu().run([reply, 1])[2]
+
+                self.assertIn(INVALID_BOARD, err)
+
+    def test_the_prompt_mentions_the_shortcuts(self):
+        err = self.menu().run([2, "e"])[2]
+
+        self.assertIn("e to exit", err)
+        self.assertIn("b to go back", err)
+
+
 class IgnoredDirectoryTests(unittest.TestCase):
     """Directories that are not boards, and configurations that are chosen
     through hackathon_top.sv, must not appear in the menu."""

@@ -581,7 +581,7 @@ select_fpga_board ()
     do
         info "${current_board_message}Please select an FPGA board amoung the following supported."  \
              "A star marks a board with several configurations:"
-        PS3="Your choice (a number): "
+        PS3="Your choice (a number, or e to exit): "
 
         chosen_base=
 
@@ -589,6 +589,15 @@ select_fpga_board ()
         do
             if [ -z "$label" ]
             then
+                # An answer that is not a menu number: the letters first,
+                # then the complaint
+
+                case "$REPLY" in
+                    [eE])
+                        return 1
+                    ;;
+                esac
+
                 info "Invalid FPGA board choice, please choose one of the listed numbers again"
                 continue
             fi
@@ -655,7 +664,7 @@ select_fpga_board ()
         done
 
         info "Please select a configuration of the board $chosen_base:"
-        PS3="Your choice (a number): "
+        PS3="Your choice (a number, b to go back, or e to exit): "
 
         chosen_config=
 
@@ -663,6 +672,15 @@ select_fpga_board ()
         do
             if [ -z "$label" ]
             then
+                case "$REPLY" in
+                    [eE])
+                        return 1
+                    ;;
+                    [bB])
+                        break
+                    ;;
+                esac
+
                 info "Invalid configuration choice, please choose one of the listed numbers again"
                 continue
             fi

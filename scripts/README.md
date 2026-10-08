@@ -124,6 +124,11 @@ underscore at the first comparison level, which swaps `de2_115` and
 `de23_lite` - and then "choose number 26" means two different boards on two
 different laptops.
 
+Besides a number, the menu takes `e` or `E` to exit on either level, and `b`
+or `B` to go back on the second one. They are recognised where `select`
+reports that the answer was not a menu number, so they cost nothing when the
+answer is a number, and any other letter is still rejected as before.
+
 `select_fpga_board` returns non-zero when the user cancels, rather than
 exiting the script itself, and keeps `PS3` and `REPLY` local.
 
