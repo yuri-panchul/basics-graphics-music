@@ -4,7 +4,9 @@
 
 The board menu in `steps/00_setup.source_bash` first lists board names or
 families, then lists their configurations using complete directory names.
-A board with only one configuration is selected immediately. The second menu
+A trailing ` *` marks a group with multiple visible configurations; a short
+legend explains it. A board with only one configuration is selected immediately.
+The second menu
 has `back` and `exit`; invalid input retries the current menu. Exiting or closing
 standard input leaves an existing selection file untouched. Numbers with leading
 zeros are decimal: `08`, `09`, and `010` select items 8, 9, and 10.
@@ -47,7 +49,8 @@ without reading pin constraints or requiring installed EDA tools.
 The current 110 eligible directory choices appear in 52 board/family groups.
 `fpga_board_selection` retains its flat format: the selected configuration's
 original name is uncommented and other eligible choices are commented. Display
-annotations never enter the saved name or toolchain dispatch.
+annotations and first-level markers never enter the saved name or toolchain
+dispatch.
 
 Run the menu tests without installing EDA tools:
 

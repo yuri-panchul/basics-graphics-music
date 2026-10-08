@@ -336,9 +336,23 @@ class BoardMenuTests(unittest.TestCase):
                 self.assert_selection(result, "de0_nano_soc_vga666")
 
     def test_first_menu_is_sorted_by_board_name(self):
-        boards = self.menus(self.run_setup(columns="1"))[0][:-1]
+        boards = [label.removesuffix(" *")
+                  for label in self.menus(self.run_setup(columns="1"))[0][:-1]]
         self.assertEqual(boards, list(GROUPS))
         self.assertLess(boards.index("de0_nano"), boards.index("de0_nano_soc"))
+
+    def test_marker_counts_only_visible_configurations(self):
+        labels = self.menus(self.run_setup(columns="1"))[0][:-1]
+        self.assertEqual(labels, [name + (" *" if len(variants) > 1 else "")
+                                  for name, variants in GROUPS.items()])
+        # A hidden hackathon choice must not add a marker or a second menu.
+        (self.root / "boards/basys3_hackathon").mkdir()
+        labels = self.menus(self.run_setup(columns="1"))[0]
+        self.assertIn("basys3", labels)
+        self.assertNotIn("basys3 *", labels)
+        result = self.run_setup(self.choices_for("basys3"))
+        self.assert_selection(result, "basys3")
+        self.assertNotIn("Please select a variant", result.stderr)
 
     def run_helpers(self, body, choices=""):
         wrapper = self.lab / "test_helpers.bash"

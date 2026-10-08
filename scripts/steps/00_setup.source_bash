@@ -334,8 +334,9 @@ fpga_board_base_name ()
 choose_fpga_board ()
 {
     local board_name configuration index sorted_board_names
-    local seen_boards=" " PS3 REPLY
-    local -a board_names=() configurations=() configuration_boards=() variants=() variant_labels=()
+    local seen_boards=" " multiple_boards=" " PS3 REPLY
+    local -a board_names=() board_labels=() configurations=()
+    local -a configuration_boards=() variants=() variant_labels=()
 
     for configuration in $available_fpga_boards
     do
@@ -351,6 +352,8 @@ choose_fpga_board ()
         then
             board_names+=("$board_name")
             seen_boards+="$board_name "
+        else
+            multiple_boards+="$board_name "
         fi
     done
 
@@ -369,13 +372,25 @@ choose_fpga_board ()
         board_names+=("$board_name")
     done <<< "$sorted_board_names"
 
+    for board_name in "${board_names[@]}"
+    do
+        if [[ "$multiple_boards" == *" $board_name "* ]]
+        then
+            board_labels+=("$board_name *")
+        else
+            board_labels+=("$board_name")
+        fi
+    done
+
+    info "* = multiple configurations."
+
     while true
     do
         info "${current_board_message}Please select an FPGA board:"
         PS3="Board (a number): "
         board_name=
 
-        select board_name in "${board_names[@]}" exit
+        select board_name in "${board_labels[@]}" exit
         do
             if [ -n "$board_name" ]
             then
@@ -389,6 +404,9 @@ choose_fpga_board ()
         then
             return 1
         fi
+
+        # % removes the literal trailing " *" marker, leaving the canonical name.
+        board_name=${board_name% \*}
 
         variants=()
 
