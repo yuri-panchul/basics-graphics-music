@@ -252,9 +252,8 @@ source "$script_dir/steps/00_setup_terminal.source_bash"
 # for Yosys.
 #
 # fpga_board_base tries all the combinations of the suffixes below, so a
-# component such as _pmod or _no_hdmi does not need a combined entry of its
-# own. Keep the list sorted to make it easy to compare with the directory
-# names in "boards".
+# compound such as _no_hdmi needs no entry of its own. Keep the list sorted
+# to make it easy to compare with the directory names in "boards".
 
 fpga_board_config_suffixes="
     _50mhz
@@ -263,7 +262,6 @@ fpga_board_config_suffixes="
     _bright
     _dvi_12b
     _dvi_24b
-    _hackathon
     _hdmi
     _hdmi_no_ip_tm1638
     _hdmi_no_tm1638
@@ -276,8 +274,8 @@ fpga_board_config_suffixes="
     _no_hdmi
     _no_tm1638
     _no_tm1638_yosys
-    _pmod
     _pmod_hdmi
+    _pmod_hub75e_led_matrix
     _pmod_mic3
     _pmod_vga
     _quartus_13_1_or_older
@@ -289,6 +287,38 @@ fpga_board_config_suffixes="
     _virtual_switches
     _wo_dig_0
     _yosys
+"
+
+# Suffixes that name the size of the FPGA rather than a feature of the board.
+# The same product is sold in two sizes - Nexys A7-50T and A7-100T, Arty
+# A7-35T and A7-100T - differing in the part number in board_specific.tcl, so
+# these are configurations of one board rather than two boards.
+#
+# They are kept apart from the list above because a bare number is a risky
+# thing to strip. Do not grow this list without checking that the number
+# really names a size of one product and not a different product.
+
+fpga_board_size_suffixes="
+    _35
+    _50
+    _100
+"
+
+# Directories under "boards" that are not boards at all and must not appear
+# in the menu, in the selection file or in the validity check.
+
+fpga_board_non_boards="
+    zzz_postponed_and_retired
+"
+
+# Configurations kept only so that older notes and scripts keep working: the
+# same part and the same pins as another configuration. For nexys_a7 the
+# board_specific.tcl and the .xdc are identical to those of nexys_a7_100, and
+# board_specific_top.sv is a single include of it. The second level of the
+# menu says so, as "<alias>:<the configuration it stands for>".
+
+fpga_board_legacy_aliases="
+    nexys_a7:nexys_a7_100
 "
 
 #-----------------------------------------------------------------------------
@@ -312,7 +342,7 @@ fpga_board_base ()
     local name="$1"
     local suffix stripped candidate best="$1"
 
-    for suffix in $fpga_board_config_suffixes
+    for suffix in $fpga_board_config_suffixes $fpga_board_size_suffixes
     do
         case "$name" in
             *"$suffix")
@@ -339,22 +369,111 @@ fpga_board_base ()
 
 #-----------------------------------------------------------------------------
 
-# Asks the user for a board and sets the global $fpga_board, or exits if the
-# user chooses "exit". The boards to choose from are in
+# Echoes its arguments without the directories listed in
+# $fpga_board_non_boards, which are not boards and cannot be selected.
+
+fpga_board_drop_non_boards ()
+{
+    local i_fpga_board non_board result=
+
+    for i_fpga_board in "$@"
+    do
+        for non_board in $fpga_board_non_boards
+        do
+            [ "$i_fpga_board" == "$non_board" ] && continue 2
+        done
+
+        result="${result:+$result }$i_fpga_board"
+    done
+
+    printf "%s" "$result"
+}
+
+#-----------------------------------------------------------------------------
+
+# Sets $choice to the number of the menu item the user answered with.
+#
+# Bash "select" is generous about what it accepts for item eight: "8", "08",
+# " 8" and "+8" all work, and "010" means item ten. Arithmetic in Bash,
+# however, reads a leading zero as octal, so $(( REPLY - 1 )) turns "010"
+# into 7 and fails outright on "08". Keeping only the digits and forcing base
+# ten gives the item the user actually picked.
+#
+# Called only after "select" has returned a non-empty label, which is what
+# guarantees there is at least one digit here.
+
+fpga_board_menu_choice ()
+{
+    # ${REPLY//[!0-9]/} - $REPLY with every non-digit removed
+    # 10#               - read the result as decimal rather than as octal
+
+    choice=${REPLY//[!0-9]/}
+    choice=$(( 10#0$choice ))
+}
+
+#-----------------------------------------------------------------------------
+
+# The configuration that $1 is a legacy alias of, or nothing when $1 is not
+# an alias. See fpga_board_legacy_aliases above.
+
+fpga_board_alias_target_result=
+
+fpga_board_alias_target ()
+{
+    local pair
+
+    fpga_board_alias_target_result=
+
+    for pair in $fpga_board_legacy_aliases
+    do
+        case "$pair" in
+            "$1":*)
+                # ${pair#*:} - the part after the colon: the configuration
+
+                fpga_board_alias_target_result=${pair#*:}
+                return
+            ;;
+        esac
+    done
+}
+
+#-----------------------------------------------------------------------------
+
+# Asks the user for a board and sets the global $fpga_board. Returns non-zero
+# without setting it when the user cancels, leaving it to the caller to
+# report that and to decide whether to stop. The boards to choose from are in
 # $available_fpga_boards.
 
 select_fpga_board ()
 {
-    local i_fpga_board board base label pair n single unique_bases
-    local chosen_base chosen_config
-    local pairs level1_labels level1_bases level2_labels configs
+    local i_fpga_board board base label pair n single
+    local chosen_base chosen_config choice
+    local pairs level1_labels level1_bases level2_labels configs seen
 
-    # "<board> <base>" for every available board, computed once
+    # PS3 is the prompt of "select" and REPLY is where it leaves the answer.
+    # Both are made local so that the menu leaves no trace in the shell.
+
+    local PS3 REPLY
+
+    # "<board> <base>" for every available board, computed once.
+    #
+    # Two kinds of directory are left out. A configuration whose name ends in
+    # _hackathon is chosen by naming it in hackathon_top.sv, not from this
+    # menu; see fpga_board_setup, which reads that file first. A directory
+    # listed in $fpga_board_non_boards is not a board at all - the caller
+    # drops those as well, and repeating it here keeps this menu correct
+    # whatever it is handed.
 
     pairs=()
 
-    for i_fpga_board in $available_fpga_boards
+    for i_fpga_board in $(fpga_board_drop_non_boards $available_fpga_boards)
     do
+        case "$i_fpga_board" in
+            *_hackathon)
+                continue
+            ;;
+        esac
+
         fpga_board_base "$i_fpga_board"
         pairs[${#pairs[@]}]="$i_fpga_board $fpga_board_base_result"
     done
@@ -364,37 +483,40 @@ select_fpga_board ()
         error "found no FPGA board directories in \"$board_dir\""
     fi
 
-    # The first level of the menu: the unique board names, sorted. A board
-    # with a single configuration is listed under the name of that
-    # configuration, so that choosing such a board does not open a second
-    # menu with one item in it.
+    # The first level of the menu: the unique board names, in the order in
+    # which they appear in $available_fpga_boards. A board with a single
+    # configuration is listed under the name of that configuration, so that
+    # choosing such a board does not open a second menu with one item in it.
 
-    # ${pair#* } - the part after the first space: the base name
-
-    unique_bases=$(
-        for pair in "${pairs[@]}"
-        do
-            printf "%s\n" "${pair#* }"
-        done | sort -u
-    )
-
+    seen=" "
     level1_bases=()
     level1_labels=()
 
-    for base in $unique_bases
+    for pair in "${pairs[@]}"
     do
+        # ${pair#* } - the part after the first space: the base name
+
+        base=${pair#* }
+
+        case "$seen" in
+            *" $base "*)
+                continue
+            ;;
+        esac
+
+        seen="$seen$base "
         n=0
         single=
 
-        for pair in "${pairs[@]}"
+        for i_fpga_board in "${pairs[@]}"
         do
-            if [ "${pair#* }" == "$base" ]
+            if [ "${i_fpga_board#* }" == "$base" ]
             then
                 n=$(( n + 1 ))
 
-                # ${pair%% *} - the part before the first space: the board
+                # ${i_fpga_board%% *} - the part before the first space
 
-                single=${pair%% *}
+                single=${i_fpga_board%% *}
             fi
         done
 
@@ -423,19 +545,18 @@ select_fpga_board ()
                 continue
             fi
 
-            # $label is not empty, so $REPLY is the number of a menu item.
-            # Comparing the numbers rather than the labels keeps the menu
-            # working even for a board directory named "exit".
+            fpga_board_menu_choice
 
-            if [ $REPLY -gt ${#level1_labels[@]} ]
+            if [ $choice -gt ${#level1_labels[@]} ]
             then
-                info "a new FPGA board is not selected, please run the script again"
-                exit 0
+                # The item after the boards: "exit"
+
+                return 1
             fi
 
-            # The items are numbered from 1, so $REPLY-1 is the array index
+            # The items are numbered from 1, so $choice-1 is the array index
 
-            chosen_base=${level1_bases[$(( REPLY - 1 ))]}
+            chosen_base=${level1_bases[$(( choice - 1 ))]}
             break
         done
 
@@ -443,8 +564,7 @@ select_fpga_board ()
         then
             # The input ended: "select" exited its loop without a choice
 
-            info "a new FPGA board is not selected, please run the script again"
-            exit 0
+            return 1
         fi
 
         # The configurations of the chosen board, in the same order as in
@@ -462,26 +582,28 @@ select_fpga_board ()
             fpga_board=${configs[0]}
 
             info "FPGA board selected: $fpga_board"
-            return
+            return 0
         fi
 
-        # The second level of the menu. The configuration without a suffix,
-        # if there is one, is listed under the board name itself; the others
-        # under the suffix that distinguishes them.
+        # The second level of the menu. Each configuration is listed under its
+        # full directory name, which is also what goes into the selection
+        # file, so that what the user picks and what gets written are the same
+        # string. A legacy alias says what it stands for.
 
         level2_labels=()
 
         for board in "${configs[@]}"
         do
-            if [ "$board" == "$chosen_base" ]
-            then
-                level2_labels[${#level2_labels[@]}]=$board
-            else
-                # ${board#${chosen_base}_} - the board name without the
-                # leading board name and the underscore after it
+            fpga_board_alias_target "$board"
 
-                level2_labels[${#level2_labels[@]}]=${board#${chosen_base}_}
+            if [ -n "$fpga_board_alias_target_result" ]
+            then
+                label="$board (alias of $fpga_board_alias_target_result)"
+            else
+                label=$board
             fi
+
+            level2_labels[${#level2_labels[@]}]=$label
         done
 
         info "Please select a configuration of the board $chosen_base:"
@@ -497,20 +619,21 @@ select_fpga_board ()
                 continue
             fi
 
+            fpga_board_menu_choice
+
             # The two items after the configurations are "back" and "exit"
 
-            if [ $REPLY -gt $(( ${#level2_labels[@]} + 1 )) ]
+            if [ $choice -gt $(( ${#level2_labels[@]} + 1 )) ]
             then
-                info "a new FPGA board is not selected, please run the script again"
-                exit 0
+                return 1
             fi
 
-            if [ $REPLY == $(( ${#level2_labels[@]} + 1 )) ]
+            if [ $choice = $(( ${#level2_labels[@]} + 1 )) ]
             then
                 break
             fi
 
-            chosen_config=${configs[$(( REPLY - 1 ))]}
+            chosen_config=${configs[$(( choice - 1 ))]}
             break
         done
 
@@ -519,7 +642,7 @@ select_fpga_board ()
             fpga_board=$chosen_config
 
             info "FPGA board selected: $fpga_board"
-            return
+            return 0
         fi
 
         # "back" or the end of the input: ask for the board again
@@ -730,16 +853,31 @@ fpga_board_setup ()
 
     # TODO: Remove else after testing on Linux and Windows
 
+    # LC_ALL=C keeps the order of the list, and therefore the numbers in the
+    # menu, the same on every machine. Under a UTF-8 locale "sort" ignores
+    # the underscore at the first comparison level, which swaps de2_115 and
+    # de23_lite - so "choose number 26" would mean two different boards.
+    #
+    # xargs -I implies one command per input line; adding -L 1 as well makes
+    # GNU xargs reject the pair and print the literal "%" for every board.
+
     if [[ "$OSTYPE" = "darwin"*   ]] ; then
-      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % -L 1 basename '%' | sort | tr "\r\n" " ")
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d | xargs -I % basename '%' | LC_ALL=C sort | tr "\r\n" " ")
     else
-      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr "\r\n" " ")
+      available_fpga_boards=$($find_to_run "$board_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | LC_ALL=C sort | tr "\r\n" " ")
     fi
+
+    available_fpga_boards=$(fpga_board_drop_non_boards $available_fpga_boards)
 
     if    ! [ -f "$select_file" ]  \
        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]
     then
-        select_fpga_board
+        if ! select_fpga_board
+        then
+            info "a new FPGA board is not selected, please run the script again"
+            exit 0
+        fi
+
         create_fpga_board_select_file
 
         if [ $offer_to_create_all_run_dirs = 1 ]

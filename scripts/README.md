@@ -62,7 +62,7 @@ first level lists the boards, the second one the configurations of the board
 chosen on the first level. A board with a single configuration is listed
 under the name of that configuration and does not open a second menu.
 
-The two levels come from the directory names under `boards` alone:
+The two levels come from the directory names under `boards` alone.
 `fpga_board_config_suffixes` lists the suffixes that mark a configuration
 rather than a different board, and `fpga_board_base` removes them. Board
 files are not examined, because configurations of the same board comment out
@@ -73,20 +73,63 @@ Removing the longest matching suffix at each step is not enough, because the
 suffixes overlap: `tang_primer_20k_dock_no_hdmi_no_tm1638` ends with the
 listed suffix `_hdmi_no_tm1638`, while the correct split is `_no_hdmi`
 followed by `_no_tm1638`. `fpga_board_base` therefore tries every way to
-split the tail and keeps the shortest board name. A consequence is that a
-component such as `_pmod`, `_no_hdmi` or `_no_dvi` needs no combined entry of
-its own in the list.
+split the tail and keeps the shortest board name.
+
+`fpga_board_size_suffixes` is a second, deliberately short list: `_35`, `_50`
+and `_100` name the size of the FPGA rather than a feature of the board. Nexys
+A7-50T and A7-100T, and Arty A7-35T and A7-100T, are one product in two sizes,
+differing in the part number in `board_specific.tcl`, so they share a
+first-level entry. Do not grow that list without checking that the number
+really names a size of one product.
 
 Boards that differ by more than a listed suffix stay separate first-level
 entries: `de0`, `de0_cv`, `de0_nano` and `de0_nano_soc`; `de1` and `de1_soc`;
-`de2` and `de2_115`; `omdazz` and `omdazz_epm570`; `nexys_a7`, `nexys_a7_50`
-and `nexys_a7_100`; `tang_mega_138k` and `tang_mega_138k_pro`.
+`de2` and `de2_115`; `nexys4` and `nexys4_ddr`; `omdazz` and `omdazz_epm570`;
+`tang_mega_138k` and `tang_mega_138k_pro`. `_ecp5` names the FPGA and is part
+of the board name, which is why the directories are called
+`colorlight75b_ecp5_tm1638_yosys` rather than `colorlight75b_tm1638_ecp5_yosys`.
 
-Run the menu regression suite, which checks that the two levels select
-exactly the same boards as the one-level menu they replaced:
+Two kinds of directory are left out of the menu. `fpga_board_non_boards`
+lists directories that are not boards at all, currently only
+`zzz_postponed_and_retired`; those are dropped from `available_fpga_boards`
+as well, so they appear neither in the selection file nor in the validity
+check. A configuration whose name ends in `_hackathon` is chosen by naming it
+in `hackathon_top.sv` instead, so it is left out of the menu but kept in the
+selection file, where it can still be uncommented by hand.
+
+`fpga_board_legacy_aliases` names configurations kept only so that older
+notes keep working. `nexys_a7` has the same part and the same pins as
+`nexys_a7_100`, so the second level shows it as
+`nexys_a7 (alias of nexys_a7_100)`.
+
+The menu numbers are read with `fpga_board_menu_choice`, which keeps the
+digits of the answer and forces base ten. Bash `select` accepts `8`, `08`,
+` 8`, `+8` for item eight and `010` for item ten, but Bash arithmetic reads a
+leading zero as octal, so `$(( REPLY - 1 ))` would turn `010` into item eight
+and fail outright on `08`.
+
+The directory listing is sorted with `LC_ALL=C`, so the numbers in the menu
+are the same on every machine. Under a UTF-8 locale `sort` ignores the
+underscore at the first comparison level, which swaps `de2_115` and
+`de23_lite` - and then "choose number 26" means two different boards on two
+different laptops.
+
+`select_fpga_board` returns non-zero when the user cancels, rather than
+exiting the script itself, and keeps `PS3` and `REPLY` local.
+
+Run the menu regression suite:
 
 ```sh
 python3 scripts/tests/test_fpga_board_menu.py
+```
+
+Add `--baseline <path to an older 00_setup.source_bash>` to replay every
+selection through both the old flat menu and the two-level menu and compare
+the chosen board, the chosen toolchain and the selection file:
+
+```sh
+git show 77959f67:scripts/steps/00_setup.source_bash > /tmp/old_setup.source_bash
+python3 scripts/tests/test_fpga_board_menu.py --baseline /tmp/old_setup.source_bash
 ```
 
 ## Strict Bash settings
