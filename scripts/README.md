@@ -108,8 +108,17 @@ digits of the answer and forces base ten. Bash `select` accepts `8`, `08`,
 leading zero as octal, so `$(( REPLY - 1 ))` would turn `010` into item eight
 and fail outright on `08`.
 
-The directory listing is sorted with `LC_ALL=C`, so the numbers in the menu
-are the same on every machine. Under a UTF-8 locale `sort` ignores the
+The first level is sorted by board name with `fpga_board_sort`, which is why
+`de0_nano` comes before `de0_nano_soc`: the directory listing has
+`de0_nano_soc_vga666` before `de0_nano_vga666`, because "s" comes before "v".
+That sort is written in Bash rather than calling `sort`, because Windows has
+its own `sort.exe` that may come first on `PATH` and does not understand the
+Unix options. Sorting 52 names this way costs about a millisecond, which is
+less than starting `sort` would.
+
+The directory listing itself is sorted with `LC_ALL=C`, and
+`fpga_board_sort` makes `LC_ALL` local for the same reason, so the numbers in
+the menu are the same on every machine. Under a UTF-8 locale `sort` ignores the
 underscore at the first comparison level, which swaps `de2_115` and
 `de23_lite` - and then "choose number 26" means two different boards on two
 different laptops.

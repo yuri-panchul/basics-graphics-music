@@ -129,13 +129,13 @@ def selectable_directories():
             if d not in NON_BOARDS and not d.endswith(HACKATHON_SUFFIX)]
 
 
-def clean_env():
+def clean_env(locale="C"):
     env = os.environ.copy()
 
     for name in ("BASH_ENV", "ENV", "CDPATH"):
         env.pop(name, None)
 
-    env.update(PATH="/usr/bin:/bin", LC_ALL="C", COLUMNS="120")
+    env.update(PATH="/usr/bin:/bin", LC_ALL=locale, COLUMNS="120")
 
     return env
 
@@ -144,8 +144,9 @@ class MenuSection:
     """Runs select_fpga_board out of the real script against a given board
     list and a given sequence of answers."""
 
-    def __init__(self, boards):
+    def __init__(self, boards, locale="C"):
         self.boards = list(boards)
+        self.locale = locale
 
     def run(self, answers):
         runner = (
@@ -170,7 +171,8 @@ class MenuSection:
         done = subprocess.run(
             ["bash", "-c", runner],
             input="".join("%s\n" % a for a in answers),
-            capture_output=True, text=True, env=clean_env(), timeout=60)
+            capture_output=True, text=True, env=clean_env(self.locale),
+            timeout=60)
 
         selected = re.search(r"^SELECTED=(.*)$", done.stdout, re.M)
         cancelled = re.search(r"^CANCELLED=(.*)$", done.stdout, re.M)
@@ -373,6 +375,74 @@ class EquivalenceTests(unittest.TestCase):
 
         self.assertIn(INVALID_BOARD, err)
         self.assertIsNotNone(board)
+
+
+class OrderTests(unittest.TestCase):
+    """The first level is sorted by board name, the same way on every
+    machine."""
+
+    @staticmethod
+    def items_of(text):
+        """The items of one "select" menu, in menu order.
+
+        "select" lays its items out in columns, so the numbers order them,
+        not the lines."""
+
+        items = re.findall(r"(?:^|\s)(\d+)\) (\S+)", text)
+        numbered = {int(n): label for n, label in items}
+
+        return [numbered[i] for i in sorted(numbered)]
+
+    def first_level(self, locale="C"):
+        """The first-level entries in menu order."""
+
+        menu = MenuSection(all_directories(), locale=locale)
+        text = menu.run([1])[2]
+
+        # Keep only the first menu: answering 1 may open a second one
+
+        text = text.split("Please select an FPGA board", 1)[1]
+        text = text.split(CONFIG_PROMPT, 1)[0]
+
+        return self.items_of(text)
+
+    def test_de0_nano_precedes_de0_nano_soc(self):
+        order = self.first_level()
+
+        self.assertLess(order.index("de0_nano"), order.index("de0_nano_soc"),
+                        "the first level is not sorted by board name")
+
+    def test_the_first_level_is_in_byte_order(self):
+        order = self.first_level()
+
+        self.assertEqual(order[:-1], sorted(order[:-1]),
+                         "expected byte order, with exit last")
+        self.assertEqual(order[-1], "exit")
+
+    def test_the_order_does_not_depend_on_the_locale(self):
+        reference = self.first_level("C")
+
+        for locale in ("en_US.UTF-8", "ru_RU.UTF-8"):
+            with self.subTest(locale=locale):
+                self.assertEqual(self.first_level(locale), reference)
+
+    def test_the_configurations_are_in_order_too(self):
+        # In byte order de23_lite comes before de2_115, so the group is
+        # item 2; its configurations have to be in byte order as well
+
+        menu = MenuSection(["de23_lite", "de2_115", "de2_115_tm1638"])
+        text = menu.run([2])[2]
+
+        self.assertIn(CONFIG_PROMPT + "de2_115:", text)
+
+        # After the second menu the input runs out, which sends the menu
+        # back to the first level and prints it again, so cut there
+
+        second = text.split(CONFIG_PROMPT, 1)[1]
+        second = second.split("Please select an FPGA board", 1)[0]
+        items = self.items_of(second)
+
+        self.assertEqual(items, ["de2_115", "de2_115_tm1638", "back", "exit"])
 
 
 class IgnoredDirectoryTests(unittest.TestCase):

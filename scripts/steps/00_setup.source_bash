@@ -369,6 +369,47 @@ fpga_board_base ()
 
 #-----------------------------------------------------------------------------
 
+# Echoes its arguments in order, one per line.
+#
+# This is done in Bash rather than with "sort" on purpose. Windows has its own
+# sort.exe, which may come first on PATH and does not understand the Unix
+# options; and the order has to be the same on every machine, which an
+# external sort only is when the locale is forced. An insertion sort of the
+# board names takes about a millisecond, which is less than starting "sort"
+# costs anyway.
+#
+# LC_ALL is made local so that the comparison below is by byte value. Under a
+# UTF-8 locale Bash, like sort, ignores the underscore at the first comparison
+# level, which swaps de2_115 and de23_lite.
+
+fpga_board_sort ()
+{
+    local LC_ALL=C
+    local item i n=0
+    local sorted=()
+
+    for item in "$@"
+    do
+        i=$n
+
+        while [ $i -gt 0 ] && [[ "${sorted[$(( i - 1 ))]}" > "$item" ]]
+        do
+            sorted[$i]=${sorted[$(( i - 1 ))]}
+            i=$(( i - 1 ))
+        done
+
+        sorted[$i]=$item
+        n=$(( n + 1 ))
+    done
+
+    if [ $n != 0 ]
+    then
+        printf "%s\n" "${sorted[@]}"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
 # Echoes its arguments without the directories listed in
 # $fpga_board_non_boards, which are not boards and cannot be selected.
 
@@ -449,6 +490,7 @@ select_fpga_board ()
     local i_fpga_board board base label pair n single
     local chosen_base chosen_config choice
     local pairs level1_labels level1_bases level2_labels configs seen
+    local unique_bases
 
     # PS3 is the prompt of "select" and REPLY is where it leaves the answer.
     # Both are made local so that the menu leaves no trace in the shell.
@@ -483,14 +525,18 @@ select_fpga_board ()
         error "found no FPGA board directories in \"$board_dir\""
     fi
 
-    # The first level of the menu: the unique board names, in the order in
-    # which they appear in $available_fpga_boards. A board with a single
-    # configuration is listed under the name of that configuration, so that
-    # choosing such a board does not open a second menu with one item in it.
+    # The first level of the menu: the unique board names, in alphabetical
+    # order. Sorting the board names rather than keeping the order of the
+    # directory listing is what puts de0_nano before de0_nano_soc: the
+    # listing has de0_nano_soc_vga666 before de0_nano_vga666, because "s"
+    # comes before "v".
+    #
+    # A board with a single configuration is listed under the name of that
+    # configuration, so that choosing such a board does not open a second
+    # menu with one item in it.
 
     seen=" "
-    level1_bases=()
-    level1_labels=()
+    unique_bases=()
 
     for pair in "${pairs[@]}"
     do
@@ -505,6 +551,14 @@ select_fpga_board ()
         esac
 
         seen="$seen$base "
+        unique_bases[${#unique_bases[@]}]=$base
+    done
+
+    level1_bases=()
+    level1_labels=()
+
+    for base in $(fpga_board_sort "${unique_bases[@]}")
+    do
         n=0
         single=
 
@@ -520,14 +574,14 @@ select_fpga_board ()
             fi
         done
 
-        level1_bases[${#level1_bases[@]}]=$base
-
         if [ $n = 1 ]
         then
             level1_labels[${#level1_labels[@]}]=$single
         else
             level1_labels[${#level1_labels[@]}]="$base ($n configurations)"
         fi
+
+        level1_bases[${#level1_bases[@]}]=$base
     done
 
     while true
