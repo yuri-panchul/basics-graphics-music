@@ -353,7 +353,7 @@ riscv_software_toolchain_run ()
     # Check with all variants of GCC
 
     $riscv_gcc \
-        -DRISCV_CORE=RISC_V_CORE_${riscv_core^^} \
+        -DRISCV_CORE=RISCV_CORE_${riscv_core^^} \
         -I "$cpu_dir/program" \
         -ffreestanding \
         -fverbose-asm \
@@ -376,6 +376,12 @@ riscv_software_toolchain_run ()
         "aps")
             $riscv_objcopy -O verilog --verilog-data-width=4 a.out final
             ;;
+        "yrv")
+            info "YRV CPU Build"
+            $riscv_objcopy -O binary a.out final
+            $PY3 "$script_dir/gcc/freedom-bin2hex-banks.py" -w32 final --banks  $program_mem32
+            cp *bank* $cpu_dir/cpu
+            ;;        
         *)
             $riscv_objcopy -O binary a.out final
             $PY3 "$script_dir/gcc/freedom-bin2hex.py" -w32 final > $program_mem32

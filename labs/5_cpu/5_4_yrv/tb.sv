@@ -1,8 +1,11 @@
+`ifdef __ICARUS__
+    `define USE_MEM_BANKS_FOR_BYTE_LINES
+`endif 
 `include "config.svh"
-
+`timescale 10ns / 10ns
 module tb;
 
-    localparam clk_mhz = 1,
+    localparam clk_mhz = 50,
                w_key   = 4,
                w_sw    = 8,
                w_led   = 8,
@@ -43,7 +46,7 @@ module tb;
         clk = 1'b0;
 
         forever
-            # 5 clk = ~ clk;
+            # 1 clk = ~ clk;
     end
 
     //------------------------------------------------------------------------
@@ -70,12 +73,9 @@ module tb;
 
         @ (negedge rst);
 
-        repeat (50)
+        repeat (5000000)
         begin
             @ (posedge clk);
-
-            key <= $urandom ();
-            sw  <= $urandom ();
         end
 
         $finish;
