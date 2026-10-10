@@ -238,10 +238,40 @@ xilinx_setup_vivado ()
 
 #-----------------------------------------------------------------------------
 
+# The Vivado scripts read the sources and the constraints from
+# boards/<fpga_board>, taking fpga_board from board_specific.tcl. A board
+# directory copied from another one and still naming the original there
+# would silently build the original's sources and constraints instead.
+
+xilinx_check_board_specific_tcl ()
+{
+    local tcl="$board_dir/$fpga_board/board_specific.tcl"
+    local tcl_fpga_board
+
+    # sed -E captures <name> from a "set fpga_board <name>" line. The name
+    # stops at white space, which also leaves out the CR at the end of a
+    # line in a file checked out with Windows line endings. tail -n 1 keeps
+    # the last such line, the one that wins in Tcl.
+
+    tcl_fpga_board=$(sed -nE 's/^[[:space:]]*set[[:space:]]+fpga_board[[:space:]]+([^[:space:]]+).*/\1/p' "$tcl" | tail -n 1)
+
+    if [ "$tcl_fpga_board" != "$fpga_board" ]
+    then
+        error "\"$tcl\" sets fpga_board to \"$tcl_fpga_board\""  \
+              "instead of \"$fpga_board\", so Vivado would read"    \
+              "the sources and constraints of another board."       \
+              "Change that line to: set fpga_board $fpga_board"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
 setup_run_directory_for_fpga_synthesis_xilinx ()
 {
     dir="$1"
     main_src_dir="$2"
+
+    xilinx_check_board_specific_tcl
 
     cat "$board_dir/$fpga_board/board_specific.tcl"      \
         "$script_dir/fpga/xilinx_vivado_synthesize.tcl"  \
