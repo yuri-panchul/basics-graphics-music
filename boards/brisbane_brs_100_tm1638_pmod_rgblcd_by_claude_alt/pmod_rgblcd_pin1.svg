@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="950" viewBox="0 0 1480 950">
+<title>PMOD-RGBLCD v1.3: where pin 1 of header J2 is</title>
+<defs><marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#d1203a"/></marker></defs>
+<rect width="1480" height="950" fill="#ffffff"/>
+<text x="40.0" y="36.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="24" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">PMOD-RGBLCD v1.3: where pin 1 of header J2 is</text>
+<text x="40.0" y="68.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">Pin 1 is the square pad in the corner of the header at the board edge, at the end next to the backlight boost and away from the "PMOD-RGBLCD v1.3" text.</text>
+<text x="40.0" y="92.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">The outer column, next to the board edge, is pins 1 to 15. The inner column is pins 30 to 16, so pin 30 is beside pin 1.</text>
+<text x="473.2" y="152.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#1b1b1b" text-anchor="middle" dominant-baseline="central">Component side</text>
+<text x="473.2" y="176.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="middle" dominant-baseline="central">the side with the ribbon connector and the text</text>
+<path d="M 250 230 H 667.6800000000001 Q 696.4300000000001 230 696.4300000000001 258.75 V 661.25 Q 696.4300000000001 690.0 667.6800000000001 690.0 H 250 Z" fill="#232323" stroke="#000" stroke-width="2"/>
+<rect x="575.5" y="312.8" width="64.4" height="300.2" rx="3" fill="none" stroke="#e8e8e8" stroke-width="1.6"/>
+<text x="607.6" y="462.9" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#e8e8e8" text-anchor="middle" dominant-baseline="central">J1</text>
+<text x="607.6" y="627.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="middle" dominant-baseline="central">LCD ribbon connector</text>
+<rect x="399.5" y="264.5" width="143.8" height="115.0" rx="3" fill="none" stroke="#e8e8e8" stroke-width="1.6"/>
+<text x="471.4" y="322.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#e8e8e8" text-anchor="middle" dominant-baseline="central">U1 L1 D1</text>
+<text x="471.4" y="392.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="middle" dominant-baseline="central">backlight boost</text>
+<rect x="401.8" y="429.9" width="25.3" height="12" fill="none" stroke="#e8e8e8" stroke-width="1.4"/>
+<text x="434.0" y="435.9" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">R3, 0 Ω</text>
+<rect x="401.8" y="462.0" width="25.3" height="12" fill="none" stroke="#e8e8e8" stroke-width="1.4"/>
+<text x="434.0" y="468.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">R4, 0 Ω</text>
+<text x="399.5" y="662.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="16" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">PMOD-RGBLCD v1.3</text>
+<rect x="279.9" y="239.2" width="59.8" height="438.8" fill="none" stroke="#e8e8e8" stroke-width="1.6"/>
+<rect x="285.1" y="244.4" width="19.6" height="19.6" fill="#d1203a" stroke="#fff" stroke-width="1.5"/>
+<circle cx="294.9" cy="283.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="312.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="341.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="371.0" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="294.9" cy="371.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="400.2" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="294.9" cy="400.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="429.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="458.6" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="294.9" cy="458.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="487.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="517.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="546.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="575.5" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="604.7" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="633.9" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="294.9" cy="633.9" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="294.9" cy="663.1" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="294.9" cy="663.1" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="254.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="283.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="312.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="341.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="371.0" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="324.8" cy="371.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="400.2" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="324.8" cy="400.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="429.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="458.6" r="13.2" fill="none" stroke="#b0182a" stroke-width="3"/>
+<circle cx="324.8" cy="458.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="487.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="517.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="546.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="575.5" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="604.7" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="633.9" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="324.8" cy="633.9" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="324.8" cy="663.1" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="324.8" cy="663.1" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<text x="236.0" y="254.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">G0  1</text>
+<text x="236.0" y="283.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">G1  2</text>
+<text x="236.0" y="312.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">G2  3</text>
+<text x="236.0" y="341.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">G3  4</text>
+<text x="236.0" y="371.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#4a8f5a" text-anchor="end" dominant-baseline="central">GND  5</text>
+<text x="236.0" y="400.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ef7d1a" text-anchor="end" dominant-baseline="central">3V3  6</text>
+<text x="236.0" y="429.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">G4  7</text>
+<text x="236.0" y="458.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#4a8f5a" text-anchor="end" dominant-baseline="central">GND  8</text>
+<text x="236.0" y="487.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">G5  9</text>
+<text x="236.0" y="517.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">LCD_CLK 10</text>
+<text x="236.0" y="546.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">LCD_HS 11</text>
+<text x="236.0" y="575.5" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">LCD_VS 12</text>
+<text x="236.0" y="604.7" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">LCD_DE 13</text>
+<text x="236.0" y="633.9" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#4a8f5a" text-anchor="end" dominant-baseline="central">GND 14</text>
+<text x="236.0" y="663.1" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ef7d1a" text-anchor="end" dominant-baseline="central">3V3 15</text>
+<text x="346.6" y="254.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">30 R0</text>
+<text x="346.6" y="283.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">29 R1</text>
+<text x="346.6" y="312.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">28 R2</text>
+<text x="346.6" y="341.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">27 R3</text>
+<text x="346.6" y="371.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4a8f5a" text-anchor="start" dominant-baseline="central">26 GND</text>
+<text x="346.6" y="400.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ef7d1a" text-anchor="start" dominant-baseline="central">25 3V3</text>
+<text x="346.6" y="429.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">24 R4</text>
+<text x="346.6" y="458.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ff6b7a" text-anchor="start" dominant-baseline="central">23 5V</text>
+<text x="346.6" y="487.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">22 B0</text>
+<text x="346.6" y="517.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">21 B1</text>
+<text x="346.6" y="546.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">20 B2</text>
+<text x="346.6" y="575.5" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">19 B3</text>
+<text x="346.6" y="604.7" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="start" dominant-baseline="central">18 B4</text>
+<text x="346.6" y="633.9" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4a8f5a" text-anchor="start" dominant-baseline="central">17 GND</text>
+<text x="346.6" y="663.1" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ef7d1a" text-anchor="start" dominant-baseline="central">16 3V3</text>
+<text x="1013.2" y="152.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#1b1b1b" text-anchor="middle" dominant-baseline="central">Solder side</text>
+<text x="1013.2" y="176.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="middle" dominant-baseline="central">the board turned over left to right</text>
+<path d="M 1236.43 230 H 818.75 Q 790 230 790 258.75 V 661.25 Q 790 690.0 818.75 690.0 H 1236.43 Z" fill="#232323" stroke="#000" stroke-width="2"/>
+<rect x="846.6" y="312.8" width="64.4" height="300.2" rx="3" fill="none" stroke="#9a9a9a" stroke-dasharray="6 4" stroke-width="1.6"/>
+<text x="878.8" y="462.9" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#9a9a9a" text-anchor="middle" dominant-baseline="central"></text>
+<text x="878.8" y="627.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9a9a" text-anchor="middle" dominant-baseline="central">ribbon connector, other side</text>
+<rect x="1146.7" y="239.2" width="59.8" height="438.8" fill="none" stroke="#e8e8e8" stroke-width="1.6"/>
+<rect x="1181.8" y="244.4" width="19.6" height="19.6" fill="#d1203a" stroke="#fff" stroke-width="1.5"/>
+<circle cx="1191.6" cy="283.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="312.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="341.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="371.0" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="1191.6" cy="371.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="400.2" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="1191.6" cy="400.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="429.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="458.6" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="1191.6" cy="458.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="487.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="517.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="546.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="575.5" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="604.7" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="633.9" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="1191.6" cy="633.9" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1191.6" cy="663.1" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="1191.6" cy="663.1" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="254.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="283.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="312.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="341.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="371.0" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="1161.7" cy="371.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="400.2" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="1161.7" cy="400.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="429.4" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="458.6" r="13.2" fill="none" stroke="#b0182a" stroke-width="3"/>
+<circle cx="1161.7" cy="458.6" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="487.8" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="517.0" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="546.2" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="575.5" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="604.7" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="633.9" r="13.2" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<circle cx="1161.7" cy="633.9" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<circle cx="1161.7" cy="663.1" r="13.2" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<circle cx="1161.7" cy="663.1" r="9.8" fill="#d9b45a" stroke="#6b5520" stroke-width="1"/>
+<text x="1250.4" y="254.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central"> 1 G0</text>
+<text x="1250.4" y="283.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central"> 2 G1</text>
+<text x="1250.4" y="312.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central"> 3 G2</text>
+<text x="1250.4" y="341.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central"> 4 G3</text>
+<text x="1250.4" y="371.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#4a8f5a" text-anchor="start" dominant-baseline="central"> 5 GND</text>
+<text x="1250.4" y="400.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ef7d1a" text-anchor="start" dominant-baseline="central"> 6 3V3</text>
+<text x="1250.4" y="429.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central"> 7 G4</text>
+<text x="1250.4" y="458.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#4a8f5a" text-anchor="start" dominant-baseline="central"> 8 GND</text>
+<text x="1250.4" y="487.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central"> 9 G5</text>
+<text x="1250.4" y="517.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">10 LCD_CLK</text>
+<text x="1250.4" y="546.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">11 LCD_HS</text>
+<text x="1250.4" y="575.5" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">12 LCD_VS</text>
+<text x="1250.4" y="604.7" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">13 LCD_DE</text>
+<text x="1250.4" y="633.9" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#4a8f5a" text-anchor="start" dominant-baseline="central">14 GND</text>
+<text x="1250.4" y="663.1" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ef7d1a" text-anchor="start" dominant-baseline="central">15 3V3</text>
+<text x="1139.8" y="254.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">R0 30</text>
+<text x="1139.8" y="283.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">R1 29</text>
+<text x="1139.8" y="312.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">R2 28</text>
+<text x="1139.8" y="341.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">R3 27</text>
+<text x="1139.8" y="371.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4a8f5a" text-anchor="end" dominant-baseline="central">GND 26</text>
+<text x="1139.8" y="400.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ef7d1a" text-anchor="end" dominant-baseline="central">3V3 25</text>
+<text x="1139.8" y="429.4" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">R4 24</text>
+<text x="1139.8" y="458.6" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ff6b7a" text-anchor="end" dominant-baseline="central">5V 23</text>
+<text x="1139.8" y="487.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">B0 22</text>
+<text x="1139.8" y="517.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">B1 21</text>
+<text x="1139.8" y="546.2" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">B2 20</text>
+<text x="1139.8" y="575.5" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">B3 19</text>
+<text x="1139.8" y="604.7" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#e8e8e8" text-anchor="end" dominant-baseline="central">B4 18</text>
+<text x="1139.8" y="633.9" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4a8f5a" text-anchor="end" dominant-baseline="central">GND 17</text>
+<text x="1139.8" y="663.1" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ef7d1a" text-anchor="end" dominant-baseline="central">3V3 16</text>
+<line x1="144.9" y1="194.2" x2="280.9" y2="244.2" stroke="#d1203a" stroke-width="4" marker-end="url(#head)"/>
+<text x="138.9" y="182.2" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="20" font-weight="bold" fill="#d1203a" text-anchor="end" dominant-baseline="central">PIN 1</text>
+<text x="138.9" y="204.2" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#d1203a" text-anchor="end" dominant-baseline="central">square pad</text>
+<line x1="1341.6" y1="194.2" x2="1205.6" y2="244.2" stroke="#d1203a" stroke-width="4" marker-end="url(#head)"/>
+<text x="1347.6" y="182.2" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="20" font-weight="bold" fill="#d1203a" text-anchor="start" dominant-baseline="central">PIN 1</text>
+<text x="1347.6" y="204.2" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#d1203a" text-anchor="start" dominant-baseline="central">square pad</text>
+<rect x="42" y="729.0" width="14" height="14" fill="#d1203a"/>
+<text x="64.0" y="736.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">pin 1</text>
+<circle cx="154" cy="736.0" r="8" fill="none" stroke="#4a8f5a" stroke-width="3"/>
+<text x="169.0" y="736.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">GND</text>
+<circle cx="241" cy="736.0" r="8" fill="none" stroke="#ef7d1a" stroke-width="3"/>
+<text x="256.0" y="736.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">3.3 V</text>
+<circle cx="346" cy="736.0" r="8" fill="none" stroke="#b0182a" stroke-width="3"/>
+<text x="361.0" y="736.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">5 V, backlight only</text>
+<rect x="40" y="776.0" width="1400" height="144.0" rx="10" fill="#f4f6f9" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="60.0" y="802.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">Check the orientation before wiring, with a multimeter in continuity mode and nothing powered:</text>
+<text x="60.0" y="836.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">1.  Count rows from the end you believe is pin 1. Rows 5 and 14 are GND in both columns: all four pins beep with each other.</text>
+<text x="60.0" y="864.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">2.  If instead rows 2 and 11 beep with each other, the board is turned end for end and pin 1 is at the other end.</text>
+<text x="60.0" y="892.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">3.  Row 8 tells the columns apart: the outer pin, 8, beeps with GND through the 0 Ω R3; the inner pin, 23, does not. Pin 23 is the 5 V input, through R4.</text>
+</svg>

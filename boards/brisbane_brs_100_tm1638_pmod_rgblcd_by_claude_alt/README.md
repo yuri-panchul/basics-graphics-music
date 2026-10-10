@@ -94,6 +94,17 @@ the right, pin 1 is the square pad at the top of the left column. The left
 column is pins 1 to 15 from the top, the right column is pins 30 to 16 from
 the top, so pin 30 is next to pin 1. The GND pads are in rows 5 and 14.
 
+Physically, pin 1 is in the corner of the header at the board edge, at the
+end next to the backlight boost converter (U1, L1, D1) and away from the
+"PMOD-RGBLCD v1.3" text. The picture shows both sides of the board and a
+multimeter check of the orientation:
+
+![Pin 1 of PMOD-RGBLCD J2](pmod_rgblcd_pin1.png)
+
+The same picture as a vector file: [pmod_rgblcd_pin1.svg](pmod_rgblcd_pin1.svg).
+It is made by [generate_pin1_diagram.py](generate_pin1_diagram.py) from the
+board drawing in the PMOD-RGBLCD v1.3 schematic.
+
 | Row | Left pin | Signal  | Right pin | Signal |
 |----:|---------:|---------|----------:|--------|
 |   1 |        1 | G0      |        30 | R0     |
