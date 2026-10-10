@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installation Manual 0.2: Two Editions Compared</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Figtree:wght@600;800&family=Inconsolata:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground:#f4f2ee; --surface:#ffffff; --ink:#1a1814; --muted:#5f5a51;
+    --faint:#918b80; --rule:#e2ddd3; --rule2:#c0b9ac;
+    --mine:#9c3f14; --mine-bg:#fbf0e8; --codex:#1f6f6b; --codex-bg:#e8f3f2;
+    --proved:#2f6b3a; --warn:#9a2f2f; --warn-bg:#fcecec; --code-bg:#ebe7df;
+    --display:Figtree,"Helvetica Neue",Arial,sans-serif;
+    --body:"Atkinson Hyperlegible","Helvetica Neue",Arial,sans-serif;
+    --mono:Inconsolata,ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#15130f; --surface:#1d1a16; --ink:#ece8e0; --muted:#a8a197;
+      --faint:#777066; --rule:#2b2721; --rule2:#413b33;
+      --mine:#e79a6e; --mine-bg:#26170e; --codex:#79c4bf; --codex-bg:#10211f;
+      --proved:#8cc497; --warn:#e38a8a; --warn-bg:#271414; --code-bg:#191610;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#15130f; --surface:#1d1a16; --ink:#ece8e0; --muted:#a8a197;
+    --faint:#777066; --rule:#2b2721; --rule2:#413b33;
+    --mine:#e79a6e; --mine-bg:#26170e; --codex:#79c4bf; --codex-bg:#10211f;
+    --proved:#8cc497; --warn:#e38a8a; --warn-bg:#271414; --code-bg:#191610;
+  }
+
+  body { margin:0; background:var(--ground); color:var(--ink);
+         font-family:var(--body); font-size:16.5px; line-height:1.62;
+         -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:53rem; margin:0 auto; padding-inline:20px; padding-block:2.75rem 5rem; }
+
+  .eyebrow { font-family:var(--display); font-size:0.7rem; font-weight:600;
+             letter-spacing:0.16em; text-transform:uppercase; color:var(--faint);
+             margin:0 0 0.75rem; }
+  h1 { font-family:var(--display); font-weight:800;
+       font-size:clamp(2rem,6.5vw,2.9rem); line-height:1.04;
+       letter-spacing:-0.025em; text-wrap:balance; margin:0 0 1rem; }
+  .standfirst { font-size:1.1rem; color:var(--muted); max-width:41rem; margin:0 0 1.8rem; }
+
+  h2 { font-family:var(--display); font-weight:800; font-size:1.4rem;
+       letter-spacing:-0.015em; text-wrap:balance; margin:2.8rem 0 0.9rem;
+       padding-bottom:0.3rem; border-bottom:2px solid var(--ink); }
+  h3 { font-family:var(--display); font-weight:600; font-size:1.06rem; margin:1.8rem 0 0.5rem; }
+  p { margin:0 0 0.95rem; max-width:42rem; }
+
+  code { font-family:var(--mono); font-size:0.92em; background:var(--code-bg);
+         padding:0.08em 0.3em; border-radius:2px; }
+  .m { color:var(--mine); font-weight:700; }
+  .c { color:var(--codex); font-weight:700; }
+
+  .box { border-left:4px solid var(--rule2); background:var(--surface);
+         padding:1.1rem 1.3rem; margin-bottom:2rem; }
+  .box h2 { font-family:var(--display); font-weight:800; font-size:1.2rem;
+            margin:0 0 0.5rem; padding:0; border:0; }
+  .box p { margin:0 0 0.6rem; max-width:40rem; }
+  .box p:last-child { margin-bottom:0; }
+  .box.done { border-left-color:var(--proved); } .box.done h2 { color:var(--proved); }
+  .box.alarm { border-left-color:var(--warn); background:var(--warn-bg); } .box.alarm h2 { color:var(--warn); }
+  .box.note { border-left-color:var(--codex); } .box.note h2 { color:var(--codex); }
+
+  pre { font-family:var(--mono); font-size:0.83rem; line-height:1.6;
+        background:var(--code-bg); padding:0.8rem 1rem; margin:0 0 1.2rem;
+        overflow-x:auto; white-space:pre; }
+  pre .cm { color:var(--faint); }
+  pre .good { color:var(--proved); font-weight:600; }
+  pre .bad { color:var(--warn); font-weight:600; }
+
+  .scroll { overflow-x:auto; margin-bottom:1.3rem; }
+  table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+  caption { caption-side:top; text-align:left; font-family:var(--display);
+            font-size:0.66rem; font-weight:600; letter-spacing:0.12em;
+            text-transform:uppercase; color:var(--faint); padding-bottom:0.45rem; }
+  th, td { text-align:left; padding:0.5rem 0.8rem 0.5rem 0;
+           border-bottom:1px solid var(--rule); vertical-align:top; }
+  thead th { font-family:var(--display); font-weight:600; font-size:0.71rem;
+             letter-spacing:0.05em; text-transform:uppercase; color:var(--muted);
+             border-bottom:1px solid var(--rule2); white-space:nowrap; }
+  td.mono { font-family:var(--mono); font-size:0.84rem; }
+  td.num { font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  tr.bad td:first-child { border-left:3px solid var(--warn); padding-left:0.6rem; }
+
+  .tag { font-family:var(--display); font-size:0.65rem; font-weight:600;
+         letter-spacing:0.07em; text-transform:uppercase; white-space:nowrap; }
+  .t-same { color:var(--faint); } .t-codex { color:var(--codex); }
+  .t-mine { color:var(--mine); } .t-spec { color:var(--proved); }
+  .t-bad { color:var(--warn); }
+
+  .pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));
+          gap:2rem; margin-bottom:1rem; }
+  .impl { border-top:3px solid var(--rule2); padding-top:0.8rem; }
+  .impl.mine-side { border-top-color:var(--mine); }
+  .impl.codex-side { border-top-color:var(--codex); }
+  .impl-name { font-family:var(--mono); font-size:0.95rem; font-weight:600; margin:0 0 0.1rem; }
+  .mine-side .impl-name { color:var(--mine); }
+  .codex-side .impl-name { color:var(--codex); }
+  .impl-sub { font-family:var(--display); font-size:0.68rem; letter-spacing:0.08em;
+              text-transform:uppercase; color:var(--faint); margin:0 0 1rem; }
+  ul.findings { margin:0; padding-left:0; list-style:none; }
+  ul.findings li { margin-bottom:0.6rem; font-size:0.93rem; padding-left:1.3rem; position:relative; }
+  ul.findings li::before { position:absolute; left:0; top:0; font-family:var(--mono); font-weight:600; }
+  ul.findings li.plus::before { content:"+"; color:var(--proved); }
+  ul.findings li.minus::before { content:"\2212"; color:var(--warn); }
+  ol.plan { margin:0 0 1rem; padding-left:1.5rem; }
+  ol.plan li { margin-bottom:0.6rem; }
+  ol.plan li::marker { font-family:var(--mono); font-size:0.85rem; color:var(--faint); }
+
+  footer { margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
+           font-family:var(--mono); font-size:0.77rem; color:var(--faint); line-height:1.8; }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="eyebrow">BGM installation manual &middot; version 0.2 &middot; two editions</p>
+<h1>They read the RTL. I read the Word file.</h1>
+<p class="standfirst">Both editions added the UART terminal chapter from the
+same <code>terminal_installation.docx</code>. Codex also opened the three
+exercises' SystemVerilog and found that the document's advice is wrong for one
+of them &mdash; and that two of my descriptions of what the board does were
+wrong. I have checked every claim against the source and fixed my manual.</p>
+
+<div class="box alarm">
+<h2>Verdict: they win this round on the facts</h2>
+<p>Codex's terminal chapter is grounded in the exercises' RTL; mine was
+grounded in the supplied document. Where the two disagree, the RTL decides,
+and it decided against me <strong>three times out of three</strong>: what the
+seven-segment exercise actually displays, where the calculator puts its
+answer, and whether a line ends with CR only. On top of that they caught a
+usability trap I walked straight into &mdash; turning local echo on
+unconditionally, which breaks the echo exercise.</p>
+<p>All of it is now corrected in my 0.2. What I keep over theirs is the figure
+coverage (127 cropped screenshots against 75), the errata in three languages
+rather than one, and a terminal chapter that sits inside each operating
+system's own walk-through instead of in a separate chapter.</p>
+</div>
+
+<h2>What is being compared</h2>
+
+<div class="scroll">
+<table>
+<thead><tr><th></th><th class="m">claude</th><th class="c">codex</th></tr></thead>
+<tbody>
+<tr><td>Directory</td>
+    <td class="mono">~/claude/installation_manual_2026_version_0.2</td>
+    <td class="mono">~/codex/installation_manual_2026_version_0.2</td></tr>
+<tr><td>Russian manual</td><td class="num">192.6 KB, 58 sections</td><td class="num">179.8 KB, 60 sections</td></tr>
+<tr><td>English / Portuguese</td><td class="num">146.9 / 151.7 KB</td><td class="num">129.3 / 128.9 KB</td></tr>
+<tr><td>Errata or change log</td><td class="num">3 languages, 42 + 34 + 35 KB</td><td class="num">Russian only, 34.5 KB</td></tr>
+<tr><td>Figures</td><td class="num">127</td><td class="num">75</td></tr>
+<tr><td>Landing page</td><td class="num">none</td><td class="num">index.html, three languages</td></tr>
+<tr><td>Styling</td><td class="num">inline</td><td class="num">external manual.css + manual.js</td></tr>
+<tr><td>Provenance</td><td class="num">plain image manifest + generator</td><td class="num">SHA-256 manifest, sources/, validation JSON, README</td></tr>
+<tr><td>Terminal chapter</td><td class="num">4.1.11 and 4.2.11, inside each OS</td><td class="num">4.4, one chapter for all OSes</td></tr>
+</tbody></table>
+</div>
+
+<h2>Where they were right and I was wrong</h2>
+
+<p>Each row below I verified myself in
+<code>/home/verilog/projects/basics-graphics-music</code> at
+<code>e8b9de12</code>, not taken on trust.</p>
+
+<div class="scroll">
+<table>
+<caption>My version 0.2 as first written, against the source</caption>
+<thead><tr><th>What I wrote</th><th>What the source says</th><th>Where</th></tr></thead>
+<tbody>
+<tr class="bad"><td>8_1_1 "shows the code of the received byte on the
+    seven-segment display"</td>
+    <td>The display shows <code>rx_buf[i] - 8'h41 + 8'hA</code>, so only
+    capital <strong>A…F</strong> map to hex digits A…F; <code>0…9</code> come
+    out as nonsense. The low-nibble line that would have made digits work is
+    in the source, commented out.</td>
+    <td class="mono">8_1_1/lab_top.sv</td></tr>
+<tr class="bad"><td>8_1_3 "you type an expression and get the answer",
+    implying the terminal</td>
+    <td>The answer goes to the <strong>seven-segment display</strong>, in hex:
+    <code>display_number &lt;= res_data</code>, and
+    <code>uart_tx = '1</code> &mdash; the transmitter is off in this exercise
+    too, so the terminal never receives anything.</td>
+    <td class="mono">8_1_3/lab_top.sv:69,223</td></tr>
+<tr class="bad"><td>"the end of an expression is a carriage return"</td>
+    <td>Either one: <code>(fifo_data_i == cr) | (fifo_data_i == "\n")</code>.
+    And a terminal that sends CR+LF can have the expression read as two ends
+    of line.</td>
+    <td class="mono">8_1_3/ascii2tok.sv:51</td></tr>
+<tr class="bad"><td>"turn local echo on so the characters are visible", as a
+    permanent <code>~/.minirc.dfl</code> setting</td>
+    <td>Right for 8_1_1 and 8_1_3, <strong>wrong for 8_1_2</strong>: that
+    exercise echoes in hardware, so local echo doubles every character and the
+    test proves nothing. Codex spells out the setting per exercise and says
+    outright that they are correcting the DOCX.</td>
+    <td class="mono">8_1_2/lab_top.sv</td></tr>
+<tr class="bad"><td>"UART is a serial channel carried by the same USB cable
+    the board is plugged in with"</td>
+    <td>True for FTDI-based boards, false for a board programmed by a separate
+    JTAG programmer such as a USB Blaster, which provides no serial port at
+    all. Codex requires the board's own UART or a USB-to-UART adapter, with
+    TX/RX/GND wiring.</td>
+    <td>board documentation</td></tr>
+<tr class="bad"><td>Nothing said about where
+    <code>14_run_terminal_program.bash</code> exists</td>
+    <td>It is present only in <code>8_1_1_uart_7segment</code>. For the other
+    two the terminal has to be opened by hand.</td>
+    <td class="mono">8_1_uart/*/</td></tr>
+<tr class="bad"><td>"look for <code>/dev/ttyUSB*</code> or
+    <code>/dev/ttyACM*</code>", then use the helper script</td>
+    <td>The helper globs <code>/dev/tty${tty_suffix}*</code> with the suffix
+    fixed per platform: <code>USB</code> on Linux, <code>S</code> under Git
+    Bash, <code>.usbserial-</code> on macOS. An ACM device is invisible to it
+    and must be opened manually. It also always starts picocom with
+    <code>--echo</code> &mdash; which is exactly wrong for the echo
+    exercise.</td>
+    <td class="mono">00_setup_terminal.source_bash:36-57,209</td></tr>
+<tr class="bad"><td>macOS: <code>picocom … /dev/tty.usbserial-0001</code></td>
+    <td>For your own connections the right device is
+    <code>/dev/cu.*</code>; <code>/dev/tty.*</code> waits for a DCD signal and
+    can hang on open. Codex says <code>cu</code>.</td>
+    <td>macOS serial convention</td></tr>
+<tr class="bad"><td>PuTTY from <code>putty.org.ru/download</code>, because the
+    DOCX shows that page</td>
+    <td>A third-party mirror. Codex keeps the screenshot as a historical
+    source and points the live link at the developer's own download page.
+    Better advice: signed installer, current version.</td>
+    <td>&mdash;</td></tr>
+<tr class="bad"><td>Nothing about PuTTY's <em>Local line editing</em></td>
+    <td>Left on, PuTTY holds the line until <kbd>Enter</kbd>, so the board
+    never receives characters one at a time &mdash; which breaks the
+    seven-segment exercise.</td>
+    <td>PuTTY Terminal settings</td></tr>
+</tbody></table>
+</div>
+
+<p><strong>All ten are fixed in my 0.2 as it stands now</strong>, in all three
+languages: the exercise table is rewritten from the RTL, local echo is given
+per exercise with a note that the DOCX advice is being corrected, the UART
+wiring caveat and the helper's three habits are called out, macOS uses
+<code>cu</code>, and the PuTTY link goes to the official page with the mirror
+screenshot kept and labelled.</p>
+
+<h2>Where my edition is ahead</h2>
+
+<div class="scroll">
+<table>
+<thead><tr><th>Point</th><th class="m">claude</th><th class="c">codex</th></tr></thead>
+<tbody>
+<tr><td>Figures cropped from the previous manual</td><td class="num">124</td><td class="num">64</td></tr>
+<tr><td>Photographs of the board and the JTAG connection</td>
+    <td class="num">4 (<code>board_omdazz_connection</code>)</td>
+    <td class="num">none</td></tr>
+<tr><td>Programmer "Successful" screenshots</td><td class="num">6</td><td class="num">none</td></tr>
+<tr><td>Errata / change log languages</td><td class="num">3</td><td class="num">1 (Russian)</td></tr>
+<tr><td>Deep links from the errata into the manual</td><td class="num">70 per language, all resolve</td><td class="num">none</td></tr>
+<tr><td>Windows port discovery from the command line</td>
+    <td class="num">the repo's own <code>check_which_port_is_used.bat</code>
+    and <code>drive_uart.bat</code>, plus <code>mode comN</code></td>
+    <td class="num">not mentioned</td></tr>
+<tr><td>The <code>mnt.txt</code> expressions as a harder check</td>
+    <td class="num">all three</td><td class="num">one short one</td></tr>
+</tbody></table>
+</div>
+
+<p>The figure gap is a real editorial difference rather than an oversight on
+their part: they kept whole-page scans of all 68 pages in
+<code>research/</code> and cropped 64 figures for the manual, while I cropped
+124. For a step-by-step installation guide I think the finer crops win &mdash;
+the reader sees the dialog box next to the sentence about it &mdash; but their
+page archive is the better provenance record.</p>
+
+<h2>Where they are ahead, beyond the facts above</h2>
+
+<div class="pair">
+<div class="impl codex-side">
+<p class="impl-name">codex</p>
+<p class="impl-sub">structure and packaging</p>
+<ul class="findings">
+<li class="plus"><strong>Eight Vivado-on-Linux screenshots</strong> taken from
+the repository's own <code>docs/vivado_installation_guide/</code> &mdash;
+byte-identical to <code>installer_gui1.png</code> and the rest. I only linked
+to that guide; they embedded it. A source I had and did not use.</li>
+<li class="plus"><strong>macOS gets the full eleven subsections</strong>
+(4.3.1–4.3.11), one per tool, parallel to Windows and Linux. Mine is a single
+prose section about four peculiarities.</li>
+<li class="plus"><strong>One terminal chapter for all three systems</strong>,
+so the UART material is written once rather than three times.</li>
+<li class="plus"><strong>A landing page</strong> with the three languages,
+which mine lacks entirely &mdash; you have to know the file names.</li>
+<li class="plus"><strong>SHA-256 provenance manifest</strong> for every
+figure, an archived <code>sources/</code> tree, a validation script with JSON
+output, and a README naming the commit the code was read at.</li>
+<li class="plus"><strong>A dedicated 8.4</strong> on the new CPU
+infrastructure and Round-Robin Threads, where I folded the same material into
+8.1 and the reading list.</li>
+<li class="plus"><strong>Honest scope statements</strong> throughout: "checked
+against the RTL, no hardware test was performed", and a note that figures are
+historical pages whose text does not replace the new instructions.</li>
+<li class="plus"><strong>Diagnostics written as symptoms</strong> in 4.4.6 -
+nothing visible, doubled characters, permission denied, port busy, calculator
+wrong - which is how a stuck reader actually searches.</li>
+</ul>
+</div>
+</div>
+
+<h2>What I am adopting</h2>
+<ol class="plan">
+<li><strong>Already done:</strong> the ten factual corrections in the table
+above, in all three languages.</li>
+<li><strong>The repository's Vivado Linux screenshots.</strong> Eight PNGs
+sitting in <code>docs/vivado_installation_guide/</code>, plus
+<code>board_sel.png</code> and <code>license.png</code>, would turn my Vivado
+sections from prose into a walk-through. There is no reason I linked to them
+instead of using them.</li>
+<li><strong>A landing page.</strong> Three languages, the errata, and a line
+saying what the edition is.</li>
+<li><strong>A SHA-256 manifest and a validation script in the package.</strong>
+I run the structural checks by hand each time; theirs is committed and
+repeatable, which is the better habit.</li>
+<li><strong>Per-symptom troubleshooting.</strong> My FAQ gained three UART
+questions; their 4.4.6 is better organised and worth copying in shape.</li>
+</ol>
+
+<h2>Recommendations for their edition</h2>
+<ol class="plan">
+<li><strong>Translate the change log.</strong> <code>changes.html</code> is
+Russian only, while the manual is in three languages. An English reader is
+told the manual was audited but cannot read the audit.</li>
+<li><strong>Link the audit to the manual.</strong> Their change log names
+sections in prose; 70 deep links per language make an errata usable as a
+to-do list rather than a report.</li>
+<li><strong>Use the finer crops.</strong> 64 figures from a 68-page manual
+means roughly one per page; the original has several dialogs per page. The
+board-and-JTAG photographs and the Programmer "Successful" screenshots are
+missing altogether, and those are exactly the two places a beginner gets
+stuck.</li>
+<li><strong>Add the repository's own Windows port helpers.</strong>
+<code>check_which_port_is_used.bat</code> and <code>drive_uart.bat</code> live
+in the exercise directory and answer "which COM port is it" without Device
+Manager. Neither is mentioned.</li>
+<li><strong>Reconsider the single terminal chapter.</strong> Writing it once
+avoids triplication, but a Windows reader working through 4.1 now has to jump
+to 4.4 and find the Windows parts of it. A short per-OS pointer with the
+commands, and the shared material in 4.4, would serve both.</li>
+<li><strong>Keep the wirenboard and picocom manual links.</strong> The DOCX
+gave a Russian minicom guide; they replaced it with the Debian packaged
+manual. For the School's audience the Russian walk-through is the more useful
+of the two &mdash; keep both.</li>
+</ol>
+
+<div class="box note">
+<h2>The lesson I am taking from this</h2>
+<p>I treated <code>terminal_installation.docx</code> as the specification and
+the repository as background. Codex treated the repository as the
+specification and the document as a draft to be checked against it &mdash;
+and said so in the text, which is why their manual contains sentences like
+"the DOCX instruction to always enable echo is refined here according to the
+exercises' behaviour".</p>
+<p>Everything I got wrong came from that one choice. The supplied document was
+written before the exercises settled; three of its statements, and four of
+mine that followed from it, do not match the RTL that ships today. When a
+document and the code disagree, the code is what the student will run.</p>
+</div>
+
+<footer>
+claude: ~/claude/installation_manual_2026_version_0.2 &middot; 58 sections &times; 3 languages, 127 figures, errata &times; 3<br>
+codex: ~/codex/installation_manual_2026_version_0.2 &middot; 60 sections &times; 3 languages, 75 figures, changes.html in Russian<br>
+RTL and scripts verified in /home/verilog/projects/basics-graphics-music at e8b9de12 &middot; article habr.com/ru/articles/1091540 read for the CPU infrastructure<br>
+every claim above was checked against the source files named beside it &middot; 2026-10-08
+</footer>
+
+</div>
+</body>
+</html>

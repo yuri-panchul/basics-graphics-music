@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board menu comparison 2 — Codex and Claude after feedback</title><style>
+:root{color-scheme:light;--ink:#182b3c;--muted:#516578;--line:#d8e1e7;--codex:#006b68;--claude:#945220;--paper:#fff;--wash:#f1f5f7}
+*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1200px;margin:auto;padding:32px 36px 64px;background:var(--paper)}header{padding:14px 0 24px;border-bottom:3px solid var(--ink)}.eyebrow{letter-spacing:.13em;text-transform:uppercase;font-size:.76rem;font-weight:750;color:var(--codex)}h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.14;margin:12px 0 18px;letter-spacing:-.035em}h2{font-size:1.65rem;line-height:1.3;margin:0 0 18px}h3{font-size:1.13rem;margin:22px 0 8px}p{margin:10px 0 16px}a{color:#005e84;text-underline-offset:3px}small,.muted{color:var(--muted)}section{padding-top:38px;scroll-margin-top:20px}.lead{font-size:1.16rem;max-width:920px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}.metric{background:var(--wash);border-radius:8px;padding:16px}.metric strong{display:block;font-size:1.7rem;line-height:1.2}.metric span{font-size:.85rem;color:var(--muted)}nav{display:flex;flex-wrap:wrap;gap:8px 20px;padding:14px 0;font-size:.92rem}.columns{display:grid;grid-template-columns:1fr 1fr;gap:22px}.panel{border:1px solid var(--line);border-top:4px solid var(--codex);border-radius:7px;padding:20px}.panel.claude{border-top-color:var(--claude)}.panel h3:first-child{margin-top:0}.callout{padding:18px 22px;background:#fff6e6;border-left:4px solid #b46a12;margin:20px 0}.finding{border:1px solid var(--line);border-radius:7px;padding:20px;margin:16px 0}.finding h3{margin-top:0}.tag{display:inline-block;font-size:.72rem;font-weight:750;letter-spacing:.04em;text-transform:uppercase;background:#e7eef4;border-radius:4px;padding:2px 7px;vertical-align:middle}.tag.bug{background:#fde9e6;color:#8e281e}.table-wrap{overflow-x:auto;margin:16px 0}table{width:100%;border-collapse:collapse;font-size:.9rem}th{text-align:left;background:#eaf0f4;font-weight:650}th,td{padding:11px 12px;border:1px solid var(--line);vertical-align:top}td code{overflow-wrap:anywhere}tr:nth-child(even){background:#f8fafb}code{font: .9em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;background:#eef2f5;padding:2px 4px;border-radius:3px}pre{background:#142a3a;color:#e8f1f6;padding:18px;border-radius:6px;overflow:auto;font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}pre code{background:transparent;padding:0;color:inherit}li{margin:8px 0}ol,ul{padding-left:24px}details{border:1px solid var(--line);border-radius:6px;padding:13px 16px;margin:16px 0}summary{cursor:pointer;font-weight:650}details pre{max-height:650px}.toolbar{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:12px;background:var(--wash);border-radius:6px}input[type=search]{min-width:260px;max-width:100%;padding:9px;border:1px solid #a8b7c2;border-radius:4px;font:inherit}.mapping{font-size:.8rem}#diff span{display:block;min-height:1.5em;white-space:pre}#diff .add{background:#123c30;color:#b8efc5}#diff .remove{background:#472b32;color:#ffd0ce}#diff .hunk{color:#8bd3f1}.nowrap{white-space:nowrap}footer{margin-top:36px;border-top:1px solid var(--line);padding-top:16px;font-size:.85rem;color:var(--muted)}[hidden]{display:none!important}
+@media(max-width:800px){main{padding:22px 18px 44px}.columns{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}th,td{padding:8px}h2{font-size:1.4rem}}
+@media print{body,main{background:#fff}main{max-width:none;padding:0;font-size:10pt}nav,.toolbar{display:none}.metrics{grid-template-columns:repeat(4,1fr)}section{padding-top:20px}.panel,.finding,tr{break-inside:avoid}.table-wrap{overflow:visible}details pre{max-height:none}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:inherit}.columns{gap:12px}h2,h3{break-after:avoid}}
+</style></head>
+<body><main>
+<header><div class="eyebrow">Basics Graphics Music · implementation review 02</div>
+<h1>The menus have converged.<br>The discovery code still differs.</h1>
+<p class="lead">Both current implementations select the same 110 configurations through the same 52 board/family groups under the tested Unix environment. Both now satisfy the requested menu presentation and navigation. The main remaining reliability gap is Claude’s unverified PATH sorter in directory discovery; its generic numeric-suffix rule also groups more names than the two requested families.</p>
+<p class="muted">2026-10-07 22:35 PDT · compared local snapshots, reran both suites, and exercised both complete setup scripts against the original flat menu</p>
+<div class="metrics"><div class="metric"><strong>110 / 110</strong><span>retained selections match the baseline</span></div><div class="metric"><strong>52</strong><span>identical current groups</span></div><div class="metric"><strong>17 + 35</strong><span>starred groups + singletons</span></div><div class="metric"><strong>110 / 112</strong><span>saved-file lines: Codex / Claude</span></div></div>
+<nav aria-label="Sections"><a href="#versions">Versions</a><a href="#resolved">What changed</a><a href="#steps">Selection steps</a><a href="#differences">Differences</a><a href="#findings">Verified findings</a><a href="#tradeoffs">Pros and cons</a><a href="#adopt">What to adopt</a><a href="#tests">Tests</a><a href="#mapping">All choices</a><a href="#diff-section">Source diff</a></nav></header>
+
+<section id="versions"><h2>Versions compared</h2><div class="table-wrap"><table><thead><tr><th scope="col">Implementation</th><th scope="col">Branch and commit</th><th scope="col">Local source</th></tr></thead><tbody><tr><td>Codex</td><td><code>codex_board_menu</code><br><code>e40b3aa2</code></td><td><code>/home/verilog/codex/basics-graphics-music/scripts/steps/00_setup.source_bash</code></td></tr><tr><td>Claude</td><td><code>claude_board_menu</code><br><code>7d12dcbc</code></td><td><code>/home/verilog/claude/basics-graphics-music/scripts/steps/00_setup.source_bash</code></td></tr></tbody></table></div>
+<p>The implementations include your Colorlight renames from main at <code>c055dfe3</code> and their respective four follow-up commits. The source and test files inspected match the recorded commits. Both trees contain the same 113 top-level board directories.</p>
+<p>This review supersedes the behavior comparison in <a href="board_menu_compare_1.html">board_menu_compare_1.html</a>. In particular, stripping <code>_ecp5</code> is not an improvement: it is part of the board name. The new implementations both preserve it.</p>
+</section>
+
+<section id="resolved"><h2>What both sides have fixed or adopted</h2>
+<ul>
+<li><strong>Correct family menus.</strong> <code>nexys_a7</code> contains its legacy alias and the two chip-specific configurations. <code>arty_a7</code> contains four configurations across the 35 and 100 chip variants. These are navigation groups; their different board files and selected identifiers remain distinct.</li>
+<li><strong>Clear alias labeling.</strong> Both display <code>nexys_a7 (alias of nexys_a7_100)</code> and save <code>nexys_a7</code> when that legacy entry is chosen.</li>
+<li><strong>Correct exclusions.</strong> The retired container is ignored; the two trailing-<code>_hackathon</code> configurations are absent from the menu and still selectable through the hackathon-file override. Neither implementation keeps <code>_hackathon</code> in its configuration-suffix list.</li>
+<li><strong>Requested presentation.</strong> The first menu uses bare names with <code> *</code> on groups with multiple configurations. The second menu keeps complete directory names. <code>nexys4</code> and <code>nexys4_ddr</code> stay separate.</li>
+<li><strong>Navigation and input.</strong> Both accept <code>e/E</code> to exit, <code>b/B</code> to go back from level two, and decimal <code>08</code>, <code>09</code> and <code>010</code>. The old Claude leading-zero bug is fixed.</li>
+<li><strong>Scoped prompt state.</strong> Both return ordinary cancellation to the caller and restore <code>PS3</code>/<code>REPLY</code>. Both removed the redundant <code>-L 1</code> from the Darwin discovery pipeline, as approved.</li>
+<li><strong>Stronger verification on both sides.</strong> Claude now includes full-setup integration tests and an optional baseline check. Codex now also walks the menu to verify that every eligible configuration is reachable exactly once.</li>
+</ul>
+</section>
+
+<section id="steps"><h2>How each implementation chooses a configuration</h2>
+<p>The shared surrounding setup gives a hackathon-file override priority. It otherwise reuses a valid saved selection when no new choice is requested. These steps describe the path when a menu is needed.</p>
+<div class="columns"><article class="panel"><h3>Codex, in plain English</h3><ol>
+<li>Find a sorter that actually produces the required C ordering, preferring the Unix tools at <code>/usr/bin/sort</code> and <code>/bin/sort</code> before trying PATH.</li>
+<li>List board directories, leaving out the retired container. Sort their names using the verified program with <code>LC_ALL=C</code>.</li>
+<li>Skip hackathon names while building menu candidates. Remove recognized trailing configuration endings with one regex. Then apply explicit Nexys A7 and Arty A7 family mappings.</li>
+<li>Collect unique board/family names, sort those names, and mark each group having multiple visible configurations with <code> *</code>.</li>
+<li>Use Bash’s selected label. Remove the first-level display marker; choose a singleton immediately or show the group’s full configuration names.</li>
+<li>Remove the known legacy-alias annotation from the selected display value when needed. Save the original configuration name and use its existing toolchain dispatch. The generated file lists only the 110 interactive choices.</li>
+</ol></article><article class="panel claude"><h3>Claude, in plain English</h3><ol>
+<li>List all board directories and pass them through <code>LC_ALL=C sort</code>, using whichever <code>sort</code> PATH resolves.</li>
+<li>Remove the retired container from the discovered list. Skip hackathon names when constructing the menu.</li>
+<li>Recursively try known configuration endings and the numeric endings <code>_35</code>, <code>_50</code>, <code>_100</code>. Keep the shortest nonempty remainder as the group name.</li>
+<li>Deduplicate those names and sort them with a Bash insertion-sort helper using local <code>LC_ALL=C</code>. Count configurations and add the same <code> *</code> markers.</li>
+<li>Normalize a valid numeric answer as decimal and use it to look up the original name in a separate array. Show full configuration names; obtain alias annotations from a small alias table.</li>
+<li>Save the original selected name and use the same toolchain dispatch. The generated file includes 110 interactive choices plus two commented hackathon configurations.</li>
+</ol></article></div>
+<p>On the current board set and a compatible Unix sort, the observable menu labels and numeric selection paths agree, despite these different algorithms.</p>
+</section>
+
+<section id="differences"><h2>Side-by-side differences</h2><div class="table-wrap"><table><thead><tr><th scope="col">Aspect</th><th scope="col">Codex</th><th scope="col">Claude</th></tr></thead><tbody><tr><td>Current menu contents</td><td>110 configurations in 52 groups; 17 stars and 35 singletons.</td><td>Same configuration set, groups, labels and normal choice paths.</td></tr><tr><td>Suffix recognition</td><td>One regex matches the entire trailing sequence of known configuration suffixes.</td><td>Recursive search tries all suffix decompositions and keeps the shortest nonempty remainder.</td></tr><tr><td>Chip families</td><td>Explicit mappings for Nexys A7 50/100 and Arty A7 35/100 only.</td><td>Globally strips <code>_35</code>, <code>_50</code> and <code>_100</code> from any board name.</td></tr><tr><td>Directory discovery order</td><td>Finds and behavior-tests a Unix-compatible sorter; runs it with <code>LC_ALL=C</code>.</td><td>Calls <code>LC_ALL=C sort</code> from PATH without verifying that executable.</td></tr><tr><td>First-level sorting</td><td>Uses the verified sorter again on deduplicated board names.</td><td>Uses a Bash insertion sort with local <code>LC_ALL=C</code>. This step has no external-sort dependency.</td></tr><tr><td>Nexys alias annotation</td><td>Two explicit checks add/remove the known annotation while preserving the original selected name.</td><td>An alias table and lookup helper generate labels; a separate array holds original names. Easier to extend.</td></tr><tr><td>Menu numbers</td><td>Uses the selected value supplied by Bash; no numeric reparsing.</td><td>Normalizes accepted input as decimal, then indexes separate label/name arrays.</td></tr><tr><td>Hackathon entries in saved file</td><td>Omits the two hidden configurations: 110 lines.</td><td>Retains both as commented choices: 112 lines. Neither is in the menu.</td></tr><tr><td>Cancellation</td><td>Returns a status; local <code>PS3</code> and <code>REPLY</code>.</td><td>Same for ordinary cancellation; the old exit-from-helper issue has been fixed.</td></tr><tr><td>EOF at second level</td><td>Returns cancellation directly.</td><td>Redisplays the first menu, then cancels when the closed input stream yields EOF again.</td></tr><tr><td>Empty eligible list</td><td>Prints a diagnostic and returns 1 to the caller.</td><td>Calls the existing fatal <code>error</code> helper, ending the caller. This is an error path, not ordinary cancellation.</td></tr><tr><td>Setup-script patch versus main</td><td>+254 / −20 lines.</td><td>+498 / −20 lines. Counts include comments and whitespace.</td></tr><tr><td>Test-file size</td><td>457 lines.</td><td>981 lines. Test count and size are not quality scores.</td></tr></tbody></table></div>
+<p>Both use the same explicit configuration suffixes, including <code>_pmod_hub75e_led_matrix</code>; neither treats generic <code>_pmod</code> as removable. Claude’s separate numeric-size list is the substantive grouping-policy difference.</p>
+<pre>Both implementations, Nexys A7 menu:
+1) nexys_a7 (alias of nexys_a7_100)
+2) nexys_a7_100
+3) nexys_a7_50
+4) back
+5) exit
+
+Selecting item 1 saves: nexys_a7
+Selecting item 3 saves: nexys_a7_50</pre>
+</section>
+
+<section id="findings"><h2>Verified findings and their impact</h2>
+<article class="finding"><h3><span class="tag bug">Priority 1 · Claude</span> Directory discovery still trusts PATH’s sort</h3>
+<p>Claude’s Bash sorter protects the <em>derived first-level names</em>. It does not protect the initial directory list: both platform branches still invoke bare <code>sort</code> from PATH. Configuration order within each family comes from that initial list. Consequently, a foreign or failing PATH sorter can stop setup or change variant numbers even though the first menu is sorted correctly.</p>
+<p>The review injected a temporary <code>sort</code> executable at the front of PATH while retaining the real Unix sorter at <code>/usr/bin/sort</code>. Two full-setup probes produced:</p>
+<div class="table-wrap"><table><thead><tr><th>Controlled PATH sorter</th><th>Codex</th><th>Claude</th></tr></thead><tbody>
+<tr><td>Exits with status 1</td><td>Uses its verified absolute-path sorter; selection succeeds.</td><td>Setup exits with status 1 before the menu.</td></tr>
+<tr><td>Outputs names in reverse order</td><td>Normal variant order; <code>33 → 1</code> saves <code>nexys_a7</code>.</td><td>First-level order remains correct, but variants are reversed; <code>33 → 1</code> saves <code>nexys_a7_50</code>.</td></tr>
+</tbody></table></div>
+<p>This is a reproduced <strong>numbering-stability problem</strong>, not the old bug where the displayed item and selected value disagreed. With reverse sorting, Claude displays <code>nexys_a7_50</code> as item 1 and selects it correctly. The same classroom instruction or scripted pair of numbers now means a different configuration.</p>
+<p><strong>Recommendation:</strong> adopt Codex’s sorter discovery for the initial scan, or extend the Bash sorter to the discovered directory list too. An internal sorter can remove the external dependency only if every relevant stage uses it. These are simulated incompatibility tests on Linux, not a native Windows-sort execution. <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/7d12dcbc1bcc4d3ff52da4061d7bd59da518d2fa/scripts/steps/00_setup.source_bash#L931">Claude discovery</a>; <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/e40b3aa29116ff7bc0cf557f6a255d8343ed7737/scripts/steps/00_setup.source_bash#L243">Codex discovery helper</a>.</p>
+</article>
+
+<article class="finding"><h3><span class="tag">Scope risk · Claude</span> Numeric endings are stripped from every board family</h3>
+<p>Claude’s <code>fpga_board_size_suffixes</code> applies globally. The current repository groups agree with Codex, but the policy also combines unrelated hypothetical names:</p>
+<div class="table-wrap"><table><thead><tr><th>Synthetic directory</th><th>Codex base</th><th>Claude base</th></tr></thead><tbody>
+<tr><td><code>future_board_35</code></td><td><code>future_board_35</code></td><td><code>future_board</code></td></tr>
+<tr><td><code>future_board_50</code></td><td><code>future_board_50</code></td><td><code>future_board</code></td></tr>
+<tr><td><code>future_board_100</code></td><td><code>future_board_100</code></td><td><code>future_board</code></td></tr>
+</tbody></table></div>
+<p>Those endings might name chip sizes, but names alone do not establish that for every future board. Your request established the Nexys A7 and Arty A7 families specifically. Codex encodes that limited policy and leaves unfamiliar numbered names intact.</p>
+<p><strong>Recommendation:</strong> constrain Claude’s numeric grouping to explicit supported families and add negative tests for unrelated names ending in these numbers. Its catalog test currently removes the same numeric suffixes from expected model names, so it can share the same overly broad assumption. This is a demonstrated synthetic behavior difference, not a loss of any current configuration. <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/7d12dcbc1bcc4d3ff52da4061d7bd59da518d2fa/scripts/steps/00_setup.source_bash#L301">Claude numeric suffix list</a>; <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/e40b3aa29116ff7bc0cf557f6a255d8343ed7737/scripts/steps/00_setup.source_bash#L324">Codex explicit family mappings</a>.</p>
+</article>
+
+<article class="finding"><h3><span class="tag">Policy difference</span> Saved files differ by two commented lines</h3>
+<p>Both omit <code>zzz_postponed_and_retired</code>. Claude retains these two entries, commented when an ordinary board is selected; Codex omits them:</p>
+<pre># tang_nano_9k_lcd_480_272_tm1638_hackathon
+# tang_nano_9k_lcd_800_480_tm1638_hackathon</pre>
+<p>Claude documents this as allowing an expert to uncomment a hackathon configuration manually. Codex keeps newly generated files aligned with the interactive choices and supports the normal <code>hackathon_top.sv</code> override. Both still recognize an otherwise valid preexisting saved hackathon name in the surrounding setup code.</p>
+<p>Your instruction excluded these configurations from the <em>menu</em>; it did not explicitly demand their removal from every saved file. Therefore this difference is a policy choice, not evidence that either menu fails the requirement. File formats and the selected, uncommented identifier agree; complete file bytes do not. <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/7d12dcbc1bcc4d3ff52da4061d7bd59da518d2fa/scripts/steps/00_setup.source_bash#L723">Claude saved-file writer</a>; <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/e40b3aa29116ff7bc0cf557f6a255d8343ed7737/scripts/steps/00_setup.source_bash#L484">Codex saved-file writer</a>.</p>
+</article>
+
+<article class="finding"><h3><span class="tag">Smaller behavior differences</span> EOF, diagnostics and prompts</h3>
+<p>With a closed input stream at the second menu, Codex returns cancellation immediately. Claude prints the first menu again before its next read returns EOF. Both preserve the saved selection. Direct cancellation probes also confirmed that both restore preexisting <code>PS3</code>, <code>REPLY</code> and locale values.</p>
+<p>With no eligible configurations, Codex’s helper reports the problem and returns; Claude calls the shared fatal-error helper. Codex gives callers more control on this error path. Claude still says “amoung” in its first prompt and uses “Your choice” at both levels; Codex’s prompts explicitly say “Board” and “Variant” and advertise uppercase shortcuts too. These are minor readability differences.</p>
+</article>
+</section>
+
+<section id="tradeoffs"><h2>Advantages and disadvantages of each implementation</h2>
+<div class="columns"><article class="panel"><h3>Codex advantages</h3><ul>
+<li><strong>Verified sorting across both stages.</strong> Directory and board-name sorting share the discovered C-compatible executable.</li>
+<li><strong>Limited family rules.</strong> Only known Nexys A7 and Arty A7 names are grouped by chip variant; unfamiliar numeric endings remain intact.</li>
+<li><strong>Smaller setup patch.</strong> A single suffix-sequence regex, direct use of Bash’s selected values, and shorter menu control flow reduce bookkeeping.</li>
+<li><strong>Default full-setup coverage.</strong> The standard suite checks every eligible configuration’s exact saved file and expected toolchain, plus sorter failures, locale variation, aliases, markers and cancellation.</li>
+<li><strong>Clear helper behavior.</strong> EOF and an empty menu return control, while prompt state stays local.</li>
+</ul><h3>Codex disadvantages</h3><ul>
+<li><strong>Requires a compatible external sorter.</strong> It reports a missing dependency if none passes its probe; no built-in fallback is provided.</li>
+<li><strong>One command substitution per configuration.</strong> Base-name calculation forks and reconstructs the suffix array/pattern each time. The regex is concise but needs careful explanation.</li>
+<li><strong>Alias presentation is special-cased.</strong> Adding more aliases means keeping label creation and label-to-name conversion consistent. Claude’s separate name array/table is more extensible.</li>
+<li><strong>Some input tests are narrower.</strong> The shipped suite tests leading zeros but could add Claude’s whitespace, plus-sign and zero-padded control-item cases. Independent probes confirmed the tested plus/space inputs already work.</li>
+<li><strong>Exact display identifiers still matter to dispatch.</strong> Codex removes the star and known alias text from selected labels. This is small for the present menu, but richer annotations would favor explicit label/name separation.</li>
+</ul></article>
+<article class="panel claude"><h3>Claude advantages</h3><ul>
+<li><strong>Extensible metadata.</strong> Separate alias and non-board tables make those policies visible and easy to extend.</li>
+<li><strong>Display labels are separate from values.</strong> Decimal indices retrieve original names without undoing presentation annotations.</li>
+<li><strong>Fewer per-board subprocesses.</strong> Base-name recursion returns through a result variable; first-level sorting is performed in Bash.</li>
+<li><strong>Broader input-focused tests.</strong> The suite covers spaces, plus signs, padded controls, shortcut prompts and hypothetical input lists.</li>
+<li><strong>Integration testing has improved substantially.</strong> It now includes the temporary-repository harness, saved files, toolchain checks, hackathon overrides, platform branches and an optional old-menu comparison.</li>
+</ul><h3>Claude disadvantages</h3><ul>
+<li><strong>Incomplete protection from PATH sort.</strong> The independent first-level sorter does not cover discovery or variant ordering.</li>
+<li><strong>Global numeric stripping is too general.</strong> It combines future numbered names without a family-specific rule.</li>
+<li><strong>More moving parts.</strong> Recursion, pair strings, several parallel arrays, explicit decimal parsing and global result variables increase the code to review.</li>
+<li><strong>Default exhaustive integration coverage is weaker.</strong> The standard run walks every menu choice, but full old-versus-new comparison requires <code>--baseline</code>. Its default integration tests cover selected examples; they do not check all files/toolchains as Codex’s default test does.</li>
+<li><strong>Small cleanup opportunities remain.</strong> Second-level EOF redisplays the first menu, the empty-list error exits the caller, and one prompt retains a typo.</li>
+</ul></article></div>
+<p>The algorithms have different costs: Codex starts a subshell for each base; Claude explores overlapping suffix paths recursively, scans pairs for group counts and uses insertion sort. No performance winner is claimed here. Suite runtimes include different tests and concurrent machine load, and are not menu-startup benchmarks.</p>
+</section>
+
+<section id="adopt"><h2>What each side can adopt next</h2>
+<div class="columns"><article class="panel"><h3>Codex can adopt from Claude</h3><ol>
+<li><strong>The additional numeric-input cases:</strong> leading/trailing spaces, <code>+8</code>, and zero-padded Back/Exit, as regression tests rather than new parsing code.</li>
+<li><strong>A small alias table and separate stored values</strong> if more legacy aliases or annotations are introduced. There is no need to enlarge the current code solely for hypothetical reserved board names.</li>
+<li><strong>The Bash sorting idea as an optional fallback</strong> if supporting systems with no compatible Unix sorter becomes a requirement. Test byte ordering and apply any fallback consistently to directories and groups.</li>
+<li><strong>More isolated helper tests with synthetic inventories</strong> when those tests add negative cases beyond the existing full-setup suite.</li>
+</ol></article><article class="panel claude"><h3>Claude can adopt from Codex</h3><ol>
+<li><strong>Fix discovery sorting first.</strong> Use a behavior-tested sorter in every external sorting call, or replace the remaining call with the internal sorter. Add the failing/reverse-PATH probes from this review.</li>
+<li><strong>Use explicit Nexys A7 and Arty A7 family rules.</strong> Preserve unrelated <code>_35</code>/<code>_50</code>/<code>_100</code> names and test that boundary independently of the implementation’s suffix list.</li>
+<li><strong>Check every configuration’s saved output and toolchain by default.</strong> Keep the optional baseline test, but make core exhaustive integration checks part of a normal test run.</li>
+<li><strong>Consider the regex implementation</strong> to simplify the suffix algorithm, and direct EOF return to simplify cancellation. Preserve the now-correct decimal handling if retaining index-based selection.</li>
+</ol></article></div>
+<div class="callout"><strong>Recommended direction:</strong> keep the converged menu design. Prioritize complete sort protection and family-specific numeric grouping; use the two test suites’ complementary cases. Alias tables and a built-in sorting fallback are maintainability options, not prerequisites for the current 110 configurations.</div>
+</section>
+
+<section id="tests"><h2>Verification performed for this report</h2>
+<ul>
+<li><strong>Codex shipped suite:</strong> 22 tests passed.</li>
+<li><strong>Claude shipped suite:</strong> 53 tests discovered; 52 passed and the one optional baseline test was skipped because no <code>--baseline</code> argument was supplied in that run.</li>
+<li><strong>Independent full-setup audit:</strong> executed all 110 retained choices through Codex, Claude and the original flat menu at <code>c055dfe3</code>. Selected directory identifiers and toolchains agreed for every choice. Each implementation’s complete saved-file contents matched its respective 110-line or 112-line policy.</li>
+<li><strong>Targeted probes:</strong> synthetic numeric suffixes, <code>08</code>/<code>09</code>/<code>010</code>, <code>+8</code> and spaces, both cases of letter commands, caller prompt state, second-level EOF, empty lists and two incompatible PATH sort behaviors.</li>
+<li><strong>Syntax:</strong> both complete scripts passed <code>bash -n</code>. The compared source/test files match their recorded commits.</li>
+</ul>
+<p>Full-setup runs used temporary board trees and stubbed EDA setup functions. No licenses, synthesis, hardware programming or physical FPGA boards were tested. All execution was on Linux; native Windows and macOS behavior remains unverified. Bash <code>OSTYPE</code> branch tests are emulation, and the PATH probes deliberately simulate incompatible sort behavior.</p>
+<details><summary>Commands to rerun the shipped suites</summary><pre>cd /home/verilog/codex/basics-graphics-music
+python3 -B scripts/tests/test_board_menu.py
+bash -n scripts/steps/00_setup.source_bash
+
+cd /home/verilog/claude/basics-graphics-music
+python3 -B scripts/tests/test_fpga_board_menu.py
+bash -n scripts/steps/00_setup.source_bash
+
+# Enable Claude's optional baseline test when desired:
+git show c055dfe3:scripts/steps/00_setup.source_bash &gt; /tmp/board-menu-main.source_bash
+python3 -B scripts/tests/test_fpga_board_menu.py --baseline /tmp/board-menu-main.source_bash</pre></details>
+<details><summary>Captured PATH-sort probe results</summary><pre>{
+  &quot;codex&quot;: {
+    &quot;failing_sort&quot;: {
+      &quot;rc&quot;: 0,
+      &quot;stdout&quot;: &quot;RESULT_BOARD=nexys_a7\nRESULT_TOOLCHAIN=xilinx\n&quot;,
+      &quot;stderr_tail&quot;: [
+        &quot; 9) colorlight75b_ecp5\t    23) eclypse_z7\t\t37) orangepi_msoc\t    51) zeowaa *&quot;,
+        &quot;10) colorlightI5_ecp5\t    24) emooc_cc\t\t38) piswords6\t\t    52) zybo_z7&quot;,
+        &quot;11) de0\t\t\t    25) ice40hx8k_evb\t\t39) qmtech_kintex_7\t    53) exit&quot;,
+        &quot;12) de0_cv\t\t    26) icebreaker *\t\t40) rzrd *&quot;,
+        &quot;13) de0_nano *\t\t    27) karnix_ecp5\t\t41) saylinx *&quot;,
+        &quot;14) de0_nano_soc *\t    28) marsohod3gw2\t\t42) tang_mega_138k&quot;,
+        &quot;Board (a number, e/E to exit): &quot;,
+        &quot;06_choose_another_fpga_board.bash: Please select a variant of &#x27;nexys_a7&#x27;:&quot;,
+        &quot;1) nexys_a7 (alias of nexys_a7_100)  3) nexys_a7_50\t\t\t  5) exit&quot;,
+        &quot;2) nexys_a7_100\t\t\t     4) back&quot;,
+        &quot;Variant (a number, b/B to go back, e/E to exit): &quot;,
+        &quot;06_choose_another_fpga_board.bash: FPGA board selected: nexys_a7&quot;,
+        &quot;&quot;,
+        &quot;06_choose_another_fpga_board.bash: Created an FPGA board selection file: \&quot;/tmp/.private/verilog/bgm-board-menu-wsf8ac6q/fpga_board_selection\&quot;&quot;
+      ]
+    },
+    &quot;reverse_sort&quot;: {
+      &quot;rc&quot;: 0,
+      &quot;stdout&quot;: &quot;RESULT_BOARD=nexys_a7\nRESULT_TOOLCHAIN=xilinx\n&quot;,
+      &quot;stderr_tail&quot;: [
+        &quot; 9) colorlight75b_ecp5\t    23) eclypse_z7\t\t37) orangepi_msoc\t    51) zeowaa *&quot;,
+        &quot;10) colorlightI5_ecp5\t    24) emooc_cc\t\t38) piswords6\t\t    52) zybo_z7&quot;,
+        &quot;11) de0\t\t\t    25) ice40hx8k_evb\t\t39) qmtech_kintex_7\t    53) exit&quot;,
+        &quot;12) de0_cv\t\t    26) icebreaker *\t\t40) rzrd *&quot;,
+        &quot;13) de0_nano *\t\t    27) karnix_ecp5\t\t41) saylinx *&quot;,
+        &quot;14) de0_nano_soc *\t    28) marsohod3gw2\t\t42) tang_mega_138k&quot;,
+        &quot;Board (a number, e/E to exit): &quot;,
+        &quot;06_choose_another_fpga_board.bash: Please select a variant of &#x27;nexys_a7&#x27;:&quot;,
+        &quot;1) nexys_a7 (alias of nexys_a7_100)  3) nexys_a7_50\t\t\t  5) exit&quot;,
+        &quot;2) nexys_a7_100\t\t\t     4) back&quot;,
+        &quot;Variant (a number, b/B to go back, e/E to exit): &quot;,
+        &quot;06_choose_another_fpga_board.bash: FPGA board selected: nexys_a7&quot;,
+        &quot;&quot;,
+        &quot;06_choose_another_fpga_board.bash: Created an FPGA board selection file: \&quot;/tmp/.private/verilog/bgm-board-menu-wsf8ac6q/fpga_board_selection\&quot;&quot;
+      ]
+    }
+  },
+  &quot;claude&quot;: {
+    &quot;failing_sort&quot;: {
+      &quot;rc&quot;: 1,
+      &quot;stdout&quot;: &quot;&quot;,
+      &quot;stderr_tail&quot;: [
+        &quot;INCOMPATIBLE_PATH_SORT&quot;
+      ]
+    },
+    &quot;reverse_sort&quot;: {
+      &quot;rc&quot;: 0,
+      &quot;stdout&quot;: &quot;RESULT_BOARD=nexys_a7_50\nRESULT_TOOLCHAIN=xilinx\n&quot;,
+      &quot;stderr_tail&quot;: [
+        &quot; 9) colorlight75b_ecp5\t    23) eclypse_z7\t\t37) orangepi_msoc\t    51) zeowaa *&quot;,
+        &quot;10) colorlightI5_ecp5\t    24) emooc_cc\t\t38) piswords6\t\t    52) zybo_z7&quot;,
+        &quot;11) de0\t\t\t    25) ice40hx8k_evb\t\t39) qmtech_kintex_7\t    53) exit&quot;,
+        &quot;12) de0_cv\t\t    26) icebreaker *\t\t40) rzrd *&quot;,
+        &quot;13) de0_nano *\t\t    27) karnix_ecp5\t\t41) saylinx *&quot;,
+        &quot;14) de0_nano_soc *\t    28) marsohod3gw2\t\t42) tang_mega_138k&quot;,
+        &quot;Your choice (a number, or e to exit): &quot;,
+        &quot;06_choose_another_fpga_board.bash: Please select a configuration of the board nexys_a7:&quot;,
+        &quot;1) nexys_a7_50\t\t\t     3) nexys_a7 (alias of nexys_a7_100)  5) exit&quot;,
+        &quot;2) nexys_a7_100\t\t\t     4) back&quot;,
+        &quot;Your choice (a number, b to go back, or e to exit): &quot;,
+        &quot;06_choose_another_fpga_board.bash: FPGA board selected: nexys_a7_50&quot;,
+        &quot;&quot;,
+        &quot;06_choose_another_fpga_board.bash: Created an FPGA board selection file: \&quot;/tmp/.private/verilog/bgm-board-menu-gfeq42t0/fpga_board_selection\&quot;&quot;
+      ]
+    }
+  }
+}</pre></details>
+<details><summary>Independent audit runner</summary><p>This reproduces the source snapshots, grouping and input probes, full-setup checks and PATH-sort experiments using the local clones. It requires Python 3.9 or later and Bash; it changes only temporary test trees and writes its evidence under <code>/tmp/board-menu-compare-2</code>.</p><pre>import collections
+import difflib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import shlex
+import subprocess
+
+OUT = Path(&#x27;/tmp/board-menu-compare-2&#x27;)
+OUT.mkdir(exist_ok=True)
+ROOTS = {name: Path(&#x27;/home/verilog&#x27;) / name / &#x27;basics-graphics-music&#x27;
+         for name in (&#x27;codex&#x27;, &#x27;claude&#x27;)}
+SOURCES = {name: (root / &#x27;scripts/steps/00_setup.source_bash&#x27;).read_text()
+           for name, root in ROOTS.items()}
+MENUS = {}
+for name, source in SOURCES.items():
+    start = &#x27;fpga_board_sort_discovery ()&#x27; if name == &#x27;codex&#x27; else &#x27;fpga_board_config_suffixes=&#x27;
+    MENUS[name] = start + source.split(start, 1)[1].split(&#x27;create_fpga_board_select_file()&#x27;, 1)[0]
+ENV = os.environ.copy()
+for key in (&#x27;BASH_ENV&#x27;, &#x27;ENV&#x27;, &#x27;CDPATH&#x27;):
+    ENV.pop(key, None)
+ENV.update(PATH=&#x27;/usr/bin:/bin&#x27;, LC_ALL=&#x27;C&#x27;, COLUMNS=&#x27;120&#x27;)
+
+def bash(source, args=(), answers=&#x27;&#x27;):
+    return subprocess.run([&#x27;bash&#x27;, &#x27;-c&#x27;, source, &#x27;audit&#x27;, *args], input=answers,
+                          capture_output=True, text=True, env=ENV, timeout=15)
+
+def bases(name, names):
+    command = (&#x27;fpga_board_base_name &quot;$board&quot;&#x27; if name == &#x27;codex&#x27; else
+               &#x27;fpga_board_base &quot;$board&quot;; printf &quot;%s\\n&quot; &quot;$fpga_board_base_result&quot;&#x27;)
+    result = bash(&#x27;set -Eeuo pipefail\n&#x27; + MENUS[name]
+                  + &#x27;\nfor board in &quot;$@&quot;; do &#x27; + command + &#x27;; done\n&#x27;, args=names)
+    assert result.returncode == 0, result.stderr
+    assert len(result.stdout.splitlines()) == len(names)
+    return dict(zip(names, result.stdout.splitlines()))
+
+def menu(name, names, answers=&#x27;&#x27;):
+    call = &#x27;choose_fpga_board&#x27; if name == &#x27;codex&#x27; else &#x27;select_fpga_board&#x27;
+    result = bash(&#x27;set -Eeuo pipefail\n&#x27;
+        &#x27;info () { printf &quot;%s\\n&quot; &quot;$*&quot; &gt;&amp;2; }\n&#x27;
+        &#x27;error () { info &quot;$@&quot;; exit 1; }\n&#x27;
+        &#x27;current_board_message=\nboard_dir=/audit/boards\n&#x27;
+        &#x27;available_fpga_boards=&#x27; + shlex.quote(&#x27; &#x27;.join(names)) + &#x27;\n&#x27; + MENUS[name]
+        + &#x27;\nPS3=original_prompt\nREPLY=original_reply\nfpga_board=original_board\n&#x27;
+        + (&#x27;fpga_board_sort_discovery\n&#x27; if name == &#x27;codex&#x27; else &#x27;&#x27;)
+        + &#x27;if &#x27; + call + &#x27;; then printf &quot;SELECTED=%s\\n&quot; &quot;$fpga_board&quot;; &#x27;
+        &#x27;else printf &quot;CANCELLED=%s\\n&quot; &quot;$?&quot;; fi\n&#x27;
+        &#x27;printf &quot;STATE=%s,%s,%s\\n&quot; &quot;$PS3&quot; &quot;$REPLY&quot; &quot;$LC_ALL&quot;\n&#x27;, answers=answers)
+    return {&#x27;rc&#x27;: result.returncode, &#x27;stdout&#x27;: result.stdout, &#x27;stderr&#x27;: result.stderr}
+
+all_boards = sorted(p.name for p in (ROOTS[&#x27;codex&#x27;] / &#x27;boards&#x27;).iterdir() if p.is_dir())
+assert all_boards == sorted(p.name for p in (ROOTS[&#x27;claude&#x27;] / &#x27;boards&#x27;).iterdir() if p.is_dir())
+eligible = [b for b in all_boards if b != &#x27;zzz_postponed_and_retired&#x27; and not b.endswith(&#x27;_hackathon&#x27;)]
+extra = [&#x27;future_board_35&#x27;, &#x27;future_board_50&#x27;, &#x27;future_board_100&#x27;,
+         &#x27;new_board_pmod&#x27;, &#x27;new_board_hackathon&#x27;, &#x27;nexys_a7_35&#x27;]
+data = {&#x27;metadata&#x27;: {}, &#x27;all_boards&#x27;: all_boards, &#x27;eligible&#x27;: eligible,
+        &#x27;bases&#x27;: {}, &#x27;groups&#x27;: {}, &#x27;menu_probes&#x27;: {}, &#x27;full_setup&#x27;: {}, &#x27;path_sort_probes&#x27;: {}}
+for name, root in ROOTS.items():
+    data[&#x27;metadata&#x27;][name] = {
+        &#x27;root&#x27;: str(root),
+        &#x27;commit&#x27;: subprocess.check_output([&#x27;git&#x27;, &#x27;rev-parse&#x27;, &#x27;HEAD&#x27;], cwd=root, text=True).strip(),
+        &#x27;branch&#x27;: subprocess.check_output([&#x27;git&#x27;, &#x27;branch&#x27;, &#x27;--show-current&#x27;], cwd=root, text=True).strip(),
+        &#x27;source_lines&#x27;: len(SOURCES[name].splitlines()),
+        &#x27;test_lines&#x27;: len((root / (&#x27;scripts/tests/test_board_menu.py&#x27; if name == &#x27;codex&#x27; else &#x27;scripts/tests/test_fpga_board_menu.py&#x27;)).read_text().splitlines()),
+    }
+    data[&#x27;bases&#x27;][name] = bases(name, eligible + extra)
+    groups = collections.defaultdict(list)
+    for board in eligible:
+        groups[data[&#x27;bases&#x27;][name][board]].append(board)
+    data[&#x27;groups&#x27;][name] = dict(sorted(groups.items()))
+    first = list(data[&#x27;groups&#x27;][name]).index(&#x27;tang_nano_9k&#x27;) + 1
+    cases = {
+        &#x27;leading_08&#x27;: &#x27;08\n1\n&#x27;, &#x27;leading_09&#x27;: &#x27;09\n1\n&#x27;, &#x27;leading_010&#x27;: &#x27;010\n1\n&#x27;,
+        &#x27;plus_8&#x27;: &#x27;+8\n1\n&#x27;, &#x27;spaces_8&#x27;: &#x27; 8 \n1\n&#x27;,
+        &#x27;variant_010&#x27;: f&#x27;{first}\n010\n&#x27;,
+        &#x27;e_first&#x27;: &#x27;e\n&#x27;, &#x27;E_first&#x27;: &#x27;E\n&#x27;,
+        &#x27;e_second&#x27;: f&#x27;{first}\ne\n&#x27;, &#x27;E_second&#x27;: f&#x27;{first}\nE\n&#x27;,
+        &#x27;back_lower&#x27;: f&#x27;{first}\nb\n1\n&#x27;, &#x27;back_upper&#x27;: f&#x27;{first}\nB\n1\n&#x27;,
+        &#x27;eof_second&#x27;: f&#x27;{first}\n&#x27;,
+        &#x27;board_menu&#x27;: &#x27;&#x27;,
+    }
+    data[&#x27;menu_probes&#x27;][name] = {key: menu(name, all_boards, choices) for key, choices in cases.items()}
+    data[&#x27;menu_probes&#x27;][name][&#x27;empty&#x27;] = menu(name, [])
+    data[&#x27;menu_probes&#x27;][name][&#x27;future_numbered_boards&#x27;] = menu(name, extra[:3], &#x27;1\n1\n&#x27;)
+    (OUT / (name + &#x27;_setup.source_bash&#x27;)).write_text(SOURCES[name])
+
+assert data[&#x27;groups&#x27;][&#x27;codex&#x27;] == data[&#x27;groups&#x27;][&#x27;claude&#x27;]
+print(&#x27;Current groups match:&#x27;, len(eligible), &#x27;configurations in&#x27;, len(data[&#x27;groups&#x27;][&#x27;codex&#x27;]), &#x27;groups.&#x27;, flush=True)
+print(&#x27;Synthetic numeric suffixes:&#x27;, {b: {n: data[&#x27;bases&#x27;][n][b] for n in ROOTS} for b in extra[:3]}, flush=True)
+
+spec = importlib.util.spec_from_file_location(&#x27;codex_board_tests&#x27;, ROOTS[&#x27;codex&#x27;] / &#x27;scripts/tests/test_board_menu.py&#x27;)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+baseline = subprocess.check_output([&#x27;git&#x27;, &#x27;show&#x27;, &#x27;c055dfe3:scripts/steps/00_setup.source_bash&#x27;],
+                                   cwd=ROOTS[&#x27;codex&#x27;], text=True)
+observed = {}
+for name in (&#x27;codex&#x27;, &#x27;claude&#x27;, &#x27;baseline&#x27;):
+    case = module.BoardMenuTests()
+    case.setUp()
+    observed[name] = {}
+    try:
+        case.setup.write_text(baseline if name == &#x27;baseline&#x27; else SOURCES[name])
+        for board in eligible:
+            choices = (f&#x27;{all_boards.index(board) + 1}\n&#x27; if name == &#x27;baseline&#x27;
+                       else case.choices_for(board))
+            result = case.run_setup(choices)
+            assert result.returncode == 0, (name, board, result.stderr)
+            fields = dict(re.findall(r&#x27;^(RESULT_BOARD|RESULT_TOOLCHAIN)=(.*)$&#x27;, result.stdout, re.M))
+            assert fields[&#x27;RESULT_BOARD&#x27;] == board, (name, board, fields)
+            selected = [line for line in case.selection.read_text().splitlines() if line and not line.startswith(&#x27;#&#x27;)]
+            assert selected == [board]
+            expected_names = (all_boards if name == &#x27;baseline&#x27; else eligible if name == &#x27;codex&#x27;
+                              else [b for b in all_boards if b != &#x27;zzz_postponed_and_retired&#x27;])
+            assert case.selection.read_text() == case.expected_file(board, expected_names)
+            observed[name][board] = fields
+        data[&#x27;full_setup&#x27;][name] = {&#x27;checked&#x27;: len(eligible), &#x27;file_lines&#x27;: len(case.selection.read_text().splitlines()),
+                                   &#x27;example_file&#x27;: case.selection.read_text()}
+        print(name, &#x27;full setup:&#x27;, len(eligible), &#x27;exact selections and expected selection-file contents passed.&#x27;, flush=True)
+
+        if name != &#x27;baseline&#x27;:
+            fake_dir = case.root / &#x27;fake-tools&#x27;
+            fake_dir.mkdir()
+            fake_sort = fake_dir / &#x27;sort&#x27;
+            probes = {}
+            for label, text in {
+                &#x27;failing_sort&#x27;: &#x27;#!/bin/sh\nprintf &quot;INCOMPATIBLE_PATH_SORT\\n&quot; &gt;&amp;2\nexit 1\n&#x27;,
+                &#x27;reverse_sort&#x27;: &#x27;#!/bin/sh\nexec /usr/bin/sort -r &quot;$@&quot;\n&#x27;,
+            }.items():
+                fake_sort.write_text(text)
+                fake_sort.chmod(0o755)
+                board = &#x27;nexys_a7&#x27;
+                result = case.run_setup(case.choices_for(board),
+                                        extra_env={&#x27;PATH&#x27;: f&#x27;{fake_dir}:/usr/bin:/bin&#x27;})
+                probes[label] = {&#x27;rc&#x27;: result.returncode, &#x27;stdout&#x27;: result.stdout,
+                                 &#x27;stderr_tail&#x27;: result.stderr.splitlines()[-14:]}
+            data[&#x27;path_sort_probes&#x27;][name] = probes
+    finally:
+        case.doCleanups()
+
+assert observed[&#x27;codex&#x27;] == observed[&#x27;claude&#x27;] == observed[&#x27;baseline&#x27;]
+data[&#x27;full_setup_agreement&#x27;] = True
+(OUT / &#x27;audit.json&#x27;).write_text(json.dumps(data, indent=2))
+(OUT / &#x27;setup.diff&#x27;).write_text(&#x27;&#x27;.join(difflib.unified_diff(
+    SOURCES[&#x27;codex&#x27;].splitlines(keepends=True), SOURCES[&#x27;claude&#x27;].splitlines(keepends=True),
+    fromfile=&#x27;codex/00_setup.source_bash&#x27;, tofile=&#x27;claude/00_setup.source_bash&#x27;)))
+print(&#x27;Both implementations agree with the original flat menu for all 110 retained selections and toolchains.&#x27;, flush=True)
+print(json.dumps(data[&#x27;path_sort_probes&#x27;], indent=2), flush=True)
+</pre></details>
+</section>
+
+<section id="mapping"><h2>All 110 current selection paths</h2>
+<p>Under a compatible Unix sorter and C ordering, this map is common to both implementations. A single number selects a singleton; two numbers mean board/family → configuration. The display annotation does not change the saved identifier.</p>
+<details><summary>Expand the complete common selection map</summary><div class="table-wrap"><table><thead><tr><th scope="col">Choices</th><th scope="col">First-level label</th><th scope="col">Configuration label</th><th scope="col">Saved identifier</th></tr></thead><tbody><tr><td>1</td><td><code>a7_lite_35t</code></td><td><code>a7_lite_35t</code></td><td><code>a7_lite_35t</code></td></tr><tr><td>2</td><td><code>alinx_ax301</code></td><td><code>alinx_ax301</code></td><td><code>alinx_ax301</code></td></tr><tr><td>3</td><td><code>alinx_ax4010</code></td><td><code>alinx_ax4010</code></td><td><code>alinx_ax4010</code></td></tr><tr><td>4</td><td><code>alinx_ax7035b</code></td><td><code>alinx_ax7035b</code></td><td><code>alinx_ax7035b</code></td></tr><tr><td>5 → 1</td><td><code>arty_a7 *</code></td><td><code>arty_a7_100</code></td><td><code>arty_a7_100</code></td></tr><tr><td>5 → 2</td><td><code>arty_a7 *</code></td><td><code>arty_a7_100_pmod_mic3</code></td><td><code>arty_a7_100_pmod_mic3</code></td></tr><tr><td>5 → 3</td><td><code>arty_a7 *</code></td><td><code>arty_a7_35</code></td><td><code>arty_a7_35</code></td></tr><tr><td>5 → 4</td><td><code>arty_a7 *</code></td><td><code>arty_a7_35_pmod_mic3</code></td><td><code>arty_a7_35_pmod_mic3</code></td></tr><tr><td>6</td><td><code>basys3</code></td><td><code>basys3</code></td><td><code>basys3</code></td></tr><tr><td>7</td><td><code>c5gx</code></td><td><code>c5gx</code></td><td><code>c5gx</code></td></tr><tr><td>8</td><td><code>cmod_s7</code></td><td><code>cmod_s7</code></td><td><code>cmod_s7</code></td></tr><tr><td>9</td><td><code>colorlight75b_ecp5</code></td><td><code>colorlight75b_ecp5_tm1638_yosys</code></td><td><code>colorlight75b_ecp5_tm1638_yosys</code></td></tr><tr><td>10</td><td><code>colorlightI5_ecp5</code></td><td><code>colorlightI5_ecp5_tm1638_yosys</code></td><td><code>colorlightI5_ecp5_tm1638_yosys</code></td></tr><tr><td>11</td><td><code>de0</code></td><td><code>de0</code></td><td><code>de0</code></td></tr><tr><td>12</td><td><code>de0_cv</code></td><td><code>de0_cv</code></td><td><code>de0_cv</code></td></tr><tr><td>13 → 1</td><td><code>de0_nano *</code></td><td><code>de0_nano_vga666</code></td><td><code>de0_nano_vga666</code></td></tr><tr><td>13 → 2</td><td><code>de0_nano *</code></td><td><code>de0_nano_vga_pmod</code></td><td><code>de0_nano_vga_pmod</code></td></tr><tr><td>14 → 1</td><td><code>de0_nano_soc *</code></td><td><code>de0_nano_soc_vga666</code></td><td><code>de0_nano_soc_vga666</code></td></tr><tr><td>14 → 2</td><td><code>de0_nano_soc *</code></td><td><code>de0_nano_soc_vga_pmod</code></td><td><code>de0_nano_soc_vga_pmod</code></td></tr><tr><td>15</td><td><code>de1</code></td><td><code>de1</code></td><td><code>de1</code></td></tr><tr><td>16 → 1</td><td><code>de10_lite *</code></td><td><code>de10_lite</code></td><td><code>de10_lite</code></td></tr><tr><td>16 → 2</td><td><code>de10_lite *</code></td><td><code>de10_lite_tm1638_virtual_switches</code></td><td><code>de10_lite_tm1638_virtual_switches</code></td></tr><tr><td>17</td><td><code>de10_nano</code></td><td><code>de10_nano</code></td><td><code>de10_nano</code></td></tr><tr><td>18</td><td><code>de1_soc</code></td><td><code>de1_soc</code></td><td><code>de1_soc</code></td></tr><tr><td>19</td><td><code>de2</code></td><td><code>de2</code></td><td><code>de2</code></td></tr><tr><td>20</td><td><code>de23_lite</code></td><td><code>de23_lite</code></td><td><code>de23_lite</code></td></tr><tr><td>21</td><td><code>de2_115</code></td><td><code>de2_115</code></td><td><code>de2_115</code></td></tr><tr><td>22</td><td><code>dk_dev_3c120n</code></td><td><code>dk_dev_3c120n</code></td><td><code>dk_dev_3c120n</code></td></tr><tr><td>23</td><td><code>eclypse_z7</code></td><td><code>eclypse_z7</code></td><td><code>eclypse_z7</code></td></tr><tr><td>24</td><td><code>emooc_cc</code></td><td><code>emooc_cc</code></td><td><code>emooc_cc</code></td></tr><tr><td>25</td><td><code>ice40hx8k_evb</code></td><td><code>ice40hx8k_evb_yosys</code></td><td><code>ice40hx8k_evb_yosys</code></td></tr><tr><td>26 → 1</td><td><code>icebreaker *</code></td><td><code>icebreaker_bare</code></td><td><code>icebreaker_bare</code></td></tr><tr><td>26 → 2</td><td><code>icebreaker *</code></td><td><code>icebreaker_dvi_12b_no_tm1638_yosys</code></td><td><code>icebreaker_dvi_12b_no_tm1638_yosys</code></td></tr><tr><td>26 → 3</td><td><code>icebreaker *</code></td><td><code>icebreaker_dvi_12b_tm1638_yosys</code></td><td><code>icebreaker_dvi_12b_tm1638_yosys</code></td></tr><tr><td>26 → 4</td><td><code>icebreaker *</code></td><td><code>icebreaker_dvi_24b_no_tm1638_yosys</code></td><td><code>icebreaker_dvi_24b_no_tm1638_yosys</code></td></tr><tr><td>26 → 5</td><td><code>icebreaker *</code></td><td><code>icebreaker_dvi_24b_tm1638_yosys</code></td><td><code>icebreaker_dvi_24b_tm1638_yosys</code></td></tr><tr><td>26 → 6</td><td><code>icebreaker *</code></td><td><code>icebreaker_no_dvi_no_tm1638_yosys</code></td><td><code>icebreaker_no_dvi_no_tm1638_yosys</code></td></tr><tr><td>26 → 7</td><td><code>icebreaker *</code></td><td><code>icebreaker_no_dvi_tm1638_yosys</code></td><td><code>icebreaker_no_dvi_tm1638_yosys</code></td></tr><tr><td>27</td><td><code>karnix_ecp5</code></td><td><code>karnix_ecp5_yosys</code></td><td><code>karnix_ecp5_yosys</code></td></tr><tr><td>28</td><td><code>marsohod3gw2</code></td><td><code>marsohod3gw2</code></td><td><code>marsohod3gw2</code></td></tr><tr><td>29</td><td><code>marsohod_mcy112</code></td><td><code>marsohod_mcy112</code></td><td><code>marsohod_mcy112</code></td></tr><tr><td>30</td><td><code>marsohod_mcy316</code></td><td><code>marsohod_mcy316</code></td><td><code>marsohod_mcy316</code></td></tr><tr><td>31</td><td><code>nexys4</code></td><td><code>nexys4</code></td><td><code>nexys4</code></td></tr><tr><td>32</td><td><code>nexys4_ddr</code></td><td><code>nexys4_ddr</code></td><td><code>nexys4_ddr</code></td></tr><tr><td>33 → 1</td><td><code>nexys_a7 *</code></td><td><code>nexys_a7 (alias of nexys_a7_100)</code></td><td><code>nexys_a7</code></td></tr><tr><td>33 → 2</td><td><code>nexys_a7 *</code></td><td><code>nexys_a7_100</code></td><td><code>nexys_a7_100</code></td></tr><tr><td>33 → 3</td><td><code>nexys_a7 *</code></td><td><code>nexys_a7_50</code></td><td><code>nexys_a7_50</code></td></tr><tr><td>34 → 1</td><td><code>omdazz *</code></td><td><code>omdazz</code></td><td><code>omdazz</code></td></tr><tr><td>34 → 2</td><td><code>omdazz *</code></td><td><code>omdazz_pmod_mic3</code></td><td><code>omdazz_pmod_mic3</code></td></tr><tr><td>35 → 1</td><td><code>omdazz_epm570 *</code></td><td><code>omdazz_epm570</code></td><td><code>omdazz_epm570</code></td></tr><tr><td>35 → 2</td><td><code>omdazz_epm570 *</code></td><td><code>omdazz_epm570_quartus_13_1_or_older</code></td><td><code>omdazz_epm570_quartus_13_1_or_older</code></td></tr><tr><td>36</td><td><code>orangecrab_ecp5</code></td><td><code>orangecrab_ecp5_yosys</code></td><td><code>orangecrab_ecp5_yosys</code></td></tr><tr><td>37</td><td><code>orangepi_msoc</code></td><td><code>orangepi_msoc</code></td><td><code>orangepi_msoc</code></td></tr><tr><td>38</td><td><code>piswords6</code></td><td><code>piswords6</code></td><td><code>piswords6</code></td></tr><tr><td>39</td><td><code>qmtech_kintex_7</code></td><td><code>qmtech_kintex_7</code></td><td><code>qmtech_kintex_7</code></td></tr><tr><td>40 → 1</td><td><code>rzrd *</code></td><td><code>rzrd</code></td><td><code>rzrd</code></td></tr><tr><td>40 → 2</td><td><code>rzrd *</code></td><td><code>rzrd_pmod_mic3</code></td><td><code>rzrd_pmod_mic3</code></td></tr><tr><td>41 → 1</td><td><code>saylinx *</code></td><td><code>saylinx</code></td><td><code>saylinx</code></td></tr><tr><td>41 → 2</td><td><code>saylinx *</code></td><td><code>saylinx_pmod_mic3</code></td><td><code>saylinx_pmod_mic3</code></td></tr><tr><td>42</td><td><code>tang_mega_138k</code></td><td><code>tang_mega_138k_lcd_480_272_tm1638</code></td><td><code>tang_mega_138k_lcd_480_272_tm1638</code></td></tr><tr><td>43 → 1</td><td><code>tang_mega_138k_pro *</code></td><td><code>tang_mega_138k_pro_lcd_480_272_no_tm1638</code></td><td><code>tang_mega_138k_pro_lcd_480_272_no_tm1638</code></td></tr><tr><td>43 → 2</td><td><code>tang_mega_138k_pro *</code></td><td><code>tang_mega_138k_pro_lcd_480_272_tm1638</code></td><td><code>tang_mega_138k_pro_lcd_480_272_tm1638</code></td></tr><tr><td>44 → 1</td><td><code>tang_nano_20k *</code></td><td><code>tang_nano_20k_hdmi_no_tm1638</code></td><td><code>tang_nano_20k_hdmi_no_tm1638</code></td></tr><tr><td>44 → 2</td><td><code>tang_nano_20k *</code></td><td><code>tang_nano_20k_hdmi_tm1638</code></td><td><code>tang_nano_20k_hdmi_tm1638</code></td></tr><tr><td>44 → 3</td><td><code>tang_nano_20k *</code></td><td><code>tang_nano_20k_lcd_480_272_no_tm1638</code></td><td><code>tang_nano_20k_lcd_480_272_no_tm1638</code></td></tr><tr><td>44 → 4</td><td><code>tang_nano_20k *</code></td><td><code>tang_nano_20k_lcd_480_272_tm1638</code></td><td><code>tang_nano_20k_lcd_480_272_tm1638</code></td></tr><tr><td>44 → 5</td><td><code>tang_nano_20k *</code></td><td><code>tang_nano_20k_lcd_800_480_no_tm1638</code></td><td><code>tang_nano_20k_lcd_800_480_no_tm1638</code></td></tr><tr><td>44 → 6</td><td><code>tang_nano_20k *</code></td><td><code>tang_nano_20k_lcd_800_480_tm1638</code></td><td><code>tang_nano_20k_lcd_800_480_tm1638</code></td></tr><tr><td>44 → 7</td><td><code>tang_nano_20k *</code></td><td><code>tang_nano_20k_lcd_800_480_tm1638_alt</code></td><td><code>tang_nano_20k_lcd_800_480_tm1638_alt</code></td></tr><tr><td>45 → 1</td><td><code>tang_nano_4k *</code></td><td><code>tang_nano_4k_hdmi_no_tm1638</code></td><td><code>tang_nano_4k_hdmi_no_tm1638</code></td></tr><tr><td>45 → 2</td><td><code>tang_nano_4k *</code></td><td><code>tang_nano_4k_hdmi_tm1638</code></td><td><code>tang_nano_4k_hdmi_tm1638</code></td></tr><tr><td>46 → 1</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_50mhz_hdmi_no_tm1638</code></td><td><code>tang_nano_9k_50mhz_hdmi_no_tm1638</code></td></tr><tr><td>46 → 2</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_50mhz_hdmi_tm1638</code></td><td><code>tang_nano_9k_50mhz_hdmi_tm1638</code></td></tr><tr><td>46 → 3</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_hdmi_no_ip_tm1638</code></td><td><code>tang_nano_9k_hdmi_no_ip_tm1638</code></td></tr><tr><td>46 → 4</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_hdmi_no_tm1638</code></td><td><code>tang_nano_9k_hdmi_no_tm1638</code></td></tr><tr><td>46 → 5</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_hdmi_tm1638</code></td><td><code>tang_nano_9k_hdmi_tm1638</code></td></tr><tr><td>46 → 6</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_480_272_no_tm1638</code></td><td><code>tang_nano_9k_lcd_480_272_no_tm1638</code></td></tr><tr><td>46 → 7</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_480_272_no_tm1638_yosys</code></td><td><code>tang_nano_9k_lcd_480_272_no_tm1638_yosys</code></td></tr><tr><td>46 → 8</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_480_272_tm1638</code></td><td><code>tang_nano_9k_lcd_480_272_tm1638</code></td></tr><tr><td>46 → 9</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_480_272_tm1638_yosys</code></td><td><code>tang_nano_9k_lcd_480_272_tm1638_yosys</code></td></tr><tr><td>46 → 10</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_800_480_no_tm1638</code></td><td><code>tang_nano_9k_lcd_800_480_no_tm1638</code></td></tr><tr><td>46 → 11</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_800_480_no_tm1638_yosys</code></td><td><code>tang_nano_9k_lcd_800_480_no_tm1638_yosys</code></td></tr><tr><td>46 → 12</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_800_480_tm1638</code></td><td><code>tang_nano_9k_lcd_800_480_tm1638</code></td></tr><tr><td>46 → 13</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_800_480_tm1638_yosys</code></td><td><code>tang_nano_9k_lcd_800_480_tm1638_yosys</code></td></tr><tr><td>46 → 14</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_ml6485_no_tm1638_yosys</code></td><td><code>tang_nano_9k_lcd_ml6485_no_tm1638_yosys</code></td></tr><tr><td>46 → 15</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_lcd_ml6485_tm1638_yosys</code></td><td><code>tang_nano_9k_lcd_ml6485_tm1638_yosys</code></td></tr><tr><td>46 → 16</td><td><code>tang_nano_9k *</code></td><td><code>tang_nano_9k_tm1638_sd</code></td><td><code>tang_nano_9k_tm1638_sd</code></td></tr><tr><td>47 → 1</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_50mhz_hdmi_no_tm1638</code></td><td><code>tang_primer_20k_dock_50mhz_hdmi_no_tm1638</code></td></tr><tr><td>47 → 2</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_50mhz_hdmi_tm1638</code></td><td><code>tang_primer_20k_dock_50mhz_hdmi_tm1638</code></td></tr><tr><td>47 → 3</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_50mhz_lcd_800_480_no_tm1638</code></td><td><code>tang_primer_20k_dock_50mhz_lcd_800_480_no_tm1638</code></td></tr><tr><td>47 → 4</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_50mhz_lcd_800_480_tm1638</code></td><td><code>tang_primer_20k_dock_50mhz_lcd_800_480_tm1638</code></td></tr><tr><td>47 → 5</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_hdmi_no_tm1638</code></td><td><code>tang_primer_20k_dock_hdmi_no_tm1638</code></td></tr><tr><td>47 → 6</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_hdmi_no_tm1638_yosys</code></td><td><code>tang_primer_20k_dock_hdmi_no_tm1638_yosys</code></td></tr><tr><td>47 → 7</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_hdmi_tm1638</code></td><td><code>tang_primer_20k_dock_hdmi_tm1638</code></td></tr><tr><td>47 → 8</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_hdmi_tm1638_alt</code></td><td><code>tang_primer_20k_dock_hdmi_tm1638_alt</code></td></tr><tr><td>47 → 9</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_hdmi_tm1638_yosys</code></td><td><code>tang_primer_20k_dock_hdmi_tm1638_yosys</code></td></tr><tr><td>47 → 10</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_lcd_800_480_no_tm1638</code></td><td><code>tang_primer_20k_dock_lcd_800_480_no_tm1638</code></td></tr><tr><td>47 → 11</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_lcd_800_480_tm1638</code></td><td><code>tang_primer_20k_dock_lcd_800_480_tm1638</code></td></tr><tr><td>47 → 12</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_lcd_800_480_tm1638_alt</code></td><td><code>tang_primer_20k_dock_lcd_800_480_tm1638_alt</code></td></tr><tr><td>47 → 13</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_no_hdmi_no_tm1638</code></td><td><code>tang_primer_20k_dock_no_hdmi_no_tm1638</code></td></tr><tr><td>47 → 14</td><td><code>tang_primer_20k_dock *</code></td><td><code>tang_primer_20k_dock_no_hdmi_tm1638</code></td><td><code>tang_primer_20k_dock_no_hdmi_tm1638</code></td></tr><tr><td>48</td><td><code>tang_primer_20k_lite</code></td><td><code>tang_primer_20k_lite</code></td><td><code>tang_primer_20k_lite</code></td></tr><tr><td>49 → 1</td><td><code>tang_primer_25k *</code></td><td><code>tang_primer_25k_pmod_hdmi</code></td><td><code>tang_primer_25k_pmod_hdmi</code></td></tr><tr><td>49 → 2</td><td><code>tang_primer_25k *</code></td><td><code>tang_primer_25k_pmod_hub75e_led_matrix</code></td><td><code>tang_primer_25k_pmod_hub75e_led_matrix</code></td></tr><tr><td>49 → 3</td><td><code>tang_primer_25k *</code></td><td><code>tang_primer_25k_pmod_hub75e_led_matrix_bright</code></td><td><code>tang_primer_25k_pmod_hub75e_led_matrix_bright</code></td></tr><tr><td>49 → 4</td><td><code>tang_primer_25k *</code></td><td><code>tang_primer_25k_pmod_vga</code></td><td><code>tang_primer_25k_pmod_vga</code></td></tr><tr><td>50</td><td><code>terasic_sockit</code></td><td><code>terasic_sockit</code></td><td><code>terasic_sockit</code></td></tr><tr><td>51 → 1</td><td><code>zeowaa *</code></td><td><code>zeowaa</code></td><td><code>zeowaa</code></td></tr><tr><td>51 → 2</td><td><code>zeowaa *</code></td><td><code>zeowaa_wo_dig_0</code></td><td><code>zeowaa_wo_dig_0</code></td></tr><tr><td>52</td><td><code>zybo_z7</code></td><td><code>zybo_z7</code></td><td><code>zybo_z7</code></td></tr></tbody></table></div></details>
+</section>
+<section id="diff-section"><h2>Exact source differences</h2>
+<p>Unified diff from the Codex snapshot to the Claude snapshot. Removed lines are Codex; added lines are Claude. This includes algorithms, helpers, presentation and persistence differences.</p>
+<details><summary>Expand the complete setup-script diff</summary><pre id="diff"><span class="">--- codex/00_setup.source_bash</span>
+<span class="">+++ claude/00_setup.source_bash</span>
+<span class="hunk">@@ -236,248 +236,489 @@</span>
+<span class=""> </span>
+<span class=""> #-----------------------------------------------------------------------------</span>
+<span class=""> #</span>
+<span class="remove">-#   FPGA board setup</span>
+<span class="remove">-#</span>
+<span class="remove">-#-----------------------------------------------------------------------------</span>
+<span class="remove">-</span>
+<span class="remove">-fpga_board_sort_discovery ()</span>
+<span class="remove">-{</span>
+<span class="remove">-    local sort_candidate sort_probe</span>
+<span class="remove">-</span>
+<span class="remove">-    # Verify C ordering instead of assuming PATH contains the Unix sort utility.</span>
+<span class="remove">-</span>
+<span class="remove">-    for sort_candidate in /usr/bin/sort /bin/sort sort</span>
+<span class="add">+#   Two-level FPGA board menu</span>
+<span class="add">+#</span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+</span>
+<span class="add">+# The suffixes that mark a configuration of a board rather than a different</span>
+<span class="add">+# board. The first level of the menu lists the board names with these</span>
+<span class="add">+# suffixes removed, the second level lists the configurations of the board</span>
+<span class="add">+# chosen on the first level.</span>
+<span class="add">+#</span>
+<span class="add">+# The split is based on the suffixes alone and does not look into</span>
+<span class="add">+# board_specific.qsf, .xdc, .lpf, .pcf or .cst files. Such a check would be</span>
+<span class="add">+# unreliable anyway: configurations of the same board comment out different</span>
+<span class="add">+# pins, and some Gowin boards have separate configurations for Gowin EDA and</span>
+<span class="add">+# for Yosys.</span>
+<span class="add">+#</span>
+<span class="add">+# fpga_board_base tries all the combinations of the suffixes below, so a</span>
+<span class="add">+# compound such as _no_hdmi needs no entry of its own. Keep the list sorted</span>
+<span class="add">+# to make it easy to compare with the directory names in &quot;boards&quot;.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_config_suffixes=&quot;</span>
+<span class="add">+    _50mhz</span>
+<span class="add">+    _alt</span>
+<span class="add">+    _bare</span>
+<span class="add">+    _bright</span>
+<span class="add">+    _dvi_12b</span>
+<span class="add">+    _dvi_24b</span>
+<span class="add">+    _hdmi</span>
+<span class="add">+    _hdmi_no_ip_tm1638</span>
+<span class="add">+    _hdmi_no_tm1638</span>
+<span class="add">+    _hdmi_tm1638</span>
+<span class="add">+    _hub75e_led_matrix</span>
+<span class="add">+    _lcd_480_272</span>
+<span class="add">+    _lcd_800_480</span>
+<span class="add">+    _lcd_ml6485</span>
+<span class="add">+    _no_dvi</span>
+<span class="add">+    _no_hdmi</span>
+<span class="add">+    _no_tm1638</span>
+<span class="add">+    _no_tm1638_yosys</span>
+<span class="add">+    _pmod_hdmi</span>
+<span class="add">+    _pmod_hub75e_led_matrix</span>
+<span class="add">+    _pmod_mic3</span>
+<span class="add">+    _pmod_vga</span>
+<span class="add">+    _quartus_13_1_or_older</span>
+<span class="add">+    _tm1638</span>
+<span class="add">+    _tm1638_sd</span>
+<span class="add">+    _tm1638_yosys</span>
+<span class="add">+    _vga666</span>
+<span class="add">+    _vga_pmod</span>
+<span class="add">+    _virtual_switches</span>
+<span class="add">+    _wo_dig_0</span>
+<span class="add">+    _yosys</span>
+<span class="add">+&quot;</span>
+<span class="add">+</span>
+<span class="add">+# Suffixes that name the size of the FPGA rather than a feature of the board.</span>
+<span class="add">+# The same product is sold in two sizes - Nexys A7-50T and A7-100T, Arty</span>
+<span class="add">+# A7-35T and A7-100T - differing in the part number in board_specific.tcl, so</span>
+<span class="add">+# these are configurations of one board rather than two boards.</span>
+<span class="add">+#</span>
+<span class="add">+# They are kept apart from the list above because a bare number is a risky</span>
+<span class="add">+# thing to strip. Do not grow this list without checking that the number</span>
+<span class="add">+# really names a size of one product and not a different product.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_size_suffixes=&quot;</span>
+<span class="add">+    _35</span>
+<span class="add">+    _50</span>
+<span class="add">+    _100</span>
+<span class="add">+&quot;</span>
+<span class="add">+</span>
+<span class="add">+# Directories under &quot;boards&quot; that are not boards at all and must not appear</span>
+<span class="add">+# in the menu, in the selection file or in the validity check.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_non_boards=&quot;</span>
+<span class="add">+    zzz_postponed_and_retired</span>
+<span class="add">+&quot;</span>
+<span class="add">+</span>
+<span class="add">+# Configurations kept only so that older notes and scripts keep working: the</span>
+<span class="add">+# same part and the same pins as another configuration. For nexys_a7 the</span>
+<span class="add">+# board_specific.tcl and the .xdc are identical to those of nexys_a7_100, and</span>
+<span class="add">+# board_specific_top.sv is a single include of it. The second level of the</span>
+<span class="add">+# menu says so, as &quot;&lt;alias&gt;:&lt;the configuration it stands for&gt;&quot;.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_legacy_aliases=&quot;</span>
+<span class="add">+    nexys_a7:nexys_a7_100</span>
+<span class="add">+&quot;</span>
+<span class="add">+</span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+</span>
+<span class="add">+# The board name that remains after removing a sequence of the suffixes</span>
+<span class="add">+# above: the shortest such name, searching all the ways to split the tail.</span>
+<span class="add">+#</span>
+<span class="add">+# Taking the longest matching suffix at each step would not work, because the</span>
+<span class="add">+# suffixes overlap. For example, tang_primer_20k_dock_no_hdmi_no_tm1638 ends</span>
+<span class="add">+# with the listed suffix _hdmi_no_tm1638, which leaves</span>
+<span class="add">+# tang_primer_20k_dock_no, while the correct split is _no_hdmi followed by</span>
+<span class="add">+# _no_tm1638, which leaves tang_primer_20k_dock.</span>
+<span class="add">+#</span>
+<span class="add">+# The result is returned in a global variable rather than printed, to avoid</span>
+<span class="add">+# a subshell for every board of the menu.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_base_result=</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_base ()</span>
+<span class="add">+{</span>
+<span class="add">+    local name=&quot;$1&quot;</span>
+<span class="add">+    local suffix stripped candidate best=&quot;$1&quot;</span>
+<span class="add">+</span>
+<span class="add">+    for suffix in $fpga_board_config_suffixes $fpga_board_size_suffixes</span>
+<span class="">     do</span>
+<span class="remove">-        if sort_probe=$(printf &#x27;de0_nano_soc\na\nZ\nde0_nano\na\n_\n&#x27; |</span>
+<span class="remove">-            LC_ALL=C &quot;$sort_candidate&quot; 2&gt;/dev/null)</span>
+<span class="add">+        case &quot;$name&quot; in</span>
+<span class="add">+            *&quot;$suffix&quot;)</span>
+<span class="add">+                # ${name%$suffix} - $name without the matched suffix</span>
+<span class="add">+</span>
+<span class="add">+                stripped=&quot;${name%$suffix}&quot;</span>
+<span class="add">+</span>
+<span class="add">+                if [ -n &quot;$stripped&quot; ]</span>
+<span class="add">+                then</span>
+<span class="add">+                    fpga_board_base &quot;$stripped&quot;</span>
+<span class="add">+                    candidate=$fpga_board_base_result</span>
+<span class="add">+</span>
+<span class="add">+                    if [ ${#candidate} -lt ${#best} ]</span>
+<span class="add">+                    then</span>
+<span class="add">+                        best=$candidate</span>
+<span class="add">+                    fi</span>
+<span class="add">+                fi</span>
+<span class="add">+            ;;</span>
+<span class="add">+        esac</span>
+<span class="add">+    done</span>
+<span class="add">+</span>
+<span class="add">+    fpga_board_base_result=$best</span>
+<span class="add">+}</span>
+<span class="add">+</span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+</span>
+<span class="add">+# Echoes its arguments in order, one per line.</span>
+<span class="add">+#</span>
+<span class="add">+# This is done in Bash rather than with &quot;sort&quot; on purpose. Windows has its own</span>
+<span class="add">+# sort.exe, which may come first on PATH and does not understand the Unix</span>
+<span class="add">+# options; and the order has to be the same on every machine, which an</span>
+<span class="add">+# external sort only is when the locale is forced. An insertion sort of the</span>
+<span class="add">+# board names takes about a millisecond, which is less than starting &quot;sort&quot;</span>
+<span class="add">+# costs anyway.</span>
+<span class="add">+#</span>
+<span class="add">+# LC_ALL is made local so that the comparison below is by byte value. Under a</span>
+<span class="add">+# UTF-8 locale Bash, like sort, ignores the underscore at the first comparison</span>
+<span class="add">+# level, which swaps de2_115 and de23_lite.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_sort ()</span>
+<span class="add">+{</span>
+<span class="add">+    local LC_ALL=C</span>
+<span class="add">+    local item i n=0</span>
+<span class="add">+    local sorted=()</span>
+<span class="add">+</span>
+<span class="add">+    for item in &quot;$@&quot;</span>
+<span class="add">+    do</span>
+<span class="add">+        i=$n</span>
+<span class="add">+</span>
+<span class="add">+        while [ $i -gt 0 ] &amp;&amp; [[ &quot;${sorted[$(( i - 1 ))]}&quot; &gt; &quot;$item&quot; ]]</span>
+<span class="add">+        do</span>
+<span class="add">+            sorted[$i]=${sorted[$(( i - 1 ))]}</span>
+<span class="add">+            i=$(( i - 1 ))</span>
+<span class="add">+        done</span>
+<span class="add">+</span>
+<span class="add">+        sorted[$i]=$item</span>
+<span class="add">+        n=$(( n + 1 ))</span>
+<span class="add">+    done</span>
+<span class="add">+</span>
+<span class="add">+    if [ $n != 0 ]</span>
+<span class="add">+    then</span>
+<span class="add">+        printf &quot;%s\n&quot; &quot;${sorted[@]}&quot;</span>
+<span class="add">+    fi</span>
+<span class="add">+}</span>
+<span class="add">+</span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+</span>
+<span class="add">+# Echoes its arguments without the directories listed in</span>
+<span class="add">+# $fpga_board_non_boards, which are not boards and cannot be selected.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_drop_non_boards ()</span>
+<span class="add">+{</span>
+<span class="add">+    local i_fpga_board non_board result=</span>
+<span class="add">+</span>
+<span class="add">+    for i_fpga_board in &quot;$@&quot;</span>
+<span class="add">+    do</span>
+<span class="add">+        for non_board in $fpga_board_non_boards</span>
+<span class="add">+        do</span>
+<span class="add">+            [ &quot;$i_fpga_board&quot; == &quot;$non_board&quot; ] &amp;&amp; continue 2</span>
+<span class="add">+        done</span>
+<span class="add">+</span>
+<span class="add">+        result=&quot;${result:+$result }$i_fpga_board&quot;</span>
+<span class="add">+    done</span>
+<span class="add">+</span>
+<span class="add">+    printf &quot;%s&quot; &quot;$result&quot;</span>
+<span class="add">+}</span>
+<span class="add">+</span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+</span>
+<span class="add">+# Sets $choice to the number of the menu item the user answered with.</span>
+<span class="add">+#</span>
+<span class="add">+# Bash &quot;select&quot; is generous about what it accepts for item eight: &quot;8&quot;, &quot;08&quot;,</span>
+<span class="add">+# &quot; 8&quot; and &quot;+8&quot; all work, and &quot;010&quot; means item ten. Arithmetic in Bash,</span>
+<span class="add">+# however, reads a leading zero as octal, so $(( REPLY - 1 )) turns &quot;010&quot;</span>
+<span class="add">+# into 7 and fails outright on &quot;08&quot;. Keeping only the digits and forcing base</span>
+<span class="add">+# ten gives the item the user actually picked.</span>
+<span class="add">+#</span>
+<span class="add">+# Called only after &quot;select&quot; has returned a non-empty label, which is what</span>
+<span class="add">+# guarantees there is at least one digit here.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_menu_choice ()</span>
+<span class="add">+{</span>
+<span class="add">+    # ${REPLY//[!0-9]/} - $REPLY with every non-digit removed</span>
+<span class="add">+    # 10#               - read the result as decimal rather than as octal</span>
+<span class="add">+</span>
+<span class="add">+    choice=${REPLY//[!0-9]/}</span>
+<span class="add">+    choice=$(( 10#0$choice ))</span>
+<span class="add">+}</span>
+<span class="add">+</span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+</span>
+<span class="add">+# The configuration that $1 is a legacy alias of, or nothing when $1 is not</span>
+<span class="add">+# an alias. See fpga_board_legacy_aliases above.</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_alias_target_result=</span>
+<span class="add">+</span>
+<span class="add">+fpga_board_alias_target ()</span>
+<span class="add">+{</span>
+<span class="add">+    local pair</span>
+<span class="add">+</span>
+<span class="add">+    fpga_board_alias_target_result=</span>
+<span class="add">+</span>
+<span class="add">+    for pair in $fpga_board_legacy_aliases</span>
+<span class="add">+    do</span>
+<span class="add">+        case &quot;$pair&quot; in</span>
+<span class="add">+            &quot;$1&quot;:*)</span>
+<span class="add">+                # ${pair#*:} - the part after the colon: the configuration</span>
+<span class="add">+</span>
+<span class="add">+                fpga_board_alias_target_result=${pair#*:}</span>
+<span class="add">+                return</span>
+<span class="add">+            ;;</span>
+<span class="add">+        esac</span>
+<span class="add">+    done</span>
+<span class="add">+}</span>
+<span class="add">+</span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+</span>
+<span class="add">+# Asks the user for a board and sets the global $fpga_board. Returns non-zero</span>
+<span class="add">+# without setting it when the user cancels, leaving it to the caller to</span>
+<span class="add">+# report that and to decide whether to stop. The boards to choose from are in</span>
+<span class="add">+# $available_fpga_boards.</span>
+<span class="add">+</span>
+<span class="add">+select_fpga_board ()</span>
+<span class="add">+{</span>
+<span class="add">+    local i_fpga_board board base label pair n</span>
+<span class="add">+    local chosen_base chosen_config choice</span>
+<span class="add">+    local pairs level1_labels level1_bases level2_labels configs seen</span>
+<span class="add">+    local unique_bases</span>
+<span class="add">+</span>
+<span class="add">+    # PS3 is the prompt of &quot;select&quot; and REPLY is where it leaves the answer.</span>
+<span class="add">+    # Both are made local so that the menu leaves no trace in the shell.</span>
+<span class="add">+</span>
+<span class="add">+    local PS3 REPLY</span>
+<span class="add">+</span>
+<span class="add">+    # &quot;&lt;board&gt; &lt;base&gt;&quot; for every available board, computed once.</span>
+<span class="add">+    #</span>
+<span class="add">+    # Two kinds of directory are left out. A configuration whose name ends in</span>
+<span class="add">+    # _hackathon is chosen by naming it in hackathon_top.sv, not from this</span>
+<span class="add">+    # menu; see fpga_board_setup, which reads that file first. A directory</span>
+<span class="add">+    # listed in $fpga_board_non_boards is not a board at all - the caller</span>
+<span class="add">+    # drops those as well, and repeating it here keeps this menu correct</span>
+<span class="add">+    # whatever it is handed.</span>
+<span class="add">+</span>
+<span class="add">+    pairs=()</span>
+<span class="add">+</span>
+<span class="add">+    for i_fpga_board in $(fpga_board_drop_non_boards $available_fpga_boards)</span>
+<span class="add">+    do</span>
+<span class="add">+        case &quot;$i_fpga_board&quot; in</span>
+<span class="add">+            *_hackathon)</span>
+<span class="add">+                continue</span>
+<span class="add">+            ;;</span>
+<span class="add">+        esac</span>
+<span class="add">+</span>
+<span class="add">+        fpga_board_base &quot;$i_fpga_board&quot;</span>
+<span class="add">+        pairs[${#pairs[@]}]=&quot;$i_fpga_board $fpga_board_base_result&quot;</span>
+<span class="add">+    done</span>
+<span class="add">+</span>
+<span class="add">+    if [ ${#pairs[@]} = 0 ]</span>
+<span class="add">+    then</span>
+<span class="add">+        error &quot;found no FPGA board directories in \&quot;$board_dir\&quot;&quot;</span>
+<span class="add">+    fi</span>
+<span class="add">+</span>
+<span class="add">+    # The first level of the menu: the unique board names, in alphabetical</span>
+<span class="add">+    # order. Sorting the board names rather than keeping the order of the</span>
+<span class="add">+    # directory listing is what puts de0_nano before de0_nano_soc: the</span>
+<span class="add">+    # listing has de0_nano_soc_vga666 before de0_nano_vga666, because &quot;s&quot;</span>
+<span class="add">+    # comes before &quot;v&quot;.</span>
+<span class="add">+    #</span>
+<span class="add">+    # A board with more than one configuration is marked with a star, so that</span>
+<span class="add">+    # the user can tell which choices open a second menu. The names are kept</span>
+<span class="add">+    # bare otherwise, because that is what lets &quot;select&quot; lay the whole list</span>
+<span class="add">+    # out in two or three columns.</span>
+<span class="add">+</span>
+<span class="add">+    seen=&quot; &quot;</span>
+<span class="add">+    unique_bases=()</span>
+<span class="add">+</span>
+<span class="add">+    for pair in &quot;${pairs[@]}&quot;</span>
+<span class="add">+    do</span>
+<span class="add">+        # ${pair#* } - the part after the first space: the base name</span>
+<span class="add">+</span>
+<span class="add">+        base=${pair#* }</span>
+<span class="add">+</span>
+<span class="add">+        case &quot;$seen&quot; in</span>
+<span class="add">+            *&quot; $base &quot;*)</span>
+<span class="add">+                continue</span>
+<span class="add">+            ;;</span>
+<span class="add">+        esac</span>
+<span class="add">+</span>
+<span class="add">+        seen=&quot;$seen$base &quot;</span>
+<span class="add">+        unique_bases[${#unique_bases[@]}]=$base</span>
+<span class="add">+    done</span>
+<span class="add">+</span>
+<span class="add">+    level1_bases=()</span>
+<span class="add">+    level1_labels=()</span>
+<span class="add">+</span>
+<span class="add">+    for base in $(fpga_board_sort &quot;${unique_bases[@]}&quot;)</span>
+<span class="add">+    do</span>
+<span class="add">+        n=0</span>
+<span class="add">+</span>
+<span class="add">+        for i_fpga_board in &quot;${pairs[@]}&quot;</span>
+<span class="add">+        do</span>
+<span class="add">+            [ &quot;${i_fpga_board#* }&quot; == &quot;$base&quot; ] &amp;&amp; n=$(( n + 1 ))</span>
+<span class="add">+        done</span>
+<span class="add">+</span>
+<span class="add">+        if [ $n = 1 ]</span>
+<span class="">         then</span>
+<span class="remove">-            if [ &quot;$sort_probe&quot; = $&#x27;Z\n_\na\na\nde0_nano\nde0_nano_soc&#x27; ]</span>
+<span class="remove">-            then</span>
+<span class="remove">-                board_sort_to_run=$sort_candidate</span>
+<span class="remove">-                return 0</span>
+<span class="remove">-            fi</span>
+<span class="add">+            level1_labels[${#level1_labels[@]}]=$base</span>
+<span class="add">+        else</span>
+<span class="add">+            level1_labels[${#level1_labels[@]}]=&quot;$base *&quot;</span>
+<span class="">         fi</span>
+<span class="add">+</span>
+<span class="add">+        level1_bases[${#level1_bases[@]}]=$base</span>
+<span class="">     done</span>
+<span class="remove">-</span>
+<span class="remove">-    info &quot;error: no Unix-compatible sort with C ordering was found.&quot;  \</span>
+<span class="remove">-         &quot;Put the Unix, MSYS or Cygwin sort utility on PATH.&quot;</span>
+<span class="remove">-</span>
+<span class="remove">-    return 1</span>
+<span class="remove">-}</span>
+<span class="remove">-</span>
+<span class="remove">-#-----------------------------------------------------------------------------</span>
+<span class="remove">-</span>
+<span class="remove">-fpga_board_base_name ()</span>
+<span class="remove">-{</span>
+<span class="remove">-    local base=&quot;$1&quot; suffix_pattern IFS=&#x27;|&#x27;</span>
+<span class="remove">-</span>
+<span class="remove">-    # Match a complete suffix sequence, including overlapping combinations such</span>
+<span class="remove">-    # as no_hdmi + no_tm1638, without leaving a spurious board name ending in no.</span>
+<span class="remove">-</span>
+<span class="remove">-    local -a variant_suffixes=(</span>
+<span class="remove">-        _pmod_hub75e_led_matrix</span>
+<span class="remove">-        _quartus_13_1_or_older</span>
+<span class="remove">-        _hdmi_no_ip_tm1638</span>
+<span class="remove">-        _hub75e_led_matrix</span>
+<span class="remove">-        _virtual_switches</span>
+<span class="remove">-        _no_tm1638_yosys</span>
+<span class="remove">-        _hdmi_no_tm1638</span>
+<span class="remove">-        _tm1638_yosys</span>
+<span class="remove">-        _hdmi_tm1638</span>
+<span class="remove">-        _lcd_480_272</span>
+<span class="remove">-        _lcd_800_480</span>
+<span class="remove">-        _lcd_ml6485</span>
+<span class="remove">-        _no_tm1638</span>
+<span class="remove">-        _pmod_hdmi</span>
+<span class="remove">-        _pmod_mic3</span>
+<span class="remove">-        _tm1638_sd</span>
+<span class="remove">-        _pmod_vga</span>
+<span class="remove">-        _vga_pmod</span>
+<span class="remove">-        _wo_dig_0</span>
+<span class="remove">-        _dvi_12b</span>
+<span class="remove">-        _dvi_24b</span>
+<span class="remove">-        _no_hdmi</span>
+<span class="remove">-        _bright</span>
+<span class="remove">-        _no_dvi</span>
+<span class="remove">-        _tm1638</span>
+<span class="remove">-        _vga666</span>
+<span class="remove">-        _50mhz</span>
+<span class="remove">-        _yosys</span>
+<span class="remove">-        _bare</span>
+<span class="remove">-        _hdmi</span>
+<span class="remove">-        _alt</span>
+<span class="remove">-    )</span>
+<span class="remove">-</span>
+<span class="remove">-    # [*] joins the suffixes using IFS; the regex accepts one or more at the end.</span>
+<span class="remove">-    suffix_pattern=&quot;(${variant_suffixes[*]})+$&quot;</span>
+<span class="remove">-</span>
+<span class="remove">-    # Bash regex matching finds the earliest start of the trailing suffix sequence.</span>
+<span class="remove">-</span>
+<span class="remove">-    if [[ &quot;$base&quot; =~ $suffix_pattern ]] &amp;&amp; [ &quot;$base&quot; != &quot;${BASH_REMATCH[0]}&quot; ]</span>
+<span class="remove">-    then</span>
+<span class="remove">-        # % removes the literal matched suffix sequence held in BASH_REMATCH[0].</span>
+<span class="remove">-        base=${base%&quot;${BASH_REMATCH[0]}&quot;}</span>
+<span class="remove">-    fi</span>
+<span class="remove">-</span>
+<span class="remove">-    # Group these chip variants for navigation without changing their directories.</span>
+<span class="remove">-</span>
+<span class="remove">-    case &quot;$base&quot; in</span>
+<span class="remove">-        nexys_a7_50 | nexys_a7_100 ) base=nexys_a7 ;;</span>
+<span class="remove">-        arty_a7_35  | arty_a7_100  ) base=arty_a7  ;;</span>
+<span class="remove">-    esac</span>
+<span class="remove">-</span>
+<span class="remove">-    printf &#x27;%s\n&#x27; &quot;$base&quot;</span>
+<span class="remove">-}</span>
+<span class="remove">-</span>
+<span class="remove">-#-----------------------------------------------------------------------------</span>
+<span class="remove">-</span>
+<span class="remove">-choose_fpga_board ()</span>
+<span class="remove">-{</span>
+<span class="remove">-    local board_name configuration index sorted_board_names</span>
+<span class="remove">-    local seen_boards=&quot; &quot; multiple_boards=&quot; &quot; PS3 REPLY</span>
+<span class="remove">-    local -a board_names=() board_labels=() configurations=()</span>
+<span class="remove">-    local -a configuration_boards=() variants=() variant_labels=()</span>
+<span class="remove">-</span>
+<span class="remove">-    for configuration in $available_fpga_boards</span>
+<span class="remove">-    do</span>
+<span class="remove">-        case &quot;$configuration&quot; in</span>
+<span class="remove">-            zzz_postponed_and_retired | *_hackathon ) continue ;;</span>
+<span class="remove">-        esac</span>
+<span class="remove">-</span>
+<span class="remove">-        board_name=$(fpga_board_base_name &quot;$configuration&quot;)</span>
+<span class="remove">-        configurations+=(&quot;$configuration&quot;)</span>
+<span class="remove">-        configuration_boards+=(&quot;$board_name&quot;)</span>
+<span class="remove">-</span>
+<span class="remove">-        if [[ &quot;$seen_boards&quot; != *&quot; $board_name &quot;* ]]</span>
+<span class="remove">-        then</span>
+<span class="remove">-            board_names+=(&quot;$board_name&quot;)</span>
+<span class="remove">-            seen_boards+=&quot;$board_name &quot;</span>
+<span class="remove">-        else</span>
+<span class="remove">-            multiple_boards+=&quot;$board_name &quot;</span>
+<span class="remove">-        fi</span>
+<span class="remove">-    done</span>
+<span class="remove">-</span>
+<span class="remove">-    if [ &quot;${#board_names[@]}&quot; -eq 0 ]</span>
+<span class="remove">-    then</span>
+<span class="remove">-        info &quot;No FPGA board configurations are available in &#x27;$board_dir&#x27;.&quot;</span>
+<span class="remove">-        return 1</span>
+<span class="remove">-    fi</span>
+<span class="remove">-</span>
+<span class="remove">-    sorted_board_names=$(printf &#x27;%s\n&#x27; &quot;${board_names[@]}&quot; |</span>
+<span class="remove">-        LC_ALL=C &quot;$board_sort_to_run&quot;) || return 1</span>
+<span class="remove">-    board_names=()</span>
+<span class="remove">-</span>
+<span class="remove">-    while IFS= read -r board_name</span>
+<span class="remove">-    do</span>
+<span class="remove">-        board_names+=(&quot;$board_name&quot;)</span>
+<span class="remove">-    done &lt;&lt;&lt; &quot;$sorted_board_names&quot;</span>
+<span class="remove">-</span>
+<span class="remove">-    for board_name in &quot;${board_names[@]}&quot;</span>
+<span class="remove">-    do</span>
+<span class="remove">-        if [[ &quot;$multiple_boards&quot; == *&quot; $board_name &quot;* ]]</span>
+<span class="remove">-        then</span>
+<span class="remove">-            board_labels+=(&quot;$board_name *&quot;)</span>
+<span class="remove">-        else</span>
+<span class="remove">-            board_labels+=(&quot;$board_name&quot;)</span>
+<span class="remove">-        fi</span>
+<span class="remove">-    done</span>
+<span class="remove">-</span>
+<span class="remove">-    info &quot;* = multiple configurations.&quot;</span>
+<span class=""> </span>
+<span class="">     while true</span>
+<span class="">     do</span>
+<span class="remove">-        info &quot;${current_board_message}Please select an FPGA board:&quot;</span>
+<span class="remove">-        PS3=&quot;Board (a number, e/E to exit): &quot;</span>
+<span class="remove">-        board_name=</span>
+<span class="remove">-</span>
+<span class="remove">-        select board_name in &quot;${board_labels[@]}&quot; exit</span>
+<span class="add">+        info &quot;${current_board_message}Please select an FPGA board amoung the following supported.&quot;  \</span>
+<span class="add">+             &quot;A star marks a board with several configurations:&quot;</span>
+<span class="add">+        PS3=&quot;Your choice (a number, or e to exit): &quot;</span>
+<span class="add">+</span>
+<span class="add">+        chosen_base=</span>
+<span class="add">+</span>
+<span class="add">+        select label in &quot;${level1_labels[@]}&quot; exit</span>
+<span class="">         do</span>
+<span class="remove">-            case &quot;$REPLY&quot; in</span>
+<span class="remove">-                e | E ) return 1 ;;</span>
+<span class="remove">-            esac</span>
+<span class="remove">-</span>
+<span class="remove">-            if [ -n &quot;$board_name&quot; ]</span>
+<span class="add">+            if [ -z &quot;$label&quot; ]</span>
+<span class="add">+            then</span>
+<span class="add">+                # An answer that is not a menu number: the letters first,</span>
+<span class="add">+                # then the complaint</span>
+<span class="add">+</span>
+<span class="add">+                case &quot;$REPLY&quot; in</span>
+<span class="add">+                    [eE])</span>
+<span class="add">+                        return 1</span>
+<span class="add">+                    ;;</span>
+<span class="add">+                esac</span>
+<span class="add">+</span>
+<span class="add">+                info &quot;Invalid FPGA board choice, please choose one of the listed numbers again&quot;</span>
+<span class="add">+                continue</span>
+<span class="add">+            fi</span>
+<span class="add">+</span>
+<span class="add">+            fpga_board_menu_choice</span>
+<span class="add">+</span>
+<span class="add">+            if [ $choice -gt ${#level1_labels[@]} ]</span>
+<span class="add">+            then</span>
+<span class="add">+                # The item after the boards: &quot;exit&quot;</span>
+<span class="add">+</span>
+<span class="add">+                return 1</span>
+<span class="add">+            fi</span>
+<span class="add">+</span>
+<span class="add">+            # The items are numbered from 1, so $choice-1 is the array index</span>
+<span class="add">+</span>
+<span class="add">+            chosen_base=${level1_bases[$(( choice - 1 ))]}</span>
+<span class="add">+            break</span>
+<span class="add">+        done</span>
+<span class="add">+</span>
+<span class="add">+        if [ -z &quot;$chosen_base&quot; ]</span>
+<span class="add">+        then</span>
+<span class="add">+            # The input ended: &quot;select&quot; exited its loop without a choice</span>
+<span class="add">+</span>
+<span class="add">+            return 1</span>
+<span class="add">+        fi</span>
+<span class="add">+</span>
+<span class="add">+        # The configurations of the chosen board, in the same order as in</span>
+<span class="add">+        # $available_fpga_boards</span>
+<span class="add">+</span>
+<span class="add">+        configs=()</span>
+<span class="add">+</span>
+<span class="add">+        for pair in &quot;${pairs[@]}&quot;</span>
+<span class="add">+        do</span>
+<span class="add">+            [ &quot;${pair#* }&quot; == &quot;$chosen_base&quot; ] &amp;&amp; configs[${#configs[@]}]=${pair%% *}</span>
+<span class="add">+        done</span>
+<span class="add">+</span>
+<span class="add">+        if [ ${#configs[@]} = 1 ]</span>
+<span class="add">+        then</span>
+<span class="add">+            fpga_board=${configs[0]}</span>
+<span class="add">+</span>
+<span class="add">+            info &quot;FPGA board selected: $fpga_board&quot;</span>
+<span class="add">+            return 0</span>
+<span class="add">+        fi</span>
+<span class="add">+</span>
+<span class="add">+        # The second level of the menu. Each configuration is listed under its</span>
+<span class="add">+        # full directory name, which is also what goes into the selection</span>
+<span class="add">+        # file, so that what the user picks and what gets written are the same</span>
+<span class="add">+        # string. A legacy alias says what it stands for.</span>
+<span class="add">+</span>
+<span class="add">+        level2_labels=()</span>
+<span class="add">+</span>
+<span class="add">+        for board in &quot;${configs[@]}&quot;</span>
+<span class="add">+        do</span>
+<span class="add">+            fpga_board_alias_target &quot;$board&quot;</span>
+<span class="add">+</span>
+<span class="add">+            if [ -n &quot;$fpga_board_alias_target_result&quot; ]</span>
+<span class="add">+            then</span>
+<span class="add">+                label=&quot;$board (alias of $fpga_board_alias_target_result)&quot;</span>
+<span class="add">+            else</span>
+<span class="add">+                label=$board</span>
+<span class="add">+            fi</span>
+<span class="add">+</span>
+<span class="add">+            level2_labels[${#level2_labels[@]}]=$label</span>
+<span class="add">+        done</span>
+<span class="add">+</span>
+<span class="add">+        info &quot;Please select a configuration of the board $chosen_base:&quot;</span>
+<span class="add">+        PS3=&quot;Your choice (a number, b to go back, or e to exit): &quot;</span>
+<span class="add">+</span>
+<span class="add">+        chosen_config=</span>
+<span class="add">+</span>
+<span class="add">+        select label in &quot;${level2_labels[@]}&quot; back exit</span>
+<span class="add">+        do</span>
+<span class="add">+            if [ -z &quot;$label&quot; ]</span>
+<span class="add">+            then</span>
+<span class="add">+                case &quot;$REPLY&quot; in</span>
+<span class="add">+                    [eE])</span>
+<span class="add">+                        return 1</span>
+<span class="add">+                    ;;</span>
+<span class="add">+                    [bB])</span>
+<span class="add">+                        break</span>
+<span class="add">+                    ;;</span>
+<span class="add">+                esac</span>
+<span class="add">+</span>
+<span class="add">+                info &quot;Invalid configuration choice, please choose one of the listed numbers again&quot;</span>
+<span class="add">+                continue</span>
+<span class="add">+            fi</span>
+<span class="add">+</span>
+<span class="add">+            fpga_board_menu_choice</span>
+<span class="add">+</span>
+<span class="add">+            # The two items after the configurations are &quot;back&quot; and &quot;exit&quot;</span>
+<span class="add">+</span>
+<span class="add">+            if [ $choice -gt $(( ${#level2_labels[@]} + 1 )) ]</span>
+<span class="add">+            then</span>
+<span class="add">+                return 1</span>
+<span class="add">+            fi</span>
+<span class="add">+</span>
+<span class="add">+            if [ $choice = $(( ${#level2_labels[@]} + 1 )) ]</span>
+<span class="">             then</span>
+<span class="">                 break</span>
+<span class="">             fi</span>
+<span class=""> </span>
+<span class="remove">-            info &quot;Invalid FPGA board choice, please choose one of the listed numbers again&quot;</span>
+<span class="add">+            chosen_config=${configs[$(( choice - 1 ))]}</span>
+<span class="add">+            break</span>
+<span class="">         done</span>
+<span class=""> </span>
+<span class="remove">-        if [ -z &quot;$board_name&quot; ] || [ &quot;$board_name&quot; = exit ]</span>
+<span class="add">+        if [ -n &quot;$chosen_config&quot; ]</span>
+<span class="">         then</span>
+<span class="remove">-            return 1</span>
+<span class="add">+            fpga_board=$chosen_config</span>
+<span class="add">+</span>
+<span class="add">+            info &quot;FPGA board selected: $fpga_board&quot;</span>
+<span class="add">+            return 0</span>
+<span class="">         fi</span>
+<span class=""> </span>
+<span class="remove">-        # % removes the literal trailing &quot; *&quot; marker, leaving the canonical name.</span>
+<span class="remove">-        board_name=${board_name% \*}</span>
+<span class="remove">-</span>
+<span class="remove">-        variants=()</span>
+<span class="remove">-</span>
+<span class="remove">-        # !array[@] expands to array indices, keeping each group paired with its directory.</span>
+<span class="remove">-</span>
+<span class="remove">-        for index in &quot;${!configurations[@]}&quot;</span>
+<span class="remove">-        do</span>
+<span class="remove">-            if [ &quot;${configuration_boards[index]}&quot; = &quot;$board_name&quot; ]</span>
+<span class="remove">-            then</span>
+<span class="remove">-                variants+=(&quot;${configurations[index]}&quot;)</span>
+<span class="remove">-            fi</span>
+<span class="remove">-        done</span>
+<span class="remove">-</span>
+<span class="remove">-        # #array[@] is the number of elements in the array.</span>
+<span class="remove">-</span>
+<span class="remove">-        if [ &quot;${#variants[@]}&quot; -eq 1 ]</span>
+<span class="remove">-        then</span>
+<span class="remove">-            configuration=&quot;${variants[0]}&quot;</span>
+<span class="remove">-        else</span>
+<span class="remove">-            variant_labels=()</span>
+<span class="remove">-</span>
+<span class="remove">-            for configuration in &quot;${variants[@]}&quot;</span>
+<span class="remove">-            do</span>
+<span class="remove">-                if [ &quot;$configuration&quot; = nexys_a7 ]</span>
+<span class="remove">-                then</span>
+<span class="remove">-                    variant_labels+=(&quot;nexys_a7 (alias of nexys_a7_100)&quot;)</span>
+<span class="remove">-                else</span>
+<span class="remove">-                    variant_labels+=(&quot;$configuration&quot;)</span>
+<span class="remove">-                fi</span>
+<span class="remove">-            done</span>
+<span class="remove">-</span>
+<span class="remove">-            info &quot;Please select a variant of &#x27;$board_name&#x27;:&quot;</span>
+<span class="remove">-            PS3=&quot;Variant (a number, b/B to go back, e/E to exit): &quot;</span>
+<span class="remove">-            configuration=</span>
+<span class="remove">-</span>
+<span class="remove">-            select configuration in &quot;${variant_labels[@]}&quot; back exit</span>
+<span class="remove">-            do</span>
+<span class="remove">-                case &quot;$REPLY&quot; in</span>
+<span class="remove">-                    e | E ) return 1 ;;</span>
+<span class="remove">-                    b | B ) configuration=back; break ;;</span>
+<span class="remove">-                esac</span>
+<span class="remove">-</span>
+<span class="remove">-                if [ -n &quot;$configuration&quot; ]</span>
+<span class="remove">-                then</span>
+<span class="remove">-                    break</span>
+<span class="remove">-                fi</span>
+<span class="remove">-</span>
+<span class="remove">-                info &quot;Invalid FPGA board variant, please choose one of the listed numbers again&quot;</span>
+<span class="remove">-            done</span>
+<span class="remove">-        fi</span>
+<span class="remove">-</span>
+<span class="remove">-        case &quot;$configuration&quot; in</span>
+<span class="remove">-            back ) continue ;;</span>
+<span class="remove">-            &quot;&quot; | exit ) return 1 ;;</span>
+<span class="remove">-        esac</span>
+<span class="remove">-</span>
+<span class="remove">-        if [ &quot;$configuration&quot; = &quot;nexys_a7 (alias of nexys_a7_100)&quot; ]</span>
+<span class="remove">-        then</span>
+<span class="remove">-            configuration=nexys_a7</span>
+<span class="remove">-        fi</span>
+<span class="remove">-</span>
+<span class="remove">-        fpga_board=&quot;$configuration&quot;</span>
+<span class="remove">-        info &quot;FPGA board selected: $fpga_board&quot;</span>
+<span class="remove">-        return 0</span>
+<span class="add">+        # &quot;back&quot; or the end of the input: ask for the board again</span>
+<span class="">     done</span>
+<span class=""> }</span>
+<span class=""> </span>
+<span class="add">+#-----------------------------------------------------------------------------</span>
+<span class="add">+#</span>
+<span class="add">+#   FPGA board setup</span>
+<span class="add">+#</span>
+<span class=""> #-----------------------------------------------------------------------------</span>
+<span class=""> </span>
+<span class=""> create_fpga_board_select_file()</span>
+<span class="hunk">@@ -486,10 +727,6 @@</span>
+<span class=""> </span>
+<span class="">     for i_fpga_board in $available_fpga_boards</span>
+<span class="">     do</span>
+<span class="remove">-        case &quot;$i_fpga_board&quot; in</span>
+<span class="remove">-            *_hackathon ) continue ;;</span>
+<span class="remove">-        esac</span>
+<span class="remove">-</span>
+<span class="">         comment=&quot;# &quot;</span>
+<span class="">         [ $i_fpga_board == $fpga_board ] &amp;&amp; comment=&quot;&quot;</span>
+<span class="">         printf &quot;$comment%s\n&quot; &quot;$i_fpga_board&quot; &gt;&gt; &quot;$select_file&quot;</span>
+<span class="hunk">@@ -635,7 +872,6 @@</span>
+<span class=""> </span>
+<span class=""> fpga_board_setup ()</span>
+<span class=""> {</span>
+<span class="remove">-    local board_sort_to_run</span>
+<span class="">     fpga_toolchain=none</span>
+<span class=""> </span>
+<span class="">     if ! [[ $script =~ fpga ]] ; then</span>
+<span class="hunk">@@ -681,24 +917,32 @@</span>
+<span class=""> </span>
+<span class="">     #-------------------------------------------------------------------------</span>
+<span class=""> </span>
+<span class="remove">-    fpga_board_sort_discovery || return 1</span>
+<span class="remove">-</span>
+<span class="">     # TODO: Remove else after testing on Linux and Windows</span>
+<span class=""> </span>
+<span class="add">+    # LC_ALL=C keeps the order of the list, and therefore the numbers in the</span>
+<span class="add">+    # menu, the same on every machine. Under a UTF-8 locale &quot;sort&quot; ignores</span>
+<span class="add">+    # the underscore at the first comparison level, which swaps de2_115 and</span>
+<span class="add">+    # de23_lite - so &quot;choose number 26&quot; would mean two different boards.</span>
+<span class="add">+    #</span>
+<span class="add">+    # xargs -I implies one command per input line; adding -L 1 as well makes</span>
+<span class="add">+    # GNU xargs reject the pair and print the literal &quot;%&quot; for every board.</span>
+<span class="add">+</span>
+<span class="">     if [[ &quot;$OSTYPE&quot; = &quot;darwin&quot;*   ]] ; then</span>
+<span class="remove">-      available_fpga_boards=$($find_to_run &quot;$board_dir&quot; -mindepth 1 -maxdepth 1 -type d ! -name zzz_postponed_and_retired | xargs -I % basename &#x27;%&#x27; | LC_ALL=C &quot;$board_sort_to_run&quot; | tr &quot;\r\n&quot; &quot; &quot;)</span>
+<span class="add">+      available_fpga_boards=$($find_to_run &quot;$board_dir&quot; -mindepth 1 -maxdepth 1 -type d | xargs -I % basename &#x27;%&#x27; | LC_ALL=C sort | tr &quot;\r\n&quot; &quot; &quot;)</span>
+<span class="">     else</span>
+<span class="remove">-      available_fpga_boards=$($find_to_run &quot;$board_dir&quot; -mindepth 1 -maxdepth 1 -type d ! -name zzz_postponed_and_retired -printf &#x27;%f\n&#x27; | LC_ALL=C &quot;$board_sort_to_run&quot; | tr &quot;\r\n&quot; &quot; &quot;)</span>
+<span class="remove">-    fi</span>
+<span class="add">+      available_fpga_boards=$($find_to_run &quot;$board_dir&quot; -mindepth 1 -maxdepth 1 -type d -printf &#x27;%f\n&#x27; | LC_ALL=C sort | tr &quot;\r\n&quot; &quot; &quot;)</span>
+<span class="add">+    fi</span>
+<span class="add">+</span>
+<span class="add">+    available_fpga_boards=$(fpga_board_drop_non_boards $available_fpga_boards)</span>
+<span class=""> </span>
+<span class="">     if    ! [ -f &quot;$select_file&quot; ]  \</span>
+<span class="">        ||   [ $offer_to_create_a_new_fpga_board_select_file = 1 ]</span>
+<span class="">     then</span>
+<span class="remove">-        choose_fpga_board ||</span>
+<span class="remove">-        {</span>
+<span class="remove">-            info &quot;A new FPGA board is not selected, please run the script again&quot;</span>
+<span class="add">+        if ! select_fpga_board</span>
+<span class="add">+        then</span>
+<span class="add">+            info &quot;a new FPGA board is not selected, please run the script again&quot;</span>
+<span class="">             exit 0</span>
+<span class="remove">-        }</span>
+<span class="add">+        fi</span>
+<span class=""> </span>
+<span class="">         create_fpga_board_select_file</span>
+<span class=""> </span></pre></details>
+</section>
+<footer>Local report: <code>/home/verilog/codex/board_menu_compare_2.html</code>. Self-contained styling, selection map, audit code and source diff. The comparison itself made no implementation changes.</footer>
+</main></body></html>
