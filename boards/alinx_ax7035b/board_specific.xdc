@@ -12,6 +12,10 @@ set_property PACKAGE_PIN Y18 [get_ports {sys_clk}]
 
 set_property IOSTANDARD LVCMOS33 [get_ports {rst_n}]
 set_property PACKAGE_PIN F20 [get_ports {rst_n}]
+
+# Exclude paths from the asynchronous external reset from timing analysis.
+set_false_path -from [get_ports rst_n]
+
 ############## key define##############################
 set_property PACKAGE_PIN M13 [get_ports {key_in[0]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {key_in[0]}]
