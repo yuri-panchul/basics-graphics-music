@@ -21,7 +21,7 @@ without leaving a bogus board name ending in `_no`.
 
 `_ecp5` is part of the board name, so `colorlight75b_ecp5_tm1638_yosys`
 belongs to `colorlight75b_ecp5`, and `karnix_ecp5_yosys` to `karnix_ecp5`.
-Only specific PMOD compounds such as `_pmod_hdmi` and
+Only specific PMOD compounds such as `_pmod_hdmi`, `_pmod_rgblcd` and
 `_pmod_hub75e_led_matrix` are suffixes; an unknown ending such as `_pmod`
 is retained. `_hackathon` is not a configuration suffix for grouping.
 

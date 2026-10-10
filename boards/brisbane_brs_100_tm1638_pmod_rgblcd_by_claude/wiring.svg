@@ -1,0 +1,337 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1740" height="1290" viewBox="0 0 1740 1290">
+<title>BRS-100-GW1NR9 wiring for brisbane_brs_100_tm1638_pmod_rgblcd_by_claude</title>
+<rect x="0.0" y="0.0" width="1740.0" height="1290.0" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
+<text x="40.0" y="38.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="24" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">BRS-100-GW1NR9 + PMOD-RGBLCD 4.3" 480x272 + TM1638 + PCM5102 + INMP441</text>
+<text x="40.0" y="70.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">Board configuration brisbane_brs_100_tm1638_pmod_rgblcd_by_claude. Each wire is one female-female jumper; both ends are labeled.</text>
+<text x="40.0" y="94.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">The headers of BRS-100 and PMOD-RGBLCD are seen from the component side. BRS-100 labels give header pin and FPGA pin.</text>
+<line x1="40" y1="132" x2="68" y2="132" stroke="#d1495b" stroke-width="5" stroke-linecap="round"/>
+<text x="76.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">LCD red</text>
+<line x1="148" y1="132" x2="176" y2="132" stroke="#3a9a4a" stroke-width="5" stroke-linecap="round"/>
+<text x="184.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">LCD green</text>
+<line x1="272" y1="132" x2="300" y2="132" stroke="#3b6fd1" stroke-width="5" stroke-linecap="round"/>
+<text x="308.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">LCD blue</text>
+<line x1="388" y1="132" x2="416" y2="132" stroke="#8e5bb5" stroke-width="5" stroke-linecap="round"/>
+<text x="424.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">LCD clock and sync</text>
+<line x1="584" y1="132" x2="612" y2="132" stroke="#c99100" stroke-width="5" stroke-linecap="round"/>
+<text x="620.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">TM1638</text>
+<line x1="684" y1="132" x2="712" y2="132" stroke="#8c5a3c" stroke-width="5" stroke-linecap="round"/>
+<text x="720.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">PCM5102</text>
+<line x1="792" y1="132" x2="820" y2="132" stroke="#1a9a9a" stroke-width="5" stroke-linecap="round"/>
+<text x="828.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">INMP441</text>
+<line x1="900" y1="132" x2="928" y2="132" stroke="#ef7d1a" stroke-width="5" stroke-linecap="round"/>
+<text x="936.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">+3.3 V</text>
+<line x1="1000" y1="132" x2="1028" y2="132" stroke="#b0182a" stroke-width="5" stroke-linecap="round"/>
+<text x="1036.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">+5 V</text>
+<line x1="1084" y1="132" x2="1112" y2="132" stroke="#222222" stroke-width="5" stroke-linecap="round"/>
+<text x="1120.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">GND</text>
+<rect x="600.0" y="260.0" width="280.0" height="708.0" rx="22" fill="#1d4fa8" stroke="#0f2e66" stroke-width="3"/>
+<rect x="700.0" y="238.0" width="80.0" height="52.0" rx="10" fill="#c9ced6" stroke="#7c838f" stroke-width="2"/>
+<text x="740.0" y="264.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="middle" dominant-baseline="central">USB-C</text>
+<rect x="635.0" y="280.0" width="30.0" height="30.0" rx="4" fill="#d9d9d9" stroke="#555" stroke-width="1.5"/>
+<circle cx="650" cy="295" r="8" fill="#444"/>
+<text x="650.0" y="222.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="middle" dominant-baseline="central">Button 1</text>
+<text x="650.0" y="238.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="middle" dominant-baseline="central">pin 3, KEY[1]</text>
+<rect x="815.0" y="280.0" width="30.0" height="30.0" rx="4" fill="#d9d9d9" stroke="#555" stroke-width="1.5"/>
+<circle cx="830" cy="295" r="8" fill="#444"/>
+<text x="830.0" y="222.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="middle" dominant-baseline="central">Button 2</text>
+<text x="830.0" y="238.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="middle" dominant-baseline="central">pin 4, KEY[0]</text>
+<text x="740.0" y="554.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle" dominant-baseline="central">BRS-100</text>
+<text x="740.0" y="584.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="18" font-weight="normal" fill="#dbe6ff" text-anchor="middle" dominant-baseline="central">GW1NR9</text>
+<rect x="690.0" y="656.0" width="100.0" height="100.0" rx="4" fill="#2b2b2b" stroke="#111" stroke-width="1.5"/>
+<text x="740.0" y="706.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#bbbbbb" text-anchor="middle" dominant-baseline="central">GW1NR-9</text>
+<text x="628.0" y="324.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle" dominant-baseline="central">J5</text>
+<text x="852.0" y="324.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle" dominant-baseline="central">J6</text>
+<rect x="621.0" y="343.0" width="14.0" height="14.0" rx="0" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="350.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 1  25</text>
+<circle cx="628.0" cy="384.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="384.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 2  26</text>
+<circle cx="628.0" cy="418.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="418.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 3  27</text>
+<circle cx="628.0" cy="452.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="452.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 4  28</text>
+<circle cx="628.0" cy="486.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="486.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 5  29</text>
+<circle cx="628.0" cy="520.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="520.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 6  30</text>
+<circle cx="628.0" cy="554.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="554.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 7  33</text>
+<circle cx="628.0" cy="588.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="588.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 8  34</text>
+<circle cx="628.0" cy="622.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="622.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 9  35</text>
+<circle cx="628.0" cy="656.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="656.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">10  36</text>
+<circle cx="628.0" cy="690.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="690.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">11  37</text>
+<circle cx="628.0" cy="724.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="724.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">12  38</text>
+<circle cx="628.0" cy="758.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="758.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">13  39</text>
+<circle cx="628.0" cy="792.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="792.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">14  40</text>
+<circle cx="628.0" cy="826.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="826.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">15  41</text>
+<circle cx="628.0" cy="860.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="860.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">16  42</text>
+<circle cx="628.0" cy="894.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="894.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">17  GND</text>
+<circle cx="628.0" cy="928.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="644.0" y="928.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">18  +5V</text>
+<rect x="845.0" y="343.0" width="14.0" height="14.0" rx="0" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="350.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 1  77</text>
+<circle cx="852.0" cy="384.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="384.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 2  76</text>
+<circle cx="852.0" cy="418.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="418.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 3  75</text>
+<circle cx="852.0" cy="452.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="452.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 4  74</text>
+<circle cx="852.0" cy="486.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="486.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 5  73</text>
+<circle cx="852.0" cy="520.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="520.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 6  72</text>
+<circle cx="852.0" cy="554.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="554.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 7  71</text>
+<circle cx="852.0" cy="588.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="588.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 8  70</text>
+<circle cx="852.0" cy="622.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="622.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central"> 9  69</text>
+<circle cx="852.0" cy="656.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="656.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">10  68</text>
+<circle cx="852.0" cy="690.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="690.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">11  57</text>
+<circle cx="852.0" cy="724.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="724.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">12  56</text>
+<circle cx="852.0" cy="758.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="758.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">13  55</text>
+<circle cx="852.0" cy="792.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="792.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">14  54</text>
+<circle cx="852.0" cy="826.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="826.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">15  53</text>
+<circle cx="852.0" cy="860.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="860.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">16  51</text>
+<circle cx="852.0" cy="894.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="894.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">17  GND</text>
+<circle cx="852.0" cy="928.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="836.0" y="928.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">18  +3.3V</text>
+<rect x="1210.0" y="270.0" width="270.0" height="610.0" rx="14" fill="#232323" stroke="#000" stroke-width="2"/>
+<text x="1345.0" y="296.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle" dominant-baseline="central">PMOD-RGBLCD v1.3, header J2</text>
+<text x="1345.0" y="862.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#bbbbbb" text-anchor="middle" dominant-baseline="central">LCD ribbon connector on this side →</text>
+<rect x="1235.0" y="343.0" width="14.0" height="14.0" rx="0" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="350.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 1 G0</text>
+<circle cx="1242.0" cy="384.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="384.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 2 G1</text>
+<circle cx="1242.0" cy="418.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="418.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 3 G2</text>
+<circle cx="1242.0" cy="452.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="452.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 4 G3</text>
+<circle cx="1242.0" cy="486.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="486.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 5 GND</text>
+<circle cx="1242.0" cy="520.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="520.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 6 3V3</text>
+<circle cx="1242.0" cy="554.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="554.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 7 G4</text>
+<circle cx="1242.0" cy="588.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="588.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 8 GND</text>
+<circle cx="1242.0" cy="622.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="622.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central"> 9 G5</text>
+<circle cx="1242.0" cy="656.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="656.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">10 LCD_CLK</text>
+<circle cx="1242.0" cy="690.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="690.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">11 LCD_HS</text>
+<circle cx="1242.0" cy="724.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="724.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">12 LCD_VS</text>
+<circle cx="1242.0" cy="758.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="758.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">13 LCD_DE</text>
+<circle cx="1242.0" cy="792.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="792.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">14 GND</text>
+<circle cx="1242.0" cy="826.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1258.0" y="826.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="start" dominant-baseline="central">15 3V3</text>
+<circle cx="1448.0" cy="350.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="350.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">R0 30</text>
+<circle cx="1448.0" cy="384.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="384.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">R1 29</text>
+<circle cx="1448.0" cy="418.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="418.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">R2 28</text>
+<circle cx="1448.0" cy="452.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="452.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">R3 27</text>
+<circle cx="1448.0" cy="486.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="486.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">GND 26</text>
+<circle cx="1448.0" cy="520.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="520.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">3V3 25</text>
+<circle cx="1448.0" cy="554.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="554.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">R4 24</text>
+<circle cx="1448.0" cy="588.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="588.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">5V 23</text>
+<circle cx="1448.0" cy="622.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="622.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">B0 22</text>
+<circle cx="1448.0" cy="656.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="656.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">B1 21</text>
+<circle cx="1448.0" cy="690.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="690.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">B2 20</text>
+<circle cx="1448.0" cy="724.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="724.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">B3 19</text>
+<circle cx="1448.0" cy="758.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="758.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">B4 18</text>
+<circle cx="1448.0" cy="792.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="792.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">GND 17</text>
+<circle cx="1448.0" cy="826.0" r="7" fill="#d9d9d9" stroke="#777" stroke-width="1.5"/>
+<text x="1432.0" y="826.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#ffffff" text-anchor="end" dominant-baseline="central">3V3 16</text>
+<rect x="110.0" y="284.0" width="220.0" height="224.0" rx="10" fill="#f4f1e8" stroke="#8a8577" stroke-width="2"/>
+<rect x="110.0" y="284.0" width="10.0" height="224.0" rx="0" fill="#c99100" stroke="none" stroke-width="1.5"/>
+<text x="132.0" y="302.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">TM1638 LED&amp;KEY</text>
+<text x="132.0" y="322.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">8 digits, 8 LEDs, 8 keys</text>
+<circle cx="316.0" cy="349.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="349.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">DIO</text>
+<circle cx="316.0" cy="383.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="383.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">CLK</text>
+<circle cx="316.0" cy="417.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="417.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">STB</text>
+<circle cx="316.0" cy="451.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="451.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">GND</text>
+<circle cx="316.0" cy="485.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="485.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">VCC</text>
+<rect x="110.0" y="530.0" width="220.0" height="258.0" rx="10" fill="#f4f1e8" stroke="#8a8577" stroke-width="2"/>
+<rect x="110.0" y="530.0" width="10.0" height="258.0" rx="0" fill="#8c5a3c" stroke="none" stroke-width="1.5"/>
+<text x="132.0" y="548.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">PCM5102 DAC</text>
+<text x="132.0" y="568.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">I2S audio output</text>
+<circle cx="316.0" cy="595.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="595.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">BCK</text>
+<circle cx="316.0" cy="629.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="629.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">DIN</text>
+<circle cx="316.0" cy="663.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="663.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">LCK</text>
+<circle cx="316.0" cy="697.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="697.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">SCK</text>
+<circle cx="316.0" cy="731.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="731.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">GND</text>
+<circle cx="316.0" cy="765.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="765.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">VIN</text>
+<rect x="110.0" y="810.0" width="220.0" height="258.0" rx="10" fill="#f4f1e8" stroke="#8a8577" stroke-width="2"/>
+<rect x="110.0" y="810.0" width="10.0" height="258.0" rx="0" fill="#1a9a9a" stroke="none" stroke-width="1.5"/>
+<text x="132.0" y="828.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">INMP441</text>
+<text x="132.0" y="848.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">I2S microphone</text>
+<circle cx="316.0" cy="875.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="875.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">SCK</text>
+<circle cx="316.0" cy="909.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="909.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">WS</text>
+<circle cx="316.0" cy="943.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="943.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">L/R</text>
+<circle cx="316.0" cy="977.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="977.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">SD</text>
+<circle cx="316.0" cy="1011.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="1011.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">VDD</text>
+<circle cx="316.0" cy="1045.0" r="7" fill="#e9c46a" stroke="#7a5c12" stroke-width="1.5"/>
+<text x="302.0" y="1045.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="normal" fill="#1b1b1b" text-anchor="end" dominant-baseline="central">GND</text>
+<path d="M 316.0 349.0 L 359.5 349.0 Q 360.0 349.0 360.0 349.5 L 360.0 349.5 Q 360.0 350.0 360.5 350.0 L 628.0 350.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 349.0 L 359.5 349.0 Q 360.0 349.0 360.0 349.5 L 360.0 349.5 Q 360.0 350.0 360.5 350.0 L 628.0 350.0" fill="none" stroke="#c99100" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 383.0 L 377.5 383.0 Q 378.0 383.0 378.0 383.5 L 378.0 383.5 Q 378.0 384.0 378.5 384.0 L 628.0 384.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 383.0 L 377.5 383.0 Q 378.0 383.0 378.0 383.5 L 378.0 383.5 Q 378.0 384.0 378.5 384.0 L 628.0 384.0" fill="none" stroke="#c99100" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 417.0 L 395.5 417.0 Q 396.0 417.0 396.0 417.5 L 396.0 417.5 Q 396.0 418.0 396.5 418.0 L 628.0 418.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 417.0 L 395.5 417.0 Q 396.0 417.0 396.0 417.5 L 396.0 417.5 Q 396.0 418.0 396.5 418.0 L 628.0 418.0" fill="none" stroke="#c99100" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 595.0 L 351.0 595.0 Q 360.0 595.0 360.0 586.0 L 360.0 461.0 Q 360.0 452.0 369.0 452.0 L 628.0 452.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 595.0 L 351.0 595.0 Q 360.0 595.0 360.0 586.0 L 360.0 461.0 Q 360.0 452.0 369.0 452.0 L 628.0 452.0" fill="none" stroke="#8c5a3c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 629.0 L 369.0 629.0 Q 378.0 629.0 378.0 620.0 L 378.0 495.0 Q 378.0 486.0 387.0 486.0 L 628.0 486.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 629.0 L 369.0 629.0 Q 378.0 629.0 378.0 620.0 L 378.0 495.0 Q 378.0 486.0 387.0 486.0 L 628.0 486.0" fill="none" stroke="#8c5a3c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 663.0 L 387.0 663.0 Q 396.0 663.0 396.0 654.0 L 396.0 529.0 Q 396.0 520.0 405.0 520.0 L 628.0 520.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 663.0 L 387.0 663.0 Q 396.0 663.0 396.0 654.0 L 396.0 529.0 Q 396.0 520.0 405.0 520.0 L 628.0 520.0" fill="none" stroke="#8c5a3c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 875.0 L 351.0 875.0 Q 360.0 875.0 360.0 866.0 L 360.0 665.0 Q 360.0 656.0 369.0 656.0 L 628.0 656.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 875.0 L 351.0 875.0 Q 360.0 875.0 360.0 866.0 L 360.0 665.0 Q 360.0 656.0 369.0 656.0 L 628.0 656.0" fill="none" stroke="#1a9a9a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 909.0 L 369.0 909.0 Q 378.0 909.0 378.0 900.0 L 378.0 699.0 Q 378.0 690.0 387.0 690.0 L 628.0 690.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 909.0 L 369.0 909.0 Q 378.0 909.0 378.0 900.0 L 378.0 699.0 Q 378.0 690.0 387.0 690.0 L 628.0 690.0" fill="none" stroke="#1a9a9a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 943.0 L 387.0 943.0 Q 396.0 943.0 396.0 934.0 L 396.0 733.0 Q 396.0 724.0 405.0 724.0 L 628.0 724.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 943.0 L 387.0 943.0 Q 396.0 943.0 396.0 934.0 L 396.0 733.0 Q 396.0 724.0 405.0 724.0 L 628.0 724.0" fill="none" stroke="#1a9a9a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 977.0 L 405.0 977.0 Q 414.0 977.0 414.0 968.0 L 414.0 767.0 Q 414.0 758.0 423.0 758.0 L 628.0 758.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 977.0 L 405.0 977.0 Q 414.0 977.0 414.0 968.0 L 414.0 767.0 Q 414.0 758.0 423.0 758.0 L 628.0 758.0" fill="none" stroke="#1a9a9a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 485.0 L 331.0 485.0 Q 340.0 485.0 340.0 494.0 L 340.0 511.0 Q 340.0 520.0 331.0 520.0 L 53.0 520.0 Q 44.0 520.0 44.0 529.0 L 44.0 1150.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 485.0 L 331.0 485.0 Q 340.0 485.0 340.0 494.0 L 340.0 511.0 Q 340.0 520.0 331.0 520.0 L 53.0 520.0 Q 44.0 520.0 44.0 529.0 L 44.0 1150.0" fill="none" stroke="#ef7d1a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="44.0" cy="1150.0" r="4.5" fill="#ef7d1a"/>
+<path d="M 316.0 451.0 L 340.0 451.0 Q 349.0 451.0 349.0 460.0 L 349.0 520.0 Q 349.0 529.0 340.0 529.0 L 63.0 529.0 Q 54.0 529.0 54.0 538.0 L 54.0 1230.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 451.0 L 340.0 451.0 Q 349.0 451.0 349.0 460.0 L 349.0 520.0 Q 349.0 529.0 340.0 529.0 L 63.0 529.0 Q 54.0 529.0 54.0 538.0 L 54.0 1230.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="54.0" cy="1230.0" r="4.5" fill="#222222"/>
+<path d="M 316.0 765.0 L 331.0 765.0 Q 340.0 765.0 340.0 774.0 L 340.0 791.0 Q 340.0 800.0 331.0 800.0 L 73.0 800.0 Q 64.0 800.0 64.0 809.0 L 64.0 1150.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 765.0 L 331.0 765.0 Q 340.0 765.0 340.0 774.0 L 340.0 791.0 Q 340.0 800.0 331.0 800.0 L 73.0 800.0 Q 64.0 800.0 64.0 809.0 L 64.0 1150.0" fill="none" stroke="#ef7d1a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="64.0" cy="1150.0" r="4.5" fill="#ef7d1a"/>
+<path d="M 316.0 731.0 L 340.0 731.0 Q 349.0 731.0 349.0 740.0 L 349.0 800.0 Q 349.0 809.0 340.0 809.0 L 83.0 809.0 Q 74.0 809.0 74.0 818.0 L 74.0 1230.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 731.0 L 340.0 731.0 Q 349.0 731.0 349.0 740.0 L 349.0 800.0 Q 349.0 809.0 340.0 809.0 L 83.0 809.0 Q 74.0 809.0 74.0 818.0 L 74.0 1230.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="74.0" cy="1230.0" r="4.5" fill="#222222"/>
+<path d="M 316.0 697.0 L 340.0 697.0 Q 349.0 697.0 349.0 706.0 L 349.0 731.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 697.0 L 340.0 697.0 Q 349.0 697.0 349.0 706.0 L 349.0 731.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="349.0" cy="731.0" r="4.5" fill="#222222"/>
+<path d="M 316.0 1045.0 L 331.0 1045.0 Q 340.0 1045.0 340.0 1054.0 L 340.0 1071.0 Q 340.0 1080.0 331.0 1080.0 L 93.0 1080.0 Q 84.0 1080.0 84.0 1089.0 L 84.0 1230.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 1045.0 L 331.0 1045.0 Q 340.0 1045.0 340.0 1054.0 L 340.0 1071.0 Q 340.0 1080.0 331.0 1080.0 L 93.0 1080.0 Q 84.0 1080.0 84.0 1089.0 L 84.0 1230.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="84.0" cy="1230.0" r="4.5" fill="#222222"/>
+<path d="M 316.0 1011.0 L 340.0 1011.0 Q 349.0 1011.0 349.0 1020.0 L 349.0 1080.0 Q 349.0 1089.0 340.0 1089.0 L 103.0 1089.0 Q 94.0 1089.0 94.0 1098.0 L 94.0 1150.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 316.0 1011.0 L 340.0 1011.0 Q 349.0 1011.0 349.0 1020.0 L 349.0 1080.0 Q 349.0 1089.0 340.0 1089.0 L 103.0 1089.0 Q 94.0 1089.0 94.0 1098.0 L 94.0 1150.0" fill="none" stroke="#ef7d1a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="94.0" cy="1150.0" r="4.5" fill="#ef7d1a"/>
+<path d="M 852.0 588.0 L 1051.0 588.0 Q 1060.0 588.0 1060.0 579.0 L 1060.0 359.0 Q 1060.0 350.0 1069.0 350.0 L 1242.0 350.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 588.0 L 1051.0 588.0 Q 1060.0 588.0 1060.0 579.0 L 1060.0 359.0 Q 1060.0 350.0 1069.0 350.0 L 1242.0 350.0" fill="none" stroke="#3a9a4a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 622.0 L 1035.0 622.0 Q 1044.0 622.0 1044.0 613.0 L 1044.0 393.0 Q 1044.0 384.0 1053.0 384.0 L 1242.0 384.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 622.0 L 1035.0 622.0 Q 1044.0 622.0 1044.0 613.0 L 1044.0 393.0 Q 1044.0 384.0 1053.0 384.0 L 1242.0 384.0" fill="none" stroke="#3a9a4a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 656.0 L 1019.0 656.0 Q 1028.0 656.0 1028.0 647.0 L 1028.0 427.0 Q 1028.0 418.0 1037.0 418.0 L 1242.0 418.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 656.0 L 1019.0 656.0 Q 1028.0 656.0 1028.0 647.0 L 1028.0 427.0 Q 1028.0 418.0 1037.0 418.0 L 1242.0 418.0" fill="none" stroke="#3a9a4a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 690.0 L 1003.0 690.0 Q 1012.0 690.0 1012.0 681.0 L 1012.0 461.0 Q 1012.0 452.0 1021.0 452.0 L 1242.0 452.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 690.0 L 1003.0 690.0 Q 1012.0 690.0 1012.0 681.0 L 1012.0 461.0 Q 1012.0 452.0 1021.0 452.0 L 1242.0 452.0" fill="none" stroke="#3a9a4a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 724.0 L 987.0 724.0 Q 996.0 724.0 996.0 715.0 L 996.0 563.0 Q 996.0 554.0 1005.0 554.0 L 1242.0 554.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 724.0 L 987.0 724.0 Q 996.0 724.0 996.0 715.0 L 996.0 563.0 Q 996.0 554.0 1005.0 554.0 L 1242.0 554.0" fill="none" stroke="#3a9a4a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 758.0 L 971.0 758.0 Q 980.0 758.0 980.0 749.0 L 980.0 631.0 Q 980.0 622.0 989.0 622.0 L 1242.0 622.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 758.0 L 971.0 758.0 Q 980.0 758.0 980.0 749.0 L 980.0 631.0 Q 980.0 622.0 989.0 622.0 L 1242.0 622.0" fill="none" stroke="#3a9a4a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 418.0 L 891.0 418.0 Q 900.0 418.0 900.0 409.0 L 900.0 253.0 Q 900.0 244.0 909.0 244.0 L 1501.0 244.0 Q 1510.0 244.0 1510.0 253.0 L 1510.0 341.0 Q 1510.0 350.0 1501.0 350.0 L 1448.0 350.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 418.0 L 891.0 418.0 Q 900.0 418.0 900.0 409.0 L 900.0 253.0 Q 900.0 244.0 909.0 244.0 L 1501.0 244.0 Q 1510.0 244.0 1510.0 253.0 L 1510.0 341.0 Q 1510.0 350.0 1501.0 350.0 L 1448.0 350.0" fill="none" stroke="#d1495b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 452.0 L 905.0 452.0 Q 914.0 452.0 914.0 443.0 L 914.0 241.0 Q 914.0 232.0 923.0 232.0 L 1517.0 232.0 Q 1526.0 232.0 1526.0 241.0 L 1526.0 375.0 Q 1526.0 384.0 1517.0 384.0 L 1448.0 384.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 452.0 L 905.0 452.0 Q 914.0 452.0 914.0 443.0 L 914.0 241.0 Q 914.0 232.0 923.0 232.0 L 1517.0 232.0 Q 1526.0 232.0 1526.0 241.0 L 1526.0 375.0 Q 1526.0 384.0 1517.0 384.0 L 1448.0 384.0" fill="none" stroke="#d1495b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 486.0 L 919.0 486.0 Q 928.0 486.0 928.0 477.0 L 928.0 229.0 Q 928.0 220.0 937.0 220.0 L 1533.0 220.0 Q 1542.0 220.0 1542.0 229.0 L 1542.0 409.0 Q 1542.0 418.0 1533.0 418.0 L 1448.0 418.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 486.0 L 919.0 486.0 Q 928.0 486.0 928.0 477.0 L 928.0 229.0 Q 928.0 220.0 937.0 220.0 L 1533.0 220.0 Q 1542.0 220.0 1542.0 229.0 L 1542.0 409.0 Q 1542.0 418.0 1533.0 418.0 L 1448.0 418.0" fill="none" stroke="#d1495b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 520.0 L 933.0 520.0 Q 942.0 520.0 942.0 511.0 L 942.0 217.0 Q 942.0 208.0 951.0 208.0 L 1549.0 208.0 Q 1558.0 208.0 1558.0 217.0 L 1558.0 443.0 Q 1558.0 452.0 1549.0 452.0 L 1448.0 452.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 520.0 L 933.0 520.0 Q 942.0 520.0 942.0 511.0 L 942.0 217.0 Q 942.0 208.0 951.0 208.0 L 1549.0 208.0 Q 1558.0 208.0 1558.0 217.0 L 1558.0 443.0 Q 1558.0 452.0 1549.0 452.0 L 1448.0 452.0" fill="none" stroke="#d1495b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 554.0 L 947.0 554.0 Q 956.0 554.0 956.0 545.0 L 956.0 205.0 Q 956.0 196.0 965.0 196.0 L 1565.0 196.0 Q 1574.0 196.0 1574.0 205.0 L 1574.0 545.0 Q 1574.0 554.0 1565.0 554.0 L 1448.0 554.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 554.0 L 947.0 554.0 Q 956.0 554.0 956.0 545.0 L 956.0 205.0 Q 956.0 196.0 965.0 196.0 L 1565.0 196.0 Q 1574.0 196.0 1574.0 205.0 L 1574.0 545.0 Q 1574.0 554.0 1565.0 554.0 L 1448.0 554.0" fill="none" stroke="#d1495b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 792.0 L 1071.0 792.0 Q 1080.0 792.0 1080.0 801.0 L 1080.0 911.0 Q 1080.0 920.0 1089.0 920.0 L 1631.0 920.0 Q 1640.0 920.0 1640.0 911.0 L 1640.0 631.0 Q 1640.0 622.0 1631.0 622.0 L 1448.0 622.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 792.0 L 1071.0 792.0 Q 1080.0 792.0 1080.0 801.0 L 1080.0 911.0 Q 1080.0 920.0 1089.0 920.0 L 1631.0 920.0 Q 1640.0 920.0 1640.0 911.0 L 1640.0 631.0 Q 1640.0 622.0 1631.0 622.0 L 1448.0 622.0" fill="none" stroke="#3b6fd1" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 826.0 L 1085.0 826.0 Q 1094.0 826.0 1094.0 835.0 L 1094.0 925.0 Q 1094.0 934.0 1103.0 934.0 L 1615.0 934.0 Q 1624.0 934.0 1624.0 925.0 L 1624.0 665.0 Q 1624.0 656.0 1615.0 656.0 L 1448.0 656.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 826.0 L 1085.0 826.0 Q 1094.0 826.0 1094.0 835.0 L 1094.0 925.0 Q 1094.0 934.0 1103.0 934.0 L 1615.0 934.0 Q 1624.0 934.0 1624.0 925.0 L 1624.0 665.0 Q 1624.0 656.0 1615.0 656.0 L 1448.0 656.0" fill="none" stroke="#3b6fd1" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 860.0 L 1099.0 860.0 Q 1108.0 860.0 1108.0 869.0 L 1108.0 939.0 Q 1108.0 948.0 1117.0 948.0 L 1599.0 948.0 Q 1608.0 948.0 1608.0 939.0 L 1608.0 699.0 Q 1608.0 690.0 1599.0 690.0 L 1448.0 690.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 860.0 L 1099.0 860.0 Q 1108.0 860.0 1108.0 869.0 L 1108.0 939.0 Q 1108.0 948.0 1117.0 948.0 L 1599.0 948.0 Q 1608.0 948.0 1608.0 939.0 L 1608.0 699.0 Q 1608.0 690.0 1599.0 690.0 L 1448.0 690.0" fill="none" stroke="#3b6fd1" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 554.0 L 599.0 554.0 Q 590.0 554.0 590.0 563.0 L 590.0 989.0 Q 590.0 998.0 599.0 998.0 L 1115.0 998.0 Q 1124.0 998.0 1124.0 989.0 L 1124.0 767.0 Q 1124.0 758.0 1133.0 758.0 L 1242.0 758.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 554.0 L 599.0 554.0 Q 590.0 554.0 590.0 563.0 L 590.0 989.0 Q 590.0 998.0 599.0 998.0 L 1115.0 998.0 Q 1124.0 998.0 1124.0 989.0 L 1124.0 767.0 Q 1124.0 758.0 1133.0 758.0 L 1242.0 758.0" fill="none" stroke="#8e5bb5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 588.0 L 591.0 588.0 Q 582.0 588.0 582.0 597.0 L 582.0 1003.0 Q 582.0 1012.0 591.0 1012.0 L 1129.0 1012.0 Q 1138.0 1012.0 1138.0 1003.0 L 1138.0 733.0 Q 1138.0 724.0 1147.0 724.0 L 1242.0 724.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 588.0 L 591.0 588.0 Q 582.0 588.0 582.0 597.0 L 582.0 1003.0 Q 582.0 1012.0 591.0 1012.0 L 1129.0 1012.0 Q 1138.0 1012.0 1138.0 1003.0 L 1138.0 733.0 Q 1138.0 724.0 1147.0 724.0 L 1242.0 724.0" fill="none" stroke="#8e5bb5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 622.0 L 583.0 622.0 Q 574.0 622.0 574.0 631.0 L 574.0 1017.0 Q 574.0 1026.0 583.0 1026.0 L 1143.0 1026.0 Q 1152.0 1026.0 1152.0 1017.0 L 1152.0 665.0 Q 1152.0 656.0 1161.0 656.0 L 1242.0 656.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 622.0 L 583.0 622.0 Q 574.0 622.0 574.0 631.0 L 574.0 1017.0 Q 574.0 1026.0 583.0 1026.0 L 1143.0 1026.0 Q 1152.0 1026.0 1152.0 1017.0 L 1152.0 665.0 Q 1152.0 656.0 1161.0 656.0 L 1242.0 656.0" fill="none" stroke="#8e5bb5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 792.0 L 575.0 792.0 Q 566.0 792.0 566.0 801.0 L 566.0 1031.0 Q 566.0 1040.0 575.0 1040.0 L 1157.0 1040.0 Q 1166.0 1040.0 1166.0 1031.0 L 1166.0 699.0 Q 1166.0 690.0 1175.0 690.0 L 1242.0 690.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 792.0 L 575.0 792.0 Q 566.0 792.0 566.0 801.0 L 566.0 1031.0 Q 566.0 1040.0 575.0 1040.0 L 1157.0 1040.0 Q 1166.0 1040.0 1166.0 1031.0 L 1166.0 699.0 Q 1166.0 690.0 1175.0 690.0 L 1242.0 690.0" fill="none" stroke="#8e5bb5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 826.0 L 567.0 826.0 Q 558.0 826.0 558.0 835.0 L 558.0 1045.0 Q 558.0 1054.0 567.0 1054.0 L 1571.0 1054.0 Q 1580.0 1054.0 1580.0 1045.0 L 1580.0 767.0 Q 1580.0 758.0 1571.0 758.0 L 1448.0 758.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 826.0 L 567.0 826.0 Q 558.0 826.0 558.0 835.0 L 558.0 1045.0 Q 558.0 1054.0 567.0 1054.0 L 1571.0 1054.0 Q 1580.0 1054.0 1580.0 1045.0 L 1580.0 767.0 Q 1580.0 758.0 1571.0 758.0 L 1448.0 758.0" fill="none" stroke="#3b6fd1" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 860.0 L 559.0 860.0 Q 550.0 860.0 550.0 869.0 L 550.0 1059.0 Q 550.0 1068.0 559.0 1068.0 L 1555.0 1068.0 Q 1564.0 1068.0 1564.0 1059.0 L 1564.0 733.0 Q 1564.0 724.0 1555.0 724.0 L 1448.0 724.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 860.0 L 559.0 860.0 Q 550.0 860.0 550.0 869.0 L 550.0 1059.0 Q 550.0 1068.0 559.0 1068.0 L 1555.0 1068.0 Q 1564.0 1068.0 1564.0 1059.0 L 1564.0 733.0 Q 1564.0 724.0 1555.0 724.0 L 1448.0 724.0" fill="none" stroke="#3b6fd1" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="30" y1="1150" x2="1710" y2="1150" stroke="#ef7d1a" stroke-width="7" stroke-linecap="round"/>
+<text x="110.0" y="1136.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#ef7d1a" text-anchor="start" dominant-baseline="central">+3.3 V rail</text>
+<line x1="30" y1="1190" x2="1710" y2="1190" stroke="#b0182a" stroke-width="7" stroke-linecap="round"/>
+<text x="110.0" y="1176.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b0182a" text-anchor="start" dominant-baseline="central">+5 V rail</text>
+<line x1="30" y1="1230" x2="1710" y2="1230" stroke="#222222" stroke-width="7" stroke-linecap="round"/>
+<text x="110.0" y="1216.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#222222" text-anchor="start" dominant-baseline="central">GND rail</text>
+<path d="M 628.0 894.0 L 619.0 894.0 Q 610.0 894.0 610.0 903.0 L 610.0 1230.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 894.0 L 619.0 894.0 Q 610.0 894.0 610.0 903.0 L 610.0 1230.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="610.0" cy="1230.0" r="4.5" fill="#222222"/>
+<path d="M 628.0 928.0 L 623.0 928.0 Q 618.0 928.0 618.0 933.0 L 618.0 1190.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 628.0 928.0 L 623.0 928.0 Q 618.0 928.0 618.0 933.0 L 618.0 1190.0" fill="none" stroke="#b0182a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="618.0" cy="1190.0" r="4.5" fill="#b0182a"/>
+<path d="M 852.0 894.0 L 891.0 894.0 Q 900.0 894.0 900.0 903.0 L 900.0 1230.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 894.0 L 891.0 894.0 Q 900.0 894.0 900.0 903.0 L 900.0 1230.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="900.0" cy="1230.0" r="4.5" fill="#222222"/>
+<path d="M 852.0 928.0 L 879.0 928.0 Q 888.0 928.0 888.0 937.0 L 888.0 1150.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 852.0 928.0 L 879.0 928.0 Q 888.0 928.0 888.0 937.0 L 888.0 1150.0" fill="none" stroke="#ef7d1a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="888.0" cy="1150.0" r="4.5" fill="#ef7d1a"/>
+<path d="M 1242.0 826.0 L 1215.0 826.0 Q 1206.0 826.0 1206.0 835.0 L 1206.0 1150.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1242.0 826.0 L 1215.0 826.0 Q 1206.0 826.0 1206.0 835.0 L 1206.0 1150.0" fill="none" stroke="#ef7d1a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="1206.0" cy="1150.0" r="4.5" fill="#ef7d1a"/>
+<path d="M 1242.0 792.0 L 1203.0 792.0 Q 1194.0 792.0 1194.0 801.0 L 1194.0 1230.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1242.0 792.0 L 1203.0 792.0 Q 1194.0 792.0 1194.0 801.0 L 1194.0 1230.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="1194.0" cy="1230.0" r="4.5" fill="#222222"/>
+<path d="M 1448.0 792.0 L 1681.0 792.0 Q 1690.0 792.0 1690.0 801.0 L 1690.0 1230.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1448.0 792.0 L 1681.0 792.0 Q 1690.0 792.0 1690.0 801.0 L 1690.0 1230.0" fill="none" stroke="#222222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="1690.0" cy="1230.0" r="4.5" fill="#222222"/>
+<path d="M 1448.0 588.0 L 1667.0 588.0 Q 1676.0 588.0 1676.0 597.0 L 1676.0 1190.0" fill="none" stroke="#ffffff" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1448.0 588.0 L 1667.0 588.0 Q 1676.0 588.0 1676.0 597.0 L 1676.0 1190.0" fill="none" stroke="#b0182a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="1676.0" cy="1190.0" r="4.5" fill="#b0182a"/>
+<text x="40.0" y="1268.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">J6 pins 1 and 2 (FPGA pins 77 and 76) stay free as user GPIO. PCM5102: SCK to GND; solder jumpers FLT, DEMP, FMT low and XSMT high.</text>
+</svg>

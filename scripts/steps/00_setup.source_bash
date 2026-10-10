@@ -287,6 +287,7 @@ fpga_board_base_name ()
         _lcd_480_272
         _lcd_800_480
         _lcd_ml6485
+        _pmod_rgblcd
         _by_claude
         _no_tm1638
         _pmod_hdmi
@@ -596,6 +597,7 @@ update_fpga_toolchain_var ()
             fpga_toolchain=quartus
         ;;
 
+        brisbane_brs_100*                | \
         runber                           | \
         marsohod3gw2*                    | \
         tang_*                           | \

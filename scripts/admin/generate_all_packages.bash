@@ -48,6 +48,7 @@ update_fpga_toolchain_var ()
             use_old_version_of_quartus=0
         ;;
 
+        brisbane_brs_100*                | \
         runber                           | \
         tang_nano_1k*                    | \
         tang_nano_4k*                    | \
