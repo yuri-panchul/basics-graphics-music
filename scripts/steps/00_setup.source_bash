@@ -283,16 +283,16 @@ fpga_board_base_name ()
         _no_tm1638_yosys
         _hdmi_no_tm1638
         _tm1638_yosys
-        _from_claude
         _hdmi_tm1638
         _lcd_480_272
         _lcd_800_480
-        _from_codex
         _lcd_ml6485
+        _by_claude
         _no_tm1638
         _pmod_hdmi
         _pmod_mic3
         _tm1638_sd
+        _by_codex
         _pmod_vga
         _vga_pmod
         _wo_dig_0
