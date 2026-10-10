@@ -45,7 +45,7 @@ module board_specific_top
     output                  TMDS_clk_p,
     output [           2:0] TMDS_data_n,
     output [           2:0] TMDS_data_p,
-    output                  HDMI_OEN,
+    output [           0:0] HDMI_OEN,
 
     input                   uart_rx,
     output                  uart_tx
@@ -62,10 +62,9 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    // Pin M6, called HDMI_OEN in the constraints of the vendor, switches
-    // the +5 V supply of the HDMI connector. It is active high, despite
-    // the name: see the HDMI section of the ALINX AX7035B user manual,
-    // https://alinx.com/public/upload/file/AX7035B_UG.pdf
+    // Pin M6, called HDMI_OEN - output enable - in the constraints of the
+    // vendor, switches the +5 V supply of the HDMI connector. Driving it
+    // high turns the supply on.
 
     localparam hdmi_output_enable = 1'b1;
 
