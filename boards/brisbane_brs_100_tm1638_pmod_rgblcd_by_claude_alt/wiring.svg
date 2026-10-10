@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1740" height="1290" viewBox="0 0 1740 1290">
-<title>BRS-100-GW1NR9 wiring for brisbane_brs_100_tm1638_pmod_rgblcd_by_claude</title>
+<title>BRS-100-GW1NR9 wiring for brisbane_brs_100_tm1638_pmod_rgblcd_by_claude_alt</title>
 <rect x="0.0" y="0.0" width="1740.0" height="1290.0" rx="0" fill="#ffffff" stroke="none" stroke-width="1.5"/>
 <text x="40.0" y="38.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="24" font-weight="bold" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">BRS-100-GW1NR9 + PMOD-RGBLCD 4.3" 480x272 + TM1638 + PCM5102 + INMP441</text>
-<text x="40.0" y="70.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">Board configuration brisbane_brs_100_tm1638_pmod_rgblcd_by_claude. Each wire is one female-female jumper; both ends are labeled.</text>
+<text x="40.0" y="70.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">Board configuration brisbane_brs_100_tm1638_pmod_rgblcd_by_claude_alt. Each wire is one female-female jumper; both ends are labeled.</text>
 <text x="40.0" y="94.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start" dominant-baseline="central">The headers of BRS-100 and PMOD-RGBLCD are seen from the component side. BRS-100 labels give header pin and FPGA pin.</text>
 <line x1="40" y1="132" x2="68" y2="132" stroke="#d1495b" stroke-width="5" stroke-linecap="round"/>
 <text x="76.0" y="132.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#1b1b1b" text-anchor="start" dominant-baseline="central">LCD red</text>

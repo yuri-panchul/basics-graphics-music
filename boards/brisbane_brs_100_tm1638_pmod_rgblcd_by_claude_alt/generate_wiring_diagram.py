@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate wiring.svg for brisbane_brs_100_tm1638_pmod_rgblcd_by_claude.
+"""Generate wiring.svg for the board configuration in this directory.
 
 Run from any directory:
 
@@ -17,6 +17,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 OUT = Path(__file__).with_name("wiring.svg")
+CONFIGURATION = Path(__file__).resolve().parent.name
 
 W, H = 1740, 1290
 PITCH = 34
@@ -171,12 +172,12 @@ RAIL_X0, RAIL_X1 = 30, 1710
 
 add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
     f'viewBox="0 0 {W} {H}">')
-add('<title>BRS-100-GW1NR9 wiring for brisbane_brs_100_tm1638_pmod_rgblcd_by_claude</title>')
+add(f'<title>BRS-100-GW1NR9 wiring for {CONFIGURATION}</title>')
 rect(0, 0, W, H, "#ffffff")
 
 text(40, 38, "BRS-100-GW1NR9 + PMOD-RGBLCD 4.3\" 480x272 + TM1638 + PCM5102 + INMP441",
      size=24, weight="bold")
-text(40, 70, "Board configuration brisbane_brs_100_tm1638_pmod_rgblcd_by_claude. "
+text(40, 70, f"Board configuration {CONFIGURATION}. "
      "Each wire is one female-female jumper; both ends are labeled.",
      size=15, color=C["muted"])
 text(40, 94, "The headers of BRS-100 and PMOD-RGBLCD are seen from the component "

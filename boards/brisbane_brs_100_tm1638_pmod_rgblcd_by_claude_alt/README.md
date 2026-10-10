@@ -1,6 +1,6 @@
 # BRS-100-GW1NR9 with PMOD-RGBLCD, TM1638, PCM5102 and INMP441
 
-Board configuration `brisbane_brs_100_tm1638_pmod_rgblcd_by_claude`.
+Board configuration `brisbane_brs_100_tm1638_pmod_rgblcd_by_claude_alt`.
 
 [BRS-100-GW1NR9](https://brisbanesilicon.com.au/brs-100-gw1nr9/) by
 BrisbaneSilicon carries the same Gowin GW1NR-9 FPGA as Tang Nano 9K,
