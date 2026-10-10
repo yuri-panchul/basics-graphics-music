@@ -1,0 +1,32 @@
+2026.09.06
+
+1. Intel - сейчас снова Altera. Quartus Lite 25.1 - он устанавливается в директорию altera_lite. Quartus Pro - он устанавливается в директорию altera_pro.
+
+2. Quartus pro - релевантный если использовать новую плату Terasic DE23-Lite.
+https://www.wildberries.ru/catalog/1145042953/detail.aspx?ysclid=mtpy8zahco838327750
+
+3. Рекомендовать минимум Icarus 13 а может и более новую версию (14).
+
+Поставить явную ссылку на сайт, скачивать версию 14 - https://bleyer.org/icarus/
+
+4. Добавить поддержку icarus из OSS CAD Suite - Win и Linux.
+
+5. Для VS Code - добавить Surfer extension for VCD browsing.
+
+6. Добавить USB Blaster III в инструкцию
+
+7. Добавить установку surfer программы как альтернативу GTKWave.
+
+https://gitlab.com/surfer-project/surfer/-/releases
+
+8. Сейчас в basics-graphics-music вместо OpenLane стоит поддержка LibreLane - более новой версии.
+
+- всю часть про OpenLane нужно переписать.
+
+9. Эта директория устарела - https://gitflic.ru/project/yuri-panchul/valid-ready-etc
+
+10. Добавить часть про XPACK для сборки C и ассемблерных программ для работы с ядром APS из МИЭТ. Андрей Солодовников возможно может помочь в написании этой части инструкции.
+
+11. Инструкция для установки различных терминалов - Анастасия Воробьева.
+
+Юрий Панчул

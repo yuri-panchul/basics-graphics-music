@@ -5,22 +5,24 @@ count=0
 while read file
 do
     dir=$(readlink -f "$(dirname "$file")/run")
+
     if [ -d "$dir" ]
     then
-        info "Cleaning up: \"$dir\""
+        info "cleaning up: \"$dir\""
         rm -rf "$dir"
-        export count=`expr $count + 1`
+        count=`expr $count + 1`
     fi
 done <<< $($find_to_run "$lab_dir" -name '*synthesize_for_fpga.bash')
 
-rm -rf "$package_dir/run"
-
-echo
-
 if [ "$count" == 0 ]
 then
-    echo "Nothing to clean."
+    info "nothing to clean in lab directories"
 else
-    echo "Cleaned $count lab dirs."
+    info "cleaned $count lab dirs"
 fi
 
+rm -rf \
+    "$package_dir/fpga_board_selection" \
+    "$package_dir/riscv_core_selection" \
+    "$package_dir/last_uart_port"       \
+    "$package_dir/run"

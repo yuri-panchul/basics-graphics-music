@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Converged on Vivado</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;600;700&family=Source+Code+Pro:wght@400;500&family=Spectral:wght@300;400;500&display=swap">
+<style>
+  :root {
+    --ground:  #fafaf9;
+    --surface: #ffffff;
+    --ink:     #18181b;
+    --muted:   #52525b;
+    --faint:   #8b8b93;
+    --rule:    #e3e3e0;
+    --rule2:   #c2c2bd;
+    --agree:   #3f6212;
+    --diverge: #b45309;
+    --code-bg: #f1f1ee;
+
+    --display: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+    --body:    Spectral, Georgia, "Times New Roman", serif;
+    --mono:    "Source Code Pro", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #121212;
+      --surface: #1a1a1b;
+      --ink:     #ececea;
+      --muted:   #a1a1a8;
+      --faint:   #71717a;
+      --rule:    #2a2a2c;
+      --rule2:   #3f3f44;
+      --agree:   #a3c164;
+      --diverge: #e0a155;
+      --code-bg: #171718;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:  #121212;
+    --surface: #1a1a1b;
+    --ink:     #ececea;
+    --muted:   #a1a1a8;
+    --faint:   #71717a;
+    --rule:    #2a2a2c;
+    --rule2:   #3f3f44;
+    --agree:   #a3c164;
+    --diverge: #e0a155;
+    --code-bg: #171718;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17.5px;
+    font-weight: 400;
+    line-height: 1.64;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 51rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 3rem 5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 0.85rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 7vw, 3rem);
+    line-height: 1.06;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+
+  .standfirst {
+    font-size: 1.17rem;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 39rem;
+    margin: 0 0 2rem;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.6rem;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding-block: 0.85rem;
+    margin-bottom: 2.75rem;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+  .meta b { color: var(--faint); font-weight: 400; }
+
+  /* headline figure */
+
+  .headline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem 1.5rem;
+    border-left: 3px solid var(--agree);
+    padding: 0.4rem 0 0.4rem 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+  .headline .big {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 2.6rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--agree);
+    font-variant-numeric: tabular-nums;
+  }
+  .headline p {
+    margin: 0;
+    max-width: 30rem;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 3.25rem 0 1rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  p { margin: 0 0 1rem; max-width: 41rem; }
+  strong { font-weight: 500; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.83em;
+    background: var(--code-bg);
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+  }
+
+  /* procedure */
+
+  .steps { margin: 0 0 1.25rem; padding: 0; list-style: none; }
+  .step {
+    display: grid;
+    grid-template-columns: 2.3rem 1fr;
+    gap: 0 0.95rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+  .step:last-child { border-bottom: 1px solid var(--rule); }
+  .step-n {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--faint);
+    padding-top: 0.32rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .step h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    margin: 0 0 0.3rem;
+  }
+  .step p { margin: 0 0 0.55rem; max-width: 39rem; font-size: 0.99rem; }
+  .step p:last-child { margin-bottom: 0; }
+
+  .stop {
+    display: inline-block;
+    font-family: var(--display);
+    font-size: 0.63rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--rule2);
+    border-radius: 2px;
+    padding: 0.05rem 0.42rem;
+    margin-left: 0.45rem;
+    vertical-align: 0.16em;
+  }
+
+  .note-diverge {
+    border-left: 2px solid var(--diverge);
+    padding: 0.4rem 0 0.4rem 0.8rem;
+    margin-top: 0.7rem;
+    font-size: 0.93rem;
+  }
+  .note-diverge .who {
+    display: block;
+    font-family: var(--display);
+    font-size: 0.63rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--diverge);
+    margin-bottom: 0.15rem;
+  }
+  .note-diverge p { margin: 0; max-width: 37rem; }
+
+  /* code blocks */
+
+  .tree, .shell {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.85;
+    background: var(--code-bg);
+    padding: 0.85rem 1rem;
+    margin: 0 0 1.5rem;
+    overflow-x: auto;
+  }
+  .tree .note, .shell .note { color: var(--faint); }
+  .shell pre { margin: 0; white-space: pre; font: inherit; }
+  .shell .cap {
+    display: block;
+    font-family: var(--display);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 0.45rem;
+  }
+
+  /* tables */
+
+  .scroll { overflow-x: auto; margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 0.5rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.45rem 0.8rem 0.45rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  thead th {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule2);
+    white-space: nowrap;
+  }
+  td.num, th.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .path { font-family: var(--mono); font-size: 0.78rem; }
+  tr.row-diverge td { background: var(--surface); }
+  .tag-agree, .tag-diverge {
+    font-family: var(--display);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .tag-agree   { color: var(--agree); }
+  .tag-diverge { color: var(--diverge); }
+  .worse { color: var(--diverge); font-weight: 500; }
+
+  /* two implementations */
+
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 2.25rem;
+    margin-bottom: 1rem;
+  }
+  .impl { border-top: 1px solid var(--ink); padding-top: 0.8rem; }
+  .impl-name {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0 0 0.1rem;
+  }
+  .impl-sub {
+    font-family: var(--display);
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 1rem;
+  }
+  .label {
+    font-family: var(--display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 1.3rem 0 0.5rem;
+  }
+  .label:first-of-type { margin-top: 0; }
+  ul.findings { margin: 0; padding-left: 1.1rem; }
+  ul.findings li { margin-bottom: 0.62rem; font-size: 0.93rem; }
+
+  /* verdict */
+
+  .verdict {
+    border-left: 3px solid var(--ink);
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    margin-bottom: 1.25rem;
+  }
+  .verdict h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.04rem;
+    margin: 0 0 0.35rem;
+  }
+  .verdict p:last-child { margin-bottom: 0; }
+
+  ol.plan { margin: 0 0 1rem; padding-left: 1.45rem; }
+  ol.plan li { margin-bottom: 0.5rem; }
+  ol.plan li::marker { font-family: var(--mono); font-size: 0.8rem; color: var(--faint); }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--faint);
+    line-height: 1.85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="eyebrow">basics-graphics-music &middot; 00_setup_xilinx.source_bash</p>
+  <h1>Converged on Vivado</h1>
+  <p class="standfirst">
+    Two independent rewrites of the code that finds a Vivado installation have
+    arrived at the same answer. What is left to compare is not which Vivado they
+    run, but what they tell you and how much code it takes.
+  </p>
+
+  <div class="meta">
+    <span><b>codex</b> 9d893916 &middot; 10 commits</span>
+    <span><b>claude</b> 271f1ccf &middot; 5 commits</span>
+    <span><b>compared</b> 2026-10-03</span>
+    <span><b>against</b> Vivado 2026.1</span>
+  </div>
+
+  <div class="headline">
+    <span class="big">11 / 11</span>
+    <p>
+      situations in which both implementations select the identical directory
+      &mdash; including an equal-version tie across two vendor directories, a
+      symlinked version directory, and a <code>sort</code> that has been shadowed
+      on <code>PATH</code>.
+    </p>
+  </div>
+
+  <p>
+    That is new. Three days ago they disagreed in several cases; each has since
+    adopted the other's better ideas. Both now use shell patterns rather than
+    <code>find</code>, both require a version directory whose name starts with a
+    digit, both hunt for a working version-aware <code>sort</code> instead of
+    trusting the first one on <code>PATH</code>, and both refuse an installation
+    with no version directory at all.
+  </p>
+
+  <h2>What counts as an installation</h2>
+
+  <p>
+    Two directory shapes, under a vendor directory named <code>Xilinx</code>,
+    <code>AMD</code> or <code>AMDDesignTools</code>. A candidate counts only if it
+    contains a <code>bin</code>, and only if the directory supplying the version
+    number starts with a digit:
+  </p>
+
+  <div class="tree"><!--
+--> &lt;parent&gt;/&lt;vendor&gt;/Vivado/&lt;version&gt;/bin   <span class="note">Vivado 2024.1 and older</span>
+ &lt;parent&gt;/&lt;vendor&gt;/&lt;version&gt;/Vivado/bin   <span class="note">Vivado 2024.2 and newer</span>
+</div>
+
+  <h2>How an installation is chosen</h2>
+
+  <p>
+    The same procedure in both. Steps run in order, and the first one that
+    succeeds ends the matter &mdash; later steps never run.
+  </p>
+
+  <ol class="steps">
+
+    <li class="step">
+      <div class="step-n">01</div>
+      <div>
+        <h3>Check the platform<span class="stop">can stop</span></h3>
+        <p>
+          Do nothing unless the shell is Linux, Cygwin or MSYS. On macOS and
+          anything else, return at once: Vivado does not run there.
+        </p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">02</div>
+      <div>
+        <h3>Obey <code>XILINX_VIVADO</code> if it is set<span class="stop">can stop</span></h3>
+        <p>
+          If that variable names a directory that has a <code>bin</code> inside,
+          put the <code>bin</code> on <code>PATH</code> and stop. Nothing is
+          searched. This is how you pin one specific version, or point at an
+          installation in an unusual place.
+        </p>
+        <p>
+          If it is set but there is no <code>bin</code> there, warn and carry on
+          rather than fail.
+        </p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">03</div>
+      <div>
+        <h3>Leave a working <code>vivado</code> alone<span class="stop">can stop</span></h3>
+        <p>
+          If <code>vivado</code> already runs from <code>PATH</code> &mdash;
+          because you sourced <code>settings64.sh</code> yourself &mdash; change
+          nothing and stop.
+        </p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">04</div>
+      <div>
+        <h3>Decide where to look</h3>
+        <p>
+          In order: <code>XILINX_HOME</code> first if it is set, then the standard
+          parents for the platform &mdash; <code>$HOME</code>, <code>/opt</code>,
+          <code>/tools</code> on Linux, or <code>/c</code>, <code>/d</code>,
+          <code>/e</code> on Cygwin and MSYS.
+        </p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">05</div>
+      <div>
+        <h3>Collect what one place has to offer</h3>
+        <p>
+          Within a single parent directory, try all three vendor names and both
+          directory shapes. Keep every match that has a <code>bin</code> and whose
+          version directory starts with a digit, remembering the version number
+          alongside the path. The digit rule is what keeps the installer's own
+          <code>DocNav</code>, <code>xic</code> and <code>.xinstall</code>
+          directories out of the running.
+        </p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">06</div>
+      <div>
+        <h3>Nothing here? Move on. Something here? Stop looking.</h3>
+        <p>
+          A parent with no candidates is skipped, and if it was the one you named
+          in <code>XILINX_HOME</code>, you are told. The first parent that does
+          yield candidates ends the search &mdash; later parents are never
+          examined. That is what makes <code>XILINX_HOME</code> authoritative and
+          lets <code>$HOME</code> win over <code>/opt</code>.
+        </p>
+        <div class="note-diverge">
+          <span class="who">only claude says anything here</span>
+          <p>
+            If a skipped directory looked like an installation but its name did not
+            start with a digit, claude names it in a warning and suggests
+            <code>XILINX_VIVADO</code>. Codex skips it without comment.
+          </p>
+        </div>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">07</div>
+      <div>
+        <h3>Find a <code>sort</code> that can really compare versions</h3>
+        <p>
+          Try <code>/usr/bin/sort</code>, then <code>/bin/sort</code>, then
+          whatever <code>sort</code> is on <code>PATH</code>, and accept one only
+          after watching it put <code>2026.2</code> before <code>2026.10</code>.
+          Checking that the <code>-V</code> option is merely <em>accepted</em> is
+          not enough. The reason for the search is Cygwin and MSYS, where the
+          <code>sort</code> on <code>PATH</code> can be the <code>sort.exe</code>
+          of Microsoft Windows.
+        </p>
+        <p>
+          If none of the three qualifies, fall back to plain <code>sort</code> and
+          warn that an older version may be picked.
+        </p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">08</div>
+      <div>
+        <h3>Pick the newest version from that one place</h3>
+        <p>
+          Every candidate from that parent competes, whatever its vendor directory
+          or layout, compared on the version field alone so a path can never sway
+          the result. Carriage returns are stripped first, in case the sort came
+          from Windows. If there was more than one candidate, a warning lists them
+          and names the winner.
+        </p>
+        <div class="note-diverge">
+          <span class="who">tie-breaking</span>
+          <p>
+            Codex adds <code>-k2,2</code>, so two installations of the same version
+            are resolved by path, deliberately and documented. Claude leaves it to
+            the sort's own last-resort comparison, which happens to give the same
+            answer.
+          </p>
+        </div>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">09</div>
+      <div>
+        <h3>Publish the result<span class="stop">stops</span></h3>
+        <p>
+          Set <code>XILINX_VIVADO</code> to the winning directory and append its
+          <code>bin</code> to <code>PATH</code>.
+        </p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-n">10</div>
+      <div>
+        <h3>If every place came up empty, fail with instructions<span class="stop">stops</span></h3>
+        <p>
+          The error names the parents that were tried, the three vendor directory
+          names, both expected layouts, and the two environment variables that
+          override the search.
+        </p>
+      </div>
+    </li>
+
+  </ol>
+
+  <h2>Where they still differ</h2>
+
+  <p>
+    Nothing in the selection. I sourced both files from one harness under
+    <code>set -Eeuo pipefail</code> against identical trees:
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>Selection &mdash; 11 situations</caption>
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th>Both select</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Real install, no variables set</td><td class="path">AMD/2026.1/Vivado</td><td class="tag-agree">agree</td></tr>
+        <tr><td class="path">Xilinx/Vivado/{2022.2, 2023.1}</td><td class="path">&hellip;/2023.1</td><td class="tag-agree">agree</td></tr>
+        <tr><td class="path">AMD/{2026.9, 2026.10}/Vivado</td><td class="path">&hellip;/2026.10</td><td class="tag-agree">agree</td></tr>
+        <tr><td class="path">AMDDesignTools/2027.1/Vivado</td><td class="path">&hellip;/2027.1</td><td class="tag-agree">agree</td></tr>
+        <tr><td>Three vendors in one parent</td><td class="path">&hellip;/AMDDesignTools/2026.2/Vivado</td><td class="tag-agree">agree</td></tr>
+        <tr><td><code>XILINX_VIVADO</code> set explicitly</td><td>honoured, no search</td><td class="tag-agree">agree</td></tr>
+        <tr><td>Versionless install only</td><td>ignored, search continues</td><td class="tag-agree">agree</td></tr>
+        <tr><td>Versionless beside versioned</td><td class="path">&hellip;/Vivado/2024.1</td><td class="tag-agree">agree</td></tr>
+        <tr><td class="path">Xilinx/Vivado/mybuild <span class="note">(no digit)</span></td><td>ignored, search continues</td><td class="tag-agree">agree</td></tr>
+        <tr><td>Same version, two vendor directories</td><td class="path">&hellip;/tie/Xilinx/Vivado/2026.1</td><td class="tag-agree">agree</td></tr>
+        <tr><td>Symlinked version directory</td><td class="path">&hellip;/link/Xilinx/Vivado/2025.1</td><td class="tag-agree">agree</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    The differences live in what gets said. Four situations, four different
+    messages:
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>Diagnostics &mdash; same outcome, different words</caption>
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th>codex says</th>
+          <th>claude says</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-diverge">
+          <td>A directory skipped for having no digit</td>
+          <td>only the generic &ldquo;no Vivado installation found under <code>XILINX_HOME</code>&rdquo;, and nothing at all if <code>XILINX_HOME</code> was not set</td>
+          <td>names the directory and why it was skipped, and points at <code>XILINX_VIVADO</code></td>
+          <td class="tag-diverge">claude</td>
+        </tr>
+        <tr class="row-diverge">
+          <td>Several installations found</td>
+          <td>quotes each path separately, comma-separated &mdash; unambiguous when a path contains spaces</td>
+          <td>joins the paths with spaces inside one pair of quotes</td>
+          <td class="tag-diverge">codex</td>
+        </tr>
+        <tr>
+          <td>No working version sort</td>
+          <td>&ldquo;no Unix sort with version sorting support found&rdquo;, plus a hint</td>
+          <td>same substance, naming 2026.9 against 2026.10 as the concrete risk</td>
+          <td class="tag-agree">equal</td>
+        </tr>
+        <tr>
+          <td>Nothing found anywhere</td>
+          <td>parents comma-separated and quoted; vendor list printed from the array</td>
+          <td>parents joined with &ldquo;or&rdquo;; vendor list printed from the same variable the loops use</td>
+          <td class="tag-agree">equal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="shell">
+    <span class="cap">The one message only one of them prints</span>
+<pre>$ XILINX_HOME=$H/nonnum          <span class="note"># contains Xilinx/Vivado/mybuild/bin</span>
+
+codex   warning: no Vivado installation found under XILINX_HOME='&hellip;/nonnum'.
+                 Trying the default installation parents.
+
+claude  warning: ignoring '&hellip;/nonnum/Xilinx/Vivado/mybuild', because the name
+                 of a version directory is expected to start with a digit.
+                 You can also use XILINX_VIVADO variable to specify a directory &hellip;</pre>
+  </div>
+
+  <h2>The two implementations</h2>
+
+  <div class="pair">
+    <div class="impl">
+      <p class="impl-name">xilinx_codex</p>
+      <p class="impl-sub">284 lines &middot; 3 functions</p>
+
+      <p class="label">Advantages</p>
+      <ul class="findings">
+        <li><strong>Much smaller for the same behaviour</strong> &mdash; 284 lines against 403, and three functions against six. Easier to hold in your head.</li>
+        <li><strong>Leaks nothing into your shell.</strong> Every working variable is <code>local</code>; this file is sourced, not executed.</li>
+        <li><strong>Quotes each path individually</strong> in the multiple-installation warning, so a path containing a space stays readable.</li>
+        <li><strong>Tie-breaking is explicit and documented</strong> (<code>-k2,2</code>) rather than left to the sort's last-resort behaviour.</li>
+        <li><strong>Candidate collection is a pure function</strong> that prints records to standard output, so it can be exercised on its own without the rest of the machinery.</li>
+        <li><strong>Also contributes the style rules</strong> it follows, extending <code>AGENTS.md</code> with the Bash spacing conventions.</li>
+      </ul>
+
+      <p class="label">Disadvantages</p>
+      <ul class="findings">
+        <li><strong>Says nothing about a directory it skips.</strong> A real installation under a directory named <code>build</code> or <code>v2024.1</code> disappears from the search in silence.</li>
+        <li><strong>Three new lines past 79 columns,</strong> where the file's own convention is to stay inside it.</li>
+        <li><strong>Keeps an unreachable branch</strong> &mdash; the <code>else error "this script does not support your OS"</code> cannot be reached, because the function already returned for any other platform.</li>
+        <li><strong>The two layouts are described in the error text</strong> separately from the patterns that implement them, so the two can drift.</li>
+      </ul>
+    </div>
+
+    <div class="impl">
+      <p class="impl-name">xilinx_claude</p>
+      <p class="impl-sub">403 lines &middot; 6 functions</p>
+
+      <p class="label">Advantages</p>
+      <ul class="findings">
+        <li><strong>The only one that explains a skipped directory,</strong> naming it and suggesting the variable that would override the rule.</li>
+        <li><strong>No new line past 79 columns</strong> &mdash; the three in the file are untouched upstream lines.</li>
+        <li><strong>No dead code</strong> &mdash; the unreachable platform branch is gone.</li>
+        <li><strong>One documented constant for the vendor list,</strong> read by the loops and by every message, so the code and its diagnostics cannot disagree.</li>
+        <li><strong>Warning text names the concrete risk</strong> &mdash; that 2026.9 would be taken for newer than 2026.10 &mdash; rather than describing it abstractly.</li>
+      </ul>
+
+      <p class="label">Disadvantages</p>
+      <ul class="findings">
+        <li><strong>42% more code</strong> for the same selection, spread over twice as many functions. The extra buys one warning and shorter source lines.</li>
+        <li><strong>Joins paths with spaces</strong> inside a single pair of quotes in the multiple-installation warning, which is ambiguous if a path contains a space.</li>
+        <li><strong>One variable still leaks</strong> &mdash; <code>xilinx_vendor_dirs</code>, kept at file scope on purpose as the configuration knob, but a leak all the same.</li>
+        <li><strong>The <code>xilinx_append_to</code> helper is clever rather than plain,</strong> using <code>printf -v</code> and indirect expansion to keep the accumulator lines short.</li>
+        <li><strong>Two comment blocks do not follow the spacing exception</strong> codex's branch adds to <code>AGENTS.md</code>; if that document is merged, this file no longer conforms to it.</li>
+        <li><strong>The sort-failure error path is untested.</strong> It is reachable only if a sort that passed the probe later fails, which I could not construct.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Measurements</h2>
+
+  <div class="scroll">
+    <table>
+      <caption>Same file, three revisions</caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="num">codex</th>
+          <th class="num">claude</th>
+          <th class="num">upstream</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Lines in file</td><td class="num">284</td><td class="num worse">403</td><td class="num">255</td></tr>
+        <tr><td>Functions defined</td><td class="num">3</td><td class="num worse">6</td><td class="num">1</td></tr>
+        <tr><td>Commits on branch</td><td class="num">10</td><td class="num">5</td><td class="num">&mdash;</td></tr>
+        <tr><td>Longest line, columns</td><td class="num">93</td><td class="num">93</td><td class="num">93</td></tr>
+        <tr><td>Lines over 79, newly added</td><td class="num worse">3</td><td class="num">0</td><td class="num">&mdash;</td></tr>
+        <tr><td>Variables leaked into the shell</td><td class="num">0</td><td class="num worse">1</td><td class="num worse">7</td></tr>
+        <tr><td>Selection disagreements, of 11</td><td class="num">0</td><td class="num">0</td><td class="num">&mdash;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Recommendation</h2>
+
+  <div class="verdict">
+    <h3>Merge codex, then carry over one warning.</h3>
+    <p>
+      When two implementations pick the same directory in every situation, size
+      and clarity decide, and codex is 119 lines smaller with half the functions
+      and no leaked variables. The one thing it lacks that matters is the message
+      naming a directory it skipped &mdash; the difference between a student
+      seeing why their install was ignored and seeing nothing.
+    </p>
+  </div>
+
+  <ol class="plan">
+    <li>Take <code>xilinx_codex</code> as the base, <code>AGENTS.md</code> spacing rules included.</li>
+    <li>Port claude's skipped-directory warning into <code>xilinx_collect_vivado_candidates</code>, or alongside it.</li>
+    <li>Reflow codex's three long lines to stay inside 79 columns.</li>
+    <li>Delete codex's unreachable <code>else error "unsupported OS"</code> branch, or move the platform list into one variable so the branch becomes reachable and meaningful.</li>
+    <li>Adopt claude's wording for the no-version-sort warning, which names 2026.9 against 2026.10.</li>
+  </ol>
+
+  <p>
+    Point 4 is a genuine choice rather than a port: codex restored that branch
+    deliberately on <code>a6e378bf</code>. Dead code that documents an intention
+    is still dead code, but if the platform list is ever extended, that branch is
+    what catches the omission.
+  </p>
+
+  <footer>
+    Eleven selection cases and four diagnostic cases run through a shared harness
+    with stub info / error / warning helpers, under set -Eeuo pipefail.<br>
+    Verified against a real Vivado 2026.1 install at /home/verilog/AMD/2026.1/Vivado
+    on Simply Linux 10.4, bash 4.4.23, glibc 2.32.
+  </footer>
+
+</div>
+
+</body>
+</html>

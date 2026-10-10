@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two Robots, One Bash Script</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&family=Zilla+Slab:wght@500;700&display=swap">
+<style>
+  :root {
+    --ground:   #fbfaf9;
+    --surface:  #ffffff;
+    --ink:      #1c1a18;
+    --muted:    #5f5a54;
+    --faint:    #918b83;
+    --rule:     #e4e0da;
+    --rule2:    #c4bdb3;
+    --accent:   #7b2233;
+    --accent-bg:#f8eeef;
+    --codex:    #3f5566;
+    --code-bg:  #f0edea;
+
+    --display: "Zilla Slab", Georgia, serif;
+    --body:    "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #161514;
+      --surface:  #1e1c1a;
+      --ink:      #ece8e3;
+      --muted:    #a9a29a;
+      --faint:    #7b746c;
+      --rule:     #2d2a27;
+      --rule2:    #433e39;
+      --accent:   #e08a93;
+      --accent-bg:#271a1c;
+      --codex:    #9db4c6;
+      --code-bg:  #1a1917;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #161514;
+    --surface:  #1e1c1a;
+    --ink:      #ece8e3;
+    --muted:    #a9a29a;
+    --faint:    #7b746c;
+    --rule:     #2d2a27;
+    --rule2:    #433e39;
+    --accent:   #e08a93;
+    --accent-bg:#271a1c;
+    --codex:    #9db4c6;
+    --code-bg:  #1a1917;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17.5px;
+    line-height: 1.68;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 3rem 5rem;
+  }
+
+  .kicker {
+    font-family: var(--body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.9rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 7.5vw, 3.3rem);
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 1.1rem;
+  }
+
+  .byline {
+    font-size: 0.92rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  .byline b { color: var(--ink); font-weight: 600; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.55rem;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 2.8rem 0 0.8rem;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.14rem;
+    margin: 1.9rem 0 0.5rem;
+  }
+
+  p { margin: 0 0 1.1rem; }
+  .lead { font-size: 1.14rem; color: var(--muted); }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.84em;
+    background: var(--code-bg);
+    padding: 0.1em 0.32em;
+    border-radius: 2px;
+  }
+
+  blockquote {
+    margin: 1.6rem 0;
+    padding: 0 0 0 1.2rem;
+    border-left: 3px solid var(--accent);
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.22rem;
+    line-height: 1.42;
+    color: var(--ink);
+  }
+  blockquote p { margin: 0; }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.79rem;
+    line-height: 1.75;
+    background: var(--code-bg);
+    padding: 0.9rem 1.05rem;
+    margin: 0 0 1.3rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre .cm { color: var(--faint); }
+
+  .scroll { overflow-x: auto; margin-bottom: 1.4rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 0.5rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.5rem 0.85rem 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  thead th {
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule2);
+    white-space: nowrap;
+  }
+  .k-claude { color: var(--accent); font-weight: 600; }
+  .k-codex  { color: var(--codex);  font-weight: 600; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  ul, ol { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+  li { margin-bottom: 0.5rem; }
+
+  .reports {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 1.1rem 1.3rem;
+    margin: 1.6rem 0;
+  }
+  .reports h3 { margin-top: 0; }
+  .reports ul { margin-bottom: 0; list-style: none; padding-left: 0; }
+  .reports li {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    margin-bottom: 0.3rem;
+  }
+  .reports .tag {
+    display: inline-block;
+    min-width: 4.2rem;
+    font-family: var(--body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .events {
+    font-size: 0.93rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding-block: 1rem;
+    margin: 1.5rem 0;
+  }
+  .events ul { margin: 0; padding-left: 1.2rem; }
+  .events li { margin-bottom: 0.25rem; }
+
+  footer {
+    margin-top: 3.2rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.84rem;
+    color: var(--faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="kicker">AI-assisted development</p>
+  <h1>Two Robots, One Bash Script</h1>
+  <p class="byline">
+    <b>Yuri Panchul</b> &middot; October 2026 &middot; on
+    <code>basics-graphics-music</code>
+  </p>
+
+  <p class="lead">
+    I am not a Bash scripting virtuoso but I can evaluate the quality of Bash
+    code. It turns out that this is enough to run a useful experiment: let two AI
+    agents solve the same problem in two separate clones of the same repository,
+    let each one review the other's work, and see where they end up.
+  </p>
+
+  <h2>First, what the repository is</h2>
+
+  <p>
+    <code>basics-graphics-music</code>, or BGM, is a collection of portable
+    SystemVerilog examples for FPGA and ASIC design. You get a board, you run one
+    script to choose it, and you run another script to synthesize, place, route
+    and program your design. Press the buttons, watch the LEDs, see something on
+    a VGA or HDMI screen, hear something from an audio output.
+  </p>
+
+  <p>
+    The point of the project is that the examples are portable, and the thing
+    that makes them portable is the least glamorous part of it: the scripts and
+    the board wrappers. BGM currently supports <strong>54 distinct
+    boards</strong>: Terasic DE boards, Digilent Arty, Nexys and Basys, a very
+    large family of Sipeed Tang boards, iCEBreaker, OrangeCrab, Karnix, Marsohod,
+    ALINX, OMDAZZ and others. Behind them sit five different toolchains: Intel
+    Quartus, AMD Vivado, Gowin EDA, Lattice tools, and the open-source
+    Yosys-based flow.
+  </p>
+
+  <p>
+    Those 54 boards occupy <strong>112 directories</strong>, and the difference
+    between the two numbers is itself worth a paragraph, because it is the shape
+    of the problem. A single board rarely has a single configuration. The Tang
+    Nano 9K alone accounts for eighteen directories: with and without a TM1638
+    keypad-and-display module, driving HDMI or one of three different LCD panels,
+    built with the vendor toolchain or with Yosys, and in one case clocked at
+    50&nbsp;MHz through an extra PLL instead of the board's native 27. The Tang
+    Primer 20K Dock accounts for fourteen more, iCEBreaker and the Tang Nano 20K
+    for seven each.
+  </p>
+
+  <blockquote>
+    <p>
+      Fifty-four boards, a hundred and twelve configurations, five toolchains.
+      The zoo is not a problem to be eliminated &mdash; it is the reality of
+      teaching digital design, and the scripts exist to hide it.
+    </p>
+  </blockquote>
+
+  <p>
+    All this matters because of how the project is actually used. When I run a
+    seminar, the room does not contain one kind of board. It contains whatever
+    the university owns, whatever the students brought, and whatever I carried in
+    with me. A student with a Tang Nano 9K and a student with a Nexys A7 should
+    be able to run the same lab from the same repository in the same two
+    commands. That is the whole design goal, and every hour spent on the Bash
+    layer buys back a hundred hours of other people not fighting their tools.
+  </p>
+
+  <div class="events">
+    Where this has been used, among other places:
+    <ul>
+      <li>2022 &mdash; American University of Central Asia, Bishkek, Kyrgyzstan</li>
+      <li>2023 &mdash; LaLambda, Tbilisi, Georgia</li>
+      <li>2024 &mdash; ADA University, Baku, Azerbaijan; Hacker Dojo, Silicon Valley</li>
+      <li>2025 &mdash; Universidad Aut&oacute;noma de Baja California, Tijuana, Mexico; Russian-Armenian University and the Institute for Informatics and Automation Problems, Yerevan, Armenia</li>
+    </ul>
+  </div>
+
+  <p>
+    The same examples are used by
+    <a href="https://edu.yadro.com/chip-design-school/">Школа синтеза цифровых
+    схем</a>, the School of Digital Circuit Synthesis, whose seminars run in
+    <strong>25 universities across Russia and Belarus</strong> &mdash; which
+    makes it the largest single user of these examples.
+  </p>
+
+  <p>
+    Educators use BGM because it removes the vendor complexity from the first
+    week of a course. Nobody learns anything about finite state machines from
+    forty minutes of licence dialogs and directory layouts. And a script that
+    fails for an obscure reason does not cost one raised hand in one room; it
+    costs the same confused hour in every room at once.
+  </p>
+
+  <h2>The problem AMD handed us</h2>
+
+  <p>
+    Which brings me to the script in question. For years, Vivado installed itself
+    into a directory that looked like this:
+  </p>
+
+<pre>&lt;parent&gt;/Xilinx/Vivado/2023.1</pre>
+
+  <p>
+    Our setup script looked for exactly that, under <code>$HOME</code>,
+    <code>/opt</code> and <code>/tools</code>. Then, starting with release
+    2024.2, AMD put the version <em>above</em> the product, and the vendor
+    directory is no longer necessarily called Xilinx:
+  </p>
+
+<pre>&lt;parent&gt;/AMD/2026.1/Vivado</pre>
+
+  <p>
+    So the script stopped finding Vivado. Worse, I later learned it did something
+    more embarrassing than failing. If you had an installation with no version
+    directory at all, the script happily enumerated Vivado's own internal
+    subdirectories as if they were version numbers, sorted them alphabetically,
+    and picked the last one:
+  </p>
+
+<pre>XILINX_VIVADO=.../Xilinx/Vivado/tps
+PATH=...:.../Xilinx/Vivado/tps/bin</pre>
+
+  <p>
+    It then printed a confident warning that multiple Vivado versions were
+    installed, listing <code>tps</code>, <code>scripts</code> and
+    <code>lib</code> among them. A student hitting this would get a failure
+    message about <code>vivado</code> not being in the path, several steps later
+    and in the wrong place entirely.
+  </p>
+
+  <h2>The experiment</h2>
+
+  <p>
+    I keep two clones of the repository side by side: <code>~/claude</code> and
+    <code>~/codex</code>. I gave the same task to Claude in one and Codex in the
+    other, on separate branches, with no knowledge of each other. Then I did
+    three things repeatedly:
+  </p>
+
+  <ol>
+    <li>Ask each one to implement or improve the search.</li>
+    <li>Ask each one to read the other's clone and write a report comparing the
+    two implementations, with advantages and disadvantages of each.</li>
+    <li>Ask each one to improve its own code based on that comparison.</li>
+  </ol>
+
+  <p>
+    This is where not being a Bash virtuoso stops mattering. I did not have to
+    invent the right implementation. I had to read two arguments about the same
+    code and decide which one was better &mdash; and that is a much easier skill
+    to have, and a much easier one to apply at speed.
+  </p>
+
+  <h2>Round one: they were not the same</h2>
+
+  <p>
+    Both agents got the layouts right. The interesting differences were
+    elsewhere, and each had found something the other had missed.
+  </p>
+
+  <p>
+    Codex had worried about a case I would not have thought of. Under Cygwin and
+    MSYS &mdash; which plenty of students use &mdash; the <code>sort</code> on
+    the path can be Microsoft Windows' own <code>sort.exe</code>, which knows
+    nothing about version sorting. So Codex searched
+    <code>/usr/bin/sort</code> and <code>/bin/sort</code> before trusting
+    <code>sort</code> from the path, and it did not merely check that the
+    <code>-V</code> option was accepted. It fed the candidate two version numbers
+    and checked the answer:
+  </p>
+
+<pre>printf '2026.10\tb\n2026.2\ta\n' | LC_ALL=C "$sort_candidate" -t $'\t' -k1,1V
+<span class="cm"># accept this sort only if 2026.2 really comes out before 2026.10</span></pre>
+
+  <p>
+    Claude's version checked only that <code>sort -V</code> did not error. When I
+    had Claude test its own code against a deliberately broken <code>sort</code>,
+    it picked Vivado <strong>2026.9</strong> over <strong>2026.10</strong> and
+    only printed a warning. That is the kind of bug that produces a confused
+    student and a wasted afternoon.
+  </p>
+
+  <p>
+    Claude had found things too. These scripts are <em>sourced</em> into the
+    user's interactive shell rather than executed, so every variable they fail to
+    declare <code>local</code> stays in your session afterwards. Claude measured
+    it: the original script left <strong>seven</strong> variables behind, its own
+    first attempt left <strong>eleven</strong>, and Codex left
+    <strong>none</strong>. Claude then fixed its own, which is the useful part.
+  </p>
+
+  <p>
+    And Claude insisted on one behaviour Codex still does not have. If a
+    directory looks like a Vivado installation but its name does not start with a
+    digit, Codex skips it in silence. Claude names it:
+  </p>
+
+<pre>warning: ignoring '.../Xilinx/Vivado/mybuild', because the name
+         of a version directory is expected to start with a digit.
+         You can also use XILINX_VIVADO variable to specify a directory ...</pre>
+
+  <p>
+    For a teaching repository, that message is worth real money. The silent
+    version turns a five-second fix into a forum thread.
+  </p>
+
+  <h2>Round two: they converged</h2>
+
+  <p>
+    What happened next is the part I did not expect. Each agent read the other's
+    critique and took the good ideas. Within a couple of rounds both had moved to
+    shell patterns instead of <code>find</code>, both required a version
+    directory beginning with a digit, both hunted for a <code>sort</code> that
+    genuinely works, both dropped support for versionless installations once I
+    decided that case was out of scope, and both settled on the same message
+    style.
+  </p>
+
+  <p>
+    By the final round, Claude ran both implementations through one test harness
+    against identical fake installation trees &mdash; including an equal-version
+    tie across two vendor directories, a symlinked version directory, and a
+    sabotaged <code>sort</code> &mdash; and reported that in
+    <strong>eleven out of eleven</strong> situations the two scripts selected the
+    identical directory. Two independent implementations, no shared code, same
+    answer every time.
+  </p>
+
+  <blockquote>
+    <p>
+      When two solutions disagree, one of them is teaching you something. When
+      they stop disagreeing, you are probably done.
+    </p>
+  </blockquote>
+
+  <p>
+    What was left to compare was no longer behaviour. It was size, diagnostics
+    and taste:
+  </p>
+
+  <div class="scroll">
+    <table>
+      <caption>After convergence</caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="k-codex">codex</th>
+          <th class="k-claude">claude</th>
+          <th>original</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Lines in the file</td><td class="num">284</td><td class="num">403</td><td class="num">255</td></tr>
+        <tr><td>Functions</td><td class="num">3</td><td class="num">6</td><td class="num">1</td></tr>
+        <tr><td>Variables leaked into your shell</td><td class="num">0</td><td class="num">1</td><td class="num">7</td></tr>
+        <tr><td>Explains a directory it skipped</td><td>no</td><td>yes</td><td>no</td></tr>
+        <tr><td>Survives a shadowed <code>sort</code></td><td>yes</td><td>yes</td><td>n/a</td></tr>
+        <tr><td>Selection disagreements, of 11</td><td class="num">0</td><td class="num">0</td><td>&mdash;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Codex's version is 119 lines shorter with half the functions and no leaked
+    variables. Claude's is the only one that tells the student why their
+    installation was ignored. That is a genuine engineering trade-off, and it is
+    the kind of decision I am happy to make myself &mdash; which is exactly where
+    I wanted to end up.
+  </p>
+
+  <h2>The reports</h2>
+
+  <p>
+    All six reports are in the repository, three from each side, written at
+    successive stages of the competition. They are worth reading in order,
+    because you can watch the gap close:
+  </p>
+
+  <div class="reports">
+    <h3>
+      <a href="https://github.com/yuri-panchul/basics-graphics-music/tree/main/misc/ai_sessions/20261003_xilinx_support">misc/ai_sessions/20261003_xilinx_support</a>
+    </h3>
+    <ul>
+      <li><span class="tag k-claude">claude</span> claude_report_1.html</li>
+      <li><span class="tag k-claude">claude</span> claude_report_2.html</li>
+      <li><span class="tag k-claude">claude</span> claude_report_3.html</li>
+      <li><span class="tag k-codex">codex</span> codex_report_1.html</li>
+      <li><span class="tag k-codex">codex</span> codex_report_2.html</li>
+      <li><span class="tag k-codex">codex</span> codex_report_3.html</li>
+    </ul>
+  </div>
+
+  <p>
+    Each report explains, in plain English and in steps, how a Vivado
+    installation gets chosen &mdash; which is documentation the project simply
+    did not have before, and which came out of the competition as a side effect.
+  </p>
+
+  <h2>What I take away from this</h2>
+
+  <p>
+    A few things, in the order I think they matter.
+  </p>
+
+  <h3>Competition surfaces blind spots that review does not</h3>
+
+  <p>
+    If I had asked one agent to write the script and then asked it to review its
+    own work, I would have got a confident report and the Windows
+    <code>sort.exe</code> bug. The second implementation is what made the first
+    one's weaknesses visible, because it had made different choices rather than
+    looking harder at the same ones.
+  </p>
+
+  <h3>Make them test, not just build</h3>
+
+  <p>
+    The most valuable thing either agent did was build a test harness: stub out
+    the helper functions, create fake installation trees, and run both scripts
+    against the same cases. That is how the <code>2026.9</code> versus
+    <code>2026.10</code> bug stopped being a theory. &ldquo;It synthesizes&rdquo;
+    and &ldquo;it works&rdquo; are different claims, and an agent will happily
+    give you the first while sounding like it gave you the second.
+  </p>
+
+  <h3>Judging is a smaller skill than authoring, and it scales</h3>
+
+  <p>
+    I could not have written Codex's <code>sort</code> probe from memory. I had
+    no trouble at all recognising that it was better than Claude's once both were
+    in front of me with an explanation of each. For a maintainer, that asymmetry
+    is the whole opportunity.
+  </p>
+
+  <h3>Keep the reports</h3>
+
+  <p>
+    Committing the comparison reports into <code>misc/ai_sessions/</code> turned
+    out to be more useful than I expected. Six months from now, when somebody
+    asks why the script probes three different <code>sort</code> binaries, the
+    answer is in the repository instead of in my memory.
+  </p>
+
+  <p>
+    The script now finds Vivado under <code>Xilinx</code>, <code>AMD</code> and
+    <code>AMDDesignTools</code> directories, in both the old and the new layout,
+    compares version numbers correctly, and says something useful when it finds
+    nothing. It took two robots arguing with each other and a human deciding who
+    was right.
+  </p>
+
+  <footer>
+    <code>basics-graphics-music</code> is at
+    <a href="https://github.com/yuri-panchul/basics-graphics-music">github.com/yuri-panchul/basics-graphics-music</a>.
+    Board count, toolchain list and the figures in this post were taken from the
+    repository at the time of writing.
+  </footer>
+
+</div>
+</body>
+</html>

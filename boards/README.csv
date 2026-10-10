@@ -1,0 +1,55 @@
+FPGA Manufacturer,Board Manufacturer,Board,FPGA family,Toolchain with acceptable versions,TM1638,Graphics wired
+Altera,ALINX,alinx_ax301,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,ALINX,alinx_ax4010,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,Altera,dk_dev_3c120n,Cyclone III,Quartus 13.1 and older,never,none
+Altera,Marsohod,marsohod_mcy112,Cyclone,Quartus 9.1 SP2; a licence is needed from 13.0sp1 on †,never,none
+Altera,Marsohod,marsohod_mcy316,Cyclone III,Quartus 13.1 and older,never,none
+Altera,OMDAZZ,omdazz,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA + LCD
+Altera,OMDAZZ,omdazz_epm570,MAX II,Quartus 13.0sp1 through 25.1std,never,VGA + LCD
+Altera,Piswords,piswords6,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,Terasic,c5gx,Cyclone V,Quartus 13.0sp1 through 25.1std,never,HDMI/DVI
+Altera,Terasic,de0,Cyclone III,Quartus 13.1 and older,never,VGA
+Altera,Terasic,de0_cv,Cyclone V,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,Terasic,de0_nano,Cyclone IV E,Quartus 13.0sp1 through 25.1std,always,VGA
+Altera,Terasic,de0_nano_soc,Cyclone V,Quartus 13.0sp1 through 25.1std,always,VGA
+Altera,Terasic,de1,Cyclone II,Quartus 13.0sp1 and older,never,VGA
+Altera,Terasic,de10_lite,MAX 10,Quartus 14.0.2 and newer †,either,VGA
+Altera,Terasic,de10_nano,Cyclone V,Quartus 13.0sp1 through 25.1std,always,HDMI/DVI
+Altera,Terasic,de1_soc,Cyclone V,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,Terasic,de2,Cyclone II,Quartus 13.0sp1 and older,never,VGA
+Altera,Terasic,de23_lite,Agilex 3,Quartus Pro 26.1.1,never,HDMI/DVI
+Altera,Terasic,de2_115,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,Terasic,terasic_sockit,Cyclone V,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,ZEOWAA,zeowaa,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
+Altera,unknown,emooc_cc,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,none
+Altera,unknown,rzrd,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA + LCD
+Altera,unknown,saylinx,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
+Gowin,Marsohod,marsohod3gw2,GW1NR-9,"Gowin EDA, any version †",never,HDMI/DVI
+Gowin,Sipeed,tang_mega_138k,GW5AST,"Gowin EDA, 1.9.9 and newer †",always,HDMI/DVI + LCD
+Gowin,Sipeed,tang_mega_138k_pro,GW5AST-138,"Gowin EDA, any version †",always,HDMI/DVI + LCD
+Gowin,Sipeed,tang_nano_20k,GW2AR-18,"Gowin EDA, any version †",always,HDMI/DVI + LCD
+Gowin,Sipeed,tang_nano_4k,GW1NSR-4,"Gowin EDA, any version †",always,HDMI/DVI
+Gowin,Sipeed,tang_nano_9k,GW1NR-9,"Gowin EDA, any version; Yosys/OSS †",always,HDMI/DVI + LCD
+Gowin,Sipeed,tang_primer_20k_dock,GW2A-18C,"Gowin EDA, any version; Yosys/OSS †",always,HDMI/DVI + LCD
+Gowin,Sipeed,tang_primer_20k_lite,GW2A-18,"Gowin EDA, any version †",always,none
+Gowin,Sipeed,tang_primer_25k,GW5A,"Gowin EDA, 1.9.9 and newer †",always,HDMI/DVI + VGA
+Gowin,Xunlong,orangepi_msoc,GW5AT-138B,"Gowin EDA, any version †",always,none
+Lattice,1BitSquared,icebreaker,iCE40,no toolchain assigned; Yosys/OSS †,either,HDMI/DVI
+Lattice,Colorlight,colorlight75b,ECP5,Yosys/OSS †,always,none
+Lattice,Colorlight,colorlightI5,ECP5,Yosys/OSS †,always,none
+Lattice,Fabmicro,karnix,ECP5,Yosys/OSS †,always,none
+Lattice,Greg Davill,orangecrab,ECP5,Yosys/OSS †,always,none
+Lattice,Olimex,ice40hx8k_evb,iCE40,Yosys/OSS †,always,VGA
+Xilinx,ALINX,alinx_ax7035b,Artix-7,"Vivado, any version †",never,none
+Xilinx,Digilent,arty_a7_100,Artix-7,"Vivado, any version †",never,none
+Xilinx,Digilent,arty_a7_35,Artix-7,"Vivado, any version †",never,none
+Xilinx,Digilent,basys3,Artix-7,"Vivado, any version †",never,VGA
+Xilinx,Digilent,cmod_s7,Spartan-7,"Vivado, any version †",never,none
+Xilinx,Digilent,eclypse_z7,Zynq-7000,"Vivado, any version †",always,none
+Xilinx,Digilent,nexys4,Artix-7,"Vivado, any version †",never,VGA
+Xilinx,Digilent,nexys4_ddr,Artix-7,"Vivado, any version †",never,none
+Xilinx,Digilent,nexys_a7_100,Artix-7,"Vivado, any version †",never,none
+Xilinx,Digilent,nexys_a7_50,Artix-7,"Vivado, any version †",never,none
+Xilinx,Digilent,zybo_z7,Zynq-7000,"Vivado, any version †",never,none
+Xilinx,QMTech,qmtech_kintex_7,Kintex-7,"Vivado, any version †",never,none
+Xilinx,unknown,a7_lite_35t,Artix-7,"Vivado, any version †",always,HDMI/DVI

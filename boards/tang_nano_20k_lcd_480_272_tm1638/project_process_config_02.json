@@ -46,7 +46,7 @@
     "Synthesis On/Off Implemented as Translate On/Off" : false,
     "Synthesize_tool" : "GowinSyn",
     "TclPre" : "",
-    "TopModule" : "TOP",
+    "TopModule" : "board_specific_top",
     "USERCODE" : "default",
     "Unused_Pin" : "As_input_tri_stated_with_pull_up",
     "Update_Compile_Point_Timing_Data" : false,

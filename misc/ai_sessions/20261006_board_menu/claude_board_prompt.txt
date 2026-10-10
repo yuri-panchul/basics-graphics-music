@@ -1,0 +1,55 @@
+Create a new branch of main called claude_board_menu
+and do all the work on that branch for the following task:
+
+There is a menu to choose a board in
+basics-graphics-music/scripts/steps/00_setup.source_bash
+This menu is too long because it lists all the configurations.
+I want to convert it into two-level menu: first for a unique board, and the
+second for a board variant.
+
+Here is a list of suffixes for board configurations:
+
+_50mhz
+_alt
+_bare
+_bright
+_dvi_12b
+_dvi_24b
+_hackathon
+_hdmi
+_hdmi_no_ip_tm1638
+_hdmi_no_tm1638
+_hdmi_tm1638
+_hub75e_led_matrix
+_lcd_480_272
+_lcd_800_480
+_lcd_ml6485
+_no_tm1638
+_no_tm1638_yosys
+_pmod_hdmi
+_pmod_mic3
+_pmod_vga
+_quartus_13_1_or_older
+_tm1638
+_tm1638_sd
+_tm1638_yosys
+_vga666
+_vga_pmod
+_virtual_switches
+_wo_dig_0
+_yosys
+
+Note that de0, de0_nano_soc and de0_nano are different boards and should not be
+confused as variants. Same thing about de1 and de1_soc, or de2 and de2_115.
+Or omdazz and omdazz_epm570.
+
+Generally you can figure out which board is a variant by examining .qsf, .xdc, .lpf or .pcf file.
+However it should be done carefully because some variants of the same board
+comment out different pins in .cst file. In addition, some boards, like
+gowin boards have variants for Gowin EDA or Yosys toolchains.
+
+So creating a menu based purely on suffixes should be sufficient. You most
+likely don't need to check board-specific files before giving user the menu.
+
+However I want you to check the the final two-level selection process is
+equivalent to the original one.

@@ -178,6 +178,18 @@ Not all boards include everything on the same board. To compensate for this we u
 
 This repository was used during the following events:
 
+[Verilog Meetup at California Polytechnic State University, San Luis Obispo](https://verilog-meetup.com/2025/10/29/calpoly-slo-report/)
+
+![Verilog Meetup at California Polytechnic State University, San Luis Obispo](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2025_calpoly_slo.jpg)
+
+[FPGA Hackathon on EDA Connect conference in Yerevan, Armenia](https://verilog-meetup.com/2025/04/13/armenia-eda-connect/)
+
+![FPGA Hackathon on EDA Connect conference in Yerevan, Armenia](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2025_yerevan_armenia.jpg)
+
+[Verilog Meetup workshop we did at Universidad autónoma de Baja California in Tijuana](https://verilog-meetup.com/2025/02/26/uabc-tijuana-mexico-workshop/)
+
+![Verilog Meetup workshop we did at Universidad autónoma de Baja California in Tijuana](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2025_tijuana_mexico.jpg)
+
 [Hacker Dojo in Mountain View, California in 2024](https://verilog-meetup.com)
 
 ![Hacker Dojo in Mountain View, California in 2024](https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/2024_hacker_dojo.jpg)
