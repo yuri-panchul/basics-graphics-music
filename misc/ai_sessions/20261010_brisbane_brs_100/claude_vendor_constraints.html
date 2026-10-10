@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vendor Constraints, Mapping in RTL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --bg:      #f5f6f8;
+    --paper:   #ffffff;
+    --ink:     #1a1d24;
+    --muted:   #5a6170;
+    --rule:    #d9dde4;
+    --accent:  #1d4fa8;
+    --accent-soft: #e6edf9;
+    --pro:     #1f6b45;
+    --pro-bg:  #e7f3ec;
+    --con:     #8a4b0f;
+    --con-bg:  #fbf0e3;
+    --code-bg: #eef0f4;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:      #13161c;
+      --paper:   #1b1f27;
+      --ink:     #e6e9ef;
+      --muted:   #9aa3b2;
+      --rule:    #2e3440;
+      --accent:  #7fa7ec;
+      --accent-soft: #1e2a40;
+      --pro:     #7cc8a0;
+      --pro-bg:  #17281f;
+      --con:     #e2ad6f;
+      --con-bg:  #2b2116;
+      --code-bg: #232833;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:      #13161c;
+    --paper:   #1b1f27;
+    --ink:     #e6e9ef;
+    --muted:   #9aa3b2;
+    --rule:    #2e3440;
+    --accent:  #7fa7ec;
+    --accent-soft: #1e2a40;
+    --pro:     #7cc8a0;
+    --pro-bg:  #17281f;
+    --con:     #e2ad6f;
+    --con-bg:  #2b2116;
+    --code-bg: #232833;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding-inline: 16px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 64px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.25; }
+  h1 { font-size: 2.1rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.05rem; margin: 22px 0 6px; }
+  p, li { max-width: 68ch; }
+  .meta { color: var(--muted); font-size: 0.92rem; margin: 0 0 22px; }
+  .lede { font-size: 1.1rem; }
+  code, pre, .mono { font-family: "IBM Plex Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace; }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+  pre {
+    background: var(--code-bg); padding: 14px 16px; border-radius: 8px;
+    font-size: 0.84rem; line-height: 1.5; overflow-x: auto; margin: 8px 0 0;
+  }
+  pre code { background: none; padding: 0; }
+  .label {
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem;
+    font-weight: 600; color: var(--muted);
+  }
+
+  .verdict {
+    background: var(--accent-soft); border-left: 4px solid var(--accent);
+    padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 20px 0;
+  }
+  .verdict p { margin: 4px 0; }
+
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 12px; }
+  .pair > div { min-width: 0; }
+  @media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
+
+  .table-wrap { overflow-x: auto; margin-top: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; background: var(--paper); }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.diff td { background: var(--con-bg); }
+
+  .points { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 10px; }
+  .points li {
+    max-width: none; padding: 10px 14px 10px 14px; border-radius: 8px;
+    background: var(--paper); border: 1px solid var(--rule);
+  }
+  .points li b { display: block; }
+  .tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 1px 7px; border-radius: 99px; margin-right: 6px;
+    vertical-align: 1px;
+  }
+  .tag.pro { color: var(--pro); background: var(--pro-bg); }
+  .tag.con { color: var(--con); background: var(--con-bg); }
+  .tag.seen { color: var(--accent); background: var(--accent-soft); }
+
+  ol.steps li { margin-bottom: 8px; }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.86rem; border-top: 1px solid var(--rule); padding-top: 14px; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="label">basics-graphics-music · BRS-100-GW1NR9</p>
+<h1>Vendor constraints, pin mapping in RTL</h1>
+<p class="meta">Branch <code>claude_brisbane_brs_100</code> · 10 October 2026 · Claude Opus 5.5</p>
+
+<p class="lede">The repository keeps each board's constraint file as the manufacturer
+wrote it and does the peripheral wiring in <code>board_specific_top.sv</code>.
+The BRS-100 now has one configuration of each kind, with identical jumper wiring,
+which makes the trade-off measurable instead of hypothetical.</p>
+
+<div class="verdict">
+  <p><b>Verdict.</b> The vendor-file approach is the right default here, and
+  <code>brisbane_brs_100_tm1638_pmod_rgblcd_by_claude</code> should be the configuration
+  the later variants build on. It cost one tool setting, four unused port declarations
+  and one SDC change; in return it fixed an I/O standard that the hand-written file
+  had left at a 1.8 V default on 3.3 V banks.</p>
+</div>
+
+<h2>The two configurations</h2>
+
+<div class="pair">
+  <div>
+    <p class="label">_alt — mapping in the .cst</p>
+    <pre><code>IO_LOC "MIC_SD"     39;  # J5.13
+IO_LOC "LCD_R[3]"   75;  # J6.3  J2.30 R0
+
+// board_specific_top.sv
+input  MIC_SD,
+output [7:3] LCD_R,</code></pre>
+  </div>
+  <div>
+    <p class="label">primary — vendor .cst, mapping in RTL</p>
+    <pre><code>IO_LOC  "pad_io[13]"  39;
+IO_PORT "pad_io[13]"  IO_TYPE=LVCMOS33
+                      PULL_MODE=DOWN DRIVE=8;
+
+// board_specific_top.sv
+inout  [32:1] pad_io,
+.sd ( pad_io [13] ),            // J5.13
+assign pad_io [19] = LCD_R [3]; // J6.3</code></pre>
+  </div>
+</div>
+
+<p>The primary configuration's <code>board_specific.cst</code> is
+<code>location.cst</code> from BrisbaneSilicon's repository at commit
+<code>cd0bcbf1</code>, byte for byte, under a provenance comment.</p>
+
+<h2>What the builds show</h2>
+
+<p><code>labs/3_music/3_0_oscilloscope</code> uses the LCD, TM1638, microphone and DAC at
+once. Both configurations were built with Gowin EDA V1.9.9 Beta-4 Education:</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Measure</th><th>_alt</th><th>primary (vendor .cst)</th></tr></thead>
+  <tbody>
+    <tr><td>Logic / registers / PLL</td><td class="num">535 / 183 / 1</td><td class="num">535 / 183 / 1</td></tr>
+    <tr><td>Placed signals on the same FPGA pin, same direction</td><td class="num" colspan="2">44 of 44</td></tr>
+    <tr class="diff"><td>Header pin I/O standard</td><td class="num">LVCMOS18, pull-up</td><td class="num">LVCMOS33, pull-down</td></tr>
+    <tr><td>Fmax, 27 MHz clock</td><td class="num">97.5 MHz</td><td class="num">93.6 MHz</td></tr>
+    <tr><td>Fmax, 9 MHz pixel clock</td><td class="num">104.3 MHz</td><td class="num">104.3 MHz</td></tr>
+    <tr><td>Timing violations</td><td class="num">0</td><td class="num">0</td></tr>
+    <tr class="diff"><td>Distinct synthesis and constraint warnings</td><td class="num">7</td><td class="num">12</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The five extra warnings are the four unused SPI flash pads, which the vendor file
+constrains and so must exist as ports, and CT1108, described below. Without a setting change
+CT1108 is an error and the build stops.</p>
+
+<h2>Advantages</h2>
+<ul class="points">
+  <li><span class="tag pro">Pro</span><span class="tag seen">seen here</span><b>The electrical settings come with the pins.</b>
+    The vendor file sets <code>IO_TYPE=LVCMOS33</code> on the 3.3 V banks. The hand-written
+    <code>_alt</code> file only placed pins, and Gowin fell back to LVCMOS18 with pull-ups. The
+    build of <code>tang_nano_9k_lcd_480_272_tm1638</code> reports the same. Nobody chose that;
+    it happened by omission.</li>
+  <li><span class="tag pro">Pro</span><b>One constraint file per board, many configurations.</b>
+    The planned <code>_no_tm1638</code> and <code>_tm1638_no_graphics_but_sound</code> variants
+    change only <code>board_specific_top.sv</code>, or a two-line wrapper of it. With
+    function-named constraints each variant would carry its own diverging .cst.</li>
+  <li><span class="tag pro">Pro</span><b>Diffable against the source.</b>
+    When BrisbaneSilicon updates <code>location.cst</code>, the update is a file copy and a
+    readable diff. A hand-edited file has to be re-derived and re-checked pin by pin.</li>
+  <li><span class="tag pro">Pro</span><b>Names match the board documentation.</b>
+    <code>pad_io[13]</code> is pin 13 of J5 in the vendor's pinout PDF, schematic and example
+    project. A student moving between the manual and the code needs no translation table.</li>
+  <li><span class="tag pro">Pro</span><b>The wiring decision is in reviewable RTL.</b>
+    Which header pin carries which signal sits in one block of <code>assign</code>s with
+    comments, next to the modules it feeds, where it can be read, simulated and changed.</li>
+  <li><span class="tag pro">Pro</span><b>It is how the rest of the repository works.</b>
+    Tang Nano 9K keeps Sipeed's names and wires the INMP441 L/R line to <code>TF_CS</code> in the
+    top module; de10_lite keeps Terasic's <code>GPIO[0]</code> and comments it
+    <code>// JP1 pin 1</code>; the Arty boards keep Digilent's master XDC with
+    <code>ja[0]</code>. A board that breaks the pattern is harder to maintain beside them.</li>
+</ul>
+
+<h2>Disadvantages</h2>
+<ul class="points">
+  <li><span class="tag con">Con</span><span class="tag seen">seen here</span><b>The vendor file can conflict with the tool flow.</b>
+    It puts <code>DRIVE=8</code> on every header pin. Gowin rejects drive strength on a pin the
+    design uses only as an input — <code>pad_io[13]</code>, the microphone data — with CT1108,
+    and this repository's flow treats constraint warnings as errors. The fix chosen,
+    <code>set_option -cst_warn_to_error 0</code>, also turns a mistyped port name in any
+    constraint into a warning. The alternative, <code>assign pad_io[13] = 1'bz;</code>,
+    works too but does not cover a lab that only reads its GPIO.</li>
+  <li><span class="tag con">Con</span><span class="tag seen">seen here</span><b>Every constrained port must exist.</b>
+    The four SPI flash pads are declared as <code>inout</code> ports the labs never use, only so
+    the constraints have something to bind to. They add four warnings to every build.</li>
+  <li><span class="tag con">Con</span><span class="tag seen">seen here</span><b>Timing constraints lose their meaningful names.</b>
+    The pixel clock is now constrained as <code>[get_ports {pad_io[9]}]</code>. Constraining the
+    internal net failed (TA2003, the net is renamed in synthesis), and a PLL-pin constraint
+    would fail in labs without graphics, where there is no PLL.</li>
+  <li><span class="tag con">Con</span><b>Index arithmetic replaces names.</b>
+    J6 pin 3 is <code>pad_io[19]</code>; the vendor counts from 1; the Tang-compatible LED order
+    reverses <code>pad_leds_n[6:1]</code>. Each is a place to be off by one or reversed, and the
+    tools cannot catch it — a wrong index still builds.</li>
+  <li><span class="tag con">Con</span><b>Direction checks disappear.</b>
+    With every header pin an <code>inout</code>, connecting an output to an output, or forgetting
+    to drive a pin, produces no port-direction error. Reports and pin tables say
+    <code>pad_io[24]</code> rather than <code>LCD_G[2]</code>, so reading them needs the README.</li>
+  <li><span class="tag con">Con</span><b>The vendor's electrical choices may not fit the peripheral.</b>
+    Every header pin gets a pull-down. That is harmless for the LCD and I2S lines, but the
+    TM1638 data line is usually pulled up by a resistor on the module, and the FPGA's weak
+    pull-down works against it. This should be checked on hardware.</li>
+  <li><span class="tag con">Con</span><b>Some interfaces cannot stay inside the vendor file.</b>
+    Differential outputs are constrained as pairs, as in
+    <code>tang_primer_25k_pmod_hdmi</code>: <code>IO_LOC "TMDS_0_CLK_P" H5,J5;</code>. A PMOD-HDMI
+    variant of the BRS-100 would have to replace the single-ended <code>pad_io</code> lines for
+    those pins, so the file would no longer be the vendor's.</li>
+</ul>
+
+<h2>Where the rule should bend</h2>
+<p>Keeping the vendor file is a default, not an absolute. It should give way when:</p>
+<ul>
+  <li>the interface needs constraints the vendor file cannot express, such as differential
+    pairs or another I/O standard on a bank;</li>
+  <li>the vendor file is wrong for the board. Fix it then in a separate, labelled block below
+    the untouched original, never by editing lines in place, so the diff stays readable;</li>
+  <li>the vendor file conflicts with the flow, as with CT1108. Prefer a flow setting scoped to
+    the board, in <code>board_specific.tcl</code>, over editing the file.</li>
+</ul>
+
+<h2>Recommendations</h2>
+<ol class="steps">
+  <li>Build the next BRS-100 variants on <code>brisbane_brs_100_tm1638_pmod_rgblcd_by_claude</code>:
+    <code>_no_tm1638</code> as a two-line wrapper, and the sound-only variant as another top
+    module over the same <code>board_specific.cst</code>.</li>
+  <li>Keep <code>_alt</code> for now as the reference that shows the same wiring with named
+    constraints; remove it once the primary has been tried on a real board.</li>
+  <li>Try both configurations on hardware once: LCD image, TM1638 keys with the pull-down,
+    microphone level and DAC output. Nothing here has run on a board yet.</li>
+  <li>Consider adding <code>IO_TYPE=LVCMOS33</code> to the Tang Nano 9K constraints.
+    The LVCMOS18 default on its 3.3 V banks is the same omission found in <code>_alt</code>.</li>
+</ol>
+
+<footer>
+  <p>Measurements: Gowin EDA V1.9.9 Beta-4 Education, <code>03_synthesize_for_fpga.bash</code> on
+  <code>labs/3_music/3_0_oscilloscope</code> and <code>labs/1_basics/1_01_and_or_not_xor_de_morgan</code>;
+  pin tables joined by FPGA pin from <code>impl/pnr/fpga_project.pin.html</code>, Fmax from
+  <code>fpga_project_tr_content.html</code>. Vendor file:
+  <a href="https://github.com/BrisbaneSilicon/BRS-100-GW1NR9/blob/cd0bcbf1c24ae6c567346271b2f94c26927d5c5f/build/platforms/gowin/devices/GW1NR-9/C7I6/constraints/location.cst">location.cst at cd0bcbf1</a>.</p>
+</footer>
+
+</div>
+</body>
+</html>
