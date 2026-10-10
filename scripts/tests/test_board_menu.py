@@ -169,6 +169,7 @@ class BoardMenuTests(unittest.TestCase):
             "tang_primer_20k_dock_no_hdmi_tm1638": "tang_primer_20k_dock",
             "tang_primer_20k_dock_no_hdmi_no_tm1638": "tang_primer_20k_dock",
             "tang_primer_25k_pmod_hub75e_led_matrix_bright": "tang_primer_25k",
+            "brisbane_brs_100_tm1638_pmod_rgblcd_by_claude": "brisbane_brs_100",
             "brisbane_brs_100_tm1638_pmod_rgblcd_by_claude_alt": "brisbane_brs_100",
             "colorlight75b_ecp5_tm1638_yosys": "colorlight75b_ecp5",
             "colorlightI5_ecp5_tm1638_yosys": "colorlightI5_ecp5",
