@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board menu — step 2 plan and implementation record</title>
+<style>
+:root{color-scheme:light;--ink:#203244;--muted:#526578;--line:#d7e0e7;--accent:#006d68;--wash:#f1f5f7}*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1120px;margin:auto;background:white;padding:40px 38px 64px}header{border-bottom:3px solid var(--ink);padding-bottom:22px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.76rem;font-weight:750;color:var(--accent)}h1{font-size:clamp(2rem,5vw,3rem);line-height:1.15;letter-spacing:-.03em;margin:12px 0 20px}h2{font-size:1.55rem;line-height:1.3;margin:0 0 16px}h3{font-size:1.13rem;margin:18px 0 8px}p{margin:10px 0 16px}section{padding-top:34px;scroll-margin-top:20px}.lead{font-size:1.15rem}.muted,small{color:var(--muted)}a{color:#005d80;text-underline-offset:3px}nav{display:flex;flex-wrap:wrap;gap:9px 20px;margin-top:22px;font-size:.9rem}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}.metric{background:var(--wash);padding:14px 16px;border-radius:6px}.metric strong{font-size:1.6rem;display:block;line-height:1.3}.metric span{font-size:.84rem;color:var(--muted)}.notice{border-left:4px solid var(--accent);padding:15px 20px;background:#eaf5f2;margin:18px 0}.caution{background:#fff6e5;border-left-color:#b06b14}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.91rem;margin:16px 0}th,td{text-align:left;vertical-align:top;padding:10px 12px;border:1px solid var(--line)}th{background:#eaf0f4}tr:nth-child(even){background:#f9fbfc}code{font:.9em/1.5 ui-monospace,Consolas,monospace;background:#edf2f5;padding:2px 4px;border-radius:3px;overflow-wrap:anywhere}pre{padding:18px;background:#192e3e;color:#e8f1f6;overflow:auto;border-radius:6px;font:13px/1.65 ui-monospace,Consolas,monospace}pre code{background:none;color:inherit;padding:0}li{margin:8px 0}ul,ol{padding-left:24px}.commit{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:5px;padding:20px 22px;margin:18px 0}.commit h3{margin-top:0}.tag{display:inline-block;padding:2px 7px;background:#eaf0f4;border-radius:3px;font-size:.72rem;font-weight:750;text-transform:uppercase;letter-spacing:.04em}.columns{display:grid;grid-template-columns:1fr 1fr;gap:22px}footer{border-top:1px solid var(--line);padding-top:16px;margin-top:34px;font-size:.84rem;color:var(--muted)}
+@media(max-width:750px){main{padding:26px 18px 40px}.columns{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media print{body,main{background:white}main{max-width:none;padding:0;font-size:10pt}nav{display:none}section{padding-top:20px}.commit,tr{break-inside:avoid}h2,h3{break-after:avoid}.table-wrap{overflow:visible}pre{white-space:pre-wrap}a{color:inherit}}
+</style>
+</head>
+<body><main>
+<header>
+<div class="eyebrow">Basics Graphics Music · board menu · step 2</div>
+<h1>Action plan and implementation record</h1>
+<p class="lead">Preserve Codex’s short board names and full configuration names. Correct board identity and menu eligibility first, then make the three presentation and navigation changes in their own commits.</p>
+<p class="muted">Prepared October 7, 2026. Implementation branch: <code>codex_board_menu</code>.</p>
+<div class="metrics"><div class="metric"><strong>113</strong><span>directories after merging main</span></div><div class="metric"><strong>110</strong><span>verified menu configurations</span></div><div class="metric"><strong>52</strong><span>verified board/family groups</span></div><div class="metric"><strong>4</strong><span>separate implementation commits</span></div></div>
+<nav aria-label="Sections"><a href="#completed">Merge completed</a><a href="#decisions">Your 16 points</a><a href="#commits">Commit plan</a><a href="#behavior">Intended behavior</a><a href="#review">Competitor’s report</a><a href="#validation">Validation</a><a href="#oracle">What “oracle” means</a></nav>
+</header>
+
+<section id="completed"><h2>Completed before writing this plan</h2>
+<p>Fetched <code>origin</code> and merged <code>origin/main</code> at <code>c055dfe3</code> into <code>codex_board_menu</code>. The merge completed without conflicts as <strong><code>00138d8a</code></strong>. The working tree is clean. This is the preliminary merge, separate from the four implementation commits below; the merge is already on the remote branch; the four new implementation commits are local and have not been pushed.</p>
+<ul>
+<li><code>colorlight75b_tm1638_ecp5_yosys</code> is now <code>colorlight75b_ecp5_tm1638_yosys</code>.</li>
+<li><code>colorlightI5_tm1638_ecp5_yosys</code> is now <code>colorlightI5_ecp5_tm1638_yosys</code>.</li>
+<li>The full merge also brought the current Tang Nano 20K board-file updates and archived comparison reports from main.</li>
+</ul>
+<p>After the merge, Bash syntax and whitespace checks passed. All 10 existing board-menu tests also passed, including comparison of the 113 current configurations with main’s flat-menu script. These tests confirm the existing behavior survives the merge; they do not yet enforce the new requirements.</p>
+<p>I read <a href="../claude/board_menu_compare_1.html">Claude’s local comparison report</a>, covering <code>df723431</code> versus Codex <code>5e39006d</code>, and reviewed the relevant implementation and test code. A repository copy is also available at <a href="basics-graphics-music/misc/ai_sessions/20261006_board_menu/claude_board_menu_compare_1.html">misc/ai_sessions/20261006_board_menu/claude_board_menu_compare_1.html</a>.</p>
+<div class="notice"><strong>Correction to my previous report:</strong> recommending <code>_ecp5_yosys</code> as a removable suffix was wrong. <code>_ecp5</code> belongs to the board name. Your clarified board identities take precedence over the catalog-derived expectations used in the earlier tests.</div>
+</section>
+
+<section id="decisions"><h2>Decisions for all 16 feedback points</h2>
+<div class="table-wrap"><table><thead><tr><th>Point</th><th>Planned treatment</th><th>Where</th></tr></thead><tbody>
+<tr><td>1 · ECP5 and renames</td><td>Merge completed. Remove <code>_ecp5_yosys</code> from the suffix list. Strip the actual configuration endings while retaining <code>_ecp5</code> in all four affected board names.</td><td>Merge + commit 1</td></tr>
+<tr><td>2 · Locale</td><td>Use <strong><code>LC_ALL=C</code></strong>. <code>LC_ACC</code> is a typo and does not control collation. Scope the setting to sorting or a helper; do not change the caller’s locale globally.</td><td>Commit 1</td></tr>
+<tr><td>3 · Nexys A7</td><td>Group <code>nexys_a7</code>, <code>nexys_a7_100</code> and <code>nexys_a7_50</code> under <code>nexys_a7</code>. Mark the legacy <code>nexys_a7</code> entry as an alias of <code>nexys_a7_100</code>. Group the chip-specific <code>arty_a7_35</code> and <code>arty_a7_100</code> configurations under <code>arty_a7</code> as well. Use explicit family rules, not generic numeric-suffix stripping. Keep <code>nexys4</code> and <code>nexys4_ddr</code> separate.</td><td>Commit 1</td></tr>
+<tr><td>4 · Retired directory</td><td>Ignore the exact directory <code>zzz_postponed_and_retired</code> in normal board availability and the menu. It is a container, not a selectable board.</td><td>Commit 1</td></tr>
+<tr><td>5 · Hackathon variants</td><td>Exclude names ending in <code>_hackathon</code> from interactive choices. Remove <code>_hackathon</code> from the suffix list. Preserve selection through <code>hackathon_top.sv</code> and keep menu filtering separate from that override.</td><td>Commit 1</td></tr>
+<tr><td>6 · Leading zeros</td><td>Keep Bash <code>select</code>’s decimal interpretation: <code>08</code>, <code>09</code> and <code>010</code> mean 8, 9 and 10. Add regression coverage. Avoid recalculating positions using raw <code>$(( REPLY - 1 ))</code>.</td><td>Commit 1; recheck in 3 and 4</td></tr>
+<tr><td>7 · xargs on Windows</td><td>The user approved dropping <code>-L 1</code>; retain its existing removal. Keep the current platform split. Native platform checks remain useful validation, not a prerequisite for this approved removal.</td><td>Commit 1 validation</td></tr>
+<tr><td>8 · PMOD</td><td>Do not add generic <code>_pmod</code>. Retain explicit compounds such as <code>_pmod_hdmi</code> and <code>_pmod_hub75e_led_matrix</code>. An otherwise unknown board ending in <code>_pmod</code> keeps that part of its name.</td><td>Commit 1 tests</td></tr>
+<tr><td>9 · sort discovery</td><td>Discover and verify a Unix-compatible sorter rather than assuming PATH’s <code>sort</code> supports Unix options. The existing Bash deduplication means <code>sort -u</code> need not be introduced.</td><td>Commit 1; reuse in 2</td></tr>
+<tr><td>10 · Helper contract</td><td>Keep local <code>PS3</code>/<code>REPLY</code> and return cancellation to the caller. The menu helper itself must not call <code>exit</code>. Test that cancellation preserves the selection file and caller prompt variables.</td><td>Commit 1 tests</td></tr>
+<tr><td>11 · Sorted board names</td><td>Sort the deduplicated base names explicitly, so <code>de0_nano</code> precedes <code>de0_nano_soc</code>. Keep this change out of commit 1.</td><td><strong>Commit 2</strong></td></tr>
+<tr><td>12 · Multiple-configuration hint</td><td>Keep bare names and append exactly <code> *</code> only when a board has multiple visible configurations. No long configuration-count text. Explain the marker once near the menu.</td><td><strong>Commit 3</strong></td></tr>
+<tr><td>13 · Letter shortcuts</td><td>Add <code>e/E</code> for Exit at either level and <code>b/B</code> for Back at the variant level, using short <code>REPLY</code> checks. At the first level, Back has no parent and remains invalid input.</td><td><strong>Commit 4</strong></td></tr>
+<tr><td>14 · Variant labels</td><td>Retain full configuration-directory names at level two and save those exact names.</td><td>All commits</td></tr>
+<tr><td>15 · Reserved board names</td><td>Do not add machinery solely to make hypothetical boards named <code>exit</code> or <code>back</code> selectable. Their collisions are outside the requested scope.</td><td>Scope decision</td></tr>
+<tr><td>16 · “Oracle”</td><td>It means the expected-answer source for a test. Use the clearer phrase “independent expected results” in the updated test documentation.</td><td>Explanation below + commit 1</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="commits"><h2>Four implementation commits</h2>
+<div class="notice"><strong>Implementation complete:</strong> four separate local commits implement the updated requirements. The final suite passes all 22 tests, exercising all 110 eligible configurations in 52 groups. Commit 1 also passed comparison against the original flat menu for every retained selection; the suffix mutation check detected the deliberately removed <code>_no_hdmi</code> rule. Bash syntax and whitespace checks pass. Native Windows/macOS execution remains unverified.</div>
+<article class="commit"><h3>Commit 1 — Correct board grouping, eligibility and portable discovery</h3>
+<p><span class="tag">Completed · 6189b9d0</span> <code>Correct FPGA board menu grouping and discovery</code></p>
+<p>Apply the naming and filtering rules, add deterministic directory sorting, and strengthen the tests. Keep first-level ordering by first occurrence for this commit, so the explicit board-name ordering change remains isolated in commit 2.</p>
+<ul>
+<li>Remove the ECP5 compound and <code>_hackathon</code> from configuration suffixes; retain the existing complete suffix-sequence regex and explicit PMOD compounds.</li>
+<li>After ordinary suffix removal, map the specified Nexys A7 names to <code>nexys_a7</code> and the Arty A7 35/100 names to <code>arty_a7</code>. Keep each original chip-specific configuration and its Tcl files intact. Mark <code>nexys_a7</code> as an alias of <code>nexys_a7_100</code> in the display only; save the original legacy identifier when selected. Keep <code>nexys4</code> and <code>nexys4_ddr</code> separate.</li>
+<li>Build a distinct interactive-candidate list excluding the retired container and trailing <code>_hackathon</code> names. Do not let this list invalidate the existing file-driven hackathon override or otherwise valid saved selections.</li>
+<li>Add a small board-specific sort-discovery helper. Check <code>/usr/bin/sort</code>, <code>/bin/sort</code> and PATH’s <code>sort</code> with a behavioral probe under <code>LC_ALL=C</code>, including mixed case, underscores and duplicate lines. Verify output and status, not just the executable’s name.</li>
+<li>Continue deduplicating groups in Bash and use the discovered sorter without <code>-u</code>. If a future implementation uses <code>-u</code>, it must separately verify that capability. If no candidate produces the required C ordering, report the missing Unix-sort dependency and return failure with guidance to use the MSYS/Cygwin tool directory; do not silently substitute Windows collation.</li>
+<li>Keep the helper’s return-status contract, local prompt variables, decimal number handling and full directory labels. Add an explicit diagnostic when no eligible interactive configurations exist.</li>
+<li>Update the README and expected test data. Keep selection-file format and the final selected identifier stable; do not save a base name or presentation marker.</li>
+</ul>
+<p><strong>Acceptance:</strong> all 110 eligible configurations are reachable exactly once, in 52 board/family groups; both excluded hackathon configurations still work through the file override; the retired container never appears. All four ECP5 bases, the three-entry Nexys A7 group and the four-entry Arty A7 group match the explicit expectations. The two Nexys 4 boards remain distinct.</p>
+</article>
+
+<article class="commit"><h3>Commit 2 — Sort the first level by board name</h3>
+<p><span class="tag">Completed · dce46296</span> <code>Sort FPGA board menu by board name</code></p>
+<p>Sort the already deduplicated base names with the discovered sorter under <code>LC_ALL=C</code>. Retain configuration ordering and all saved identifiers. Test both group membership and the intended first-level order, including <code>de0_nano</code> before <code>de0_nano_soc</code>. Compare complete menu order under C, English UTF-8 and Russian UTF-8 caller locales.</p>
+<p><strong>Acceptance:</strong> only first-level ordering changes relative to commit 1. Every retained configuration remains selectable and chooses the same toolchain.</p>
+</article>
+
+<article class="commit"><h3>Commit 3 — Mark boards with multiple configurations</h3>
+<p><span class="tag">Completed · 6d31a854</span> <code>Mark FPGA boards with multiple configurations</code></p>
+<p>Append <code> *</code> to the displayed first-level name when more than one eligible configuration remains after filtering. Add a short legend, such as “* = multiple configurations.” Keep canonical board names separate from this display marker and preserve decimal selection behavior.</p>
+<pre>First level, illustrative labels:
+de0_nano *
+de0_nano_soc *
+nexys_a7 *
+orangecrab_ecp5
+
+Nexys A7 second level:
+1) nexys_a7 (alias of nexys_a7_100)
+2) nexys_a7_100
+3) nexys_a7_50
+4) back
+5) exit</pre>
+<p><strong>Acceptance:</strong> the 17 multi-configuration groups have a marker and 35 singletons do not. No <code>*</code> reaches directory lookup, toolchain dispatch or the saved file. Full second-level directory names remain unchanged.</p>
+</article>
+
+<article class="commit"><h3>Commit 4 — Add short letter commands</h3>
+<p><span class="tag">Completed · e40b3aa2</span> <code>Add board menu exit and back shortcuts</code></p>
+<p>This is feasible with short code. Bash already leaves a typed letter in <code>REPLY</code> when <code>select</code> has no numeric match. Handle <code>e/E</code> before the invalid-choice message at both levels; handle <code>b/B</code> only at level two. Reuse existing cancellation and Back control flow. Keep numbered Back/Exit entries.</p>
+<p>Update the prompts to advertise these options. A first-level <code>b/B</code> simply asks again because there is no earlier menu. EOF retains the existing cancellation behavior.</p>
+<p><strong>Acceptance:</strong> both cases of each supported shortcut work; Back does not write an intermediate selection; Exit preserves any existing selection; callers retain their prompt variables. Repeat <code>08</code>, <code>09</code> and <code>010</code> tests at both levels.</p>
+</article>
+</section>
+
+<section id="behavior"><h2>Expected final behavior</h2>
+<ol>
+<li>Preserve the existing setup decision: use a valid hackathon-file override first, or reuse an existing valid saved selection when no new choice is requested.</li>
+<li>When a menu is required, discover board directories, ignore the retired container and omit the two current trailing-<code>_hackathon</code> configurations from interactive choices.</li>
+<li>Remove only recognized configuration endings. Retain <code>_ecp5</code>, retain unknown name components, and apply the explicit Nexys A7 and Arty A7 family rules. Grouping is for navigation; chip-specific identifiers and board files remain distinct.</li>
+<li>Sort the distinct board names in C order. Show each bare name, adding <code> *</code> for a group with multiple eligible configurations.</li>
+<li>Select a singleton directly. For a group with multiple configurations, display its full directory names plus Back/Exit. Accept decimal numbers and the documented letters.</li>
+<li>Save the exact configuration identifier and use the existing toolchain-selection logic. A cancelled menu returns to its caller without changing the saved selection.</li>
+</ol>
+<div class="table-wrap"><table><thead><tr><th>Configuration on disk</th><th>Expected first-level board</th></tr></thead><tbody>
+<tr><td><code>colorlight75b_ecp5_tm1638_yosys</code></td><td><code>colorlight75b_ecp5</code></td></tr>
+<tr><td><code>colorlightI5_ecp5_tm1638_yosys</code></td><td><code>colorlightI5_ecp5</code></td></tr>
+<tr><td><code>karnix_ecp5_yosys</code></td><td><code>karnix_ecp5</code></td></tr>
+<tr><td><code>orangecrab_ecp5_yosys</code></td><td><code>orangecrab_ecp5</code></td></tr>
+<tr><td><code>nexys_a7</code>, <code>nexys_a7_100</code>, <code>nexys_a7_50</code></td><td><code>nexys_a7</code></td></tr>
+<tr><td><code>arty_a7_35</code>, <code>arty_a7_100</code>, and their PMOD configurations</td><td><code>arty_a7</code>; retain each chip-specific directory</td></tr>
+<tr><td><code>nexys4</code> and <code>nexys4_ddr</code></td><td>Two separate first-level boards</td></tr>
+<tr><td><code>tang_primer_25k_pmod_hub75e_led_matrix_bright</code></td><td><code>tang_primer_25k</code>, using the explicit compound suffix</td></tr>
+<tr><td>A hypothetical <code>new_board_pmod</code></td><td><code>new_board_pmod</code>, unchanged</td></tr>
+</tbody></table></div>
+<p>The verified totals come from the merged tree: 113 directories minus one retired container and two hackathon menu entries leaves 110 configurations. Grouping the three Nexys A7 entries, grouping the two Arty A7 models, and removing the retired group gives 52 first-level groups (35 singletons and 17 with multiple configurations). These counts are now verified by the implemented menu and its regression tests.</p>
+</section>
+
+<section id="review"><h2>What to take from the competitor’s report</h2>
+<div class="columns"><div><h3>Adopt</h3><ul>
+<li>Explicit C collation and explicit sorting of derived board names.</li>
+<li>A short multi-configuration marker, as you suggested, instead of verbose count labels.</li>
+<li>A menu traversal test that discovers actual displayed choices and proves unique reachability, complementing the full-setup harness.</li>
+<li>Independent expected grouping rules, with your ECP5, Nexys and Arty clarifications encoded explicitly.</li>
+<li>A targeted mutation check: removing <code>_no_hdmi</code> in a temporary test copy should make the overlap test fail. No production source needs to be altered for that check.</li>
+</ul></div><div><h3>Do not carry over</h3><ul>
+<li>Generic <code>_pmod</code>, removal of <code>_ecp5</code>, abbreviated second-level labels, or verbose first-level configuration counts.</li>
+<li>Raw arithmetic on <code>REPLY</code>: the report’s recommendation to index by number needs the decimal-handling correction identified in the Codex review.</li>
+<li>Reserved-name handling solely for hypothetical boards named <code>exit</code> and <code>back</code>.</li>
+<li>A global result variable or recursive algorithm merely to chase the reported speed difference. Keep the regex and scoped helper state for this four-commit sequence.</li>
+</ul></div></div>
+<p>The competitor’s timing table measures repeated base-name extraction. It is useful evidence of subprocess overhead, but it is not a measured 2.9× speedup of the entire interactive setup. A performance refactor can be considered later if actual startup measurements justify it.</p>
+</section>
+
+<section id="validation"><h2>Validation plan and the Windows question</h2>
+<h3>Tests attached to the relevant commit</h3>
+<ul>
+<li>Exercise the real setup script in temporary repositories with EDA functions stubbed. Verify all 110 eligible choices, exact selected identifiers, saved-file format and toolchain dispatch. Compare retained selections against main’s original flat menu; account explicitly for the three intentionally hidden entries instead of expecting old and new menu inventories to be identical.</li>
+<li>Separate expected group membership from menu order. Add dedicated order assertions in commit 2, marker assertions in commit 3 and shortcut assertions in commit 4. Avoid failures tied only to incidental prompt wording.</li>
+<li>Test normal invalid input, EOF, numbered Exit/Back, leading zeros, empty eligible lists, saved-selection reuse and both file-selected hackathon configurations.</li>
+<li>Test discovery with fake PATH sort programs that reject Unix options, fail, or produce the wrong ordering. Confirm the helper chooses a verified Unix sorter and preserves caller locale/prompt state.</li>
+<li>Repeat under available C, English UTF-8 and Russian UTF-8 locales. These locales are present on this host.</li>
+</ul>
+<h3>What history establishes about <code>-L 1</code></h3>
+<p>Commit <code>027dbad6</code>, dated December 15, 2024 and titled “Debugging bash scripts on MacOS,” introduced the Darwin-specific <code>xargs -I % -L 1 basename '%'</code> pipeline. It also added the comment about testing on Linux and Windows. The commit does not state why <code>-L 1</code> was needed.</p>
+<p>The user has approved removing <code>-L 1</code>, and Codex has already removed it on this branch. The Linux/GNU-tools experiment establishes a conflict for that option ordering; it does not prove behavior on native Windows or stock macOS. Windows normally uses the other discovery branch, so testing only the ordinary Windows menu would not exercise this xargs expression.</p>
+<div class="table-wrap"><table><thead><tr><th>Environment</th><th>Planned check</th><th>Current evidence</th></tr></thead><tbody>
+<tr><td>Linux</td><td>Complete menu suite, locale variation, sort discovery and both xargs forms.</td><td>Existing suite passed after merge. Earlier GNU-tools experiment found the replacement problem with <code>-I % -L 1</code>.</td></tr>
+<tr><td>Windows: Git Bash/MSYS2 and Cygwin</td><td>Run the actual Windows discovery branch. Also compare the old and new basename pipelines directly, with several directories, a parent path containing spaces and Windows sort.exe earlier on PATH. Record tool versions and exact output.</td><td>Native execution pending. Setting <code>OSTYPE=msys</code> on Linux is only branch emulation.</td></tr>
+<tr><td>macOS</td><td>Check the basename pipeline with stock tools and with GNU tools when available; run the menu tests on the actual platform.</td><td>Native execution pending. The competitor’s stock-BSD claim was not independently verified here.</td></tr>
+</tbody></table></div>
+<div class="notice caution"><strong>Execution constraint:</strong> the available host is Linux. Native Windows/macOS results must come from an available runner or host; they cannot be inferred from changing <code>OSTYPE</code>. Prepare a reproducible small test and record those checks as pending until they are run. The approved removal of <code>-L 1</code> can proceed without waiting for those runners. Keep any resulting platform fix with commit 1’s portability work, leaving commits 2–4 focused.</div>
+<p>Run Bash syntax and whitespace checks for each implementation commit. Keep the existing repository’s Bash spacing, comment and parameter-expansion explanation rules. Each commit should contain its own code, relevant tests and documentation and remain independently reviewable.</p>
+</section>
+
+<section id="oracle"><h2>What “oracle” means here</h2>
+<p>A <strong>test oracle</strong> is the source of expected answers used to decide whether the program behaved correctly. It is unrelated to Oracle Corporation or Oracle Database.</p>
+<p>For example, a test can state independently that <code>colorlight75b_ecp5_tm1638_yosys</code> must belong to <code>colorlight75b_ecp5</code>. It then asks the Bash code for its result and compares the two. If the expected answer is generated using the same suffix-removal algorithm as the implementation, both can repeat the same mistake and the test may pass incorrectly.</p>
+<p>The previous tests used <code>boards/README.csv</code> as an independent list of model names. That is helpful, but not infallible: the CSV currently lists the four affected ECP5 models without <code>_ecp5</code> and lists Nexys A7 and Arty A7 chip sizes separately. The menu now groups these families while retaining their distinct configurations. The revised tests need explicit expected-result mappings for your naming policy, rather than treating the CSV as the final authority or changing it just to make a test pass.</p>
+</section>
+
+<footer>Local plan: <code>/home/verilog/codex/board_menu_step_2.html</code>. Completed: main merged and checked, competitor’s report reviewed, follow-up feedback incorporated, and all four implementation commits created and tested. The repository working tree is clean; the four new commits have not been pushed.</footer>
+</main></body></html>

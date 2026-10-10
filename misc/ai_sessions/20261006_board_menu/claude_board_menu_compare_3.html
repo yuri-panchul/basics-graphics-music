@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board Menu Round Three: One Difference Left</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Figtree:wght@600;800&family=Inconsolata:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground:#f2f4f8; --surface:#ffffff; --ink:#171b24; --muted:#5a6372;
+    --faint:#8d95a3; --rule:#dde1e9; --rule2:#b9c0cc;
+    --mine:#b3306b; --mine-bg:#fbeef4; --codex:#1f6f8b; --codex-bg:#e9f3f6;
+    --proved:#2f6b3a; --warn:#9a4a12; --warn-bg:#fdf1e6; --code-bg:#e7eaf0;
+    --display:Figtree,"Helvetica Neue",Arial,sans-serif;
+    --body:"Atkinson Hyperlegible","Helvetica Neue",Arial,sans-serif;
+    --mono:Inconsolata,ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#111419; --surface:#181c23; --ink:#e8eaef; --muted:#a4abb8;
+      --faint:#737b88; --rule:#262b33; --rule2:#3b424d;
+      --mine:#e88ab2; --mine-bg:#26151e; --codex:#7cc0d6; --codex-bg:#121f25;
+      --proved:#8cc497; --warn:#e0a46a; --warn-bg:#241a10; --code-bg:#151a20;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#111419; --surface:#181c23; --ink:#e8eaef; --muted:#a4abb8;
+    --faint:#737b88; --rule:#262b33; --rule2:#3b424d;
+    --mine:#e88ab2; --mine-bg:#26151e; --codex:#7cc0d6; --codex-bg:#121f25;
+    --proved:#8cc497; --warn:#e0a46a; --warn-bg:#241a10; --code-bg:#151a20;
+  }
+
+  body { margin:0; background:var(--ground); color:var(--ink);
+         font-family:var(--body); font-size:16.5px; line-height:1.6;
+         -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:52rem; margin:0 auto; padding-inline:20px; padding-block:2.75rem 5rem; }
+
+  .eyebrow { font-family:var(--display); font-size:0.7rem; font-weight:600;
+             letter-spacing:0.16em; text-transform:uppercase; color:var(--faint);
+             margin:0 0 0.75rem; }
+  h1 { font-family:var(--display); font-weight:800;
+       font-size:clamp(2rem,6.5vw,2.85rem); line-height:1.05;
+       letter-spacing:-0.025em; text-wrap:balance; margin:0 0 1rem; }
+  .standfirst { font-size:1.1rem; color:var(--muted); max-width:40rem; margin:0 0 1.8rem; }
+
+  h2 { font-family:var(--display); font-weight:800; font-size:1.4rem;
+       letter-spacing:-0.015em; text-wrap:balance; margin:2.7rem 0 0.9rem;
+       padding-bottom:0.3rem; border-bottom:2px solid var(--ink); }
+  h3 { font-family:var(--display); font-weight:600; font-size:1.05rem; margin:1.7rem 0 0.5rem; }
+  p { margin:0 0 0.95rem; max-width:42rem; }
+
+  code { font-family:var(--mono); font-size:0.92em; background:var(--code-bg);
+         padding:0.08em 0.3em; border-radius:2px; }
+  .m { color:var(--mine); font-weight:700; }
+  .c { color:var(--codex); font-weight:700; }
+
+  .box { border-left:4px solid var(--rule2); background:var(--surface);
+         padding:1.1rem 1.3rem; margin-bottom:2rem; }
+  .box h2 { font-family:var(--display); font-weight:800; font-size:1.2rem;
+            margin:0 0 0.5rem; padding:0; border:0; }
+  .box p { margin:0 0 0.6rem; max-width:40rem; }
+  .box p:last-child { margin-bottom:0; }
+  .box.done { border-left-color:var(--proved); }
+  .box.done h2 { color:var(--proved); }
+  .box.note { border-left-color:var(--codex); }
+  .box.note h2 { color:var(--codex); }
+
+  pre { font-family:var(--mono); font-size:0.84rem; line-height:1.65;
+        background:var(--code-bg); padding:0.8rem 1rem; margin:0 0 1.2rem;
+        overflow-x:auto; white-space:pre; }
+  pre .cm { color:var(--faint); }
+  pre .good { color:var(--proved); font-weight:600; }
+  pre .bad { color:var(--warn); font-weight:600; }
+  pre .del { color:var(--warn); }
+  pre .add { color:var(--proved); }
+
+  .scroll { overflow-x:auto; margin-bottom:1.3rem; }
+  table { width:100%; border-collapse:collapse; font-size:0.89rem; }
+  caption { caption-side:top; text-align:left; font-family:var(--display);
+            font-size:0.66rem; font-weight:600; letter-spacing:0.12em;
+            text-transform:uppercase; color:var(--faint); padding-bottom:0.45rem; }
+  th, td { text-align:left; padding:0.45rem 0.8rem 0.45rem 0;
+           border-bottom:1px solid var(--rule); vertical-align:top; }
+  thead th { font-family:var(--display); font-weight:600; font-size:0.71rem;
+             letter-spacing:0.05em; text-transform:uppercase; color:var(--muted);
+             border-bottom:1px solid var(--rule2); white-space:nowrap; }
+  td.mono { font-family:var(--mono); font-size:0.85rem; }
+  td.num { font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  .tag { font-family:var(--display); font-size:0.65rem; font-weight:600;
+         letter-spacing:0.07em; text-transform:uppercase; white-space:nowrap; }
+  .t-same { color:var(--faint); }
+  .t-codex { color:var(--codex); }
+  .t-mine { color:var(--mine); }
+  .t-spec { color:var(--proved); }
+
+  .pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));
+          gap:2rem; margin-bottom:1rem; }
+  .impl { border-top:3px solid var(--rule2); padding-top:0.8rem; }
+  .impl.mine-side { border-top-color:var(--mine); }
+  .impl.codex-side { border-top-color:var(--codex); }
+  .impl-name { font-family:var(--mono); font-size:0.95rem; font-weight:600; margin:0 0 0.1rem; }
+  .mine-side .impl-name { color:var(--mine); }
+  .codex-side .impl-name { color:var(--codex); }
+  .impl-sub { font-family:var(--display); font-size:0.68rem; letter-spacing:0.08em;
+              text-transform:uppercase; color:var(--faint); margin:0 0 1rem; }
+  .impl p { font-size:0.95rem; }
+
+  ol.plan { margin:0 0 1rem; padding-left:1.5rem; }
+  ol.plan li { margin-bottom:0.55rem; }
+  ol.plan li::marker { font-family:var(--mono); font-size:0.85rem; color:var(--faint); }
+
+  footer { margin-top:3rem; padding-top:1rem; border-top:1px solid var(--rule);
+           font-family:var(--mono); font-size:0.78rem; color:var(--faint); line-height:1.8; }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="eyebrow">basics-graphics-music &middot; board menu &middot; round three</p>
+<h1>One difference left</h1>
+<p class="standfirst">I took the one thing the last comparison said codex got
+right: the two-size boards are now listed by name, not matched by a numeric
+suffix. The two base-name functions now agree on every name I can invent. What
+remains between the implementations is a single structural choice about
+<code>sort</code>.</p>
+
+<div class="box done">
+<h2>What changed on my side</h2>
+<p>Commit <code>598a51b2</code> replaces <code>fpga_board_size_suffixes</code>
+with <code>fpga_board_families</code>, which names the four directories
+instead of stripping <code>_35</code>, <code>_50</code> and
+<code>_100</code> from anything that ends that way.</p>
+<pre><span class="del">- fpga_board_size_suffixes="</span>
+<span class="del">-     _35</span>
+<span class="del">-     _50</span>
+<span class="del">-     _100</span>
+<span class="del">- "</span>
+<span class="add">+ fpga_board_families="</span>
+<span class="add">+     nexys_a7_50:nexys_a7</span>
+<span class="add">+     nexys_a7_100:nexys_a7</span>
+<span class="add">+     arty_a7_35:arty_a7</span>
+<span class="add">+     arty_a7_100:arty_a7</span>
+<span class="add">+ "</span></pre>
+<p>The recursion that removes suffixes is now
+<code>fpga_board_base_search</code>, and <code>fpga_board_base</code> is a
+thin wrapper that applies the family mapping once the search has finished.
+Applying it inside the recursion would have let it change which way an
+overlapping suffix is split; applying it to the finished name cannot.</p>
+<p>No current board changes group. 55 tests pass, including two new ones that
+exist precisely to pin the behaviour I was getting wrong.</p>
+</div>
+
+<h2>The hypothetical names that settled it</h2>
+
+<p>Both base-name functions, run over the same list. The first six rows are
+real directories; the rest do not exist, which is where a rule like this is
+decided:</p>
+
+<div class="scroll">
+<table>
+<caption>fpga_board_base against fpga_board_base_name</caption>
+<thead><tr><th>Directory name</th><th class="m">claude, now</th><th class="c">codex</th><th>claude, before</th></tr></thead>
+<tbody>
+<tr><td class="mono">nexys_a7</td><td class="mono">nexys_a7</td><td class="mono">nexys_a7</td><td class="mono">nexys_a7</td></tr>
+<tr><td class="mono">nexys_a7_50</td><td class="mono">nexys_a7</td><td class="mono">nexys_a7</td><td class="mono">nexys_a7</td></tr>
+<tr><td class="mono">arty_a7_100_pmod_mic3</td><td class="mono">arty_a7</td><td class="mono">arty_a7</td><td class="mono">arty_a7</td></tr>
+<tr><td class="mono">nexys4_ddr</td><td class="mono">nexys4_ddr</td><td class="mono">nexys4_ddr</td><td class="mono">nexys4_ddr</td></tr>
+<tr><td class="mono">a7_lite_35t</td><td class="mono">a7_lite_35t</td><td class="mono">a7_lite_35t</td><td class="mono">a7_lite_35t</td></tr>
+<tr><td class="mono">tang_nano_9k_50mhz_hdmi_tm1638</td><td class="mono">tang_nano_9k</td><td class="mono">tang_nano_9k</td><td class="mono">tang_nano_9k</td></tr>
+<tr><td class="mono">new_board_100</td><td class="mono">new_board_100</td><td class="mono">new_board_100</td><td class="mono" style="color:var(--warn)">new_board</td></tr>
+<tr><td class="mono">new_board_35_tm1638</td><td class="mono">new_board_35</td><td class="mono">new_board_35</td><td class="mono" style="color:var(--warn)">new_board</td></tr>
+<tr><td class="mono">nexys_a7_200</td><td class="mono">nexys_a7_200</td><td class="mono">nexys_a7_200</td><td class="mono">nexys_a7_200</td></tr>
+<tr><td colspan="4" style="border-bottom:0"><span class="tag t-spec">agreement</span>
+    Thirteen names tried in total, real and invented. The two functions now
+    return the same board for every one of them.</td></tr>
+</tbody></table>
+</div>
+
+<p>The <code>nexys_a7_200</code> row is the one that convinced me. I had
+justified the suffix list as buying generality for a future size, and it does
+not: a third size needs an edit in either implementation. So the list bought
+nothing and cost the two rows above it.</p>
+
+<h2>Everything the user sees is still identical</h2>
+
+<pre>first level: claude=53 codex=53
+  <span class="good">still identical</span></pre>
+
+<p>52 boards plus exit, same labels, same stars, same order, in both. The
+second levels match, including <code>nexys_a7 (alias of
+nexys_a7_100)</code>. The fourteen inputs from the previous report &mdash;
+leading zeros, <code>+8</code>, zero-padded exit, <code>e</code>,
+<code>E</code>, <code>b</code>, <code>B</code> &mdash; still select the same
+board in both.</p>
+
+<h2>The one difference that remains</h2>
+
+<div class="pair">
+<div class="impl mine-side">
+<p class="impl-name">claude</p>
+<p class="impl-sub">no external command in the menu path</p>
+<p><code>fpga_board_sort</code> is an insertion sort in Bash with
+<code>local LC_ALL=C</code>. 52 names cost about a millisecond, which measured
+less than starting <code>sort</code> at all: <strong>14 ms against
+18 ms</strong> for ten menu builds.</p>
+<p>Nothing to probe, nothing to fall back to, no new way for the setup to
+fail, and the order is the same under every locale because the comparison is
+by byte value.</p>
+</div>
+<div class="impl codex-side">
+<p class="impl-name">codex</p>
+<p class="impl-sub">an external sort, discovered</p>
+<p><code>fpga_board_sort_discovery</code> probes
+<code>/usr/bin/sort</code>, <code>/bin/sort</code> and then
+<code>sort</code> from <code>PATH</code> with a sample only a C-ordering sort
+gets right, so a Windows <code>sort.exe</code> first on <code>PATH</code>
+cannot win.</p>
+<p>If none qualifies it reports <em>no Unix-compatible sort</em> and returns
+failure, which stops the board selection. Their own test pins that path, so it
+is a deliberate fail-closed choice rather than an oversight.</p>
+</div>
+</div>
+
+<p>I prefer mine, but the honest summary is that this is a judgement call
+about dependencies, not a correctness difference. Theirs fails loudly in an
+environment that would otherwise sort wrongly; mine has no such environment to
+worry about. Their discovery test is the better piece of craft either way: it
+shadows <code>/usr/bin/sort</code> with a <em>Bash function of that name</em>
+to simulate all four outcomes without touching the filesystem, and separately
+puts a fake <code>sort</code> first on <code>PATH</code> to prove it is not
+used.</p>
+
+<h2>Where the two stand now</h2>
+
+<div class="scroll">
+<table>
+<caption>Measured on this machine</caption>
+<thead><tr><th></th><th class="m">claude</th><th class="c">codex</th><th></th></tr></thead>
+<tbody>
+<tr><td>Branch head</td><td class="mono">598a51b2</td><td class="mono">e40b3aa2</td><td></td></tr>
+<tr><td>First-level entries</td><td class="num">53</td><td class="num">53</td><td><span class="tag t-same">identical</span></td></tr>
+<tr><td>Selectable configurations</td><td class="num">110</td><td class="num">110</td><td><span class="tag t-same">identical</span></td></tr>
+<tr><td>Base-name agreement, 13 names</td><td colspan="2" class="num">all 13</td><td><span class="tag t-spec">agree</span></td></tr>
+<tr><td>Base-name cost, 5 &times; 113 names</td><td class="num">238 ms</td><td class="num">736 ms</td><td><span class="tag t-mine">3.1&times;</span></td></tr>
+<tr><td>Menu code in the setup script</td><td class="num">512 lines</td><td class="num">241 lines</td><td><span class="tag t-codex">leaner</span></td></tr>
+<tr><td>Tests</td><td class="num">55</td><td class="num">22</td><td><span class="tag t-mine">broader</span></td></tr>
+<tr><td>External commands in the menu path</td><td class="num">none</td><td class="num">sort, discovered</td><td><span class="tag t-mine">fewer</span></td></tr>
+<tr><td>Generated selection file</td><td class="num">112 lines</td><td class="num">110 lines</td><td><span class="tag t-same">coin toss</span></td></tr>
+</tbody></table>
+</div>
+
+<p>The base-name ratio is the <code>$( )</code> subshell codex runs per board;
+over the whole script it came to 61 ms, paid once per menu. The line-count
+difference is largely comment: my version explains the overlapping-suffix
+trap, the decimal normalisation and the locale pinning in place, which is
+where I would rather have it than in a commit message.</p>
+
+<div class="box note">
+<h2>What this exercise actually produced</h2>
+<p>Three rounds of comparison moved four things that neither of us would have
+found alone.</p>
+<ol class="plan">
+<li><strong>The leading-zero bug</strong> was mine, found by codex, and the
+worst case was not the crash but the silent one: with a selection file
+present, <code>08</code> left the old board in place with
+<code>fpga_toolchain=none</code> and exited 0.</li>
+<li><strong>The <code>xargs -L 1</code> bug</strong> was pre-existing, found
+by codex because their test forces the Darwin branch on Linux. Under GNU
+findutils the board list became 113 copies of <code>%</code>.</li>
+<li><strong>The menu walk</strong> was mine, taken by codex: explore the menu
+with numbers only and assert every directory is reachable exactly once, so the
+test cannot agree with a wrong grouping.</li>
+<li><strong>The sorted first level</strong> was mine, taken by codex, and the
+<strong>family table</strong> was theirs, taken by me.</li>
+</ol>
+<p>The remaining difference is a dependency judgement, which is a reasonable
+place for two implementations to disagree.</p>
+</div>
+
+<footer>
+claude_board_menu @ 598a51b2 (main e8b9de12 merged) &middot; codex_board_menu @ e40b3aa2<br>
+113 directories, 110 selectable, 52 boards, 55 tests green including the old-menu replay<br>
+every number above was produced by running both implementations &middot; 2026-10-07
+</footer>
+
+</div>
+</body>
+</html>

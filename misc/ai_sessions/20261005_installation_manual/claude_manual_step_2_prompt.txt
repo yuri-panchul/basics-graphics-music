@@ -1,0 +1,48 @@
+I need you to update the manual, particularly Russian version.
+
+1. You need to integrate the instruction how to install terminals using
+document
+20261005_installation_manual/terminal_installation.docx
+
+These terminals are needed for the exercises that are now present in 
+/home/verilog/projects/basics-graphics-music/labs/8_unfinished/8_1_uart
+
+Create a summary of those exercises to explain why a user needs to install
+UART terminals, in the beginning of terminal installation section.
+
+Also update "what is new" section with these exercises.
+
+Mention that terminals will be also used for the future exercises with
+RISC-V cores from 
+
+/home/verilog/projects/basics-graphics-music/labs/5_cpu
+
+2. Insert a reference to the article 
+https://habr.com/en/articles/1091540/
+that describes the new infrastructure for cpu exercises above.
+
+3. Fix errors, particularly:
+
+Yuri Panchul in Russian is "Юрий Панчул", not "Юрий Панчуль".
+
+Design flow is "маршрут проектирования" not "поток проектирования".
+
+We are not caching boards in ~/.cache in the most recent version of main
+branch.
+
+Femto Threads are now renamed into Round-Robin Threads, or RR Threads, or
+RRT.
+
+Once you create the updated manual in a new directory
+installation_manual_2026_version_0.2
+
+the next task is to compare your version with the version of your competitor
+from 
+
+/home/verilog/codex/installation_manual_2026
+
+Create a local html document
+manual_compare.html
+
+List all mistakes, omissions, pros and cons, what ideas can be adopted in
+your manual and your recommendation for improving the competitor's manual.

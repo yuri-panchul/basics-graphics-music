@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BGM Boards at a Glance</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground:#f7f7f5; --surface:#fff; --ink:#191a18; --muted:#565853;
+    --faint:#8a8c86; --rule:#e3e3df; --rule2:#c3c3bd;
+    --meas:#1d5e42; --unv:#8a5212; --unv-bg:#faf3e9;
+    --board:#334e8c; --code-bg:#ececE8;
+    --altera:#1f6f4a; --amd:#8d2f3f; --gowin:#1d5c8a; --lattice:#6b4a8f;
+    --display:"IBM Plex Sans",Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#131413; --surface:#1a1b1a; --ink:#e8e9e6; --muted:#a0a29c;
+      --faint:#74766f; --rule:#272825; --rule2:#3c3e39;
+      --meas:#79c3a0; --unv:#d79f5c; --unv-bg:#241c11;
+      --board:#8fa5de; --code-bg:#181917;
+      --altera:#72c49c; --amd:#e08a95; --gowin:#7fb6da; --lattice:#b193d6;
+    }
+  }
+  :root[data-theme="dark"] {
+      --ground:#131413; --surface:#1a1b1a; --ink:#e8e9e6; --muted:#a0a29c;
+      --faint:#74766f; --rule:#272825; --rule2:#3c3e39;
+      --meas:#79c3a0; --unv:#d79f5c; --unv-bg:#241c11;
+      --board:#8fa5de; --code-bg:#181917;
+      --altera:#72c49c; --amd:#e08a95; --gowin:#7fb6da; --lattice:#b193d6;
+  }
+  body { margin:0; background:var(--ground); color:var(--ink);
+         font-family:var(--display); font-size:15.5px; line-height:1.55;
+         -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:74rem; margin:0 auto; padding-inline:20px;
+          padding-block:2.5rem 4rem; }
+  h1 { font-weight:600; font-size:clamp(1.7rem,5vw,2.4rem);
+       letter-spacing:-0.02em; margin:0 0 0.7rem; text-wrap:balance; }
+  h2 { font-weight:600; font-size:1.15rem; margin:2rem 0 0.6rem; }
+  p { margin:0 0 0.9rem; max-width:46rem; }
+  .lede { color:var(--muted); font-size:1.04rem; }
+  code { font-family:var(--mono); font-size:0.87em; background:var(--code-bg);
+         padding:0.08em 0.3em; border-radius:2px; }
+  .note { border-left:4px solid var(--unv); background:var(--unv-bg);
+          padding:0.75rem 1rem; margin:1.2rem 0 1.5rem; max-width:46rem;
+          font-size:0.93rem; }
+  .note p { margin:0; max-width:none; }
+  .note strong { color:var(--unv); }
+  .scroll { overflow-x:auto; border:1px solid var(--rule); background:var(--surface); }
+  table { border-collapse:collapse; width:100%; font-size:0.86rem; }
+  th, td { text-align:left; padding:0.42rem 0.7rem;
+           border-bottom:1px solid var(--rule); vertical-align:top; }
+  thead th { position:sticky; top:0; background:var(--surface);
+             font-weight:600; font-size:0.71rem; letter-spacing:0.04em;
+             text-transform:uppercase; color:var(--muted);
+             border-bottom:2px solid var(--rule2); white-space:nowrap; }
+  tbody tr:nth-child(even) { background:color-mix(in srgb,var(--ground) 50%, transparent); }
+  td.b { font-family:var(--mono); font-size:0.83rem; color:var(--board);
+         white-space:nowrap; }
+  th.unv { color:var(--unv); }
+  td.unv { background:var(--unv-bg); white-space:nowrap; }
+  td.unk { color:var(--faint); font-style:italic; }
+  td.tool { font-size:0.83rem; }
+  td.tool .meas { color:var(--meas); }
+  td.tool .dag { color:var(--unv); font-weight:600; margin-left:0.2em; }
+  td.tm { text-align:center; white-space:nowrap; font-size:0.8rem; }
+  td.tmalways { color:var(--meas); font-weight:600; }
+  td.tmnever  { color:var(--faint); }
+  td.tmeither { color:var(--board); font-weight:600; }
+  td.none { color:var(--faint); }
+  td.gfx { font-weight:600; }
+  td.fv { font-weight:600; white-space:nowrap; }
+  td.fv-altera  { color:var(--altera); }
+  td.fv-amd     { color:var(--amd); }
+  td.fv-gowin   { color:var(--gowin); }
+  td.fv-lattice { color:var(--lattice); }
+  td.meas-y { color:var(--meas); font-weight:600; text-align:center; }
+  td.meas-n { color:var(--faint); text-align:center; }
+  ul.notes { margin:0 0 1rem; padding-left:1.2rem; font-size:0.9rem;
+             color:var(--muted); max-width:52rem; }
+  ul.notes li { margin-bottom:0.35rem; }
+  ul.notes strong { color:var(--ink); }
+  footer { margin-top:1.8rem; font-family:var(--mono); font-size:0.75rem;
+           color:var(--faint); line-height:1.8; }
+  @media (prefers-reduced-motion: reduce) { * { animation:none!important; transition:none!important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>BGM boards at a glance</h1>
+  <p class="lede">54 boards, one line each, with the Quartus versions that
+  can actually build them.</p>
+
+  <div class="note">
+    <p>
+      <strong>The Quartus ranges are measured</strong>, shown in green: every
+      installed version was asked whether it can build each board's exact part.
+      Probed here were 13.0sp1, 13.1 and 25.1std under the home directory, 21.1
+      under <code>/opt</code>, and 26.1.1 Pro. A range carrying a dagger reaches
+      past those versions, so one of its boundaries is not measured &mdash; as
+      does every entry for Vivado, Gowin EDA and the Yosys flow, for which the
+      repository states no version requirement at all. Manufacturer is unverified
+      for the same reason.
+    </p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>FPGA Manufacturer</th><th class="unv">Board Manufacturer</th><th>Board</th><th>FPGA family</th><th>Toolchain with acceptable versions</th><th>TM1638</th><th>Graphics wired</th></tr></thead>
+      <tbody>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">ALINX</td><td class="b">alinx_ax301</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">ALINX</td><td class="b">alinx_ax4010</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Altera</td><td class="b">dk_dev_3c120n</td><td>Cyclone III</td><td class="tool"><span class="meas">Quartus 13.1 and older</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Marsohod</td><td class="b">marsohod_mcy112</td><td>Cyclone</td><td class="tool">Quartus 9.1 SP2; a licence is needed from 13.0sp1 on<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Marsohod</td><td class="b">marsohod_mcy316</td><td>Cyclone III</td><td class="tool"><span class="meas">Quartus 13.1 and older</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">OMDAZZ</td><td class="b">omdazz</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA + LCD</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">OMDAZZ</td><td class="b">omdazz_epm570</td><td>MAX II</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA + LCD</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Piswords</td><td class="b">piswords6</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">c5gx</td><td>Cyclone V</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">HDMI/DVI</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de0</td><td>Cyclone III</td><td class="tool"><span class="meas">Quartus 13.1 and older</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de0_cv</td><td>Cyclone V</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de0_nano</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmalways">always</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de0_nano_soc</td><td>Cyclone V</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmalways">always</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de1</td><td>Cyclone II</td><td class="tool"><span class="meas">Quartus 13.0sp1 and older</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de10_lite</td><td>MAX 10</td><td class="tool">Quartus 14.0.2 and newer<span class="dag">&dagger;</span></td><td class="tm tmeither">either</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de10_nano</td><td>Cyclone V</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de1_soc</td><td>Cyclone V</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de2</td><td>Cyclone II</td><td class="tool"><span class="meas">Quartus 13.0sp1 and older</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de23_lite</td><td>Agilex 3</td><td class="tool"><span class="meas">Quartus Pro 26.1.1</span></td><td class="tm tmnever">never</td><td class="gfx">HDMI/DVI</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">de2_115</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">Terasic</td><td class="b">terasic_sockit</td><td>Cyclone V</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv">ZEOWAA</td><td class="b">zeowaa</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv unk">unknown</td><td class="b">emooc_cc</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv unk">unknown</td><td class="b">rzrd</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA + LCD</td></tr>
+        <tr><td class="fv fv-altera">Altera</td><td class="unv unk">unknown</td><td class="b">saylinx</td><td>Cyclone IV E</td><td class="tool"><span class="meas">Quartus 13.0sp1 through 25.1std</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Marsohod</td><td class="b">marsohod3gw2</td><td>GW1NR-9</td><td class="tool">Gowin EDA, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="gfx">HDMI/DVI</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_mega_138k</td><td>GW5AST</td><td class="tool">Gowin EDA, 1.9.9 and newer<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI + LCD</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_mega_138k_pro</td><td>GW5AST-138</td><td class="tool">Gowin EDA, any version<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI + LCD</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_nano_20k</td><td>GW2AR-18</td><td class="tool">Gowin EDA, any version<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI + LCD</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_nano_4k</td><td>GW1NSR-4</td><td class="tool">Gowin EDA, any version<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_nano_9k</td><td>GW1NR-9</td><td class="tool">Gowin EDA, any version; Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI + LCD</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_primer_20k_dock</td><td>GW2A-18C</td><td class="tool">Gowin EDA, any version; Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI + LCD</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_primer_20k_lite</td><td>GW2A-18</td><td class="tool">Gowin EDA, any version<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Sipeed</td><td class="b">tang_primer_25k</td><td>GW5A</td><td class="tool">Gowin EDA, 1.9.9 and newer<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI + VGA</td></tr>
+        <tr><td class="fv fv-gowin">Gowin</td><td class="unv">Xunlong</td><td class="b">orangepi_msoc</td><td>GW5AT-138B</td><td class="tool">Gowin EDA, any version<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-lattice">Lattice</td><td class="unv">1BitSquared</td><td class="b">icebreaker</td><td>iCE40</td><td class="tool">no toolchain assigned; Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmeither">either</td><td class="gfx">HDMI/DVI</td></tr>
+        <tr><td class="fv fv-lattice">Lattice</td><td class="unv">Colorlight</td><td class="b">colorlight75b</td><td>ECP5</td><td class="tool">Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-lattice">Lattice</td><td class="unv">Colorlight</td><td class="b">colorlightI5</td><td>ECP5</td><td class="tool">Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-lattice">Lattice</td><td class="unv">Fabmicro</td><td class="b">karnix</td><td>ECP5</td><td class="tool">Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-lattice">Lattice</td><td class="unv">Greg Davill</td><td class="b">orangecrab</td><td>ECP5</td><td class="tool">Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-lattice">Lattice</td><td class="unv">Olimex</td><td class="b">ice40hx8k_evb</td><td>iCE40</td><td class="tool">Yosys/OSS<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">ALINX</td><td class="b">alinx_ax7035b</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">arty_a7_100</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">arty_a7_35</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">basys3</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">cmod_s7</td><td>Spartan-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">eclypse_z7</td><td>Zynq-7000</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">nexys4</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="gfx">VGA</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">nexys4_ddr</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">nexys_a7_100</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">nexys_a7_50</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">Digilent</td><td class="b">zybo_z7</td><td>Zynq-7000</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv">QMTech</td><td class="b">qmtech_kintex_7</td><td>Kintex-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmnever">never</td><td class="none">none</td></tr>
+        <tr><td class="fv fv-xilinx">Xilinx</td><td class="unv unk">unknown</td><td class="b">a7_lite_35t</td><td>Artix-7</td><td class="tool">Vivado, any version<span class="dag">&dagger;</span></td><td class="tm tmalways">always</td><td class="gfx">HDMI/DVI</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>How each range was established</h2>
+  <ul class="notes"><li><strong>Agilex 3</strong> &mdash; only the Pro edition builds it; no older Pro installed</li><li><strong>Cyclone</strong> &mdash; every installed version refuses it with error 20005, a licence is required; the board&#x27;s own project file was written by 9.1 SP2 Web Edition</li><li><strong>Cyclone II</strong> &mdash; 13.0sp1 builds it, 13.1 does not</li><li><strong>Cyclone III</strong> &mdash; 13.1 builds it, 21.1 does not</li><li><strong>Cyclone IV E</strong> &mdash; all four free editions build it</li><li><strong>Cyclone V</strong> &mdash; all four free editions build it</li><li><strong>MAX 10</strong> &mdash; 21.1 and 25.1std build it, 13.x do not; the 14.0.2 bound is not measured here</li><li><strong>MAX II</strong> &mdash; all four free editions build it</li></ul>
+
+  <footer>
+    TM1638: always, never or either, from whether each build's wrapper
+    instantiates the module.<br>
+    Graphics describes what the wrapper wires, not what the board can do.
+  </footer>
+
+</div>
+</body>
+</html>

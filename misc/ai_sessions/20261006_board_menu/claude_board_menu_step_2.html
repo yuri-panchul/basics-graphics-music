@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board Menu: Step 2 Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Figtree:wght@600;800&family=Inconsolata:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground:  #f2f4f8;
+    --surface: #ffffff;
+    --ink:     #171b24;
+    --muted:   #5a6372;
+    --faint:   #8d95a3;
+    --rule:    #dde1e9;
+    --rule2:   #b9c0cc;
+    --mine:    #b3306b;
+    --mine-bg: #fbeef4;
+    --codex:   #1f6f8b;
+    --codex-bg:#e9f3f6;
+    --proved:  #2f6b3a;
+    --warn:    #9a4a12;
+    --warn-bg: #fdf1e6;
+    --code-bg: #e7eaf0;
+
+    --display: Figtree, "Helvetica Neue", Arial, sans-serif;
+    --body:    "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono:    Inconsolata, ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #111419;
+      --surface: #181c23;
+      --ink:     #e8eaef;
+      --muted:   #a4abb8;
+      --faint:   #737b88;
+      --rule:    #262b33;
+      --rule2:   #3b424d;
+      --mine:    #e88ab2;
+      --mine-bg: #26151e;
+      --codex:   #7cc0d6;
+      --codex-bg:#121f25;
+      --proved:  #8cc497;
+      --warn:    #e0a46a;
+      --warn-bg: #241a10;
+      --code-bg: #151a20;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:  #111419;
+    --surface: #181c23;
+    --ink:     #e8eaef;
+    --muted:   #a4abb8;
+    --faint:   #737b88;
+    --rule:    #262b33;
+    --rule2:   #3b424d;
+    --mine:    #e88ab2;
+    --mine-bg: #26151e;
+    --codex:   #7cc0d6;
+    --codex-bg:#121f25;
+    --proved:  #8cc497;
+    --warn:    #e0a46a;
+    --warn-bg: #241a10;
+    --code-bg: #151a20;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 52rem; margin: 0 auto; padding-inline: 20px; padding-block: 2.75rem 5rem; }
+
+  .eyebrow {
+    font-family: var(--display); font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint);
+    margin: 0 0 0.75rem;
+  }
+
+  h1 {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 2.85rem); line-height: 1.05;
+    letter-spacing: -0.025em; text-wrap: balance; margin: 0 0 1rem;
+  }
+
+  .standfirst { font-size: 1.1rem; color: var(--muted); max-width: 40rem; margin: 0 0 1.8rem; }
+
+  h2 {
+    font-family: var(--display); font-weight: 800; font-size: 1.4rem;
+    letter-spacing: -0.015em; text-wrap: balance; margin: 2.7rem 0 0.9rem;
+    padding-bottom: 0.3rem; border-bottom: 2px solid var(--ink);
+  }
+
+  h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin: 1.7rem 0 0.5rem; }
+
+  p { margin: 0 0 0.95rem; max-width: 42rem; }
+  strong { font-weight: 700; }
+
+  code {
+    font-family: var(--mono); font-size: 0.92em; background: var(--code-bg);
+    padding: 0.08em 0.3em; border-radius: 2px;
+  }
+
+  .m { color: var(--mine);  font-weight: 700; }
+  .c { color: var(--codex); font-weight: 700; }
+
+  .box {
+    border-left: 4px solid var(--rule2); background: var(--surface);
+    padding: 1.1rem 1.3rem; margin-bottom: 2rem;
+  }
+  .box h2 {
+    font-family: var(--display); font-weight: 800; font-size: 1.2rem;
+    margin: 0 0 0.5rem; padding: 0; border: 0;
+  }
+  .box p { margin: 0 0 0.6rem; max-width: 40rem; }
+  .box p:last-child { margin-bottom: 0; }
+  .box.done  { border-left-color: var(--proved); }
+  .box.done h2  { color: var(--proved); }
+  .box.alarm { border-left-color: var(--warn); background: var(--warn-bg); }
+  .box.alarm h2 { color: var(--warn); }
+  .box.ask   { border-left-color: var(--codex); }
+  .box.ask h2 { color: var(--codex); }
+
+  pre {
+    font-family: var(--mono); font-size: 0.84rem; line-height: 1.65;
+    background: var(--code-bg); padding: 0.8rem 1rem; margin: 0 0 1.2rem;
+    overflow-x: auto; white-space: pre;
+  }
+  pre .cm   { color: var(--faint); }
+  pre .good { color: var(--proved); font-weight: 600; }
+  pre .bad  { color: var(--warn); font-weight: 600; }
+  pre .add  { color: var(--proved); }
+  pre .del  { color: var(--warn); }
+
+  .scroll { overflow-x: auto; margin-bottom: 1.3rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.89rem; }
+  caption {
+    caption-side: top; text-align: left; font-family: var(--display);
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--faint); padding-bottom: 0.45rem;
+  }
+  th, td { text-align: left; padding: 0.45rem 0.8rem 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-family: var(--display); font-weight: 600; font-size: 0.71rem;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--rule2); white-space: nowrap;
+  }
+  td.mono { font-family: var(--mono); font-size: 0.85rem; }
+  td.num  { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .pill {
+    display: inline-block; font-family: var(--display); font-size: 0.63rem;
+    font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 0.1rem 0.45rem; border-radius: 3px; white-space: nowrap;
+  }
+  .p1 { color: #fff; background: var(--mine); }
+  .p2, .p3, .p4 { color: var(--ink); background: var(--rule); }
+  .pdone { color: #fff; background: var(--proved); }
+  .pask  { color: #fff; background: var(--codex); }
+  .pno   { color: #fff; background: var(--warn); }
+
+  .commit {
+    border: 1px solid var(--rule); border-top: 3px solid var(--mine);
+    background: var(--surface); padding: 1.2rem 1.3rem; margin-bottom: 1.6rem;
+  }
+  .commit > h3 { margin: 0 0 0.2rem; font-size: 1.15rem; font-weight: 800; }
+  .commit .sub {
+    font-family: var(--display); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--faint); margin: 0 0 1rem;
+  }
+  .commit.c2 { border-top-color: var(--rule2); }
+  .commit.c3 { border-top-color: var(--rule2); }
+  .commit.c4 { border-top-color: var(--rule2); }
+  .commit ol, .commit ul { margin: 0 0 1rem; padding-left: 1.3rem; }
+  .commit li { margin-bottom: 0.5rem; font-size: 0.96rem; }
+  .commit li > strong { font-weight: 700; }
+  .commit .label {
+    font-family: var(--display); font-size: 0.64rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint);
+    margin: 1.2rem 0 0.45rem;
+  }
+  .commit p { font-size: 0.96rem; }
+
+  dl.qa { margin: 0 0 1.3rem; }
+  dl.qa dt {
+    font-family: var(--display); font-weight: 600; font-size: 0.98rem;
+    margin-top: 1rem;
+  }
+  dl.qa dd { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.96rem; max-width: 40rem; }
+
+  footer {
+    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 0.78rem; color: var(--faint); line-height: 1.8;
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="eyebrow">basics-graphics-music &middot; board menu &middot; step 2</p>
+<h1>Plan of action</h1>
+<p class="standfirst">Your sixteen points, the competitor's review, and one bug of
+mine that can silently select the wrong board. Four commits, in the order you
+numbered them, with the correctness work first.</p>
+
+<div class="box done">
+<h2>Already done</h2>
+<p><code>origin/main</code> is merged into <code>claude_board_menu</code> as
+<code>b3968beb</code>. The rename in <code>c055dfe3</code> does exactly what you
+intended: with <code>_ecp5</code> ahead of <code>_tm1638</code>, my stripping
+stops at the right place with no special case at all.</p>
+<pre>colorlight75b_ecp5_tm1638_yosys  &rarr; <span class="good">colorlight75b_ecp5</span>
+colorlightI5_ecp5_tm1638_yosys   &rarr; <span class="good">colorlightI5_ecp5</span>
+karnix_ecp5_yosys                &rarr; <span class="good">karnix_ecp5</span>
+orangecrab_ecp5_yosys            &rarr; <span class="good">orangecrab_ecp5</span></pre>
+<p>So <strong>no <code>_ecp5_yosys</code> suffix is needed</strong>. Codex's
+report still recommends adding it; after your rename that recommendation is
+obsolete, and adding it would strip a real part of the board name. The 17
+existing tests still pass on the merged branch.</p>
+</div>
+
+<div class="box alarm">
+<h2>Fix first: leading zeros select the wrong board</h2>
+<p>Codex found a real bug in my code and I have reproduced all of it. Bash's
+<code>select</code> accepts <code>010</code> as item&nbsp;10, but my
+<code>$(( REPLY - 1 ))</code> reads it as <em>octal</em>, so I index item&nbsp;8.
+Measured through the full setup script:</p>
+<div class="scroll">
+<table>
+<thead><tr><th>Typed</th><th>Exit</th><th>Board selected</th><th>Toolchain</th><th></th></tr></thead>
+<tbody>
+<tr><td class="mono">8</td><td class="num">0</td><td class="mono">c5gx</td><td class="mono">quartus</td><td><span class="pill pdone">correct</span></td></tr>
+<tr><td class="mono">08</td><td class="num">1</td><td>&mdash;</td><td>&mdash;</td><td><span class="pill pno">aborts: value too great for base</span></td></tr>
+<tr><td class="mono">08</td><td class="num">0</td><td class="mono">basys3 <span class="cm">(the previously saved board)</span></td><td class="mono">none</td><td><span class="pill pno">worst case</span></td></tr>
+<tr><td class="mono">010</td><td class="num">0</td><td class="mono">c5gx <span class="cm">(item 8, not 10)</span></td><td class="mono">quartus</td><td><span class="pill pno">silently wrong</span></td></tr>
+<tr><td class="mono">49 then 010</td><td class="num">0</td><td class="mono">tang_nano_9k_lcd_480_272_tm1638</td><td class="mono">gowin</td><td><span class="pill pno">wrong board and toolchain</span></td></tr>
+</tbody></table>
+</div>
+<p>The third row is the one that worries me: with a selection file already
+present, typing <code>08</code> prints an arithmetic error, then
+<strong>exits&nbsp;0 with the old board and <code>fpga_toolchain=none</code></strong>.
+A synthesis launched from that state has no toolchain configured.</p>
+<p>This is the direct cost of a decision I presented as an advantage in my own
+report &mdash; &ldquo;items chosen by number, never by label text&rdquo;. Codex
+passes all five rows because it uses the value <code>select</code> hands back
+and never does arithmetic on <code>REPLY</code>. Your point&nbsp;6 is exactly
+this, and it goes in <span class="pill p1">commit 1</span> as the first change.</p>
+</div>
+
+<h2>What goes where</h2>
+
+<div class="scroll">
+<table>
+<caption>Your sixteen points mapped to the four commits</caption>
+<thead><tr><th>#</th><th>Your point</th><th>Lands in</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td><code>_ecp5</code> is part of the name; dirs renamed in main</td><td><span class="pill pdone">done</span></td><td>merged; no suffix needed, and I will <em>not</em> add <code>_ecp5_yosys</code></td></tr>
+<tr><td class="num">2</td><td><code>LC_ALL=C</code> so the order is stable</td><td><span class="pill p1">commit 1</span></td><td>on the existing directory sort; the new level-1 sort follows in commit 2</td></tr>
+<tr><td class="num">3</td><td><code>nexys_a7</code> + <code>_50</code> + <code>_100</code> are one board</td><td><span class="pill p1">commit 1</span></td><td>explicit alias, not a numeric suffix &mdash; see the question below</td></tr>
+<tr><td class="num">4</td><td>ignore <code>zzz_postponed_and_retired</code></td><td><span class="pill p1">commit 1</span></td><td></td></tr>
+<tr><td class="num">5</td><td>ignore <code>*_hackathon</code></td><td><span class="pill p1">commit 1</span></td><td>file-driven selection still works, and gets a test</td></tr>
+<tr><td class="num">6</td><td><code>08</code>, <code>09</code>, <code>010</code> are decimal</td><td><span class="pill p1">commit 1</span></td><td>confirmed bug; first change in the commit</td></tr>
+<tr><td class="num">7</td><td><code>-L 1</code> must be tested under Windows</td><td><span class="pill pask">needs you</span></td><td>untouched; I add a probe you can run on macOS and Git Bash</td></tr>
+<tr><td class="num">8</td><td><code>_pmod</code> is not generic</td><td><span class="pill p1">commit 1</span></td><td>swap it for <code>_pmod_hub75e_led_matrix</code></td></tr>
+<tr><td class="num">9</td><td><code>sort -u</code> may be missing on Windows</td><td><span class="pill p2">commit 2</span></td><td>commit 1 needs no sort at all, see below</td></tr>
+<tr><td class="num">10</td><td>helper must not exit the caller or touch global prompts</td><td><span class="pill p1">commit 1</span></td><td>codex's contract: return status, <code>local PS3 REPLY</code></td></tr>
+<tr><td class="num">11</td><td>sort the first level by board name</td><td><span class="pill p2">commit 2</span></td><td></td></tr>
+<tr><td class="num">12</td><td>bare board names, <code>&nbsp;*</code> for multi-config</td><td><span class="pill p3">commit 3</span></td><td></td></tr>
+<tr><td class="num">13</td><td><code>e</code>/<code>E</code> exit, <code>b</code>/<code>B</code> back</td><td><span class="pill p4">commit 4</span></td><td>about six lines per level</td></tr>
+<tr><td class="num">14</td><td>full directory names on the second level</td><td><span class="pill p1">commit 1</span></td><td>adopting codex's choice; drops my suffix-only labels</td></tr>
+<tr><td class="num">15</td><td>boards named <code>exit</code>/<code>back</code> do not matter</td><td><span class="pill pdone">noted</span></td><td>I drop that justification; see the honest note below</td></tr>
+<tr><td class="num">16</td><td>what is an &ldquo;oracle&rdquo;?</td><td><span class="pill pdone">answered</span></td><td>next section</td></tr>
+</tbody></table>
+</div>
+
+<h2>Point 16: what an oracle is</h2>
+<p>Jargon of mine, and a poor choice of word &mdash; nothing to do with the
+company. In testing, the <strong>oracle</strong> is whatever tells the test what
+the right answer is. A test has two halves: run the thing, then ask the oracle
+whether the result was correct.</p>
+<p>The reason it matters here is that a bad oracle can agree with a bug. If my
+test computed the expected grouping with the same suffix list the script uses,
+then a wrong suffix list would produce a wrong grouping <em>and</em> a wrong
+expectation, and the test would pass. That is a self-fulfilling oracle.</p>
+<p>The two implementations picked different oracles, and that is the most
+interesting difference between the test suites:</p>
+<div class="scroll">
+<table>
+<thead><tr><th>Oracle</th><th>Used by</th><th>What it can catch</th></tr></thead>
+<tbody>
+<tr><td>the directory listing itself &mdash; every directory must be reachable exactly once</td><td class="m">claude</td><td>a board becoming unreachable, or reachable twice; says nothing about whether the grouping is sensible</td></tr>
+<tr><td><code>boards/README.csv</code> &mdash; group by the longest catalogued board name that is a prefix</td><td class="c">codex</td><td>a wrong grouping, because the expectation comes from the board catalog rather than from the suffix list</td></tr>
+<tr><td>the old flat menu itself &mdash; replay all selections through both</td><td class="c">codex</td><td>any behaviour change at all, including the saved file and the chosen toolchain</td></tr>
+</tbody></table>
+</div>
+<p>I will use all three. The last one is the strongest and I already borrowed it
+for the comparison report: 113 boards, old menu versus new, zero mismatches.
+Folding it into the test file is part of the plan.</p>
+
+<h2>The four commits</h2>
+
+<div class="commit">
+<h3><span class="pill p1">commit 1</span> &nbsp;Correctness and policy</h3>
+<p class="sub">points 2, 3, 4, 5, 6, 8, 10, 14 &middot; no user-visible reordering yet</p>
+
+<p class="label">Changes</p>
+<ol>
+<li><strong>Decimal normalisation.</strong> Validate that the reply is all
+digits, convert once with <code>10#</code>, and use that one number for the
+array index <em>and</em> for the <code>back</code>/<code>exit</code>
+comparisons &mdash; codex's report is right that a zero-padded
+<code>019</code> for <code>back</code> breaks the same way.
+<pre><span class="del">-            chosen_base=${level1_bases[$(( REPLY - 1 ))]}</span>
+<span class="add">+            # 10#$REPLY - force base ten, so 010 is item ten, not eight</span>
+<span class="add">+</span>
+<span class="add">+            choice=$(( 10#$REPLY ))</span>
+<span class="add">+            chosen_base=${level1_bases[$(( choice - 1 ))]}</span></pre></li>
+
+<li><strong><code>_pmod</code> out, <code>_pmod_hub75e_led_matrix</code>
+in.</strong> Your point 8. The list goes from 32 entries to 32: the three I
+added beyond your original 29 become <code>_no_dvi</code>,
+<code>_no_hdmi</code> and <code>_pmod_hub75e_led_matrix</code>. Grouping is
+unchanged for every current board; a future <code>new_board_pmod</code> now
+stays its own board instead of being folded into <code>new_board</code>.</li>
+
+<li><strong><code>nexys_a7</code> alias.</strong> A numeric suffix will not do:
+adding <code>_50</code> and <code>_100</code> to the general list would also
+strip <code>arty_a7_100</code> while leaving <code>arty_a7_35</code> alone,
+splitting that family in two. So an explicit table consulted before the suffix
+search:
+<pre>fpga_board_aliases="
+    nexys_a7_50:nexys_a7
+    nexys_a7_100:nexys_a7
+"</pre></li>
+
+<li><strong>Ignore list.</strong> <code>zzz_postponed_and_retired</code> and any
+directory ending in <code>_hackathon</code> are dropped from
+<code>available_fpga_boards</code> before anything else looks at it. Two
+consequences I will handle rather than discover later: the validity check that
+rejects a hand-edited selection file must still accept a
+<code>_hackathon</code> board, and <code>hackathon_top.sv</code> selection must
+keep working &mdash; both get tests.</li>
+
+<li><strong><code>LC_ALL=C</code> on the directory sort</strong>, so item
+numbers are the same on every machine. Today they are not:
+<pre><span class="cm">LC_ALL=C           </span>&rarr; item 26 = de23_lite   item 27 = de2_115
+<span class="cm">LC_ALL=en_US.UTF-8 </span>&rarr; item 26 = de2_115     item 27 = de23_lite</pre>
+That matters when an instructor reads a number out loud in class.</li>
+
+<li><strong>Helper contract.</strong> <code>select_fpga_board</code> returns 1
+on cancellation instead of calling <code>exit</code>, and declares
+<code>local PS3 REPLY</code> so it leaves no trace in the shell. The caller
+prints the message and exits, as in codex's version.</li>
+
+<li><strong>Second level shows full directory names.</strong> Your point 14.
+My suffix-only labels go away. The board name moves into the prompt line, which
+is where codex already puts it.</li>
+</ol>
+
+<p class="label">No sort in this commit</p>
+<p>Dropping my <code>sort -u</code> here is deliberate: the first level keeps
+first-appearance order for now (same as codex), deduplicated in pure Bash. That
+removes the external <code>sort</code> dependency from this commit entirely, so
+the Windows question in your point 9 arrives together with the sorting in
+commit 2 rather than being spread over both.</p>
+
+<p class="label">Menu after commit 1</p>
+<div class="scroll"><table>
+<thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
+<tbody>
+<tr><td>Selectable configurations</td><td class="num">113</td><td class="num">110</td></tr>
+<tr><td>First-level entries</td><td class="num">56</td><td class="num">53</td></tr>
+<tr><td>&hellip; multi-configuration</td><td class="num">17</td><td class="num">18</td></tr>
+<tr><td>Largest group</td><td class="num">tang_nano_9k, 18</td><td class="num">tang_nano_9k, 16</td></tr>
+</tbody></table></div>
+
+<p class="label">Tests added</p>
+<ul>
+<li><code>08</code>, <code>09</code>, <code>010</code> and a zero-padded
+<code>back</code>/<code>exit</code> at both levels, asserting both the selected
+board and the process exit status.</li>
+<li>The ignored directories are unreachable, and still unreachable when a
+hand-written selection file names one.</li>
+<li><code>hackathon_top.sv</code> still bypasses the menu and selects its
+board.</li>
+<li><code>nexys_a7</code> offers exactly three configurations.</li>
+<li>The suffix cases from codex's suite that mine lacks, including the
+synthetic <code>new_board_pmod</code> now staying its own board.</li>
+<li><strong>Codex's sandbox harness, adopted.</strong> A temporary repository
+with stub toolchain modules runs the real script in 0.12&nbsp;s instead of
+2.4&nbsp;s, and lets the test check the exact bytes of
+<code>fpga_board_selection</code>, the resulting <code>fpga_toolchain</code>,
+the saved-selection bypass and the cancellation paths &mdash; none of which my
+current test touches.</li>
+<li><strong>Their <code>--baseline</code> mode, adopted.</strong> Old flat menu
+versus new menu for every board, compared on the saved file and the toolchain.
+I ran this by hand for the report; it belongs in the test file.</li>
+<li><strong>Their catalog oracle, adopted</strong> as a second opinion on the
+grouping, with <code>nexys_a7</code> and the ignore list taken into account.</li>
+</ul>
+</div>
+
+<div class="commit c2">
+<h3><span class="pill p2">commit 2</span> &nbsp;Sort the first level by board name</h3>
+<p class="sub">points 11 and 9</p>
+<p>Your point 11: <code>de0_nano</code> must precede <code>de0_nano_soc</code>.
+Today codex and my commit-1 state both list <code>de0_nano_soc</code> first,
+because <code>de0_nano_soc_vga666</code> sorts before
+<code>de0_nano_vga666</code> and the order is inherited from the directory
+scan.</p>
+<p>Point 9 says <code>sort -u</code> may be unavailable on Windows, and the
+repository already has the pattern for this &mdash;
+<code>xilinx_sort_discovery</code> probes for the option it needs, falls back to
+plain <code>sort</code>, and warns. I will mirror it:</p>
+<ul>
+<li>prefer <code>/usr/bin/sort</code> and <code>/bin/sort</code> over whatever
+<code>sort</code> is first on <code>PATH</code>, so Windows
+<code>sort.exe</code> cannot win;</li>
+<li>probe with a two-line sample that <code>-u</code> actually deduplicates
+under <code>LC_ALL=C</code>;</li>
+<li>if no suitable <code>sort</code> is found, keep the existing Bash dedup and
+fall back to <strong>insertion into sorted position in pure Bash</strong>
+rather than leaving the list unsorted &mdash; 53 names, so the cost is
+irrelevant and the behaviour is then identical everywhere, with no warning
+needed at all.</li>
+</ul>
+<p>I will measure the pure-Bash sort first. If it is genuinely cheap, it may be
+the better answer for the whole commit, and the discovery code disappears. I
+will report the measurement before choosing.</p>
+<p class="label">Tests</p>
+<ul>
+<li><code>de0_nano</code> precedes <code>de0_nano_soc</code>; the whole first
+level is in <code>LC_ALL=C</code> order.</li>
+<li>The order is identical under <code>LC_ALL=C</code>,
+<code>en_US.UTF-8</code> and <code>ru_RU.UTF-8</code>.</li>
+<li>A stub <code>sort</code> on <code>PATH</code> that rejects <code>-u</code>
+still produces the correct sorted menu.</li>
+<li>Index expectations in the adopted catalog tests get the same sort applied,
+which is the coupling codex's report warns about.</li>
+</ul>
+</div>
+
+<div class="commit c3">
+<h3><span class="pill p3">commit 3</span> &nbsp;Bare board names, <code>*</code> for multiple configurations</h3>
+<p class="sub">point 12</p>
+<pre>14) de0_nano *          <span class="cm">two configurations</span>
+15) de0_nano_soc *
+16) de1
+49) tang_nano_9k *      <span class="cm">sixteen configurations</span>
+51) tang_primer_20k_lite</pre>
+<p>This replaces my <code>(18 configurations)</code> labels, which you find too
+long, and it keeps the labels short enough for <code>select</code> to use two
+or three columns &mdash; the main thing codex's first level does better than
+mine.</p>
+<p>One consequence worth stating: a single-configuration board will then be
+listed under its <em>board</em> name rather than its directory name, so
+<code>karnix_ecp5</code> appears in the menu and
+<code>karnix_ecp5_yosys</code> is what gets selected. The
+<code>FPGA board selected: &hellip;</code> line already prints the full name, so
+nothing is hidden, and it is how codex behaves today.</p>
+<p class="label">Tests</p>
+<ul>
+<li>Every multi-configuration entry carries the marker and no
+single-configuration entry does.</li>
+<li>The marker is not part of the stored value: a board whose name would end in
+<code>&nbsp;*</code> cannot arise, but the test pins the display-versus-value
+split that codex's report flags as my weak spot.</li>
+</ul>
+</div>
+
+<div class="commit c4">
+<h3><span class="pill p4">commit 4</span> &nbsp;Letter shortcuts: <code>e</code> to exit, <code>b</code> to go back</h3>
+<p class="sub">point 13 &mdash; yes, it is short</p>
+<p>When the reply is not a number, <code>select</code> leaves the label empty
+and loops. That is the natural place to look at the letters, before the
+&ldquo;invalid choice&rdquo; message:</p>
+<pre>            case "$REPLY" in
+                [eE]) cancelled=1 ; break ;;
+                [bB]) break ;;            <span class="cm"># second level only</span>
+            esac</pre>
+<p>About six lines per level. I would also put the hint in the prompt itself
+rather than in the menu items, which keeps the list short:</p>
+<pre>Board (a number, or e to exit): </pre>
+<p>Say if you would rather the prompt stayed as it is &mdash; it is one string
+either way.</p>
+<p class="label">Tests</p>
+<ul>
+<li><code>e</code>, <code>E</code> cancel at both levels; <code>b</code>,
+<code>B</code> go back at the second and are rejected at the first.</li>
+<li>The numeric <code>back</code> and <code>exit</code> items keep working.</li>
+<li>A board directory named <code>e</code> or <code>b</code> would now be
+shadowed. No such directory exists; I will note it in the script comment rather
+than engineer around it, consistent with your point 15.</li>
+</ul>
+</div>
+
+<div class="box ask">
+<h2>Three things I need from you</h2>
+<dl class="qa">
+<dt>1. Should <code>arty_a7_35</code> and <code>arty_a7_100</code> also become
+one board?</dt>
+<dd>They are the same Digilent board with a different part, exactly like
+<code>nexys_a7_50</code> and <code>nexys_a7_100</code>. You named only
+<code>nexys_a7</code>, so by default I will group only that and leave
+<code>arty_a7_35</code> and <code>arty_a7_100</code> as separate first-level
+entries. Adding them to the alias table is two more lines if you want the
+families treated alike. The same question applies to <code>nexys4</code> and
+<code>nexys4_ddr</code>, which I would leave separate.</dd>
+
+<dt>2. <code>xargs -I % -L 1</code> &mdash; what did you need it for?</dt>
+<dd>You are right that there was a reason, and I will not touch it blind. What
+I can tell you is what it does here: with GNU findutils, <code>-I</code> and
+<code>-L</code> are rejected as mutually exclusive, <code>-I</code> is dropped
+with a warning, and the board list becomes 113 copies of <code>%</code>. On BSD
+<code>xargs</code>, which is what macOS ships, <code>-I</code> implies
+<code>-L 1</code> and the extra option is harmless. So the question is only
+whether some Windows <code>xargs</code> needs it. I will add a one-command
+probe you can paste into Git Bash on Windows and into a macOS terminal:
+<pre>printf 'a/b\nc/d\n' | xargs -I % -L 1 basename '%'
+printf 'a/b\nc/d\n' | xargs -I %      basename '%'</pre>
+If both print <code>b</code> and <code>d</code> everywhere you care about, the
+option can go. If you would rather close the question for good, the whole
+pipeline can be replaced by a loop over <code>"$board_dir"/*/</code> that needs
+neither <code>xargs</code> nor GNU <code>find -printf</code>, and the
+macOS-versus-Linux branch disappears. Tell me which you prefer; it is not in
+any of the four commits above.</dd>
+
+<dt>3. Should the <code>_hackathon</code> suffix stay in the suffix list?</dt>
+<dd>Once those directories never reach the menu, the suffix has no work left to
+do. I will keep it with a comment explaining why it is there but unused, unless
+you would rather have it deleted.</dd>
+</dl>
+</div>
+
+<h2>What I am taking from codex's review, and what I am not</h2>
+
+<h3>Taking</h3>
+<div class="scroll">
+<table>
+<thead><tr><th>Their point</th><th>My response</th></tr></thead>
+<tbody>
+<tr><td>Leading zeros select the wrong board; fix before anything else</td><td>Agreed and reproduced, including the stale-board case I had not tested. First change in commit 1.</td></tr>
+<tr><td>Normalise once and use the same number for the control comparisons</td><td>Taking it; a zero-padded <code>back</code> breaks identically.</td></tr>
+<tr><td>Helper should not exit the caller, and should localise prompt state</td><td>Taking it &mdash; also your point 10.</td></tr>
+<tr><td>Run the whole setup in a temporary repository; check the saved file, the toolchain, exit status, timeouts</td><td>Taking the harness wholesale. It is 20&times; faster than driving the real repository and covers what my test skips.</td></tr>
+<tr><td>Add an expected-model check so reachability cannot hide a bad grouping</td><td>Taking their catalog oracle as a second check.</td></tr>
+<tr><td>Full directory names at level two</td><td>Taking it &mdash; your point 14.</td></tr>
+<tr><td>Their <code>xargs -L 1</code> observation</td><td>Correct diagnosis, but deferred to your decision rather than applied.</td></tr>
+</tbody></table>
+</div>
+
+<h3>Not taking</h3>
+<div class="scroll">
+<table>
+<thead><tr><th>Their point</th><th>Why not</th></tr></thead>
+<tbody>
+<tr><td>&ldquo;Add <code>_ecp5_yosys</code> to the suffix list&rdquo;</td><td>Obsolete after your rename, and wrong in principle: <code>_ecp5</code> is part of the board name, so stripping it would be the mistake their own report warns about elsewhere.</td></tr>
+<tr><td>&ldquo;Adopt position-based dispatch to support boards named <code>exit</code>&rdquo; <span class="cm">(their recommendation to themselves)</span></td><td>Your point 15 says this does not matter. I am keeping numeric dispatch only because the letter shortcuts in commit 4 need to inspect the reply anyway, and I am dropping the reserved-name argument from my justification.</td></tr>
+<tr><td>&ldquo;Keep the generic <code>_pmod</code> only if a trailing <code>_pmod</code> always marks a configuration&rdquo;</td><td>Your point 8 settles it: it does not. Removing it.</td></tr>
+<tr><td>Counts in the first-level labels <span class="cm">(they credit this as my advantage)</span></td><td>You find them too long. Commit 3 replaces them with <code>&nbsp;*</code>.</td></tr>
+</tbody></table>
+</div>
+
+<p>One correction to their review for the record: it says my test suite
+&ldquo;does not check subprocess exit codes, so some failures may be
+interpreted as no selection.&rdquo; That is a fair criticism, and it is exactly
+how the stale-board case in the table above could have hidden from me &mdash; my
+walk treats a crash and a cancellation as the same outcome. Commit 1's tests
+assert the exit status.</p>
+
+<h2>Order of work</h2>
+<ol>
+<li><span class="pill pdone">done</span> merge <code>main</code>
+(<code>b3968beb</code>)</li>
+<li><span class="pill p1">commit 1</span> correctness and policy, with the
+decimal fix first and the adopted test harness last</li>
+<li><span class="pill p2">commit 2</span> sorted first level, after measuring
+whether a pure-Bash sort removes the Windows question</li>
+<li><span class="pill p3">commit 3</span> bare names and the
+<code>*</code> marker</li>
+<li><span class="pill p4">commit 4</span> letter shortcuts</li>
+<li>re-run everything on the final state: 17 existing tests, the new ones, the
+old-versus-new baseline for all 110 boards, and the catalog oracle</li>
+<li>push the branch and report what each commit changed in the menu</li>
+</ol>
+<p>Each commit will be green on its own, so any of them can be dropped or
+reordered without breaking the ones before it. Nothing is pushed until you have
+seen the result.</p>
+
+<footer>
+branch claude_board_menu @ b3968beb (main b3968beb merged from c055dfe3) &middot; 110 selectable configurations, 53 boards<br>
+competitor review read from misc/ai_sessions/20261006_board_menu/codex_board_menu_compare_1.html<br>
+every measurement above was reproduced on this machine &middot; plan written 2026-10-07
+</footer>
+
+</div>
+</body>
+</html>

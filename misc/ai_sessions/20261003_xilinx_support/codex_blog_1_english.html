@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Developing BGM's Vivado discovery script by having Claude and Codex work in separate repository clones, review each other, and adopt the better ideas.">
+  <title>Two clones, one Bash script: Claude and Codex review each other</title>
+  <style>
+    :root { color-scheme: light; --paper: #fffdf8; --ink: #24302f; --muted: #626c68; --line: #dcded4; --teal: #17685c; --amber: #885823; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #eeeee6; color: var(--ink); font: 19px/1.78 Georgia, "Times New Roman", serif; }
+    main { max-width: 1040px; margin: 36px auto; padding: 66px 92px; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 12px 40px #20352a09; }
+    .opening { margin-top: 0; font-size: clamp(28px, 3.3vw, 39px); line-height: 1.35; letter-spacing: -.025em; }
+    p { margin: 0 0 1.25em; }
+    a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    a:hover { color: #0d463e; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+    code { font-size: .8em; background: #e9eee6; padding: .12em .28em; border-radius: 3px; overflow-wrap: anywhere; }
+    pre { padding: 21px 24px; margin: 1.3em 0; background: #243832; color: #f3f5e9; border-radius: 6px; font-size: 14px; line-height: 1.8; overflow-x: auto; }
+    pre code { font-size: inherit; background: transparent; padding: 0; color: inherit; }
+    .workflow { margin: 32px 0; font: 15px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .clones { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .clone { padding: 20px; border: 1px solid var(--line); border-top: 4px solid var(--teal); border-radius: 6px; background: #f2f6f0; }
+    .clone.claude { border-top-color: var(--amber); background: #faf2e6; }
+    .clone strong { display: block; font-size: 18px; margin-bottom: 5px; }
+    .clone code { display: block; background: transparent; padding: 0; font-size: 12px; }
+    .exchange { text-align: center; padding: 15px 10px; color: var(--muted); }
+    .decision { border: 1px solid var(--line); border-radius: 6px; padding: 16px 20px; text-align: center; background: #f2f0e8; }
+    figcaption { margin-top: 11px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .takeaway { border-left: 4px solid var(--teal); padding: 12px 0 12px 22px; font-size: 1.1em; line-height: 1.55; margin: 30px 0; }
+    .reports { width: 100%; border-collapse: collapse; margin-top: 35px; font: 14px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .reports caption { text-align: left; font-weight: 700; margin-bottom: 10px; }
+    .reports th, .reports td { text-align: left; vertical-align: top; padding: 12px 8px; border-bottom: 1px solid var(--line); }
+    .reports th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    footer { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 18px; font: 12px/1.7 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--muted); }
+    @media (max-width: 760px) { body { font-size: 17px; } main { margin: 0; padding: 34px 22px; border: 0; } .clones { grid-template-columns: 1fr; } pre { padding: 17px; font-size: 12px; } .reports { font-size: 12px; } }
+    @media print { body { background: white; font-size: 11pt; } main { max-width: none; padding: 0; margin: 0; border: 0; box-shadow: none; } .opening { font-size: 22pt; } a { color: inherit; } .workflow, pre, tr { break-inside: avoid; } pre { white-space: pre-wrap; color: black; background: #f0f0f0; } }
+  </style>
+</head>
+<body>
+<main>
+<article>
+  <p class="opening">I am not a Bash scripting virtuozo but I can evaluate the quality of Bash code.</p>
+
+  <p>That was enough to try an experiment: give Claude and Codex separate clones of the same repository, let each develop a solution, and then ask each to examine the other’s work. I would read their arguments, ask about concrete failures, and decide which recommendations to adopt. The subject was a small but consequential piece of infrastructure: the Bash script that finds a Xilinx or AMD Vivado installation.</p>
+
+  <p>The repository is <a href="https://github.com/yuri-panchul/basics-graphics-music">basics-graphics-music, or BGM</a>, a collection of portable Verilog and SystemVerilog examples for learning FPGA and ASIC design. It gives educators a common starting point for laboratory exercises, with scripts for selecting a board, running the tools, and putting a design onto hardware. Students can spend their attention on the circuit they are building.</p>
+
+  <p>This becomes particularly useful when you have a <em>zoo of boards</em>. A classroom may contain older Terasic boards with Altera FPGAs, Digilent boards with Xilinx devices, and inexpensive Gowin boards from Sipeed. BGM’s <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/boards/README.md">board support</a> accommodates that variety. Its board wrappers and tool scripts handle differences around the lab design. Portability still takes work, but each instructor does not have to reconstruct the entire environment for every board.</p>
+
+  <p>These are teaching materials with a travel history. The repository records use at Hacker Dojo in Mountain View, United States; ADA University in Baku, Azerbaijan; LaLambda in Tbilisi, Georgia; and the AUCA and Siemens EDA seminar in Bishkek, Kyrgyzstan. The <a href="https://github.com/yuri-panchul/basics-graphics-music#verilog-events-across-the-world">event list</a> gives the locations and dates. At the <a href="https://verilog-meetup.com/2024/02/28/azerbaijan-2024/">ADA University seminar</a>, the exercises progressed from basic logic through graphics and sound to a small RISC-V CPU. A reliable setup script helps make that progression possible on the equipment a particular institution has.</p>
+
+  <p>The change I needed was easy to describe. The Vivado setup script, <code>scripts/steps/00_setup_xilinx.source_bash</code>, had to understand both directory layouts below, with <code>Xilinx</code>, <code>AMD</code>, or <code>AMDDesignTools</code> as the vendor directory:</p>
+
+  <pre><code>&lt;parent&gt;/&lt;vendor&gt;/Vivado/&lt;version&gt;/bin
+&lt;parent&gt;/&lt;vendor&gt;/&lt;version&gt;/Vivado/bin</code></pre>
+
+  <p>It also had to choose versions sensibly. An installation named <code>2026.10</code> should beat <code>2026.2</code> when both compete in the same search location. Paths might contain spaces. A version directory might be a symbolic link. On a Windows machine running a Bash environment, the command named <code>sort</code> might be Microsoft’s utility rather than the Unix program the script expected. The <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/codex_report_2.html">second Codex report</a> lays out these cases and the selection policy.</p>
+
+  <p>I kept the implementations in <code>~/codex</code> and <code>~/claude</code>, on the branches <code>xilinx_codex</code> and <code>xilinx_claude</code>. Separate clones made the comparison tangible: each assistant had actual files to inspect, and each could change its own implementation without overwriting the other’s work. I could inspect a diff, keep a commit, or ask for another revision.</p>
+
+  <figure class="workflow" aria-label="Claude and Codex develop in separate clones and exchange reviews; the maintainer selects changes and repeats the comparison.">
+    <div class="clones">
+      <div class="clone"><strong>Codex</strong><code>~/codex/basics-graphics-music</code><code>branch: xilinx_codex</code>Implement, test, review Claude’s version.</div>
+      <div class="clone claude"><strong>Claude</strong><code>~/claude/basics-graphics-music</code><code>branch: xilinx_claude</code>Implement, test, review Codex’s version.</div>
+    </div>
+    <div class="exchange">Exchange code and comparison reports ↔ revise both implementations</div>
+    <div class="decision">I evaluate the evidence, choose useful changes, and request another comparison.</div>
+    <figcaption>The competition creates alternatives; repeated review brings the useful ideas together.</figcaption>
+  </figure>
+
+  <p>The first useful result was that the implementations had different strengths. <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/codex_report_1.html">Codex’s first comparison</a> found its own version stronger at locating a suitable Unix sort and recognizing symlinked installations. It also found an embarrassing counterexample: a directory named <code>backup</code>, containing a <code>bin</code> subdirectory, could be selected as the newest version. Claude’s digit-prefix filter excluded it. That is a much more useful criticism than a general statement that one implementation is cleaner.</p>
+
+  <p><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/claude_report_1.html">Claude’s first review</a> recommended using Codex as the base while carrying over improvements from Claude. It called out the repeated vendor list, awkward candidate messages, and redundant returns after an error helper that already exits. Here was one assistant recommending the other assistant’s implementation, while still identifying worthwhile changes to it. I did not have to choose an entire package of strengths and weaknesses.</p>
+
+  <p>The review cycle then became quite practical. I asked for another comparison, read the advantages and disadvantages, and told the assistant to adopt the useful recommendations. Codex acquired a centralized vendor list, a separate candidate-collection function, and the numeric-name filter. These are concrete changes advocated in <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/claude_report_2.html">Claude’s second report</a>. Filtering names is a policy choice: it rejects renamed installations such as <code>mybuild</code>, but an explicit installation variable provides an escape hatch. I could evaluate that tradeoff against the installations we intended to support.</p>
+
+  <p>In the other direction, the later Claude implementation adopted shell globbing, the search for Unix sort in known locations, a test of actual version ordering, and cleanup of Windows carriage returns. <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/claude_report_3.html">Claude’s third report</a> describes this convergence. The two implementations increasingly expressed the same requirements, even though their function structure and diagnostics remained different.</p>
+
+  <p>The sort example captures why I liked this process. It is tempting to ask whether a command accepts <code>-V</code> and call the problem solved. A stronger check gives the command two deliberately troublesome versions and examines the result. Codex also tried <code>/usr/bin/sort</code> and <code>/bin/sort</code> before trusting <code>sort</code> on <code>PATH</code>. If no suitable implementation was available, the requested fallback was plain sorting with an explicit warning that it might choose an older release. The <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/codex_report_2.html">second comparison’s tests</a> made the consequences visible.</p>
+
+  <p>I also changed the scope. We briefly supported automatic discovery of installations without version directories, such as <code>/opt/Xilinx/Vivado/bin</code>. I later asked both sides to remove that special case and assume versioned installations for discovery. That decision simplified the problem. The assistants could propose compatibility features; I still had to decide which ones belonged in the repository.</p>
+
+  <p>Readability received the same attention. I asked for comments explaining the less obvious Bash substitutions, including operations equivalent to <code>basename</code>. I specified where blank lines should go, how multiline diagnostics should be separated from following commands, and how continuation backslashes should align. The conventions went into <code>AGENTS.md</code> and <code>CLAUDE.md</code>. In teaching infrastructure, code that another contributor can understand next month has practical value.</p>
+
+  <p class="takeaway">The most useful question became: “Which concrete case proves that this change is better?”</p>
+
+  <p>That question applies to the reviews themselves. Claude’s third report recorded agreement in eleven selection scenarios and recommended the smaller Codex implementation as the base. That supported convergence on the search policy. It did not establish that every failure path was equivalent. <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/claude_report_3.html">Its test matrix</a> needs to be read alongside the other reviewer’s evidence.</p>
+
+  <p><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/codex_report_3.html">Codex’s third report</a> tested a failing sort probe under <code>set -Eeuo pipefail</code>. Claude’s unguarded assignment could terminate setup before trying the next sort program; Codex’s conditional probe continued. It also tested an apostrophe in a directory name: Claude’s <code>xargs</code>-based diagnostic could fail after a valid installation had already been selected. The lesson was specific. Probe failures need deliberate handling, and formatting an informational message should not reinterpret the user’s pathname.</p>
+
+  <p>The same report explains the limits of those tests: Windows behavior was simulated, and its comparison did not run native Windows or end-to-end synthesis. I would preserve that distinction when describing the result. Agreement between two reviewers is useful evidence, and their test coverage still has boundaries.</p>
+
+  <p>The solution we converged toward can be explained without reading Bash. Respect a valid explicit <code>XILINX_VIVADO</code> directory; otherwise keep an existing <code>vivado</code> command on <code>PATH</code>. If discovery is needed, search <code>XILINX_HOME</code> first, then the platform defaults. Linux uses <code>$HOME</code>, <code>/opt</code>, and <code>/tools</code>; Cygwin/MSYS uses <code>/c</code>, <code>/d</code>, and <code>/e</code>, corresponding to Windows drives <code>C:\</code>, <code>D:\</code>, and <code>E:\</code>. Within the first parent that has candidates, compare versions across both layouts and all three vendor names. This gives location priority over a newer installation somewhere else.</p>
+
+  <p>The retained implementation uses a digit-prefix filter, preserves symlink support, tests sorting behavior, makes equal-version ties deterministic, and formats paths without <code>xargs</code>. It sets <code>XILINX_VIVADO</code> and appends the selected <code>bin</code> directory to <code>PATH</code>. That last detail is worth understanding: an earlier executable on <code>PATH</code> can still win. Nor does finding a <code>bin</code> directory validate the executable or its license. The <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/b698a07c/scripts/steps/00_setup_xilinx.source_bash">Codex script after the review and readability changes</a> is the concrete result, with these limits intact.</p>
+
+  <p>I would use this method again for work I can review but do not want to write entirely from scratch. Start with separate working copies, ask each assistant to assess both implementations, and require examples for important claims. Then give the useful criticism back to the other side and repeat. Keep the human decisions visible: supported cases, acceptable fallback behavior, code style, and what evidence is sufficient to accept a change.</p>
+
+  <p>The outcome was a Bash implementation assembled from ideas that survived comparison. Claude contributed useful structure and filtering; Codex contributed stronger handling of awkward environments and paths; my part was to set the requirements and judge the tradeoffs. For BGM, the payoff is concrete: a student selects a board, the scripts locate the tools, and the seminar can move on to the logic, graphics, music, or processor the student came to build.</p>
+
+  <table class="reports">
+    <caption>The six comparison reports</caption>
+    <thead><tr><th scope="col">Round</th><th scope="col">Claude’s review</th><th scope="col">Codex’s review</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">1</th><td><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/claude_report_1.html">Vivado Discovery Review</a></td><td><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/codex_report_1.html">Initial implementation comparison</a></td></tr>
+      <tr><th scope="row">2</th><td><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/claude_report_2.html">Choosing Vivado</a></td><td><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/codex_report_2.html">Selection policy and failure cases</a></td></tr>
+      <tr><th scope="row">3</th><td><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/claude_report_3.html">Converged on Vivado</a></td><td><a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261003_xilinx_support/codex_report_3.html">Convergence and remaining edge cases</a></td></tr>
+    </tbody>
+  </table>
+</article>
+<footer>
+  Based on the development session and the reports in
+  <a href="https://github.com/yuri-panchul/basics-graphics-music/tree/main/misc/ai_sessions/20261003_xilinx_support">BGM’s October 3, 2026 AI-session archive</a>.
+  The reports describe specific revisions and different test sets; their results document this development process rather than a general ranking of the two assistants.
+</footer>
+</main>
+</body>
+</html>

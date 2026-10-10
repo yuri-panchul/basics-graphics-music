@@ -284,7 +284,7 @@ configure_fpga_yosys ()
             if [[ "$CABLE" == "cmsisdap" ]] && [ ! -f /etc/udev/rules.d/99-icesugar-pro.rules ]
             then
                 error "udev rule for iCESugar-pro is not installed."                    \
-                      "Please run once: sudo $script_dir/setup_icesugar_udev.bash"       \
+                      "Please run once: sudo $script_dir/fpga/setup_icesugar_udev.bash"       \
                       "and then replug the board."
             fi
 

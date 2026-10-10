@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vivado setup script comparison: Codex and Claude</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #182536; background: #f3f6fa; }
+body { margin: 0; line-height: 1.6; }
+main { max-width: 1120px; margin: 36px auto; padding: 32px; background: white; border-radius: 12px; }
+h1 { line-height: 1.2; margin-top: 0; }
+h2 { font-size: 1.2rem; margin-top: 28px; }
+.lead { font-size: 1.15rem; }
+code { overflow-wrap: anywhere; font-size: .9em; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin: 18px 0; }
+th, td { text-align: left; vertical-align: top; padding: 12px; border: 1px solid #d8e0ea; }
+thead { background: #183956; color: white; }
+tbody th { width: 20%; background: #f0f5fa; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; }
+li { margin-bottom: 8px; }
+.note { padding: 16px 20px; background: #eef5fc; border-left: 4px solid #356d9e; }
+@media (max-width: 700px) { main { margin: 0; padding: 20px; border-radius: 0; } .grid { grid-template-columns: 1fr; } }
+@media print { main { margin: 0; padding: 0; } body { background: white; } tr { break-inside: avoid; } }
+</style>
+</head>
+<body><main>
+<h1>Vivado setup script comparison</h1>
+<p class="lead">The <strong>Codex version handles Windows sorting and symlinks better</strong>; the <strong>Claude version filters version directories more carefully and has more modular discovery code</strong>.</p>
+<p>Files compared:</p>
+<ul>
+<li><code>/home/verilog/codex/basics-graphics-music/scripts/steps/00_setup_xilinx.source_bash</code></li>
+<li><code>/home/verilog/claude/basics-graphics-music/scripts/steps/00_setup_xilinx.source_bash</code></li>
+</ul>
+<p>This is a snapshot of the files inspected during the comparison; later edits are not reflected here.</p>
+<p>Both support all three vendor names (Xilinx, AMD, AMDDesignTools), both versioned layouts, unversioned installations, and explicit environment overrides. Both prioritize unversioned installations within the first matching parent directory.</p>
+<div class="table-wrap"><table>
+<caption>Discovery and selection behavior</caption>
+<thead><tr><th scope="col">Area</th><th scope="col">~/codex</th><th scope="col">~/claude</th></tr></thead><tbody>
+<tr><th scope="row">Unix sort discovery</th><td>Checks /usr/bin/sort, /bin/sort, then PATH; verifies actual version ordering.</td><td>Checks only whether sort -V on PATH succeeds.</td></tr>
+<tr><th scope="row">Windows fallback</th><td>Warns, uses no options, and removes CRLF carriage returns.</td><td>Warns and uses no options, but leaves carriage returns in paths.</td></tr>
+<tr><th scope="row">Sorting failure</th><td>Explicit error and return.</td><td>Relies on the caller’s shell error settings.</td></tr>
+<tr><th scope="row">Version directories</th><td>Accepts any name containing an installation, including backup.</td><td>Accepts only names beginning with a digit.</td></tr>
+<tr><th scope="row">Symlinked version directories</th><td>Recognized by shell globbing and directory checks.</td><td>Skipped by find -type d without symlink following.</td></tr>
+<tr><th scope="row">Multiple unversioned installs</th><td>First wins: Xilinx, then AMD, then AMDDesignTools.</td><td>Last wins: effectively AMDDesignTools, then AMD, then Xilinx.</td></tr>
+<tr><th scope="row">Multiple-install diagnostics</th><td>Returns immediately for an unversioned installation without listing alternatives.</td><td>Collects alternatives and warns about multiple installations.</td></tr>
+<tr><th scope="row">Organization</th><td>Shorter; mostly local variables; fewer external commands.</td><td>Separate candidate/discovery helpers; centralized vendor list; more shared global state.</td></tr>
+</tbody></table></div><div class="grid">
+<section><h2>Codex version — advantages</h2><ul><li>More robust when Windows sort.exe comes first in PATH.</li><li>Supports symlinked installations.</li><li>Avoids sorting entirely when an unversioned installation is found.</li><li>Uses an argument array rather than splitting a command string.</li></ul></section>
+<section><h2>Codex version — disadvantages</h2><ul><li>Can mistakenly select a directory named backup as the newest version. This was reproduced in testing.</li><li>Repeats the vendor list.</li><li>Does not warn when multiple unversioned installations exist.</li></ul></section>
+<section><h2>Claude version — advantages</h2><ul><li>Excludes obvious non-version directories such as backup.</li><li>Separates candidate collection from selection.</li><li>Keeps vendor names in one place and reports alternative installations.</li></ul></section>
+<section><h2>Claude version — disadvantages</h2><ul><li>Can fall back to alphabetical ordering even when /usr/bin/sort supports version sorting.</li><li>Does not normalize Windows CRLF output.</li><li>Misses symlinked version directories.</li><li>Uses xargs echo for diagnostics, which can mishandle paths containing quotes or backslashes.</li></ul></section>
+</div>
+<h2>Verification</h2>
+<p>Tests covered mixed versions, nonnumeric directories, multiple unversioned installations, symlinked version directories, and simulated Windows sorting. Both selected 2026.10 over 2026.2 with Unix sort. Codex selected a backup directory when present; Claude excluded it. Codex recognized the symlinked version directory; Claude did not. Windows behavior was simulated, not tested on native Windows.</p>
+<h2>Recommendation</h2>
+<p class="note">Retain the Codex sorting behavior and add Claude’s numeric-directory filter and centralized vendor list.</p>
+</main></body></html>
