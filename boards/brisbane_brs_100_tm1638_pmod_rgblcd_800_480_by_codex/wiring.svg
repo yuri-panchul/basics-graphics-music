@@ -1,0 +1,283 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1500" viewBox="0 0 1600 1500" role="img">
+<title>BRS-100 · RGB LCD + TM1638 jumper connections</title><desc>800 × 480 RGB565 • wuxx PMOD-RGBLCD v1.3 • Proposed wiring; match your hardware revision before powering it.</desc>
+<style>text{font-family:DejaVu Sans,sans-serif;fill:#17324d}.mono{font-family:DejaVu Sans Mono,monospace}</style>
+<rect width="1600" height="1500" fill="#f2f6fa"/>
+<text x="40" y="56" font-size="30" font-weight="700" text-anchor="start" class="" style="fill:#17324d">BRS-100 · RGB LCD + TM1638 jumper connections</text>
+<text x="40" y="91" font-size="17" font-weight="400" text-anchor="start" class="" style="fill:#17324d">800 × 480 RGB565 • wuxx PMOD-RGBLCD v1.3 • Proposed wiring; match your hardware revision before powering it.</text>
+<rect x="35" y="115" width="885" height="810" rx="10" fill="white" stroke="#ccdae6"/>
+<text x="60" y="151" font-size="22" font-weight="700" text-anchor="start" class="" style="fill:#17324d">LCD signal jumpers · one line = one wire</text>
+<text x="60" y="183" font-size="17" font-weight="400" text-anchor="start" class="" style="fill:#17324d">BRS-100 header / GPIO / FPGA pin</text>
+<text x="585" y="183" font-size="17" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Adapter J2 / signal</text>
+<text x="60" y="211" font-size="16" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Rows below are grouped by signal, not physical socket order.</text>
+<text x="60" y="253" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.1    GPIO  1  FPGA 25</text>
+<path d="M410 247 L560 247" fill="none" stroke="#bc3545" stroke-width="3"/>
+<circle cx="410" cy="247" r="5" fill="#bc3545"/>
+<circle cx="560" cy="247" r="5" fill="#bc3545"/>
+<text x="585" y="253" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#bc3545">J2.30  R0</text>
+<text x="60" y="284" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.2    GPIO  2  FPGA 26</text>
+<path d="M410 278 L560 278" fill="none" stroke="#bc3545" stroke-width="3"/>
+<circle cx="410" cy="278" r="5" fill="#bc3545"/>
+<circle cx="560" cy="278" r="5" fill="#bc3545"/>
+<text x="585" y="284" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#bc3545">J2.29  R1</text>
+<text x="60" y="315" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.3    GPIO  3  FPGA 27</text>
+<path d="M410 309 L560 309" fill="none" stroke="#bc3545" stroke-width="3"/>
+<circle cx="410" cy="309" r="5" fill="#bc3545"/>
+<circle cx="560" cy="309" r="5" fill="#bc3545"/>
+<text x="585" y="315" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#bc3545">J2.28  R2</text>
+<text x="60" y="346" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.4    GPIO  4  FPGA 28</text>
+<path d="M410 340 L560 340" fill="none" stroke="#bc3545" stroke-width="3"/>
+<circle cx="410" cy="340" r="5" fill="#bc3545"/>
+<circle cx="560" cy="340" r="5" fill="#bc3545"/>
+<text x="585" y="346" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#bc3545">J2.27  R3</text>
+<text x="60" y="377" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.5    GPIO  5  FPGA 29</text>
+<path d="M410 371 L560 371" fill="none" stroke="#bc3545" stroke-width="3"/>
+<circle cx="410" cy="371" r="5" fill="#bc3545"/>
+<circle cx="560" cy="371" r="5" fill="#bc3545"/>
+<text x="585" y="377" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#bc3545">J2.24  R4</text>
+<text x="60" y="408" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.6    GPIO  6  FPGA 30</text>
+<path d="M410 402 L560 402" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="402" r="5" fill="#17844e"/>
+<circle cx="560" cy="402" r="5" fill="#17844e"/>
+<text x="585" y="408" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">J2.1   G0</text>
+<text x="60" y="439" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.7    GPIO  7  FPGA 33</text>
+<path d="M410 433 L560 433" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="433" r="5" fill="#17844e"/>
+<circle cx="560" cy="433" r="5" fill="#17844e"/>
+<text x="585" y="439" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">J2.2   G1</text>
+<text x="60" y="470" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.8    GPIO  8  FPGA 34</text>
+<path d="M410 464 L560 464" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="464" r="5" fill="#17844e"/>
+<circle cx="560" cy="464" r="5" fill="#17844e"/>
+<text x="585" y="470" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">J2.3   G2</text>
+<text x="60" y="501" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.9    GPIO  9  FPGA 35</text>
+<path d="M410 495 L560 495" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="495" r="5" fill="#17844e"/>
+<circle cx="560" cy="495" r="5" fill="#17844e"/>
+<text x="585" y="501" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">J2.4   G3</text>
+<text x="60" y="532" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.10   GPIO 10  FPGA 36</text>
+<path d="M410 526 L560 526" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="526" r="5" fill="#17844e"/>
+<circle cx="560" cy="526" r="5" fill="#17844e"/>
+<text x="585" y="532" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">J2.7   G4</text>
+<text x="60" y="563" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.11   GPIO 11  FPGA 37</text>
+<path d="M410 557 L560 557" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="557" r="5" fill="#17844e"/>
+<circle cx="560" cy="557" r="5" fill="#17844e"/>
+<text x="585" y="563" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">J2.9   G5</text>
+<text x="60" y="594" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.12   GPIO 12  FPGA 38</text>
+<path d="M410 588 L560 588" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="588" r="5" fill="#2469c4"/>
+<circle cx="560" cy="588" r="5" fill="#2469c4"/>
+<text x="585" y="594" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">J2.22  B0</text>
+<text x="60" y="625" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.13   GPIO 13  FPGA 39</text>
+<path d="M410 619 L560 619" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="619" r="5" fill="#2469c4"/>
+<circle cx="560" cy="619" r="5" fill="#2469c4"/>
+<text x="585" y="625" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">J2.21  B1</text>
+<text x="60" y="656" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.14   GPIO 14  FPGA 40</text>
+<path d="M410 650 L560 650" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="650" r="5" fill="#2469c4"/>
+<circle cx="560" cy="650" r="5" fill="#2469c4"/>
+<text x="585" y="656" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">J2.20  B2</text>
+<text x="60" y="687" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.15   GPIO 15  FPGA 41</text>
+<path d="M410 681 L560 681" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="681" r="5" fill="#2469c4"/>
+<circle cx="560" cy="681" r="5" fill="#2469c4"/>
+<text x="585" y="687" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">J2.19  B3</text>
+<text x="60" y="718" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J5.16   GPIO 16  FPGA 42</text>
+<path d="M410 712 L560 712" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="712" r="5" fill="#2469c4"/>
+<circle cx="560" cy="712" r="5" fill="#2469c4"/>
+<text x="585" y="718" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">J2.18  B4</text>
+<text x="60" y="749" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.1    GPIO 17  FPGA 77</text>
+<path d="M410 743 L560 743" fill="none" stroke="#a66c05" stroke-width="3"/>
+<circle cx="410" cy="743" r="5" fill="#a66c05"/>
+<circle cx="560" cy="743" r="5" fill="#a66c05"/>
+<text x="585" y="749" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#a66c05">J2.10  CLK</text>
+<text x="60" y="780" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.2    GPIO 18  FPGA 76</text>
+<path d="M410 774 L560 774" fill="none" stroke="#a66c05" stroke-width="3"/>
+<circle cx="410" cy="774" r="5" fill="#a66c05"/>
+<circle cx="560" cy="774" r="5" fill="#a66c05"/>
+<text x="585" y="780" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#a66c05">J2.11  HS</text>
+<text x="60" y="811" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.3    GPIO 19  FPGA 75</text>
+<path d="M410 805 L560 805" fill="none" stroke="#a66c05" stroke-width="3"/>
+<circle cx="410" cy="805" r="5" fill="#a66c05"/>
+<circle cx="560" cy="805" r="5" fill="#a66c05"/>
+<text x="585" y="811" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#a66c05">J2.12  VS</text>
+<text x="60" y="842" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.4    GPIO 20  FPGA 74</text>
+<path d="M410 836 L560 836" fill="none" stroke="#a66c05" stroke-width="3"/>
+<circle cx="410" cy="836" r="5" fill="#a66c05"/>
+<circle cx="560" cy="836" r="5" fill="#a66c05"/>
+<text x="585" y="842" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#a66c05">J2.13  DE</text>
+<text x="60" y="894" font-size="17" font-weight="400" text-anchor="start" class="" style="fill:#17324d">RGB bits 0 → 4/5 run from least to most significant.</text>
+<rect x="950" y="115" width="615" height="530" rx="10" fill="white" stroke="#ccdae6"/>
+<text x="975" y="151" font-size="21" font-weight="700" text-anchor="start" class="" style="fill:#17324d">BRS-100 · component side · USB-C at top</text>
+<text x="1010" y="185" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17324d">J5 (left)</text>
+<text x="1305" y="185" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17324d">J6 (right)</text>
+<rect x="1200" y="195" width="90" height="40" rx="10" fill="#e7edf4" stroke="#ccdae6"/>
+<text x="1245" y="221" font-size="16" font-weight="400" text-anchor="middle" class="" style="fill:#17324d">USB-C</text>
+<circle cx="980" cy="212" r="5" fill="#17324d"/>
+<text x="995" y="217" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 1  GPIO  1</text>
+<circle cx="1305" cy="212" r="5" fill="#17324d"/>
+<text x="1320" y="217" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 1  GPIO 17</text>
+<circle cx="980" cy="235" r="5" fill="#17324d"/>
+<text x="995" y="240" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 2  GPIO  2</text>
+<circle cx="1305" cy="235" r="5" fill="#17324d"/>
+<text x="1320" y="240" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 2  GPIO 18</text>
+<circle cx="980" cy="258" r="5" fill="#17324d"/>
+<text x="995" y="263" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 3  GPIO  3</text>
+<circle cx="1305" cy="258" r="5" fill="#17324d"/>
+<text x="1320" y="263" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 3  GPIO 19</text>
+<circle cx="980" cy="281" r="5" fill="#17324d"/>
+<text x="995" y="286" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 4  GPIO  4</text>
+<circle cx="1305" cy="281" r="5" fill="#17324d"/>
+<text x="1320" y="286" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 4  GPIO 20</text>
+<circle cx="980" cy="304" r="5" fill="#17324d"/>
+<text x="995" y="309" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 5  GPIO  5</text>
+<circle cx="1305" cy="304" r="5" fill="#17324d"/>
+<text x="1320" y="309" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 5  GPIO 21</text>
+<circle cx="980" cy="327" r="5" fill="#17324d"/>
+<text x="995" y="332" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 6  GPIO  6</text>
+<circle cx="1305" cy="327" r="5" fill="#17324d"/>
+<text x="1320" y="332" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 6  GPIO 22</text>
+<circle cx="980" cy="350" r="5" fill="#17324d"/>
+<text x="995" y="355" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 7  GPIO  7</text>
+<circle cx="1305" cy="350" r="5" fill="#17324d"/>
+<text x="1320" y="355" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 7  GPIO 23</text>
+<circle cx="980" cy="373" r="5" fill="#17324d"/>
+<text x="995" y="378" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 8  GPIO  8</text>
+<circle cx="1305" cy="373" r="5" fill="#17324d"/>
+<text x="1320" y="378" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 8  GPIO 24</text>
+<circle cx="980" cy="396" r="5" fill="#17324d"/>
+<text x="995" y="401" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 9  GPIO  9</text>
+<circle cx="1305" cy="396" r="5" fill="#17324d"/>
+<text x="1320" y="401" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 9  GPIO 25</text>
+<circle cx="980" cy="419" r="5" fill="#17324d"/>
+<text x="995" y="424" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">10  GPIO 10</text>
+<circle cx="1305" cy="419" r="5" fill="#17324d"/>
+<text x="1320" y="424" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">10  GPIO 26</text>
+<circle cx="980" cy="442" r="5" fill="#17324d"/>
+<text x="995" y="447" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">11  GPIO 11</text>
+<circle cx="1305" cy="442" r="5" fill="#17324d"/>
+<text x="1320" y="447" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">11  GPIO 27</text>
+<circle cx="980" cy="465" r="5" fill="#17324d"/>
+<text x="995" y="470" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">12  GPIO 12</text>
+<circle cx="1305" cy="465" r="5" fill="#17324d"/>
+<text x="1320" y="470" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">12  GPIO 28</text>
+<circle cx="980" cy="488" r="5" fill="#17324d"/>
+<text x="995" y="493" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">13  GPIO 13</text>
+<circle cx="1305" cy="488" r="5" fill="#17324d"/>
+<text x="1320" y="493" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">13  GPIO 29</text>
+<circle cx="980" cy="511" r="5" fill="#17324d"/>
+<text x="995" y="516" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">14  GPIO 14</text>
+<circle cx="1305" cy="511" r="5" fill="#17324d"/>
+<text x="1320" y="516" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">14  GPIO 30</text>
+<circle cx="980" cy="534" r="5" fill="#17324d"/>
+<text x="995" y="539" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">15  GPIO 15</text>
+<circle cx="1305" cy="534" r="5" fill="#17324d"/>
+<text x="1320" y="539" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">15  GPIO 31</text>
+<circle cx="980" cy="557" r="5" fill="#17324d"/>
+<text x="995" y="562" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">16  GPIO 16</text>
+<circle cx="1305" cy="557" r="5" fill="#17324d"/>
+<text x="1320" y="562" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">16  GPIO 32</text>
+<circle cx="980" cy="580" r="5" fill="#17324d"/>
+<text x="995" y="585" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">17  GND</text>
+<circle cx="1305" cy="580" r="5" fill="#17324d"/>
+<text x="1320" y="585" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">17  GND</text>
+<circle cx="980" cy="603" r="5" fill="#bc3545"/>
+<text x="995" y="608" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#bc3545">18  +5 V</text>
+<circle cx="1305" cy="603" r="5" fill="#a66c05"/>
+<text x="1320" y="608" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#a66c05">18  +3.3 V</text>
+<text x="975" y="632" font-size="16" font-weight="700" text-anchor="start" class="" style="fill:#17324d">J6.1 = GPIO 17. J6.17 is GND, not GPIO 17.</text>
+<rect x="950" y="665" width="615" height="530" rx="10" fill="white" stroke="#ccdae6"/>
+<text x="975" y="701" font-size="20" font-weight="700" text-anchor="start" class="" style="fill:#17324d">Adapter J2 · v1.3 PCB component-side view</text>
+<text x="975" y="730" font-size="16" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Follow the PCB pin-1 mark; do not count odd/even.</text>
+<circle cx="1010" cy="759" r="5" fill="#17844e"/>
+<text x="1025" y="764" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17844e"> 1  G0</text>
+<circle cx="1325" cy="759" r="5" fill="#bc3545"/>
+<text x="1340" y="764" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#bc3545">30  R0</text>
+<circle cx="1010" cy="784" r="5" fill="#17844e"/>
+<text x="1025" y="789" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17844e"> 2  G1</text>
+<circle cx="1325" cy="784" r="5" fill="#bc3545"/>
+<text x="1340" y="789" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#bc3545">29  R1</text>
+<circle cx="1010" cy="809" r="5" fill="#17844e"/>
+<text x="1025" y="814" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17844e"> 3  G2</text>
+<circle cx="1325" cy="809" r="5" fill="#bc3545"/>
+<text x="1340" y="814" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#bc3545">28  R2</text>
+<circle cx="1010" cy="834" r="5" fill="#17844e"/>
+<text x="1025" y="839" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17844e"> 4  G3</text>
+<circle cx="1325" cy="834" r="5" fill="#bc3545"/>
+<text x="1340" y="839" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#bc3545">27  R3</text>
+<circle cx="1010" cy="859" r="5" fill="#17324d"/>
+<text x="1025" y="864" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 5  GND</text>
+<circle cx="1325" cy="859" r="5" fill="#17324d"/>
+<text x="1340" y="864" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">26  GND</text>
+<circle cx="1010" cy="884" r="5" fill="#17324d"/>
+<text x="1025" y="889" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 6  3V3</text>
+<circle cx="1325" cy="884" r="5" fill="#17324d"/>
+<text x="1340" y="889" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">25  3V3</text>
+<circle cx="1010" cy="909" r="5" fill="#17844e"/>
+<text x="1025" y="914" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17844e"> 7  G4</text>
+<circle cx="1325" cy="909" r="5" fill="#bc3545"/>
+<text x="1340" y="914" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#bc3545">24  R4</text>
+<circle cx="1010" cy="934" r="5" fill="#17324d"/>
+<text x="1025" y="939" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d"> 8  GND*</text>
+<circle cx="1325" cy="934" r="5" fill="#bc3545"/>
+<text x="1340" y="939" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#bc3545">23  +5V*</text>
+<circle cx="1010" cy="959" r="5" fill="#17844e"/>
+<text x="1025" y="964" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17844e"> 9  G5</text>
+<circle cx="1325" cy="959" r="5" fill="#2469c4"/>
+<text x="1340" y="964" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#2469c4">22  B0</text>
+<circle cx="1010" cy="984" r="5" fill="#17324d"/>
+<text x="1025" y="989" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">10  CLK</text>
+<circle cx="1325" cy="984" r="5" fill="#2469c4"/>
+<text x="1340" y="989" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#2469c4">21  B1</text>
+<circle cx="1010" cy="1009" r="5" fill="#17324d"/>
+<text x="1025" y="1014" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">11  HS</text>
+<circle cx="1325" cy="1009" r="5" fill="#2469c4"/>
+<text x="1340" y="1014" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#2469c4">20  B2</text>
+<circle cx="1010" cy="1034" r="5" fill="#17324d"/>
+<text x="1025" y="1039" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">12  VS</text>
+<circle cx="1325" cy="1034" r="5" fill="#2469c4"/>
+<text x="1340" y="1039" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#2469c4">19  B3</text>
+<circle cx="1010" cy="1059" r="5" fill="#17324d"/>
+<text x="1025" y="1064" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">13  DE</text>
+<circle cx="1325" cy="1059" r="5" fill="#2469c4"/>
+<text x="1340" y="1064" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#2469c4">18  B4</text>
+<circle cx="1010" cy="1084" r="5" fill="#17324d"/>
+<text x="1025" y="1089" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">14  GND</text>
+<circle cx="1325" cy="1084" r="5" fill="#17324d"/>
+<text x="1340" y="1089" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">17  GND</text>
+<circle cx="1010" cy="1109" r="5" fill="#17324d"/>
+<text x="1025" y="1114" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">15  3V3</text>
+<circle cx="1325" cy="1109" r="5" fill="#17324d"/>
+<text x="1340" y="1114" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">16  3V3</text>
+<text x="975" y="1175" font-size="16" font-weight="400" text-anchor="start" class="" style="fill:#17324d">* J2.8 via R3; J2.23 via R4. Both are 0 Ω links.</text>
+<rect x="35" y="945" width="885" height="250" rx="10" fill="white" stroke="#ccdae6"/>
+<text x="60" y="982" font-size="22" font-weight="700" text-anchor="start" class="" style="fill:#17324d">TM1638 · use a 3.3 V ↔ 5 V translator</text>
+<text x="60" y="1013" font-size="17" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Example: TXS0104E module; A = 3.3 V, B = 5 V.</text>
+<text x="60" y="1058" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.5    GPIO 21  FPGA 73</text>
+<path d="M410 1052 L560 1052" fill="none" stroke="#7541a0" stroke-width="3"/>
+<circle cx="410" cy="1052" r="5" fill="#7541a0"/>
+<circle cx="560" cy="1052" r="5" fill="#7541a0"/>
+<text x="585" y="1058" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#7541a0">A1 ↔ B1 → TM DIO</text>
+<text x="60" y="1093" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.6    GPIO 22  FPGA 72</text>
+<path d="M410 1087 L560 1087" fill="none" stroke="#7541a0" stroke-width="3"/>
+<circle cx="410" cy="1087" r="5" fill="#7541a0"/>
+<circle cx="560" cy="1087" r="5" fill="#7541a0"/>
+<text x="585" y="1093" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#7541a0">A2 ↔ B2 → TM CLK</text>
+<text x="60" y="1128" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.7    GPIO 23  FPGA 71</text>
+<path d="M410 1122 L560 1122" fill="none" stroke="#7541a0" stroke-width="3"/>
+<circle cx="410" cy="1122" r="5" fill="#7541a0"/>
+<circle cx="560" cy="1122" r="5" fill="#7541a0"/>
+<text x="585" y="1128" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#7541a0">A3 ↔ B3 → TM STB</text>
+<text x="60" y="1163" font-size="17" font-weight="700" text-anchor="start" class="" style="fill:#17324d">DIO is bidirectional. Do not connect a 5 V module directly to GPIO.</text>
+<rect x="35" y="1215" width="1530" height="245" rx="10" fill="#fff9e9" stroke="#e7d3a0"/>
+<text x="60" y="1255" font-size="24" font-weight="700" text-anchor="start" class="" style="fill:#17324d">Power and assembly</text>
+<text x="60" y="1295" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">J5.18 (+5 V) → adapter J2.23, TM1638 VCC, translator VCCB. Leave the adapter USB-C unplugged.</text>
+<text x="60" y="1326" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">J6.18 (+3.3 V) → adapter J2.6, translator VCCA and OE. Use a power distribution strip for fan-out.</text>
+<text x="60" y="1357" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">J5.17 / J6.17 (GND) → adapter J2.5 + J2.14 + J2.17 + J2.26, translator GND and TM1638 GND.</text>
+<text x="60" y="1388" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Open adapter SB1–SB4 for independent RGB565. Seat the compatible 40-pin panel in J1 with power removed.</text>
+<text x="60" y="1419" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Keep signal jumpers short. Optional microphone / DAC / three spare GPIOs: see wiring_audio.svg and README.md.</text>
+<text x="40" y="1484" font-size="15" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Configuration: brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_codex · Signal source: wiring.csv · References and limitations: README.md</text>
+</svg>

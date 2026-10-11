@@ -566,7 +566,8 @@ configure_fpga_gowin_proprietary ()
             fpga_board_for_programmer="GW1NSR-4C"
             flash_method="-r 5"                     ;;
 
-        tang_nano_9k* )
+        brisbane_brs_100* | \
+        tang_nano_9k*     )
 
             fpga_board_for_programmer="GW1NR-9C"
             flash_method="-r 5"                     ;;
@@ -653,6 +654,7 @@ configure_fpga_gowin_openfpga ()
 
     case $fpga_board in
 
+        brisbane_brs_100* ) fpga_board_for_openFPGALoader=brs-100-gw1nr9 ;;
         runber           ) fpga_board_for_openFPGALoader=runber        ;;
         tang_nano_1k*    ) fpga_board_for_openFPGALoader=tangnano1k    ;;
         tang_nano_4k*    ) fpga_board_for_openFPGALoader=tangnano4k    ;;

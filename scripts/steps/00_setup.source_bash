@@ -293,6 +293,8 @@ fpga_board_base_name ()
         _pmod_mic3
         _tm1638_sd
         _by_codex
+        _pmod_rgblcd_480_272
+        _pmod_rgblcd_800_480
         _pmod_vga
         _vga_pmod
         _wo_dig_0
@@ -596,6 +598,7 @@ update_fpga_toolchain_var ()
             fpga_toolchain=quartus
         ;;
 
+        brisbane_brs_100*                 | \
         runber                           | \
         marsohod3gw2*                    | \
         tang_*                           | \

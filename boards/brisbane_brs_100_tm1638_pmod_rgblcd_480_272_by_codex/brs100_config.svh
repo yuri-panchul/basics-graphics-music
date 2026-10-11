@@ -1,0 +1,13 @@
+`ifndef BRS100_CONFIG_SVH
+`define BRS100_CONFIG_SVH
+`define BRS100_WIDTH 480
+`define BRS100_HEIGHT 272
+`define BRS100_CLK_MHZ 27
+`define BRS100_PIXEL_MHZ 9
+`define BRS100_H_SYNC 41
+`define BRS100_H_BACK 2
+`define BRS100_H_FRONT 2
+`define BRS100_V_SYNC 10
+`define BRS100_V_BACK 2
+`define BRS100_V_FRONT 4
+`endif
