@@ -5,3 +5,10 @@ Or create a special brisbane_brs_100_tm1638_no_graphics_but_sound_by_claude conf
 You also need to create configurations with and without tm1638. Before you do all the variant I want to create the first, with lcd and tm1638:
 brisbane_brs_100_tm1638_pmod_rgblcd_by_claude. Generate a SVG and PNG files showing how to connect the pins with jumpers, as well as README.md
 instruction inside the board directory. Copy this prompt into the generated repository as claude_prompt.txt
+
+I want to try all configurations. So rename these and create four configurations: 
+
+brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_claude
+brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_claude_alt
+brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_claude
+brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_claude_alt

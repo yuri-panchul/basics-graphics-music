@@ -277,6 +277,8 @@ fpga_board_base_name ()
     local -a variant_suffixes=(
         _pmod_hub75e_led_matrix
         _quartus_13_1_or_older
+        _pmod_rgblcd_480_272
+        _pmod_rgblcd_800_480
         _hdmi_no_ip_tm1638
         _hub75e_led_matrix
         _virtual_switches
@@ -287,7 +289,6 @@ fpga_board_base_name ()
         _lcd_480_272
         _lcd_800_480
         _lcd_ml6485
-        _pmod_rgblcd
         _by_claude
         _no_tm1638
         _pmod_hdmi

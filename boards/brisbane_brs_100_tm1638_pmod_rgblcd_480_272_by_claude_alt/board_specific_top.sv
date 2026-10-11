@@ -5,14 +5,12 @@
 // BrisbaneSilicon BRS-100-GW1NR9 with MuseLab PMOD-RGBLCD adapter,
 // TM1638 module, INMP441 microphone and PCM5102 DAC.
 //
-// board_specific.cst is the constraint file of the board manufacturer.
-// It names the 32 header pins pad_io[1..32], and this module decides
-// which of them carry the LCD, TM1638, microphone and DAC signals.
+// The board has no LCD connector, so the LCD, TM1638, microphone
+// and DAC are connected to the J5 and J6 headers with jumper wires.
 // The FPGA pins are the same as on Tang Nano 9K with a 480x272 LCD,
 // and this module follows boards/tang_nano_9k_lcd_480_272_tm1638.
-//
-// pad_io[1..16] are the pins 1..16 of header J5,
-// pad_io[17..32] are the pins 1..16 of header J6.
+// The _800_480 configurations define USE_LCD_800_480 and include this
+// module for an 800x480 LCD, as tang_nano_9k_lcd_800_480_tm1638 does.
 
 //----------------------------------------------------------------------------
 
@@ -40,10 +38,19 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 6,
               w_digit       = 0,
-              w_gpio        = 2,  // pad_io [18:17], J6.1 and J6.2
+              w_gpio        = 2,
+
+              `ifdef USE_LCD_800_480
+
+              screen_width  = 800,
+              screen_height = 480,
+
+              `else
 
               screen_width  = 480,
               screen_height = 272,
+
+              `endif
 
               w_red         = 5,
               w_green       = 6,
@@ -53,87 +60,43 @@ module board_specific_top
               w_y           = $clog2 ( screen_height )
 )
 (
-    input                        pad_clk_27Mhz,
+    input                        CLK,
 
-    input  [             2:1]    pad_user_buttons_n,
-    output [             6:1]    pad_leds_n,
+    input  [w_key        - 1:0]  KEY,
 
-    output                       pad_ser_tx,
-    input                        pad_ser_rx,
+    output [w_led        - 1:0]  LED,
 
-    inout  [            32:1]    pad_io,
+    input                        UART_RX,
+    output                       UART_TX,
 
-    // The SPI flash pins are not used by the labs
+    output                       LCD_DE,
+    output                       LCD_VS,
+    output                       LCD_HS,
+    output                       LCD_CK,
 
-    inout                        pad_flash_clk,
-    inout                        pad_flash_csb,
-    inout                        pad_flash_mosi,
-    inout                        pad_flash_miso
+    output [7:7 + 1 - w_red   ]  LCD_R,
+    output [7:7 + 1 - w_green ]  LCD_G,
+    output [7:7 + 1 - w_blue  ]  LCD_B,
+
+    inout                        TM1638_DIO,
+    output                       TM1638_CLK,
+    output                       TM1638_STB,
+
+    output                       MIC_LR,
+    output                       MIC_WS,
+    output                       MIC_SCK,
+    input                        MIC_SD,
+
+    output                       DAC_BCK,
+    output                       DAC_DIN,
+    output                       DAC_LCK,
+
+    // The two header pins left after the peripherals above
+
+    inout  [w_gpio       - 1:0]  GPIO
 );
 
-    wire clk = pad_clk_27Mhz;
-
-    //------------------------------------------------------------------------
-    // Buttons and LEDs, in the order of Tang Nano 9K:
-    // KEY [0] is FPGA pin 4 and LED [0] is FPGA pin 10.
-
-    wire [w_key - 1:0] KEY = { pad_user_buttons_n [1], pad_user_buttons_n [2] };
-    wire [w_led - 1:0] LED;
-
-    assign pad_leds_n = { LED [0], LED [1], LED [2], LED [3], LED [4], LED [5] };
-
-    wire UART_RX = pad_ser_rx;
-    wire UART_TX;
-
-    assign pad_ser_tx = UART_TX;
-
-    //------------------------------------------------------------------------
-    // Header pins. See README.md for the wiring.
-
-    wire                         LCD_DE;
-    wire                         LCD_VS;
-    wire                         LCD_HS;
-    wire                         LCD_CK;
-
-    wire [7:7 + 1 - w_red   ]    LCD_R;
-    wire [7:7 + 1 - w_green ]    LCD_G;
-    wire [7:7 + 1 - w_blue  ]    LCD_B;
-
-    // pad_io [1..3] are J5.1..3, TM1638 DIO, CLK and STB,
-    // connected in tm1638_board_controller instance below
-
-    // pad_io [4..6] are J5.4..6, PCM5102 BCK, DIN and LCK,
-    // connected in i2s_audio_out instance below
-
-    assign pad_io [ 7] = LCD_DE;      // J5.7   PMOD-RGBLCD J2.13
-    assign pad_io [ 8] = LCD_VS;      // J5.8   J2.12
-    assign pad_io [ 9] = LCD_CK;      // J5.9   J2.10
-
-    // pad_io [10..13] are J5.10..13, INMP441 SCK, WS, L/R and SD,
-    // connected in inmp441_mic_i2s_receiver instance below
-
-    assign pad_io [14] = LCD_HS;      // J5.14  J2.11
-    assign pad_io [15] = LCD_B [7];   // J5.15  J2.18  B4
-    assign pad_io [16] = LCD_B [6];   // J5.16  J2.19  B3
-
-    // pad_io [17..18] are J6.1..2, the GPIO of the labs
-
-    assign pad_io [19] = LCD_R [3];   // J6.3   J2.30  R0
-    assign pad_io [20] = LCD_R [4];   // J6.4   J2.29  R1
-    assign pad_io [21] = LCD_R [5];   // J6.5   J2.28  R2
-    assign pad_io [22] = LCD_R [6];   // J6.6   J2.27  R3
-    assign pad_io [23] = LCD_R [7];   // J6.7   J2.24  R4
-
-    assign pad_io [24] = LCD_G [2];   // J6.8   J2.1   G0
-    assign pad_io [25] = LCD_G [3];   // J6.9   J2.2   G1
-    assign pad_io [26] = LCD_G [4];   // J6.10  J2.3   G2
-    assign pad_io [27] = LCD_G [5];   // J6.11  J2.4   G3
-    assign pad_io [28] = LCD_G [6];   // J6.12  J2.7   G4
-    assign pad_io [29] = LCD_G [7];   // J6.13  J2.9   G5
-
-    assign pad_io [30] = LCD_B [3];   // J6.14  J2.22  B0
-    assign pad_io [31] = LCD_B [4];   // J6.15  J2.21  B1
-    assign pad_io [32] = LCD_B [5];   // J6.16  J2.20  B2
+    wire clk = CLK;
 
     //------------------------------------------------------------------------
 
@@ -303,7 +266,7 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( pad_io [18:17] )
+        .gpio          ( GPIO          )
     );
 
     //------------------------------------------------------------------------
@@ -326,9 +289,9 @@ module board_specific_top
             .digit    ( tm_digit       ),
             .ledr     ( tm_led         ),
             .keys     ( tm_key         ),
-            .sio_data ( pad_io [ 1]    ),  // J5.1
-            .sio_clk  ( pad_io [ 2]    ),  // J5.2
-            .sio_stb  ( pad_io [ 3]    )   // J5.3
+            .sio_data ( TM1638_DIO     ),
+            .sio_clk  ( TM1638_CLK     ),
+            .sio_stb  ( TM1638_STB     )
         );
 
     `endif
@@ -337,13 +300,34 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        Gowin_rPLL i_Gowin_rPLL
-        (
-            .clkout  ( LCD_CK ),  //  9 MHz
-            .clkin   ( clk    )   // 27 MHz
-        );
+        `ifdef USE_LCD_800_480
 
-        lcd_480_272 i_lcd
+            // gowin_rpll.v of the 800x480 configuration:
+            // 27 MHz * 24 / 5 = 129.6 MHz, divided by 4 = 32.4 MHz
+
+            Gowin_rPLL i_Gowin_rPLL
+            (
+                .clkout  (        ),  // 129.6 MHz
+                .clkoutd ( LCD_CK ),  //  32.4 MHz
+                .clkin   ( clk    )   //  27   MHz
+            );
+
+        `else
+
+            Gowin_rPLL i_Gowin_rPLL
+            (
+                .clkout  ( LCD_CK ),  //  9 MHz
+                .clkin   ( clk    )   // 27 MHz
+            );
+
+        `endif
+
+        `ifdef USE_LCD_800_480
+        lcd_800_480
+        `else
+        lcd_480_272
+        `endif
+        i_lcd
         (
             .PixelClk  (   LCD_CK         ),
             .nRST      ( ~ rst            ),
@@ -370,10 +354,10 @@ module board_specific_top
         (
             .clk      ( clk            ),
             .rst      ( rst            ),
-            .lr       ( pad_io [12]    ),  // J5.12
-            .ws       ( pad_io [11]    ),  // J5.11
-            .sck      ( pad_io [10]    ),  // J5.10
-            .sd       ( pad_io [13]    ),  // J5.13
+            .lr       ( MIC_LR         ),
+            .ws       ( MIC_WS         ),
+            .sck      ( MIC_SCK        ),
+            .sd       ( MIC_SD         ),
             .value    ( mic            )
         );
 
@@ -393,9 +377,9 @@ module board_specific_top
             .reset    ( rst            ),
             .data_in  ( sound          ),
             .mclk     (                ),  // SCK should be connected to 0 in PCM 5102
-            .bclk     ( pad_io [ 4]    ),  // J5.4  BCK
-            .sdata    ( pad_io [ 5]    ),  // J5.5  DIN
-            .lrclk    ( pad_io [ 6]    )   // J5.6  LCK
+            .bclk     ( DAC_BCK        ),  // BCK
+            .sdata    ( DAC_DIN        ),  // DIN
+            .lrclk    ( DAC_LCK        )   // LCK
         );
 
     `endif
