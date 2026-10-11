@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1600" viewBox="0 0 1600 1600" role="img">
+<title>BRS-100 · optional microphone and sound DAC</title><desc>These connections fit alongside the LCD and TM1638. Use the same ground and power distribution strip.</desc>
+<style>text{font-family:DejaVu Sans,sans-serif;fill:#17324d}.mono{font-family:DejaVu Sans Mono,monospace}</style>
+<rect width="1600" height="1600" fill="#f2f6fa"/>
+<text x="40" y="56" font-size="30" font-weight="700" text-anchor="start" class="" style="fill:#17324d">BRS-100 · optional microphone and sound DAC</text>
+<text x="40" y="91" font-size="17" font-weight="400" text-anchor="start" class="" style="fill:#17324d">These connections fit alongside the LCD and TM1638. Use the same ground and power distribution strip.</text>
+<rect x="35" y="120" width="1530" height="365" rx="10" fill="white" stroke="#ccdae6"/>
+<text x="60" y="160" font-size="25" font-weight="700" text-anchor="start" class="" style="fill:#17324d">INMP441 I²S microphone · 3.3 V</text>
+<text x="60" y="221" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.8    GPIO 24  FPGA 70</text>
+<path d="M410 215 L560 215" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="215" r="5" fill="#17844e"/>
+<circle cx="560" cy="215" r="5" fill="#17844e"/>
+<text x="585" y="221" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">INMP441 WS</text>
+<text x="60" y="263" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.9    GPIO 25  FPGA 69</text>
+<path d="M410 257 L560 257" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="257" r="5" fill="#17844e"/>
+<circle cx="560" cy="257" r="5" fill="#17844e"/>
+<text x="585" y="263" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">INMP441 SCK</text>
+<text x="60" y="305" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.10   GPIO 26  FPGA 68</text>
+<path d="M410 299 L560 299" fill="none" stroke="#17844e" stroke-width="3"/>
+<circle cx="410" cy="299" r="5" fill="#17844e"/>
+<circle cx="560" cy="299" r="5" fill="#17844e"/>
+<text x="585" y="305" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#17844e">INMP441 SD</text>
+<text x="60" y="376" font-size="20" font-weight="400" text-anchor="start" class="" style="fill:#17324d">J6.18 (+3.3 V) → INMP441 VDD/VCC</text>
+<text x="60" y="413" font-size="20" font-weight="400" text-anchor="start" class="" style="fill:#17324d">GND strip → INMP441 GND and L/R (left channel)</text>
+<text x="60" y="454" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">SD travels from the microphone to the FPGA. WS and SCK travel from FPGA to microphone.</text>
+<rect x="35" y="510" width="1530" height="460" rx="10" fill="white" stroke="#ccdae6"/>
+<text x="60" y="555" font-size="25" font-weight="700" text-anchor="start" class="" style="fill:#17324d">PCM5102 / PCM5102A I²S DAC · 3.3 V logic</text>
+<text x="60" y="616" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.11   GPIO 27  FPGA 57</text>
+<path d="M410 610 L560 610" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="610" r="5" fill="#2469c4"/>
+<circle cx="560" cy="610" r="5" fill="#2469c4"/>
+<text x="585" y="616" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">PCM5102 BCK</text>
+<text x="60" y="658" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.12   GPIO 28  FPGA 56</text>
+<path d="M410 652 L560 652" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="652" r="5" fill="#2469c4"/>
+<circle cx="560" cy="652" r="5" fill="#2469c4"/>
+<text x="585" y="658" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">PCM5102 DIN</text>
+<text x="60" y="700" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.13   GPIO 29  FPGA 55</text>
+<path d="M410 694 L560 694" fill="none" stroke="#2469c4" stroke-width="3"/>
+<circle cx="410" cy="694" r="5" fill="#2469c4"/>
+<circle cx="560" cy="694" r="5" fill="#2469c4"/>
+<text x="585" y="700" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#2469c4">PCM5102 LCK/LRCK</text>
+<text x="60" y="778" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">GND strip → DAC GND, SCK, FLT, DEMP and FMT. SCK is not BCK: tie SCK low to use the internal PLL.</text>
+<text x="60" y="813" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">J6.18 (+3.3 V) → XSMT (unmute), unless your module already straps it high.</text>
+<text x="60" y="848" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Only a module with a documented 5 V VIN and onboard regulator: J5.18 (+5 V) → VIN.</text>
+<text x="60" y="883" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">For a 3.3 V-only module, use J6.18 (+3.3 V). Never infer the voltage from a generic VCC label.</text>
+<text x="60" y="918" font-size="18" font-weight="400" text-anchor="start" class="" style="fill:#17324d">DAC L/R analog outputs → powered speakers or amplifier. They are line-level outputs.</text>
+<rect x="35" y="995" width="1530" height="215" rx="10" fill="white" stroke="#ccdae6"/>
+<text x="60" y="1036" font-size="24" font-weight="700" text-anchor="start" class="" style="fill:#17324d">Still available to the lab</text>
+<text x="60" y="1086" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.14   GPIO 30  FPGA 54</text>
+<path d="M410 1080 L560 1080" fill="none" stroke="#a66c05" stroke-width="3"/>
+<circle cx="410" cy="1080" r="5" fill="#a66c05"/>
+<circle cx="560" cy="1080" r="5" fill="#a66c05"/>
+<text x="585" y="1086" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#a66c05">GPIO[0] · 3.3 V user I/O</text>
+<text x="60" y="1126" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.15   GPIO 31  FPGA 53</text>
+<path d="M410 1120 L560 1120" fill="none" stroke="#a66c05" stroke-width="3"/>
+<circle cx="410" cy="1120" r="5" fill="#a66c05"/>
+<circle cx="560" cy="1120" r="5" fill="#a66c05"/>
+<text x="585" y="1126" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#a66c05">GPIO[1] · 3.3 V user I/O</text>
+<text x="60" y="1166" font-size="17" font-weight="400" text-anchor="start" class="mono" style="fill:#17324d">J6.16   GPIO 32  FPGA 51</text>
+<path d="M410 1160 L560 1160" fill="none" stroke="#a66c05" stroke-width="3"/>
+<circle cx="410" cy="1160" r="5" fill="#a66c05"/>
+<circle cx="560" cy="1160" r="5" fill="#a66c05"/>
+<text x="585" y="1166" font-size="18" font-weight="700" text-anchor="start" class="" style="fill:#a66c05">GPIO[2] · 3.3 V user I/O</text>
+<rect x="35" y="1235" width="1530" height="320" rx="10" fill="#fff9e9" stroke="#e7d3a0"/>
+<text x="60" y="1280" font-size="24" font-weight="700" text-anchor="start" class="" style="fill:#17324d">Connection order and checks</text>
+<text x="60" y="1325" font-size="19" font-weight="400" text-anchor="start" class="" style="fill:#17324d">1. Remove board power before adding jumpers. Find J6 by the main wiring.svg component-side drawing.</text>
+<text x="60" y="1360" font-size="19" font-weight="400" text-anchor="start" class="" style="fill:#17324d">2. Connect common ground and the module&#x27;s documented supply. Check L/R, SCK and the DAC format straps.</text>
+<text x="60" y="1395" font-size="19" font-weight="400" text-anchor="start" class="" style="fill:#17324d">3. Add the six I²S signal wires shown above. No GPIO is shared with the LCD or TM1638.</text>
+<text x="60" y="1430" font-size="19" font-weight="400" text-anchor="start" class="" style="fill:#17324d">4. Reconnect board USB-C. Start with color stripes, then a microphone or music lab.</text>
+<text x="60" y="1465" font-size="19" font-weight="400" text-anchor="start" class="" style="fill:#17324d">5. Verify I²S clocks and signal levels on the assembled hardware. Jumper wiring has not been bench-tested.</text>
+<text x="60" y="1500" font-size="19" font-weight="400" text-anchor="start" class="" style="fill:#17324d">An absent microphone reads zero through the FPGA input pulldown. Audio modules are optional.</text>
+<text x="40" y="1585" font-size="16" font-weight="400" text-anchor="start" class="" style="fill:#17324d">Configuration: brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_codex · See README.md for sources, setup and validation scope.</text>
+</svg>

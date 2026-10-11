@@ -16,6 +16,11 @@ below. This wiring has **not been tested on a physical board**. The exact
 manufacturer part needs a Gowin device database newer/different than the
 installed Education package used for these checks.
 
+This `_alt` configuration preserves the original peripheral-named CST.
+The [manufacturer-GPIO version](../brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex/README.md)
+uses the same jumpers and maps peripheral functions in `board_specific_top.sv`.
+See the [HTML discussion](../brisbane_brs_100_pin_mapping.html) for the differences.
+
 ## What is connected
 
 | Function | Support |

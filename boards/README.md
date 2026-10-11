@@ -31,7 +31,7 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 | Altera | unknown | emooc_cc | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | none |
 | Altera | unknown | rzrd | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA + LCD |
 | Altera | unknown | saylinx | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
-| Gowin | BrisbaneSilicon | [brisbane_brs_100](brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex_alt/README.md) | GW1NR-9C | Gowin EDA with GW1NR-LV9QN88PC7/I6 support | always | PMOD-RGBLCD (external) |
+| Gowin | BrisbaneSilicon | [brisbane_brs_100](brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex/README.md) | GW1NR-9C | Gowin EDA with GW1NR-LV9QN88PC7/I6 support | always | PMOD-RGBLCD (external) |
 | Gowin | Marsohod | marsohod3gw2 | GW1NR-9 | Gowin EDA, any version † | never | HDMI/DVI |
 | Gowin | Sipeed | tang_mega_138k | GW5AST | Gowin EDA, 1.9.9 and newer † | always | HDMI/DVI + LCD |
 | Gowin | Sipeed | tang_mega_138k_pro | GW5AST-138 | Gowin EDA, any version † | always | HDMI/DVI + LCD |

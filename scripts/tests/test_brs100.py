@@ -5,6 +5,7 @@ Requires Icarus Verilog. Temporary simulation files stay outside the repository.
 """
 
 import csv
+import hashlib
 from pathlib import Path
 import re
 import shlex
@@ -14,8 +15,8 @@ import unittest
 
 
 REPO = Path(__file__).resolve().parents[2]
-BOARDS = sorted((REPO / "boards").glob("brisbane_brs_100_tm1638_pmod_rgblcd_*_by_codex_alt"))
-BOARD = BOARDS[0]
+BOARDS = sorted((REPO / "boards").glob("brisbane_brs_100_tm1638_pmod_rgblcd_*_by_codex*"))
+GPIO_BOARDS = [board for board in BOARDS if not board.name.endswith("_alt")]
 
 
 def run(*args):
@@ -58,6 +59,7 @@ fpga_board="$1"
                 self.check_pin_map(board)
 
     def check_pin_map(self, BOARD):
+        vendor_ports = BOARD in GPIO_BOARDS
         rows = list(csv.DictReader((BOARD / "wiring.csv").read_text().splitlines()))
         # Manufacturer header pinout, independent of our generated constraints.
         expected_pins = [25, 26, 27, 28, 29, 30, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
@@ -67,18 +69,49 @@ fpga_board="$1"
         locations = re.findall(r'IO_LOC\s+"([^"]+)"\s+(\d+);', cst)
         self.assertEqual(len(locations), len(set(pin for _, pin in locations)))
         locations = dict(locations)
-        self.assertEqual(len(locations), 44)  # 32 header + CLK + 2 KEY + 6 LED + UART + CS
+        # Manufacturer version retains all four flash pins, not just CS.
+        self.assertEqual(len(locations), 47 if vendor_ports else 44)
         for n, (row, pin) in enumerate(zip(rows, expected_pins), 1):
             self.assertEqual(int(row["gpio"]), n)
             self.assertEqual(int(row["fpga_pin"]), pin)
             self.assertEqual(row["header"], f'J{5 if n <= 16 else 6}.{n if n <= 16 else n - 16}')
-            self.assertEqual(locations[row["signal"]], str(pin))
+            port = f"pad_io[{n}]" if vendor_ports else row["signal"]
+            self.assertEqual(locations[port], str(pin))
         adapter = [row["destination"] for row in rows if row["peripheral"] == "LCD"]
         self.assertEqual(len(set(adapter)), 20)
         self.assertEqual(set(adapter), {f"J2.{i}" for i in
                          [1, 2, 3, 4, 7, 9, 10, 11, 12, 13, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30]})
-        for port in [f"KEY[{i}]" for i in range(2)] + [f"LED[{i}]" for i in range(6)]:
-            self.assertRegex(cst, rf'IO_PORT "{re.escape(port)}" IO_TYPE=LVCMOS18')
+        ports = ([f"pad_user_buttons_n[{i}]" for i in range(1, 3)] +
+                 [f"pad_leds_n[{i}]" for i in range(1, 7)]) if vendor_ports else (
+                 [f"KEY[{i}]" for i in range(2)] + [f"LED[{i}]" for i in range(6)])
+        for port in ports:
+            self.assertRegex(cst, rf'IO_PORT "{re.escape(port)}"\s+IO_TYPE=LVCMOS18')
+
+    def test_manufacturer_constraints(self):
+        self.assertEqual(len(GPIO_BOARDS), 2)
+        for board in GPIO_BOARDS:
+            original = (board / "manufacturer_location.cst.txt").read_bytes()
+            cst = (board / "board_specific.cst").read_text()
+            source = original.decode()
+            # Pinned upstream bytes; no download is needed to check provenance.
+            self.assertEqual(hashlib.sha256(original).hexdigest(),
+                             "1f781ae9f432ba9b620e8f5fa080b2e28c9130fd5091a0fa30a9748595a40ab7")
+            self.assertEqual(re.findall(r'^IO_LOC.*', source, re.M),
+                             re.findall(r'^IO_LOC.*', cst, re.M))
+            old = dict(re.findall(r'IO_PORT "([^"]+)"\s+(.*);', source))
+            new = dict(re.findall(r'IO_PORT "([^"]+)"\s+(.*);', cst))
+            self.assertEqual(old.keys(), new.keys())
+            for port, value in old.items():
+                if port.startswith(("pad_user_buttons_n[", "pad_leds_n[")):
+                    value = "IO_TYPE=LVCMOS18 " + value
+                if port == "pad_io[21]":
+                    value = value.replace("PULL_MODE=DOWN", "PULL_MODE=UP")
+                if port in ("pad_flash_miso", "pad_io[26]", "pad_io[30]", "pad_io[31]", "pad_io[32]"):
+                    value = value.replace("DRIVE=8", "")
+                self.assertEqual(value.split(), new[port].split(), port)
+            sdc = (board / "board_specific.sdc").read_text()
+            self.assertEqual(set(map(int, re.findall(r'pad_io\[(\d+)\]', sdc))),
+                             set(range(1, 21)) - {17})
 
     def test_lcd_frames(self):
         with tempfile.TemporaryDirectory(prefix="brs100-lcd-") as tmp:
@@ -102,6 +135,8 @@ fpga_board="$1"
                   "INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE"]
         cases = [macros, [], macros + ["FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE"]]
         cases += [[macro] for macro in macros]
+        if BOARD in GPIO_BOARDS:
+            cases.append(macros + ["BRS100_PIN_MAPPING_TEST"])
         peripheral = REPO / "peripherals"
         with tempfile.TemporaryDirectory(prefix="brs100-wrapper-") as tmp:
             tmp = Path(tmp)
@@ -118,7 +153,10 @@ fpga_board="$1"
                     run("iverilog", "-g2012", "-s", "tb", "-I", tmp, "-I", BOARD,
                         "-I", REPO / "labs/common", "-I", peripheral,
                         "-o", tmp / "board.vvp", tmp / "tb.sv", *sources)
-                    self.assertIn("PASS wrapper", run("vvp", tmp / "board.vvp"))
+                    output = run("vvp", tmp / "board.vvp")
+                    self.assertIn("PASS wrapper", output)
+                    if "BRS100_PIN_MAPPING_TEST" in case:
+                        self.assertIn("PASS GPIO mapping", output)
 
 
 if __name__ == "__main__":
