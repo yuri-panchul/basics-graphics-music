@@ -14,7 +14,7 @@ import unittest
 
 
 REPO = Path(__file__).resolve().parents[2]
-BOARDS = sorted((REPO / "boards").glob("brisbane_brs_100_tm1638_pmod_rgblcd_*_by_codex"))
+BOARDS = sorted((REPO / "boards").glob("brisbane_brs_100_tm1638_pmod_rgblcd_*_by_codex_alt"))
 BOARD = BOARDS[0]
 
 

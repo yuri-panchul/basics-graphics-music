@@ -1,13 +1,13 @@
 # BRS-100-GW1NR9: 480×272 RGB LCD and TM1638
 
-Board selection: **`brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex`**.
+Board selection: **`brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex_alt`**.
 
 This configuration connects a BrisbaneSilicon BRS-100 to a **wuxx/Muse Lab
 PMOD-RGBLCD v1.3 adapter**, a compatible **480×272, 3.3 V parallel RGB panel**,
 and an eight-key/eight-digit TM1638 module. It also has enough pins for an
 INMP441 microphone and PCM5102/PCM5102A sound DAC at the same time.
 
-The [800×480 configuration](../brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_codex/README.md)
+The [800×480 configuration](../brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_codex_alt/README.md)
 uses the same jumpers. Choose the configuration matching your panel.
 HDMI and additional configurations without TM1638 are outside this first pair.
 
@@ -191,7 +191,7 @@ interfaces run independently, as they do in the Tang Nano configuration.
    does not silently substitute the Tang Nano's C6/I5 part.
 2. In a lab such as `labs/2_graphics/2_3_color_stripes`, run
    `./06_choose_another_fpga_board.bash`. Select `brisbane_brs_100`, then
-   `brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex`. The configuration's
+   `brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex_alt`. The configuration's
    name determines the resolution; do not use a Tang Nano LCD macro to change it.
 3. Run `./03_synthesize_for_fpga.bash`. The normal BGM command **builds and then
    programs** the board. Start with color stripes; check all edges of the panel,
