@@ -158,3 +158,83 @@ against.](https://www.reddit.com/r/commandline/comments/g1vsxk/comment/fniifmk)
 
 set -Eeuxo pipefail
 ```
+
+## Simulating with Verilator
+
+Run the existing launcher **from the exercise directory**:
+
+```bash
+cd labs/1_basics/1_06_binary_counter
+SIMULATOR=verilator ./02_simulate_rtl.bash
+```
+
+This mode skips FPGA board selection and vendor tool setup. It builds the
+exercise's `tb` with `--binary --timing --trace --assert`, executes it, then
+opens `run/dump.vcd` in GTKWave with the exercise's `gtkwave.tcl`, if present.
+No C++ testbench is required. A generated bound module enables tracing without
+editing the exercise's `tb.sv` or defining the Icarus-specific macro.
+
+Requirements: Verilator 5.x, GNU Make, and a compiler supporting coroutines
+(GCC 10 or newer). Verilator 4.x is rejected because these testbenches use
+SystemVerilog delays. On Ubuntu 20.04, the default G++ 9 is insufficient;
+install `g++-10`. The runner selects `g++-10` when the default G++ is older.
+
+Environment settings:
+
+| Variable | Meaning |
+| --- | --- |
+| `SIMULATOR=verilator` | Select the new runner. Unset or `auto` retains the original Questa/Icarus flow. |
+| `SIM_HEADLESS=1` | Build, run and save VCD without opening a GUI. |
+| `VERILATOR=/absolute/path/to/verilator` | Override the executable. Otherwise use `tools/verilator-5.030/bin/verilator` if installed, then PATH. |
+| `VERILATOR_CXX=g++-10` | Override the C++ compiler used to build the simulation. |
+| `VERILATOR_JOBS=2` | Positive number of parallel compilation jobs (default 2). |
+| `GTKWAVE=/path/to/gtkwave` | Override the waveform viewer executable. |
+
+To use Verilator for subsequent launches in the same terminal:
+
+```bash
+export SIMULATOR=verilator
+```
+
+Build and runtime logs are saved separately as `run/verilator_build.log` and
+`run/verilator_run.log`. Compilation errors, failed assertions, nonzero simulator
+exit status, and standalone `ERROR`/`FAIL` messages produce a nonzero launcher
+status. Warnings remain visible but do not by themselves stop compilation.
+The testbench must eventually finish or run out of scheduled events.
+
+Only the selected exercise's `.sv`/`.v` files are compiled directly; module
+libraries are searched in the exercise, its `cpu` directory, `labs/common`,
+and `peripherals`. Shared `.sv`/`.v` files are also passed as explicit library
+files because some contain multiple modules with names different from the
+filename. `program.s`, if present, is assembled using the bundled
+RARS before simulation. CPU exercises requiring other software images still
+need their software build step first. Exercises without `tb.sv` (including
+many hackathon tasks) require a testbench. Verilator uses mostly two-state
+simulation: tests relying on X/Z behavior can differ from Icarus/Questa.
+Graphics and sound are signals in the waveform, not a live display or audio player.
+
+Runner regression tests (no Verilator or FPGA tools required):
+
+```bash
+python3 -B scripts/tests/test_verilator_runner.py
+```
+
+A local source installation can coexist with an older system Verilator. From
+the repository root, after installing the build dependencies listed in the
+[Verilator installation guide](https://verilator.org/guide/latest/install.html):
+
+```bash
+repo_dir=$PWD
+build_dir=$(mktemp -d)
+git clone --depth 1 --branch v5.030 https://github.com/verilator/verilator.git "$build_dir"
+cd "$build_dir"
+autoconf
+CXX=g++-10 ./configure --prefix="$repo_dir/tools/verilator-5.030"
+make -j2
+make install
+```
+
+Use your supported compiler in place of `g++-10` if needed. Configure Verilator
+with that compiler too: configuration detects the coroutine flags later used
+for compiling simulations. The local installation is ignored by Git and does
+not change `/usr/bin/verilator`.
