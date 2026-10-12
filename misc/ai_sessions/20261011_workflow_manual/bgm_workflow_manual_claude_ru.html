@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Поддержка разработки студентами своих вариантов упражнений BGM в рамках Школы Синтеза Цифровых Схем</title>
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: #1d2128;
+    font: 17px/1.6 "PT Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  article { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1 { font-size: 2em; line-height: 1.2; margin: 0 0 12px; text-wrap: balance; }
+  h2 { font-size: 1.5em; margin: 2.2em 0 0.6em; padding-top: 0.6em;
+       border-top: 1px solid #d9dee5; text-wrap: balance; }
+  h3 { font-size: 1.2em; margin: 1.6em 0 0.5em; }
+  h4 { font-size: 1.05em; margin: 1.3em 0 0.4em; }
+  code { font-family: "JetBrains Mono", Consolas, Menlo, monospace; font-size: 0.88em;
+         background: #eef1f5; padding: 1px 4px; border-radius: 3px; }
+  pre { background: #1e2329; color: #e6e9ee; padding: 12px 14px; border-radius: 6px;
+        overflow-x: auto; line-height: 1.45; }
+  pre code { background: none; padding: 0; color: inherit; font-size: 0.86em; }
+  img { max-width: 100%; height: auto; border: 1px solid #d9dee5; }
+  p.figure { margin: 1.2em 0 1.6em; }
+  p.figure em { color: #4a5260; font-size: 0.92em; }
+  blockquote { margin: 1.2em 0; padding: 10px 16px; background: #f3f6fa;
+               border-left: 4px solid #3d6fb6; }
+  blockquote p { margin: 0.3em 0; }
+  table { border-collapse: collapse; margin: 1em 0; font-size: 0.95em; }
+  th, td { border: 1px solid #d0d6de; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #eef1f5; }
+  .subtitle { color: #4a5260; margin: 0.2em 0; }
+  a { color: #2b5ea7; }
+</style>
+</head>
+<body>
+<article>
+<!-- Для GitHub Wiki и WordPress копируйте содержимое между <article> и </article>. -->
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/image_at_the_beginning_synthesis_school_first_lesson_2023.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/image_at_the_beginning_synthesis_school_first_lesson_2023.jpg" alt="Первое занятие Школы синтеза цифровых схем, 2023 год."></a></p>
+<h1>Поддержка разработки студентами своих вариантов упражнений BGM в рамках Школы Синтеза Цифровых Схем</h1>
+<p class="subtitle"><strong>Использование Git, GitHub, VSCode с терминалами и маршрутов синтеза для ПЛИС.</strong></p>
+<p class="subtitle"><strong>Покрывает маршруты: Xilinx Vivado, Altera Quartus, Gowin EDA и OSS CAD Suite.</strong></p>
+<p class="subtitle"><strong>Покрывает платформы: Windows 10 и 11, Linux и ARM macOS.</strong></p>
+<p>Версия от 11 октября 2026 года.</p>
+<h2 id="toc">Содержание</h2>
+<ul>
+<li><a href="#s0">0. Введение</a></li>
+<li><a href="#s1">1. Создание учётной записи на GitHub</a></li>
+<li><a href="#s2">2. Форк репозитория Школы синтеза</a></li>
+<li><a href="#s3">3. Установка Git под Windows, Linux и macOS</a></li>
+<li><a href="#s4">4. Клонирование своего форка</a></li>
+<li><a href="#s5">5. Открытие репозитория в VSCode</a></li>
+<li><a href="#s6">6. Терминал в VSCode, особенно под Windows: выбор типа терминала и переход в каталог упражнения</a></li>
+<li><a href="#s7">7. Выбор платы</a></li>
+<li><a href="#s8">8. Синтез для платы Saylinx с ПЛИС Altera</a></li>
+<li><a href="#s9">9. Изменение примера</a></li>
+<li><a href="#s10">10. Отправка изменений в свой форк</a></li>
+<li><a href="#s11">11. Хранение учётных данных Git под Linux</a></li>
+<li><a href="#s12">12. Pull request в исходный репозиторий</a></li>
+<li><a href="#s13">13. Синхронизация своего форка с исходным репозиторием</a></li>
+<li><a href="#s14">14. Схема после элаборации в Quartus</a></li>
+<li><a href="#s15">15. Синтез для ALINX AX7035B с ПЛИС Xilinx</a></li>
+<li><a href="#s16">16. Просмотр схем в Xilinx Vivado</a></li>
+<li><a href="#s17">17. Просмотр размещённого проекта в Xilinx Vivado</a></li>
+<li><a href="#s18">18. Синтез для Tang Nano 9K с LCD на ПЛИС Gowin</a></li>
+<li><a href="#s19">19. Схема и отчёты в Gowin EDA</a></li>
+<li><a href="#s20">20. Клонирование форка на Apple Mac с процессором ARM</a></li>
+<li><a href="#s21">21. Открытие репозитория в VSCode на Apple Mac с процессором ARM</a></li>
+<li><a href="#s22">22. Синтез для Tang Nano 9K с HDMI в Gowin EDA под macOS</a></li>
+<li><a href="#s23">23. Синтез для Tang Nano 9K в OSS CAD Suite</a></li>
+<li><a href="#s24">24. Синтез для iCEBreaker с ПЛИС Lattice в OSS CAD Suite</a></li>
+<li><a href="#s25">25. Просмотр размещённого проекта в nextpnr</a></li>
+<li><a href="#sa">Приложение А. Минималистичная шпаргалка по Git</a></li>
+<li><a href="#sb">Приложение Б. Как скрипты BGM находят САПР ПЛИС</a></li>
+</ul>
+<h2 id="s0">0. Введение</h2>
+<p>Мы решили написать эту инструкцию после того, как преподаватель МЭИ Михаил Графов высказал пожелание, чтобы студенты могли редактировать дома код своих вариантов упражнений из репозитория BGM (Basic-Graphics-Music) и чтобы их редактирование не сбрасывалось при обновлении репозитория. Кроме этого, для развития Школы было бы полезно, чтобы некоторые из разработанных студентами примеров можно было вносить в исходный репозиторий, с минимизацией риска, что эти изменения поломают код для других студентов.</p>
+<p>Собственно именно для всего этого были созданы системы управления версиями и их хостинги: GitHub, GitLab, GitVerse, GitFlic и другие. Репозиторий BGM использует GitHub, в котором есть такие удобные инструменты как fork и pull request, но не все студенты их знают.</p>
+<p>Кроме этого, мы решили показать использование маршрутов синтеза внутри терминалов VSCode, с удобными шорткатами, например использованием табуляции для автодополнения. А также небольшие различия в использовании платформ. Например под Linux и macOS можно открыть терминал правой кнопкой мыши (bash под Linux и zsh под macOS) прямо в нужной директории примера, а в Windows мы рекомендуем создать Git Bash терминал, после чего набрать команду <code>cd </code> и перетянуть туда директорию примера из проводника VSCode мышью.</p>
+<p>Альтернатива такого drag-and-drop в Windows — это открыть Windows PowerShell правой кнопкой мыши, после чего использовать не <code>./название_скрипта</code>, а <code>bash ./название_скрипта</code>, но если на компьютере установлен WSL (Windows Subsystem for Linux), это может не работать, выдавать ошибки про Windows CR-LF в коде скриптов.</p>
+<p>Мы также решили проиллюстрировать, как увидеть синтезированные из кода схемы в маршрутах синтеза от различных производителей, которые поддерживает инфраструктура BGM.</p>
+<p>Эта инструкция не содержит информации, как устанавливать маршруты синтеза, ее вы можете найти в другом мануале, <a href="https://panchul.com/bgm_svh_manual/20261006_draft/claude/manual_ru.html">Инструкции по установке ПО</a>. В Инструкции по установке ПО также есть сведения, как установить программы терминалов для связи с платой ПЛИС через UART (не путать с терминалами в VSCode), архитектурного симулятора RARS, а также пакета XPACK, варианта пакетов GCC и LLVM для компиляции программ для архитектуры RISC-V.</p>
+<p>При этом мы решили поместить в приложение к этой инструкции информацию о том, как скрипты BGM находят установки пакетов САПР ПЛИС: Xilinx Vivado, Altera Quartus, Gowin EDA и OSS CAD Suite.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/00_introduction/00_01.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/00_introduction/00_01.jpg" alt="Рис. 0.1. Занятие Школы синтеза в кластере Московского Энергетического Института." loading="lazy"></a><br><em>Рис. 0.1. Занятие Школы синтеза в кластере Московского Энергетического Института.</em></p>
+<h3 id="s0_1">Как устроена эта инструкция</h3>
+<p>Главы идут в том порядке, в котором студент проходит весь путь: от регистрации на GitHub до pull request в репозиторий Школы. В середине инструкции тот же цикл «выбрать плату — синтезировать — посмотреть схему» повторяется для каждой САПР.</p>
+<table>
+<thead><tr><th>Главы</th><th>Что делаем</th><th>Платформа на снимках</th></tr></thead>
+<tbody>
+<tr><td>1–2</td><td>Учётная запись GitHub и форк репозитория</td><td>браузер</td></tr>
+<tr><td>3–7</td><td>Git, клонирование, VSCode, терминал, выбор платы</td><td>Windows, местами Linux</td></tr>
+<tr><td>8–9</td><td>Синтез в Quartus для платы Saylinx, изменение примера</td><td>Windows</td></tr>
+<tr><td>10–13</td><td>Коммит, push, pull request, синхронизация форка</td><td>Windows</td></tr>
+<tr><td>14</td><td>Схема в Quartus RTL Viewer</td><td>Windows</td></tr>
+<tr><td>15–17</td><td>Vivado: синтез для ALINX AX7035B, схемы, размещённый проект</td><td>Windows, Linux</td></tr>
+<tr><td>18–19</td><td>Gowin EDA: Tang Nano 9K с LCD, схема и отчёты</td><td>Windows, Linux</td></tr>
+<tr><td>20–22</td><td>Клонирование, VSCode и Gowin EDA на Mac с процессором Apple</td><td>macOS</td></tr>
+<tr><td>23–25</td><td>OSS CAD Suite: Tang Nano 9K, iCEBreaker, nextpnr</td><td>macOS</td></tr>
+<tr><td>Прил. А</td><td>Шпаргалка по Git</td><td>—</td></tr>
+<tr><td>Прил. Б</td><td>Как скрипты BGM находят САПР ПЛИС</td><td>—</td></tr>
+</tbody></table>
+<p>На снимках используется учебная учётная запись <strong>Dmitri-Mendeleev</strong>. Везде, где в командах и адресах встречается это имя, подставляйте имя своей учётной записи GitHub.</p>
+<p>Каждое упражнение BGM — это каталог в <code>labs</code> с одинаковым набором скриптов. Все скрипты запускаются из каталога упражнения:</p>
+<table>
+<thead><tr><th>Скрипт</th><th>Что делает</th></tr></thead>
+<tbody>
+<tr><td><code>01_clean.bash</code></td><td>удаляет результаты предыдущих запусков (каталог <code>run</code> и <code>log.txt</code>)</td></tr>
+<tr><td><code>02_simulate_rtl.bash</code></td><td>моделирует упражнение (Icarus Verilog) и показывает временные диаграммы</td></tr>
+<tr><td><code>03_synthesize_for_fpga.bash</code></td><td>синтезирует проект для выбранной платы и в конце сам вызывает <code>04</code>, чтобы загрузить его в ПЛИС</td></tr>
+<tr><td><code>04_configure_fpga.bash</code></td><td>загружает уже синтезированный проект в ПЛИС</td></tr>
+<tr><td><code>05_run_gui_for_fpga_synthesis.bash</code></td><td>открывает проект в графической оболочке САПР</td></tr>
+<tr><td><code>06_choose_another_fpga_board.bash</code></td><td>выбирает другую плату</td></tr>
+<tr><td><code>07_synthesize_for_asic.bash</code> – <code>09_…</code></td><td>синтез в заказную микросхему (в этой инструкции не рассматривается)</td></tr>
+</tbody></table>
+<h2 id="s1">1. Создание учётной записи на GitHub</h2>
+<p>Откройте <a href="https://github.com">github.com</a>, введите адрес электронной почты и нажмите <strong>Sign up for GitHub</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_01.png" alt="Рис. 1.1. Главная страница GitHub." loading="lazy"></a><br><em>Рис. 1.1. Главная страница GitHub.</em></p>
+<p>Заполните форму: адрес почты, пароль и имя пользователя (username). Пароль должен содержать не меньше 15 символов или не меньше 8 символов, среди которых есть цифра и строчная буква. Имя пользователя войдёт в адрес вашего форка, поэтому выберите короткое и понятное. Нажмите <strong>Create account</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_02.png" alt="Рис. 1.2. Форма регистрации." loading="lazy"></a><br><em>Рис. 1.2. Форма регистрации.</em></p>
+<p>GitHub пришлёт на почту код из 8 цифр. Введите его и нажмите <strong>Continue</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_03.png" alt="Рис. 1.3. Подтверждение адреса почты." loading="lazy"></a><br><em>Рис. 1.3. Подтверждение адреса почты.</em></p>
+<p>После подтверждения войдите в созданную учётную запись.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_04.png" alt="Рис. 1.4. Учётная запись создана, осталось войти." loading="lazy"></a><br><em>Рис. 1.4. Учётная запись создана, осталось войти.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/01_creating_a_github_account/01_05.png" alt="Рис. 1.5. Страница нового пользователя: репозиториев пока нет." loading="lazy"></a><br><em>Рис. 1.5. Страница нового пользователя: репозиториев пока нет.</em></p>
+<h2 id="s2">2. Форк репозитория Школы синтеза</h2>
+<p><strong>Форк</strong> (fork) — это ваша собственная копия чужого репозитория на GitHub. В неё можно отправлять свои изменения, не имея прав на исходный репозиторий, а исходный репозиторий при этом не меняется. Обновления исходного репозитория потом можно забирать в свой форк (глава 13), а свои изменения — предлагать авторам через pull request (глава 12).</p>
+<p>Найдите организацию Школы синтеза на GitHub, например поиском «школа синтеза цифровых схем github». Её адрес — <a href="https://github.com/chipdesignschool">github.com/chipdesignschool</a>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_01.png" alt="Рис. 2.1. Поиск организации Школы синтеза." loading="lazy"></a><br><em>Рис. 2.1. Поиск организации Школы синтеза.</em></p>
+<p>Среди закреплённых репозиториев есть <strong>basics-graphics-music</strong>. Обратите внимание на подпись: он сам является форком репозитория <code>yuri-panchul/basics-graphics-music</code>. Студенты Школы делают форк именно <code>chipdesignschool/basics-graphics-music</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_02.png" alt="Рис. 2.2. Организация chipdesignschool." loading="lazy"></a><br><em>Рис. 2.2. Организация chipdesignschool.</em></p>
+<p>Откройте репозиторий и нажмите кнопку <strong>Fork</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_03.png" alt="Рис. 2.3. Кнопка Fork на странице репозитория." loading="lazy"></a><br><em>Рис. 2.3. Кнопка Fork на странице репозитория.</em></p>
+<p>В окне <strong>Create a new fork</strong> владельцем (Owner) будет ваша учётная запись. Имя репозитория оставьте прежним, флажок <strong>Copy the main branch only</strong> оставьте включённым и нажмите <strong>Create fork</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_04.png" alt="Рис. 2.4. Создание форка." loading="lazy"></a><br><em>Рис. 2.4. Создание форка.</em></p>
+<p>Через несколько секунд откроется ваш форк: <code>github.com/&lt;ваше_имя&gt;/basics-graphics-music</code>. Под названием написано, от какого репозитория он создан, а строка <em>This branch is up to date with …</em> показывает, что форк совпадает с исходным репозиторием. Здесь же находятся кнопки <strong>Contribute</strong> (глава 12) и <strong>Sync fork</strong> (глава 13).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_05.png" alt="Рис. 2.5. Только что созданный форк." loading="lazy"></a><br><em>Рис. 2.5. Только что созданный форк.</em></p>
+<p>Чтобы скачать форк на компьютер, нужен его адрес. Нажмите зелёную кнопку <strong>Code</strong>, на вкладке <strong>Local</strong> выберите <strong>HTTPS</strong> и скопируйте адрес кнопкой справа от него. Для учебной учётной записи это <code>https://github.com/Dmitri-Mendeleev/basics-graphics-music.git</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/02_forking_the_synthesis_school_repo/02_06.png" alt="Рис. 2.6. Адрес форка для клонирования." loading="lazy"></a><br><em>Рис. 2.6. Адрес форка для клонирования.</em></p>
+<h2 id="s3">3. Установка Git под Windows, Linux и macOS</h2>
+<p>Подробная установка Git описана в <a href="https://panchul.com/bgm_svh_manual/20261006_draft/claude/manual_ru.html#s4_1_8">Инструкции по установке ПО</a>. Здесь — коротко для каждой платформы.</p>
+<h3 id="s3_1">Windows</h3>
+<p>Найдите в поисковике «git for windows» и откройте страницу загрузки на <a href="https://git-scm.com/install/windows">git-scm.com</a>. Скачайте 64-битный установщик (<strong>Git for Windows/x64 Setup</strong>; для компьютеров с процессором ARM есть ARM64 Setup).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_01.png" alt="Рис. 3.1. Поиск Git для Windows." loading="lazy"></a><br><em>Рис. 3.1. Поиск Git для Windows.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_02.png" alt="Рис. 3.2. Страница загрузки Git для Windows." loading="lazy"></a><br><em>Рис. 3.2. Страница загрузки Git для Windows.</em></p>
+<p>В установщике можно оставить все варианты по умолчанию — так рекомендует Инструкция по установке ПО. На снимке на странице <em>Adjusting your PATH environment</em> выбран третий вариант, <em>Use Git and optional Unix tools from the Command Prompt</em>: он делает Unix-утилиты доступными также из <code>cmd</code> и PowerShell, но подменяет стандартные команды Windows <code>find</code> и <code>sort</code>. Скрипты BGM работают при любом из этих вариантов, потому что запускаются из Git Bash.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_03.png" alt="Рис. 3.3. Страница установщика Adjusting your PATH environment." loading="lazy"></a><br><em>Рис. 3.3. Страница установщика Adjusting your PATH environment.</em></p>
+<p>Вместе с Git устанавливается <strong>Git Bash</strong> — оболочка bash, в которой под Windows запускаются все скрипты BGM.</p>
+<h3 id="s3_2">Linux</h3>
+<p>В Debian, Ubuntu и производных:</p>
+<pre><code class="language-bash">sudo apt-get install git</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_04.png" alt="Рис. 3.4. Установка Git в Linux." loading="lazy"></a><br><em>Рис. 3.4. Установка Git в Linux.</em></p>
+<p>В Fedora, RED OS и подобных используйте <code>sudo dnf install git</code>.</p>
+<h3 id="s3_3">macOS</h3>
+<p>Удобнее всего установить Git через менеджер пакетов <a href="https://brew.sh/ru/">Homebrew</a>. Если Homebrew ещё не установлен, выполните в программе Terminal команду с его сайта:</p>
+<pre><code class="language-bash">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_05.png" alt="Рис. 3.5. Установка Homebrew." loading="lazy"></a><br><em>Рис. 3.5. Установка Homebrew.</em></p>
+<p>Затем установите Git:</p>
+<pre><code class="language-bash">brew install git</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/03_install_git_on_windows_linux_macos/03_06.png" alt="Рис. 3.6. Установка Git через Homebrew." loading="lazy"></a><br><em>Рис. 3.6. Установка Git через Homebrew.</em></p>
+<p>Ещё один вариант: при первом вызове команды <code>git</code> macOS сама предлагает установить Command Line Tools for Xcode, в составе которых есть Git.</p>
+<h2 id="s4">4. Клонирование своего форка</h2>
+<p><strong>Клонировать</strong> — значит скачать репозиторий на компьютер вместе со всей историей изменений. Клонируйте <strong>свой форк</strong>, а не исходный репозиторий: тогда вы сможете отправлять в него свои изменения.</p>
+<p>Откройте терминал (под Windows — Git Bash), перейдите в каталог, где будут лежать проекты, и выполните <code>git clone</code> с адресом, скопированным в главе 2:</p>
+<pre><code class="language-bash">git clone https://github.com/Dmitri-Mendeleev/basics-graphics-music.git</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/04_cloning_your_forked_repo/04_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/04_cloning_your_forked_repo/04_01.png" alt="Рис. 4.1. Команда клонирования." loading="lazy"></a><br><em>Рис. 4.1. Команда клонирования.</em></p>
+<p>Git создаст каталог <code>basics-graphics-music</code> и скачает в него около 83 МБ.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/04_cloning_your_forked_repo/04_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/04_cloning_your_forked_repo/04_02.png" alt="Рис. 4.2. Клонирование завершено." loading="lazy"></a><br><em>Рис. 4.2. Клонирование завершено.</em></p>
+<blockquote>
+<p><strong>Важно.</strong> Путь к каталогу репозитория не должен содержать пробелов и русских букв. На снимках под Windows репозиторий лежит в <code>C:\projects\basics-graphics-music</code>. Quartus и некоторые другие САПР не работают с путями, в которых есть пробелы или нелатинские символы.</p>
+</blockquote>
+<h2 id="s5">5. Открытие репозитория в VSCode</h2>
+<p>Запустите VSCode. На странице <strong>Welcome</strong> есть пункт <strong>Open Folder…</strong>; то же самое делает меню <strong>File → Open Folder…</strong> (<code>Ctrl+K Ctrl+O</code>).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_01.png" alt="Рис. 5.1. Страница Welcome в VSCode." loading="lazy"></a><br><em>Рис. 5.1. Страница Welcome в VSCode.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_02.png" alt="Рис. 5.2. Меню File → Open Folder…" loading="lazy"></a><br><em>Рис. 5.2. Меню File → Open Folder…</em></p>
+<p>Выберите каталог <code>basics-graphics-music</code> и нажмите <strong>Open</strong>. Если VSCode спросит, доверяете ли вы авторам файлов в этом каталоге, ответьте утвердительно, иначе часть возможностей редактора будет отключена.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_03.png" alt="Рис. 5.3. Выбор каталога репозитория (Linux)." loading="lazy"></a><br><em>Рис. 5.3. Выбор каталога репозитория (Linux).</em></p>
+<p>Слева, в панели <strong>Explorer</strong>, появится дерево репозитория. Внизу, в строке состояния, VSCode показывает текущую ветку Git — <code>main</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_04.png" alt="Рис. 5.4. Репозиторий открыт." loading="lazy"></a><br><em>Рис. 5.4. Репозиторий открыт.</em></p>
+<p>Упражнения лежат в каталоге <code>labs</code>. Например, первое графическое упражнение — <code>labs/2_graphics/2_1_rectangle_ellipse_parabola</code>. Щёлкните по файлу <code>lab_top.sv</code>, чтобы открыть его в редакторе.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_05.png" alt="Рис. 5.5. Каталог упражнения и файл lab_top.sv." loading="lazy"></a><br><em>Рис. 5.5. Каталог упражнения и файл lab_top.sv.</em></p>
+<p>Для работы с SystemVerilog полезно установить два расширения. Откройте <strong>View → Extensions</strong> (<code>Ctrl+Shift+X</code>), найдите и установите:</p>
+<ul>
+<li><strong>SystemVerilog - Language Support</strong> (автор Eirik Prestegårdshus) — подсветка синтаксиса и переход к определениям;</li>
+<li><strong>surfer</strong> — просмотрщик временных диаграмм прямо в VSCode.</li>
+</ul>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_06.png" alt="Рис. 5.6. Меню View → Extensions." loading="lazy"></a><br><em>Рис. 5.6. Меню View → Extensions.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_07.png" alt="Рис. 5.7. Установленные расширения surfer и SystemVerilog - Language Support." loading="lazy"></a><br><em>Рис. 5.7. Установленные расширения surfer и SystemVerilog - Language Support.</em></p>
+<p>Терминал внутри VSCode открывается через <strong>Terminal → New Terminal</strong> (Ctrl+Shift и клавиша с обратным апострофом слева от 1, на русской раскладке это Ё). О том, какой терминал выбрать, — следующая глава.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/05_opening_repo_in_vscode/05_08.png" alt="Рис. 5.8. Меню Terminal → New Terminal." loading="lazy"></a><br><em>Рис. 5.8. Меню Terminal → New Terminal.</em></p>
+<h2 id="s6">6. Терминал в VSCode, особенно под Windows: выбор типа терминала и переход в каталог упражнения</h2>
+<p>Скрипты BGM написаны на bash. Под Linux терминал VSCode по умолчанию и так bash, под macOS — zsh, который запускает скрипты bash без дополнительных действий. Под Windows по умолчанию открывается PowerShell, поэтому сначала нужно открыть терминал <strong>Git Bash</strong>.</p>
+<h3 id="s6_1">Открываем Git Bash под Windows</h3>
+<p>Откройте новый терминал: <strong>Terminal → New Terminal</strong>. Если меню скрыто за кнопкой <code>...</code>, оно находится там.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_01.png" alt="Рис. 6.1. Новый терминал в VSCode под Windows." loading="lazy"></a><br><em>Рис. 6.1. Новый терминал в VSCode под Windows.</em></p>
+<p>Открылся PowerShell: приглашение начинается с <code>PS</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_02.png" alt="Рис. 6.2. Терминал PowerShell." loading="lazy"></a><br><em>Рис. 6.2. Терминал PowerShell.</em></p>
+<p>Нажмите на стрелку рядом с кнопкой <strong>+</strong> в панели терминала и выберите <strong>Git Bash</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_03.png" alt="Рис. 6.3. Выбор Git Bash в списке терминалов." loading="lazy"></a><br><em>Рис. 6.3. Выбор Git Bash в списке терминалов.</em></p>
+<p>Приглашение Git Bash выглядит иначе: в нём есть имя компьютера, слово <code>MINGW64</code>, текущий каталог в формате Unix (<code>/c/projects/…</code> вместо <code>C:\projects\…</code>) и текущая ветка Git в скобках.</p>
+<h3 id="s6_2">Переходим в каталог упражнения перетаскиванием</h3>
+<p>Наберите <code>cd</code> и пробел, но не нажимайте Enter.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_04.png" alt="Рис. 6.4. Набрана команда cd с пробелом." loading="lazy"></a><br><em>Рис. 6.4. Набрана команда cd с пробелом.</em></p>
+<p>Перетащите мышью каталог упражнения из панели Explorer в окно терминала.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_05.png" alt="Рис. 6.5. Перетаскивание каталога в терминал." loading="lazy"></a><br><em>Рис. 6.5. Перетаскивание каталога в терминал.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_06.png" alt="Рис. 6.6. Подсказка с полным путём к каталогу." loading="lazy"></a><br><em>Рис. 6.6. Подсказка с полным путём к каталогу.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_07.png" alt="Рис. 6.7. Каталог над окном терминала." loading="lazy"></a><br><em>Рис. 6.7. Каталог над окном терминала.</em></p>
+<p>VSCode вставит полный путь к каталогу в кавычках.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_08.png" alt="Рис. 6.8. Путь вставлен в команду cd." loading="lazy"></a><br><em>Рис. 6.8. Путь вставлен в команду cd.</em></p>
+<p>Нажмите Enter. Приглашение показывает, что вы в каталоге упражнения.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/06_open_terminal_in_vscode_particularly_under_windows__set_term_type__cd_lab/06_09.png" alt="Рис. 6.9. Терминал в каталоге упражнения." loading="lazy"></a><br><em>Рис. 6.9. Терминал в каталоге упражнения.</em></p>
+<blockquote>
+<p><strong>Совет.</strong> Чтобы не выбирать Git Bash каждый раз, сделайте его терминалом по умолчанию: в том же меню рядом с кнопкой <strong>+</strong> выберите <strong>Select Default Profile</strong> и затем <strong>Git Bash</strong>. После этого под Windows тоже работает способ, описанный ниже для Linux и macOS: щелчок правой кнопкой мыши по каталогу в Explorer и пункт <strong>Open in Integrated Terminal</strong> открывают Git Bash сразу в этом каталоге.</p>
+</blockquote>
+<h3 id="s6_3">Linux и macOS: правая кнопка мыши</h3>
+<p>Под Linux и macOS щёлкните правой кнопкой мыши по каталогу упражнения в панели Explorer и выберите <strong>Open in Integrated Terminal</strong> (снимки — в главе 22). Терминал откроется сразу в этом каталоге: под Linux это bash, под macOS — zsh.</p>
+<h3 id="s6_4">PowerShell и WSL</h3>
+<p>Скрипты можно запустить и из PowerShell, если писать <code>bash ./название_скрипта</code>. Но если на компьютере установлен WSL, команда <code>bash</code> в PowerShell может запустить bash из Linux внутри WSL, а не bash из Git. Тот не понимает окончания строк Windows (CR-LF), с которыми Git для Windows по умолчанию извлекает файлы, и выдаёт ошибки вроде <code>$'\r': command not found</code>. Кроме того, внутри WSL скрипты не найдут САПР, установленные в Windows. Поэтому под Windows мы рекомендуем Git Bash.</p>
+<p>Если всё же нужен PowerShell, можно явно вызвать bash из Git (при установке Git в каталог по умолчанию):</p>
+<pre><code class="language-powershell">&amp; "C:\Program Files\Git\bin\bash.exe" ./03_synthesize_for_fpga.bash</code></pre>
+<h3 id="s6_5">Полезные клавиши в терминале</h3>
+<ul>
+<li><strong>Tab</strong> — автодополнение. Наберите <code>./06</code> и нажмите Tab: bash допишет <code>./06_choose_another_fpga_board.bash</code>. Так не нужно помнить длинные имена скриптов.</li>
+<li><strong>Стрелка вверх</strong> — предыдущая команда. Чтобы повторить синтез после исправления кода, достаточно нажать стрелку вверх и Enter.</li>
+<li><strong>Ctrl+C</strong> — прервать выполняющуюся команду.</li>
+<li><strong>q</strong> — выйти из просмотра длинного вывода, например <code>git diff</code> или <code>git log</code>.</li>
+</ul>
+<h2 id="s7">7. Выбор платы</h2>
+<p>Перед синтезом нужно один раз выбрать плату. Наберите в терминале <code>./06</code> и нажмите Tab.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_01.png" alt="Рис. 7.1. Набрано начало имени скрипта." loading="lazy"></a><br><em>Рис. 7.1. Набрано начало имени скрипта.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_02.png" alt="Рис. 7.2. Tab дописал имя скрипта." loading="lazy"></a><br><em>Рис. 7.2. Tab дописал имя скрипта.</em></p>
+<p>Скрипт покажет нумерованный список плат. Звёздочка <code>*</code> после имени означает, что у этой платы несколько конфигураций, например с модулем TM1638 и без него или с разными дисплеями. Наберите номер платы и нажмите Enter. На снимке выбрана плата <code>saylinx</code> с ПЛИС Altera Cyclone IV E. Номера в вашем списке могут отличаться: они зависят от версии репозитория.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_03.png" alt="Рис. 7.3. Первый уровень меню: список плат." loading="lazy"></a><br><em>Рис. 7.3. Первый уровень меню: список плат.</em></p>
+<p>Для платы со звёздочкой появится второй уровень меню — список её конфигураций. Здесь <code>b</code> возвращает к списку плат, а <code>e</code> выходит без выбора.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_04.png" alt="Рис. 7.4. Второй уровень меню: конфигурации платы saylinx." loading="lazy"></a><br><em>Рис. 7.4. Второй уровень меню: конфигурации платы saylinx.</em></p>
+<p>Выбор сохраняется в файле <code>fpga_board_selection</code> в корне репозитория и действует для всех упражнений, пока вы не выберете другую плату. Этот файл указан в <code>.gitignore</code>, поэтому <code>git</code> его не отслеживает и в коммиты он не попадает. Сразу после выбора скрипт находит подходящую САПР и сообщает, какую версию будет использовать; для <code>saylinx</code> это Quartus Prime Lite 23.1. Как скрипты ищут САПР, описано в <a href="#sb">приложении Б</a>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/07_selecting_board/07_05.png" alt="Рис. 7.5. Плата выбрана, найден Quartus." loading="lazy"></a><br><em>Рис. 7.5. Плата выбрана, найден Quartus.</em></p>
+<h2 id="s8">8. Синтез для платы Saylinx с ПЛИС Altera</h2>
+<p>Запустите синтез: <code>./03</code> и Tab.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_01.png" alt="Рис. 8.1. Набрано начало имени скрипта синтеза." loading="lazy"></a><br><em>Рис. 8.1. Набрано начало имени скрипта синтеза.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_02.png" alt="Рис. 8.2. Скрипт синтеза." loading="lazy"></a><br><em>Рис. 8.2. Скрипт синтеза.</em></p>
+<p>Скрипт создаёт в каталоге упражнения подкаталог <code>run</code>, собирает в нём проект Quartus из файлов упражнения, общих модулей и файлов платы и запускает полную компиляцию.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_03.png" alt="Рис. 8.3. Начало синтеза." loading="lazy"></a><br><em>Рис. 8.3. Начало синтеза.</em></p>
+<p>Компиляция занимает от нескольких десятков секунд до нескольких минут. Сотня предупреждений (warnings) — это нормально, важно, чтобы было 0 ошибок. После компиляции скрипт сам пытается загрузить проект в ПЛИС. Если плата не подключена или не найден кабель USB-Blaster, он сообщает об ошибке и просит нажать любую клавишу. Результаты синтеза при этом сохраняются.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_06.png" alt="Рис. 8.4. Компиляция успешна, но плата не подключена." loading="lazy"></a><br><em>Рис. 8.4. Компиляция успешна, но плата не подключена.</em></p>
+<p>Подключите плату и загрузите в неё уже готовый проект скриптом <code>04</code>, без повторного синтеза: <code>./04</code> и Tab.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_07.png" alt="Рис. 8.5. Набрано начало имени скрипта загрузки." loading="lazy"></a><br><em>Рис. 8.5. Набрано начало имени скрипта загрузки.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_08.png" alt="Рис. 8.6. Скрипт загрузки проекта в ПЛИС." loading="lazy"></a><br><em>Рис. 8.6. Скрипт загрузки проекта в ПЛИС.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_09.png" alt="Рис. 8.7. Проект загружен в ПЛИС." loading="lazy"></a><br><em>Рис. 8.7. Проект загружен в ПЛИС.</em></p>
+<p>Плата выводит изображение на монитор через разъём VGA.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_05.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/08_running_synthesis_for_saylinx_board_with_altera_fpga/08_05.jpg" alt="Рис. 8.8. Плата Saylinx и монитор с изображением упражнения 2_1." loading="lazy"></a><br><em>Рис. 8.8. Плата Saylinx и монитор с изображением упражнения 2_1.</em></p>
+<blockquote>
+<p><strong>Примечание.</strong> Скрипт загружает конфигурацию в ПЛИС через JTAG. Такая конфигурация хранится только до выключения питания платы; после включения проект нужно загрузить снова скриптом <code>04</code>. Так же работают загрузка в Vivado и Gowin в этой инструкции; исключение — iCEBreaker (глава 24).</p>
+</blockquote>
+<h2 id="s9">9. Изменение примера</h2>
+<p>Теперь внесём в упражнение своё изменение. Откройте <code>lab_top.sv</code> и в конце блока <code>always_comb</code>, после строк для параболы, добавьте закраску областей вокруг гиперболы <code>x * y = 20000</code>:</p>
+<pre><code class="language-systemverilog">        if (x * y &lt; 20000)
+            green = '1;
+        else if (y &gt; x)
+            red = '1;
+        else
+            blue = '1;</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_01.png" alt="Рис. 9.1. Изменённый файл lab_top.sv." loading="lazy"></a><br><em>Рис. 9.1. Изменённый файл lab_top.sv.</em></p>
+<p>Пока файл не сохранён, на его вкладке вместо крестика стоит белая точка. Буква <strong>M</strong> (modified) означает, что файл отличается от версии в Git.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_02.png" alt="Рис. 9.2. Файл изменён, но не сохранён." loading="lazy"></a><br><em>Рис. 9.2. Файл изменён, но не сохранён.</em></p>
+<p>Сохраните файл (<code>Ctrl+S</code>). Точка сменится крестиком, а буква <strong>M</strong> останется: изменение сохранено на диске, но ещё не зафиксировано в Git.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_03.png" alt="Рис. 9.3. Файл сохранён." loading="lazy"></a><br><em>Рис. 9.3. Файл сохранён.</em></p>
+<p>Снова запустите синтез. Стрелка вверх в терминале вернёт предыдущие команды.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_04.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_04.jpg" alt="Рис. 9.4. Повторный синтез." loading="lazy"></a><br><em>Рис. 9.4. Повторный синтез.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_05.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/09_modifying_example/09_05.jpg" alt="Рис. 9.5. Результат изменённого упражнения на мониторе." loading="lazy"></a><br><em>Рис. 9.5. Результат изменённого упражнения на мониторе.</em></p>
+<p>Изменение работает, и его стоит сохранить в своём форке на GitHub.</p>
+<h2 id="s10">10. Отправка изменений в свой форк</h2>
+<p>Ваш форк на GitHub пока совпадает с исходным репозиторием: изменение существует только на вашем компьютере.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_01.png" alt="Рис. 10.1. Профиль на GitHub, форк basics-graphics-music." loading="lazy"></a><br><em>Рис. 10.1. Профиль на GitHub, форк basics-graphics-music.</em></p>
+<p>Самые нужные команды Git собраны в шпаргалке <code>git_cheat_sheet.md</code> в корне репозитория. Её перевод с дополнениями — в <a href="#sa">приложении А</a>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_02.png" alt="Рис. 10.2. Файл git_cheat_sheet.md в репозитории." loading="lazy"></a><br><em>Рис. 10.2. Файл git_cheat_sheet.md в репозитории.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_03.png" alt="Рис. 10.3. Начало шпаргалки по Git." loading="lazy"></a><br><em>Рис. 10.3. Начало шпаргалки по Git.</em></p>
+<h3 id="s10_1">Имя и адрес почты (один раз)</h3>
+<p>Git записывает в каждый коммит имя автора и адрес его почты. Задайте их один раз на каждом компьютере:</p>
+<pre><code class="language-bash">git config --global user.name  "Dmitri-Mendeleev"
+git config --global user.email "Dmitri.Mendeleev@silicon-russia.com"</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_04.png" alt="Рис. 10.4. Настройка имени и почты." loading="lazy"></a><br><em>Рис. 10.4. Настройка имени и почты.</em></p>
+<p>Чтобы GitHub связал коммиты с вашей учётной записью и показал их в профиле, укажите тот же адрес почты, что и при регистрации, или адрес вида <code>&lt;номер&gt;+&lt;имя&gt;@users.noreply.github.com</code> из настроек GitHub (<strong>Settings → Emails</strong>), если не хотите показывать свой адрес.</p>
+<h3 id="s10_2">Проверяем изменения</h3>
+<p>Перейдите в каталог упражнения, если вы ещё не там.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_05.png" alt="Рис. 10.5. Переход в каталог упражнения перетаскиванием." loading="lazy"></a><br><em>Рис. 10.5. Переход в каталог упражнения перетаскиванием.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_06.png" alt="Рис. 10.6. Терминал в каталоге упражнения." loading="lazy"></a><br><em>Рис. 10.6. Терминал в каталоге упражнения.</em></p>
+<p>Команда <code>git status</code> показывает, какие файлы изменены. Каталог <code>run</code>, файл <code>log.txt</code> и выбор платы <code>fpga_board_selection</code> в списке не появляются: они перечислены в <code>.gitignore</code>.</p>
+<pre><code class="language-bash">git status</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_07.png" alt="Рис. 10.7. git status: изменён один файл, lab_top.sv." loading="lazy"></a><br><em>Рис. 10.7. git status: изменён один файл, lab_top.sv.</em></p>
+<p>Команда <code>git diff</code> показывает сами изменения: добавленные строки отмечены <code>+</code>, удалённые — <code>-</code>. Длинный вывод листается пробелом, выход — клавиша <code>q</code>.</p>
+<pre><code class="language-bash">git diff</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_08.png" alt="Рис. 10.8. git diff: добавлено семь строк." loading="lazy"></a><br><em>Рис. 10.8. git diff: добавлено семь строк.</em></p>
+<h3 id="s10_3">Фиксируем изменение: коммит</h3>
+<p><strong>Коммит</strong> (commit) — сохранённый в истории Git снимок изменений с комментарием. Ключ <code>-a</code> включает в коммит все изменённые отслеживаемые файлы, <code>-m</code> задаёт комментарий. Пишите в комментарии, что и зачем изменено.</p>
+<pre><code class="language-bash">git commit -am "Added hyperbola to graphics lab"</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_09.png" alt="Рис. 10.9. Команда коммита." loading="lazy"></a><br><em>Рис. 10.9. Команда коммита.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_10.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_10.png" alt="Рис. 10.10. Коммит создан." loading="lazy"></a><br><em>Рис. 10.10. Коммит создан.</em></p>
+<blockquote>
+<p><strong>Важно.</strong> Ключ <code>-a</code> не добавляет <strong>новые</strong> файлы. Если вы создали новый файл, сначала выполните <code>git add имя_файла</code>, а потом <code>git commit</code>.</p>
+</blockquote>
+<h3 id="s10_4">Отправляем коммит на GitHub: push</h3>
+<p>Команда <code>git push</code> отправляет ваши коммиты в форк на GitHub.</p>
+<pre><code class="language-bash">git push</code></pre>
+<p>При первом <code>git push</code> под Windows открывается окно <strong>Git Credential Manager</strong> — программы, которая входит в Git для Windows и хранит ваши учётные данные. Выберите <strong>Sign in with your browser</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_11.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_11.png" alt="Рис. 10.11. Окно Connect to GitHub." loading="lazy"></a><br><em>Рис. 10.11. Окно Connect to GitHub.</em></p>
+<p>В браузере войдите в свою учётную запись GitHub.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_12.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_12.png" alt="Рис. 10.12. Вход в GitHub для Git Credential Manager." loading="lazy"></a><br><em>Рис. 10.12. Вход в GitHub для Git Credential Manager.</em></p>
+<p>Разрешите Git Credential Manager доступ к учётной записи: <strong>Authorize git-ecosystem</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_13.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_13.png" alt="Рис. 10.13. Авторизация Git Credential Manager." loading="lazy"></a><br><em>Рис. 10.13. Авторизация Git Credential Manager.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_14.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_14.png" alt="Рис. 10.14. Авторизация завершена, вкладку можно закрыть." loading="lazy"></a><br><em>Рис. 10.14. Авторизация завершена, вкладку можно закрыть.</em></p>
+<p>После этого <code>git push</code> завершается. Последние строки вывода показывают, куда и какой коммит отправлен: <code>main -&gt; main</code>. Повторно вводить пароль не придётся: Git Credential Manager запомнил вход в хранилище учётных данных Windows.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_15.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_15.png" alt="Рис. 10.15. Вывод git push." loading="lazy"></a><br><em>Рис. 10.15. Вывод git push.</em></p>
+<blockquote>
+<p><strong>Примечание.</strong> Первые строки на снимке, <code>usage: git credential-cache</code> и <code>credential-cache is disabled in this build of Git</code>, появились потому, что перед этим в репозитории была выполнена команда из шпаргалки <code>git config credential.helper 'cache --timeout=3600'</code>. Под Windows этот способ не работает и не нужен, вместо него работает Git Credential Manager. Чтобы убрать сообщение, выполните в каталоге репозитория <code>git config --unset credential.helper</code> (если команду выполняли с ключом <code>--global</code>, добавьте <code>--global</code> и сюда).</p>
+</blockquote>
+<h3 id="s10_5">Проверяем результат на GitHub</h3>
+<p>Обновите страницу форка. Теперь GitHub пишет <em>This branch is 1 commit ahead of chipdesignschool/basics-graphics-music:main</em>: в вашем форке есть один коммит, которого нет в исходном репозитории.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_16.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_16.png" alt="Рис. 10.16. Форк опережает исходный репозиторий на один коммит." loading="lazy"></a><br><em>Рис. 10.16. Форк опережает исходный репозиторий на один коммит.</em></p>
+<p>Ссылка <em>1 commit ahead</em> открывает сравнение форка с исходным репозиторием. С этой страницы начинается pull request (глава 12).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_17.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_17.png" alt="Рис. 10.17. Сравнение форка с исходным репозиторием." loading="lazy"></a><br><em>Рис. 10.17. Сравнение форка с исходным репозиторием.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_18.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/10_submitting_to_your_forked_repo/10_18.png" alt="Рис. 10.18. Изменения коммита на GitHub." loading="lazy"></a><br><em>Рис. 10.18. Изменения коммита на GitHub.</em></p>
+<p>Теперь изменение хранится на GitHub. Его можно скачать на другом компьютере командой <code>git clone</code> или <code>git pull</code>, и оно не пропадёт при обновлении репозитория Школы (глава 13).</p>
+<h2 id="s11">11. Хранение учётных данных Git под Linux</h2>
+<p>Под Linux нет окна Git Credential Manager, и при первом <code>git push</code> по адресу <code>https://</code> Git спрашивает в терминале имя пользователя (Username) и пароль (Password). Здесь есть два подвоха.</p>
+<p><strong>Первый: пароль от GitHub не подходит.</strong> С 2021 года GitHub не принимает пароль учётной записи для команд Git. Вместо пароля вводится <strong>personal access token</strong> (токен доступа). Создайте его так:</p>
+<ol>
+<li>На GitHub откройте <strong>Settings → Developer settings → Personal access tokens → Fine-grained tokens</strong> и нажмите <strong>Generate new token</strong>.</li>
+<li>Задайте имя токена и срок действия (Expiration).</li>
+<li>В <strong>Repository access</strong> выберите <strong>Only select repositories</strong> и отметьте свой форк <code>basics-graphics-music</code>.</li>
+<li>В <strong>Permissions</strong> для <strong>Contents</strong> установите <strong>Read and write</strong>.</li>
+<li>Нажмите <strong>Generate token</strong> и сразу скопируйте токен: GitHub показывает его только один раз.</li>
+</ol>
+<p>При <code>git push</code> введите своё имя пользователя GitHub, а в ответ на запрос пароля вставьте токен. В терминале вставка выполняется сочетанием <code>Ctrl+Shift+V</code>; вводимые символы пароля не отображаются, так и должно быть.</p>
+<p><strong>Второй: Git каждый раз спрашивает снова.</strong> Чтобы не вводить токен при каждом <code>git push</code>, включите вспомогательную программу хранения учётных данных (credential helper). Варианты:</p>
+<table>
+<thead><tr><th>Команда</th><th>Где хранится токен</th><th>Замечание</th></tr></thead>
+<tbody>
+<tr><td><code>git config --global credential.helper 'cache --timeout=36000'</code></td><td>в памяти, 36000 секунд (10 часов)</td><td>после перезагрузки или по истечении времени Git спросит снова</td></tr>
+<tr><td><code>git config --global credential.helper store</code></td><td>в файле <code>~/.git-credentials</code> открытым текстом</td><td>удобно на личном компьютере, но не делайте так на общем</td></tr>
+</tbody></table>
+<p>Без ключа <code>--global</code> настройка действует только для текущего репозитория. Время в <code>--timeout</code> задаётся в секундах: <code>3600</code> — это один час.</p>
+<p>Другой способ — утилита GitHub CLI: после <code>gh auth login</code> и <code>gh auth setup-git</code> Git получает учётные данные от неё, и токен создавать вручную не нужно. Под macOS Git обычно хранит токен в связке ключей (Keychain), поэтому достаточно ввести его один раз.</p>
+<h2 id="s12">12. Pull request в исходный репозиторий</h2>
+<p><strong>Pull request</strong> (PR) — предложение авторам исходного репозитория забрать ваши коммиты. Авторы видят изменения, могут их обсудить, попросить доработать и принять (merge). Исходный репозиторий меняется только после того, как они примут PR, поэтому риск сломать код другим студентам сводится к минимуму.</p>
+<p>Откройте страницу своего форка. Строка <em>This branch is 1 commit ahead of …</em> показывает, что вам есть что предложить.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_01.png" alt="Рис. 12.1. Форк с коммитом, которого нет в исходном репозитории." loading="lazy"></a><br><em>Рис. 12.1. Форк с коммитом, которого нет в исходном репозитории.</em></p>
+<p>Щёлкните по ссылке <em>1 commit ahead of</em> (или нажмите <strong>Contribute → Open pull request</strong>).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_02.png" alt="Рис. 12.2. Ссылка на сравнение." loading="lazy"></a><br><em>Рис. 12.2. Ссылка на сравнение.</em></p>
+<p>Откроется страница <strong>Comparing changes</strong>. Проверьте направление: слева (base repository) — <code>chipdesignschool/basics-graphics-music</code>, ветка <code>main</code>; справа (head repository) — ваш форк и ваша ветка. Надпись <em>Able to merge</em> означает, что изменения не конфликтуют с исходным репозиторием.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_03.png" alt="Рис. 12.3. Сравнение изменений перед pull request." loading="lazy"></a><br><em>Рис. 12.3. Сравнение изменений перед pull request.</em></p>
+<p>Ниже страница показывает все изменения. Просмотрите их ещё раз: всё, что здесь видно, попадёт в pull request.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_04.png" alt="Рис. 12.4. Изменения, которые войдут в pull request." loading="lazy"></a><br><em>Рис. 12.4. Изменения, которые войдут в pull request.</em></p>
+<p>Нажмите <strong>Create pull request</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_05.png" alt="Рис. 12.5. Кнопка Create pull request." loading="lazy"></a><br><em>Рис. 12.5. Кнопка Create pull request.</em></p>
+<p>Заголовок PR GitHub берёт из комментария коммита. Добавьте описание: что изменено, зачем и как вы это проверили (например, на какой плате).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_06.png" alt="Рис. 12.6. Форма нового pull request." loading="lazy"></a><br><em>Рис. 12.6. Форма нового pull request.</em></p>
+<p>Флажок <strong>Allow edits by maintainers</strong> разрешает авторам исходного репозитория самим поправить мелочи в вашем PR. Нажмите <strong>Create pull request</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_07.png" alt="Рис. 12.7. Описание pull request." loading="lazy"></a><br><em>Рис. 12.7. Описание pull request.</em></p>
+<p>Pull request создан, у него есть номер и статус <strong>Open</strong>. Дальнейшее обсуждение идёт на этой странице; уведомления о комментариях приходят на почту. Если вас попросят что-то исправить, просто сделайте новый коммит и <code>git push</code> в ту же ветку: он автоматически появится в этом PR.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/12_opening_pull_request_to_the_parent_repo/12_08.png" alt="Рис. 12.8. Открытый pull request в репозитории chipdesignschool." loading="lazy"></a><br><em>Рис. 12.8. Открытый pull request в репозитории chipdesignschool.</em></p>
+<blockquote>
+<p><strong>Совет.</strong> Для каждого предложения удобно заводить отдельную ветку, а не коммитить прямо в <code>main</code>:</p>
+<p><code>git switch -c hyperbola</code> — создать ветку и перейти в неё; затем коммиты как обычно; <code>git push -u origin hyperbola</code> — отправить ветку в форк. На GitHub появится предложение открыть PR из этой ветки.</p>
+<p>Тогда <code>main</code> вашего форка остаётся точной копией исходного репозитория, его легко синхронизировать, а несколько PR не смешиваются друг с другом.</p>
+</blockquote>
+<h2 id="s13">13. Синхронизация своего форка с исходным репозиторием</h2>
+<p>Пока вы работаете, в репозиторий Школы добавляются новые упражнения и исправления. Форк сам по себе не обновляется: GitHub покажет на его странице <em>This branch is N commits behind …</em>. Ваши изменения при синхронизации не теряются — Git объединяет их с новыми коммитами.</p>
+<blockquote>
+<p><strong>Важно.</strong> Перед синхронизацией зафиксируйте свои изменения коммитом (глава 10) или временно отложите их командой <code>git stash</code>; после синхронизации верните их командой <code>git stash pop</code>.</p>
+</blockquote>
+<h3 id="s13_1">Способ 1: кнопка Sync fork на GitHub</h3>
+<ol>
+<li>Откройте страницу своего форка на GitHub.</li>
+<li>Нажмите <strong>Sync fork</strong>, затем <strong>Update branch</strong>. GitHub перенесёт в форк новые коммиты исходного репозитория.</li>
+<li>В терминале, в каталоге репозитория, заберите их на компьютер:</li>
+</ol>
+<pre><code class="language-bash">git pull</code></pre>
+<p>Если в вашей ветке есть коммиты, которых нет в исходном репозитории, и они затрагивают те же строки, что и новые коммиты, GitHub не сможет объединить их сам. Тогда используйте способ 2.</p>
+<h3 id="s13_2">Способ 2: из командной строки</h3>
+<p>Добавьте исходный репозиторий как второй удалённый репозиторий с именем <code>upstream</code>. Это делается один раз:</p>
+<pre><code class="language-bash">git remote add upstream https://github.com/chipdesignschool/basics-graphics-music.git</code></pre>
+<p>Каждый раз для синхронизации:</p>
+<pre><code class="language-bash">git fetch upstream
+git merge upstream/main
+git push</code></pre>
+<p><code>git fetch upstream</code> скачивает новые коммиты репозитория Школы, <code>git merge upstream/main</code> объединяет их с вашей текущей веткой, <code>git push</code> отправляет результат в ваш форк. Проверить список удалённых репозиториев можно командой <code>git remote -v</code>: <code>origin</code> — ваш форк, <code>upstream</code> — репозиторий Школы.</p>
+<p>Если <code>git merge</code> сообщает о конфликте (CONFLICT), Git помечает в файлах спорные места. VSCode подсвечивает их и предлагает кнопки <em>Accept Current Change</em>, <em>Accept Incoming Change</em> и <em>Accept Both Changes</em>. Выберите нужный вариант в каждом месте, сохраните файлы и завершите объединение:</p>
+<pre><code class="language-bash">git add имя_файла
+git commit -m "Merge upstream changes"
+git push</code></pre>
+<h2 id="s14">14. Схема после элаборации в Quartus</h2>
+<p>Скрипты синтезируют проект в пакетном режиме, без окон. Чтобы увидеть, какую схему Quartus построил из кода, откройте проект в графической оболочке скриптом <code>05</code>: <code>./05</code> и Tab.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_01.png" alt="Рис. 14.1. Набрано начало имени скрипта." loading="lazy"></a><br><em>Рис. 14.1. Набрано начало имени скрипта.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_02.png" alt="Рис. 14.2. Скрипт запуска графической оболочки." loading="lazy"></a><br><em>Рис. 14.2. Скрипт запуска графической оболочки.</em></p>
+<p>Откроется Quartus Prime с проектом <code>fpga_project</code> из каталога <code>run</code>. Слева вверху — иерархия проекта (верхний модуль <code>board_specific_top</code>), под ней — список задач <strong>Tasks</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_03.png" alt="Рис. 14.3. Проект упражнения в Quartus Prime Lite." loading="lazy"></a><br><em>Рис. 14.3. Проект упражнения в Quartus Prime Lite.</em></p>
+<p>Запустите компиляцию двойным щелчком по <strong>Compile Design</strong>. Для просмотра схемы достаточно и первого шага, <strong>Analysis &amp; Synthesis</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_04.png" alt="Рис. 14.4. Задача Compile Design." loading="lazy"></a><br><em>Рис. 14.4. Задача Compile Design.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_05.png" alt="Рис. 14.5. Компиляция идёт." loading="lazy"></a><br><em>Рис. 14.5. Компиляция идёт.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_06.png" alt="Рис. 14.6. Компиляция завершена: 0 ошибок." loading="lazy"></a><br><em>Рис. 14.6. Компиляция завершена: 0 ошибок.</em></p>
+<p>Отчёт <strong>Flow Summary</strong> показывает, сколько ресурсов ПЛИС занял проект: логических элементов, регистров, выводов и встроенных умножителей.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_07.png" alt="Рис. 14.7. Flow Summary." loading="lazy"></a><br><em>Рис. 14.7. Flow Summary.</em></p>
+<p>Откройте схему: в списке задач раскройте <strong>Analysis &amp; Synthesis → Netlist Viewers</strong> и дважды щёлкните <strong>RTL Viewer</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_08.png" alt="Рис. 14.8. Задача RTL Viewer." loading="lazy"></a><br><em>Рис. 14.8. Задача RTL Viewer.</em></p>
+<p>RTL Viewer показывает схему всего проекта: модуль упражнения <code>lab_top</code>, генератор развёртки VGA <code>vga</code>, генератор медленного тактового сигнала, приёмник микрофона и выход звука.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_09.png" alt="Рис. 14.9. Схема верхнего модуля в RTL Viewer." loading="lazy"></a><br><em>Рис. 14.9. Схема верхнего модуля в RTL Viewer.</em></p>
+<p>Чтобы рассмотреть детали, выберите на панели инструментов <strong>Zoom Tool</strong> (лупа) и щёлкайте по нужному месту; колесо мыши тоже меняет масштаб.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_10.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_10.png" alt="Рис. 14.10. Инструмент Zoom Tool." loading="lazy"></a><br><em>Рис. 14.10. Инструмент Zoom Tool.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_11.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_11.png" alt="Рис. 14.11. Увеличенная схема верхнего модуля." loading="lazy"></a><br><em>Рис. 14.11. Увеличенная схема верхнего модуля.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_12.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_12.png" alt="Рис. 14.12. Блок lab_top:i_lab_top." loading="lazy"></a><br><em>Рис. 14.12. Блок lab_top:i_lab_top.</em></p>
+<p>Вернитесь к инструменту выделения (стрелка) и дважды щёлкните по блоку <code>lab_top:i_lab_top</code>, чтобы открыть его содержимое. То же самое делает значок <strong>+</strong> в углу блока. Слева, в <strong>Netlist Navigator</strong>, можно выбирать экземпляры модулей по иерархии.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_13.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_13.png" alt="Рис. 14.13. Инструмент выделения." loading="lazy"></a><br><em>Рис. 14.13. Инструмент выделения.</em></p>
+<p>Внутри видна схема, построенная из кода упражнения: умножители (<code>Mult</code>), сумматоры (<code>Add</code>), компараторы (<code>LessThan</code>) и мультиплексоры, выбирающие цвет точки. Гипербола из главы 9 добавила умножитель <code>x * y</code> и компаратор с константой 20000, которая на схеме записана как <code>19'h4e20</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_14.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/14_view_elaborated_schematics_in_quartus/14_14.png" alt="Рис. 14.14. Схема модуля lab_top." loading="lazy"></a><br><em>Рис. 14.14. Схема модуля lab_top.</em></p>
+<h2 id="s15">15. Синтез для ALINX AX7035B с ПЛИС Xilinx</h2>
+<p>Теперь тот же пример для другой платы — ALINX AX7035B с ПЛИС Xilinx Artix-7. Выберите плату скриптом <code>06</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_01.png" alt="Рис. 15.1. Скрипт выбора платы." loading="lazy"></a><br><em>Рис. 15.1. Скрипт выбора платы.</em></p>
+<p>У платы <code>alinx_ax7035b</code> три конфигурации: базовая и две с выводом изображения через HDMI, <code>alinx_ax7035b_hdmi_by_claude</code> и <code>alinx_ax7035b_hdmi_by_codex</code>. Это две реализации HDMI, написанные с помощью ИИ-агентов Claude Code и Codex. На снимке выбрана третья.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_02.png" alt="Рис. 15.2. Конфигурации платы alinx_ax7035b." loading="lazy"></a><br><em>Рис. 15.2. Конфигурации платы alinx_ax7035b.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_03.png" alt="Рис. 15.3. Плата выбрана, запускаем синтез." loading="lazy"></a><br><em>Рис. 15.3. Плата выбрана, запускаем синтез.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_04.png" alt="Рис. 15.4. Скрипт синтеза." loading="lazy"></a><br><em>Рис. 15.4. Скрипт синтеза.</em></p>
+<p>Скрипт запускает Vivado в пакетном режиме: синтез, размещение, трассировку, генерацию файла конфигурации и, если плата подключена, загрузку в ПЛИС через hw_server. Последние строки показывают, что загрузка прошла и Vivado завершил работу.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_05.png" alt="Рис. 15.5. Конец вывода Vivado." loading="lazy"></a><br><em>Рис. 15.5. Конец вывода Vivado.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_06.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/15_running_synthesis_for_alinx_ax7035b_with_xilinx_fpga/15_06.jpg" alt="Рис. 15.6. Плата ALINX AX7035B выводит изображение через HDMI." loading="lazy"></a><br><em>Рис. 15.6. Плата ALINX AX7035B выводит изображение через HDMI.</em></p>
+<h2 id="s16">16. Просмотр схем в Xilinx Vivado</h2>
+<p>Откройте проект в графической оболочке Vivado: <code>./05</code> и Tab.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_01.png" alt="Рис. 16.1. Набрано начало имени скрипта." loading="lazy"></a><br><em>Рис. 16.1. Набрано начало имени скрипта.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_02.png" alt="Рис. 16.2. Скрипт запуска графической оболочки." loading="lazy"></a><br><em>Рис. 16.2. Скрипт запуска графической оболочки.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_03.png" alt="Рис. 16.3. Заставка Vivado." loading="lazy"></a><br><em>Рис. 16.3. Заставка Vivado.</em></p>
+<p>Скрипт синтеза создаёт в каталоге <code>run</code> проект Vivado <code>gui_prj/board_specific_top.xpr</code>, и скрипт <code>05</code> открывает именно его. В правой части окна видны параметры проекта, например ПЛИС <code>xc7a35tfgg484-2</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_04.png" alt="Рис. 16.4. Проект в Vivado." loading="lazy"></a><br><em>Рис. 16.4. Проект в Vivado.</em></p>
+<p>В панели <strong>Flow Navigator</strong> слева, в разделе <strong>RTL ANALYSIS</strong>, нажмите <strong>Open Elaborated Design</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_05.png" alt="Рис. 16.5. Open Elaborated Design." loading="lazy"></a><br><em>Рис. 16.5. Open Elaborated Design.</em></p>
+<p>Vivado предупредит, что настройки элаборации замедляют её. Нажмите <strong>OK</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_07.png" alt="Рис. 16.6. Окно Elaborate Design." loading="lazy"></a><br><em>Рис. 16.6. Окно Elaborate Design.</em></p>
+<p>Когда элаборация закончится, под <strong>Open Elaborated Design</strong> появится пункт <strong>Schematic</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_06.png" alt="Рис. 16.7. Пункт Schematic." loading="lazy"></a><br><em>Рис. 16.7. Пункт Schematic.</em></p>
+<p>Откроется схема верхнего модуля. Снимок сделан под Linux; под Windows окно выглядит так же.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_08.png" alt="Рис. 16.8. Схема после элаборации в Vivado (Linux)." loading="lazy"></a><br><em>Рис. 16.8. Схема после элаборации в Vivado (Linux).</em></p>
+<p>Наведите курсор на блок <code>i_lab_top</code>: подсказка покажет имя экземпляра и модуля. Двойной щелчок или значок <strong>+</strong> раскрывает блок.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_09.png" alt="Рис. 16.9. Блок i_lab_top." loading="lazy"></a><br><em>Рис. 16.9. Блок i_lab_top.</em></p>
+<p>Внутри — та же логика, что в RTL Viewer Quartus, но в обозначениях Vivado: <code>RTL_MULT</code> (умножитель), <code>RTL_ADD</code> (сумматор), <code>RTL_LT</code> и <code>RTL_GEQ</code> (сравнения «меньше» и «больше или равно»), <code>RTL_AND</code>, <code>RTL_MUX</code> (мультиплексор). Это схема после элаборации, ещё без привязки к ресурсам конкретной ПЛИС. Схему из таблиц LUT, триггеров и цепей переноса показывает <strong>Open Synthesized Design → Schematic</strong>, но для этого в проекте сначала должен быть выполнен синтез (глава 17).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_10.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/16_view_schematics_in_xilinx_vivado/16_10.png" alt="Рис. 16.10. Схема модуля lab_top в Vivado." loading="lazy"></a><br><em>Рис. 16.10. Схема модуля lab_top в Vivado.</em></p>
+<h2 id="s17">17. Просмотр размещённого проекта в Xilinx Vivado</h2>
+<p>Чтобы увидеть, как проект разместился внутри ПЛИС, нужны результаты реализации (implementation). Нажмите на панели инструментов <strong>Generate Bitstream</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_01.png" alt="Рис. 17.1. Кнопка Generate Bitstream." loading="lazy"></a><br><em>Рис. 17.1. Кнопка Generate Bitstream.</em></p>
+<p>Скрипт синтеза уже выполнил всю цепочку, но в пакетном режиме, и сохранил результаты в файлы контрольных точек (<code>post_synth.dcp</code>, <code>post_place.dcp</code>, <code>post_route.dcp</code>). Прогоны внутри проекта <code>gui_prj</code> (<code>synth_1</code> и <code>impl_1</code>) при этом не запускались, поэтому Vivado предлагает выполнить синтез и реализацию. Нажмите <strong>Yes</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_02.png" alt="Рис. 17.2. Нет результатов реализации, запустить синтез и реализацию." loading="lazy"></a><br><em>Рис. 17.2. Нет результатов реализации, запустить синтез и реализацию.</em></p>
+<p>В окне <strong>Launch Runs</strong> можно указать число параллельных заданий; нажмите <strong>OK</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_03.png" alt="Рис. 17.3. Окно Launch Runs." loading="lazy"></a><br><em>Рис. 17.3. Окно Launch Runs.</em></p>
+<p>Когда генерация файла конфигурации закончится, выберите <strong>Open Implemented Design</strong> и нажмите <strong>OK</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_04.png" alt="Рис. 17.4. Генерация завершена, открываем реализованный проект." loading="lazy"></a><br><em>Рис. 17.4. Генерация завершена, открываем реализованный проект.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_05.png" alt="Рис. 17.5. Загрузка реализованного проекта." loading="lazy"></a><br><em>Рис. 17.5. Загрузка реализованного проекта.</em></p>
+<p>Справа вверху открывается вид <strong>Device</strong> — кристалл ПЛИС с размещённой логикой. Внизу, на вкладке <strong>Timing</strong>, — сводка временного анализа. Положительный запас WNS (Worst Negative Slack) и надпись <em>All user specified timing constraints are met</em> означают, что схема успевает работать на заданной тактовой частоте.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_06.png" alt="Рис. 17.6. Реализованный проект: вид Device и сводка Timing." loading="lazy"></a><br><em>Рис. 17.6. Реализованный проект: вид Device и сводка Timing.</em></p>
+<p>Увеличивайте вид Device кнопкой <strong>Zoom In</strong> (<code>Ctrl+=</code>) или колесом мыши. Занятые ячейки выделены цветом.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_07.png" alt="Рис. 17.7. Занятые ресурсы на кристалле." loading="lazy"></a><br><em>Рис. 17.7. Занятые ресурсы на кристалле.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_08.png" alt="Рис. 17.8. Плитки CLB, DSP и блочной памяти." loading="lazy"></a><br><em>Рис. 17.8. Плитки CLB, DSP и блочной памяти.</em></p>
+<p>При сильном увеличении видны отдельные слайсы (SLICE) с таблицами LUT, триггерами и цепью переноса. Подпись над ячейкой показывает, какой части проекта она принадлежит: здесь <code>i_lab_top/red4__0_carry</code> — элемент цепи переноса (carry) из модуля упражнения.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/17_view_implemented_design_in_xilinx_vivado/17_09.png" alt="Рис. 17.9. Слайс с цепью переноса из модуля lab_top." loading="lazy"></a><br><em>Рис. 17.9. Слайс с цепью переноса из модуля lab_top.</em></p>
+<blockquote>
+<p><strong>Совет.</strong> Размещённый проект можно открыть и без повторного запуска: <strong>File → Checkpoint → Open</strong> и файл <code>run/post_route.dcp</code>, который сохранил скрипт синтеза.</p>
+</blockquote>
+<h2 id="s18">18. Синтез для Tang Nano 9K с LCD на ПЛИС Gowin</h2>
+<p>Третья САПР — Gowin EDA. Выберите скриптом <code>06</code> плату <code>tang_nano_9k</code>, а затем конфигурацию <code>tang_nano_9k_lcd_480_272_tm1638</code>: Tang Nano 9K с LCD-экраном 480×272 и модулем TM1638 (8 семисегментных индикаторов, 8 светодиодов и 8 кнопок).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_01.png" alt="Рис. 18.1. Конфигурации платы tang_nano_9k." loading="lazy"></a><br><em>Рис. 18.1. Конфигурации платы tang_nano_9k.</em></p>
+<p>Скрипт находит Gowin EDA и печатает пути к его программам: <code>gw_ide</code> (графическая оболочка), <code>gw_sh</code> (пакетный режим) и <code>programmer_cli</code> (загрузка в ПЛИС).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_02.png" alt="Рис. 18.2. Найден Gowin EDA." loading="lazy"></a><br><em>Рис. 18.2. Найден Gowin EDA.</em></p>
+<p>Запустите <code>./03_synthesize_for_fpga.bash</code>. В конце вывода — загрузка проекта в SRAM ПЛИС GW1NR-9C. Отдельный кабель не нужен: адаптер JTAG встроен в плату и подключается через её разъём USB-C.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_03.png" alt="Рис. 18.3. Синтез и загрузка в Tang Nano 9K." loading="lazy"></a><br><em>Рис. 18.3. Синтез и загрузка в Tang Nano 9K.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_04.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/18_running_synthesis_for_tang_nano_9k_lcd_with_gowin_fpga/18_04.jpg" alt="Рис. 18.4. Tang Nano 9K с LCD-экраном и модулем TM1638." loading="lazy"></a><br><em>Рис. 18.4. Tang Nano 9K с LCD-экраном и модулем TM1638.</em></p>
+<h2 id="s19">19. Схема и отчёты в Gowin EDA</h2>
+<p>Скрипт <code>05</code> открывает проект в Gowin FPGA Designer. Схему показывает <strong>Tools → Schematic Viewer → RTL Design Viewer</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_01.png" alt="Рис. 19.1. Меню RTL Design Viewer (Linux)." loading="lazy"></a><br><em>Рис. 19.1. Меню RTL Design Viewer (Linux).</em></p>
+<p>Справа от списка файлов — иерархия проекта: цепи (Nets), примитивы (Primitives), порты (Ports) и модули (Modules).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_02.png" alt="Рис. 19.2. RTL Design Viewer." loading="lazy"></a><br><em>Рис. 19.2. RTL Design Viewer.</em></p>
+<p>Масштаб меняется кнопками <strong>Zoom In</strong> и <strong>Zoom Out</strong> на панели инструментов.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_03.png" alt="Рис. 19.3. Кнопка Zoom In." loading="lazy"></a><br><em>Рис. 19.3. Кнопка Zoom In.</em></p>
+<p>В списке <strong>Modules</strong> видны все модули проекта: упражнение <code>i_lab_top</code>, контроллер TM1638, ФАПЧ <code>i_Gowin_rPLL</code>, контроллер экрана <code>i_lcd</code>, приёмник микрофона и выход звука. Двойной щелчок по модулю открывает его схему.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_04.png" alt="Рис. 19.4. Схема и список модулей." loading="lazy"></a><br><em>Рис. 19.4. Схема и список модулей.</em></p>
+<h3 id="s19_1">Отчёты Gowin в VSCode</h3>
+<p>Отчёты Gowin — это файлы HTML в каталоге <code>run/impl</code>. Их удобно смотреть прямо в VSCode: щёлкните по файлу правой кнопкой мыши и выберите <strong>Open in Integrated Browser</strong>.</p>
+<table>
+<thead><tr><th>Файл</th><th>Содержание</th></tr></thead>
+<tbody>
+<tr><td><code>run/impl/gwsynthesis/fpga_project_syn.rpt.html</code></td><td>отчёт синтеза: ресурсы и оценка частоты</td></tr>
+<tr><td><code>run/impl/pnr/fpga_project.rpt.html</code></td><td>отчёт размещения и трассировки: занятые ресурсы</td></tr>
+<tr><td><code>run/impl/pnr/fpga_project.tr.html</code></td><td>временной анализ после размещения</td></tr>
+<tr><td><code>run/impl/pnr/fpga_project.pin.html</code></td><td>назначение выводов</td></tr>
+<tr><td><code>run/impl/pnr/fpga_project.power.html</code></td><td>оценка потребляемой мощности</td></tr>
+</tbody></table>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_05.png" alt="Рис. 19.5. Открытие отчёта во встроенном браузере VSCode." loading="lazy"></a><br><em>Рис. 19.5. Открытие отчёта во встроенном браузере VSCode.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_06.png" alt="Рис. 19.6. Контекстное меню для отчёта синтеза." loading="lazy"></a><br><em>Рис. 19.6. Контекстное меню для отчёта синтеза.</em></p>
+<p>Отчёт синтеза показывает, сколько таблиц LUT, сумматоров (ALU) и регистров занял проект, и список тактовых сигналов.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_07.png" alt="Рис. 19.7. Отчёт синтеза: ресурсы и тактовые сигналы." loading="lazy"></a><br><em>Рис. 19.7. Отчёт синтеза: ресурсы и тактовые сигналы.</em></p>
+<p>Раздел <strong>Max Frequency Summary</strong> — оценка максимальной частоты по результатам синтеза.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_08.png" alt="Рис. 19.8. Отчёт синтеза: максимальная частота." loading="lazy"></a><br><em>Рис. 19.8. Отчёт синтеза: максимальная частота.</em></p>
+<p>Точная оценка — в отчёте временного анализа <code>fpga_project.tr.html</code>, после размещения и трассировки.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_09.png" alt="Рис. 19.9. Открытие отчёта временного анализа." loading="lazy"></a><br><em>Рис. 19.9. Открытие отчёта временного анализа.</em></p>
+<p>В <strong>Max Frequency Summary</strong> для каждого тактового сигнала указаны заданная частота (Constraint) и достижимая (Actual Fmax). Нули в <strong>Total Negative Slack Summary</strong> означают, что временные ограничения выполнены.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_10.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/19_view_elaborated_schematics_in_gowin_eda/19_10.png" alt="Рис. 19.10. Отчёт временного анализа." loading="lazy"></a><br><em>Рис. 19.10. Отчёт временного анализа.</em></p>
+<h2 id="s20">20. Клонирование форка на Apple Mac с процессором ARM</h2>
+<p>Те же шаги на компьютере Mac с процессором Apple (M1 и новее). Откройте в браузере свою страницу на GitHub и свой форк. На снимках форк уже содержит коммит с гиперболой, отправленный с компьютера под Windows в главе 10.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_01.png" alt="Рис. 20.1. Профиль GitHub на Mac." loading="lazy"></a><br><em>Рис. 20.1. Профиль GitHub на Mac.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_02.png" alt="Рис. 20.2. Форк с коммитом из главы 10." loading="lazy"></a><br><em>Рис. 20.2. Форк с коммитом из главы 10.</em></p>
+<p>Скопируйте адрес для клонирования: <strong>Code → Local → HTTPS</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_03.png" alt="Рис. 20.3. Адрес форка для клонирования." loading="lazy"></a><br><em>Рис. 20.3. Адрес форка для клонирования.</em></p>
+<p>Откройте программу <strong>Terminal</strong>: значок <strong>Apps</strong> (Launchpad) в Dock, затем <strong>Terminal</strong>. Её можно найти и через Spotlight (<code>Cmd+Space</code>).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_04.png" alt="Рис. 20.4. Значок Apps в Dock." loading="lazy"></a><br><em>Рис. 20.4. Значок Apps в Dock.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_05.png" alt="Рис. 20.5. Программы Terminal и Visual Studio Code." loading="lazy"></a><br><em>Рис. 20.5. Программы Terminal и Visual Studio Code.</em></p>
+<p>Перейдите в домашний каталог и клонируйте форк:</p>
+<pre><code class="language-bash">cd
+pwd
+git clone https://github.com/Dmitri-Mendeleev/basics-graphics-music.git</code></pre>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_06.png" alt="Рис. 20.6. Команда клонирования в Terminal." loading="lazy"></a><br><em>Рис. 20.6. Команда клонирования в Terminal.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/20_cloning_your_forked_repo_on_apple_mac_arm/20_07.png" alt="Рис. 20.7. Клонирование завершено." loading="lazy"></a><br><em>Рис. 20.7. Клонирование завершено.</em></p>
+<h2 id="s21">21. Открытие репозитория в VSCode на Apple Mac с процессором ARM</h2>
+<p>Запустите VSCode и откройте каталог репозитория: <strong>File → Open Folder…</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_01.png" alt="Рис. 21.1. VSCode на Mac." loading="lazy"></a><br><em>Рис. 21.1. VSCode на Mac.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_02.png" alt="Рис. 21.2. Меню File → Open Folder…" loading="lazy"></a><br><em>Рис. 21.2. Меню File → Open Folder…</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_03.png" alt="Рис. 21.3. Выбор каталога basics-graphics-music." loading="lazy"></a><br><em>Рис. 21.3. Выбор каталога basics-graphics-music.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_04.png" alt="Рис. 21.4. Репозиторий открыт." loading="lazy"></a><br><em>Рис. 21.4. Репозиторий открыт.</em></p>
+<p>Установите расширения, как в главе 5. Откройте панель <strong>Extensions</strong> значком слева.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_05.png" alt="Рис. 21.5. Значок Extensions." loading="lazy"></a><br><em>Рис. 21.5. Значок Extensions.</em></p>
+<p>Найдите <strong>surfer</strong> и нажмите <strong>Install</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_06.png" alt="Рис. 21.6. Расширение surfer в Marketplace." loading="lazy"></a><br><em>Рис. 21.6. Расширение surfer в Marketplace.</em></p>
+<p>VSCode спрашивает, доверяете ли вы издателю расширения. Для surfer нажмите <strong>Trust Publisher &amp; Install</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_07.png" alt="Рис. 21.7. Подтверждение доверия издателю." loading="lazy"></a><br><em>Рис. 21.7. Подтверждение доверия издателю.</em></p>
+<p>Так же установите <strong>SystemVerilog - Language Support</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/21_opening_repo_in_vscode_on_apple_mac_arm/21_08.png" alt="Рис. 21.8. Установленные расширения." loading="lazy"></a><br><em>Рис. 21.8. Установленные расширения.</em></p>
+<h2 id="s22">22. Синтез для Tang Nano 9K с HDMI в Gowin EDA под macOS</h2>
+<p>Под macOS терминал открывается прямо в каталоге упражнения: щёлкните по каталогу правой кнопкой мыши и выберите <strong>Open in Integrated Terminal</strong>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_01.png" alt="Рис. 22.1. Пункт Open in Integrated Terminal." loading="lazy"></a><br><em>Рис. 22.1. Пункт Open in Integrated Terminal.</em></p>
+<p>Откроется терминал zsh, приглашение которого заканчивается на <code>%</code>. В строке состояния VSCode видно, что окончания строк здесь Unix (LF), а не Windows (CRLF), как на снимках главы 9.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_02.png" alt="Рис. 22.2. Терминал zsh в каталоге упражнения." loading="lazy"></a><br><em>Рис. 22.2. Терминал zsh в каталоге упражнения.</em></p>
+<p>Выберите плату: <code>./06</code> и Tab.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_03.png" alt="Рис. 22.3. Набрано начало имени скрипта." loading="lazy"></a><br><em>Рис. 22.3. Набрано начало имени скрипта.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_04.png" alt="Рис. 22.4. Скрипт выбора платы." loading="lazy"></a><br><em>Рис. 22.4. Скрипт выбора платы.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_05.png" alt="Рис. 22.5. Выбрана плата tang_nano_9k." loading="lazy"></a><br><em>Рис. 22.5. Выбрана плата tang_nano_9k.</em></p>
+<p>Конфигурация <code>tang_nano_9k_hdmi_tm1638</code>: изображение выводится через разъём HDMI самой платы, без LCD-экрана.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_06.png" alt="Рис. 22.6. Выбрана конфигурация tang_nano_9k_hdmi_tm1638." loading="lazy"></a><br><em>Рис. 22.6. Выбрана конфигурация tang_nano_9k_hdmi_tm1638.</em></p>
+<p>Скрипт нашёл Gowin EDA внутри <code>/Applications/GowinIDE.app</code>. Gowin EDA под macOS работает только на компьютерах с процессором Apple.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_07.png" alt="Рис. 22.7. Gowin EDA найден в каталоге /Applications." loading="lazy"></a><br><em>Рис. 22.7. Gowin EDA найден в каталоге /Applications.</em></p>
+<p>Запустите синтез.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_08.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_08.png" alt="Рис. 22.8. Скрипт синтеза." loading="lazy"></a><br><em>Рис. 22.8. Скрипт синтеза.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_09.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_09.png" alt="Рис. 22.9. Проект загружен в Tang Nano 9K." loading="lazy"></a><br><em>Рис. 22.9. Проект загружен в Tang Nano 9K.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_10.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/22_running_synthesis_for_tang_nano_9k_hdmi_with_gowin_fpga_using_gowin_eda/22_10.jpg" alt="Рис. 22.10. Tang Nano 9K выводит изображение на монитор через HDMI." loading="lazy"></a><br><em>Рис. 22.10. Tang Nano 9K выводит изображение на монитор через HDMI.</em></p>
+<h2 id="s23">23. Синтез для Tang Nano 9K в OSS CAD Suite</h2>
+<p>OSS CAD Suite — сборка открытых программ для синтеза: Yosys (логический синтез), nextpnr (размещение и трассировка), проект Apicula для ПЛИС Gowin, IceStorm для Lattice iCE40 и openFPGALoader (загрузка в ПЛИС). Скрипты BGM используют этот маршрут для конфигураций, имена которых оканчиваются на <code>_yosys</code>.</p>
+<p>У Tang Nano 9K такие конфигурации есть для LCD-экранов. Выберите <code>tang_nano_9k_lcd_480_272_tm1638_yosys</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_01.png" alt="Рис. 23.1. Скрипт выбора платы." loading="lazy"></a><br><em>Рис. 23.1. Скрипт выбора платы.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_02.png" alt="Рис. 23.2. Конфигурации tang_nano_9k, выбрана 9-я." loading="lazy"></a><br><em>Рис. 23.2. Конфигурации tang_nano_9k, выбрана 9-я.</em></p>
+<p>Скрипт проверяет, что программы OSS CAD Suite для ПЛИС Gowin найдены: <code>Configuring for Gowin chips... OK</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_03.png" alt="Рис. 23.3. Найдены программы OSS CAD Suite для Gowin." loading="lazy"></a><br><em>Рис. 23.3. Найдены программы OSS CAD Suite для Gowin.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_04.png" alt="Рис. 23.4. Скрипт синтеза." loading="lazy"></a><br><em>Рис. 23.4. Скрипт синтеза.</em></p>
+<p>В конце вывода nextpnr сообщает об отсутствии ошибок, а openFPGALoader загружает проект в SRAM ПЛИС и проверяет контрольную сумму (<em>CRC check: Success</em>). Предупреждения вида <em>Numpy is not available, performance will be degraded</em> относятся к упаковщику Apicula и на результат не влияют.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/23_running_synthesis_for_tang_nano_9k_hdmi_with_giwin_fpga_using_oss_cad_suite/23_05.png" alt="Рис. 23.5. Синтез в OSS CAD Suite и загрузка в Tang Nano 9K." loading="lazy"></a><br><em>Рис. 23.5. Синтез в OSS CAD Suite и загрузка в Tang Nano 9K.</em></p>
+<h2 id="s24">24. Синтез для iCEBreaker с ПЛИС Lattice в OSS CAD Suite</h2>
+<p>Плата iCEBreaker с ПЛИС Lattice iCE40UP5K синтезируется только открытым маршрутом. Выберите плату <code>icebreaker</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_01.png" alt="Рис. 24.1. Скрипт выбора платы." loading="lazy"></a><br><em>Рис. 24.1. Скрипт выбора платы.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_02.png" alt="Рис. 24.2. Список плат, выбрана icebreaker." loading="lazy"></a><br><em>Рис. 24.2. Список плат, выбрана icebreaker.</em></p>
+<p>Конфигурации отличаются модулем вывода изображения (DVI с 12-битным или 24-битным цветом либо без него) и наличием TM1638. На снимке выбрана <code>icebreaker_dvi_24b_tm1638_yosys</code>.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_03.png" alt="Рис. 24.3. Конфигурации платы icebreaker." loading="lazy"></a><br><em>Рис. 24.3. Конфигурации платы icebreaker.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_04.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_04.png" alt="Рис. 24.4. Найдены программы OSS CAD Suite для Lattice iCE40." loading="lazy"></a><br><em>Рис. 24.4. Найдены программы OSS CAD Suite для Lattice iCE40.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_05.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_05.png" alt="Рис. 24.5. Набрано начало имени скрипта синтеза." loading="lazy"></a><br><em>Рис. 24.5. Набрано начало имени скрипта синтеза.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_06.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_06.png" alt="Рис. 24.6. Скрипт синтеза." loading="lazy"></a><br><em>Рис. 24.6. Скрипт синтеза.</em></p>
+<p>В отличие от остальных плат в этой инструкции, openFPGALoader записывает проект для iCEBreaker во флеш-память на плате (<em>Erasing… Writing…</em>), поэтому он сохраняется и после выключения питания.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_07.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_07.png" alt="Рис. 24.7. Запись во флеш-память iCEBreaker." loading="lazy"></a><br><em>Рис. 24.7. Запись во флеш-память iCEBreaker.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_08.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_08.jpg" alt="Рис. 24.8. Рабочее место с iCEBreaker." loading="lazy"></a><br><em>Рис. 24.8. Рабочее место с iCEBreaker.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_09.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/24_running_synthesis_for_ice_breaker_with_lattice_fpga_using_oss_cad_suite/24_09.jpg" alt="Рис. 24.9. iCEBreaker с модулями DVI и TM1638." loading="lazy"></a><br><em>Рис. 24.9. iCEBreaker с модулями DVI и TM1638.</em></p>
+<h2 id="s25">25. Просмотр размещённого проекта в nextpnr</h2>
+<p>В маршруте OSS CAD Suite скрипт <code>05</code> снова запускает синтез Yosys, а затем nextpnr с графическим интерфейсом.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/25_view_implemented_design_in_oss_cad_suite_nextpnr/25_01.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/25_view_implemented_design_in_oss_cad_suite_nextpnr/25_01.png" alt="Рис. 25.1. Набрано начало имени скрипта." loading="lazy"></a><br><em>Рис. 25.1. Набрано начало имени скрипта.</em></p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/25_view_implemented_design_in_oss_cad_suite_nextpnr/25_02.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/25_view_implemented_design_in_oss_cad_suite_nextpnr/25_02.png" alt="Рис. 25.2. Скрипт запуска графического интерфейса." loading="lazy"></a><br><em>Рис. 25.2. Скрипт запуска графического интерфейса.</em></p>
+<p>Окно nextpnr показывает кристалл ПЛИС (здесь Lattice iCE40UP5K в корпусе sg48). Справа — списки элементов кристалла и проекта на вкладках: <strong>Bels</strong> (базовые элементы), <strong>Wires</strong> (провода), <strong>Pips</strong> (программируемые соединения), <strong>Cells</strong> (ячейки проекта), <strong>Nets</strong> (цепи) и <strong>Groups</strong>. Выбранный в списке элемент подсвечивается на кристалле, а его свойства появляются ниже. Внизу слева — консоль Python для команд nextpnr.</p>
+<p>Если на кристалле не видно размещённых ячеек, выполните этапы упаковки, размещения и трассировки кнопками на панели инструментов. Масштаб меняется колесом мыши.</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/25_view_implemented_design_in_oss_cad_suite_nextpnr/25_03.png"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/25_view_implemented_design_in_oss_cad_suite_nextpnr/25_03.png" alt="Рис. 25.3. nextpnr-ice40 для Lattice iCE40UP5K." loading="lazy"></a><br><em>Рис. 25.3. nextpnr-ice40 для Lattice iCE40UP5K.</em></p>
+<h2 id="sa">Приложение А. Минималистичная шпаргалка по Git</h2>
+<p>Перевод файла <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/git_cheat_sheet.md">git_cheat_sheet.md</a> из репозитория BGM (автор — Юрий Панчул, обновлён 28.08.2026). Наши примечания и дополнения отмечены словами <strong>Примечание</strong> и <strong>Дополнение</strong>.</p>
+<h3 id="sa_1">1. В начале работы</h3>
+<h4>1.1. Укажите своё имя и адрес почты</h4>
+<pre><code class="language-bash">git config --global user.name  "Your Name"
+git config --global user.email your@email.com</code></pre>
+<h4>1.2. Включите кэширование пароля</h4>
+<pre><code class="language-bash">git config credential.helper 'cache --timeout=3600'</code></pre>
+<p>Без этого придётся вводить имя пользователя и пароль при каждом <code>git push</code>. Время хранения задаётся в секундах; по его истечении Git снова спросит имя и пароль.</p>
+<blockquote>
+<p><strong>Примечание.</strong> В оригинале сказано, что эта команда задаёт время в 10 часов. На самом деле <code>3600</code> секунд — это один час; для 10 часов укажите <code>36000</code>. Без ключа <code>--global</code> настройка действует только в текущем репозитории. Вместо пароля GitHub принимает только токен доступа (глава 11). Под Windows эту команду выполнять не нужно: там работает Git Credential Manager, а <code>cache</code> в Git для Windows недоступен (глава 10).</p>
+</blockquote>
+<h4>1.3. Клонируйте репозиторий с GitHub</h4>
+<pre><code class="language-bash">git clone https://github.com/yuri-panchul/basics-graphics-music</code></pre>
+<blockquote>
+<p><strong>Дополнение.</strong> Студентам Школы нужно клонировать не этот репозиторий, а свой форк репозитория chipdesignschool (главы 2 и 4): <code>git clone https://github.com/&lt;ваше_имя&gt;/basics-graphics-music.git</code>.</p>
+</blockquote>
+<h3 id="sa_2">2. Цикл разработки</h3>
+<h4>2.1. Получите изменения, сделанные другими</h4>
+<pre><code class="language-bash">git pull</code></pre>
+<h4>2.2. Добавьте новые файлы или каталоги (рекурсивно)</h4>
+<pre><code class="language-bash">git add file_or_directory_name</code></pre>
+<h4>2.3. Отредактируйте файлы</h4>
+<h4>2.4. Перед фиксацией проверьте состояние</h4>
+<p>Обратите внимание на изменённые, добавленные и удалённые файлы, а также на файлы, которые вы собирались добавить, но забыли.</p>
+<pre><code class="language-bash">git status</code></pre>
+<h4>2.5. Сравните свои изменения с репозиторием</h4>
+<pre><code class="language-bash">git diff</code></pre>
+<h4>2.6. Не добавляйте в репозиторий текст с табуляциями</h4>
+<p>Разные редакторы показывают табуляции по-разному, и многим это неудобно. Разработчикам не должно быть нужно настраивать ширину табуляции, чтобы читать исходный код. Есть исключения, прежде всего Makefile. Найти табуляции в текстовых файлах можно так:</p>
+<pre><code class="language-bash">grep -rlI --exclude-dir=.git --exclude=*.mk $'\t' .</code></pre>
+<p>Ключи <code>grep</code>:</p>
+<ul>
+<li><code>-r</code> — рекурсивный поиск;</li>
+<li><code>-l</code> — вывести только список файлов;</li>
+<li><code>-I</code> — пропускать двоичные файлы.</li>
+</ul>
+<p>Исправить табуляции можно так, но обязательно проверьте результат:</p>
+<pre><code class="language-bash">grep -rlI --exclude-dir=.git --exclude=*.mk $'\t' . | xargs sed -i 's/\t/    /g'</code></pre>
+<blockquote>
+<p><strong>Дополнение.</strong> В VSCode табуляции заменяются пробелами при вводе, если в строке состояния выбрано <em>Spaces: 4</em>. Табуляции в отступах уже открытого файла заменяет команда палитры (<code>Ctrl+Shift+P</code>) <em>Convert Indentation to Spaces</em>.</p>
+</blockquote>
+<h4>2.7. Отменить незафиксированные изменения файла или каталога</h4>
+<pre><code class="language-bash">git checkout file_or_directory_name</code></pre>
+<h4>2.8. Отменить все незафиксированные изменения в текущем каталоге, включая удаления</h4>
+<pre><code class="language-bash">git checkout .</code></pre>
+<blockquote>
+<p><strong>Дополнение.</strong> В новых версиях Git для этого есть более понятная команда <code>git restore</code>: <code>git restore имя_файла</code> или <code>git restore .</code>. Отменённые так изменения восстановить нельзя.</p>
+</blockquote>
+<h4>2.9. Отмена зафиксированных или уже отправленных изменений</h4>
+<p>Если нужно отменить зафиксированные или даже отправленные изменения, обратитесь к опытному пользователю Git или внимательно прочитайте документацию, убедившись, что понимаете каждый шаг.</p>
+<h4>2.10. Закончив редактирование, зафиксируйте изменения</h4>
+<p>Ключ <code>-a</code> автоматически включает в коммит все изменения и удаления файлов, но не новые файлы. Новые файлы и каталоги нужно добавить явно командой <code>git add</code>.</p>
+<p><strong>Важное замечание 1: перед каждым коммитом выполняйте <code>git status</code> и <code>git diff</code>.</strong> Отменить зафиксированные и особенно отправленные изменения труднее, чем незафиксированные.</p>
+<p><strong>Важное замечание 2: пишите осмысленный комментарий к каждому коммиту.</strong></p>
+<pre><code class="language-bash">git commit -am "A meaningful comment"</code></pre>
+<h4>2.11. Опубликуйте все зафиксированные изменения в репозитории (например, на GitHub)</h4>
+<p>После этого ваши изменения видны всем.</p>
+<pre><code class="language-bash">git push</code></pre>
+<h3 id="sa_3">3. Другие приёмы</h3>
+<h4>3.1. Историю репозитория можно смотреть прямо на github.com в браузере</h4>
+<h4>3.2. Файлы, которые Git должен игнорировать, перечислите в .gitignore</h4>
+<p>Это могут быть автоматически созданные двоичные и временные файлы или посторонние файлы, которые вы не хотите фиксировать и видеть в выводе <code>git status</code>. Прежде чем менять <code>.gitignore</code>, прочитайте о нём в документации Git.</p>
+<blockquote>
+<p><strong>Дополнение.</strong> В репозитории BGM <code>.gitignore</code> уже содержит каталоги <code>run</code> и <code>work</code>, файлы <code>log.txt</code> и <code>fpga_board_selection</code> и некоторые другие. Поэтому результаты синтеза и выбор платы не попадают в коммиты.</p>
+</blockquote>
+<h4>3.3. Файлы, не отслеживаемые Git</h4>
+<pre><code class="language-bash">git clean -dn</code></pre>
+<p>Команда работает от текущего каталога вниз. Проверив список (будьте осторожны!), удалить эти файлы можно так:</p>
+<pre><code class="language-bash">git clean -df</code></pre>
+<h4>3.4. Файлы, игнорируемые Git</h4>
+<p>Чтобы поддерживать порядок, периодически удаляйте файлы, которые Git игнорирует по списку <code>.gitignore</code>. Перед подготовкой выпуска это нужно делать обязательно.</p>
+<pre><code class="language-bash">git clean -dxn</code></pre>
+<p>Проверив список (будьте осторожны!), удалить эти файлы можно так:</p>
+<pre><code class="language-bash">git clean -dxf</code></pre>
+<h4>3.5. Для нетривиальных операций (слияние, отмена зафиксированных или отправленных изменений) внимательно изучите документацию Git</h4>
+<p>Иначе можно внести путаницу и ошибки или зафиксировать большие двоичные файлы, засоряющие репозиторий.</p>
+<h3 id="sa_4">Дополнение: команды для работы с форком</h3>
+<table>
+<thead><tr><th>Команда</th><th>Что делает</th></tr></thead>
+<tbody>
+<tr><td><code>git log --oneline -10</code></td><td>последние 10 коммитов, по одному на строку</td></tr>
+<tr><td><code>git diff --staged</code></td><td>изменения, уже добавленные командой <code>git add</code></td></tr>
+<tr><td><code>git restore --staged имя_файла</code></td><td>убрать файл из следующего коммита, сохранив изменения</td></tr>
+<tr><td><code>git commit --amend</code></td><td>исправить последний коммит, пока он не отправлен командой <code>git push</code></td></tr>
+<tr><td><code>git switch -c имя_ветки</code></td><td>создать ветку и перейти в неё (глава 12)</td></tr>
+<tr><td><code>git switch main</code></td><td>вернуться в ветку <code>main</code></td></tr>
+<tr><td><code>git push -u origin имя_ветки</code></td><td>первый раз отправить новую ветку в свой форк</td></tr>
+<tr><td><code>git stash</code> / <code>git stash pop</code></td><td>временно отложить незафиксированные изменения и вернуть их</td></tr>
+<tr><td><code>git remote add upstream https://github.com/chipdesignschool/basics-graphics-music.git</code></td><td>один раз: подключить репозиторий Школы (глава 13)</td></tr>
+<tr><td><code>git fetch upstream</code> и <code>git merge upstream/main</code></td><td>забрать обновления репозитория Школы</td></tr>
+<tr><td><code>git remote -v</code></td><td>список удалённых репозиториев</td></tr>
+</tbody></table>
+<h2 id="sb">Приложение Б. Как скрипты BGM находят САПР ПЛИС</h2>
+<p>Скрипты упражнений начинаются с общего файла <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/scripts/steps/00_setup.source_bash"><code>scripts/steps/00_setup.source_bash</code></a>. Он читает выбранную плату из <code>fpga_board_selection</code> и по её имени определяет маршрут синтеза:</p>
+<table>
+<thead><tr><th>Имя конфигурации</th><th>Маршрут</th></tr></thead>
+<tbody>
+<tr><td>оканчивается на <code>_yosys</code></td><td>OSS CAD Suite (проверяется первым)</td></tr>
+<tr><td><code>tang_*</code>, <code>runber</code>, <code>marsohod3gw2*</code>, <code>orangepi*</code></td><td>Gowin EDA</td></tr>
+<tr><td><code>de*</code>, <code>c5gx*</code>, <code>omdazz*</code>, <code>rzrd*</code>, <code>saylinx*</code>, <code>zeowaa*</code> и другие платы с ПЛИС Altera</td><td>Quartus</td></tr>
+<tr><td><code>alinx_ax7035b*</code>, <code>arty_a7*</code>, <code>basys3</code>, <code>nexys*</code>, <code>zybo_z7</code> и другие платы с ПЛИС Xilinx</td><td>Vivado</td></tr>
+</tbody></table>
+<p>Если в каталоге упражнения есть файл <code>hackathon_top.sv</code> со строкой <code>// Board configuration: &lt;имя&gt;</code>, плата берётся из неё, а не из <code>fpga_board_selection</code>.</p>
+<p>Затем вызывается функция поиска выбранной САПР. Все четыре функции устроены похоже: сначала они проверяют переменную окружения, указывающую точный каталог, затем программы, уже доступные через <code>PATH</code>, затем переменную с родительским каталогом установки и, наконец, стандартные места установки. В Git Bash под Windows диски <code>C:</code>, <code>D:</code> и <code>E:</code> называются <code>/c</code>, <code>/d</code> и <code>/e</code>.</p>
+<table>
+<thead><tr><th>САПР</th><th>Точный каталог</th><th>Родительский каталог</th><th>Платформы</th></tr></thead>
+<tbody>
+<tr><td>Vivado</td><td><code>XILINX_VIVADO</code></td><td><code>XILINX_HOME</code></td><td>Windows, Linux</td></tr>
+<tr><td>Quartus</td><td><code>QUARTUS_ROOTDIR</code></td><td><code>INTEL_FPGA_HOME</code>, <code>ALTERA_HOME</code>, <code>QUARTUS_HOME</code></td><td>Windows, Linux</td></tr>
+<tr><td>Gowin EDA</td><td><code>GOWIN_VERSION_DIR</code></td><td><code>GOWIN_HOME</code></td><td>Windows, Linux, macOS (только Apple silicon)</td></tr>
+<tr><td>OSS CAD Suite</td><td>—</td><td>—</td><td>Windows, Linux, macOS</td></tr>
+</tbody></table>
+<p>Переменные задаются командой <code>export</code>, например в <code>~/.bashrc</code> (Linux и Git Bash) или в <code>~/.zshrc</code> (macOS):</p>
+<pre><code class="language-bash">export XILINX_VIVADO=/c/Xilinx/Vivado/2023.2</code></pre>
+<h3 id="sb_1">Б.1. Xilinx Vivado</h3>
+<p>Код: функция <code>xilinx_setup_vivado</code> в <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/scripts/steps/00_setup_xilinx.source_bash"><code>00_setup_xilinx.source_bash</code></a>. Vivado не работает под macOS, поэтому поиск выполняется только под Linux и Windows.</p>
+<ol>
+<li>Если задана <code>XILINX_VIVADO</code> и в ней есть каталог <code>bin</code>, используется он.</li>
+<li>Если команда <code>vivado</code> уже доступна через <code>PATH</code>, используется она.</li>
+<li>Иначе Vivado ищется в родительских каталогах: сначала <code>XILINX_HOME</code>, если она задана, затем стандартные — <code>$HOME</code>, <code>/opt</code>, <code>/tools</code> под Linux и <code>/c</code>, <code>/d</code>, <code>/e</code> под Windows.</li>
+</ol>
+<p>В каждом родительском каталоге проверяются подкаталоги производителя <code>Xilinx</code>, <code>AMD</code> и <code>AMDDesignTools</code> и два варианта расположения:</p>
+<pre><code class="language-text">&lt;родитель&gt;/&lt;производитель&gt;/Vivado/&lt;версия&gt;/bin      например /c/Xilinx/Vivado/2023.2/bin
+&lt;родитель&gt;/&lt;производитель&gt;/&lt;версия&gt;/Vivado/bin      например /opt/AMDDesignTools/2025.2/Vivado/bin</code></pre>
+<p>Версией считается имя каталога, начинающееся с цифры. Выбирается первый родительский каталог, в котором нашлась хотя бы одна установка, а в нём — самая новая версия. Если версий несколько, скрипт перечисляет их в предупреждении и сообщает, какую выбрал. Найденный каталог записывается в <code>XILINX_VIVADO</code>, а его <code>bin</code> добавляется в <code>PATH</code>.</p>
+<p>Если Vivado не найден, скрипт сообщает, в каких каталогах искал, и предлагает задать <code>XILINX_HOME</code> или <code>XILINX_VIVADO</code>.</p>
+<h3 id="sb_2">Б.2. Altera Quartus</h3>
+<p>Код: функция <code>quartus_setup</code> в <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/scripts/steps/00_setup_altera.source_bash"><code>00_setup_altera.source_bash</code></a>. Подробнее с примерами — в Инструкции по установке ПО, <a href="https://panchul.com/bgm_svh_manual/20261006_draft/claude/manual_ru.html#s4_1_1_4">раздел 4.1.1.4</a> (Windows) и <a href="https://panchul.com/bgm_svh_manual/20261006_draft/claude/manual_ru.html#s4_2_1_4">раздел 4.2.1.4</a> (Linux).</p>
+<p>Quartus ищется с учётом конкретной ПЛИС: скрипт читает её обозначение из строки <code>DEVICE</code> в файле <code>board_specific.qsf</code> платы, например <code>EP4CE6F17C8</code> для Saylinx, и выбирает версию Quartus, которая умеет с ней работать. Это важно для старых плат: Cyclone II и Cyclone III не поддерживаются новыми версиями Quartus.</p>
+<p>Порядок поиска:</p>
+<ol>
+<li><code>QUARTUS_ROOTDIR</code> — каталог <code>quartus</code> конкретной установки. Под Windows эту переменную задаёт установщик Quartus, поэтому на снимке главы 7 написано <em>using QUARTUS_ROOTDIR</em>.</li>
+<li>Команда <code>quartus</code>, уже доступная через <code>PATH</code>.</li>
+<li>Родительские каталоги из <code>INTEL_FPGA_HOME</code>, <code>ALTERA_HOME</code> и <code>QUARTUS_HOME</code>.</li>
+<li>Стандартные родительские каталоги: <code>$HOME</code>, <code>/opt</code>, <code>/tools</code> под Linux и <code>/c</code>, <code>/d</code>, <code>/e</code> под Windows.</li>
+</ol>
+<p>Если найденный на каком-то шаге Quartus не подходит для ПЛИС платы, скрипт пишет предупреждение и продолжает поиск на следующих шагах.</p>
+<p>В родительском каталоге проверяются подкаталоги <code>altera</code>, <code>altera_lite</code>, <code>altera_std</code>, <code>altera_pro</code>, <code>intelFPGA</code>, <code>intelFPGA_lite</code>, <code>intelFPGA_pro</code> и <code>intelFPGA_std</code>, а в них — <code>&lt;версия&gt;/quartus</code>, например <code>C:\intelFPGA_lite\23.1std\quartus</code>.</p>
+<p>Каждый кандидат проверяется так:</p>
+<ul>
+<li>есть исполняемые файлы <code>quartus</code>, <code>quartus_sh</code> и <code>quartus_pgm</code> (в <code>bin</code>, а под Windows — в <code>bin64</code> или <code>bin</code>);</li>
+<li>по заставке <code>quartus_sh</code> определяются версия и редакция (Lite, Web, Standard или Pro);</li>
+<li>версия и редакция подходят для семейства ПЛИС (таблица ниже);</li>
+<li>база данных устройств этой установки действительно содержит нужную ПЛИС; это проверяет Tcl-скрипт <code>scripts/fpga/quartus_has_device.tcl</code>;</li>
+<li>путь не содержит пробелов, нелатинских букв и спецсимволов, иначе выдаётся предупреждение.</li>
+</ul>
+<table>
+<thead><tr><th>Семейство ПЛИС</th><th>Ограничение</th></tr></thead>
+<tbody>
+<tr><td>Cyclone (EP1C)</td><td>Lite/Web до 11.0 SP1, Standard до 13.0 SP1</td></tr>
+<tr><td>Cyclone II (EP2C)</td><td>до 13.0 SP1</td></tr>
+<tr><td>Cyclone III (EP3C)</td><td>до 13.1</td></tr>
+<tr><td>MAX 10 (10M)</td><td>начиная с 14.0</td></tr>
+<tr><td>Agilex 3 (A3)</td><td>только Pro, начиная с 25.1</td></tr>
+<tr><td>Cyclone, Cyclone II–IV, Cyclone V, MAX II, MAX 10</td><td>не поддерживаются редакцией Pro</td></tr>
+</tbody></table>
+<p>Среди подходящих установок предпочитаются бесплатные (Lite и Web), затем более новая версия, а при равных версиях — Standard, а не Pro. Выбранный каталог записывается в <code>QUARTUS_ROOTDIR</code>, его <code>bin</code> ставится в начало <code>PATH</code>, и скрипт сообщает, например: <em>Selected Quartus Lite 23.1.0.991 for 'saylinx' (EP4CE6F17C8), using QUARTUS_ROOTDIR</em>.</p>
+<h3 id="sb_3">Б.3. Gowin EDA</h3>
+<p>Код: функции <code>gowin_setup_ide</code> и <code>gowin_try_install_dir</code> в <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/scripts/steps/00_setup_gowin.source_bash"><code>00_setup_gowin.source_bash</code></a>. Gowin EDA работает под Windows, Linux и macOS на процессорах Apple; на Mac с процессором Intel скрипт сообщает об ошибке.</p>
+<ol>
+<li><code>GOWIN_VERSION_DIR</code> — каталог конкретной версии, в котором лежат <code>IDE</code> и <code>Programmer</code>.</li>
+<li>Программа <code>gw_sh</code> в <code>PATH</code>, если там же есть программа загрузки: <code>openFPGALoader</code> под Linux или <code>programmer_cli</code> под Windows.</li>
+<li>Родительский каталог из <code>GOWIN_HOME</code>.</li>
+<li>Стандартные родительские каталоги: под macOS — <code>/Applications</code> и <code>~/Applications</code>, затем под Linux и macOS — <code>$HOME</code>, <code>/opt</code>, <code>/tools</code>, <code>~/Downloads</code>; под Windows — <code>/c</code>, <code>/d</code>, <code>/e</code>.</li>
+</ol>
+<p>В родительском каталоге ищется подкаталог <code>Gowin</code> (под Linux также <code>gowin</code>, под macOS также <code>GowinIDE.app</code>), а в нём — подкаталоги, в имени которых есть <code>Gowin_</code>, например <code>Gowin_V1.9.9Beta-4_Education</code>. Подходит и каталог, в котором сразу лежит <code>IDE/bin/gw_sh</code>. Под macOS добавляется путь внутри приложения <code>Contents/Resources/Gowin_EDA</code>. Примеры с наших снимков:</p>
+<pre><code class="language-text">C:\Gowin\Gowin_V1.9.9Beta-4_Education                         (Windows, глава 18)
+/Applications/GowinIDE.app/Contents/Resources/Gowin_EDA         (macOS, глава 22)</code></pre>
+<blockquote>
+<p><strong>Важно.</strong> Если установлено несколько версий, выбирается последняя по алфавиту, а не по номеру версии: <code>Gowin_V1.9.9…</code> окажется «новее», чем <code>Gowin_V1.9.10…</code>, потому что символ <code>9</code> идёт после <code>1</code>. Скрипт предупреждает о нескольких версиях; чтобы выбрать нужную, задайте <code>GOWIN_VERSION_DIR</code>.</p>
+</blockquote>
+<p>Найденная установка проверяется на наличие каталогов <code>IDE</code>, <code>IDE/bin</code> и <code>Programmer</code> и программ <code>gw_ide</code> и <code>gw_sh</code>, а под Windows и macOS также <code>programmer_cli</code>; скрипт печатает пути к ним (глава 18). Кроме того:</p>
+<ul>
+<li>под Linux скрипт подгружает через <code>LD_PRELOAD</code> системные библиотеки <code>libfreetype</code> и <code>libz</code> и задаёт <code>QT_XCB_GL_INTEGRATION=none</code>, чтобы графическая оболочка Gowin запускалась в современных дистрибутивах;</li>
+<li>под macOS скрипт добавляет библиотеки Gowin в <code>DYLD_LIBRARY_PATH</code> и <code>DYLD_FRAMEWORK_PATH</code> и снимает с каталогов Gowin атрибут карантина macOS, из-за которого система блокирует скачанные программы.</li>
+</ul>
+<p>Проект загружается в ПЛИС программой <code>programmer_cli</code> под Windows и macOS. Под Linux используется <code>openFPGALoader</code>, если он установлен, а иначе тоже <code>programmer_cli</code>. Под Linux нужно правило udev для адаптера на плате: скопируйте <code>scripts/fpga/91-sipeed.rules</code> в <code>/etc/udev/rules.d</code> и перезагрузите компьютер, иначе скрипт выдаст ошибку с этой подсказкой.</p>
+<h3 id="sb_4">Б.4. OSS CAD Suite</h3>
+<p>Код: функция <code>setup_yosys</code> в <a href="https://github.com/yuri-panchul/basics-graphics-music/blob/main/scripts/steps/00_setup_yosys.source_bash"><code>00_setup_yosys.source_bash</code></a>. Этот маршрут выбирается для конфигураций, имена которых оканчиваются на <code>_yosys</code>.</p>
+<ol>
+<li>Если есть каталог <code>~/oss-cad-suite</code>, скрипт подключает его файл <code>environment</code>, который добавляет программы сборки в <code>PATH</code>.</li>
+<li>Если есть каталог <code>~/Downloads/oss-cad-suite</code>, скрипт подключает и его (на снимках главы 23 OSS CAD Suite лежит именно там). Держите только одну из двух копий, чтобы было ясно, какая используется.</li>
+<li>Если ни одного каталога нет, используются программы, уже доступные через <code>PATH</code>, например установленные менеджером пакетов.</li>
+</ol>
+<p>Под macOS скрипт снимает с каталога OSS CAD Suite атрибут карантина. Затем он проверяет, что нужные программы есть, и сообщает об этом строкой <em>Configuring for … OK</em>:</p>
+<table>
+<thead><tr><th>Плата (часть имени)</th><th>Нужные программы</th><th>Сообщение</th></tr></thead>
+<tbody>
+<tr><td>любая</td><td><code>yosys</code></td><td>—</td></tr>
+<tr><td><code>ice</code> (Lattice iCE40)</td><td><code>nextpnr-ice40</code>, <code>icepack</code></td><td>Configuring for Lattice iCE40...</td></tr>
+<tr><td><code>ecp5</code> (Lattice ECP5)</td><td><code>nextpnr-ecp5</code>, <code>ecppack</code></td><td>Configuring for Lattice ECP5...</td></tr>
+<tr><td><code>tang</code> (Gowin)</td><td><code>nextpnr-himbaechel</code>, <code>gowin_pack</code></td><td>Configuring for Gowin chips...</td></tr>
+</tbody></table>
+<p>Параметры конкретной ПЛИС (тип, корпус, имя платы для <code>openFPGALoader</code>) берутся из файла <code>board_info.source_bash</code> в каталоге платы. Загрузка в ПЛИС выполняется командой <code>openFPGALoader -b &lt;плата&gt;</code>; для Tang Nano под Linux нужно то же правило udev, что и в разделе Б.3. Скрипт <code>05</code> в этом маршруте повторяет синтез и запускает nextpnr с ключом <code>--gui</code> (глава 25).</p>
+<p class="figure"><a href="https://www.panchul.com/bgm_workflow_manual/20261011/image_at_the_end_synthesis_school_graduation_2025.jpg"><img src="https://www.panchul.com/bgm_workflow_manual/20261011/image_at_the_end_synthesis_school_graduation_2025.jpg" alt="Выпуск Школы синтеза цифровых схем, 2025 год."></a></p>
+</article>
+</body>
+</html>

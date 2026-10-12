@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why the HDMI Stayed Dark</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Fira+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<style>
+  :root {
+    --ground:    #f7f6f4;
+    --surface:   #ffffff;
+    --ink:       #1a1a1c;
+    --muted:     #5e5c5a;
+    --faint:     #8e8b87;
+    --rule:      #e2e0dc;
+    --rule2:     #c3c0ba;
+    --fault:     #a32020;
+    --fault-bg:  #fbeeee;
+    --suspect:   #b06d16;
+    --suspect-bg:#fdf3e6;
+    --diff:      #4a5a74;
+    --cleared:   #4a6b3f;
+    --code-bg:   #efedea;
+
+    --display: Barlow, "Helvetica Neue", Arial, sans-serif;
+    --body:    Literata, Georgia, "Times New Roman", serif;
+    --mono:    "Fira Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:    #131312;
+      --surface:   #1b1b1a;
+      --ink:       #eceae7;
+      --muted:     #a8a5a0;
+      --faint:     #78756f;
+      --rule:      #2c2b29;
+      --rule2:     #42403d;
+      --fault:     #e8807a;
+      --fault-bg:  #251616;
+      --suspect:   #dba65c;
+      --suspect-bg:#241c10;
+      --diff:      #92a6c4;
+      --cleared:   #9cc188;
+      --code-bg:   #191918;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:    #131312;
+    --surface:   #1b1b1a;
+    --ink:       #eceae7;
+    --muted:     #a8a5a0;
+    --faint:     #78756f;
+    --rule:      #2c2b29;
+    --rule2:     #42403d;
+    --fault:     #e8807a;
+    --fault-bg:  #251616;
+    --suspect:   #dba65c;
+    --suspect-bg:#241c10;
+    --diff:      #92a6c4;
+    --cleared:   #9cc188;
+    --code-bg:   #191918;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.63;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 51rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 2.75rem 5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 0.75rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2rem, 6.8vw, 2.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0 0 0.95rem;
+  }
+
+  .standfirst {
+    font-size: 1.14rem;
+    color: var(--muted);
+    max-width: 39rem;
+    margin: 0 0 1.9rem;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.6rem;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding-block: 0.8rem;
+    margin-bottom: 2.5rem;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+  .meta b { color: var(--faint); font-weight: 400; }
+
+  /* root cause banner */
+
+  .cause {
+    background: var(--fault-bg);
+    border-left: 4px solid var(--fault);
+    padding: 1.15rem 1.35rem;
+    margin-bottom: 1.1rem;
+  }
+  .cause .tag {
+    display: block;
+    font-family: var(--display);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--fault);
+    margin-bottom: 0.45rem;
+  }
+  .cause h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    border: 0;
+  }
+  .cause p { margin: 0 0 0.6rem; max-width: 37rem; }
+  .cause p:last-child { margin-bottom: 0; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.42rem;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    margin: 3rem 0 0.9rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.07rem;
+    margin: 1.9rem 0 0.5rem;
+  }
+
+  p { margin: 0 0 0.95rem; max-width: 41rem; }
+  strong { font-weight: 600; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.83em;
+    background: var(--code-bg);
+    padding: 0.08em 0.3em;
+    border-radius: 2px;
+  }
+
+  /* severity chips */
+
+  .chip {
+    display: inline-block;
+    font-family: var(--display);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.45rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    color: #fff;
+  }
+  .c-fault   { background: var(--fault); }
+  .c-suspect { background: var(--suspect); }
+  .c-diff    { background: var(--diff); }
+  .c-cleared { background: var(--cleared); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.1rem;
+    margin-bottom: 1.4rem;
+    font-size: 0.86rem;
+    color: var(--muted);
+    align-items: center;
+  }
+
+  /* tables */
+
+  .scroll { overflow-x: auto; margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.89rem; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--display);
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 0.5rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.5rem 0.85rem 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  thead th {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.71rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule2);
+    white-space: nowrap;
+  }
+  td.mono { font-family: var(--mono); font-size: 0.79rem; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* code comparison */
+
+  .compare {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+  }
+  .side {
+    background: var(--code-bg);
+    padding: 0.8rem 0.95rem;
+    overflow-x: auto;
+    border-top: 3px solid var(--rule2);
+  }
+  .side.mine  { border-top-color: var(--fault); }
+  .side.theirs{ border-top-color: var(--cleared); }
+  .side .who {
+    display: block;
+    font-family: var(--display);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 0.45rem;
+  }
+  .side pre {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.75;
+    white-space: pre;
+  }
+  .side .cm { color: var(--faint); }
+
+  .shell {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    background: var(--code-bg);
+    padding: 0.8rem 1rem;
+    margin: 0 0 1.4rem;
+    overflow-x: auto;
+  }
+  .shell pre { margin: 0; white-space: pre; font: inherit; }
+  .shell .cm { color: var(--faint); }
+  .shell .ok { color: var(--cleared); }
+
+  ul.points, ol.points { margin: 0 0 1.1rem; padding-left: 1.2rem; }
+  ul.points li, ol.points li { margin-bottom: 0.6rem; }
+  ol.points li::marker { font-family: var(--mono); font-size: 0.84rem; color: var(--faint); }
+
+  .lesson {
+    border-left: 3px solid var(--ink);
+    background: var(--surface);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.3rem;
+  }
+  .lesson h3 { margin: 0 0 0.4rem; }
+  .lesson p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 3.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--faint);
+    line-height: 1.85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="eyebrow">ALINX AX7035B &middot; HDMI output &middot; post-mortem</p>
+  <h1>Why the HDMI Stayed Dark</h1>
+  <p class="standfirst">
+    Two implementations of HDMI output for the same board. One drives a monitor,
+    one does not. This is what separates them, starting with the single line
+    that accounts for it.
+  </p>
+
+  <div class="meta">
+    <span><b>working</b> codex 4b2fe932</span>
+    <span><b>dark</b> claude 7de707c8</span>
+    <span><b>part</b> xc7a35tfgg484-2</span>
+    <span><b>analysed</b> 2026-10-04</span>
+  </div>
+
+  <div class="cause">
+    <span class="tag">Root cause</span>
+    <h2>Pin M6 switches the connector's +5 V supply, and it is active high</h2>
+    <p>
+      My code drives it <strong>low</strong> to enable, inferring active-low from
+      the <code>N</code> at the end of the inherited signal name
+      <code>HDMI_OEN</code>. So on my bitstream the HDMI connector never
+      receives power: the monitor sees no hot-plug voltage and reports no signal,
+      regardless of what the three data lanes are transmitting.
+    </p>
+    <p>
+      The polarity is documented in the ALINX AX7035B user manual, HDMI section,
+      which the codex implementation cites and follows &mdash; its comment reads
+      <em>&ldquo;M6 controls HDMI1's +5 V supply and is active high, despite
+      OEN's name.&rdquo;</em> I flagged the polarity as a guess in my commit
+      message and in my hand-off notes. Flagging it was honest; it was not a
+      substitute for reading the manual, which was available.
+    </p>
+    <p>
+      My non-graphics branch has the same error with the opposite sign: it drives
+      M6 <strong>high</strong> while transmitting nothing, powering the connector
+      for a design that has no video to send.
+    </p>
+  </div>
+
+  <div class="compare">
+    <div class="side mine">
+      <span class="who">claude &mdash; wrong both ways</span>
+<pre><span class="cm">// graphics on</span>
+localparam hdmi_output_enable = 1'b0;
+assign HDMI_OEN = hdmi_output_enable;
+
+<span class="cm">// graphics off</span>
+assign HDMI_OEN = ~ hdmi_output_enable;</pre>
+    </div>
+    <div class="side theirs">
+      <span class="who">codex &mdash; follows the manual</span>
+<pre><span class="cm">// graphics on, after reset releases</span>
+assign hdmi_enable = ~ pixel_rst;
+
+<span class="cm">// graphics off</span>
+assign HDMI_OEN = '0;</pre>
+    </div>
+  </div>
+
+  <h2>Everything else, triaged</h2>
+
+  <div class="legend">
+    <span class="chip c-fault">fault</span>
+    <span class="chip c-suspect">probable fault</span>
+    <span class="chip c-diff">design difference</span>
+    <span class="chip c-cleared">cleared &mdash; not a cause</span>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>Differences, by whether they could keep the screen dark</caption>
+      <thead>
+        <tr>
+          <th>Difference</th>
+          <th>Verdict</th>
+          <th>Basis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>HDMI_OEN</code> polarity</td>
+          <td><span class="chip c-fault">fault</span></td>
+          <td>Vendor manual; connector gets no +5 V</td>
+        </tr>
+        <tr>
+          <td>Reset released asynchronously into <code>OSERDESE2</code></td>
+          <td><span class="chip c-suspect">probable fault</span></td>
+          <td>Master and slave can leave reset on different edges</td>
+        </tr>
+        <tr>
+          <td>Clock lane symbol inverted relative to the data lanes</td>
+          <td><span class="chip c-suspect">probable fault</span></td>
+          <td>Half-period clock shift; most sinks tolerate it</td>
+        </tr>
+        <tr>
+          <td>Lab clocked at 25 MHz instead of 50 MHz</td>
+          <td><span class="chip c-diff">difference</span></td>
+          <td>Self-consistent; changes lab timing, not the video</td>
+        </tr>
+        <tr>
+          <td>Copied <code>svo_tmds.v</code> instead of using <code>peripherals/dvi.sv</code></td>
+          <td><span class="chip c-diff">difference</span></td>
+          <td>Duplicated existing shared code; encoder itself is sound</td>
+        </tr>
+        <tr>
+          <td>No <code>set_false_path</code> on <code>rst_n</code></td>
+          <td><span class="chip c-diff">difference</span></td>
+          <td>Timing report hygiene only</td>
+        </tr>
+        <tr>
+          <td>Negative TMDS pins left unconstrained</td>
+          <td><span class="chip c-cleared">cleared</span></td>
+          <td>Vivado inferred the identical pins &mdash; measured</td>
+        </tr>
+        <tr>
+          <td>Sync polarity into the encoder's control bits</td>
+          <td><span class="chip c-cleared">cleared</span></td>
+          <td>Both send negative H and V sync for 640&times;480</td>
+        </tr>
+        <tr>
+          <td>Channel order: blue carries sync</td>
+          <td><span class="chip c-cleared">cleared</span></td>
+          <td>Identical in both</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The pin question, settled by measurement</h3>
+
+  <p>
+    Codex constrains all eight TMDS pins explicitly, citing the manual. I
+    constrained only the four positive pins and let Vivado derive each partner.
+    That looked like a candidate cause, so I placed my design and asked what it
+    had actually chosen:
+  </p>
+
+  <div class="shell">
+<pre>PINCHECK TMDS_clk_p     -> E1      PINCHECK TMDS_clk_n     -> D1
+PINCHECK TMDS_data_p[0] -> G1      PINCHECK TMDS_data_n[0] -> F1
+PINCHECK TMDS_data_p[1] -> H2      PINCHECK TMDS_data_n[1] -> G2
+PINCHECK TMDS_data_p[2] -> K1      PINCHECK TMDS_data_n[2] -> J1
+PINCHECK HDMI_OEN       -> M6
+
+<span class="ok">identical to the codex constraints, pin for pin</span></pre>
+  </div>
+
+  <p>
+    So that difference is cosmetic. Being explicit is still better &mdash; it
+    documents the intent and survives a tool that changes its inference &mdash;
+    but it is not why the screen is dark. Ruling it out mattered: it was the
+    difference most likely to be mistaken for the cause.
+  </p>
+
+  <h3>Reset release into the serializer</h3>
+
+  <p>
+    A <code>10:1</code> DDR serializer on Artix-7 is a pair of
+    <code>OSERDESE2</code> primitives joined by a shift chain. Both have to
+    leave reset on the same <code>CLKDIV</code> edge, or the pair starts out of
+    step and the ten bits of each symbol are framed wrongly. The reset therefore
+    has to be released synchronously.
+  </p>
+
+  <div class="compare">
+    <div class="side mine">
+      <span class="who">claude &mdash; combinational, no synchroniser</span>
+<pre>wire rst = ~ rst_n | ~ mmcm_locked;
+
+<span class="cm">// straight into OSERDESE2.RST,
+// the encoders and vga</span></pre>
+    </div>
+    <div class="side theirs">
+      <span class="who">codex &mdash; async assert, sync release</span>
+<pre>wire reset_request = rst_in | ~ locked;
+
+(* ASYNC_REG = "TRUE" *)
+logic [2:0] video_reset = '1;
+
+always_ff @(posedge pixel_clk or
+            posedge reset_request)
+  if (reset_request) video_reset &lt;= '1;
+  else video_reset &lt;= {video_reset[1:0], 1'b0};</pre>
+    </div>
+  </div>
+
+  <p>
+    I call this a probable fault rather than a confirmed one because the power
+    rail alone fully explains a blank screen, so it has not been observed. It
+    would produce a different symptom &mdash; a monitor that syncs and shows
+    noise or a torn image &mdash; and it should be fixed whether or not it has
+    bitten yet.
+  </p>
+
+  <h3>Duplicated code the repository already had</h3>
+
+  <p>
+    <code>peripherals/dvi.sv</code> has been on <code>main</code> since a commit
+    titled <em>&ldquo;Fix quartus synth error&rdquo;</em>, and provides
+    <code>dvi_sync</code>, <code>tmds_encoder</code> and a generic
+    <code>serializer</code>. Everything in <code>peripherals/</code> is compiled
+    for every board by the Vivado script, so it was available to me the whole
+    time. Codex used it. I copied <code>svo_tmds.v</code> out of
+    <code>boards/marsohod3gw2/</code> instead, adding a fourth copy of a TMDS
+    encoder to the tree.
+  </p>
+
+  <p>
+    The cause is unglamorous. I did search for the existing encoders, and
+    truncated the result:
+  </p>
+
+  <div class="shell">
+<pre>grep -rl 'TMDS\|tmds' --include='*.sv' --include='*.v' ... . | head -30
+                                                               <span class="cm">^^^^^^^</span>
+<span class="cm">peripherals/dvi.sv ranks 29th among the .sv matches alone, and falls
+past the cut once the other file types are included.</span></pre>
+  </div>
+
+  <h2>Why my verification did not catch it</h2>
+
+  <div class="lesson">
+    <h3>I proved the design builds. Codex proved the design works.</h3>
+    <p>
+      My evidence was implementation evidence: timing met with 22.8 ns of slack,
+      zero DRC violations, 8 <code>OSERDESE2</code> and 4 <code>OBUFDS</code>
+      placed, a bitstream written, both branches of the conditional compiled.
+      Every one of those checks passes with the power-enable pin inverted,
+      because none of them looks at what the pins mean.
+    </p>
+    <p>
+      Codex wrote a self-checking testbench that instantiates AMD's own MMCM,
+      serializer and output-buffer models, decodes the differential output,
+      and verifies every pixel and blanking symbol of a complete frame, then
+      repeats after an asynchronous reset. And for the facts a simulation cannot
+      supply &mdash; which pin, which polarity &mdash; it went to the vendor
+      manual rather than to the signal's name.
+    </p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <caption>What each body of evidence can and cannot establish</caption>
+      <thead>
+        <tr>
+          <th>Check</th>
+          <th>claude</th>
+          <th>codex</th>
+          <th>Would catch the M6 fault?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Synthesis, place, route, bitstream</td><td>yes</td><td>yes</td><td>no</td></tr>
+        <tr><td>Post-route timing and DRC</td><td>yes</td><td>yes</td><td>no</td></tr>
+        <tr><td>Both branches of the graphics conditional built</td><td>yes</td><td>yes</td><td>no</td></tr>
+        <tr><td>Frame-level simulation decoding the TMDS output</td><td>no</td><td>yes</td><td>no</td></tr>
+        <tr><td>Reset-recovery simulation</td><td>no</td><td>yes</td><td>no</td></tr>
+        <tr><td>Pin and polarity taken from the vendor manual</td><td>no</td><td>yes</td><td><strong>yes</strong></td></tr>
+        <tr><td>Board documentation written</td><td>no</td><td>yes</td><td>indirectly</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Only the last two rows would have found it, and only one of them is
+    engineering rather than paperwork. A simulation however thorough cannot tell
+    you that a pin called <code>OEN</code> is active high; the testbench
+    verifies the lanes it is given, not the rail that powers the connector.
+    The finding is specific: <strong>for a signal whose behaviour lives in the
+    hardware rather than in the RTL, a documented source is the only
+    verification that counts</strong> &mdash; and naming conventions are not a
+    source.
+  </p>
+
+  <h2>Fixing my implementation</h2>
+
+  <ol class="points">
+    <li>
+      Invert the power enable: drive M6 high to enable, low when idle. One
+      <code>localparam</code> and the inverted use in the non-graphics branch.
+    </li>
+    <li>
+      Add per-domain reset synchronisers with async assert and synchronous
+      release, feeding <code>OSERDESE2.RST</code> and the encoders, plus
+      <code>set_false_path -from [get_ports rst_n]</code>.
+    </li>
+    <li>
+      Replace the copied <code>svo_tmds.v</code> with the shared
+      <code>dvi_sync</code> and <code>tmds_encoder</code> from
+      <code>peripherals/dvi.sv</code>, and delete the duplicate.
+    </li>
+    <li>
+      Match the clock lane symbol to the data lanes rather than inverting it.
+    </li>
+    <li>
+      Constrain all eight TMDS pins explicitly, citing the manual section, even
+      though Vivado infers the same four.
+    </li>
+  </ol>
+
+  <p>
+    Items 1 to 3 are corrections. Items 4 and 5 bring the implementation in line
+    with a reference that is known to work, which is worth more than my judgement
+    about whether a sink tolerates an inverted clock.
+  </p>
+
+  <p>
+    The honest summary of the comparison is shorter than the comparison: on this
+    task codex produced the better implementation. It sourced the hardware facts
+    from the vendor, verified behaviour rather than buildability, reused the
+    repository's own modules, and documented both the result and the limits of
+    its testing. Mine built cleanly and did not work.
+  </p>
+
+  <footer>
+    Pin assignments measured by placing the claude design and querying
+    PACKAGE_PIN on each port, Vivado 2026.1, xc7a35tfgg484-2.<br>
+    Polarity and pin facts attributed to the ALINX AX7035B user manual via the
+    codex implementation's README, which cites it; not independently read here.
+  </footer>
+
+</div>
+</body>
+</html>

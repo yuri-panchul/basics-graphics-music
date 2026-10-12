@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ALINX AX7035B HDMI: Codex versus Claude — comparison 1</title>
+<meta name="description" content="Evidence-based comparison of the Codex and Claude ALINX AX7035B HDMI implementations, with fresh simulation, build results, defects and recommendations.">
+<style>
+:root{color-scheme:light;--ink:#1d2d40;--muted:#52657a;--line:#d7e0eb;--paper:#fff;--bg:#eef3f8;--accent:#126b79}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:#17364d;color:white;padding:44px max(24px,calc((100vw - 1120px)/2));border-bottom:6px solid #37b9ac}
+header p{max-width:850px;color:#d9e9f3;margin:12px 0 0}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:#9ce3dd}
+h1{font-size:clamp(29px,4vw,46px);line-height:1.16;margin:10px 0}main{max-width:1170px;margin:auto;padding:25px}
+nav{display:flex;flex-wrap:wrap;gap:8px 19px;margin:0 0 26px;font-size:14px}nav a{color:#19465e}a{color:#086576;text-underline-offset:3px;overflow-wrap:anywhere}
+section{background:var(--paper);padding:27px 31px;margin-bottom:24px;border:1px solid var(--line);border-radius:12px;scroll-margin-top:18px}
+h2{font-size:26px;line-height:1.25;margin:0 0 18px}h3{font-size:20px;line-height:1.35;margin:13px 0}p{margin:12px 0}.lead{font-size:19px}
+.callout{border-left:5px solid var(--accent);background:#eaf6f5;padding:16px 20px;margin:20px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:26px}.columns>article{min-width:0}
+li{margin:9px 0}ol,ul{padding-left:25px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:15px;margin:15px 0}th,td{padding:11px 13px;border:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#eaf0f6}tbody tr:nth-child(even){background:#f8fafc}code{font: .9em ui-monospace,SFMono-Regular,Consolas,monospace;background:#edf1f5;padding:2px 4px;border-radius:3px;overflow-wrap:anywhere}
+pre{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;overflow:auto;background:#f0f4f8;padding:17px;border-radius:7px}pre code{padding:0;background:none}
+.pass{color:#146b48;font-weight:650}.fail{color:#a03424;font-weight:650}.badge{display:inline-block;font-size:12px;letter-spacing:.03em;font-weight:700;padding:3px 9px;border-radius:4px}
+.bug{background:#fce4df;color:#952e21}.check{background:#fff0c9;color:#775400}.minor{background:#e7eef8;color:#324d70}.finding{padding:22px 0;border-bottom:1px solid var(--line)}.finding:last-child{border:0}
+.flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;padding:21px 6px;background:#f4f8fb;border-radius:8px;margin:20px 0}.flow span{padding:9px 12px;border:1px solid #bed3df;border-radius:5px;font-size:14px;background:white}.flow b{color:#218187}
+summary{cursor:pointer;font-weight:650;padding:12px 0}details{border-top:1px solid var(--line)}footer{color:var(--muted);font-size:13px;padding:0 25px 30px;max-width:1170px;margin:auto}
+@media(max-width:760px){body{font-size:16px}main{padding:14px}section{padding:21px 18px}.columns{grid-template-columns:1fr;gap:8px}th,td{min-width:120px}header{padding:29px 22px}h2{font-size:23px}}
+@media print{body{background:white;font-size:10pt}header{background:white;color:#17364d;padding:10px 0}header p{color:#52657a}main{padding:0;max-width:none}nav{display:none}section{border:0;padding:14px 0;margin:0;border-radius:0}h2,h3{break-after:avoid}table{font-size:9pt}tr{break-inside:avoid}.scroll{overflow:visible}.columns{display:block}details{display:none}a{color:inherit}footer{padding:20px 0}}
+</style></head><body>
+<header><div class="eyebrow">BGM · FPGA implementation review · comparison 1</div>
+<h1>ALINX AX7035B HDMI<br>Codex versus Claude</h1>
+<p>Pros, cons, reproducible findings, ideas to adopt, and a path toward a shared implementation.</p>
+<p>Reviewed October 9–10, 2026 · Vivado/XSim 2026.1 · No hardware programming performed</p></header>
+<main><nav aria-label="Report sections"><a href="#conclusion">Conclusion</a><a href="#scope">Versions and scope</a><a href="#operation">How each implementation works</a><a href="#differences">Behavioral differences</a><a href="#simulation">Fresh simulation results</a><a href="#implementation">Fresh implementation results</a><a href="#findings">Bugs, limitations, and evidence</a><a href="#tradeoffs">Pros and cons</a><a href="#adoption">Ideas each side can adopt</a><a href="#recommendations">Checks and recommendations</a><a href="#references">Exact differences and technical references</a></nav><section id="conclusion"><h2>Conclusion</h2>
+<p class="lead">Both implementations produce working simulated TMDS video for a combinational RGB source,
+and both complete a fresh color-stripes build through bitstream generation. Codex preserves the 50 MHz lab
+clock and has stronger checked-in tests. Claude uses a simpler 25 MHz lab/pixel clock arrangement and fewer
+resources. Neither implementation handles arbitrary registered RGB pipelines correctly.</p>
+<div class="callout"><strong>Recommended direction:</strong> keep the vendor XDC with HDMI lines uncommented
+and the requested reset false path; retain 50 MHz as the compatibility default; define and test the RGB latency
+contract before combining code. Adopt Claude’s module separation and Codex’s reproducible verification.</div>
+<p>This is a source comparison with fresh simulation and implementation evidence, not a claim of HDMI
+compliance or a newly observed picture on a physical monitor. No FPGA was programmed during this review.</p>
+</section><section id="scope"><h2>Versions and scope</h2>
+<div class="scroll"><table><thead><tr><th>Implementation</th><th>Reviewed version</th><th>Location</th></tr></thead><tbody>
+<tr><td>Codex</td><td><code>aeefb7bc</code> — external reset false path added</td><td><code>/home/verilog/codex/basics-graphics-music</code><br>Branch <code>codex_hdmi_ax7035b</code></td></tr>
+<tr><td>Claude</td><td><code>3d1554a2</code> — vendor HDMI constraints restored</td><td><code>/home/verilog/claude/basics-graphics-music</code><br>Branch <code>claude_hdmi_ax7035b</code></td></tr>
+</tbody></table></div>
+<p>The review began on October 9, 2026 and the report was completed on October 10 (America/Los_Angeles).
+Claude initially had two uncommitted files on top of <code>c6c1467f</code>. Those exact files were subsequently
+committed as <code>3d1554a2</code>; their saved SHA-256 hashes match. Both current working trees are clean and
+match the captured sources. This report includes that correction, rather than judging Claude’s older constraints.</p>
+<p><a href="hdmi_ax7035b_compare_1_evidence/manifest.json">Snapshot manifest and hashes</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/codex_vs_main.diff">Codex patch against main</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/claude_vs_main.diff">Claude patch against main, including the captured vendor restoration</a>.</p>
+<p>Both branches incorporate main at <code>f3b0f248</code>. Shared dependencies include
+<code>peripherals/dvi.sv</code>; this is not a comparison between independently written TMDS encoders.
+Both reuse the repository’s <code>tmds_encoder</code>.</p>
+</section><section id="operation"><h2>How each implementation works</h2>
+<div class="columns">
+<article><h3>Codex: keep the lab at 50 MHz</h3><ol>
+<li>The board’s 50 MHz oscillator enters one MMCM. It generates related 50 MHz lab, 25 MHz pixel, and 125 MHz serializer clocks.</li>
+<li>Reset asserts on the button or loss of MMCM lock. Separate three-register chains release the lab and pixel resets in their own clock domains.</li>
+<li>The shared <code>dvi_sync</code> counts the 800 × 525 frame and provides 640 × 480 visible coordinates.</li>
+<li>The lab uses the coordinates to produce RGB. It receives two clock cycles per pixel. The HDMI module samples RGB and its corresponding sync/visible signals together at 25 MHz.</li>
+<li>Three common TMDS encoders convert the colors into ten-bit symbols. Each data channel and the clock channel uses an OSERDESE2 master/slave pair and an OBUFDS differential buffer.</li>
+<li>HDMI1’s power-enable pin goes high after pixel reset releases. With graphics disabled, the lab uses the original oscillator, coordinates are zero, and HDMI power is off.</li>
+</ol><p><a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/ax7035b_hdmi.sv.html#L26">Codex: ax7035b_hdmi.sv:26</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/board_specific_top.sv.html#L156">Codex: board_specific_top.sv:156</a></p></article>
+<article><h3>Claude: run the lab with the pixels</h3><ol>
+<li><code>hdmi_clk_gen</code> derives 25 MHz pixels and a related 125 MHz serializer clock from the board’s 50 MHz oscillator.</li>
+<li>One three-register reset synchronizer serves both the lab and video because both run at 25 MHz.</li>
+<li>The existing <code>vga</code> module generates the same default frame dimensions, sync pulses, and visible region.</li>
+<li>The lab generates RGB on the pixel clock. <code>hdmi_tx</code> feeds RGB and the current sync/visible signals directly into the shared TMDS encoders, without compensating for registered lab output.</li>
+<li>Four serializer pairs and differential buffers emit the same type of video-only TMDS signal through HDMI1.</li>
+<li>HDMI power follows reset. With graphics disabled, the lab returns to 50 MHz and HDMI power is off, but <code>x</code> and <code>y</code> have no drivers.</li>
+</ol><p><a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/hdmi_clk_gen.sv.html#L29">Claude: hdmi_clk_gen.sv:29</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/board_specific_top.sv.html#L79">Claude: board_specific_top.sv:79</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/hdmi_tx.sv.html#L65">Claude: hdmi_tx.sv:65</a></p></article>
+</div>
+<div class="flow" role="img" aria-label="Common video pipeline: oscillator, related clocks, coordinates, lab colors, TMDS encoding, serializers, HDMI1">
+<span>50 MHz oscillator</span><b>→</b><span>MMCM clocks</span><b>→</b><span>Coordinates → lab RGB</span><b>→</b><span>TMDS encoding</span><b>→</b><span>Serializers → HDMI1</span></div>
+<p>Both defaults use 25 MHz pixels, 800 × 525 total pixels, approximately <strong>59.52 Hz</strong>,
+and 250 Mbit/s per data lane. Both provide DVI-compatible video through the HDMI connector, with no audio,
+EDID/DDC negotiation, hot-plug handling, or HDCP logic. The pixel clock is below the nominal 25.175 MHz
+640 × 480 VGA clock; test monitor compatibility rather than assuming every display accepts it.</p>
+</section><section id="differences"><h2>Behavioral differences</h2>
+<div class="scroll"><table><thead><tr><th>Topic</th><th>Codex</th><th>Claude</th><th>Practical consequence</th></tr></thead><tbody>
+<tr><td>Lab clock with graphics enabled</td><td>50 MHz</td><td>25 MHz; passes <code>lab_mhz</code> to the lab and slow-clock generator</td><td>Claude reduces clock-domain complexity but halves raw processing cycles per second. Correctly parameterized timers/UARTs can adapt; hard-coded cycle counters do not.</td></tr>
+<tr><td>Registered RGB</td><td>One lab-register stage passes the focused test; two fail.</td><td>One and two stages fail the focused test.</td><td>RGB latency must be specified and matched to sync/visible timing.</td></tr>
+<tr><td>Coordinates during blanking</td><td><code>dvi_sync</code> clamps out-of-range x or y to zero.</td><td><code>vga</code> exposes the raster counters; the wrapper narrows y from ten bits to nine.</td><td>Labs that infer blanking/frame events from coordinates can behave differently. Claude’s y wraps for raster rows 512–524; both need an explicit coordinate contract.</td></tr>
+<tr><td>Graphics disabled</td><td>Zero coordinates; 50 MHz direct clock; differential idle outputs.</td><td>Undriven coordinates; otherwise the same basic idle behavior.</td><td>Claude’s unused x/y appear as Z in RTL simulation.</td></tr>
+<tr><td>Clock helper</td><td>Fixed ratios; explicit buffered feedback; separate 50 MHz output.</td><td>Separate helper with frequency parameters and direct feedback.</td><td>Claude is easier to reuse, but legal MMCM ratios and video modes still need validation. Both default configurations route successfully.</td></tr>
+<tr><td>Code organization</td><td>Board HDMI module plus a reusable lane submodule in one file.</td><td>Clock generation and transmitter in separate files; one generate loop covers four channels.</td><td>Claude provides clearer reusable module boundaries; Codex keeps the board integration compact.</td></tr>
+<tr><td>XDC constraints</td><td colspan="2">Same 61 active command lines, including <code>set_false_path -from [get_ports rst_n]</code>.</td><td>Current differences are comments and placement of the reset command, not pin assignments or electrical standards.</td></tr>
+<tr><td>Checked-in verification and documentation</td><td>Full-frame testbench and board README.</td><td>No dedicated board README or testbench in the reviewed board directory.</td><td>Claude’s build evidence exists in logs/commit descriptions; Codex’s procedure is easier for another developer to rerun.</td></tr>
+</tbody></table></div>
+<p>A concrete timing difference: the game in <code>2_7_game_shrink_2</code> loads a fixed
+<code>25'h1000000</code> cycle count. Its main countdown is approximately 0.336 seconds at 50 MHz
+and 0.671 seconds at 25 MHz, apart from control-cycle overhead. Passing an accurate <code>clk_mhz</code>
+parameter does not automatically change that literal.
+<a href="hdmi_ax7035b_compare_1_evidence/sources/codex/labs/2_graphics/2_7_game_shrink_2/game_top.sv.html#L286">Codex: game_top.sv:286</a>.</p>
+<p>Defining the graphics macro controls the clock choice even when a particular lab does not draw a useful
+picture. Review clock-sensitive labs beyond the graphics chapter before changing the default clock.</p>
+</section><section id="simulation"><h2>Fresh simulation results</h2>
+<p>Vivado/XSim 2026.1 with AMD’s actual UNISIM MMCM, OSERDESE2, and OBUFDS models.
+The same focused harness instantiates each real board wrapper with a small lab replacement that produces
+<code>R=x[7:0], G=y[7:0], B=x[7:0]^y[7:0]</code>. It decodes the physical simulated TMDS pins,
+checks three complete horizontal lines, then repeats after an asynchronous reset for passing cases.</p>
+<div class="scroll"><table><thead><tr><th>Test</th><th>Codex</th><th>Claude</th><th>Evidence</th></tr></thead><tbody>
+<tr><td>Combinational RGB; horizontal sync/blanking; serialization; reset recovery</td><td class="pass">PASS</td><td class="pass">PASS</td><td><a href="hdmi_ax7035b_compare_1_evidence/runs/codex_combinational/commands.log">Codex log</a> / <a href="hdmi_ax7035b_compare_1_evidence/runs/claude_combinational/commands.log">Claude log</a></td></tr>
+<tr><td>RGB registered once on the lab clock</td><td class="pass">PASS</td><td class="fail">FAIL: first pixel of row 1 has RGB (31,0,31), expected (0,1,1)</td><td><a href="hdmi_ax7035b_compare_1_evidence/runs/codex_registered/commands.log">Codex log</a> / <a href="hdmi_ax7035b_compare_1_evidence/runs/claude_registered/commands.log">Claude log</a></td></tr>
+<tr><td>RGB registered twice on the lab clock</td><td class="fail">FAIL: RGB (0,0,0), expected (0,1,1)</td><td class="fail">FAIL: RGB (30,0,30), expected (0,1,1)</td><td><a href="hdmi_ax7035b_compare_1_evidence/runs/codex_registered2/commands.log">Codex log</a> / <a href="hdmi_ax7035b_compare_1_evidence/runs/claude_registered2/commands.log">Claude log</a></td></tr>
+<tr><td>Graphics disabled: clock, reset, power enable, differential idle outputs</td><td class="pass">PASS; x=y=0</td><td class="pass">PASS; x/y observed as Z</td><td><a href="hdmi_ax7035b_compare_1_evidence/runs/codex_idle/commands.log">Codex log</a> / <a href="hdmi_ax7035b_compare_1_evidence/runs/claude_idle/commands.log">Claude log</a></td></tr>
+</tbody></table></div>
+<p><strong>Limits:</strong> the fresh tests cover horizontal timing and early visible rows, not an entire frame,
+vertical-sync transitions, running-disparity compliance, physical signal quality, or arbitrary input-clock loss.
+The RGB tests use a synthetic lab, not every BGM graphics lab. Initial review-harness synchronization errors were
+corrected before these final results; those earlier failures are not attributed to either implementation.</p>
+<p>The Codex repository additionally contains <a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/tests/hdmi_tb.sv.html#L1">a full-frame testbench</a>.
+Its <a href="hdmi_ax7035b_compare_1_evidence/historical/codex_full_frame_xsim.log">saved October 3 log</a> records two passing frames and reset recovery.
+That older test instantiates the HDMI module directly, so it does not cover arbitrary registered lab pipelines or
+the board wrapper. It was not rerun in full during this review.</p>
+<p>Reproduce the focused tests using <a href="hdmi_ax7035b_compare_1_evidence/run_review.py">run_review.py</a> and the adjacent source snapshots:</p>
+<pre><code>source /home/verilog/AMD/2026.1/Vivado/settings64.sh
+cd /home/verilog/codex/hdmi_ax7035b_compare_1_evidence
+python3 run_review.py all suite
+python3 run_review.py all pipeline</code></pre>
+<p>The suite prints a separate <code>RESULT</code> for each case. Its aggregate process deliberately continues
+after failed cases. XSim itself can return zero after a SystemVerilog fatal; the runner inspects the log for
+<code>Fatal:</code> and <code>ERROR:</code> before reporting each case.</p>
+</section><section id="implementation"><h2>Fresh implementation results</h2>
+<p>Both captured designs were built from the same <code>2_3_color_stripes</code> lab, with default parameters,
+Vivado 2026.1, target <code>xc7a35tfgg484-2</code>, and the same synthesis, optimization, placement, physical
+optimization, routing, and bitstream sequence. These are complete designs including the selected lab,
+not isolated transmitter resource counts.</p>
+<div class="scroll"><table><thead><tr><th>Measured result</th><th>Codex</th><th>Claude</th></tr></thead><tbody>
+<tr><td>Bitstream generation</td><td class="pass">Completed</td><td class="pass">Completed</td></tr>
+<tr><td>Post-route setup slack</td><td>35.483 ns</td><td>32.883 ns</td></tr>
+<tr><td>Post-route hold slack</td><td>0.130 ns</td><td>0.130 ns</td></tr>
+<tr><td>DRC findings</td><td>0</td><td>0</td></tr>
+<tr><td>Slice LUTs</td><td>203</td><td>196</td></tr>
+<tr><td>Slice registers</td><td>100</td><td>75</td></tr>
+<tr><td>BUFG resources after optimization</td><td>3</td><td>2</td></tr>
+<tr><td>MMCM / OSERDESE2 / OBUFDS</td><td>1 / 8 / 4</td><td>1 / 8 / 4</td></tr>
+<tr><td>Unconstrained internal endpoints</td><td>0</td><td>0</td></tr>
+<tr><td>Ports reported without output delay</td><td>5</td><td>5</td></tr>
+</tbody></table></div>
+<p>Claude uses seven fewer LUTs, 25 fewer slice registers and one fewer global clock buffer in this test.
+That supports the simplicity advantage of its clock architecture, but is not a general size benchmark for all labs.
+The two lab-clock architectures differ; a larger reported slack is not proof of a faster HDMI interface or better
+display compatibility. Both emit the same default pixel rate.</p>
+<p><strong>Timing coverage remains limited:</strong> both reports flag missing output delays. Internal timing closure
+and a clean DRC do not establish timing margin at the monitor or certify the board/cable channel.</p>
+<p>Fresh routed I/O reports place the negative pins at D1, F1, G2, and J1 automatically, with positive pins
+E1, G1, H2, K1 and power enable M6. This independently confirms that uncommenting the vendor’s positive-pin
+constraints is sufficient for these default designs.</p>
+<div class="columns"><article><h3>Codex evidence</h3><p>
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/codex/build.tcl">Build script</a> · <a href="hdmi_ax7035b_compare_1_evidence/implementation/codex/build.log">Build log</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/codex/timing.rpt">Timing</a> · <a href="hdmi_ax7035b_compare_1_evidence/implementation/codex/utilization.rpt">Utilization</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/codex/drc.rpt">DRC</a> · <a href="hdmi_ax7035b_compare_1_evidence/implementation/codex/io.rpt">I/O pins</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/codex/clock_interaction.rpt">Clock interaction</a></p></article>
+<article><h3>Claude evidence</h3><p>
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/claude/build.tcl">Build script</a> · <a href="hdmi_ax7035b_compare_1_evidence/implementation/claude/build.log">Build log</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/claude/timing.rpt">Timing</a> · <a href="hdmi_ax7035b_compare_1_evidence/implementation/claude/utilization.rpt">Utilization</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/claude/drc.rpt">DRC</a> · <a href="hdmi_ax7035b_compare_1_evidence/implementation/claude/io.rpt">I/O pins</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/implementation/claude/clock_interaction.rpt">Clock interaction</a></p></article></div>
+<p>Sandbox startup failures were resolved by running the EDA tools outside the sandbox. The table reports
+completed runs, not those initial environment failures. No hardware programming command was used.</p>
+</section><section id="findings"><h2>Bugs, limitations, and evidence</h2>
+<article class="finding"><span class="badge bug">Confirmed conditional failure · both</span>
+<h3>F1. RGB pipeline latency is not handled generally</h3>
+<p>Claude’s encoder sees current sync/visible signals with the previous pixel’s registered colors when the lab
+uses one register stage. Codex’s faster lab clock accommodates one stage in the focused test, but a two-stage
+pipeline still presents stale color data at the sampling edge. Both two-stage cases fail at the first pixel of row 1.</p>
+<p>This is a compatibility issue for registered graphics sources, not a failure of the passing combinational
+color-stripes design. The repository contains registered graphics paths: <code>game_sprite_display</code>
+registers sprite output and <code>game_mixer</code> registers the final color. The optional pipelined sprite adds
+more latency. Their actual images and edge pixels still need direct end-to-end tests.</p>
+<p><strong>Fix direction:</strong> specify the lab’s RGB latency, align sync and data-enable with that delayed RGB,
+and check line/frame boundaries. Adding an equal register to both RGB and controls does not correct an existing
+latency mismatch. Do not blindly add the same delay to every lab; that would shift combinational labs.</p>
+<p><a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/ax7035b_hdmi.sv.html#L85">Codex: ax7035b_hdmi.sv:85</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/hdmi_tx.sv.html#L93">Claude: hdmi_tx.sv:93</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/sources/codex/labs/2_graphics/2_7_game_shrink_2/game_sprite_display.sv.html#L140">Codex: game_sprite_display.sv:140</a> ·
+<a href="hdmi_ax7035b_compare_1_evidence/sources/codex/labs/2_graphics/2_7_game_shrink_2/game_mixer.sv.html#L22">Codex: game_mixer.sv:22</a>.</p></article>
+
+<article class="finding"><span class="badge bug">Confirmed simulation defect · Claude</span>
+<h3>F2. Graphics-disabled x and y are undriven</h3>
+<p>The no-graphics branch disables HDMI correctly but never assigns <code>x</code> and <code>y</code>.
+The focused test observes <code>zzz</code>. Labs that ignore those inputs are unaffected; other logic may
+propagate unknown values in simulation, while synthesis can optimize unconnected inputs differently.</p>
+<p><strong>Fix:</strong> add <code>assign x = '0;</code> and <code>assign y = '0;</code>, following Codex.
+<a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/board_specific_top.sv.html#L252">Claude: board_specific_top.sv:252</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/board_specific_top.sv.html#L179">Codex: board_specific_top.sv:179</a>.</p></article>
+
+<article class="finding"><span class="badge check">Supported-mode limitation · both</span>
+<h3>F3. Exposed parameters promise more flexibility than the full path implements</h3>
+<p>Codex hard-codes the MMCM ratios, coordinate widths and eight-bit RGB interface; the wrapper’s
+<code>pixel_mhz</code> and screen parameters do not reconfigure the transmitter. Its README discloses the fixed
+mode, but there is no elaboration guard against incompatible overrides. Changing <code>clk_mhz</code> can also
+make lab timing parameters disagree with the actual generated clock.</p>
+<p>Claude forwards clock parameters to its helper, but rounds the pixel-clock divider to an integer and does
+not validate legal MMCM ranges or the exact 5:1 clock ratio. It leaves VGA dimensions at their defaults and
+also presents eight-bit color ports. Frequency parameterization alone is not complete video-mode support.</p>
+<p><strong>Recommendation:</strong> assert the supported defaults, or implement a small validated mode table
+that updates clocks, timing, widths and tests together. This is not a demonstrated failure at the defaults.
+<a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/ax7035b_hdmi.sv.html#L26">Codex: ax7035b_hdmi.sv:26</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/hdmi_clk_gen.sv.html#L47">Claude: hdmi_clk_gen.sv:47</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/board_specific_top.sv.html#L211">Claude: board_specific_top.sv:211</a>.</p></article>
+
+<article class="finding"><span class="badge check">Shared timing review item</span>
+<h3>F4. The reset false path also applies without graphics</h3>
+<p>Both files contain the requested broad exception from <code>rst_n</code>. Graphics mode synchronizes reset
+release; non-graphics mode passes <code>~rst_n</code> straight to the lab. The exception suppresses external-reset
+timing paths but does not itself make reset release safe in every downstream lab.</p>
+<p>Keep the requested constraint. Document its scope and evaluate synchronized reset release for non-graphics
+mode in a separate change. This is a shared design concern, not a newly reproduced hardware failure.
+<a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/board_specific.xdc.html#L16">Codex: board_specific.xdc:16</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/board_specific_top.sv.html#L108">Claude: board_specific_top.sv:108</a>.
+AMD describes the timing-analysis effect in its
+<a href="https://docs.amd.com/r/en-US/ug835-vivado-tcl-commands/set_false_path">set_false_path reference</a>.</p></article>
+
+<article class="finding"><span class="badge minor">Documentation corrections</span>
+<h3>F5. Clarify names, bit order, and the evidence behind claims</h3>
+<p>Codex says M6 is active high “despite OEN’s name.” OEN can simply mean output enable; the name alone does
+not imply active low. State the observed/verified polarity without that interpretation.</p>
+<p>Claude’s transmitter header describes <code>10'b1111100000</code> as five high bits followed by five low bits.
+The serializer sends the least significant bit first, so the transmitted sequence is five low followed by five high.
+The implemented constant is correct; the prose order is misleading.</p>
+<p>Claude’s latest commit explicitly retracts an earlier claim that it had consulted the ALINX manual and
+attributes the polarity correction to display behavior and comparison. That is a useful evidence correction.
+The Codex README’s manual link did not return usable PDF content through the web reader during this review;
+its schematic/page attribution was therefore not independently revalidated here.</p>
+<p><a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/ax7035b_hdmi.sv.html#L74">Codex: ax7035b_hdmi.sv:74</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/hdmi_tx.sv.html#L25">Claude: hdmi_tx.sv:25</a> · <a href="hdmi_ax7035b_compare_1_evidence/historical/claude_commit.txt">Claude’s correction and validation statement</a>.</p></article>
+</section><section id="tradeoffs"><h2>Pros and cons</h2>
+<div class="columns"><article><h3>Codex advantages</h3><ul>
+<li>Preserves the board’s original 50 MHz lab rate and gives two processing cycles per pixel.</li>
+<li>Separate reset-release synchronizers match its two logic clock domains.</li>
+<li>Explicitly samples RGB and control signals together; passes the one-register lab test.</li>
+<li>Defines idle coordinates and differential outputs deterministically.</li>
+<li>Ships a full-frame signal-decoding testbench, run instructions, pin table, limitations, and validation notes.</li>
+<li>The lane helper avoids duplicating serializer wiring for clock and data.</li>
+</ul><h3>Codex disadvantages</h3><ul>
+<li>More registers and clock resources in the same-lab build; related clock crossings require timing review.</li>
+<li>The two-register RGB test fails; existing unit coverage does not establish all-lab compatibility.</li>
+<li>Fixed mode and implicit coupling to <code>dvi_config.svh</code> limit reuse.</li>
+<li>Clock, timing generation and transmit logic are tightly joined in one board-specific module.</li>
+<li>Lacks Claude’s local <code>default_nettype none</code> guards and needs the OEN wording correction.</li>
+</ul></article><article><h3>Claude advantages</h3><ul>
+<li>One 25 MHz domain for graphics and lab logic simplifies reasoning about their interface.</li>
+<li>Fewer LUTs, registers and clock buffers in the matched color-stripes build.</li>
+<li>Separate clock helper and transmitter make reuse on other Xilinx 7-series boards easier.</li>
+<li>Detailed primitive connections and local <code>default_nettype none</code> reduce accidental implicit nets.</li>
+<li>Propagates the actual lab clock through <code>lab_mhz</code>; it does not falsely tell the lab it still runs at 50 MHz.</li>
+<li>The latest commit documents and corrects earlier unsupported provenance and polarity claims.</li>
+</ul><h3>Claude disadvantages</h3><ul>
+<li>Halves lab throughput whenever graphics is enabled; hard-coded cycle counts change real-time behavior.</li>
+<li>Fails even the one-register RGB test because control/data alignment lacks latency compensation.</li>
+<li>Leaves coordinates floating without graphics.</li>
+<li>No dedicated checked-in board testbench or user README in the reviewed version.</li>
+<li>Clock parameters lack legality checks; nondefault screen and color parameters are not fully supported.</li>
+<li>The wrapper is longer and contains more video-specific integration details.</li>
+</ul></article></div>
+<p>Source size alone is not a quality score: Codex has 185 lines of HDMI helpers and a 260-line wrapper;
+Claude has 328 lines of helpers and a 340-line wrapper. These counts include comments and whitespace;
+Codex’s separate 178-line testbench and 119-line README are excluded from those implementation counts.</p>
+</section><section id="adoption"><h2>Ideas each side can adopt</h2>
+<div class="scroll"><table><thead><tr><th>Recipient</th><th>Useful idea</th><th>How to adopt it responsibly</th></tr></thead><tbody>
+<tr><td>Codex ← Claude</td><td>Separate clock generator and generic transmitter</td><td>Keep board clock/mode policy in the wrapper; retain the lane helper and tests. Refactoring need not change the lab clock.</td></tr>
+<tr><td>Codex ← Claude</td><td>Strict net declarations and fuller interface comments</td><td>Add scoped <code>default_nettype none</code> with restoration and explain reset/clock requirements. Avoid copying the incorrect clock-symbol prose.</td></tr>
+<tr><td>Codex ← Claude</td><td>Explicit actual-lab-frequency variable</td><td>Use it consistently if a selectable clock policy is added. Preserve 50 MHz by default unless behavior changes are intended.</td></tr>
+<tr><td>Claude ← Codex</td><td>Idle coordinate assignments</td><td>Small direct fix with a graphics-disabled assertion.</td></tr>
+<tr><td>Claude ← Codex</td><td>Signal-decoding tests and board README</td><td>Check complete frames, reset recovery and full wrappers, then add registered lab sources.</td></tr>
+<tr><td>Claude ← Codex</td><td>50 MHz compatibility option</td><td>Useful for labs relying on fixed cycle counts. Do not assume it alone fixes arbitrary pipeline latency.</td></tr>
+<tr><td>Both</td><td>Explicit latency and supported-mode contracts</td><td>Declare when RGB corresponds to each coordinate; align visible/sync accordingly; reject unsupported settings.</td></tr>
+<tr><td>Both</td><td>Preserve convergence already achieved</td><td>Keep the common encoder, matched serializer clock lane, synchronized graphics reset, and vendor-style XDC.</td></tr>
+</tbody></table></div>
+</section><section id="recommendations"><h2>Checks and recommendations</h2>
+<ol class="recommendations">
+<li><strong>Fix registered-pixel alignment before calling either implementation universal.</strong>
+Add known-latency RGB fixtures and real game/lab tests. Verify first/last visible pixels and row transitions.
+Use a defined interface latency or supported per-lab setting; avoid an unconditional extra delay that breaks combinational labs.</li>
+<li><strong>Apply the small Claude idle fix and documentation corrections.</strong>
+Tie x/y to zero without graphics; correct OEN interpretation and transmitted clock-bit order.</li>
+<li><strong>Choose the lab clock as a compatibility policy.</strong>
+Keep 50 MHz as the default for this existing board. An optional 25 MHz mode is reasonable after checking
+cycle-counted timers, UARTs, CPU workloads and graphics pipelines. Preserve accurate <code>clk_mhz</code> propagation.</li>
+<li><strong>Keep the current vendor XDC plus reset exception.</strong>
+The matched builds confirm the intended pins. Treat any future reset-scope change separately and review
+non-graphics reset release. Do not restore redundant negative-pin assignments merely to make the diff larger.</li>
+<li><strong>Add supported-parameter checks and share the verification entry point.</strong>
+Reject unsupported clock/resolution/color combinations. Maintain fast line-level tests for iteration and
+full-frame tests for vertical timing and regression. Extend the receiver model to check legal TMDS encoding
+and running disparity, not just decoded RGB.</li>
+<li><strong>Test clock loss and repeated resets.</strong>
+The code ORs reset with loss of lock, but the fresh tests exercise the button reset. Check lock loss, startup,
+brief reset pulses and repeated relock using suitable models and on the board.</li>
+<li><strong>Validate real displays and external timing.</strong>
+Try more than one monitor/cable, cold boot, reconnect, and reset during video. Check M6 power enable and
+TMDS integrity. Record which build and display were used. Resolve the external timing assumptions before
+claiming end-to-end timing closure.</li>
+</ol>
+<p>Historical hardware evidence is separate: Claude’s commit descriptions report that the corrected design
+produced a picture and an older build was programmed. This review did not independently observe that.
+The saved October 9 script log includes successful bitstream generation followed by a programming failure,
+<code>There is no current hw_target</code>; it is build evidence, not proof that that run programmed the board.
+<a href="hdmi_ax7035b_compare_1_evidence/historical/claude_build_and_programming.log">Historical build/programming log</a>.</p>
+</section><section id="references"><h2>Exact differences and technical references</h2>
+<details><summary>Show wrapper diff: Codex → Claude</summary><pre>--- Codex/board_specific_top.sv
++++ Claude/board_specific_top.sv
+@@ -62,10 +62,55 @@
+ 
+     //------------------------------------------------------------------------
+ 
++    // Pin M6, called HDMI_OEN - output enable - in the constraints of the
++    // vendor, switches the +5 V supply of the HDMI connector. Driving it
++    // high turns the supply on.
++
++    localparam hdmi_output_enable = 1&#x27;b1;
++
++    //------------------------------------------------------------------------
++
+     // Clock and reset
+ 
+-    wire clk;
+-    wire rst;
++    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
++
++        // The serializer of hdmi_tx needs a clock 5 times the pixel clock,
++        // and both clocks have to come from the same MMCM. The lab itself
++        // runs on the pixel clock, as it does on the other HDMI boards.
++
++        localparam lab_mhz = pixel_mhz;
++
++        wire pixel_clk, serial_clk, mmcm_locked, pixel_rst;
++
++        hdmi_clk_gen
++        # (
++            .clk_mhz    ( clk_mhz     ),
++            .pixel_mhz  ( pixel_mhz   )
++        )
++        i_hdmi_clk_gen
++        (
++            .clk_in     ( sys_clk     ),
++            .rst        ( ~ rst_n     ),
++            .pixel_clk  ( pixel_clk   ),
++            .serial_clk ( serial_clk  ),
++            .locked     ( mmcm_locked ),
++            .rst_out    ( pixel_rst   )
++        );
++
++        // The lab and the video share the pixel clock, so the reset that
++        // the serializer needs serves the whole design
++
++        wire clk = pixel_clk;
++        wire rst = pixel_rst;
++
++    `else
++
++        localparam lab_mhz = clk_mhz;
++
++        wire clk =   sys_clk;
++        wire rst = ~ rst_n;
++
++    `endif
+ 
+     // Keys and LEDs
+ 
+@@ -84,6 +129,8 @@
+     assign Scan_Sig = ~ digit;
+ 
+     // Graphics
++
++    wire                 display_on;
+ 
+     wire [w_x     - 1:0] x;
+     wire [w_y     - 1:0] y;
+@@ -101,14 +148,14 @@
+ 
+     wire slow_clk;
+ 
+-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
++    slow_clk_gen # (.fast_clk_mhz (lab_mhz), .slow_clk_hz (1))
+     i_slow_clk_gen (.slow_clk (slow_clk), .*);
+ 
+     //------------------------------------------------------------------------
+ 
+     lab_top
+     # (
+-        .clk_mhz       ( clk_mhz        ),
++        .clk_mhz       ( lab_mhz        ),
+         .w_key         ( w_key          ),
+         .w_sw          ( w_key          ),
+         .w_led         ( w_led          ),
+@@ -156,42 +203,75 @@
+ 
+     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
+ 
+-        // 50 MHz lab clock, 25 MHz pixels, 640x480 DVI video over HDMI1.
+-        ax7035b_hdmi i_hdmi
+-        (
+-            .clk_in      ( sys_clk     ),
+-            .rst_in      ( ~ rst_n     ),
+-            .clk         ( clk         ),
+-            .rst         ( rst         ),
+-            .x           ( x           ),
+-            .y           ( y           ),
+-            .red         ( red         ),
+-            .green       ( green       ),
+-            .blue        ( blue        ),
+-            .tmds_clk_p  ( TMDS_clk_p  ),
+-            .tmds_clk_n  ( TMDS_clk_n  ),
+-            .tmds_data_p ( TMDS_data_p ),
+-            .tmds_data_n ( TMDS_data_n ),
+-            .hdmi_enable ( HDMI_OEN[0] )
++        wire hsync, vsync;
++
++        wire [9:0] x10; assign x = x10;
++        wire [9:0] y10; assign y = y10;
++
++        vga
++        # (
++            .CLK_MHZ      ( lab_mhz     ),
++            .PIXEL_MHZ    ( pixel_mhz   )
++        )
++        i_vga
++        (
++            .clk          ( clk         ),
++            .rst          ( rst         ),
++            .hsync        ( hsync       ),
++            .vsync        ( vsync       ),
++            .display_on   ( display_on  ),
++            .hpos         ( x10         ),
++            .vpos         ( y10         ),
++            .pixel_clk    (             )
++        );
++
++        //--------------------------------------------------------------------
++
++        assign HDMI_OEN = rst ? ~ hdmi_output_enable : hdmi_output_enable;
++
++        hdmi_tx i_hdmi_tx
++        (
++            .pixel_clk    ( clk         ),
++            .serial_clk   ( serial_clk  ),
++            .rst          ( rst         ),
++
++            .hsync        ( hsync       ),
++            .vsync        ( vsync       ),
++
++            .display_on   ( display_on  ),
++            .red          ( red         ),
++            .green        ( green       ),
++            .blue         ( blue        ),
++
++            .tmds_clk_p   ( TMDS_clk_p  ),
++            .tmds_clk_n   ( TMDS_clk_n  ),
++            .tmds_data_p  ( TMDS_data_p ),
++            .tmds_data_n  ( TMDS_data_n )
+         );
+ 
+     `else
+ 
+-        assign clk = sys_clk;
+-        assign rst = ~ rst_n;
+-        assign x = &#x27;0;
+-        assign y = &#x27;0;
+-        assign HDMI_OEN = &#x27;0;
+-
+-        // Keep the HDMI outputs differential even in non-graphics labs.
+-        OBUFDS # (.IOSTANDARD (&quot;TMDS_33&quot;)) i_idle_clock
+-            (.I (1&#x27;b0), .O (TMDS_clk_p), .OB (TMDS_clk_n));
+-
+-        for (genvar lane = 0; lane &lt; 3; lane++)
+-        begin : g_idle_data
+-            OBUFDS # (.IOSTANDARD (&quot;TMDS_33&quot;)) i_idle_data
+-                (.I (1&#x27;b0), .O (TMDS_data_p[lane]), .OB (TMDS_data_n[lane]));
+-        end
++        // The HDMI pins are constrained as TMDS_33 and need differential
++        // buffers even when nothing is sent, so they are driven low with
++        // the +5 V supply of the connector switched off.
++
++        assign HDMI_OEN = ~ hdmi_output_enable;
++
++        OBUFDS # (.IOSTANDARD (&quot;TMDS_33&quot;))
++        i_tmds_clk_idle
++        (
++            .I  ( 1&#x27;b0       ),
++            .O  ( TMDS_clk_p ),
++            .OB ( TMDS_clk_n )
++        );
++
++        OBUFDS # (.IOSTANDARD (&quot;TMDS_33&quot;))
++        i_tmds_data_idle [2:0]
++        (
++            .I  ( 3&#x27;b000      ),
++            .O  ( TMDS_data_p ),
++            .OB ( TMDS_data_n )
++        );
+ 
+     `endif
+ 
+</pre></details>
+<details><summary>Show XDC diff: same active commands, different comments/order</summary><pre>--- Codex/board_specific.xdc
++++ Claude/board_specific.xdc
+@@ -12,10 +12,6 @@
+ 
+ set_property IOSTANDARD LVCMOS33 [get_ports {rst_n}]
+ set_property PACKAGE_PIN F20 [get_ports {rst_n}]
+-
+-# Exclude paths from the asynchronous external reset from timing analysis.
+-set_false_path -from [get_ports rst_n]
+-
+ ############## key define##############################
+ set_property PACKAGE_PIN M13 [get_ports {key_in[0]}]
+ set_property IOSTANDARD LVCMOS33 [get_ports {key_in[0]}]
+@@ -82,6 +78,12 @@
+ 
+ set_property PACKAGE_PIN M6 [get_ports {HDMI_OEN[0]}]
+ set_property IOSTANDARD LVCMOS33 [get_ports {HDMI_OEN[0]}]
++
++# The reset button is asynchronous and its release is synchronized inside
++# hdmi_clk_gen, so there is nothing to time from the pin itself
++
++set_false_path -from [get_ports rst_n]
++
+ ############## usb uart define########################
+ set_property IOSTANDARD LVCMOS33 [get_ports uart_rx]
+ set_property PACKAGE_PIN G15 [get_ports uart_rx]
+</pre></details>
+<p><a href="hdmi_ax7035b_compare_1_evidence/xdc_comparison.txt">Active XDC comparison result</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/codex/boards/alinx_ax7035b/ax7035b_hdmi.sv.html#L1">Codex: ax7035b_hdmi.sv:1</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/hdmi_clk_gen.sv.html#L1">Claude: hdmi_clk_gen.sv:1</a> · <a href="hdmi_ax7035b_compare_1_evidence/sources/claude/boards/alinx_ax7035b/hdmi_tx.sv.html#L1">Claude: hdmi_tx.sv:1</a>.</p>
+<p>AMD’s <a href="https://docs.amd.com/r/2024.2-English/ug953-vivado-7series-libraries/OSERDESE2">OSERDESE2 reference</a>
+documents master/slave expansion for ten-bit data, D1-first serialization, the CLK/CLKDIV relationship,
+and reset timing requirements. Both implementations use those primitive arrangements; fresh simulation
+checks the resulting bit stream at the defaults.</p>
+<p>The <a href="https://docs.amd.com/r/2024.2-English/ug953-vivado-7series-libraries/MMCME2_BASE">MMCME2_BASE reference</a>
+defines the attributes and legal settings to validate when exposing clock parameters.
+The <a href="https://docs.amd.com/r/en-US/ug835-vivado-tcl-commands/set_false_path">set_false_path reference</a>
+explains why that command changes timing analysis rather than adding reset circuitry.</p>
+<p>The board-specific ALINX manual URL cited in the existing Codex README is
+<a href="https://alinx.com/public/upload/file/AX7035B_UG.pdf">AX7035B_UG.pdf</a>.
+Its content was not retrievable through the web reader in this review, so it is listed as a reference to verify,
+not as newly checked schematic evidence.</p>
+<p>The report and evidence are local artifacts. Neither implementation was edited, committed, merged,
+or pushed as part of this comparison.</p>
+</section></main>
+<footer>Prepared from local source snapshots and retained logs. Evidence links are relative to the companion
+hdmi_ax7035b_compare_1_evidence directory; keep it beside this report when moving or sharing the files.</footer>
+</body></html>

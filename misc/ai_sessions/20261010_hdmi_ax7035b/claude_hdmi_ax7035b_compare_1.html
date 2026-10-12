@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two TMDS Transmitters</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground:   #f2f4f7;
+    --surface:  #ffffff;
+    --sunken:   #e8ebf0;
+    --ink:      #14171c;
+    --muted:    #566070;
+    --faint:    #87909f;
+    --rule:     #d8dde4;
+    --rule-firm:#b3bcc8;
+
+    --accent:   #1d4f73;
+    --accent-bg:#e4eef5;
+
+    --fault:    #9f2b25;
+    --fault-bg: #f9eae9;
+    --risk:     #7f5c05;
+    --risk-bg:  #f8f1dd;
+    --clear:    #2b6049;
+    --clear-bg: #e6f1ec;
+
+    --display: Archivo, "Helvetica Neue", Arial, sans-serif;
+    --body:    "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #0f1216;
+      --surface:  #171b21;
+      --sunken:   #1e242c;
+      --ink:      #e7eaef;
+      --muted:    #9aa3b2;
+      --faint:    #747e8d;
+      --rule:     #2a313a;
+      --rule-firm:#3d4652;
+
+      --accent:   #74b4df;
+      --accent-bg:#152832;
+
+      --fault:    #e49189;
+      --fault-bg: #2b1a19;
+      --risk:     #d9b05a;
+      --risk-bg:  #2a2314;
+      --clear:    #86c4a6;
+      --clear-bg: #16271f;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #0f1216;
+    --surface:  #171b21;
+    --sunken:   #1e242c;
+    --ink:      #e7eaef;
+    --muted:    #9aa3b2;
+    --faint:    #747e8d;
+    --rule:     #2a313a;
+    --rule-firm:#3d4652;
+
+    --accent:   #74b4df;
+    --accent-bg:#152832;
+
+    --fault:    #e49189;
+    --fault-bg: #2b1a19;
+    --risk:     #d9b05a;
+    --risk-bg:  #2a2314;
+    --clear:    #86c4a6;
+    --clear-bg: #16271f;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding-inline: 20px;
+    padding-block: 0 72px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .prose { max-width: 70ch; }
+
+  /* ---- header ---------------------------------------------------------- */
+
+  header { padding-block: 56px 36px; border-bottom: 2px solid var(--rule-firm); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(32px, 6vw, 52px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+
+  .deck { font-size: 18px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+
+  .branches { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .branch {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    border: 1px solid var(--rule-firm);
+    border-radius: 2px;
+    padding: 7px 11px;
+    background: var(--surface);
+  }
+  .branch b { color: var(--accent); font-weight: 500; }
+
+  /* ---- verdict cards --------------------------------------------------- */
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-block: 36px;
+  }
+
+  .card { background: var(--surface); padding: 20px 18px; }
+  .card .n {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .card .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .card p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+  /* ---- sections -------------------------------------------------------- */
+
+  section { padding-block: 34px 6px; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: 0; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  .sub {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 20px;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    margin: 26px 0 8px;
+  }
+
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 7px; max-width: 70ch; }
+
+  code, .m { font-family: var(--mono); font-size: 0.88em; }
+  code {
+    background: var(--sunken);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* ---- tables ---------------------------------------------------------- */
+
+  .scroll { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--rule); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+  th, td { padding: 9px 13px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 500;
+    background: var(--sunken);
+    border-bottom: 1px solid var(--rule-firm);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num, th.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.lab { font-weight: 500; }
+  .win { color: var(--clear); font-weight: 500; }
+
+  /* ---- two column ------------------------------------------------------ */
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 18px; }
+  .duo > div { background: var(--surface); padding: 20px 18px; }
+  @media (max-width: 720px) { .duo { grid-template-columns: 1fr; } }
+
+  .who {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .duo h4 { font-family: var(--display); font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .duo h4:first-of-type { margin-top: 0; }
+  .duo ul { padding-left: 18px; margin-bottom: 0; }
+  .duo li { font-size: 14px; margin-bottom: 6px; }
+
+  /* ---- findings -------------------------------------------------------- */
+
+  .finding {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule-firm);
+    background: var(--surface);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .finding.defect { border-left-color: var(--fault); }
+  .finding.risk   { border-left-color: var(--risk); }
+  .finding.doc    { border-left-color: var(--accent); }
+  .finding.clear  { border-left-color: var(--clear); }
+
+  .fhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+  .fid {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--faint);
+  }
+  .ftitle { font-family: var(--display); font-weight: 600; font-size: 16px; flex: 1 1 260px; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .chip.defect { background: var(--fault-bg); color: var(--fault); }
+  .chip.risk   { background: var(--risk-bg);  color: var(--risk); }
+  .chip.doc    { background: var(--accent-bg);color: var(--accent); }
+  .chip.clear  { background: var(--clear-bg); color: var(--clear); }
+  .chip.side   { background: var(--sunken);   color: var(--muted); }
+
+  .finding p { margin: 0 0 10px; font-size: 14.5px; }
+  .finding p:last-child { margin-bottom: 0; }
+  .ev {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    background: var(--sunken);
+    border-left: 2px solid var(--rule-firm);
+    padding: 8px 11px;
+    margin: 0 0 10px;
+    overflow-x: auto;
+  }
+
+  /* ---- checks ---------------------------------------------------------- */
+
+  .check { border-top: 1px solid var(--rule); padding: 14px 0; }
+  .check:last-of-type { border-bottom: 1px solid var(--rule); }
+  .check .q { font-family: var(--display); font-weight: 600; font-size: 15.5px; margin-bottom: 5px; }
+  .check .how { font-size: 14px; color: var(--muted); margin: 0; }
+  .check .how b { color: var(--ink); font-weight: 500; }
+
+  blockquote {
+    margin: 0 0 14px;
+    padding: 12px 16px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    font-size: 14.5px;
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 2px solid var(--rule-firm);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer h2 { font-size: 15px; margin-bottom: 10px; }
+  footer code { font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">ALINX AX7035B · HDMI output · 9 October 2026</p>
+  <h1>Two TMDS Transmitters</h1>
+  <p class="deck">Both branches put 640&times;480 DVI video out of the AX7035B's HDMI1 connector
+  using <code>OSERDESE2</code> serializers and the repository's shared <code>tmds_encoder</code>.
+  They disagree about where the lab's clock comes from, where the pipeline register goes, and
+  what gets written down. Everything below that is measured was measured on this machine with
+  Vivado 2026.1.</p>
+  <div class="branches">
+    <span class="branch"><b>mine</b> &nbsp;claude_hdmi_ax7035b @ 3d1554a2</span>
+    <span class="branch"><b>theirs</b> &nbsp;codex_hdmi_ax7035b @ aeefb7bc</span>
+    <span class="branch">part xc7a35tfgg484-2 · lab 2_1_rectangle_ellipse_parabola</span>
+  </div>
+</header>
+
+<div class="cards">
+  <div class="card">
+    <span class="k">Build result</span>
+    <span class="n">0 / 0</span>
+    <p>Errors and critical warnings, both branches, synthesis through bitstream.</p>
+  </div>
+  <div class="card">
+    <span class="k">Worst-case slack</span>
+    <span class="n">+6.5 ns</span>
+    <p>Theirs, on the same lab. Their pipeline register earns it.</p>
+  </div>
+  <div class="card">
+    <span class="k">Verified on</span>
+    <span class="n">1 : 1</span>
+    <p>Mine on real hardware and no simulation; theirs in simulation and no hardware.</p>
+  </div>
+  <div class="card">
+    <span class="k">Findings below</span>
+    <span class="n">11</span>
+    <p>Four against mine, three against theirs, three shared, one upstream.</p>
+  </div>
+</div>
+
+<section>
+  <h2>What each side built</h2>
+  <p class="sub">File inventory, lines as committed</p>
+
+  <div class="scroll"><table>
+    <thead><tr><th>Mine</th><th class="num">Lines</th><th>Theirs</th><th class="num">Lines</th></tr></thead>
+    <tbody>
+      <tr><td class="lab"><code>hdmi_tx.sv</code> — encoder + serializer + buffers</td><td class="num">216</td>
+          <td class="lab"><code>ax7035b_hdmi.sv</code> — clocking + sync + encode + serialize, in one module, plus <code>ax7035b_tmds_lane</code></td><td class="num">185</td></tr>
+      <tr><td class="lab"><code>hdmi_clk_gen.sv</code> — MMCM + reset synchronizer</td><td class="num">112</td>
+          <td class="lab">(same file)</td><td class="num">—</td></tr>
+      <tr><td class="lab"><code>board_specific_top.sv</code></td><td class="num">340</td>
+          <td class="lab"><code>board_specific_top.sv</code></td><td class="num">260</td></tr>
+      <tr><td class="lab"><code>board_specific.xdc</code></td><td class="num">139</td>
+          <td class="lab"><code>board_specific.xdc</code></td><td class="num">137</td></tr>
+      <tr><td class="lab">no testbench</td><td class="num">0</td>
+          <td class="lab"><code>tests/hdmi_tb.sv</code> — full-frame TMDS decoder</td><td class="num">178</td></tr>
+      <tr><td class="lab">no board document</td><td class="num">0</td>
+          <td class="lab"><code>README.md</code> — mode, pins, usage, limits</td><td class="num">119</td></tr>
+      <tr><td class="lab">video timing from the shared <code>vga</code></td><td class="num">—</td>
+          <td class="lab">video timing from the shared <code>dvi_sync</code></td><td class="num">—</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>The split is the main structural difference. Mine is two modules that know nothing about this
+  board — a 7-series clock generator and a 7-series DVI transmitter — wired together in the board
+  top, which keeps using the <code>vga</code> timing generator that about thirty other boards use.
+  Theirs is one module named after the board that also hands the lab its clock, its reset and its
+  pixel coordinates, which makes the board top shorter and the module unusable anywhere else
+  without renaming.</p>
+</section>
+
+<section>
+  <h2>Where we converged</h2>
+  <p class="sub">Independently, and in a few cases after the same mistake</p>
+  <ul>
+    <li><b>The constraints file.</b> Both branches now ship the vendor's own HDMI block with the
+    comment marks removed, plus one added line. Both of us first rewrote that block with the
+    negative pins spelled out, and both of us then reverted it — theirs in
+    <code>a67af903</code> "Restored the original XDC file", mine in <code>3d1554a2</code>. The two
+    files differ only in where <code>set_false_path -from [get_ports rst_n]</code> sits and what
+    its comment says.</li>
+    <li><b>Serializer topology.</b> Master/slave <code>OSERDESE2</code> pair per lane,
+    <code>DATA_WIDTH 10</code>, DDR, LSB first, bits 8 and 9 into the slave's D3/D4,
+    <code>SHIFTOUT1/2</code> to <code>SHIFTIN1/2</code>, <code>OBUFDS</code> with
+    <code>IOSTANDARD TMDS_33</code> and <code>SLEW FAST</code>. Eight <code>OSERDESE2</code> in
+    both builds.</li>
+    <li><b>The clock lane.</b> Both send the pixel clock as the constant symbol
+    <code>10'b1111100000</code> through a fourth identical serializer, so its latency matches the
+    data lanes.</li>
+    <li><b>Clocking arithmetic.</b> Both multiply the 50 MHz board clock to a 1000 MHz VCO and
+    divide it down to 125 MHz serial and 25 MHz pixel, from a single <code>MMCME2_BASE</code>.</li>
+    <li><b>Reset discipline.</b> Both assert reset asynchronously on the button or on loss of
+    lock and release it synchronously with the pixel clock, which is <code>CLKDIV</code> of the
+    serializer, so the master and slave of a pair cannot frame a symbol differently.</li>
+    <li><b>The encoder.</b> Both instantiate the repository's <code>tmds_encoder</code> from
+    <code>peripherals/dvi.sv</code> rather than copying one. (Mine only after deleting a copy of
+    <code>boards/marsohod3gw2/svo_tmds.v</code> that the first version had carried in.)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Measured, same lab, same tool</h2>
+  <p class="sub">Vivado 2026.1 · xc7a35tfgg484-2 · labs/2_graphics/2_1_rectangle_ellipse_parabola</p>
+
+  <p>Codex's branch was checked out into a worktree and built with the repository's own
+  <code>03_synthesize_for_fpga.bash</code>, the same script and the same lab I had built mine with,
+  on the same machine.</p>
+
+  <div class="scroll"><table>
+    <thead><tr><th>Metric</th><th class="num">Mine</th><th class="num">Theirs</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">Slice LUTs</td><td class="num win">320</td><td class="num">342</td><td>Theirs carries 24 colour registers and three sync registers mine does not.</td></tr>
+      <tr><td class="lab">Slice registers</td><td class="num win">77</td><td class="num">122</td><td>Same cause, plus a second reset synchronizer.</td></tr>
+      <tr><td class="lab">BUFGCTRL</td><td class="num win">2</td><td class="num">3</td><td>Theirs buffers the MMCM feedback; see F4 — that one is theirs on purpose and mine by omission.</td></tr>
+      <tr><td class="lab">MMCME2_ADV</td><td class="num">1</td><td class="num">1</td><td>One <code>MMCME2_BASE</code> each.</td></tr>
+      <tr><td class="lab">OSERDESE2</td><td class="num">8</td><td class="num">8</td><td>Four lanes, master and slave.</td></tr>
+      <tr><td class="lab">Bonded IOB</td><td class="num">32</td><td class="num">32</td><td>Identical pinout.</td></tr>
+      <tr><td class="lab">Setup slack (WNS)</td><td class="num">22.962 ns</td><td class="num win">29.441 ns</td><td>Both met. The 6.479 ns is the pipeline register.</td></tr>
+      <tr><td class="lab">Hold slack (WHS)</td><td class="num">0.130 ns</td><td class="num">0.130 ns</td><td>Same critical hold path, in the serializer.</td></tr>
+      <tr><td class="lab">Pulse width (WPWS)</td><td class="num">6.408 ns</td><td class="num">6.408 ns</td><td>Set by the 125 MHz serial clock in both.</td></tr>
+      <tr><td class="lab">Timed endpoints</td><td class="num">208</td><td class="num">340</td><td>Theirs has more registers to time.</td></tr>
+      <tr><td class="lab">Errors / critical warnings</td><td class="num">1 / 0</td><td class="num">1 / 0</td><td>The one error is identical and expected in both: <code>[Labtoolstcl 44-469] There is no current hw_target</code> at the programming step, with no board attached.</td></tr>
+      <tr><td class="lab">Warnings</td><td class="num">1</td><td class="num">1</td><td>Also identical, and from the repository's own flow, not the designs: <code>'open_hw' is deprecated</code>.</td></tr>
+      <tr><td class="lab">Bitstream</td><td class="num">2 192 221 B</td><td class="num">2 192 221 B</td><td>Equal by construction — an uncompressed xc7a35t bitstream is a fixed size. Not a figure of merit.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Why their slack is better</h3>
+  <p>The two worst paths say it exactly:</p>
+  <div class="ev">mine &nbsp; i_vga/hpos_reg[2]/C &rarr; i_hdmi_tx/channel[0].data_channel.i_tmds_encoder/cnt_reg[4]/D &nbsp; 22.962 ns<br>
+theirs &nbsp; i_hdmi/i_sync/pixel_y_o_reg[5]/C &rarr; i_hdmi/rgb_reg[2][5]/D &nbsp; 29.441 ns</div>
+  <p>In my design one pixel clock has to cover the coordinate register, the whole of the lab's
+  combinational graphics logic, <em>and</em> the TMDS encoder's disparity arithmetic. In theirs the
+  lab's logic ends at a register, and the encoder starts the next cycle with a fresh 40 ns. At
+  25 MHz neither is close to failing; the margin is what you would spend on a higher pixel clock or
+  a heavier lab. Their register costs 27 flip-flops and changes nothing about alignment, because
+  they delay the colours and the sync signals by the same one cycle.</p>
+
+  <h3>One honest caveat about these numbers</h3>
+  <p><code>2_1_rectangle_ellipse_parabola</code> drives its colours from <code>always_comb</code> and
+  never uses <code>clk</code>, <code>rst</code> or <code>slow_clk</code>. In their design the lab's
+  50 MHz clock therefore has no surviving load and Vivado removes it: the routed clock report lists
+  three global clocks (pixel 132 loads, serial 8, feedback 1) and no 50 MHz net. So this build does
+  not exercise their second clock domain at all, and the LUT, register and BUFG columns understate
+  what their architecture costs on a lab that does use the lab clock. Mine has two global clocks
+  (pixel 85 loads, serial 8) and that does not change with the lab.</p>
+</section>
+
+<section>
+  <h2>Pros and cons</h2>
+  <p class="sub">After the measurements, not before them</p>
+
+  <div class="duo">
+    <div>
+      <p class="who">Mine</p>
+      <h4>In favour</h4>
+      <ul>
+        <li><b>Tested on the board.</b> It drives a real monitor. Theirs has never been on hardware — their own README says so.</li>
+        <li><b>Reusable pieces.</b> <code>hdmi_clk_gen</code> and <code>hdmi_tx</code> are 7-series modules with no AX7035B in them; the next Artix board needs a port list, not a transmitter.</li>
+        <li><b>Clock numbers come from parameters.</b> <code>clk_mhz</code> and <code>pixel_mhz</code> actually drive the MMCM dividers, so a different board clock is a parameter change rather than an edit.</li>
+        <li><b>One clock domain for lab and video.</b> No crossing to reason about, one reset synchronizer, two BUFGs, 40 ns for every lab path.</li>
+        <li><b>Follows the repository's video convention</b> — the shared <code>vga</code> generator and the <code>x10</code>/<code>y10</code> wiring that <code>nexys_a7_100</code>, <code>basys3</code> and the rest use, including <code>N_MIXER_PIPE_STAGES</code> as a documented alignment knob.</li>
+        <li><b>Smaller</b>: 320 LUT / 77 FF / 2 BUFG against 342 / 122 / 3.</li>
+      </ul>
+      <h4>Against</h4>
+      <ul>
+        <li><b>No testbench at all.</b> Four bugs were found by comparing against their code and by looking at a dark monitor, when three of them would have failed a simulation in seconds.</li>
+        <li><b>No document.</b> Nothing records the video mode, the pin table, the connector, or what is not implemented.</li>
+        <li><b>6.5 ns less slack</b>, because the lab's logic and the encoder share one pixel clock.</li>
+        <li><b>Lab at 25 MHz</b> — half the throughput of the board clock, and a deviation from every other HDMI board in the repository (F3).</li>
+        <li><b>MMCM feedback unbuffered</b> while the primitive's compensation assumes a BUFG (F4).</li>
+        <li><b>Two comment claims were wrong</b> and one cited a document I had not read (F1, F2, F3).</li>
+      </ul>
+    </div>
+    <div>
+      <p class="who">Theirs</p>
+      <h4>In favour</h4>
+      <ul>
+        <li><b>A real testbench.</b> It decodes the differential output with AMD's own MMCM, OSERDESE2 and OBUFDS models, checks every pixel of a complete frame against a coordinate-derived pattern, checks the control symbols in blanking, checks that the forwarded clock is five low and five high bits, and then does it again after an asynchronous reset.</li>
+        <li><b>A real README</b>: the mode and its 59.52 Hz, the full timing table, the pin table with both halves of each pair, how to run it, and an explicit list of what is missing — EDID, hot-plug, audio, HDCP.</li>
+        <li><b>More slack</b>, measured, from a register that costs 27 flip-flops.</li>
+        <li><b>Lab clock stays at the board's 50 MHz</b>, which is what <code>a7_lite_35t</code> and the Gowin HDMI boards do.</li>
+        <li><b>MMCM feedback through a BUFG</b>, which is what AMD's own clocking wizard emits — there is a generated instance of exactly that in this repository.</li>
+        <li><b>The reset and the enable read directly</b>: <code>assign hdmi_enable = ~ pixel_rst;</code> is better than my three-term conditional on a <code>localparam</code> that is always 1.</li>
+        <li><b>Honest about its limits</b> in writing, including that nothing has been tried on hardware.</li>
+      </ul>
+      <h4>Against</h4>
+      <ul>
+        <li><b>Board-specific by construction.</b> One module does clocking, timing, encoding, serialization and the lab's clock and reset; nothing in it is reusable for the next Xilinx board.</li>
+        <li><b>Clocking is hardcoded</b>: <code>CLKIN1_PERIOD 20.0</code>, <code>CLKFBOUT_MULT_F 20.0</code> and the three dividers are literals, while the module still receives none of <code>clk_mhz</code>, <code>pixel_mhz</code>, <code>screen_width</code> or <code>screen_height</code>. Their README admits the parameters do not select a mode (F7).</li>
+        <li><b>Coordinate widths are literals</b> — <code>output [9:0] x</code>, <code>output [8:0] y</code> — decoupled from <code>w_x</code> and <code>w_y</code> in the top.</li>
+        <li><b>Two clock domains</b> mean every lab path that touches <code>x</code> or <code>y</code> is timed across 50 and 25 MHz, not within one 40 ns pixel (F9).</li>
+        <li><b>The testbench reaches into the DUT</b> (<code>dut.serial_clk</code>) and is written against this module's exact ports, so it does not transfer.</li>
+        <li><b>Two claims about pin M6</b> are still in their tree, one of them in the README (F1, F2).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Findings</h2>
+  <p class="sub">Eleven, with the evidence for each</p>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">F1</span><span class="ftitle">"Active high despite the name" is not a finding, it is a misreading</span><span class="chip defect">defect</span><span class="chip side">both</span></div>
+    <p><code>OEN</code> expands to <em>output enable</em>. The N is the last letter of "enable", not an
+    active-low bar, so active high is the plain reading of the vendor's name and there is nothing to be
+    surprised by. Both of us drove the pin low to enable it in our first version, both of us then wrote
+    the fix up as the vendor's name being misleading. It is still in their tree twice.</p>
+    <div class="ev">theirs, ax7035b_hdmi.sv &nbsp; // M6 controls HDMI1's +5 V supply and is active high, despite OEN's name.<br>
+theirs, README.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; It is **active high**, despite the existing signal name.<br>
+mine &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; corrected in 3d1554a2; the comment now just says driving it high turns the supply on</div>
+    <p>Worth fixing in their two files. The polarity itself is right.</p>
+  </div>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">F2</span><span class="ftitle">The ALINX manual is cited as the source of the pins and the polarity</span><span class="chip defect">defect</span><span class="chip side">mine, and to confirm on theirs</span></div>
+    <p>My comment and the message of <code>fd740412</code> both said the polarity was "taken from the
+    HDMI section of the ALINX AX7035B user manual", with a URL. I never opened that document. The
+    polarity came from the monitor staying dark with the pin low, from their implementation driving it
+    high, and from the board then working. The citation is removed from my tree; the commit message
+    stays as it is, with the correction recorded in <code>3d1554a2</code>.</p>
+    <div class="ev">theirs, README.md &nbsp; Pin assignments and power-enable polarity follow the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ALINX AX7035B user manual, HDMI section](https://alinx.com/.../AX7035B_UG.pdf)<br>
+theirs, 4b2fe932 &nbsp;&nbsp; # HDMI1 output (J6), ALINX AX7035B manual, section 9.</div>
+    <p>Their citation may well be real — I cannot tell from here, and it should be confirmed rather than
+    assumed. What is certain is that the naming argument attached to it is wrong either way, and that
+    the pins did not need a manual: they were already in the vendor's constraints file, commented out.</p>
+  </div>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">F3</span><span class="ftitle">My comment claims the other HDMI boards clock the lab from the pixel clock. None of them do.</span><span class="chip defect">defect</span><span class="chip side">mine</span></div>
+    <p>The comment above my clock generator reads "The lab itself runs on the pixel clock, as it does on
+    the other HDMI boards." That is false for every HDMI board in the repository, and the closest
+    precedent is the clearest case:</p>
+    <div class="ev">boards/a7_lite_35t &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; clk_wiz: 250 MHz serial, 50 MHz lab, 25 MHz pixel &rarr; lab at 50<br>
+boards/tang_nano_9k_hdmi_tm1638 &nbsp; wire clk = CLK;  &rarr; lab at the 27 MHz board clock<br>
+boards/tang_nano_20k_hdmi_tm1638 &nbsp;wire clk = CLK;  &rarr; lab at 27 MHz<br>
+boards/marsohod3gw2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clk_mhz = 100, video on its own pixel clock</div>
+    <p>Their choice is the conventional one and mine is the outlier. The design still works — the lab
+    receives <code>lab_mhz = 25</code> as its <code>clk_mhz</code>, so every derived timer scales — but
+    the comment asserts a convention that does not exist, which is the same failure as F1 and F2 in a
+    third place. The comment has to go whether or not the clocking changes.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">F4</span><span class="ftitle">My MMCM feedback skips the BUFG that its compensation mode assumes</span><span class="chip risk">risk</span><span class="chip side">mine</span></div>
+    <p>I tie <code>CLKFBOUT</code> straight to <code>CLKFBIN</code>. They put a BUFG in between, which
+    looked like a wasted global buffer until I checked what the primitive does: <code>MMCME2_BASE</code>
+    has no <code>COMPENSATION</code> parameter, it wraps <code>MMCME2_ADV</code> without passing one, and
+    that defaults to <code>ZHOLD</code> — the mode that models a BUFG delay in the feedback path. AMD's
+    own clocking wizard emits exactly their arrangement, and there is a generated instance of it in this
+    repository:</p>
+    <div class="ev">unisims/MMCME2_BASE.v &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MMCME2_ADV #( ... ) mmcm_adv_1   // no COMPENSATION passed<br>
+unisims/MMCME2_ADV.v &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameter COMPENSATION = "ZHOLD",<br>
+boards/a7_lite_35t/clk_wiz_clk_wiz.v &nbsp;.COMPENSATION ("ZHOLD") ... BUFG clkf_buf (.O (clkfbout_buf_clk_wiz), .I (clkfbout_clk_wiz));</div>
+    <p>The consequence here is a constant phase offset between <code>sys_clk</code> and every MMCM
+    output, which nothing in this design measures: <code>sys_clk</code> feeds only the MMCM, and
+    <code>rst_n</code> is on a false path. Vivado raised no warning and the build is clean. So this is
+    not a bug in the picture, but theirs is the template-correct version and mine should adopt it — one
+    BUFG out of thirty-two.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">F5</span><span class="ftitle">My enable expression says <code>~rst</code> the long way</span><span class="chip risk">risk</span><span class="chip side">mine</span></div>
+    <div class="ev">mine &nbsp;&nbsp; localparam hdmi_output_enable = 1'b1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assign HDMI_OEN = rst ? ~ hdmi_output_enable : hdmi_output_enable;<br>
+theirs &nbsp; assign hdmi_enable = ~ pixel_rst;</div>
+    <p>The <code>localparam</code> is always 1, so the conditional is <code>~rst</code> and the
+    non-graphics branch's <code>~hdmi_output_enable</code> is <code>1'b0</code>. The indirection existed
+    to carry the "despite the name" explanation that F1 just removed, so it has lost its last reason to
+    exist.</p>
+  </div>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">F6</span><span class="ftitle">Mine has no simulation, and three of the four bugs it shipped were simulatable</span><span class="chip defect">defect</span><span class="chip side">mine</span></div>
+    <p>The first version of my branch built cleanly, met timing, and produced no picture. The four causes
+    were the inverted enable, an asynchronously released serializer reset, a copied TMDS encoder, and a
+    clock-lane symbol in the wrong phase. Against their testbench:</p>
+    <ul>
+      <li><b>Inverted enable</b> — caught. The testbench holds its state machine idle while
+      <code>enable</code> is low, so no frame would ever be decoded and the 70 ms watchdog would fire.</li>
+      <li><b>Clock lane inverted</b> — caught, explicitly: it finds bit zero on the forwarded clock's
+      falling edge and then asserts <code>cp !== (bit_number &gt;= 5)</code> on every bit.</li>
+      <li><b>Reset released asynchronously</b> — probably caught: the second half of the test re-decodes
+      a whole frame after an asynchronous reset, which is where misframed master/slave halves show up.</li>
+      <li><b>Duplicated encoder</b> — not caught. It was duplication, not misbehaviour.</li>
+    </ul>
+    <p>A testbench is the single largest thing their branch has and mine does not.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">F7</span><span class="ftitle">Their clocking and coordinate widths are literals inside a module with parameters passed around it</span><span class="chip risk">risk</span><span class="chip side">theirs</span></div>
+    <p><code>ax7035b_hdmi</code> takes no parameters. <code>CLKIN1_PERIOD 20.0</code>,
+    <code>CLKFBOUT_MULT_F 20.0</code>, <code>CLKOUT0_DIVIDE_F 8.0</code>, <code>CLKOUT1_DIVIDE 40</code>
+    and <code>CLKOUT2_DIVIDE 20</code> are written out, and <code>x</code> and <code>y</code> are
+    <code>[9:0]</code> and <code>[8:0]</code>. Meanwhile the board top still declares
+    <code>clk_mhz</code>, <code>pixel_mhz</code>, <code>screen_width</code>,
+    <code>screen_height</code>, <code>w_x</code> and <code>w_y</code> and passes none of them in. Change
+    the board clock or the screen and the design is quietly wrong rather than loudly broken. Their README
+    says as much, which is the right mitigation but not a fix.</p>
+    <p>Mine derives the five MMCM numbers from <code>clk_mhz</code> and <code>pixel_mhz</code> — though
+    only within the fixed 1000 MHz VCO, and the screen timing still comes from <code>vga</code>'s own
+    constants, so mine is parameterized in the clocking and fixed in the mode.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">F8</span><span class="ftitle">Their lab clock is a second domain that this comparison never exercised</span><span class="chip risk">risk</span><span class="chip side">theirs</span></div>
+    <p>Four BUFGs are instantiated — feedback, pixel, serial, lab — and three survive, because
+    <code>2_1</code> never uses the lab clock. On a lab that does, their design pays the fourth BUFG and
+    puts every path between the lab and the pixel domain on a 20 ns check instead of a 40 ns one. The
+    crossing is legal and timed, since both clocks come from one MMCM; it is simply tighter, and it is
+    the part of their architecture that no measurement here covers.</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">F9</span><span class="ftitle">Neither constrains the TMDS output timing</span><span class="chip doc">accepted</span><span class="chip side">both</span></div>
+    <p>There is no <code>set_output_delay</code>, no <code>create_generated_clock</code> for the
+    forwarded clock, and no skew budget between the four lanes in either XDC. Both rely on the
+    serializers being identical and in the same bank, which they are — all four pairs are in bank 35.
+    At a 250 Mbit/s lane rate that is ordinary practice and both builds route with hold slack to spare
+    (0.130 ns, inside the serializer, in both). Their README states the limitation; mine does not state
+    it anywhere.</p>
+  </div>
+
+  <div class="finding clear">
+    <div class="fhead"><span class="fid">F10</span><span class="ftitle">Checked and not a defect: my coordinate truncation and their clamped coordinates</span><span class="chip clear">cleared</span><span class="chip side">both</span></div>
+    <p>I wire <code>vga</code>'s 10-bit <code>vpos</code> into a 9-bit <code>y</code>, so during the last
+    thirteen blanking lines the lab sees a wrapped row number. That is the <code>x10</code>/<code>y10</code>
+    idiom copied verbatim from <code>nexys_a7_100</code> and <code>basys3</code> and it is harmless
+    because <code>display_on</code> is low there. Theirs sees <code>dvi_sync</code>'s coordinates, which
+    are clamped to zero outside the visible window instead. Different, both fine.</p>
+    <p>Pixel alignment is also fine in both, for opposite-looking reasons: every lab in
+    <code>labs/2_graphics</code> drives its colours from <code>always_comb</code>, so my undelayed sync
+    signals line up with the lab's colours, and their one-cycle delay of colours <em>and</em> syncs
+    together preserves the same alignment.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">F11</span><span class="ftitle">Upstream: <code>dvi_top</code> delays its sync signals for a colour path the graphics labs do not have</span><span class="chip risk">unverified</span><span class="chip side">repository</span></div>
+    <p>Neither branch uses <code>dvi_top</code>, but <code>a7_lite_35t</code> and the Gowin HDMI boards
+    do, and it contains this:</p>
+    <div class="ev">peripherals/dvi.sv &nbsp; // Delay hsync/vsync and visible_range by 1 clock cycle to account for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// color delay in image_gen</div>
+    <p>The colours are not delayed with them. If the colour source is combinational — which every
+    <code>labs/2_graphics</code> lab is — the colours then lead the sync signals and the DE window by one
+    pixel. The shared <code>vga</code> generator has <code>N_MIXER_PIPE_STAGES</code> for exactly this
+    adjustment and <code>dvi_sync</code> has no equivalent. I have not put a camera on an
+    <code>a7_lite_35t</code>, so this is a suspicion from reading, not a confirmed one-pixel shift, and it
+    belongs upstream rather than in either branch.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What each side should take</h2>
+  <p class="sub">Concrete, in the order I would do it</p>
+
+  <div class="duo">
+    <div>
+      <p class="who">Mine, from theirs</p>
+      <ul>
+        <li><b>The testbench</b>, adapted to <code>hdmi_tx</code>'s ports — the decoder, the full-frame
+        check, the forwarded-clock check and the reset-recovery pass are all independent of their module
+        structure once the hierarchical <code>dut.serial_clk</code> reference is replaced by the
+        testbench's own serial clock.</li>
+        <li><b>A board README</b> with the mode, the timing table, the pin table, how to run it, and
+        what is not implemented.</li>
+        <li><b>The colour and sync register stage</b> before the encoder: 27 flip-flops for a measured
+        6.479 ns.</li>
+        <li><b>The BUFG in the MMCM feedback</b> (F4).</li>
+        <li><b><code>assign HDMI_OEN = ~ rst;</code></b> in place of my conditional (F5).</li>
+        <li><b>The lab clock at the board's 50 MHz</b>, which is both the repository's convention and
+        twice the throughput, at the cost of the second reset synchronizer they already wrote (F3).</li>
+        <li><b><code>set_false_path</code> next to the <code>rst_n</code> pin</b> rather than at the end
+        of the HDMI block — it is a constraint about that port.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="who">Theirs, from mine</p>
+      <ul>
+        <li><b>Split the module.</b> A 7-series clock generator and a 7-series DVI transmitter with no
+        board name in them, so <code>a7_lite_35t</code> and the next Artix board can use the same two
+        files. Their <code>ax7035b_tmds_lane</code> is already exactly that, one rename away.</li>
+        <li><b>Feed the parameters through</b> to the MMCM dividers and the coordinate widths (F7),
+        instead of documenting that they do nothing.</li>
+        <li><b>Fix the two M6 claims</b> in <code>ax7035b_hdmi.sv</code> and <code>README.md</code> (F1),
+        and confirm or drop the manual citation (F2).</li>
+        <li><b>Put it on the board.</b> Everything else in their branch is better documented and better
+        verified than mine except this, and it is the one that found four bugs in mine.</li>
+        <li><b>Consider the single-domain option</b> for the lab clock, which removes the crossing
+        entirely — not as a replacement for their design, but as the thing to compare against on a lab
+        that actually uses the lab clock (F8).</li>
+      </ul>
+    </div>
+  </div>
+
+  <blockquote>
+    <p>One tempting idea that does not work: moving a shared Xilinx transmitter into
+    <code>peripherals/</code>. <code>scripts/fpga/xilinx_vivado_synthesize.tcl</code> reads
+    <code>peripherals/*.sv</code> for every board, and the Quartus, Gowin, Efinity and yosys flows read
+    the same directory, so a file containing <code>OSERDESE2</code> and <code>OBUFDS</code> would be
+    handed to toolchains that have never heard of them. Sharing it needs a new home that only the Xilinx
+    flow reads — which is why <code>a7_lite_35t</code> keeps its generated <code>clk_wiz</code> in its own
+    board directory, and why both of our transmitters sit in <code>boards/alinx_ax7035b/</code>.</p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>Open checks</h2>
+  <p class="sub">What I did not establish, and how to establish it</p>
+
+  <div class="check">
+    <div class="q">Does their testbench pass, here, now?</div>
+    <p class="how"><b>Yes — reproduced here.</b> Their documented commands ran unchanged against their worktree with Vivado 2026.1: <code>xvlog</code> analysed all four files and <code>xelab</code> built the snapshot against <code>unisims_ver</code> and <code>secureip</code> with no errors, binding the real <code>MMCME2_BASE</code>, two <code>OSERDESE2</code> configurations and <code>OBUFDS</code>. <code>xsim -runall</code> then printed all three of its checks and exited 0:</p><div class="ev">PASS: frame 1, RGB, sync and serialization<br>PASS: frame 2, RGB, sync and serialization<br>PASS: HDMI reset recovery<br>$finish called at time : 64963959 ns</div><p class="how">It is not cheap — 64.96 ms of simulated time, 34 minutes of CPU and a 423 MB peak on this host — but it is exactly the check my branch does not have, and it passes</p>
+  </div>
+
+  <div class="check">
+    <div class="q">Does their branch actually produce a picture?</div>
+    <p class="how">Their README reports simulation and timing, and states plainly that nothing has been
+    tried on hardware. <b>Build their branch for a graphics lab and plug in a monitor.</b> Mine was dark
+    on the first try while meeting timing, which is precisely why this check cannot be skipped.</p>
+  </div>
+
+  <div class="check">
+    <div class="q">What do the two designs cost on a lab that uses the lab clock?</div>
+    <p class="how">Everything measured above used a combinational lab, which deletes their second clock
+    domain. <b>Rebuild both for <code>2_2_rectangle_ellipse_parabola_moving</code> or
+    <code>2_10_color_shapes_and_functions</code></b> and compare the BUFG count, the register count and
+    the worst path between the lab and pixel domains.</p>
+  </div>
+
+  <div class="check">
+    <div class="q">Did anyone read the ALINX manual?</div>
+    <p class="how">I did not, and I said I had. <b>Open the AX7035B manual's HDMI section and the
+    schematic</b>, and confirm three things on paper: that M6 drives the connector's 5 V switch, its
+    polarity, and that the four pairs belong to HDMI1 / J6 rather than the second connector. Then whoever
+    cites it has actually read it.</p>
+  </div>
+
+  <div class="check">
+    <div class="q">Is there a one-pixel shift on the boards that use <code>dvi_top</code>?</div>
+    <p class="how">F11 is a reading, not a measurement. <b>Photograph a sharp vertical edge from
+    <code>2_3_color_stripes</code> on an <code>a7_lite_35t</code></b>, or simulate <code>dvi_top</code>
+    with a combinational colour source and compare the first visible symbol's position against
+    <code>dvi_sync</code>'s own <code>visible_range_o</code>.</p>
+  </div>
+
+  <div class="check">
+    <div class="q">Does the monitor need anything we are not giving it?</div>
+    <p class="how">Neither design reads hot-plug detect or EDID, and neither sends HDMI data islands,
+    so the output is DVI over an HDMI connector at a non-standard 25 MHz (59.52 Hz instead of 60). That
+    works on the monitor mine was tested with. <b>Try two or three more displays</b>, especially one that
+    only advertises 60 Hz modes, before calling the mode safe.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Recommendation</h2>
+  <p class="sub">One implementation, not two</p>
+
+  <p>Neither branch should be merged as it stands, and the merge is not a close call on most of the
+  files. Their verification artifacts and their clocking discipline are better; my module boundaries and
+  parameterization are better; the hardware evidence is only on my side.</p>
+
+  <ol>
+    <li><b>Keep my two-file split</b> — <code>hdmi_clk_gen.sv</code> and <code>hdmi_tx.sv</code>, with no
+    board name in either — as the shape of the thing, so the second Xilinx HDMI board is cheap.</li>
+    <li><b>Take their register stage into <code>hdmi_tx</code></b>: register the colours and the sync
+    signals together on the pixel clock before the encoders. Measured 6.479 ns, no alignment change.</li>
+    <li><b>Take their clocking choices into <code>hdmi_clk_gen</code></b>: a BUFG in the feedback path,
+    and a third output at the board clock so the lab keeps its 50 MHz with its own reset
+    synchronizer. The module then produces exactly what <code>a7_lite_35t</code>'s
+    <code>clk_wiz</code> produces, from a parameterized primitive instead of generated IP.</li>
+    <li><b>Port their testbench</b> against the new <code>hdmi_tx</code> and keep it in
+    <code>boards/alinx_ax7035b/tests/</code>, which is where they put it.</li>
+    <li><b>Take their README</b>, with the two M6 sentences rewritten and the manual citation either
+    verified or dropped.</li>
+    <li><b>Keep both XDCs</b> — they are already the same file, and the right one: the vendor's own
+    constraints with the comment marks removed, plus <code>set_false_path</code> on
+    <code>rst_n</code>.</li>
+    <li><b>Then put it on the board again</b>, because every one of these steps touches the datapath or
+    the clocking, and a clean build has already proved once that it means nothing.</li>
+  </ol>
+
+  <p>The honest summary of the last two days on this board: their branch found four bugs in mine by
+  being written independently, and their testbench would have found three of them without anyone
+  looking at a monitor. The two errors I corrected in my own tree this evening — a misread signal name
+  and a document I cited without reading — are both still in theirs, which is the symmetry worth
+  noticing. Neither of us checked the vendor's manual; one of us said he had.</p>
+</section>
+
+<footer>
+  <h2>How this was produced</h2>
+  <p><b>Branches.</b> Mine <code>claude_hdmi_ax7035b</code> at <code>3d1554a2</code> (over
+  <code>7de707c8</code>, <code>fd740412</code>). Theirs <code>codex_hdmi_ax7035b</code> at
+  <code>aeefb7bc</code> (over <code>4b2fe932</code>, <code>a67af903</code>). Both compared against
+  <code>origin/main</code>.</p>
+  <p><b>Builds.</b> Vivado 2026.1 (build 6511674), <code>xc7a35tfgg484-2</code>, speed file -2
+  PRODUCTION 1.23. Both branches built with the repository's own
+  <code>labs/2_graphics/2_1_rectangle_ellipse_parabola/03_synthesize_for_fpga.bash</code>, theirs in a
+  <code>git worktree</code>, on the same host. Numbers read from
+  <code>post_route_util.rpt</code>, <code>post_route_timing_summary.rpt</code>,
+  <code>post_route_timing.rpt</code>, <code>clock_util.rpt</code> and <code>vivado.log</code>.</p>
+  <p><b>Pin placement.</b> Read back from my routed checkpoint with
+  <code>get_property PACKAGE_PIN</code>: clock E1/D1, data 0 G1/F1, data 1 H2/G2, data 2 K1/J1,
+  enable M6 — the negative pins derived by Vivado from the vendor's positive-pin-only constraints,
+  matching the ones I had previously spelled out by hand.</p>
+  <p><b>Simulation.</b> Their testbench compiled and elaborated with <code>xvlog</code>/<code>xelab</code>
+  against <code>unisims_ver</code> and <code>secureip</code> exactly as their README documents, and run
+  with <code>xsim -runall</code>: three passes, exit 0, 64963959 ns of simulated time, 2059840 ms of CPU, 423 MB peak.</p>
+  <p><b>Primitive facts.</b> <code>COMPENSATION</code> defaults read from
+  <code>$XILINX_VIVADO/data/verilog/src/unisims/MMCME2_BASE.v</code> and
+  <code>MMCME2_ADV.v</code> in the installed 2026.1 tree; the wizard's feedback arrangement from
+  <code>boards/a7_lite_35t/clk_wiz_clk_wiz.v</code> in this repository.</p>
+</footer>
+
+</div>
+</body>
+</html>

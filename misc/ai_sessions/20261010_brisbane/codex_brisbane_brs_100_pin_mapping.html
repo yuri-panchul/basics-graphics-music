@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BRS-100: manufacturer constraints and RTL pin mapping</title>
+<style>
+:root{color-scheme:light;--ink:#17324d;--accent:#096a7b;--line:#d7e2ea}
+*{box-sizing:border-box}body{margin:0;background:#eef3f7;color:var(--ink);font:17px/1.6 system-ui,sans-serif}
+main{max-width:1120px;margin:35px auto;background:white;padding:42px 52px;border-radius:16px;box-shadow:0 8px 30px #18334d12}
+h1{font-size:2.15rem;line-height:1.2;margin:10px 0 20px}h2{margin-top:2.2em;border-bottom:2px solid var(--line);padding-bottom:.3em;font-size:1.45rem}
+h3{font-size:1.13rem}a{color:#086d91}code,pre{font-family:ui-monospace,monospace;font-size:.88em}code{background:#eef3f7;padding:2px 4px;border-radius:3px}pre{white-space:pre;overflow:auto;padding:18px;background:#f2f6f9;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.93em}th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{background:#e9f2f5}tr:nth-child(even){background:#f7f9fb}.scroll{overflow-x:auto}
+.kicker{color:var(--accent);font-weight:700;letter-spacing:.08em;font-size:.8em;text-transform:uppercase}.lead{font-size:1.12em}.note{background:#edf7f7;border-left:4px solid var(--accent);padding:16px 20px}.pending{background:#fff5e6;border-left:4px solid #ad6c16;padding:16px 20px}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}.flow div{border:1px solid var(--line);padding:16px;border-radius:8px;background:#f5f8fb}.small{font-size:.88em;color:#496276}li{margin:.4em 0}summary{cursor:pointer;font-weight:650}
+@media(max-width:700px){main{margin:0;padding:24px 18px;border-radius:0}.flow{grid-template-columns:1fr}h1{font-size:1.8rem}}
+@media print{body{background:white}main{box-shadow:none;margin:0;padding:0}pre{white-space:pre-wrap}details{display:block}}
+</style></head><body><main>
+<div class="kicker">BRS-100 · design discussion · 11 October 2026</div>
+<h1>Keep the board pinout in constraints.<br>Put peripheral wiring in the wrapper.</h1>
+<p class="lead">The new <code>_by_codex</code> configurations keep BrisbaneSilicon’s GPIO names and all package-pin assignments. LCD, TM1638, microphone and DAC connections are made in <code>board_specific_top.sv</code>. The earlier implementations are preserved as <code>_by_codex_alt</code>.</p>
+<p>This follows BGM’s board-support convention: the manufacturer’s CST describes the physical board, while the HDL wrapper describes what the lab connects to it. The same principle applies to XDC and QSF files, although those formats can also contain project settings or timing constraints.</p>
+<table><thead><tr><th>Panel</th><th>New implementation</th><th>Preserved implementation</th></tr></thead><tbody><tr><td>480 × 272</td><td><a href="brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex/README.md">Manufacturer GPIO version</a></td><td><a href="brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex_alt/README.md">Peripheral-named alternative</a></td></tr>
+<tr><td>800 × 480</td><td><a href="brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_codex/README.md">Manufacturer GPIO version</a></td><td><a href="brisbane_brs_100_tm1638_pmod_rgblcd_800_480_by_codex_alt/README.md">Peripheral-named alternative</a></td></tr></tbody></table>
+<p>The original work was recorded in <code>e1a1b4ed</code>, then renamed in the separate commit <code>6c365246</code>. The new GPIO versions were created after that commit. Nothing was pushed as part of this task.</p>
+<h2>How a signal reaches the header</h2>
+<div class="flow"><div><strong>1. Peripheral signal</strong><br>The LCD controller produces <code>LCD_R[0]</code>, the least significant red bit.</div><div><strong>2. HDL connection</strong><br><code>assign pad_io[5:1] = LCD_R;</code><br>Red bit 0 reaches GPIO 1.</div><div><strong>3. Manufacturer pinout</strong><br><code>IO_LOC "pad_io[1]" 25;</code><br>FPGA pin 25 reaches board header J5.1.</div></div>
+<p>In the alternative, the CST directly says <code>IO_LOC "LCD_R[0]" 25;</code>. Both routes reach the same pin and use the same jumper to LCD adapter J2.30. The new assignment is a connection, not a clocked operation; it adds no pipeline cycle.</p>
+<ol><li>Select the panel resolution in the BGM board menu. All four configurations group under <code>brisbane_brs_100</code>.</li><li>The selected wrapper exposes the manufacturer’s clock, buttons, LEDs, UART, flash and <code>inout [32:1] pad_io</code> ports.</li><li>LCD RGB occupies GPIOs 1–16, followed by LCD clock and controls on 17–20. TM1638 uses 21–23, microphone 24–26, DAC 27–29, and the lab’s spare GPIOs use 30–32.</li><li>The CST binds these board signals to package pins. Its electrical attributes still govern voltage standards, pulls and drive strength.</li><li>The SDC constrains the renamed physical ports. LCD data/control delays apply to GPIOs 1–16 and 18–20; GPIO 17 is the forwarded clock.</li></ol>
+<h2>Advantages and costs</h2>
+<div class="scroll"><table><thead><tr><th>Question</th><th>Manufacturer GPIO ports + HDL mapping</th><th>Peripheral names in the CST (<code>_alt</code>)</th></tr></thead><tbody>
+<tr><td>Review against the board manual</td><td><strong>Advantage:</strong> all 47 original <code>IO_LOC</code> lines remain unchanged. Connector numbering and manufacturer updates are easy to compare.</td><td>Each renamed signal must be traced back to its physical header. The file is shorter and directly describes this particular expansion setup.</td></tr>
+<tr><td>Change the expansion wiring</td><td><strong>Advantage:</strong> change the wrapper connections while keeping the board’s package mapping. Related documentation and timing/electrical constraints may still need updates.</td><td>Move the peripheral-named constraints. This is direct for a single fixed design, but multiple configurations can accumulate separate pinout edits.</td></tr>
+<tr><td>Understand peripheral direction</td><td><strong>Cost:</strong> an <code>inout</code> bus does not reveal which pins are outputs, inputs or bidirectional. Read the wrapper and test for contention or undriven pins.</td><td><strong>Advantage:</strong> <code>output LCD_R</code>, <code>input MIC_SD</code> and <code>inout TM_DIO</code> make intent visible at the top-level boundary.</td></tr>
+<tr><td>Timing reports and waveforms</td><td><strong>Cost:</strong> a report may name <code>pad_io[28]</code>; use the mapping table to identify DAC data. SDC port lists must track any reassignment.</td><td><strong>Advantage:</strong> names such as <code>DAC_DIN</code> and <code>LCD_DE</code> describe the function directly.</td></tr>
+<tr><td>RTL tests</td><td><strong>Advantage:</strong> simulations can verify the connection to a named board GPIO, including bit order and bidirectional release. CST-to-package mapping still needs a separate check.</td><td>Tests naturally target peripheral interfaces. They do not, by themselves, verify a real-world header connection encoded only in the CST.</td></tr>
+<tr><td>Resources and speed</td><td>Simple wire assignments should synthesize to connectivity, without an extra register or logic level. Final placement, I/O inference and timing still need checking.</td><td>Equally capable of efficient hardware. Descriptive port names do not inherently make the implementation faster or smaller.</td></tr>
+<tr><td>Vendor defaults</td><td><strong>Cost:</strong> preserving the file does not make every default suitable for the attached module. Explicit exceptions must be reviewed and documented.</td><td>Custom pulls and drive settings are easy to express, but their reasons and differences from the board reference can become less visible.</td></tr>
+</tbody></table></div>
+<h2>What actually changed beyond the names</h2>
+<p>The physical jumper map, LCD timing profiles, lab interfaces and shared peripheral drivers are unchanged. This is not a claim that the two constraint files are electrically identical:</p>
+<ul><li><strong>Manufacturer defaults retained:</strong> header outputs now retain <code>DRIVE=8</code> and pulldowns from the vendor file. Most alternative header ports used no pull and left drive strength unspecified. The new spare GPIOs therefore also have weak pulldowns in hardware.</li><li><strong>1.8 V bank made explicit:</strong> eight existing button/LED lines gain <code>IO_TYPE=LVCMOS18</code>. The vendor file omitted the explicit standard on those pins; its physical bank voltage still matters.</li><li><strong>TM1638 DIO exception:</strong> GPIO 21 changes from pulldown to pullup for the bidirectional data line through the level translator. A vendor default is not a substitute for checking the attached circuit.</li><li><strong>Input exceptions:</strong> flash MISO and microphone SD (GPIO 26) lose the vendor’s <code>DRIVE=8</code> attribute. Gowin rejected that output-drive setting on these synthesized inputs. GPIO 26 retains its pulldown for an absent microphone. Spare GPIOs 30–32 also omit <code>DRIVE</code> so that a lab may use them as inputs; an input-only lab probe reproduced the same Gowin error on all three pins. Output use remains supported with the tool’s default drive setting.</li><li><strong>Unused flash pins made explicit:</strong> the new top retains all four manufacturer flash names. CS stays high, CLK and MOSI stay low, MISO is input-only. The alternative constrained only CS. No flash programming is introduced.</li></ul>
+<p>Thus, the new CST has the original 47 locations, fourteen edited electrical-setting lines, provenance comments and a final newline. A byte-for-byte upstream copy is saved beside it as <code>manufacturer_location.cst.txt</code>; the automated test checks its SHA-256 and the permitted differences.</p>
+<details><summary>Exact CST changes against the manufacturer’s file</summary><pre>--- Manufacturer location.cst
++++ BGM board_specific.cst
+@@ -1,3 +1,13 @@
++# BrisbaneSilicon BRS-100-GW1NR9 manufacturer location.cst, commit
++# cd0bcbf1c24ae6c567346271b2f94c26927d5c5f, GW1NR-9/C7I6.
++# Original: manufacturer_location.cst.txt. All IO_LOC entries are unchanged.
++# Electrical edits: explicit LVCMOS18 on the 2 buttons and 6 LEDs;
++# GPIO 21 uses PULL_MODE=UP for TM1638 DIO through the level translator.
++# Omit DRIVE on input-only flash MISO and GPIO 26 (microphone SD);
++# omit it on spare GPIO 30..32 too, so labs may use them as inputs.
++# Gowin rejects output-drive attributes on synthesized input ports.
++# Peripheral-to-GPIO mapping belongs in board_specific_top.sv, not this file.
++
+ ######################### Locations #########################
+&#32;
+ IO_LOC  &quot;pad_clk_27Mhz&quot;         52;
+@@ -61,23 +71,23 @@
+&#32;
+ IO_PORT &quot;pad_clk_27Mhz&quot;             IO_TYPE=LVCMOS33    PULL_MODE=UP;
+&#32;
+-IO_PORT &quot;pad_user_buttons_n[1]&quot;                         PULL_MODE=UP;
+-IO_PORT &quot;pad_user_buttons_n[2]&quot;                         PULL_MODE=UP;
++IO_PORT &quot;pad_user_buttons_n[1]&quot;     IO_TYPE=LVCMOS18    PULL_MODE=UP;
++IO_PORT &quot;pad_user_buttons_n[2]&quot;     IO_TYPE=LVCMOS18    PULL_MODE=UP;
+&#32;
+ IO_PORT &quot;pad_ser_tx&quot;                IO_TYPE=LVCMOS33    PULL_MODE=UP    DRIVE=8;
+ IO_PORT &quot;pad_ser_rx&quot;                IO_TYPE=LVCMOS33    PULL_MODE=UP;
+&#32;
+ IO_PORT &quot;pad_flash_csb&quot;             IO_TYPE=LVCMOS33    PULL_MODE=UP    DRIVE=8;
+ IO_PORT &quot;pad_flash_clk&quot;             IO_TYPE=LVCMOS33    PULL_MODE=UP    DRIVE=8;
+-IO_PORT &quot;pad_flash_miso&quot;            IO_TYPE=LVCMOS33    PULL_MODE=UP    DRIVE=8;
++IO_PORT &quot;pad_flash_miso&quot;            IO_TYPE=LVCMOS33    PULL_MODE=UP;
+ IO_PORT &quot;pad_flash_mosi&quot;            IO_TYPE=LVCMOS33    PULL_MODE=UP    DRIVE=8;
+&#32;
+-IO_PORT &quot;pad_leds_n[1]&quot;                                 PULL_MODE=UP    DRIVE=8;
+-IO_PORT &quot;pad_leds_n[2]&quot;                                 PULL_MODE=UP    DRIVE=8;
+-IO_PORT &quot;pad_leds_n[3]&quot;                                 PULL_MODE=UP    DRIVE=8;
+-IO_PORT &quot;pad_leds_n[4]&quot;                                 PULL_MODE=UP    DRIVE=8;
+-IO_PORT &quot;pad_leds_n[5]&quot;                                 PULL_MODE=UP    DRIVE=8;
+-IO_PORT &quot;pad_leds_n[6]&quot;                                 PULL_MODE=UP    DRIVE=8;
++IO_PORT &quot;pad_leds_n[1]&quot;             IO_TYPE=LVCMOS18    PULL_MODE=UP    DRIVE=8;
++IO_PORT &quot;pad_leds_n[2]&quot;             IO_TYPE=LVCMOS18    PULL_MODE=UP    DRIVE=8;
++IO_PORT &quot;pad_leds_n[3]&quot;             IO_TYPE=LVCMOS18    PULL_MODE=UP    DRIVE=8;
++IO_PORT &quot;pad_leds_n[4]&quot;             IO_TYPE=LVCMOS18    PULL_MODE=UP    DRIVE=8;
++IO_PORT &quot;pad_leds_n[5]&quot;             IO_TYPE=LVCMOS18    PULL_MODE=UP    DRIVE=8;
++IO_PORT &quot;pad_leds_n[6]&quot;             IO_TYPE=LVCMOS18    PULL_MODE=UP    DRIVE=8;
+&#32;
+ IO_PORT &quot;pad_io[1]&quot;                 IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[2]&quot;                 IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+@@ -99,15 +109,15 @@
+ IO_PORT &quot;pad_io[18]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[19]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[20]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+-IO_PORT &quot;pad_io[21]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
++IO_PORT &quot;pad_io[21]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=UP    DRIVE=8;
+ IO_PORT &quot;pad_io[22]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[23]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[24]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[25]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+-IO_PORT &quot;pad_io[26]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
++IO_PORT &quot;pad_io[26]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN;
+ IO_PORT &quot;pad_io[27]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[28]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+ IO_PORT &quot;pad_io[29]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+-IO_PORT &quot;pad_io[30]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+-IO_PORT &quot;pad_io[31]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
+-IO_PORT &quot;pad_io[32]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN  DRIVE=8;
++IO_PORT &quot;pad_io[30]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN;
++IO_PORT &quot;pad_io[31]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN;
++IO_PORT &quot;pad_io[32]&quot;                IO_TYPE=LVCMOS33    PULL_MODE=DOWN;</pre></details>
+<h2>Bidirectional signals need real bidirectional connections</h2>
+<p>Declaring the header <code>inout</code> does not make every peripheral bidirectional. Output assignments drive LCD and audio outputs; the microphone data pin is only read. TM1638 connects directly through <code>.sio_data(pad_io[21])</code>, and the lab uses <code>.gpio(pad_io[32:30])</code>. Their drivers release the net with high impedance when reading.</p>
+<p>A one-way <code>assign</code> alias would not preserve both directions. The tests exercise TM1638 drive/read/release and drive the spare GPIOs from each side. They also walk a one bit through the header outputs and verify microphone input independently. Simulation checks connections and digital contention; it does not model the physical level translator or prove electrical compatibility.</p>
+<h2>Validation and limitations</h2>
+<!-- VALIDATION_START --><p>All five BRS-100 test groups pass, including 12 RGB-latency/frame cases, 30 wrapper cases, pin/provenance checks and mocked programmer dispatch. After the final input-only constraint adjustment, the pin-map and provenance groups were rerun successfully. All 22 menu tests pass: 116 configurations in 53 board groups.</p>
+<p>The final manufacturer-GPIO wrappers completed synthesis, placement, routing and bitstream generation for these temporary C6/I5 checks. The table reports the constrained timing paths only.</p>
+<div class="scroll"><table><thead><tr><th>Lab</th><th>Resolution</th><th>Logic units</th><th>Registers</th><th>Setup slack, ns</th><th>Hold slack, ns</th><th>Violations setup / hold</th></tr></thead><tbody><tr><td>color_stripes</td><td>480×272</td><td>234</td><td>133</td><td>29.815</td><td>0.708</td><td>0 / 0</td></tr><tr><td>color_stripes</td><td>800×480</td><td>244</td><td>135</td><td>1.724</td><td>0.708</td><td>0 / 0</td></tr><tr><td>microphone_monitor</td><td>480×272</td><td>4353</td><td>1369</td><td>5.930</td><td>0.560</td><td>0 / 0</td></tr><tr><td>microphone_monitor</td><td>800×480</td><td>4360</td><td>1380</td><td>0.133</td><td>0.563</td><td>0 / 0</td></tr></tbody></table></div>
+<p>Gowin’s SDC parser in this flow does not accept Tcl <code>set</code> variables; the final constraints use explicit port lists. Physical constraints and timing constraints must both survive a real tool run, even when RTL simulation passes.</p><!-- VALIDATION_END -->
+<p class="pending">The installed Gowin Education 1.9.11.03 database does not accept the manufacturer’s <code>GW1NR-LV9QN88PC7/I6</code>. Temporary builds use the C6/I5 model for limited synthesis, pin and timing checks only. The board target remains C7/I6, with no automatic fallback. No hardware was programmed, and no physical LCD, TM1638, microphone or DAC result is claimed.</p>
+<p>UART, TM1638 and I²S external timing is not fully constrained. LCD output delays depend on the panel setup/hold assumptions and jumper skew documented in the READMEs. The exact chip, actual panel, power arrangement and assembled wiring still need verification.</p>
+<h2>Recommendation for BGM</h2>
+<p>Use the manufacturer-style versions as the normal basis for future BRS-100 configurations. Keep the preserved alternatives for comparison. Put the board pinout and board electrical facts in the constraint file; put expansion-module functions in a clearly commented section of the wrapper. Retain the original vendor file and record every necessary departure.</p>
+<p>When moving a peripheral, review three things together: the HDL connection, its timing constraints, and the pin’s electrical settings. Keep the wiring table and diagrams in sync, and verify input/output direction in simulation and in the synthesized I/O report. “Manufacturer file preserved” should mean a small, explainable diff, not an unexamined copy.</p>
+<details><summary>Complete GPIO mapping — identical jumpers for both resolutions and both approaches</summary><div class="scroll"><table><thead><tr><th>Header</th><th>Manufacturer port</th><th>FPGA pin</th><th>Peripheral / lab signal</th><th>Destination</th></tr></thead><tbody><tr><td>J5.1</td><td><code>pad_io[1]</code></td><td>25</td><td><code>LCD_R[0]</code></td><td>J2.30</td></tr>
+<tr><td>J5.2</td><td><code>pad_io[2]</code></td><td>26</td><td><code>LCD_R[1]</code></td><td>J2.29</td></tr>
+<tr><td>J5.3</td><td><code>pad_io[3]</code></td><td>27</td><td><code>LCD_R[2]</code></td><td>J2.28</td></tr>
+<tr><td>J5.4</td><td><code>pad_io[4]</code></td><td>28</td><td><code>LCD_R[3]</code></td><td>J2.27</td></tr>
+<tr><td>J5.5</td><td><code>pad_io[5]</code></td><td>29</td><td><code>LCD_R[4]</code></td><td>J2.24</td></tr>
+<tr><td>J5.6</td><td><code>pad_io[6]</code></td><td>30</td><td><code>LCD_G[0]</code></td><td>J2.1</td></tr>
+<tr><td>J5.7</td><td><code>pad_io[7]</code></td><td>33</td><td><code>LCD_G[1]</code></td><td>J2.2</td></tr>
+<tr><td>J5.8</td><td><code>pad_io[8]</code></td><td>34</td><td><code>LCD_G[2]</code></td><td>J2.3</td></tr>
+<tr><td>J5.9</td><td><code>pad_io[9]</code></td><td>35</td><td><code>LCD_G[3]</code></td><td>J2.4</td></tr>
+<tr><td>J5.10</td><td><code>pad_io[10]</code></td><td>36</td><td><code>LCD_G[4]</code></td><td>J2.7</td></tr>
+<tr><td>J5.11</td><td><code>pad_io[11]</code></td><td>37</td><td><code>LCD_G[5]</code></td><td>J2.9</td></tr>
+<tr><td>J5.12</td><td><code>pad_io[12]</code></td><td>38</td><td><code>LCD_B[0]</code></td><td>J2.22</td></tr>
+<tr><td>J5.13</td><td><code>pad_io[13]</code></td><td>39</td><td><code>LCD_B[1]</code></td><td>J2.21</td></tr>
+<tr><td>J5.14</td><td><code>pad_io[14]</code></td><td>40</td><td><code>LCD_B[2]</code></td><td>J2.20</td></tr>
+<tr><td>J5.15</td><td><code>pad_io[15]</code></td><td>41</td><td><code>LCD_B[3]</code></td><td>J2.19</td></tr>
+<tr><td>J5.16</td><td><code>pad_io[16]</code></td><td>42</td><td><code>LCD_B[4]</code></td><td>J2.18</td></tr>
+<tr><td>J6.1</td><td><code>pad_io[17]</code></td><td>77</td><td><code>LCD_CLK</code></td><td>J2.10</td></tr>
+<tr><td>J6.2</td><td><code>pad_io[18]</code></td><td>76</td><td><code>LCD_HS</code></td><td>J2.11</td></tr>
+<tr><td>J6.3</td><td><code>pad_io[19]</code></td><td>75</td><td><code>LCD_VS</code></td><td>J2.12</td></tr>
+<tr><td>J6.4</td><td><code>pad_io[20]</code></td><td>74</td><td><code>LCD_DE</code></td><td>J2.13</td></tr>
+<tr><td>J6.5</td><td><code>pad_io[21]</code></td><td>73</td><td><code>TM_DIO</code></td><td>A1 &lt;&gt; B1</td></tr>
+<tr><td>J6.6</td><td><code>pad_io[22]</code></td><td>72</td><td><code>TM_CLK</code></td><td>A2 &gt; B2</td></tr>
+<tr><td>J6.7</td><td><code>pad_io[23]</code></td><td>71</td><td><code>TM_STB</code></td><td>A3 &gt; B3</td></tr>
+<tr><td>J6.8</td><td><code>pad_io[24]</code></td><td>70</td><td><code>MIC_WS</code></td><td>WS</td></tr>
+<tr><td>J6.9</td><td><code>pad_io[25]</code></td><td>69</td><td><code>MIC_SCK</code></td><td>SCK</td></tr>
+<tr><td>J6.10</td><td><code>pad_io[26]</code></td><td>68</td><td><code>MIC_SD</code></td><td>SD</td></tr>
+<tr><td>J6.11</td><td><code>pad_io[27]</code></td><td>57</td><td><code>DAC_BCK</code></td><td>BCK</td></tr>
+<tr><td>J6.12</td><td><code>pad_io[28]</code></td><td>56</td><td><code>DAC_DIN</code></td><td>DIN</td></tr>
+<tr><td>J6.13</td><td><code>pad_io[29]</code></td><td>55</td><td><code>DAC_LRCK</code></td><td>LCK/LRCK</td></tr>
+<tr><td>J6.14</td><td><code>pad_io[30]</code></td><td>54</td><td><code>GPIO[0]</code></td><td>spare</td></tr>
+<tr><td>J6.15</td><td><code>pad_io[31]</code></td><td>53</td><td><code>GPIO[1]</code></td><td>spare</td></tr>
+<tr><td>J6.16</td><td><code>pad_io[32]</code></td><td>51</td><td><code>GPIO[2]</code></td><td>spare</td></tr></tbody></table></div></details>
+<h2>Sources and local evidence</h2>
+<ul><li><a href="https://github.com/BrisbaneSilicon/BRS-100-GW1NR9/blob/cd0bcbf1c24ae6c567346271b2f94c26927d5c5f/build/platforms/gowin/devices/GW1NR-9/C7I6/constraints/location.cst">BrisbaneSilicon’s pinned manufacturer CST</a>; <a href="https://brisbanesilicon.com.au/docs/BRS-100-GW1NR9_Pinout.pdf">official board pinout</a>.</li>
+<li><a href="brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex/board_specific_top.sv">GPIO-based wrapper</a>, <a href="brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex/board_specific.cst">adapted CST</a>, and <a href="brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex/manufacturer_location.cst.txt">original CST copy</a>.</li>
+<li><a href="../scripts/tests/test_brs100.py">Pin, provenance, RTL and programmer tests</a>; <a href="brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex/validation.md">new validation record</a>; <a href="brisbane_brs_100_tm1638_pmod_rgblcd_480_272_by_codex_alt/validation.md">original alternative validation record</a>.</li></ul>
+<p class="small">Generated locally for the codex_brisbane_brs_100 branch. Source provenance: upstream commit cd0bcbf1c24ae6c567346271b2f94c26927d5c5f; original CST SHA-256 1f781ae9f432ba9b620e8f5fa080b2e28c9130fd5091a0fa30a9748595a40ab7.</p>
+</main></body></html>
