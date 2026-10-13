@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two BRS-100 Ports</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground:   #f2f4f7;
+    --surface:  #ffffff;
+    --sunken:   #e8ebf0;
+    --ink:      #14171c;
+    --muted:    #566070;
+    --faint:    #87909f;
+    --rule:     #d8dde4;
+    --rule-firm:#b3bcc8;
+
+    --accent:   #1d4f73;
+    --accent-bg:#e4eef5;
+
+    --fault:    #9f2b25;
+    --fault-bg: #f9eae9;
+    --risk:     #7f5c05;
+    --risk-bg:  #f8f1dd;
+    --clear:    #2b6049;
+    --clear-bg: #e6f1ec;
+
+    --display: Archivo, "Helvetica Neue", Arial, sans-serif;
+    --body:    "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #0f1216;
+      --surface:  #171b21;
+      --sunken:   #1e242c;
+      --ink:      #e7eaef;
+      --muted:    #9aa3b2;
+      --faint:    #747e8d;
+      --rule:     #2a313a;
+      --rule-firm:#3d4652;
+
+      --accent:   #74b4df;
+      --accent-bg:#152832;
+
+      --fault:    #e49189;
+      --fault-bg: #2b1a19;
+      --risk:     #d9b05a;
+      --risk-bg:  #2a2314;
+      --clear:    #86c4a6;
+      --clear-bg: #16271f;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #0f1216;
+    --surface:  #171b21;
+    --sunken:   #1e242c;
+    --ink:      #e7eaef;
+    --muted:    #9aa3b2;
+    --faint:    #747e8d;
+    --rule:     #2a313a;
+    --rule-firm:#3d4652;
+
+    --accent:   #74b4df;
+    --accent-bg:#152832;
+
+    --fault:    #e49189;
+    --fault-bg: #2b1a19;
+    --risk:     #d9b05a;
+    --risk-bg:  #2a2314;
+    --clear:    #86c4a6;
+    --clear-bg: #16271f;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding-inline: 20px;
+    padding-block: 0 72px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .prose { max-width: 70ch; }
+
+  /* ---- header ---------------------------------------------------------- */
+
+  header { padding-block: 56px 36px; border-bottom: 2px solid var(--rule-firm); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(32px, 6vw, 52px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+
+  .deck { font-size: 18px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+
+  .branches { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .branch {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    border: 1px solid var(--rule-firm);
+    border-radius: 2px;
+    padding: 7px 11px;
+    background: var(--surface);
+  }
+  .branch b { color: var(--accent); font-weight: 500; }
+
+  /* ---- verdict cards --------------------------------------------------- */
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-block: 36px;
+  }
+
+  .card { background: var(--surface); padding: 20px 18px; }
+  .card .n {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .card .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .card p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+  /* ---- sections -------------------------------------------------------- */
+
+  section { padding-block: 34px 6px; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: 0; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  .sub {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 20px;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    margin: 26px 0 8px;
+  }
+
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 7px; max-width: 70ch; }
+
+  code, .m { font-family: var(--mono); font-size: 0.88em; }
+  code {
+    background: var(--sunken);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* ---- tables ---------------------------------------------------------- */
+
+  .scroll { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--rule); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+  th, td { padding: 9px 13px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 500;
+    background: var(--sunken);
+    border-bottom: 1px solid var(--rule-firm);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num, th.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.lab { font-weight: 500; }
+  .win { color: var(--clear); font-weight: 500; }
+
+  /* ---- two column ------------------------------------------------------ */
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 18px; }
+  .duo > div { background: var(--surface); padding: 20px 18px; }
+  @media (max-width: 720px) { .duo { grid-template-columns: 1fr; } }
+
+  .who {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .duo h4 { font-family: var(--display); font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .duo h4:first-of-type { margin-top: 0; }
+  .duo ul { padding-left: 18px; margin-bottom: 0; }
+  .duo li { font-size: 14px; margin-bottom: 6px; }
+
+  /* ---- findings -------------------------------------------------------- */
+
+  .finding {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule-firm);
+    background: var(--surface);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .finding.defect { border-left-color: var(--fault); }
+  .finding.risk   { border-left-color: var(--risk); }
+  .finding.doc    { border-left-color: var(--accent); }
+  .finding.clear  { border-left-color: var(--clear); }
+
+  .fhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+  .fid {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--faint);
+  }
+  .ftitle { font-family: var(--display); font-weight: 600; font-size: 16px; flex: 1 1 260px; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .chip.defect { background: var(--fault-bg); color: var(--fault); }
+  .chip.risk   { background: var(--risk-bg);  color: var(--risk); }
+  .chip.doc    { background: var(--accent-bg);color: var(--accent); }
+  .chip.clear  { background: var(--clear-bg); color: var(--clear); }
+  .chip.side   { background: var(--sunken);   color: var(--muted); }
+
+  .finding p { margin: 0 0 10px; font-size: 14.5px; }
+  .finding p:last-child { margin-bottom: 0; }
+  .ev {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    background: var(--sunken);
+    border-left: 2px solid var(--rule-firm);
+    padding: 8px 11px;
+    margin: 0 0 10px;
+    overflow-x: auto;
+  }
+
+  /* ---- checks ---------------------------------------------------------- */
+
+  .check { border-top: 1px solid var(--rule); padding: 14px 0; }
+  .check:last-of-type { border-bottom: 1px solid var(--rule); }
+  .check .q { font-family: var(--display); font-weight: 600; font-size: 15.5px; margin-bottom: 5px; }
+  .check .how { font-size: 14px; color: var(--muted); margin: 0; }
+  .check .how b { color: var(--ink); font-weight: 500; }
+
+  blockquote {
+    margin: 0 0 14px;
+    padding: 12px 16px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    font-size: 14.5px;
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 2px solid var(--rule-firm);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer h2 { font-size: 15px; margin-bottom: 10px; }
+  footer code { font-size: 12px; }
+
+  .bad { color: var(--fault); font-weight: 600; }
+  :root {
+    --p-r: #b23a3a; --p-g: #2f7d45; --p-b: #2d5fae; --p-ctl: #7a4fa3;
+    --p-tm: #8a6a00; --p-mic: #1f7f80; --p-dac: #8a5233; --p-gp: #5c6470; --p-pwr: #14171c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --p-r: #ec8a8a; --p-g: #7fcf98; --p-b: #8ab2f0; --p-ctl: #c3a1e6;
+      --p-tm: #e2c25c; --p-mic: #78cfd0; --p-dac: #dba07f; --p-gp: #a6aebb; --p-pwr: #e7eaef;
+    }
+  }
+  :root[data-theme="dark"] {
+    --p-r: #ec8a8a; --p-g: #7fcf98; --p-b: #8ab2f0; --p-ctl: #c3a1e6;
+    --p-tm: #e2c25c; --p-mic: #78cfd0; --p-dac: #dba07f; --p-gp: #a6aebb; --p-pwr: #e7eaef;
+  }
+  .pins { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .pcol { display: grid; gap: 3px; font-family: var(--mono); font-size: 12.5px; }
+  .pcol b { font-family: var(--display); font-size: 14px; margin-bottom: 4px; }
+  .pcol span { display: grid; grid-template-columns: 2.2em 1fr; align-items: center; gap: 6px; }
+  .pcol i { font-style: normal; color: var(--faint); text-align: right; font-variant-numeric: tabular-nums; }
+  .pcol em { font-style: normal; padding: 1px 7px; border-left: 3px solid currentColor; background: var(--sunken); }
+  em.r { color: var(--p-r); } em.g { color: var(--p-g); } em.b { color: var(--p-b); }
+  em.ctl { color: var(--p-ctl); } em.tm { color: var(--p-tm); } em.mic { color: var(--p-mic); }
+  em.dac { color: var(--p-dac); } em.gp { color: var(--p-gp); } em.pwr { color: var(--p-pwr); font-weight: 500; }
+  .finding ul { margin: 0; font-size: 14.5px; }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">BrisbaneSilicon BRS-100-GW1NR9 · PMOD-RGBLCD · 11 October 2026</p>
+  <h1>Two BRS-100 Ports</h1>
+  <p class="deck">Both branches add four configurations for the same board, adapter and modules:
+  480&times;272 and 800&times;480, each with the manufacturer's <code>.cst</code> and with a
+  function-named <code>_alt</code> one. They differ in pin placement, clocking, how they treat
+  the vendor file, how they power the TM1638, and whether the free Gowin edition can build them
+  at all. Everything marked measured was measured on this machine with Gowin V1.9.9 Beta-4
+  Education; nothing has run on a real board.</p>
+  <div class="branches">
+    <span class="branch"><b>mine</b> &nbsp;claude_brisbane_brs_100 @ c3e83de8</span>
+    <span class="branch"><b>theirs</b> &nbsp;codex_brisbane_brs_100 @ 665659cd</span>
+    <span class="branch">both from main @ 991a4b32</span>
+  </div>
+</header>
+
+<div class="cards">
+  <div class="card">
+    <span class="k">Builds in Gowin Education</span>
+    <span class="n">4 / 0</span>
+    <p>Mine target the C6/I5 part the free edition knows; theirs stop at <code>can't find device</code>.</p>
+  </div>
+  <div class="card">
+    <span class="k">800&times;480, heavy lab</span>
+    <span class="n">&minus;10.3 ns</span>
+    <p>My worst setup slack: the 32.4&nbsp;MHz LCD clock crossing into the 27&nbsp;MHz lab. Theirs: +0.4&nbsp;ns.</p>
+  </div>
+  <div class="card">
+    <span class="k">Spare lab GPIO</span>
+    <span class="n">2 / 3</span>
+    <p>They tie INMP441 L/R to ground and gain a pin; I drive it from the FPGA, as Tang Nano 9K does.</p>
+  </div>
+  <div class="card">
+    <span class="k">Automated BRS tests</span>
+    <span class="n">0 / 5</span>
+    <p>Their pin-map, constraint, LCD-frame, wrapper and programmer tests all pass here.</p>
+  </div>
+</div>
+
+<section>
+  <h2>What each side built</h2>
+  <p class="sub">Inventory of the 480&times;272 configuration with the vendor .cst, lines as committed</p>
+
+  <div class="scroll"><table>
+    <thead><tr><th>Mine</th><th class="num">Lines</th><th>Theirs</th><th class="num">Lines</th></tr></thead>
+    <tbody>
+      <tr><td class="lab"><code>board_specific_top.sv</code>, Tang Nano 9K top with a pin-mapping block; reuses <code>lcd_480_272</code> / <code>lcd_800_480</code></td><td class="num">435</td>
+          <td class="lab"><code>board_specific_top.sv</code>, rewritten; own <code>brs100_lcd.sv</code>, <code>brs100_pll.v</code>, <code>brs100_config.svh</code></td><td class="num">262 + 88</td></tr>
+      <tr><td class="lab"><code>board_specific.cst</code>, vendor file verbatim under a provenance header</td><td class="num">121</td>
+          <td class="lab"><code>board_specific.cst</code>, vendor file with 14 documented electrical edits; original kept as <code>manufacturer_location.cst.txt</code></td><td class="num">123</td></tr>
+      <tr><td class="lab"><code>board_specific.sdc</code>, two <code>create_clock</code></td><td class="num">4</td>
+          <td class="lab"><code>board_specific.sdc</code>, generated pixel clock, LCD output delays, false path on buttons</td><td class="num">16</td></tr>
+      <tr><td class="lab">Gowin GUI fragments (<code>fpga_project_0*.gprj</code>, process config)</td><td class="num">yes</td>
+          <td class="lab">none; README says the GUI flow is not supported</td><td class="num">—</td></tr>
+      <tr><td class="lab">Routing diagram, pin-1 assembly drawing, two generators</td><td class="num">705</td>
+          <td class="lab">"One line = one wire" tables for LCD/TM1638 and for audio, <code>wiring.csv</code>, one generator</td><td class="num">163</td></tr>
+      <tr><td class="lab">README; the 800&times;480 README points to the 480&times;272 one</td><td class="num">235 + 46</td>
+          <td class="lab">README per configuration, plus <code>validation.md</code></td><td class="num">323 + 82</td></tr>
+      <tr><td class="lab">no BRS tests; board-menu test cases only</td><td class="num">4</td>
+          <td class="lab"><code>scripts/tests/test_brs100.py</code>, two testbenches</td><td class="num">163 + 337</td></tr>
+      <tr><td class="lab">Catalog: <code>README.csv</code>, <code>.md</code>, <code>_ru.md</code>, <code>.html</code></td><td class="num">4 files</td>
+          <td class="lab">Catalog: <code>README.csv</code>, <code>.md</code></td><td class="num">2 files</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Where we converged</h2>
+  <p class="sub">Independent choices that came out the same</p>
+  <ul class="prose">
+    <li>The adapter is MuseLab's PMOD-RGBLCD v1.3; its J2 is a 2&times;15 header numbered 1 opposite 30, not a 12-pin Pmod; R0/G0/B0 are the low bits; SB1–SB4 must stay open; J2.23 is 5&nbsp;V through R4 and only feeds the backlight boost.</li>
+    <li>LCD 20 pins, TM1638 3, DAC 3 (SCK tied to ground), both resolutions with identical jumpers.</li>
+    <li>The vendor <code>.cst</code> names the header <code>pad_io[1..32]</code>, J5 then J6; the top module declares them <code>inout [32:1]</code>.</li>
+    <li>Gowin rejects the vendor's <code>DRIVE=8</code> on a pin used only as input, the microphone data; we found it independently and solved it differently.</li>
+    <li>Toolchain, programmer device GW1NR-9C, menu grouping under <code>brisbane_brs_100</code> through the <code>_pmod_rgblcd_480_272</code> / <code>_800_480</code> suffixes.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Pin placement</h2>
+  <p class="sub">What each branch puts on every header pin; same jumpers for both resolutions</p>
+
+  <div class="duo">
+    <div>
+      <p class="who">Mine — Tang Nano 9K FPGA pins kept</p>
+      <div class="pins">
+        <div class="pcol"><b>J5</b>
+          <span><i>1</i><em class="tm">TM DIO</em></span><span><i>2</i><em class="tm">TM CLK</em></span><span><i>3</i><em class="tm">TM STB</em></span>
+          <span><i>4</i><em class="dac">DAC BCK</em></span><span><i>5</i><em class="dac">DAC DIN</em></span><span><i>6</i><em class="dac">DAC LCK</em></span>
+          <span><i>7</i><em class="ctl">LCD DE</em></span><span><i>8</i><em class="ctl">LCD VS</em></span><span><i>9</i><em class="ctl">LCD CLK</em></span>
+          <span><i>10</i><em class="mic">MIC SCK</em></span><span><i>11</i><em class="mic">MIC WS</em></span><span><i>12</i><em class="mic">MIC L/R</em></span><span><i>13</i><em class="mic">MIC SD</em></span>
+          <span><i>14</i><em class="ctl">LCD HS</em></span><span><i>15</i><em class="b">B4</em></span><span><i>16</i><em class="b">B3</em></span>
+          <span><i>17</i><em class="pwr">GND</em></span><span><i>18</i><em class="pwr">+5 V</em></span>
+        </div>
+        <div class="pcol"><b>J6</b>
+          <span><i>1</i><em class="gp">GPIO 0</em></span><span><i>2</i><em class="gp">GPIO 1</em></span>
+          <span><i>3</i><em class="r">R0</em></span><span><i>4</i><em class="r">R1</em></span><span><i>5</i><em class="r">R2</em></span><span><i>6</i><em class="r">R3</em></span><span><i>7</i><em class="r">R4</em></span>
+          <span><i>8</i><em class="g">G0</em></span><span><i>9</i><em class="g">G1</em></span><span><i>10</i><em class="g">G2</em></span><span><i>11</i><em class="g">G3</em></span><span><i>12</i><em class="g">G4</em></span><span><i>13</i><em class="g">G5</em></span>
+          <span><i>14</i><em class="b">B0</em></span><span><i>15</i><em class="b">B1</em></span><span><i>16</i><em class="b">B2</em></span>
+          <span><i>17</i><em class="pwr">GND</em></span><span><i>18</i><em class="pwr">+3.3 V</em></span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="who">Theirs — contiguous blocks</p>
+      <div class="pins">
+        <div class="pcol"><b>J5</b>
+          <span><i>1</i><em class="r">R0</em></span><span><i>2</i><em class="r">R1</em></span><span><i>3</i><em class="r">R2</em></span><span><i>4</i><em class="r">R3</em></span><span><i>5</i><em class="r">R4</em></span>
+          <span><i>6</i><em class="g">G0</em></span><span><i>7</i><em class="g">G1</em></span><span><i>8</i><em class="g">G2</em></span><span><i>9</i><em class="g">G3</em></span><span><i>10</i><em class="g">G4</em></span><span><i>11</i><em class="g">G5</em></span>
+          <span><i>12</i><em class="b">B0</em></span><span><i>13</i><em class="b">B1</em></span><span><i>14</i><em class="b">B2</em></span><span><i>15</i><em class="b">B3</em></span><span><i>16</i><em class="b">B4</em></span>
+          <span><i>17</i><em class="pwr">GND</em></span><span><i>18</i><em class="pwr">+5 V</em></span>
+        </div>
+        <div class="pcol"><b>J6</b>
+          <span><i>1</i><em class="ctl">LCD CLK</em></span><span><i>2</i><em class="ctl">LCD HS</em></span><span><i>3</i><em class="ctl">LCD VS</em></span><span><i>4</i><em class="ctl">LCD DE</em></span>
+          <span><i>5</i><em class="tm">TM DIO</em></span><span><i>6</i><em class="tm">TM CLK</em></span><span><i>7</i><em class="tm">TM STB</em></span>
+          <span><i>8</i><em class="mic">MIC WS</em></span><span><i>9</i><em class="mic">MIC SCK</em></span><span><i>10</i><em class="mic">MIC SD</em></span>
+          <span><i>11</i><em class="dac">DAC BCK</em></span><span><i>12</i><em class="dac">DAC DIN</em></span><span><i>13</i><em class="dac">DAC LCK</em></span>
+          <span><i>14</i><em class="gp">GPIO 0</em></span><span><i>15</i><em class="gp">GPIO 1</em></span><span><i>16</i><em class="gp">GPIO 2</em></span>
+          <span><i>17</i><em class="pwr">GND</em></span><span><i>18</i><em class="pwr">+3.3 V</em></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose">Theirs is the better plan to assemble. Every peripheral is one unbroken run, the colour bits
+  read in order down J5, and the controls, TM1638, microphone, DAC and spare pins follow down J6.
+  Mine spreads the LCD over both headers, interleaves it with three other modules on J5, and puts
+  B4 above B3 on J5.15–16. My only gain is that every signal sits on the same FPGA pin as
+  <code>tang_nano_9k_lcd_480_272_tm1638</code>, which nobody wiring a BRS-100 benefits from.</p>
+</section>
+
+<section>
+  <h2>Measured, same lab, same tool</h2>
+  <p class="sub"><code>labs/3_music/3_11_microphone_monitor</code>: graphics, microphone, TM1638 · worst rows of the setup path table</p>
+
+  <div class="scroll"><table>
+    <thead><tr><th>Configuration</th><th class="num">LUTs</th><th class="num">Regs</th><th class="num">Worst setup</th><th>Worst path, launch → capture clock</th><th class="num">Fmax lab / pixel</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">mine 480&times;272</td><td class="num">4366</td><td class="num">1361</td><td class="num win">+20.5 ns</td><td>LCD_CK → CLK</td><td class="num">61.7 / 108.3</td></tr>
+      <tr><td class="lab">mine 480&times;272 _alt</td><td class="num">4366</td><td class="num">1361</td><td class="num win">+20.6 ns</td><td>CLK → CLK</td><td class="num">60.7 / 110.1</td></tr>
+      <tr><td class="lab">mine 800&times;480</td><td class="num">4354</td><td class="num">1361</td><td class="num bad">&minus;10.3 ns</td><td>LCD_CK (32.4 MHz) → CLK (27 MHz), <code>i_lcd/LineCount</code> → <code>i_spectrum/white</code></td><td class="num">61.1 / 110.4</td></tr>
+      <tr><td class="lab">mine 800&times;480 _alt</td><td class="num">4354</td><td class="num">1361</td><td class="num bad">&minus;10.3 ns</td><td>same crossing</td><td class="num">61.6 / 108.0</td></tr>
+      <tr><td class="lab">theirs 480&times;272 *</td><td class="num">4375</td><td class="num">1393</td><td class="num win">+3.6 ns</td><td>pixel_clk → CLK, generated clocks</td><td class="num">60.6 / 32.3</td></tr>
+      <tr><td class="lab">theirs 800&times;480 *</td><td class="num">4393</td><td class="num">1404</td><td class="num">+0.4 ns</td><td>pixel_clk → pixel_clk; the lab itself runs at 31 MHz</td><td class="num">31.8 (one clock)</td></tr>
+      <tr><td class="lab">tang_nano_9k_lcd_800_480_tm1638 (main)</td><td class="num">—</td><td class="num">—</td><td class="num">+21.1 ns</td><td>CLK → CLK; its SDC declares the 32.4 MHz LCD clock as 9 MHz</td><td class="num">62.8 / 107.5</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">* Theirs do not build as committed in this Gowin edition (finding X1). For these rows I
+  changed only <code>set_device</code> to the C6/I5 part in a scratch worktree, the same substitution
+  their <code>validation.md</code> used; they report +0.133&nbsp;ns for this 800&times;480 case.
+  The Gowin per-clock summary printed &ldquo;0 endpoints&rdquo; for every row, including mine at
+  &minus;10.3&nbsp;ns: only the path table shows the crossing. The oscilloscope lab, which computes
+  colour combinationally, has no such path and passes on my 800&times;480.</p>
+</section>
+
+<section>
+  <h2>Findings against mine</h2>
+  <p class="sub">C = claude branch</p>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">C1</span><span class="ftitle">800&times;480 lab logic samples the 32.4 MHz LCD domain at 27 MHz</span><span class="chip defect">defect</span><span class="chip side">mine + Tang main</span></div>
+    <p>The <code>lcd_800_480</code> counters run on the PLL's 32.4&nbsp;MHz output while
+    <code>lab_top</code> runs on the 27&nbsp;MHz board clock and registers values derived from
+    <code>x</code>/<code>y</code>. The two clocks come from one PLL at a 6:5 ratio, so their closest
+    edges are 6.17&nbsp;ns apart; a 17&nbsp;ns path cannot make it.</p>
+    <p class="ev">microphone_monitor, 800&times;480: slack &minus;10.300 ns, LCD_CK:[R] → CLK:[R], relation 6.173 ns, data delay 17.025 ns</p>
+    <p>My 800&times;480 READMEs say &ldquo;no timing violations&rdquo;; that holds for the oscilloscope
+    lab only. <code>tang_nano_9k_lcd_800_480_tm1638</code> on main has the same structure, but its SDC
+    gives the LCD clock a 9&nbsp;MHz period, so its report cannot show the problem.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">C2</span><span class="ftitle">The pixel clock is declared as an independent clock on an output port</span><span class="chip risk">risk</span><span class="chip side">mine</span></div>
+    <p><code>create_clock … [get_ports {pad_io[9]}]</code> tells Gowin nothing about how that clock relates to
+    the 27&nbsp;MHz input; the analyser assumes aligned edges. Theirs declares
+    <code>create_generated_clock -source pad_clk_27Mhz -multiply_by 31 -divide_by 27</code> on the
+    PLL pin, which only works because they keep the PLL instantiated in every lab. I moved to the
+    port after the net constraint failed (TA2003) and a PLL-pin constraint would break labs without graphics.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">C3</span><span class="ftitle">Scattered, interleaved pin plan with B4 above B3</span><span class="chip risk">usability</span><span class="chip side">mine</span></div>
+    <p>See the pin map above. Twenty LCD wires leave both headers in five separate groups, three
+    other modules sit between them on J5, and J5.15 / J5.16 carry B4 / B3 in reverse order: the
+    likeliest pair to swap during assembly.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">C4</span><span class="ftitle"><code>-cst_warn_to_error 0</code> silences every constraint error for the board</span><span class="chip risk">risk</span><span class="chip side">mine</span></div>
+    <p>I kept the vendor file byte for byte and demoted CT1108 to a warning in
+    <code>board_specific.tcl</code>. The same switch also hides a mistyped port name or a missing pin.
+    Theirs deletes <code>DRIVE=8</code> from the five input-capable pins only, keeps the original beside
+    it, and a test pins its SHA-256 and allows exactly fourteen attribute edits.</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">C5</span><span class="ftitle">The LED numbering conflict in the vendor documents is not mentioned</span><span class="chip doc">docs</span><span class="chip side">mine</span></div>
+    <p>The BRS-100 pinout PDF lists LED1 on FPGA pin 16; the schematic labels pin 10 as
+    <code>PIN10_IOL15A_LED1</code>. My README and <code>.cst</code> comments present the pinout PDF's
+    order as fact. Their README notes the disagreement and asks the reader to check the silkscreen.</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">C6</span><span class="ftitle">Pin data lives in four places with nothing checking them</span><span class="chip doc">gap</span><span class="chip side">mine</span></div>
+    <p>The mapping is written into the <code>.cst</code> or top module, the README tables, and both
+    diagram generators, by hand. Theirs keeps one <code>wiring.csv</code>, draws from it, and a test
+    compares it with an independently typed list of the vendor's 32 header pins and with the
+    <code>.cst</code>.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">C7</span><span class="ftitle">Two lab GPIOs and no hackathon branch</span><span class="chip risk">usability</span><span class="chip side">mine</span></div>
+    <p>Driving INMP441 L/R from the FPGA mirrors Tang Nano 9K but costs a header pin; the module
+    only needs it at ground. My top module also dropped the Tang top's <code>USE_HACKATHON_TOP</code>
+    branch, so <code>hackathon_top</code> labs cannot use these configurations.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Findings against theirs</h2>
+  <p class="sub">X = codex branch</p>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">X1</span><span class="ftitle">No configuration builds in Gowin EDA Education</span><span class="chip defect">defect</span><span class="chip side">theirs</span></div>
+    <p><code>board_specific.tcl</code> selects the board's exact part and, by design, has no fallback.
+    The free edition, the one the repository's scripts find here, does not list it, and neither does the
+    1.9.11.03 Education package installed alongside.</p>
+    <p class="ev">03_synthesize_for_fpga.bash → can't find device: GW1NR-LV9QN88PC7/I6 · while executing "set_device GW1NR-LV9QN88PC7/I6 …"</p>
+    <p>Students can build none of the four configurations without a licensed Gowin. A Tcl
+    <code>catch</code> that tries C7/I6 and falls back to C6/I5 with a warning works in this
+    Gowin (tested) and would keep their exactness where the part exists.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">X2</span><span class="ftitle">800&times;480 runs every lab at 31 MHz with 0.4 ns to spare</span><span class="chip risk">risk</span><span class="chip side">theirs</span></div>
+    <p>Moving the lab onto the pixel clock removes my crossing (C1) and keeps
+    <code>clk_mhz</code> an integer, which is clever. The cost is that every lab must now close
+    timing at 31&nbsp;MHz instead of 27: microphone_monitor reaches 31.79&nbsp;MHz. A heavier lab,
+    or the TM1638 and audio logic in a bigger design, will fail where Tang Nano 9K's 800&times;480
+    passes.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">X3</span><span class="ftitle">TM1638 requires a 5 V module behind a TXS0104E translator</span><span class="chip risk">usability</span><span class="chip side">theirs</span></div>
+    <p>Their README cites the datasheet: TM1638 is specified at 5&nbsp;V with V<sub>IH</sub> = 0.7&nbsp;V<sub>DD</sub>.
+    But the repository's own <code>tang_nano_9k_simple_setup.png</code> wires the same LED&amp;KEY
+    module to 3.3&nbsp;V with no translator, and that is how BGM classes run it. Making a translator
+    mandatory adds a part and its wiring that the rest of the project does without.</p>
+  </div>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">X4</span><span class="ftitle">Identifiers used before their declaration</span><span class="chip defect">portability</span><span class="chip side">theirs</span></div>
+    <p><code>pll_locked</code> is read in <code>reset_request</code> before <code>wire pixel_clk, pll_locked;</code>;
+    the 800&times;480 build also reads <code>pixel_clk</code> early. Gowin, Icarus, Verilator and
+    Yosys accept it; IEEE 1800 does not.</p>
+    <p class="ev">slang: board_specific_top.sv:108:61: error: identifier 'pll_locked' used before its declaration</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">X5</span><span class="ftitle">Programmer board name unknown to older openFPGALoader</span><span class="chip risk">risk</span><span class="chip side">theirs</span></div>
+    <p><code>-b brs-100-gw1nr9</code> is listed by openFPGALoader v1.1.1 (oss-cad-suite) but not by the
+    v0.12.1 at <code>/usr/bin</code> here, which is the one the flow finds. Their README says to check.
+    Mine uses <code>-b tangnano9k</code>: same FT2232 channel, known to both versions.</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">X6</span><span class="ftitle">Catalog left half-updated</span><span class="chip doc">docs</span><span class="chip side">theirs</span></div>
+    <p><code>boards/README.md</code> says 55 boards but still ends &ldquo;Ranges fully measured for 23 of
+    54 boards&rdquo;; <code>README_ru.md</code> and <code>README.html</code> are unchanged. The new
+    row breaks the table's vocabulary: no † on an unmeasured toolchain, and &ldquo;PMOD-RGBLCD
+    (external)&rdquo; in a column of <code>LCD</code>, <code>VGA</code>, <code>HDMI/DVI</code>.</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">X7</span><span class="ftitle">Smaller documentation and interface slips</span><span class="chip doc">docs</span><span class="chip side">theirs</span></div>
+    <ul>
+      <li><code>boards/brisbane_brs_100_pin_mapping.html</code> says &ldquo;Nothing was pushed&rdquo;; the branch is on origin.</li>
+      <li>No Gowin GUI fragments: <code>05_run_gui_for_fpga_synthesis.bash</code> is unsupported (documented).</li>
+      <li><code>hackathon_top</code> declares <code>gpio [3:0]</code>; their wrapper passes three bits.</li>
+      <li>With TM1638 enabled, lab <code>led[0]</code> lights FPGA pin 16; Tang Nano 9K and mine light pin 10. Without TM1638 all three agree.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Shared, and upstream</h2>
+  <p class="sub">S = both branches or main</p>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">S1</span><span class="ftitle">We bet on opposite pixel-clock edges and neither is verified</span><span class="chip risk">open</span><span class="chip side">both</span></div>
+    <p>Theirs changes RGB/DE on the falling edge, assuming the panel samples on the rising one. Mine,
+    like the Tang modules and MuseLab's own demo for this adapter, changes them on the rising edge.
+    The panel datasheet MuseLab ships (GL043056B0, driver NV3047) gives porch limits but no
+    latching edge, and the NV3047 document was not reachable. One design is marginal on real glass.</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">S2</span><span class="ftitle"><code>lcd_480_272</code> gates DE with the pixel clock</span><span class="chip risk">upstream</span><span class="chip side">mine + Tang main</span></div>
+    <p><code>assign LCD_DE = … &amp;&amp; PixelClk;</code> drives a combinational, clock-shaped DE off the
+    chip; <code>lcd_800_480</code> does not. It works on Sipeed's panel; on a different panel over
+    jumper wires it is a candidate for a dark or jittering image. Their <code>brs100_lcd</code> registers DE with the data.</p>
+  </div>
+
+  <div class="finding clear">
+    <div class="fhead"><span class="fid">S3</span><span class="ftitle">Both handle the adapter correctly</span><span class="chip clear">clear</span><span class="chip side">both</span></div>
+    <p>J2 numbering, colour-bit order, SB1–SB4, R3/R4, power-rail fan-out, PCM5102 SCK to ground and
+    the 5&nbsp;V backlight path agree between the two branches and with the v1.3 schematic.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What each side should take</h2>
+  <p class="sub">Ideas worth adopting</p>
+
+  <div class="duo">
+    <div>
+      <p class="who">I should take from theirs</p>
+      <ul>
+        <li>The contiguous pin plan: LCD on J5.1–16 and J6.1–4 in bit order, then TM1638, microphone, DAC, spares down J6.</li>
+        <li>INMP441 L/R to ground: a third spare GPIO and room for a hackathon branch.</li>
+        <li>PLL always instantiated, <code>create_generated_clock</code>, LCD output delays, a false path on the buttons.</li>
+        <li>Reset held until PLL lock, button release synchronised.</li>
+        <li>Minimal documented edits to the vendor file with the original kept and its hash pinned, instead of a board-wide <code>-cst_warn_to_error 0</code>.</li>
+        <li><code>wiring.csv</code> as the single source, with a test against an independently typed vendor pin list.</li>
+        <li>Defined outputs when a feature is off; flash chip-select driven high.</li>
+        <li>A wire-by-wire table drawing beside my routing diagram, as an assembly checklist.</li>
+        <li>The LED-numbering caveat and the "J6.1 is GPIO 17, J6.17 is GND" warning.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="who">They should take from mine</p>
+      <ul>
+        <li>Build in Gowin Education: C6/I5, or a <code>catch</code> fallback from C7/I6.</li>
+        <li>TM1638 straight on 3.3 V as the default, the translator as an option.</li>
+        <li>Gowin GUI project fragments, so <code>05_run_gui…</code> works.</li>
+        <li>The pin-1 assembly drawing with its multimeter check of end and column.</li>
+        <li><code>-b tangnano9k</code>, or a fallback to it when <code>brs-100-gw1nr9</code> is unknown.</li>
+        <li>All four catalog files updated together, in the table's existing vocabulary.</li>
+        <li>Keep the lab at 27 MHz in 800&times;480, once the crossing is solved another way.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Open checks</h2>
+  <p class="sub">Only hardware answers these</p>
+  <div class="check"><div class="q">Which DCLK edge does the GL043056B0 latch on?</div>
+    <p class="how">Run <b>2_3_color_stripes</b> at 480&times;272 on each branch. Clean vertical stripes on one and
+    speckled edges on the other settles S1; make the clock polarity a one-line <code>`define</code> on whichever loses.</p></div>
+  <div class="check"><div class="q">Does 32.4 MHz (or 31 MHz) survive 15–20 cm jumpers?</div>
+    <p class="how">Same lab at 800&times;480, then with a ground wire beside LCD_CLK. Watch for shimmer on colour boundaries.</p></div>
+  <div class="check"><div class="q">Does TM1638 work at 3.3 V against the vendor's pull-down on DIO?</div>
+    <p class="how">A seven-segment and key lab on my <code>_by_claude</code>; if keys misread, try their pull-up edit before a translator.</p></div>
+  <div class="check"><div class="q">Which physical LED is LED1?</div>
+    <p class="how">A lab that lights only <code>led[0]</code>; compare with the pinout PDF and the schematic.</p></div>
+  <div class="check"><div class="q">Does the backlight current suit the 800&times;480 panel?</div>
+    <p class="how">R2 = 5.1&nbsp;Ω sets about 20&nbsp;mA, right for the 4.3" panel's 22.4&nbsp;V / 20&nbsp;mA string; read the larger panel's datasheet before powering it.</p></div>
+</section>
+
+<section>
+  <h2>Recommendation</h2>
+  <p class="sub">Next steps, in order</p>
+  <ol class="prose">
+    <li><b>Fix the 800&times;480 clocking in mine.</b> Either drive the panel from the 27&nbsp;MHz board
+    clock itself with shorter blanking (one domain, the lab stays at 27&nbsp;MHz; first confirm the panel's
+    minimum DCLK is at or below 27&nbsp;MHz), or follow theirs onto an integer-MHz
+    pixel clock and accept the tighter lab timing. Correct the 800&times;480 README status in either case.</li>
+    <li><b>Report the Tang Nano 9K 800&times;480 SDC upstream:</b> its 9&nbsp;MHz period hides the same crossing.</li>
+    <li><b>Converge both branches on their pin plan,</b> with L/R grounded, and regenerate my drawings from a
+    <code>wiring.csv</code>. This is the largest usability gain on offer.</li>
+    <li><b>Adopt the try-C7/I6-else-C6/I5 <code>catch</code></b> in both branches' <code>board_specific.tcl</code>.</li>
+    <li><b>Adopt their clocking and reset scaffolding:</b> PLL always on, generated clocks, reset on lock.</li>
+    <li><b>Replace <code>-cst_warn_to_error 0</code></b> with their minimal, test-pinned vendor-file edits.</li>
+    <li><b>Port <code>test_brs100.py</code></b> to my configurations, then run the hardware checks above before
+    choosing one branch, or a merge of both, for main.</li>
+  </ol>
+</section>
+
+<footer>
+  <h2>How this was produced</h2>
+  <p>Both branches were checked out from origin into scratch worktrees. Builds used
+  <code>03_synthesize_for_fpga.bash</code> with Gowin V1.9.9 Beta-4 Education; worst paths were read
+  from the setup path table in <code>impl/pnr/fpga_project_tr_content.html</code>, not from its
+  per-clock summary. Their configurations were built a second time with only <code>set_device</code>
+  changed to GW1NR-LV9QN88PC6/I5. <code>python3 scripts/tests/test_brs100.py</code> ran on their
+  branch with Icarus Verilog (5 tests, OK). Strict parsing used slang from oss-cad-suite; the Gowin Tcl
+  fallback was tested with <code>gw_sh</code>. The panel datasheet is <code>doc/rgblcd_4.3inch_480x272.pdf</code>
+  in wuxx/icesugar; the BRS-100 pinout and schematic are BrisbaneSilicon's PDFs. The Innolux
+  AT043TN24 link their README cites did not resolve from here.</p>
+</footer>
+
+</div>
+</body>
+</html>

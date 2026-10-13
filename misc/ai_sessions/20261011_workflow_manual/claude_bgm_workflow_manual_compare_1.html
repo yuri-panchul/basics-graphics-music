@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two BGM Workflow Manuals</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground:   #f2f4f7;
+    --surface:  #ffffff;
+    --sunken:   #e8ebf0;
+    --ink:      #14171c;
+    --muted:    #566070;
+    --faint:    #87909f;
+    --rule:     #d8dde4;
+    --rule-firm:#b3bcc8;
+
+    --accent:   #1d4f73;
+    --accent-bg:#e4eef5;
+
+    --fault:    #9f2b25;
+    --fault-bg: #f9eae9;
+    --risk:     #7f5c05;
+    --risk-bg:  #f8f1dd;
+    --clear:    #2b6049;
+    --clear-bg: #e6f1ec;
+
+    --display: Archivo, "Helvetica Neue", Arial, sans-serif;
+    --body:    "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #0f1216;
+      --surface:  #171b21;
+      --sunken:   #1e242c;
+      --ink:      #e7eaef;
+      --muted:    #9aa3b2;
+      --faint:    #747e8d;
+      --rule:     #2a313a;
+      --rule-firm:#3d4652;
+
+      --accent:   #74b4df;
+      --accent-bg:#152832;
+
+      --fault:    #e49189;
+      --fault-bg: #2b1a19;
+      --risk:     #d9b05a;
+      --risk-bg:  #2a2314;
+      --clear:    #86c4a6;
+      --clear-bg: #16271f;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #0f1216;
+    --surface:  #171b21;
+    --sunken:   #1e242c;
+    --ink:      #e7eaef;
+    --muted:    #9aa3b2;
+    --faint:    #747e8d;
+    --rule:     #2a313a;
+    --rule-firm:#3d4652;
+
+    --accent:   #74b4df;
+    --accent-bg:#152832;
+
+    --fault:    #e49189;
+    --fault-bg: #2b1a19;
+    --risk:     #d9b05a;
+    --risk-bg:  #2a2314;
+    --clear:    #86c4a6;
+    --clear-bg: #16271f;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding-inline: 20px;
+    padding-block: 0 72px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .prose { max-width: 70ch; }
+
+  /* ---- header ---------------------------------------------------------- */
+
+  header { padding-block: 56px 36px; border-bottom: 2px solid var(--rule-firm); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(32px, 6vw, 52px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+
+  .deck { font-size: 18px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+
+  .branches { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .branch {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    border: 1px solid var(--rule-firm);
+    border-radius: 2px;
+    padding: 7px 11px;
+    background: var(--surface);
+  }
+  .branch b { color: var(--accent); font-weight: 500; }
+
+  /* ---- verdict cards --------------------------------------------------- */
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-block: 36px;
+  }
+
+  .card { background: var(--surface); padding: 20px 18px; }
+  .card .n {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .card .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .card p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+  /* ---- sections -------------------------------------------------------- */
+
+  section { padding-block: 34px 6px; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: 0; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  .sub {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 20px;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    margin: 26px 0 8px;
+  }
+
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 7px; max-width: 70ch; }
+
+  code, .m { font-family: var(--mono); font-size: 0.88em; }
+  code {
+    background: var(--sunken);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* ---- tables ---------------------------------------------------------- */
+
+  .scroll { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--rule); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+  th, td { padding: 9px 13px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 500;
+    background: var(--sunken);
+    border-bottom: 1px solid var(--rule-firm);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num, th.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.lab { font-weight: 500; }
+  .win { color: var(--clear); font-weight: 500; }
+
+  /* ---- two column ------------------------------------------------------ */
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 18px; }
+  .duo > div { background: var(--surface); padding: 20px 18px; }
+  @media (max-width: 720px) { .duo { grid-template-columns: 1fr; } }
+
+  .who {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .duo h4 { font-family: var(--display); font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .duo h4:first-of-type { margin-top: 0; }
+  .duo ul { padding-left: 18px; margin-bottom: 0; }
+  .duo li { font-size: 14px; margin-bottom: 6px; }
+
+  /* ---- findings -------------------------------------------------------- */
+
+  .finding {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule-firm);
+    background: var(--surface);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .finding.defect { border-left-color: var(--fault); }
+  .finding.risk   { border-left-color: var(--risk); }
+  .finding.doc    { border-left-color: var(--accent); }
+  .finding.clear  { border-left-color: var(--clear); }
+
+  .fhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+  .fid {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--faint);
+  }
+  .ftitle { font-family: var(--display); font-weight: 600; font-size: 16px; flex: 1 1 260px; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .chip.defect { background: var(--fault-bg); color: var(--fault); }
+  .chip.risk   { background: var(--risk-bg);  color: var(--risk); }
+  .chip.doc    { background: var(--accent-bg);color: var(--accent); }
+  .chip.clear  { background: var(--clear-bg); color: var(--clear); }
+  .chip.side   { background: var(--sunken);   color: var(--muted); }
+
+  .finding p { margin: 0 0 10px; font-size: 14.5px; }
+  .finding p:last-child { margin-bottom: 0; }
+  .ev {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    background: var(--sunken);
+    border-left: 2px solid var(--rule-firm);
+    padding: 8px 11px;
+    margin: 0 0 10px;
+    overflow-x: auto;
+  }
+
+  /* ---- checks ---------------------------------------------------------- */
+
+  .check { border-top: 1px solid var(--rule); padding: 14px 0; }
+  .check:last-of-type { border-bottom: 1px solid var(--rule); }
+  .check .q { font-family: var(--display); font-weight: 600; font-size: 15.5px; margin-bottom: 5px; }
+  .check .how { font-size: 14px; color: var(--muted); margin: 0; }
+  .check .how b { color: var(--ink); font-weight: 500; }
+
+  blockquote {
+    margin: 0 0 14px;
+    padding: 12px 16px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    font-size: 14.5px;
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 2px solid var(--rule-firm);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer h2 { font-size: 15px; margin-bottom: 10px; }
+  footer code { font-size: 12px; }
+</style>
+<style>
+  .ru { font-style: italic; }
+  .verdict { font-size: 16.5px; }
+  .tight li { margin-bottom: 4px; }
+  td .who-tag { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">BGM workflow manual · Russian · 12 October 2026</p>
+  <h1>Two BGM Workflow Manuals</h1>
+  <p class="deck">Both manuals answer the same prompt. Each has 25 chapters built on the same
+  177 screenshots, Appendix A translating <code>git_cheat_sheet.md</code>, and Appendix Б
+  on how the scripts find each toolchain. Mine follows the screenshots and your
+  introduction closely. Theirs is more rigorous about Git safety and script behaviour,
+  but its text often departs from the pictures, and its Markdown has a layout defect
+  that affects most figures. I checked every script claim below against
+  <code>main</code> @ 991a4b32. I checked how my manual renders in the PDF you printed;
+  I did not render theirs on GitHub or WordPress.</p>
+  <div class="branches">
+    <span class="branch"><b>mine</b> &nbsp;~/claude/bgm_workflow_manual/20261011/bgm_workflow_manual_claude_ru.{html,md}</span>
+    <span class="branch"><b>theirs</b> &nbsp;~/codex/bgm_workflow_manual_20261011/bgm_workflow_manual_{,wordpress_}codex_ru.*</span>
+    <span class="branch">scripts: main @ 991a4b32</span>
+  </div>
+</header>
+
+<div class="cards">
+  <div class="card">
+    <span class="k">Screenshots used, of 177</span>
+    <span class="n">176 / 140</span>
+    <p>They leave out 36 screenshots, including the <code>git config</code> demo (10_04–05) and the pull request diff (10_17–18).</p>
+  </div>
+  <div class="card">
+    <span class="k">Captions glued to next image (MD)</span>
+    <span class="n">0 / 110</span>
+    <p>In their Markdown, each caption line runs straight into the next image line, so on GitHub the caption sits on top of the following picture.</p>
+  </div>
+  <div class="card">
+    <span class="k">Prose words</span>
+    <span class="n">6,210 / 7,934</span>
+    <p>Theirs is 28% longer, with 169 “не/нельзя” against my 66: more caveats for a student to read.</p>
+  </div>
+  <div class="card">
+    <span class="k">Script-behaviour slips</span>
+    <span class="n">5 / 0</span>
+    <p>Their Appendix Б and chapter notes matched the code everywhere I checked. Mine has five gaps or imprecise statements.</p>
+  </div>
+</div>
+
+<section>
+  <h2>What each side delivered</h2>
+  <p class="sub">Inventory, as found on disk this morning</p>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>Mine</th><th>Theirs</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">Outputs</td>
+          <td>Standalone HTML (paste the part between <code>&lt;article&gt;</code> tags into WordPress), Markdown</td>
+          <td>Standalone HTML with its own design, Markdown, and a separate CSS-free WordPress fragment</td></tr>
+      <tr><td class="lab">Figures</td>
+          <td>176 screenshots plus your two photos; numbered in order within each chapter (Рис. 9.3)</td>
+          <td>140 screenshots; numbers copied from file names (Рис. 09.03), so there are gaps and one pair is out of order</td></tr>
+      <tr><td class="lab">Introduction</td>
+          <td>Your text, with typos fixed; the three subtitle lines stay bold</td>
+          <td>Paraphrased in places; subtitle lines merged and no longer bold</td></tr>
+      <tr><td class="lab">Git workflow</td>
+          <td>Works in <code>main</code>, as the screenshots do; a tip in chapter 12 recommends a branch per PR</td>
+          <td>Uses a <code>student/hyperbola</code> branch throughout (21 mentions); notes where the screenshots differ</td></tr>
+      <tr><td class="lab">Appendix A</td>
+          <td>Translation with 3 notes, plus a table of fork commands</td>
+          <td>Translation with 9 notes, plus a table of commands for BGM coursework</td></tr>
+      <tr><td class="lab">Appendix Б</td>
+          <td>Б.1–Б.4; code links point to <code>blob/main</code></td>
+          <td>Б.1–Б.5 (Б.5: what to send the teacher); links pinned to commit 991a4b32</td></tr>
+      <tr><td class="lab">Generator</td>
+          <td><code>build.py</code> + five content modules; Python standard library only</td>
+          <td><code>build_manual.py</code> from <code>manual_source.md</code>; needs Pillow and the local images</td></tr>
+      <tr><td class="lab">Your edits from last night</td>
+          <td>Both photos and the new caption for figure 0.1</td>
+          <td>None: built at 22:03, before you asked</td></tr>
+      <tr><td class="lab">Copy on panchul.com</td>
+          <td>Byte-identical to the local file</td>
+          <td>The standalone HTML has file-upload debris after <code>&lt;/html&gt;</code> (side note below)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Where we agree</h2>
+  <p class="sub">Both reached the same conclusion independently</p>
+  <ul>
+    <li>Chapter 23: the directory name says HDMI, but the screenshots select <code>tang_nano_9k_lcd_480_272_tm1638_yosys</code>, and there is no HDMI <code>_yosys</code> configuration. Both describe it as the LCD setup.</li>
+    <li>The cheat sheet's “10 hours” for <code>--timeout=3600</code> is wrong; 3600 seconds is 1 hour.</li>
+    <li>The <code>credential-cache is disabled</code> lines in screenshot 10_15 come from that cheat-sheet setting on Windows, not from a failed push.</li>
+    <li><code>03</code> also programs the board; <code>04</code> repeats only the programming step.</li>
+    <li>Screenshot 03_03 shows a non-default PATH option in the Git installer, and both texts point this out.</li>
+    <li>Students fork <code>chipdesignschool/basics-graphics-music</code>, and the pull request goes back to it.</li>
+    <li>The Gowin search picks the version that sorts last alphabetically, so <code>Gowin_V1.9.9</code> wins over <code>Gowin_V1.9.10</code>.</li>
+    <li>GitHub Wiki can't host a raw HTML page; use the Markdown copy there.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Pros and cons</h2>
+  <p class="sub">For a student following along with the pictures</p>
+  <div class="duo">
+    <div>
+      <p class="who">Mine</p>
+      <h4>Pros</h4>
+      <ul>
+        <li>Text and pictures agree from start to finish, and almost every step has a screenshot (176 of 177).</li>
+        <li>Figure numbers run in order, so “Рис. 12.6” is easy to find.</li>
+        <li>Keeps your introduction and title layout, with only the typos fixed.</li>
+        <li>Has reference tables theirs lacks: chapters by platform, scripts 01–07, Quartus limits by FPGA family, Gowin report files, OSS CAD Suite tools by FPGA family.</li>
+        <li>Plain HTML that survives a WordPress paste. Its rendering is confirmed in your 129-page Chromium PDF.</li>
+        <li>Consistent Russian terminology (“форк”, 31 times) and shorter sentences overall.</li>
+        <li>Already includes your photos and caption; builds with nothing beyond Python.</li>
+      </ul>
+      <h4>Cons</h4>
+      <ul>
+        <li>Teaches committing to <code>main</code>, because the screenshots do. The branch advice appears only as a tip after the fact.</li>
+        <li>Little troubleshooting: it doesn't say which side is which in a merge conflict, and doesn't mention <code>git merge --abort</code>, the Discard commits trap in Sync fork, or what to send the teacher.</li>
+        <li>Appendix Б is imprecise in four places, and its links follow <code>main</code>, which will drift.</li>
+        <li>Doesn't warn that <code>git clean -dxf</code> can delete a new lab that was never added to Git.</li>
+        <li>No dedicated WordPress fragment, images have no width/height, and the page has no back-to-top links.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="who">Theirs</p>
+      <h4>Pros</h4>
+      <ul>
+        <li>Appendix Б is the most precise of the two: pinned commit, where each tool's directory goes in PATH, the sort fallback, the early exit when <code>GOWIN_VERSION_DIR</code> is set, both OSS CAD Suite environment files, and Б.5 on what to report.</li>
+        <li>Teaches safe Git habits: a branch per task, <code>git add</code> with an explicit path, <code>git diff --cached</code>, a conflict procedure, stash, <code>--ff-only</code>, and a warning about Discard commits.</li>
+        <li>Explains tool behaviour students will run into: <code>05</code> recreates the Quartus <code>run/</code>, Vivado shows its runs as “Not started”, SRAM versus flash, the macOS quarantine prompt.</li>
+        <li>Has a separate WordPress fragment with <code>&lt;figure&gt;</code>/<code>&lt;figcaption&gt;</code> and image width/height.</li>
+        <li>A polished standalone page with a two-column table of contents and a back-to-top button.</li>
+      </ul>
+      <h4>Cons</h4>
+      <ul>
+        <li>110 Markdown captions are glued to the following image.</li>
+        <li>The WordPress table of contents is numbered twice (“1. 00. Введение”).</li>
+        <li>The text uses <code>student/hyperbola</code> while every screenshot in chapters 9, 10, 12 and 20 shows <code>main</code>.</li>
+        <li>Figure numbers have gaps and one pair is out of order; 36 screenshots are unused.</li>
+        <li>Rewrites your introduction, including a new and confusing claim about xPack.</li>
+        <li>28% longer, 2.5 times as many negative warnings, and Latin “fork” used inside Russian grammar.</li>
+        <li>Missing your latest edits; the build needs Pillow.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Errors in mine</h2>
+  <p class="sub">Verified against the scripts at 991a4b32</p>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">M1</span><span class="ftitle">Б.3 advises setting GOWIN_VERSION_DIR without saying it skips the platform setup</span><span class="chip risk">medium</span></div>
+    <p>The note says “чтобы выбрать нужную, задайте <code>GOWIN_VERSION_DIR</code>”. But when that variable is set, <code>gowin_setup_ide</code> returns early, and the PATH shortcut does the same. That skips the Linux <code>LD_PRELOAD</code> and <code>QT_XCB_GL_INTEGRATION=none</code> setup and the macOS <code>DYLD_*</code> and quarantine handling, which the same section describes as always happening. Theirs flags the macOS half of this.</p>
+    <p class="ev">manual_claude_ru.md:1699, 1701–1704 · 00_setup_gowin.source_bash:187 and 202 return before 250–264</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">M2</span><span class="ftitle">Appendix A 3.4 presents git clean -dxf as removing only ignored files</span><span class="chip risk">medium</span></div>
+    <p>The <code>-x</code> flag removes <em>every</em> untracked file, including ignored ones. That includes <code>fpga_board_selection</code> and a new lab directory the student hasn't added to Git yet; <code>-X</code> is the ignored-only form. I translated the original heading faithfully but added no warning.</p>
+    <p class="ev">manual_claude_ru.md:1556–1567</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">M3</span><span class="ftitle">Chapter 14 doesn't say that 05 empties run/ for Quartus</span><span class="chip doc">medium-low</span></div>
+    <p><code>run_fpga_synthesis_gui_quartus</code> calls <code>setup_run_directory_for_fpga_synthesis</code>, which runs <code>rm -rf "$dir"/*</code>. The <code>.sof</code> file from <code>03</code> is gone, so <code>04</code> fails until the student compiles again in the GUI. My text tells them to compile but not why.</p>
+    <p class="ev">manual_claude_ru.md:843 · 00_setup_altera.source_bash:882–889 · 00_setup.source_bash:505–510</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">M4</span><span class="ftitle">“All four functions work alike” isn't true for OSS CAD Suite</span><span class="chip doc">low</span></div>
+    <p>The introduction to Appendix Б says every search checks an exact-directory variable, then PATH, then a parent variable, then the standard places. <code>setup_yosys</code> has no variables: it sources two fixed environment files first and only then relies on PATH. My own table in the same section shows “—” for both variables.</p>
+    <p class="ev">manual_claude_ru.md:1607 vs 1614 · 00_setup_yosys.source_bash:32–54</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">M5</span><span class="ftitle">Quartus version and edition are read from version.txt first</span><span class="chip doc">low</span></div>
+    <p>I wrote that they come “по заставке <code>quartus_sh</code>”. In fact the script reads <code>version.txt</code> first and runs <code>quartus_sh --version</code> only for old Web and Subscription installs that lack that file.</p>
+    <p class="ev">manual_claude_ru.md:1665 · 00_setup_altera.source_bash:85–123</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">M6</span><span class="ftitle">Gowin PATH shortcut: not used on macOS, and the tools need not be in the same directory</span><span class="chip doc">low</span></div>
+    <p>“если там же есть программа загрузки” suggests the loader must sit next to <code>gw_sh</code>; it only has to be available in PATH. The shortcut is never taken on macOS, and I don't say so.</p>
+    <p class="ev">manual_claude_ru.md:1688 · 00_setup_gowin.source_bash:193–203</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">M7</span><span class="ftitle">“Basic-Graphics-Music” kept from the prompt</span><span class="chip doc">low</span></div>
+    <p>The repository is <code>basics-graphics-music</code>. I fixed four other typos in your introduction but missed this one. Theirs fixed it.</p>
+    <p class="ev">manual_claude_ru.md:50</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">M8</span><span class="ftitle">Appendix Б links follow main, so they will drift</span><span class="chip doc">low</span></div>
+    <p>The description is of 991a4b32, but the links will show whatever <code>main</code> holds later.</p>
+    <p class="ev">manual_claude_ru.md:1596, 1626, 1647, 1685, 1712</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">M9</span><span class="ftitle">“Под Linux нет окна Git Credential Manager” is too absolute</span><span class="chip doc">low</span></div>
+    <p>It isn't installed by default, but it can be installed. Theirs shows how to set it up on Linux.</p>
+    <p class="ev">manual_claude_ru.md:696</p>
+  </div>
+</section>
+
+<section>
+  <h2>Errors in theirs</h2>
+  <p class="sub">Presentation and fidelity; I found no script-behaviour errors</p>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">T1</span><span class="ftitle">Markdown captions run into the next image</span><span class="chip defect">high for the MD copy</span></div>
+    <p>A caption line such as <code>*Рис. 01.01. …*</code> is followed by the next <code>![…](…)</code> line with no blank line between them. Under CommonMark rules that makes one paragraph: there is a gap after image N, then caption N sits directly on top of image N+1. A student will read each caption as describing the wrong picture. This happens 110 times. Their HTML outputs are not affected.</p>
+    <p class="ev">manual_codex_ru.md:102–103 and 109 more places</p>
+  </div>
+
+  <div class="finding defect">
+    <div class="fhead"><span class="fid">T2</span><span class="ftitle">WordPress table of contents is numbered twice</span><span class="chip defect">medium</span></div>
+    <p>The fragment's TOC is an <code>&lt;ol&gt;</code> whose items already start with “00.”, “01.” and so on, and the fragment has no CSS. A typical theme will display “1. 00. Введение … 26. 25. …”. The standalone page hides the list numbers with <code>list-style:none</code>; the fragment can't.</p>
+    <p class="ev">bgm_workflow_manual_wordpress_codex_ru.html:6</p>
+  </div>
+
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">T3</span><span class="ftitle">Text and screenshots disagree on the branch</span><span class="chip risk">medium</span></div>
+    <p>Chapters 9, 10, 12 and 20 tell the student to work in <code>student/hyperbola</code>, but every screenshot shows <code>main → main</code>, “1 commit ahead … :main” and a PR with <code>compare: main</code>. The captions keep apologising (“На снимке … main; в нашей последовательности — student/hyperbola”). In chapter 20, <code>git switch --track origin/student/hyperbola</code> fails for anyone who followed the pictures; theirs mentions this in a hedge after the command.</p>
+    <p class="ev">manual_codex_ru.md:437, 492, 504, 583–585, 978, 982</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">T4</span><span class="ftitle">Figure numbers come from file names</span><span class="chip doc">medium</span></div>
+    <p>Chapter 2 starts at Рис. 02.02, and chapter 10 at Рис. 10.07. Рис. 16.07 is shown before Рис. 16.06: they correctly put the dialog first, but kept the file numbers. A student looking for “Рис. 10.1” won't find it.</p>
+    <p class="ev">manual_codex_ru.md:130, 492, 804, 807</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">T5</span><span class="ftitle">36 screenshots unused, some carrying content</span><span class="chip doc">medium-low</span></div>
+    <p>Some of the omitted screenshots carry content the text relies on:</p>
+    <ul>
+      <li>10_02–03: the cheat sheet open on GitHub, which Appendix A translates.</li>
+      <li>10_04–05: the <code>git config --global user.name/email</code> commands, which the text moves to chapter 4 without a picture.</li>
+      <li>10_17–18: the Comparing changes page with the diff.</li>
+      <li>08_07: the USB-Blaster error that the text describes.</li>
+      <li>12_02 and 12_05: “1 commit ahead” and the Create pull request button.</li>
+      <li>14_11 and 14_13: the <code>lab_top:i_lab_top</code> block that the text says to expand.</li>
+    </ul>
+    <p>The rest are Tab-completion frames and menus.</p>
+    <p class="ev">comm -13 of the image lists: 02_01 03_01 05_01 05_08 06_05 06_06 08_01 08_07 10_01–06 10_17 10_18 12_02 12_05 14_01 14_05 14_11 14_13 15_01 15_04 16_01 16_03 17_05 20_04 21_01 21_05 22_03 22_05 23_01 24_01 24_05 25_01</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">T6</span><span class="ftitle">Your introduction is rewritten, with one new claim</span><span class="chip doc">medium</span></div>
+    <p>Your sentence about “пакета XPACK, варианта пакетов GCC и LLVM” becomes “В данном маршруте BGM используется xPack RISC-V GCC; выбор GCC или LLVM относится к конкретному пакету, а не к названию xPack в целом”. That is a new statement, published under your name, and it is harder for a student to parse than the original. The subtitle lines are merged into one plain paragraph, and “VSCode” in your title block becomes “VS Code”. Their rewrite of the WSL paragraph is clearer than the original, though.</p>
+    <p class="ev">manual_codex_ru.md:3–5, 48–54</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">T7</span><span class="ftitle">Latin “fork” inside Russian grammar</span><span class="chip doc">low</span></div>
+    <p>“своего fork”, “Создание fork репозитория” and so on: 21 times in prose, with “форк” never used. One chapter title is “Credential helper под Linux”. Russian course material normally says “форк”.</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">T8</span><span class="ftitle">An extra decision before the first clone</span><span class="chip doc">low</span></div>
+    <p>Chapter 3 offers <code>git clone -c core.autocrlf=false …</code> as an alternative to the clone in chapter 4, “for a clone you also plan to use under Linux/WSL”. Your screenshots show that the default works in Git Bash. A beginner now has to choose between two clone commands before they know what either does.</p>
+    <p class="ev">manual_codex_ru.md:167–173</p>
+  </div>
+
+  <div class="finding doc">
+    <div class="fhead"><span class="fid">T9</span><span class="ftitle">Advanced detail in beginner chapters</span><span class="chip doc">low</span></div>
+    <p>Chapter 7 mentions <code>hackathon_top.sv</code>. Chapter 10 starts with <code>cd "$(git rev-parse --show-toplevel)"</code> and <code>git diff --cached --check</code>. These are correct, but they come before the student has made a first commit.</p>
+    <p class="ev">manual_codex_ru.md:385, 483, 502</p>
+  </div>
+
+  <div class="finding clear">
+    <div class="fhead"><span class="fid">Side</span><span class="ftitle">The copy of their HTML on panchul.com has upload debris at the end</span><span class="chip side">not theirs</span></div>
+    <p>Byte for byte, the online <code>bgm_workflow_manual_codex_ru.html</code> is the local file followed by a multipart form-data trailer, which browsers will show as text at the bottom of the page. The other four online files are clean; my HTML matches the local copy exactly.</p>
+    <p class="ev">------WebKitFormBoundaryPE3dGRPHbB2ACN6f<br>Content-Disposition: form-data; name="overwrite"<br><br>0</p>
+  </div>
+</section>
+
+<section>
+  <h2>Where students may get confused</h2>
+  <p class="sub">Spot by spot, which manual handles it better</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Spot</th><th>Mine</th><th>Theirs</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">Which branch am I on?</td>
+          <td class="win">Matches every picture. The catch: a PR from <code>main</code> makes later syncs messier.</td>
+          <td>The text says <code>student/hyperbola</code>; the pictures say <code>main</code> (T3).</td></tr>
+      <tr><td class="lab">Finding a figure</td>
+          <td class="win">Numbered in order within each chapter.</td>
+          <td>Gaps, one pair out of order (T4), and Markdown captions under the wrong image (T1).</td></tr>
+      <tr><td class="lab">Where to clone (ch. 4)</td>
+          <td>“Перейдите в каталог …” with no command, so a student may clone into a Cyrillic home folder.</td>
+          <td class="win"><code>mkdir -p /c/projects; cd /c/projects</code>, then the clone.</td></tr>
+      <tr><td class="lab">After 05 in Quartus (ch. 14)</td>
+          <td>Says to compile, not why; <code>04</code> then fails (M3).</td>
+          <td class="win">Warns that <code>run/</code> is recreated.</td></tr>
+      <tr><td class="lab">Merge conflict (ch. 13)</td>
+          <td>Lists Accept Current/Incoming without saying which side is which.</td>
+          <td class="win">Current = your branch, Incoming = the School; <code>git merge --abort</code>.</td></tr>
+      <tr><td class="lab">Sync fork button</td>
+          <td>No warning about Discard commits.</td>
+          <td class="win">Warns that Discard commits deletes your commits.</td></tr>
+      <tr><td class="lab">How much to read</td>
+          <td class="win">6,210 words; one recommended way per step.</td>
+          <td>7,934 words; frequent alternatives and caveats (T8, T9).</td></tr>
+      <tr><td class="lab">Terms</td>
+          <td class="win">“форк”, “VSCode” as in your title.</td>
+          <td>“fork” with Russian case endings (T7).</td></tr>
+      <tr><td class="lab">PowerShell and WSL</td>
+          <td>Explains the CRLF failure and gives the explicit Git Bash command.</td>
+          <td>Same, plus <code>Get-Command bash -All</code> to see which bash will run.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Ideas to adopt</h2>
+  <p class="sub">What each side should take from the other</p>
+  <div class="duo">
+    <div>
+      <p class="who">Mine should take</p>
+      <ol class="tight">
+        <li>Pin Appendix Б's links to 991a4b32 and add one line saying it describes that commit.</li>
+        <li>Б.3: warn that <code>GOWIN_VERSION_DIR</code> and the PATH shortcut skip the Linux and macOS setup (fixes M1).</li>
+        <li>Б.1: <code>XILINX_VIVADO</code>'s <code>bin</code> is <em>appended</em> to PATH, so a <code>vivado</code> found earlier in PATH still runs; check with <code>command -v vivado</code>.</li>
+        <li>Б.4: both environment files are sourced and the <code>~/Downloads</code> one wins; on Windows, <code>~</code> is the Git Bash home folder.</li>
+        <li>A Б.5 block: what to send the teacher (<code>uname -s -m</code>, <code>git rev-parse --short HEAD</code>, the first real error).</li>
+        <li>Chapter 14: <code>05</code> recreates <code>run/</code>, so compile in the GUI before <code>04</code> (fixes M3).</li>
+        <li>Chapter 13: which side is Current and which is Incoming, <code>git merge --abort</code>, and that Discard commits deletes your commits.</li>
+        <li>Appendix A 3.4: <code>-x</code> versus <code>-X</code>, and the risk to a lab not yet added to Git (fixes M2). 2.6: quote <code>'*.mk'</code>; note that <code>Makefile</code> isn't excluded and that <code>sed -i</code> differs on macOS.</li>
+        <li>Chapter 4: an explicit <code>mkdir -p /c/projects &amp;&amp; cd /c/projects</code>.</li>
+        <li>Chapter 22: what the “Abort, Retry, Ignore?” quarantine prompt means.</li>
+        <li>A troubleshooting subheading in chapter 8: “Если синтез прошёл, но USB-Blaster не обнаружен”.</li>
+        <li>A third output: a CSS-free WordPress fragment with <code>&lt;figure&gt;</code>/<code>&lt;figcaption&gt;</code> and image width/height, and an un-numbered TOC list.</li>
+      </ol>
+    </div>
+    <div>
+      <p class="who">Theirs should take</p>
+      <ol class="tight">
+        <li>A blank line after every Markdown caption (T1).</li>
+        <li>A <code>&lt;ul&gt;</code> for the WordPress TOC (T2).</li>
+        <li>Figure numbers in order, and the screenshots they left out (T4, T5).</li>
+        <li>Your introduction verbatim apart from typo fixes, and the xPack sentence reverted (T6).</li>
+        <li>“форк” in Russian prose (T7).</li>
+        <li>The reference tables from mine: scripts 01–07, Quartus limits by FPGA family, chapters by platform.</li>
+        <li>Your two photos and the new caption for figure 0.1.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Recommendation</h2>
+  <p class="sub">Next steps, in order</p>
+  <p class="verdict"><strong>Keep mine as the base and port their strengths into it.</strong></p>
+  <ul>
+    <li>Mine is the published copy, it already has your edits, and its text agrees with the pictures.</li>
+    <li>My defects are individual paragraphs, each fixable in one place.</li>
+    <li>Theirs is the stronger technical text, but its defects run through the whole document: 110 captions, the numbering in every chapter, and the branch story in four chapters.</li>
+  </ul>
+  <ol>
+    <li><strong>Fix the three risks in mine</strong>: M1 (Gowin variable), M2 (<code>git clean -dxf</code>) and M3 (Quartus <code>05</code>). Then M4–M9.</li>
+    <li><strong>Port their ideas 1–11</strong> above into <code>generator/content_*.py</code> and rebuild. This is one pass, with no new screenshots.</li>
+    <li><strong>Decide the branch policy</strong>; this is your call.
+      <ul>
+        <li>(a) Keep <code>main</code> to match the screenshots, and move the “one branch per PR” tip from chapter 12 into chapter 9 as an optional box.</li>
+        <li>(b) Re-shoot chapters 9–12 and 20 with a branch, then adopt their flow.</li>
+      </ul>
+      I'd do (a) now and (b) the next time screenshots are taken.</li>
+    <li><strong>Add the WordPress fragment</strong> (idea 12) and paste it once into a WordPress preview.</li>
+    <li><strong>Paste the Markdown into a GitHub Wiki page</strong> and check the <code>&lt;a id&gt;</code> anchors and image links there.</li>
+    <li><strong>Re-upload or remove their HTML on panchul.com</strong> (side note).</li>
+    <li><strong>Leave the screenshot directory names alone.</strong> Fixing “hdmi” and “giwin” in directory 23 would break the image URLs in both manuals.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Open checks</h2>
+  <div class="check"><div class="q">T1 has not been seen on GitHub</div>
+    <p class="how">It follows from the CommonMark paragraph rule. Pasting one chapter of their Markdown into a Gist or Wiki preview would confirm it in seconds.</p></div>
+  <div class="check"><div class="q">T2 depends on the WordPress theme</div>
+    <p class="how">Most themes show <code>&lt;ol&gt;</code> numbers; a theme that hides them would hide the defect.</p></div>
+  <div class="check"><div class="q">OSS CAD Suite under Windows</div>
+    <p class="how">Both manuals list Windows. Neither checked that the Windows package ships the bash <code>environment</code> file that <code>setup_yosys</code> sources; Windows packages usually come with <code>.bat</code> files.</p></div>
+  <div class="check"><div class="q">Nothing ran on hardware</div>
+    <p class="how">All script behaviour here was <b>read from the code</b> at 991a4b32, not executed.</p></div>
+  <div class="check"><div class="q">Their own comparison</div>
+    <p class="how">Their <code>research/comparison/</code> folder got a copy of my manual at 10:04 today, so they are probably comparing too. I did not read their notes.</p></div>
+</section>
+
+<footer>
+  <h2>How this was produced</h2>
+  <p>I read both Markdown files in full, plus the heads and table-of-contents markup of their two HTML files. I checked script claims against <code>git show origin/main:</code> versions of <code>00_setup.source_bash</code>, <code>00_setup_{gowin,xilinx,altera,yosys}.source_bash</code>, the <code>03</code>–<code>06</code> step scripts and <code>xilinx_vivado_synthesize.tcl</code>. I looked at the 36 unused screenshots as contact sheets, at 16_06 and 16_07 at full size, and at pages 1–4, 30, 60, 100, 120 and 129 of <code>~/Downloads/20261011_bgm_workflow_manual_claude_ru.pdf</code>. Image lists, glued captions, word counts and “не” counts were computed by script from the Markdown files, excluding headings, tables, code and captions. I fetched the online copies with <code>curl</code> and compared them with the local files.</p>
+</footer>
+
+</div>
+</body>
+</html>
