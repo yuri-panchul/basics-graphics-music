@@ -48,7 +48,7 @@ The first menu is sorted by the derived board names, so `de0_nano` precedes
 `de0_nano_soc`. Variants retain directory-name order. Names alone build the menu,
 without reading pin constraints or requiring installed EDA tools.
 
-The current 110 eligible directory choices appear in 52 board/family groups.
+The current 113 eligible directory choices appear in 53 board/family groups.
 `fpga_board_selection` retains its flat format: the selected configuration's
 original name is uncommented and other eligible choices are commented. Display
 annotations and first-level markers never enter the saved name or toolchain
@@ -113,7 +113,9 @@ glob order. Symlink aliases are deduplicated. No external `sort` is needed.
 Cyclone II stops at 13.0 SP1; Cyclone III stops at 13.1. First-generation Cyclone
 has different Web and Subscription ceilings. MAX 10 rejects 13.x; its exact
 part must exist in the candidate database. DE23-Lite uses Agilex 3 and requires
-Pro 25.1 or newer with its device package. The specially named EPM570 legacy
+Pro 25.1 or newer with its device package. DE25-Nano uses Agilex 5 and requires
+Pro with the exact `A5EB013BB23BE4SCS` part in the installed device database;
+the database determines release compatibility. The specially named EPM570 legacy
 wrapper retains its 13.1 ceiling; other MAX II wrappers do not inherit it.
 See the [official device support matrix](https://www.altera.com/design/guidance/software/device-support).
 
@@ -121,6 +123,11 @@ The selected GUI, shell, and programmer come from the same directory, which
 is placed first on PATH. Windows discovery tries `bin64` then `bin`.
 The selected version directory is still passed to the existing Questa helper;
 separating simulator setup is deferred.
+
+Project preparation stages standalone board `.ip` parameter files in the run
+folder and registers them as `IP_FILE` assignments. Generated IP output stays
+out of board sources and is excluded from ordinary RTL discovery. IP with
+external source or MIF dependencies needs those dependencies staged as well.
 
 Discovery warns about spaces, non-ASCII characters, and special characters
 in installation paths, including `! $ % @ ^ & * < > ,`, quotes, and parentheses.

@@ -118,11 +118,84 @@ class DiscoveryTests(unittest.TestCase):
         self.choose(older, ALTERA_HOME=self.root / "p", fpga_board="de1")
         self.choose(newer, ALTERA_HOME=self.root / "p", fpga_board="de0")
 
-    def test_agilex_requires_pro(self):
+    def test_agilex3_requires_pro(self):
         part = "A3CZ135BB18AE7S"
         self.install("p", "altera_lite", "25.1", parts=(part,))
         winner = self.install("p", "altera_pro", "26.1.1", "pro", parts=(part,))
         self.choose(winner, ALTERA_HOME=self.root / "p", fpga_board="de23_lite")
+
+    def test_agilex5_requires_pro_even_if_other_editions_report_the_part(self):
+        part = "A5EB013BB23BE4SCS"
+        for vendor, version, edition in (("altera_lite", "26.1", "lite"),
+                                         ("altera", "26.1", "web"),
+                                         ("altera_std", "26.1", "std"),
+                                         ("altera", "26.2", "subscription")):
+            self.install("p", vendor, version, edition, parts=(part,))
+        winner = self.install("p", "altera_pro", "25.3", "pro", parts=(part,))
+        self.choose(winner, ALTERA_HOME=self.root / "p", fpga_board="de25_nano")
+
+    def test_agilex5_requires_the_exact_installed_part(self):
+        # A similar part name without the final suffix is not an exact match.
+        self.install("p", "altera_pro", "26.1", "pro", parts=("A5EB013BB23BE4SC",))
+        winner = self.install("p", "altera_pro", "25.3", "pro", parts=("A5EB013BB23BE4SCS",))
+        result = self.choose(winner, ALTERA_HOME=self.root / "p", fpga_board="de25_nano")
+        self.assertIn("Device database query failed", result.stderr)
+
+    def test_project_stages_board_ip_without_importing_generated_sources(self):
+        project = self.root / "project"
+        board = project / "boards/example_board"
+        source = project / "labs/example"
+        output = source / "run"
+        peripherals = project / "peripherals"
+        for directory in (board, output, peripherals, project / "labs/common"):
+            directory.mkdir(parents=True)
+        (board / "board_specific.qsf").write_text(f"set_global_assignment -name DEVICE {PART}\n")
+        (source / "lab_top.sv").write_text("module lab_top; endmodule\n")
+        (board / "board_specific_top.sv").write_text("module board_specific_top; endmodule\n")
+        (board / "rtl").mkdir()
+        (board / "rtl/helper.sv").write_text("module helper; endmodule\n")
+
+        def prepare():
+            result = self.run_shell(
+                'setup_run_directory_for_fpga_synthesis_quartus "$OUTPUT" "$SOURCE"',
+                OUTPUT=output, SOURCE=source, board_dir=board.parent, fpga_board=board.name,
+                peripheral_dir=peripherals, lab_dir=project / "labs", find_to_run="/usr/bin/find")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            return (output / "fpga_project.qsf").read_text()
+
+        self.assertNotIn(" -name IP_FILE ", prepare())
+
+        ip_files = [board / "reset_release.ip", board / "nested/other.ip"]
+        for ip in ip_files:
+            ip.parent.mkdir(parents=True, exist_ok=True)
+            ip.write_text("test fixture; project preparation must not run Quartus\n")
+        other_board = board.parent / "other_board"
+        other_board.mkdir()
+        (other_board / "excluded.ip").write_text("not selected\n")
+        (board / "legacy.qip").write_text("not an IP_FILE\n")
+        (board / "not_a_file.ip").mkdir()
+
+        # Model outputs left by an older in-source build and a previous run.
+        for generated in (board / "reset_release/synth", output / "board_ip/reset_release/synth"):
+            generated.mkdir(parents=True)
+            (generated / "generated.sv").write_text("module generated; endmodule\n")
+            (generated / "generated_child.ip").write_text("not an IP parameter source\n")
+
+        qsf = prepare()
+        assignments = {line for line in qsf.splitlines() if " -name IP_FILE " in line}
+        self.assertEqual(assignments, {
+            f"set_global_assignment -name IP_FILE board_ip/{ip.relative_to(board).as_posix()}"
+            for ip in ip_files
+        })
+        for ip in ip_files:
+            staged = output / "board_ip" / ip.relative_to(board)
+            self.assertEqual(staged.read_bytes(), ip.read_bytes())
+        sources = {line for line in qsf.splitlines() if " -name SYSTEMVERILOG_FILE " in line}
+        self.assertEqual(sources, {
+            f"set_global_assignment -name SYSTEMVERILOG_FILE {name}"
+            for name in ("lab_top.sv", "board_specific_top.sv", "rtl/helper.sv")
+        })
+        self.assertEqual(prepare(), qsf, "Preparing again must not import generated IP outputs")
 
     def test_max10_rejects_old_release(self):
         part = "10M50DAF484C7G"

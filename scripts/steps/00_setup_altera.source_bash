@@ -216,6 +216,9 @@ quartus_family_compatible ()
             [ "$quartus_edition" = Pro ] || return 1
             quartus_version_newer 25.1 "$quartus_version" && return 1
         ;;
+        A5*)
+            [ "$quartus_edition" = Pro ] || return 1
+        ;;
         10M*)
             quartus_version_newer 14.0 "$quartus_version" && return 1
         ;;
@@ -703,8 +706,10 @@ run_questa ()
 
 setup_run_directory_for_fpga_synthesis_quartus ()
 {
+    local quartus_run_path quartus_ip_rel
     dir="$1"
     main_src_dir="$2"
+    quartus_run_path=$(realpath "$dir")
 
     #-------------------------------------------------------------------------
 
@@ -739,11 +744,29 @@ set_global_assignment -name VERILOG_MACRO "INTEL_VERSION"
 
 EOF
 
+    # Exclude this run and output trees adjacent to their source .ip files.
+    # Quartus auto-generation must not add generated RTL as ordinary sources.
+
     $find_to_run  \
         "$main_src_dir" "$board_dir/$fpga_board" "$peripheral_dir" "$lab_dir/common"  \
+        -type d \( -path "$quartus_run_path" -o -exec test -f '{}.ip' \; \) -prune -o  \
         -type f -name '*.sv' -not -name tb.sv  \
         -printf "set_global_assignment -name SYSTEMVERILOG_FILE %P\n"  \
         >> "$dir/fpga_project.qsf"
+
+    # Stage standalone IP parameter files so their generated output stays in run.
+
+    while IFS= read -r -d '' quartus_ip_rel
+    do
+        mkdir -p "$dir/board_ip/$(dirname "$quartus_ip_rel")"
+        cp "$board_dir/$fpga_board/$quartus_ip_rel" "$dir/board_ip/$quartus_ip_rel"
+        printf 'set_global_assignment -name IP_FILE board_ip/%s\n' "$quartus_ip_rel" \
+            >> "$dir/fpga_project.qsf"
+    done < <(
+        $find_to_run "$board_dir/$fpga_board"  \
+            -type d -exec test -f '{}.ip' \; -prune -o  \
+            -type f -name '*.ip' -printf '%P\0'
+    )
 
     if [ -f "$main_src_dir/extra_project_files.qsf" ] ; then
         cat "$main_src_dir/extra_project_files.qsf" >> "$dir/fpga_project.qsf"

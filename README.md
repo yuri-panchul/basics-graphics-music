@@ -136,6 +136,7 @@ Your contributions are welcome.
 | Altera Cyclone IV  | Terasic DE2-115      | [`de2_115`](./boards/de2_115/)                       | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
 | Altera Cyclone V   | Terasic DE0-CV       | [`de0_cv`](./boards/de0_cv/)                         | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
 | Altera Cyclone V   | Terasic DE10-Nano    | [`de10_nano`](./boards/de10_nano/)                   | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Agilex 5    | Terasic DE25-Nano    | [`de25_nano`](./boards/de25_nano/README.md)           | Quartus Prime Pro |
 | Altera Cyclone V SoC | Terasic DE0-Nano SoC | [`de0_nano_soc_vga_pmod`](./boards/de0_nano_soc_vga_pmod/) <br/> [`de0_nano_soc_vga666`](./boards/de0_nano_soc_vga666/) | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
 | Altera Cyclone V SoC | Terasic DE1-SoC    | [`de1_soc`](./boards/de1_soc/)                       | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
 | Altera Cyclone V GX | Terasic C5GX        | [`c5gx`](./boards/c5gx/)                             | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |

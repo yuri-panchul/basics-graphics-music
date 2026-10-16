@@ -583,6 +583,7 @@ update_fpga_toolchain_var ()
         de10_lite*                       | \
         de10_nano*                       | \
         de23_lite                        | \
+        de25_nano                        | \
         emooc_cc                         | \
         omdazz*                          | \
         piswords6                        | \
