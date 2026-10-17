@@ -1,3 +1,18 @@
+# :- preserves the existing simulator selection unless explicitly overridden.
+rtl_simulator=${SIMULATOR:-auto}
+
+case "$rtl_simulator" in
+    verilator)
+        . "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/02_simulate_verilator.source_bash"
+        return
+        ;;
+    auto) ;;
+    *)
+        printf 'Unknown SIMULATOR: %s (expected auto or verilator)\n' "$rtl_simulator" >&2
+        return 1
+        ;;
+esac
+
 . "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/00_setup.source_bash"
 
 if [ -f $questa_script ] ; then
