@@ -18,82 +18,107 @@
 /** serial i/o module                                                 Rev 0.0  03/29/2021 **/
 /**                                                                                       **/
 /*******************************************************************************************/
-`include "serial_rx.vh"
-
-`include "serial_tx.vh"
-
 module serial_top (bufr_done, bufr_empty, bufr_full, bufr_ovr, rx_rdata, ser_clk, ser_txd,
                    cks_mode, clkp, div_rate, ld_wdata, rd_rdata, s_reset, ser_rxd, tx_wdata);
 
-  input         cks_mode;                                  /* sync mode                    */
-  input         clkp;                                      /* main peripheral clock        */
-  input         ld_wdata;                                  /* write tx data register       */
-  input         rd_rdata;                                  /* read rx data register        */
-  input         s_reset;                                   /* synchronous reset            */
-  input         ser_rxd;                                   /* receive data input           */
-  input   [7:0] tx_wdata;                                  /* write data bus               */
-  input  [11:0] div_rate;                                  /* serial baud rate divider     */
+  input         cks_mode;
+  input         clkp;
+  input         ld_wdata;
+  input         rd_rdata;
+  input         s_reset;
+  input         ser_rxd;
+  input   [7:0] tx_wdata;
+  input  [11:0] div_rate;
 
-  output        bufr_done;                                 /* serial tx done sending       */
-  output        bufr_empty;                                /* serial tx buffer empty       */
-  output        bufr_full;                                 /* serial rx buffer full        */
-  output        bufr_ovr;                                  /* serial rx buffer overrun     */
-  output        ser_clk;                                   /* serial clk output (cks)      */
-  output        ser_txd;                                   /* transmit data output         */
-  output  [7:0] rx_rdata;                                  /* receive data buffer          */
+  output        bufr_done;
+  output        bufr_empty;
+  output        bufr_full;
+  output        bufr_ovr;
+  output        ser_clk;
+  output        ser_txd;
+  output  [7:0] rx_rdata;
 
+`ifdef __ICARUS__
   /*****************************************************************************************/
-  /* signal declarations                                                                   */
+  /* SIMULATION MODEL: Console Output Stub                                                 */
   /*****************************************************************************************/
-  wire        auto_trig;                                   /* clocked serial trigger       */
-  wire        rx_run;                                      /* rcvr running (cks mode)      */
-  wire        rx_sync;                                     /* internal rx clock            */
-  wire        ser_txd;                                     /* transmitter data output      */
-  wire        tx_run;                                      /* serial tx running (cks)      */
-  wire        tx_sync;                                     /* internal tx clock            */
-  wire        bufr_done;                                   /* serial tx done sending       */
-  wire        bufr_empty;                                  /* serial tx buffer empty       */
-  wire        bufr_full;                                   /* serial rx buffer full        */
-  wire        bufr_ovr;                                    /* serial rx buffer overrun     */
-  wire  [7:0] rx_rdata;                                    /* receive data buffer          */
+  reg           bufr_done;
+  reg           bufr_empty;
+  reg           bufr_full;
+  reg           bufr_ovr;
+  reg           ser_clk;
+  reg           ser_txd;
+  reg    [7:0]  rx_rdata;
 
-  reg         ser_clk;                                     /* internal clock               */
-  reg         ser_divpls;                                  /* divider output pulse         */
-  reg  [11:0] ser_divcnt;                                  /* divider counter              */
+  initial begin
+    bufr_done  = 1'b1;
+    bufr_empty = 1'b1;
+    bufr_full  = 1'b0;
+    bufr_ovr   = 1'b0;
+    rx_rdata   = 8'h00;
+    ser_clk    = 1'b0;
+    ser_txd    = 1'b1;
+  end
 
+always @(posedge clkp) begin
+    if (!s_reset && ld_wdata && (tx_wdata != 8'h00)) begin
+        if (tx_wdata >= 8'h20 && tx_wdata <= 8'h7e)
+            $write("%c", tx_wdata);
+        else if (tx_wdata == 8'h0a || tx_wdata == 8'h0d)
+            $write("%c", tx_wdata);
+        else
+            $write("[0x%02h]", tx_wdata);
+    end
+end
+
+`else
   /*****************************************************************************************/
-  /* baud rate divider                                                                     */
+  /* SYNTHESIZABLE RTL: Original Implementation                                            */
   /*****************************************************************************************/
+  `include "serial_rx.vh"
+  `include "serial_tx.vh"
+
+  wire          bufr_done;
+  wire          bufr_empty;
+  wire          bufr_full;
+  wire          bufr_ovr;
+  wire          ser_clk;
+  wire          ser_txd;
+  wire   [7:0]  rx_rdata;
+
+  wire          auto_trig;
+  wire          rx_run;
+  wire          rx_sync;
+  wire          tx_run;
+  wire          tx_sync;
+
+  reg           ser_clk;
+  reg           ser_divpls;
+  reg   [11:0]  ser_divcnt;
+
   always @ (posedge clkp) begin
     ser_divcnt <= (s_reset) ? 12'h0 :
                   (~|ser_divcnt) ? div_rate : (ser_divcnt - 1'b1);
     ser_divpls <= !s_reset && ~|ser_divcnt;
-    end
+  end
 
-  /*****************************************************************************************/
-  /* sync clk generator                                                                    */
-  /*****************************************************************************************/
   always @ (posedge clkp) begin
     if (s_reset || ser_divpls) ser_clk <= s_reset || (!rx_run && !tx_run) || !ser_clk;
-    end
+  end
 
-  /*****************************************************************************************/
-  /* clock muxes                                                                           */
-  /*****************************************************************************************/
   assign rx_sync = (cks_mode) ? (ser_divpls && !ser_clk) : ser_divpls;
   assign tx_sync = (cks_mode) ? (ser_divpls &&  ser_clk) : ser_divpls;
 
-  /*****************************************************************************************/
-  /* serial port receiver and transmitter                                                  */
-  /*****************************************************************************************/
   serial_rx RXCV ( .bufr_ovr(bufr_ovr), .bufr_full(bufr_full), .rx_rdata(rx_rdata),
                    .rx_run(rx_run), .auto_trig(auto_trig), .cks_mode(cks_mode), .clkp(clkp),
                    .rd_rdata(rd_rdata), .rx_sync(rx_sync), .s_reset(s_reset),
                    .ser_rxd(ser_rxd) );
 
   serial_tx XMIT ( .auto_trig(auto_trig), .bufr_done(bufr_done), .bufr_empty(bufr_empty),
-                   .ser_txd(ser_txd), .tx_run(tx_run),.cks_mode(cks_mode), .clkp(clkp),
+                   .ser_txd(ser_txd), .tx_run(tx_run), .cks_mode(cks_mode), .clkp(clkp),
                    .ld_wdata(ld_wdata), .s_reset(s_reset), .tx_sync(tx_sync),
                    .tx_wdata(tx_wdata) );
 
-  endmodule
+`endif
+
+endmodule
