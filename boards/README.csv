@@ -18,6 +18,7 @@ Altera,Terasic,de10_nano,Cyclone V,Quartus 13.0sp1 through 25.1std,always,HDMI/D
 Altera,Terasic,de1_soc,Cyclone V,Quartus 13.0sp1 through 25.1std,never,VGA
 Altera,Terasic,de2,Cyclone II,Quartus 13.0sp1 and older,never,VGA
 Altera,Terasic,de23_lite,Agilex 3,Quartus Pro 26.1.1,never,HDMI/DVI
+Altera,Terasic,de25_nano,Agilex 5,Quartus Pro 26.1.1,either,HDMI/DVI
 Altera,Terasic,de2_115,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
 Altera,Terasic,terasic_sockit,Cyclone V,Quartus 13.0sp1 through 25.1std,never,VGA
 Altera,ZEOWAA,zeowaa,Cyclone IV E,Quartus 13.0sp1 through 25.1std,never,VGA
