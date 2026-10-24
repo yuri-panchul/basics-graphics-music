@@ -201,7 +201,7 @@ module yrv_csr (csr_idata, csr_ok_int, cycle_ov, ebrkd_reg, instret_ov, meie_reg
       mcyinh_reg   <=  1'b0;
       mirinh_reg   <=  1'b0;
       mie_reg      <=  1'b0;
-      mpie_reg     <=  1'b1;
+      mpie_reg     <=  1'b0;
       mlie_reg     <= 16'h0;
       meie_reg     <=  1'b0;
       msie_reg     <=  1'b0;

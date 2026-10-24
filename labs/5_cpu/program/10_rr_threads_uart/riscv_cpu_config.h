@@ -1,0 +1,21 @@
+#ifndef RISCV_CPU_CONFIG_H
+#define RISCV_CPU_CONFIG_H
+
+#define RISCV_CORE_APS       1
+#define RISCV_CORE_aps       1
+#define RISCV_CORE_YRV       2
+#define RISCV_CORE_yrv       2
+#define RISCV_CORE_PICORV32  3
+#define RISCV_CORE_picorv32  3
+
+
+#ifndef RISCV_CORE
+    #define RISCV_CORE RISCV_CORE_APS
+#endif
+
+#define TIMER_INTERRUPT_USE_EXTERNAL_INTERRUPT              1
+#define TIMER_INTERRUPT_USE_YRV_PLATFORM_LOCAL_INTERRUPT_2  2
+
+#define TIMER_INTERRUPT TIMER_INTERRUPT_USE_YRV_PLATFORM_LOCAL_INTERRUPT_2
+
+#endif  // ifndef RISCV_CPU_CONFIG_H

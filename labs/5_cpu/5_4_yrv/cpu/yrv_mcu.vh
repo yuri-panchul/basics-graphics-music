@@ -29,16 +29,26 @@
 `define IO_PORT76 14'h0003                                 /* lsword of port 7/6 address   */
 `define MEM_BASE  16'h0000                                 /* msword of mem address        */
 
+
+
 /* processor                                                                               */
 `include "yrv_top.vh"
 
 `include "serial_top.vh"
 
+// В начале файла yrv_mcu.vh
+`ifdef __ICARUS__
+  `define USE_MEM_BANKS_FOR_BYTE_LINES
+  `undef BOOT_FROM_AUX_UART
+  `define EXPOSE_MEM_BUS
+`endif
+
+
 // For real boards
 `ifndef SIMULATION
 `define BOOT_FROM_AUX_UART
 `define USE_MEM_BANKS_FOR_BYTE_LINES
-`define NO_READMEMH_FOR_8_BIT_WIDE_MEM
+//`define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define EXPOSE_MEM_BUS
 `endif
 
@@ -160,12 +170,19 @@ module yrv_mcu
   wire    [3:0] mem_wr_byte;                               /* system ram byte enables      */
 
   `ifdef USE_MEM_BANKS_FOR_BYTE_LINES
-  reg     [7:0] mcu_mem_bank0 [0:1024*4-1];                    /* system ram banks             */
-  reg     [7:0] mcu_mem_bank1 [0:1024*4-1];
-  reg     [7:0] mcu_mem_bank2 [0:1024*4-1];
-  reg     [7:0] mcu_mem_bank3 [0:1024*4-1];
+      `ifdef __ICARUS__
+        reg     [7:0] mcu_mem_bank0 [0:1024*16-1];
+        reg     [7:0] mcu_mem_bank1 [0:1024*16-1];
+        reg     [7:0] mcu_mem_bank2 [0:1024*16-1];
+        reg     [7:0] mcu_mem_bank3 [0:1024*16-1];
+      `else
+        reg     [7:0] mcu_mem_bank0 [0:1024*4-1];
+        reg     [7:0] mcu_mem_bank1 [0:1024*4-1];
+        reg     [7:0] mcu_mem_bank2 [0:1024*4-1];
+        reg     [7:0] mcu_mem_bank3 [0:1024*4-1];
+      `endif
   `else
-  reg     [7:0] mcu_mem [0:4095];                          /* system ram                   */
+    reg     [7:0] mcu_mem [0:4095];                        /* system ram                   */
   `endif
 
   reg    [31:0] mem_rdata;                                 /* raw read data                */
@@ -331,29 +348,53 @@ module yrv_mcu
 
 `ifndef NO_READMEMH_FOR_8_BIT_WIDE_MEM
 
-localparam string default_mem_file_name = "code_demo.mem8";
+  `ifdef __ICARUS__
+        initial begin
+          int fd_0,fd_1,fd_2,fd_3;
+          $display("Loading memory...");
+          fd_0 = $fopen("../cpu/program_bank0.mem8", "r");
+          fd_1 = $fopen("../cpu/program_bank1.mem8", "r");
+          fd_2 = $fopen("../cpu/program_bank2.mem8", "r");
+          fd_3 = $fopen("../cpu/program_bank3.mem8", "r");
 
-initial
-begin
-  int fd;
+          if(fd_0 && fd_1 && fd_2 && fd_3) begin
+              $fclose(fd_0);              
+              $fclose(fd_1);
+              $fclose(fd_2);
+              $fclose(fd_3);
+              
 
-  fd = $fopen(default_mem_file_name, "r");
+              $readmemh("../cpu/program_bank0.mem8", mcu_mem_bank0);
+              $readmemh("../cpu/program_bank1.mem8", mcu_mem_bank1);
+              $readmemh("../cpu/program_bank2.mem8", mcu_mem_bank2);
+              $readmemh("../cpu/program_bank3.mem8", mcu_mem_bank3);
+            end 
+          else
+            $fatal(1,"No memory files!!!");
 
-  if (fd)
-  begin
-    $fclose(fd);
-    $readmemh(default_mem_file_name, mcu_mem);
-  end
-  else
-  begin
-    $warning("No default memory file '%s' found", default_mem_file_name);
-  end
-end
+        end
+  `else 
+      localparam string default_mem_file_name = "code_demo.mem8";
 
+      initial
+      begin
+      int fd;
+
+      fd = $fopen(default_mem_file_name, "r");
+
+      if (fd)
+        begin
+          $fclose(fd);
+          $readmemh(default_mem_file_name, mcu_mem);
+        end
+      else
+        begin
+          $warning("No default memory file '%s' found", default_mem_file_name);
+        end
+      end
+  `endif
 `endif
-
-`endif
-
+`endif 
   /*****************************************************************************************/
   /* bus interface                                                                         */
   /*****************************************************************************************/
