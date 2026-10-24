@@ -739,7 +739,8 @@ fpga_board_setup ()
 
 fpga_board_setup
 
-# fpga_toolchain=quartus
+#fpga_toolchain=quartus
+#fpga_board=de10_lite
 
 case $fpga_toolchain in
     quartus  )
