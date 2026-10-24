@@ -14,3 +14,7 @@ surfer.scr - add signals for riscvsingle.sv
 tb.sv - main work, modify the testbench
 
 Main work: rewrite lab_top.sv and tb.sv
+
+## References
+
+https://habr.com/ru/articles/796255/
