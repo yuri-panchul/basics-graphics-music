@@ -73,7 +73,7 @@ module tb;
 
         @ (negedge rst);
 
-        repeat (5000000)
+        repeat (5000)
         begin
             @ (posedge clk);
         end

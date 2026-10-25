@@ -380,7 +380,7 @@ riscv_software_toolchain_run ()
         "yrv")
             info "YRV CPU Build"
             $riscv_objcopy -O binary a.out final
-            $PY3 "$script_dir/gcc/freedom-bin2hex-banks.py" -w32 final --banks  $program_mem32
+            $PY3 "$script_dir/gcc/freedom-bin2hex-banks.py" --banks --bit-width 32 final $program_mem32
             cp *bank* $cpu_dir/cpu
             ;;        
         *)

@@ -36,7 +36,6 @@
 
 `include "serial_top.vh"
 
-// В начале файла yrv_mcu.vh
 `ifdef __ICARUS__
   `define USE_MEM_BANKS_FOR_BYTE_LINES
   `undef BOOT_FROM_AUX_UART
@@ -48,7 +47,7 @@
 `ifndef SIMULATION
 `define BOOT_FROM_AUX_UART
 `define USE_MEM_BANKS_FOR_BYTE_LINES
-//`define NO_READMEMH_FOR_8_BIT_WIDE_MEM
+`define NO_READMEMH_FOR_8_BIT_WIDE_MEM
 `define EXPOSE_MEM_BUS
 `endif
 
