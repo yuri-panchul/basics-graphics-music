@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lattice Board Lineup</title>
+<meta name="description" content="Eight Lattice FPGA boards and five add-on boards identified from two photos, with their FPGAs, how to program them, and which ones basics-graphics-music already supports.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+    --bg: #f3f4ef;
+    --surface: #ffffff;
+    --surface-2: #e9ece5;
+    --ink: #18201b;
+    --muted: #59645d;
+    --line: #d5dad1;
+    --accent: #1b6a45;
+    --ice40: #0d6c78;
+    --ice40-soft: #dbeff1;
+    --ecp5: #8f5200;
+    --ecp5-soft: #f6ead6;
+    --mxo2: #6447a3;
+    --mxo2-soft: #ebe5f7;
+    --addon: #58625b;
+    --addon-soft: #eceee9;
+    --ok-ink: #155b38;
+    --ok-bg: #dcefe3;
+    --no-ink: #5b625d;
+    --no-bg: #eceee9;
+    --warn-ink: #7a4f00;
+    --warn-bg: #fbefd6;
+    --badge-bg: #0f1512;
+    --badge-ink: #ffffff;
+    --marker: #0f1512;
+    --marker-ink: #ffffff;
+    --hl: #3fd08a;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #111513;
+        --surface: #181d1a;
+        --surface-2: #202722;
+        --ink: #e4eae5;
+        --muted: #9ba69f;
+        --line: #2c352f;
+        --accent: #62c795;
+        --ice40: #56c4d0;
+        --ice40-soft: #15302f;
+        --ecp5: #efaa4d;
+        --ecp5-soft: #33280f;
+        --mxo2: #b8a2f2;
+        --mxo2-soft: #272140;
+        --addon: #a7b0aa;
+        --addon-soft: #232a25;
+        --ok-ink: #7fd8a8;
+        --ok-bg: #1b3326;
+        --no-ink: #a4ada7;
+        --no-bg: #232a25;
+        --warn-ink: #f1c46e;
+        --warn-bg: #2f2610;
+        --badge-bg: #e4eae5;
+        --badge-ink: #111513;
+        --hl: #5be0a0;
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #111513;
+    --surface: #181d1a;
+    --surface-2: #202722;
+    --ink: #e4eae5;
+    --muted: #9ba69f;
+    --line: #2c352f;
+    --accent: #62c795;
+    --ice40: #56c4d0;
+    --ice40-soft: #15302f;
+    --ecp5: #efaa4d;
+    --ecp5-soft: #33280f;
+    --mxo2: #b8a2f2;
+    --mxo2-soft: #272140;
+    --addon: #a7b0aa;
+    --addon-soft: #232a25;
+    --ok-ink: #7fd8a8;
+    --ok-bg: #1b3326;
+    --no-ink: #a4ada7;
+    --no-bg: #232a25;
+    --warn-ink: #f1c46e;
+    --warn-bg: #2f2610;
+    --badge-bg: #e4eae5;
+    --badge-ink: #111513;
+    --hl: #5be0a0;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    padding-inline: 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 1rem/1.6 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.wrap {
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-block: 40px 64px;
+    display: grid;
+    gap: 56px;
+}
+
+h1, h2, h3 {
+    font-family: Archivo, "IBM Plex Sans", system-ui, sans-serif;
+    text-wrap: balance;
+    margin: 0;
+    line-height: 1.15;
+}
+
+h1 { font-size: clamp(2rem, 1.2rem + 3vw, 3rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.5rem; font-weight: 600; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+
+p { margin: 0; }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+code {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.86em;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    overflow-wrap: anywhere;
+}
+
+.eyebrow, th, dt, .fam, .label {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.eyebrow { font-size: 0.75rem; color: var(--muted); }
+
+header { display: grid; gap: 16px; }
+header .lead { max-width: 68ch; font-size: 1.06rem; }
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 36px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.stats li { display: grid; gap: 2px; }
+.stats b { font: 700 1.75rem/1.1 Archivo, sans-serif; font-variant-numeric: tabular-nums; }
+.stats span { font-size: 0.86rem; color: var(--muted); }
+
+section { display: grid; gap: 18px; }
+section > .intro { max-width: 70ch; color: var(--muted); }
+
+/* Photos with numbered markers */
+
+.photos {
+    display: grid;
+    grid-template-columns: 66fr 54fr;
+    gap: 20px;
+    align-items: start;
+}
+
+figure { margin: 0; display: grid; gap: 8px; }
+
+.photo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background: var(--surface-2);
+}
+
+figcaption { font-size: 0.86rem; color: var(--muted); }
+
+.mk circle { fill: var(--marker); stroke: var(--marker-ink); stroke-width: 5; }
+.mk text { fill: var(--marker-ink); font-family: Archivo, sans-serif; font-weight: 700; text-anchor: middle; }
+.p1 .mk text { font-size: 40px; }
+.p2 .mk text { font-size: 34px; }
+.mk rect { fill: none; stroke: var(--hl); stroke-width: 8; opacity: 0; transition: opacity 0.15s; }
+.mk:hover rect, .mk:focus-visible rect { opacity: 1; }
+.mk:focus { outline: none; }
+.mk:focus-visible circle { stroke: var(--hl); }
+
+/* Table */
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+}
+
+table { border-collapse: collapse; width: 100%; min-width: 820px; font-size: 0.92rem; }
+
+th, td {
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--line);
+}
+
+th { font-size: 0.72rem; font-weight: 600; color: var(--muted); background: var(--surface-2); }
+tr:last-child td { border-bottom: 0; }
+td.n { font-variant-numeric: tabular-nums; color: var(--muted); width: 2.5em; }
+td a { font-weight: 500; }
+
+/* Labels */
+
+.fam {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    line-height: 1;
+    padding: 5px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.fam.ice40 { color: var(--ice40); background: var(--ice40-soft); }
+.fam.ecp5 { color: var(--ecp5); background: var(--ecp5-soft); }
+.fam.mxo2 { color: var(--mxo2); background: var(--mxo2-soft); }
+.fam.addon { color: var(--addon); background: var(--addon-soft); }
+
+.bgm { font-size: 0.86rem; }
+.bgm.no { color: var(--no-ink); }
+
+.label {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-right: 6px;
+    vertical-align: 1px;
+}
+
+.label.yes { color: var(--ok-ink); background: var(--ok-bg); }
+.label.no { color: var(--no-ink); background: var(--no-bg); }
+.label.warn { color: var(--warn-ink); background: var(--warn-bg); }
+
+/* Board cards */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    scroll-margin-top: 16px;
+}
+
+.thumb {
+    background: var(--surface-2);
+    height: 230px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.thumb svg { width: 100%; height: 100%; display: block; }
+
+.card .body { padding: 18px 20px 20px; display: grid; gap: 14px; align-content: start; }
+
+.head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.num {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--badge-bg);
+    color: var(--badge-ink);
+    font: 700 0.85rem/1 Archivo, sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
+.head h3 { flex: 1 1 auto; }
+
+.facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 7px 16px;
+    margin: 0;
+    font-size: 0.93rem;
+}
+
+dt { font-size: 0.68rem; font-weight: 500; color: var(--muted); padding-top: 0.3em; }
+dd { margin: 0; }
+
+.unsure { font-size: 0.9rem; }
+
+/* Add-on rows */
+
+.addons { display: grid; gap: 16px; }
+
+.addons .card { flex-direction: row; }
+.addons .thumb { flex: 0 0 240px; height: auto; min-height: 200px; }
+.addons .body { flex: 1 1 auto; }
+
+/* Open questions */
+
+.checks { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; max-width: 80ch; }
+.checks li {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid; gap: 8px; }
+
+@media (max-width: 860px) {
+    .photos { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .wrap { padding-block: 28px 48px; gap: 44px; }
+    .addons .card { flex-direction: column; }
+    .addons .thumb { flex: none; height: 200px; min-height: 0; }
+}
+
+@media (max-width: 440px) {
+    .facts { grid-template-columns: 1fr; gap: 2px; }
+    dt { padding-top: 8px; }
+    .thumb { height: 190px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mk rect { transition: none; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+    <p class="eyebrow">Board identification · 2 photos · 26 October 2026</p>
+    <h1>Lattice Board Lineup</h1>
+    <p class="lead">Two photos: a bench shot of loose boards (<code>lattice_boards.jpg</code>) and an
+    iCEBreaker driving a monitor (<code>icebreaker.jpg</code>). Board names are read from the silkscreen in
+    enlarged crops of the photos. The FPGA parts come from each board's published specs, because the chip
+    markings are too blurry to read. Click a number on a photo to jump to its board.</p>
+    <ul class="stats">
+        <li><b>8</b><span>FPGA boards</span></li>
+        <li><b>5</b><span>add-on boards</span></li>
+        <li><b>6 · 1 · 1</b><span>iCE40 · ECP5 · MachXO2</span></li>
+        <li><b>3 of 8</b><span>already in basics-graphics-music</span></li>
+    </ul>
+</header>
+
+<section aria-labelledby="photos-h">
+    <h2 id="photos-h">The photos</h2>
+    <div class="photos">
+        <figure class="photo p1">
+            <svg viewBox="0 0 1393 2105" role="group" aria-label="Bench photo with ten numbered boards">
+                <image href="lattice_boards.jpg" x="0" y="0" width="1393" height="2105"/>
+                <a class="mk" href="#b1" aria-label="1, OrangeCrab"><rect x="189" y="105" width="458" height="242" rx="14"/><circle cx="233" cy="149" r="36"/><text x="233" y="149" dy="0.35em">1</text></a>
+                <a class="mk" href="#b2" aria-label="2, TinyFPGA BX"><rect x="826" y="174" width="331" height="163" rx="14"/><circle cx="870" cy="218" r="36"/><text x="870" y="218" dy="0.35em">2</text></a>
+                <a class="mk" href="#b3" aria-label="3, Olimex iCE40HX8K-EVB"><rect x="126" y="405" width="579" height="605" rx="14"/><circle cx="170" cy="449" r="36"/><text x="170" y="449" dy="0.35em">3</text></a>
+                <a class="mk" href="#b4" aria-label="4, Olimex iCE40-IO"><rect x="100" y="952" width="515" height="531" rx="14"/><circle cx="144" cy="996" r="36"/><text x="144" y="996" dy="0.35em">4</text></a>
+                <a class="mk" href="#b5" aria-label="5, Olimex iCE40HX1K-EVB"><rect x="752" y="463" width="547" height="442" rx="14"/><circle cx="796" cy="507" r="36"/><text x="796" y="507" dy="0.35em">5</text></a>
+                <a class="mk" href="#b6" aria-label="6, STEP-MXO2"><rect x="763" y="1010" width="436" height="179" rx="14"/><circle cx="807" cy="1054" r="36"/><text x="807" y="1054" dy="0.35em">6</text></a>
+                <a class="mk" href="#b7" aria-label="7, FTDI FT2232H Mini Module"><rect x="705" y="1289" width="331" height="237" rx="14"/><circle cx="749" cy="1333" r="36"/><text x="749" y="1333" dy="0.35em">7</text></a>
+                <a class="mk" href="#b8" aria-label="8, iCESugar-nano"><rect x="1073" y="1268" width="158" height="347" rx="14"/><circle cx="1117" cy="1312" r="36"/><text x="1117" y="1312" dy="0.35em">8</text></a>
+                <a class="mk" href="#b9" aria-label="9, iCESugar v1.5"><rect x="100" y="1547" width="615" height="468" rx="14"/><circle cx="144" cy="1591" r="36"/><text x="144" y="1591" dy="0.35em">9</text></a>
+                <a class="mk" href="#b10" aria-label="10, PMOD-VGA"><rect x="684" y="1652" width="610" height="363" rx="14"/><circle cx="728" cy="1696" r="36"/><text x="728" y="1696" dy="0.35em">10</text></a>
+            </svg>
+            <figcaption>Bench photo: seven FPGA boards and three add-ons. <a href="lattice_boards.jpg">Full-size photo</a></figcaption>
+        </figure>
+        <figure class="photo p2">
+            <svg viewBox="0 0 970 1783" role="group" aria-label="iCEBreaker photo with three numbered boards">
+                <image href="icebreaker.jpg" x="0" y="0" width="970" height="1783"/>
+                <a class="mk" href="#b11" aria-label="11, iCEBreaker"><rect x="275" y="585" width="515" height="270" rx="12"/><circle cx="313" cy="623" r="30"/><text x="313" y="623" dy="0.35em">11</text></a>
+                <a class="mk" href="#b12" aria-label="12, DVI Pmod"><rect x="320" y="255" width="280" height="305" rx="12"/><circle cx="358" cy="293" r="30"/><text x="358" y="293" dy="0.35em">12</text></a>
+                <a class="mk" href="#b13" aria-label="13, TM1638 LED and key module"><rect x="315" y="1235" width="470" height="475" rx="12"/><circle cx="353" cy="1273" r="30"/><text x="353" y="1273" dy="0.35em">13</text></a>
+            </svg>
+            <figcaption>An iCEBreaker with a DVI Pmod and a TM1638 module, showing HDMI output on a monitor. <a href="icebreaker.jpg">Full-size photo</a></figcaption>
+        </figure>
+    </div>
+</section>
+
+<section aria-labelledby="glance-h">
+    <h2 id="glance-h">At a glance</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>No.</th><th>Board</th><th>Family</th><th>FPGA</th><th>How it is programmed</th><th>basics-graphics-music</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="n">1</td><td><a href="#b1">OrangeCrab</a></td><td><span class="fam ecp5">ECP5</span></td><td>LFE5U-25F or -85F</td><td>USB-C, DFU bootloader</td><td class="bgm"><code>orangecrab_ecp5_yosys</code></td></tr>
+                <tr><td class="n">2</td><td><a href="#b2">TinyFPGA BX</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40LP8K</td><td>Micro-USB, USB bootloader</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">3</td><td><a href="#b3">Olimex iCE40HX8K-EVB Rev.B</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40HX8K-CT256</td><td>External programmer, e.g. no. 7</td><td class="bgm"><code>ice40hx8k_evb_yosys</code></td></tr>
+                <tr><td class="n">4</td><td><a href="#b4">Olimex iCE40-IO Rev.A</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm">used by <code>ice40hx8k_evb_yosys</code></td></tr>
+                <tr><td class="n">5</td><td><a href="#b5">Olimex iCE40HX1K-EVB Rev.B</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40HX1K-VQ100</td><td>External programmer, e.g. no. 7</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">6</td><td><a href="#b6">STEP-MXO2 V2.2</a></td><td><span class="fam mxo2">MachXO2</span></td><td>MachXO2-4000HC (assumed)</td><td>Micro-USB, on-board programmer</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">7</td><td><a href="#b7">FTDI FT2232H Mini Module</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>It is the programmer</td><td class="bgm">wiring diagram in <code>ice40hx8k_evb_yosys</code></td></tr>
+                <tr><td class="n">8</td><td><a href="#b8">MuseLab iCESugar-nano v1.2</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40LP1K (per maker)</td><td>USB-C, on-board programmer</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">9</td><td><a href="#b9">MuseLab iCESugar v1.5</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40UP5K-SG48</td><td>USB-C, on-board programmer</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">10</td><td><a href="#b10">MuseLab PMOD-VGA v1.1</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">11</td><td><a href="#b11">1BitSquared iCEBreaker V1</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40UP5K-SG48</td><td>Micro-USB, on-board FT2232H</td><td class="bgm"><code>icebreaker_*</code>, 7 folders</td></tr>
+                <tr><td class="n">12</td><td><a href="#b12">24-bit DVI Pmod</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm">used by <code>icebreaker_dvi_*</code></td></tr>
+                <tr><td class="n">13</td><td><a href="#b13">TM1638 “LED&amp;KEY” module</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm">used by <code>*_tm1638_*</code> folders</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section aria-labelledby="fpga-h">
+    <h2 id="fpga-h">FPGA boards</h2>
+    <div class="cards">
+
+        <article class="card" id="b1">
+            <div class="thumb"><svg viewBox="189 105 458 242" role="img" aria-label="OrangeCrab, cropped from the bench photo"><svg x="189" y="105" width="458" height="242"><image href="lattice_boards.jpg" x="-189" y="-105" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">1</span><h3>OrangeCrab</h3><span class="fam ecp5">ECP5</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>Greg Davill, whose “GsD” logo is on the silkscreen</dd>
+                    <dt>FPGA</dt><dd>ECP5 LFE5U-25F or LFE5U-85F</dd>
+                    <dt>On board</dt><dd>Feather-size board. The square chip with the QR label is the ECP5, and the tall chip to its right is DDR3L memory. USB-C wired straight to the FPGA, a LiPo battery connector and one button.</dd>
+                    <dt>Programming</dt><dd>DFU bootloader over USB-C, with <code>dfu-util</code></dd>
+                    <dt>BGM</dt><dd><span class="label yes">Supported</span><code>orangecrab_ecp5_yosys</code>: 48 MHz clock, built for the 25F in the CSFBGA285 package with Yosys and nextpnr</dd>
+                </dl>
+                <p class="unsure"><span class="label warn">Unsure</span>Whether this is the 25F or the 85F. The part number is under the QR label.</p>
+            </div>
+        </article>
+
+        <article class="card" id="b2">
+            <div class="thumb"><svg viewBox="826 174 331 163" role="img" aria-label="TinyFPGA BX, cropped from the bench photo"><svg x="826" y="174" width="331" height="163"><image href="lattice_boards.jpg" x="-826" y="-174" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">2</span><h3>TinyFPGA BX</h3><span class="fam ice40">iCE40</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>TinyFPGA (Luke Valenty)</dd>
+                    <dt>FPGA</dt><dd>iCE40LP8K, CM81 package</dd>
+                    <dt>On board</dt><dd>16 MHz oscillator, SPI flash, micro-USB and two rows of breadboard pins numbered on the silkscreen</dd>
+                    <dt>Programming</dt><dd>A USB bootloader in the flash; upload with <code>tinyprog</code> or <code>apio</code></dd>
+                    <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder</dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b3">
+            <div class="thumb"><svg viewBox="126 405 579 605" role="img" aria-label="Olimex iCE40HX8K-EVB, cropped from the bench photo"><svg x="126" y="405" width="579" height="605"><image href="lattice_boards.jpg" x="-126" y="-405" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">3</span><h3>Olimex iCE40HX8K-EVB Rev.B</h3><span class="fam ice40">iCE40</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>Olimex, “(C)2016” on the silkscreen</dd>
+                    <dt>FPGA</dt><dd>iCE40HX8K-CT256, 7,680 LUTs</dd>
+                    <dt>On board</dt><dd>SRAM chip beside the FPGA, 100 MHz clock, RESET and two buttons, two LEDs, the 34-pin GPIO1 connector, four EXT headers, a 10-pin programming header and a 5 V power jack</dd>
+                    <dt>Programming</dt><dd>No USB on the board. Use an external programmer: the BGM folder has a wiring diagram for the FT2232H Mini Module (<a href="#b7">no. 7</a>) with <code>iceprog</code> or <code>openFPGALoader</code>.</dd>
+                    <dt>BGM</dt><dd><span class="label yes">Supported</span><code>ice40hx8k_evb_yosys</code>: 100 MHz, VGA with 4 bits per colour on the 34-pin connector where the iCE40-IO (<a href="#b4">no. 4</a>) plugs in</dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b5">
+            <div class="thumb"><svg viewBox="752 463 547 442" role="img" aria-label="Olimex iCE40HX1K-EVB, cropped from the bench photo"><svg x="752" y="463" width="547" height="442"><image href="lattice_boards.jpg" x="-752" y="-463" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">5</span><h3>Olimex iCE40HX1K-EVB Rev.B</h3><span class="fam ice40">iCE40</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>Olimex</dd>
+                    <dt>FPGA</dt><dd>iCE40HX1K-VQ100, 1,280 LUTs, in a 100-pin TQFP</dd>
+                    <dt>On board</dt><dd>Samsung K6R4016V1D SRAM (256K × 16, marking readable in the photo), RESET plus BUT1 and BUT2, LED1 and LED2, the 34-pin GPIO1 connector, a 10-pin programming header and a 5 V power jack</dd>
+                    <dt>Programming</dt><dd>Same as the HX8K-EVB: an external programmer such as the FT2232H (<a href="#b7">no. 7</a>)</dd>
+                    <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder. <code>ice40hx8k_evb_yosys</code> is the closest starting point: same maker and the same 34-pin connector.</dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b6">
+            <div class="thumb"><svg viewBox="763 1010 436 179" role="img" aria-label="STEP-MXO2, cropped from the bench photo"><svg x="763" y="1010" width="436" height="179"><image href="lattice_boards.jpg" x="-763" y="-1010" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">6</span><h3>STEP-MXO2 V2.2</h3><span class="fam mxo2">MachXO2</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>The Chinese STEP FPGA series (小脚丫)</dd>
+                    <dt>FPGA</dt><dd>MachXO2-4000HC</dd>
+                    <dt>On board</dt><dd>Two 7-segment digits, four DIP switches, four buttons, eight LEDs (LD1–LD8), two RGB LEDs, micro-USB, and two 20-pin rows that fit a breadboard like a DIP-40 chip</dd>
+                    <dt>Programming</dt><dd>On-board USB programmer through the micro-USB; bitstreams come from Lattice Diamond</dd>
+                    <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder</dd>
+                </dl>
+                <p class="unsure"><span class="label warn">Unsure</span>STEP also sells a MAX10 board with almost the same layout. The FPGA marking isn't readable, so this card assumes the Lattice one.</p>
+            </div>
+        </article>
+
+        <article class="card" id="b8">
+            <div class="thumb"><svg viewBox="1073 1268 158 347" role="img" aria-label="iCESugar-nano, cropped from the bench photo"><svg x="1073" y="1268" width="158" height="347"><image href="lattice_boards.jpg" x="-1073" y="-1268" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">8</span><h3>MuseLab iCESugar-nano v1.2</h3><span class="fam ice40">iCE40</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>MuseLab (muselab-tech.com)</dd>
+                    <dt>FPGA</dt><dd>iCE40LP1K, CM36 package, per MuseLab's spec</dd>
+                    <dt>On board</dt><dd>USB-C with a built-in programmer, 2 × 6 Pmod pads at the far end and a row of pins down each side</dd>
+                    <dt>Programming</dt><dd>MuseLab's iCELink: copy the bitstream onto the USB drive it presents, or use <code>icesprog</code></dd>
+                    <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder</dd>
+                </dl>
+                <p class="unsure"><span class="label warn">Unsure</span>The chip marked “Lattice” looks larger than the LP1K's 2.5 mm CM36 package. Worth a look under a magnifier.</p>
+            </div>
+        </article>
+
+        <article class="card" id="b9">
+            <div class="thumb"><svg viewBox="100 1547 615 468" role="img" aria-label="iCESugar v1.5, cropped from the bench photo"><svg x="100" y="1547" width="615" height="468"><image href="lattice_boards.jpg" x="-100" y="-1547" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">9</span><h3>MuseLab iCESugar v1.5</h3><span class="fam ice40">iCE40</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>MuseLab, logo and URL on the silkscreen</dd>
+                    <dt>FPGA</dt><dd>iCE40UP5K-SG48, 5,280 LUTs</dd>
+                    <dt>On board</dt><dd>USB-C programmer port, a micro-USB port, RGB LED, 4-way DIP switch, Pmod headers PMOD1–PMOD4, UART pins and jumpers labelled “Prog Flash” and “Prog iCE”</dd>
+                    <dt>Programming</dt><dd>iCELink: copy the bitstream onto its USB drive, or use <code>icesprog</code></dd>
+                    <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder. The iCEBreaker folders use the same UP5K-SG48 part, so they are the natural starting point.</dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b11">
+            <div class="thumb"><svg viewBox="275 585 515 270" role="img" aria-label="iCEBreaker with its snap-off button section, cropped from the second photo"><svg x="275" y="585" width="515" height="270"><image href="icebreaker.jpg" x="-275" y="-585" width="970" height="1783"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">11</span><h3>1BitSquared iCEBreaker V1</h3><span class="fam ice40">iCE40</span></div>
+                <dl class="facts">
+                    <dt>Maker</dt><dd>1BitSquared</dd>
+                    <dt>FPGA</dt><dd>iCE40UP5K-SG48, 5,280 LUTs</dd>
+                    <dt>On board</dt><dd>FT2232H on the board behind the micro-USB, 12 MHz clock, Pmod ports PMOD1A, PMOD1B and PMOD2, RGB LED and a user button. The snap-off section on PMOD2, with three buttons and five LEDs, is still attached in the photo.</dd>
+                    <dt>Programming</dt><dd>Micro-USB with <code>iceprog</code> or <code>openFPGALoader</code>; the same port carries a UART</dd>
+                    <dt>BGM</dt><dd><span class="label yes">Supported</span><code>icebreaker_dvi_24b_tm1638_yosys</code> matches this exact setup. There are also 12-bit DVI, no-DVI and no-TM1638 variants, plus <code>icebreaker_bare</code>.</dd>
+                </dl>
+                <p class="unsure"><span class="label warn">Unsure</span>The minor revision, such as V1.0b or V1.1a, is hidden under the jumper wires.</p>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+<section aria-labelledby="addon-h">
+    <h2 id="addon-h">Add-on boards</h2>
+    <p class="intro">No FPGA on these. They add video, input or a programmer to the boards above.</p>
+    <div class="addons">
+
+        <article class="card" id="b4">
+            <div class="thumb"><svg viewBox="100 952 515 531" role="img" aria-label="Olimex iCE40-IO, cropped from the bench photo"><svg x="100" y="952" width="515" height="531"><image href="lattice_boards.jpg" x="-100" y="-952" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">4</span><h3>Olimex iCE40-IO Rev.A</h3><span class="fam addon">Add-on</span></div>
+                <dl class="facts">
+                    <dt>Adds</dt><dd>VGA connector with a resistor DAC, PS/2 keyboard socket and IrDA</dd>
+                    <dt>Connects</dt><dd>Plugs into the 34-pin GPIO connector of the Olimex EVBs (GPIO_In1) and passes the bus on (GPIO_Out1). In the photo it sits under the HX8K-EVB (<a href="#b3">no. 3</a>).</dd>
+                    <dt>BGM</dt><dd>The VGA pins of <code>ice40hx8k_evb_yosys</code> are on this 34-pin connector</dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b7">
+            <div class="thumb"><svg viewBox="705 1289 331 237" role="img" aria-label="FTDI FT2232H Mini Module, cropped from the bench photo"><svg x="705" y="1289" width="331" height="237"><image href="lattice_boards.jpg" x="-705" y="-1289" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">7</span><h3>FTDI FT2232H Mini Module</h3><span class="fam addon">Programmer</span></div>
+                <dl class="facts">
+                    <dt>Adds</dt><dd>A two-channel USB 2.0 Hi-Speed bridge; each channel can drive JTAG or SPI. Mini-USB plus the CN2 and CN3 pin headers.</dd>
+                    <dt>Role</dt><dd>Programmer for the two Olimex boards (<a href="#b3">no. 3</a>, <a href="#b5">no. 5</a>), which have no USB of their own</dd>
+                    <dt>BGM</dt><dd>Wiring diagram: <code>boards/ice40hx8k_evb_yosys/JTAG_wiring_FT2232H_to_iCE40HX8K-EVB.svg</code></dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b10">
+            <div class="thumb"><svg viewBox="684 1652 610 363" role="img" aria-label="MuseLab PMOD-VGA, cropped from the bench photo"><svg x="684" y="1652" width="610" height="363"><image href="lattice_boards.jpg" x="-684" y="-1652" width="1393" height="2105"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">10</span><h3>MuseLab PMOD-VGA v1.1</h3><span class="fam addon">Add-on</span></div>
+                <dl class="facts">
+                    <dt>Adds</dt><dd>VGA output through a resistor DAC (R1–R40 on the silkscreen)</dd>
+                    <dt>Connects</dt><dd>Two Pmod connectors; plugged into the iCESugar (<a href="#b9">no. 9</a>) in the photo</dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b12">
+            <div class="thumb"><svg viewBox="320 255 280 305" role="img" aria-label="DVI Pmod, cropped from the second photo"><svg x="320" y="255" width="280" height="305"><image href="icebreaker.jpg" x="-320" y="-255" width="970" height="1783"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">12</span><h3>24-bit DVI Pmod</h3><span class="fam addon">Add-on</span></div>
+                <dl class="facts">
+                    <dt>Adds</dt><dd>DVI video on an HDMI connector. Silkscreen: “iCEBreaker PMOD” and “24bit DVI”.</dd>
+                    <dt>Connects</dt><dd>Double Pmod on PMOD1A and PMOD1B, with pins D0–D11, CK, DE, HS and VS. Twelve data lines carry 24-bit colour by sending 12 bits on each clock edge. The transmitter chip is a 64-pin TQFP whose marking is unreadable.</dd>
+                    <dt>BGM</dt><dd><code>DVI_24B</code>, 8 bits per colour, is the default in the <code>icebreaker_dvi_24b_*</code> folders; <code>DVI_12B</code> gives 4 bits per colour</dd>
+                </dl>
+            </div>
+        </article>
+
+        <article class="card" id="b13">
+            <div class="thumb"><svg viewBox="315 1235 470 475" role="img" aria-label="TM1638 LED and key module, cropped from the second photo"><svg x="315" y="1235" width="470" height="475"><image href="icebreaker.jpg" x="-315" y="-1235" width="970" height="1783"/></svg></svg></div>
+            <div class="body">
+                <div class="head"><span class="num">13</span><h3>TM1638 “LED&amp;KEY” module</h3><span class="fam addon">Add-on</span></div>
+                <dl class="facts">
+                    <dt>Adds</dt><dd>Eight 7-segment digits, eight LEDs and eight buttons behind one TM1638 driver chip</dd>
+                    <dt>Connects</dt><dd>Jumper wires to PMOD2: data on P2_8, clock on P2_9 and strobe on P2_10, as in <code>icebreaker_dvi_24b_tm1638_yosys/board_specific_top.sv</code></dd>
+                    <dt>BGM</dt><dd>The labs use it for digits, LEDs and keys on boards that lack them, in every <code>*_tm1638_*</code> folder</dd>
+                </dl>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+<section aria-labelledby="checks-h">
+    <h2 id="checks-h">What the photos can't settle</h2>
+    <ul class="checks">
+        <li><strong>OrangeCrab, 25F or 85F.</strong> Peel back or read around the QR label on the ECP5. BGM's folder is built for the 25F.</li>
+        <li><strong>STEP board, MachXO2 or MAX10.</strong> Read the FPGA marking. A MAX10 board would belong with the Intel boards and Quartus.</li>
+        <li><strong>iCESugar-nano FPGA.</strong> Check whether the chip marked “Lattice” is the LP1K in its 2.5 mm package or a larger part.</li>
+        <li><strong>iCEBreaker revision.</strong> Move the jumper wires and read the “V1.x” label.</li>
+        <li><strong>Colour depth of the two VGA add-ons.</strong> The photos show the resistor DACs but not how many bits per colour they take. BGM drives the iCE40-IO with 4 bits per colour.</li>
+    </ul>
+</section>
+
+<footer>
+    <p>Method: board names and revisions were read from the silkscreen in 2× crops of the two photos. FPGA parts and board features come from each maker's published specs, not from chip markings, which are too blurry to read. The “BGM” lines come from the <code>boards/</code> folders of basics-graphics-music on <code>origin/main</code>; <code>origin/yuri_lattice</code> adds no other board from these photos.</p>
+    <p>Photos: <a href="lattice_boards.jpg">lattice_boards.jpg</a> (1393 × 2105) and <a href="icebreaker.jpg">icebreaker.jpg</a> (970 × 1783), kept next to this page.</p>
+</footer>
+
+</main>
+</body>
+</html>
