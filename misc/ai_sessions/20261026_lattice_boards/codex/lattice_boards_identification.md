@@ -1,10 +1,29 @@
 # Lattice FPGA boards in two photographs
 
-26 October 2026 · Updated with owner confirmations
+26 October 2026 · Updated with owner confirmations and FPGA cell counts
 
 The photographs show eight FPGA development boards and five separate accessory modules. The owner has confirmed that the blue board is a STEP-MXO2 and that the iCEBreaker revision is V1.0e.
 
 Identification is based on visible markings and component layout, checked against the linked board documentation, together with the owner’s confirmations. FPGA types are specifications of the identified models, not claims that every chip marking is readable in the photographs. The STEP-MXO2 model and iCEBreaker V1.0e revision are explicitly confirmed by the owner; the additional V2.2, v1.2, Rev. A and 24-bit markings below were read from the photo crops during comparison with Claude’s report.
+
+## FPGA logic capacity — all eight boards
+
+These are the FPGA’s total programmable logic capacities, not the number of cells used by a particular design. Lattice reports iCE40 capacity as logic cells, each containing a four-input lookup table (LUT) and a flip-flop, and MachXO2/ECP5 capacity as LUTs. Dedicated RAM and DSP blocks are separate resources; these counts are not gate or transistor counts.
+
+| Board | FPGA | Logic cells / LUTs | Specification source |
+| --- | --- | --- | --- |
+| 1. OrangeCrab | ECP5 LFE5U-25F or LFE5U-85F; device variant unconfirmed | About 24,000 LUTs (25F) or 84,000 LUTs (85F) | [Lattice ECP5](https://www.latticesemi.com/Products/FPGAandCPLD/ECP5?ActiveTab=Data+Sheet) |
+| 2. TinyFPGA BX | iCE40LP8K | 7,680 logic cells | [Lattice iCE40 LP/HX](https://www.latticesemi.com/ice40) |
+| 3. Olimex iCE40HX8K-EVB Rev. B | iCE40HX8K | 7,680 logic cells | [Lattice iCE40 LP/HX](https://www.latticesemi.com/ice40) |
+| 4. Olimex iCE40HX1K-EVB Rev. B | iCE40HX1K | 1,280 logic cells | [Lattice iCE40 LP/HX](https://www.latticesemi.com/ice40) |
+| 5. STEP-MXO2 V2.2 | MachXO2-4000HC | 4,320 LUTs | [Lattice MachXO2](https://www.latticesemi.com/Products/FPGAandCPLD/MachXO2?ActiveTab=User+Manual) |
+| 6. MuseLab iCESugar-nano v1.2 | iCE40LP1K | 1,280 logic cells | [Lattice iCE40 LP/HX](https://www.latticesemi.com/ice40) |
+| 7. MuseLab iCESugar v1.5 | iCE40UP5K | 5,280 logic cells | [Lattice iCE40 UltraPlus](https://www.latticesemi.com/Products/FPGAandCPLD/iCE40UltraPlus?ActiveTab=Key+Documents) |
+| 8. iCEBreaker V1.0e | iCE40UP5K | 5,280 logic cells | [Lattice iCE40 UltraPlus](https://www.latticesemi.com/Products/FPGAandCPLD/iCE40UltraPlus?ActiveTab=Key+Documents) |
+
+The OrangeCrab row gives both previously identified device possibilities because the sticker hides its FPGA marking. The ECP5 figures are Lattice’s rounded 24K and 84K LUT specifications, not exact cell counts or a confirmed capacity for this unit. The other seven boards have exact logic-cell/LUT counts for their identified FPGA models.
+
+The five accessory modules are not additional FPGA boards, so they have no FPGA logic-cell count in this inventory. The STEP-MAX10 lookalike warning remains applicable; the 4,320-LUT figure above is for the owner-confirmed STEP-MXO2.
 
 ## Photo 1 — Seven FPGA development boards
 

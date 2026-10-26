@@ -1,0 +1,86 @@
+2026.10.26
+
+Plan for Philip:
+
+1. Creating and checking the development infrastructure
+
+1.1. Install Debian Linux, OSS CAD Suite and openFPGALoader.
+
+1.2. Create your own a fork of https://github.com/yuri-panchul/basics-graphics-music
+
+1.3. git clone your fork.
+
+1.4. Solder your iceBreaker v1.0e board.
+
+1.5. Connect together iceBreaker, Pmod DVI24, TM1638 and HDMI monitor. Connect it to the computer.
+
+1.6. cd basics-graphics-music/labs/2_graphics/2_3_color_stripes
+
+1.7.  ./06_choose_another_fpga_board.bash
+
+1.8. Choose icebreaker, then icebreaker_dvi_24b_tm1638_yosys.
+
+1.9. ./03_synthesize_for_fpga.bash
+
+1.10. Check that graphics is working.
+
+1.11. cd basics-graphics-music/labs/2_graphics/2_6_game_2x_variant_2
+
+1.12. ./03_synthesize_for_fpga.bash
+
+1.13. Check the game is working.
+
+2. Study the information about other boards
+
+https://panchul.com/lssk/ai_sessions/20261026_lattice_boards/claude/lattice_boards.html
+
+https://panchul.com/lssk/ai_sessions/20261026_lattice_boards/codex/lattice_boards_identification.html
+
+https://panchul.com/lssk/ai_sessions/20261026_lattice_boards/claude/claude_lattice_boards_compare_1.html
+
+https://panchul.com/lssk/ai_sessions/20261026_lattice_boards/codex/lattice_boards_comparison_updated.html
+
+Copies in github
+
+https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261026_lattice_boards/claude/lattice_boards.md
+
+https://github.com/yuri-panchul/basics-graphics-music/blob/main/misc/ai_sessions/20261026_lattice_boards/codex/lattice_boards_identification.md
+
+3. Assemble and test with BGM examples Olimex iCE40HX8K-EVB with TM1638.
+
+3.1. Check if FTDI FT2232H Mini Module or USB Blaster are necessary to program it.
+
+3.2. Check whether Olimex iCE40-IO Rev.A or MuseLab PMOD-VGA v1.1 works as VGA adapter.
+
+3.3. Check whether you can also use TinyVGA.
+
+3.4. Make a demo for the next Verilog Meetup.
+
+4. Solder headers, assemble the components and test with BGM examples  OrangeCrab board with TM1638.
+
+4.1. Check if FTDI FT2232H Mini Module is necessary to program it.
+
+4.2. Check whether MuseLab PMOD-VGA v1.1 works as VGA adapter.
+
+4.3. Check whether you can also use TinyVGA.
+
+4.4. Make a demo for the next Verilog Meetup.
+
+5. Implement board support in BGM for MuseLab iCESugar v1.5 + MuseLab PMOD-VGA + TM1638.
+
+6. Implement board support in BGM for STEP-MXO2 + TinyVGA combination.
+
+6.1. Two variants: with and without TM1638.
+
+7. Implement board support in BGM for TinyFPGA BX + TinyVGA + TM1638 combination.
+
+8. Olimex iCE40HX1K-EVB + TinyVGA + TM1638 combination. Since this board has small number of cells, I would expect only a subset of exercises to work: basics and the color stripes graphics.
+
+9. MuseLab iCESugar-nano + TinyVGA + TM1638 combination. Since this board has small number of cells, I would expect only a subset of exercises to work: basics and the color stripes graphics.
+
+10. Get colorlight75b_ecp5 and colorlightI5_ecp5 boards, find information about them and prepare two demos.
+
+GitHub pull request and review after each step. Write a report about all boards at the end.
+
+Thank you,
+Yuri Panchul

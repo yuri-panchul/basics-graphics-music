@@ -26,21 +26,39 @@ chip markings are too blurry to read. The owner confirmed the iCEBreaker revisio
 
 ## At a glance
 
-| No. | Board | Where in the photo | Family | FPGA | How it is programmed | basics-graphics-music |
-|---:|---|---|---|---|---|---|
-| 1 | [OrangeCrab r0.2.1](#b1) | Bench, top left, orange | ECP5 | LFE5U-25F or -85F, csfBGA285 | USB-C, DFU bootloader | `orangecrab_ecp5_yosys` |
-| 2 | [TinyFPGA BX](#b2) | Bench, top right, green | iCE40 | iCE40LP8K-CM81 | Micro-USB, USB bootloader | none |
-| 3 | [Olimex iCE40HX8K-EVB Rev.B](#b3) | Bench, upper left, large red | iCE40 | iCE40HX8K-CT256 | External programmer, e.g. no. 7 | `ice40hx8k_evb_yosys` |
-| 4 | [Olimex iCE40-IO Rev.A](#b4) | Bench, left, under no. 3 | Add-on | — | — | pinout differs from `ice40hx8k_evb_yosys` ([see below](#vga)) |
-| 5 | [Olimex iCE40HX1K-EVB Rev.B](#b5) | Bench, upper right, red | iCE40 | iCE40HX1K-VQ100 | External programmer, e.g. no. 7 | none |
-| 6 | [STEP-MXO2 V2.2](#b6) | Bench, right, blue | MachXO2 | LCMXO2-4000HC-4MG132 | Micro-USB, on-board USB-JTAG | none |
-| 7 | [FTDI FT2232H Mini Module](#b7) | Bench, lower middle, green | Add-on | — | It is the programmer | wiring diagram in `ice40hx8k_evb_yosys` |
-| 8 | [MuseLab iCESugar-nano v1.2](#b8) | Bench, lower right, small black | iCE40 | iCE40LP1K-CM36 | USB-C, on-board iCELink | none |
-| 9 | [MuseLab iCESugar v1.5](#b9) | Bench, bottom left, black | iCE40 | iCE40UP5K-SG48 | USB-C, on-board iCELink | none |
-| 10 | [MuseLab PMOD-VGA v1.1](#b10) | Bench, bottom right, plugged into no. 9 | Add-on | — | — | none |
-| 11 | [1BitSquared iCEBreaker V1.0e](#b11) | iCEBreaker photo, middle | iCE40 | iCE40UP5K-SG48 | Micro-USB, on-board FT2232H | `icebreaker_*`, 7 folders |
-| 12 | [24-bit DVI Pmod](#b12) | iCEBreaker photo, top, with the HDMI cable | Add-on | — | — | used by `icebreaker_dvi_*` |
-| 13 | [TM1638 “LED&KEY” module](#b13) | iCEBreaker photo, bottom | Add-on | — | — | used by `*_tm1638_*` folders |
+| No. | Board | Where in the photo | Family | FPGA | Logic cells | How it is programmed | basics-graphics-music |
+|---:|---|---|---|---|---:|---|---|
+| 1 | [OrangeCrab r0.2.1](#b1) | Bench, top left, orange | ECP5 | LFE5U-25F or -85F, csfBGA285 | 24K or 84K | USB-C, DFU bootloader | `orangecrab_ecp5_yosys` |
+| 2 | [TinyFPGA BX](#b2) | Bench, top right, green | iCE40 | iCE40LP8K-CM81 | 7,680 | Micro-USB, USB bootloader | none |
+| 3 | [Olimex iCE40HX8K-EVB Rev.B](#b3) | Bench, upper left, large red | iCE40 | iCE40HX8K-CT256 | 7,680 | External programmer, e.g. no. 7 | `ice40hx8k_evb_yosys` |
+| 4 | [Olimex iCE40-IO Rev.A](#b4) | Bench, left, under no. 3 | Add-on | — | — | — | pinout differs from `ice40hx8k_evb_yosys` ([see below](#vga)) |
+| 5 | [Olimex iCE40HX1K-EVB Rev.B](#b5) | Bench, upper right, red | iCE40 | iCE40HX1K-VQ100 | 1,280 | External programmer, e.g. no. 7 | none |
+| 6 | [STEP-MXO2 V2.2](#b6) | Bench, right, blue | MachXO2 | LCMXO2-4000HC-4MG132 | 4,320 | Micro-USB, on-board USB-JTAG | none |
+| 7 | [FTDI FT2232H Mini Module](#b7) | Bench, lower middle, green | Add-on | — | — | It is the programmer | wiring diagram in `ice40hx8k_evb_yosys` |
+| 8 | [MuseLab iCESugar-nano v1.2](#b8) | Bench, lower right, small black | iCE40 | iCE40LP1K-CM36 | 1,280 | USB-C, on-board iCELink | none |
+| 9 | [MuseLab iCESugar v1.5](#b9) | Bench, bottom left, black | iCE40 | iCE40UP5K-SG48 | 5,280 | USB-C, on-board iCELink | none |
+| 10 | [MuseLab PMOD-VGA v1.1](#b10) | Bench, bottom right, plugged into no. 9 | Add-on | — | — | — | none |
+| 11 | [1BitSquared iCEBreaker V1.0e](#b11) | iCEBreaker photo, middle | iCE40 | iCE40UP5K-SG48 | 5,280 | Micro-USB, on-board FT2232H | `icebreaker_*`, 7 folders |
+| 12 | [24-bit DVI Pmod](#b12) | iCEBreaker photo, top, with the HDMI cable | Add-on | — | — | — | used by `icebreaker_dvi_*` |
+| 13 | [TM1638 “LED&KEY” module](#b13) | iCEBreaker photo, bottom | Add-on | — | — | — | used by `*_tm1638_*` folders |
+
+## How big each FPGA is
+
+Logic cells, largest first. An iCE40 logic cell is one 4-input LUT with a flip-flop; Lattice counts the
+ECP5 and MachXO2 in 4-input LUTs too, so the numbers compare directly.
+
+| Board | FPGA | Logic cells | Relative to the smallest |
+|---|---|---:|---:|
+| [1. OrangeCrab r0.2.1](#b1) | ECP5 LFE5U-85F or -25F | 84K or 24K | about 66× or 19× |
+| [2. TinyFPGA BX](#b2) | iCE40LP8K | 7,680 | 6× |
+| [3. Olimex iCE40HX8K-EVB](#b3) | iCE40HX8K | 7,680 | 6× |
+| [9. MuseLab iCESugar v1.5](#b9) | iCE40UP5K | 5,280 | 4.1× |
+| [11. iCEBreaker V1.0e](#b11) | iCE40UP5K | 5,280 | 4.1× |
+| [6. STEP-MXO2 V2.2](#b6) | MachXO2-4000HC | 4,320 | 3.4× |
+| [5. Olimex iCE40HX1K-EVB](#b5) | iCE40HX1K | 1,280 | 1× |
+| [8. MuseLab iCESugar-nano v1.2](#b8) | iCE40LP1K | 1,280 | 1× |
+
+BGM builds the OrangeCrab for the 25F. Which chip this board has is still open.
 
 ## FPGA boards
 
@@ -53,7 +71,7 @@ chip markings are too blurry to read. The owner confirmed the iCEBreaker revisio
 
 - **Identified by:** orange Feather-size PCB with the “GsD” logo of its designer, Greg Davill. The USB-C
   port dates it: the maker's page says r0.2.1 switched from micro-USB to USB-C.
-- **FPGA:** ECP5 LFE5U-25F or LFE5U-85F in the csfBGA285 package
+- **FPGA:** ECP5 LFE5U-25F or LFE5U-85F in the csfBGA285 package: 24K or 84K LUTs
 - **On board:** the square chip with the QR label is the ECP5; the tall chip to its right is DDR3L
   memory, 128 MB or 512 MB. 128 Mbit QSPI flash, USB-C wired straight to the FPGA, a LiPo battery
   connector and one button.
@@ -61,7 +79,8 @@ chip markings are too blurry to read. The owner confirmed the iCEBreaker revisio
 - **basics-graphics-music:** **Supported.** `orangecrab_ecp5_yosys`: 48 MHz clock, built for the 25F in
   the CSFBGA285 package with Yosys and nextpnr
 - **Sources:** [OrangeCrab r0.2.1 hardware page](https://orangecrab-fpga.github.io/orangecrab-hardware/docs/r0.2.1/),
-  [Getting started (DFU upload)](https://orangecrab-fpga.github.io/orangecrab-hardware/docs/getting-started/)
+  [Getting started (DFU upload)](https://orangecrab-fpga.github.io/orangecrab-hardware/docs/getting-started/),
+  [Lattice ECP5 family datasheet](https://www.latticesemi.com/view_document?document_id=50461) (LUT counts)
 
 > **Unsure:** whether this is the 25F or the 85F. The part number is under the QR label.
 
@@ -73,7 +92,7 @@ chip markings are too blurry to read. The owner confirmed the iCEBreaker revisio
 **iCE40** · bench photo, top right
 
 - **Identified by:** silkscreen “TinyFPGA” and “BX”
-- **FPGA:** iCE40LP8K-CM81, 7,680 LUTs
+- **FPGA:** iCE40LP8K-CM81, 7,680 logic cells
 - **On board:** 16 MHz MEMS oscillator, 8 Mbit SPI flash, 41 user I/O pins, micro-USB,
   breadboard-friendly pin rows
 - **Programming:** a USB bootloader in the flash; upload with `tinyprog` or `apio`
@@ -126,12 +145,13 @@ chip markings are too blurry to read. The owner confirmed the iCEBreaker revisio
 
 - **Identified by:** layout and the “V2.2” silkscreen; **confirmed** by the owner
 - **Maker:** the Chinese STEP FPGA series (小脚丫)
-- **FPGA:** LCMXO2-4000HC-4MG132
+- **FPGA:** LCMXO2-4000HC-4MG132, 4,320 LUTs
 - **On board:** two 7-segment digits, four switches, four buttons, eight LEDs (LD1–LD8), two RGB LEDs and
   micro-USB. A 40-pin DIP outline with 36 user I/Os that fits a breadboard.
 - **Programming:** on-board USB-JTAG circuit through the micro-USB; bitstreams come from Lattice Diamond
 - **basics-graphics-music:** **Not yet.** No board folder.
-- **Sources:** [STEP-MXO2 repository](https://github.com/stepfpga/STEP-MXO2)
+- **Sources:** [STEP-MXO2 repository](https://github.com/stepfpga/STEP-MXO2),
+  [Lattice MachXO2 family datasheet](https://www.latticesemi.com/view_document?document_id=38834) (LUT counts)
 
 > **Lookalike:** STEP also sells STEP-MAX10, an Intel MAX 10 board with almost the same layout. Read the
 > FPGA marking to tell them apart.
@@ -315,8 +335,9 @@ iCE40-IO.
 ## Method
 
 Board names and revisions were read from the silkscreen in 2× crops of the two photos. FPGA parts and
-board features were checked on 26 October 2026 against the makers' pages linked in each section, and the
-VGA details against the published schematics and netlists. The owner confirmed the iCEBreaker V1.0e and
+board features were checked on 26 October 2026 against the makers' pages linked in each section, the ECP5
+and MachXO2 sizes against Lattice's family datasheets, and the VGA details against the published
+schematics and netlists. The owner confirmed the iCEBreaker V1.0e and
 the STEP-MXO2. The “basics-graphics-music” lines come from the `boards/` folders of basics-graphics-music
 on `origin/main`; `origin/yuri_lattice` adds no other board from these photos.
 
