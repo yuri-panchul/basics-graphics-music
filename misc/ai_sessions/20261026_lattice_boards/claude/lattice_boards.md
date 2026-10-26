@@ -13,13 +13,15 @@ parts come from each board's published specs, because the chip markings are too 
 
 ## The photos
 
-![Bench photo with seven FPGA boards and three add-ons](lattice_boards.jpg)
+![Bench photo with seven FPGA boards and three add-ons, numbered 1 to 10](lattice_boards_numbered.jpg)
 
-*Bench photo: boards 1–10, seven FPGA boards and three add-ons.*
+*Bench photo: boards 1–10, seven FPGA boards and three add-ons.
+[Photo without numbers](lattice_boards.jpg)*
 
-![iCEBreaker with a DVI Pmod and a TM1638 module driving a monitor](icebreaker.jpg)
+![iCEBreaker with a DVI Pmod and a TM1638 module driving a monitor, numbered 11 to 13](icebreaker_numbered.jpg)
 
-*An iCEBreaker with a DVI Pmod and a TM1638 module, showing HDMI output on a monitor: boards 11–13.*
+*An iCEBreaker with a DVI Pmod and a TM1638 module, showing HDMI output on a monitor: boards 11–13.
+[Photo without numbers](icebreaker.jpg)*
 
 ## At a glance
 
@@ -44,6 +46,8 @@ parts come from each board's published specs, because the chip markings are too 
 <a id="b1"></a>
 ### 1. OrangeCrab
 
+![OrangeCrab, cropped from the photo](crops/01_orangecrab.jpg)
+
 **ECP5** · bench photo, top left
 
 - **Maker:** Greg Davill, whose “GsD” logo is on the silkscreen
@@ -59,6 +63,8 @@ parts come from each board's published specs, because the chip markings are too 
 <a id="b2"></a>
 ### 2. TinyFPGA BX
 
+![TinyFPGA BX, cropped from the photo](crops/02_tinyfpga_bx.jpg)
+
 **iCE40** · bench photo, top right
 
 - **Maker:** TinyFPGA (Luke Valenty)
@@ -70,6 +76,8 @@ parts come from each board's published specs, because the chip markings are too 
 
 <a id="b3"></a>
 ### 3. Olimex iCE40HX8K-EVB Rev.B
+
+![Olimex iCE40HX8K-EVB Rev.B, cropped from the photo](crops/03_olimex_ice40hx8k_evb.jpg)
 
 **iCE40** · bench photo, upper left
 
@@ -85,6 +93,8 @@ parts come from each board's published specs, because the chip markings are too 
 <a id="b5"></a>
 ### 5. Olimex iCE40HX1K-EVB Rev.B
 
+![Olimex iCE40HX1K-EVB Rev.B, cropped from the photo](crops/05_olimex_ice40hx1k_evb.jpg)
+
 **iCE40** · bench photo, upper right
 
 - **Maker:** Olimex
@@ -97,6 +107,8 @@ parts come from each board's published specs, because the chip markings are too 
 
 <a id="b6"></a>
 ### 6. STEP-MXO2 V2.2
+
+![STEP-MXO2 V2.2, cropped from the photo](crops/06_step_mxo2.jpg)
 
 **MachXO2** · bench photo, right, blue
 
@@ -112,6 +124,8 @@ parts come from each board's published specs, because the chip markings are too 
 
 <a id="b8"></a>
 ### 8. MuseLab iCESugar-nano v1.2
+
+![MuseLab iCESugar-nano v1.2, cropped from the photo](crops/08_icesugar_nano.jpg)
 
 **iCE40** · bench photo, lower right, small black board
 
@@ -129,6 +143,8 @@ parts come from each board's published specs, because the chip markings are too 
 <a id="b9"></a>
 ### 9. MuseLab iCESugar v1.5
 
+![MuseLab iCESugar v1.5, cropped from the photo](crops/09_icesugar.jpg)
+
 **iCE40** · bench photo, bottom left
 
 - **Maker:** MuseLab, logo and URL on the silkscreen
@@ -141,6 +157,8 @@ parts come from each board's published specs, because the chip markings are too 
 
 <a id="b11"></a>
 ### 11. 1BitSquared iCEBreaker V1
+
+![1BitSquared iCEBreaker V1, cropped from the photo](crops/11_icebreaker.jpg)
 
 **iCE40** · iCEBreaker photo, middle
 
@@ -162,6 +180,8 @@ No FPGA on these. They add video, input or a programmer to the boards above.
 <a id="b4"></a>
 ### 4. Olimex iCE40-IO Rev.A
 
+![Olimex iCE40-IO Rev.A, cropped from the photo](crops/04_olimex_ice40_io.jpg)
+
 **Add-on** · bench photo, left, under no. 3
 
 - **Adds:** VGA connector with a resistor DAC, PS/2 keyboard socket and IrDA
@@ -171,6 +191,8 @@ No FPGA on these. They add video, input or a programmer to the boards above.
 
 <a id="b7"></a>
 ### 7. FTDI FT2232H Mini Module
+
+![FTDI FT2232H Mini Module, cropped from the photo](crops/07_ftdi_ft2232h_mini_module.jpg)
 
 **Programmer** · bench photo, lower middle
 
@@ -184,6 +206,8 @@ No FPGA on these. They add video, input or a programmer to the boards above.
 <a id="b10"></a>
 ### 10. MuseLab PMOD-VGA v1.1
 
+![MuseLab PMOD-VGA v1.1, cropped from the photo](crops/10_pmod_vga.jpg)
+
 **Add-on** · bench photo, bottom right
 
 - **Adds:** VGA output through a resistor DAC (R1–R40 on the silkscreen)
@@ -191,6 +215,8 @@ No FPGA on these. They add video, input or a programmer to the boards above.
 
 <a id="b12"></a>
 ### 12. 24-bit DVI Pmod
+
+![24-bit DVI Pmod, cropped from the photo](crops/12_dvi_pmod.jpg)
 
 **Add-on** · iCEBreaker photo, top
 
@@ -203,6 +229,8 @@ No FPGA on these. They add video, input or a programmer to the boards above.
 
 <a id="b13"></a>
 ### 13. TM1638 “LED&KEY” module
+
+![TM1638 “LED&KEY” module, cropped from the photo](crops/13_tm1638_led_key.jpg)
 
 **Add-on** · iCEBreaker photo, bottom
 
@@ -232,4 +260,6 @@ read. The “basics-graphics-music” lines come from the `boards/` folders of b
 `origin/main`; `origin/yuri_lattice` adds no other board from these photos.
 
 Photos: [lattice_boards.jpg](lattice_boards.jpg) (1393 × 2105) and [icebreaker.jpg](icebreaker.jpg)
-(970 × 1783), kept next to this file.
+(970 × 1783), kept next to this file. `lattice_boards_numbered.jpg` and `icebreaker_numbered.jpg` are
+copies with the board numbers drawn on, and `crops/` holds one picture per board, cut from the photos
+at full resolution.
