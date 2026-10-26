@@ -329,8 +329,14 @@ module lab_top
 
     wire local_interrupt_2;
 
+    `ifndef __RR_THREADS__
+      localparam strobe_freq = 100;
+    `else
+      localparam strobe_freq = 100000;
+    `endif 
+    
     strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (100))
+    # (.clk_mhz (clk_mhz), .strobe_hz (strobe_freq))
     local_timer_interrupt_gen
     (
         .clk,

@@ -34,13 +34,20 @@
 /* processor                                                                               */
 `include "yrv_top.vh"
 
-`include "serial_top.vh"
-
 `ifdef __ICARUS__
   `define USE_MEM_BANKS_FOR_BYTE_LINES
   `undef BOOT_FROM_AUX_UART
   `define EXPOSE_MEM_BUS
 `endif
+
+
+`ifndef  SIMULATION
+ `include "serial_top.vh"
+`else 
+ `include "sim_serial_top.vh"
+`endif 
+
+
 
 
 // For real boards
@@ -169,7 +176,7 @@ module yrv_mcu
   wire    [3:0] mem_wr_byte;                               /* system ram byte enables      */
 
   `ifdef USE_MEM_BANKS_FOR_BYTE_LINES
-      `ifdef __ICARUS__
+      `ifdef SIMULATION
         reg     [7:0] mcu_mem_bank0 [0:1024*16-1];
         reg     [7:0] mcu_mem_bank1 [0:1024*16-1];
         reg     [7:0] mcu_mem_bank2 [0:1024*16-1];
@@ -346,8 +353,7 @@ module yrv_mcu
   `endif
 
 `ifndef NO_READMEMH_FOR_8_BIT_WIDE_MEM
-
-  `ifdef __ICARUS__
+  `ifdef SIMULATION
         initial begin
           int fd_0,fd_1,fd_2,fd_3;
           $display("Loading memory...");
@@ -361,7 +367,6 @@ module yrv_mcu
               $fclose(fd_1);
               $fclose(fd_2);
               $fclose(fd_3);
-              
 
               $readmemh("../cpu/program_bank0.mem8", mcu_mem_bank0);
               $readmemh("../cpu/program_bank1.mem8", mcu_mem_bank1);
@@ -369,8 +374,27 @@ module yrv_mcu
               $readmemh("../cpu/program_bank3.mem8", mcu_mem_bank3);
             end 
           else
-            $fatal(1,"No memory files!!!");
+            begin
+              $display("No compiled memory files, using default");
+              fd_0 = $fopen("../cpu/code_demo_bank0.mem8", "r");
+              fd_1 = $fopen("../cpu/code_demo_bank1.mem8", "r");
+              fd_2 = $fopen("../cpu/code_demo_bank2.mem8", "r");
+              fd_3 = $fopen("../cpu/code_demo_bank3.mem8", "r");
 
+              if(fd_0 && fd_1 && fd_2 && fd_3) begin
+                  $fclose(fd_0);              
+                  $fclose(fd_1);
+                  $fclose(fd_2);
+                  $fclose(fd_3);
+
+                  $readmemh("../cpu/code_demo_bank0.mem8", mcu_mem_bank0);
+                  $readmemh("../cpu/code_demo_bank1.mem8", mcu_mem_bank1);
+                  $readmemh("../cpu/code_demo_bank2.mem8", mcu_mem_bank2);
+                  $readmemh("../cpu/code_demo_bank3.mem8", mcu_mem_bank3);
+                end 
+              else
+                $fatal(1,"No default memory files!!!");
+            end
         end
   `else 
       localparam string default_mem_file_name = "code_demo.mem8";
@@ -383,16 +407,16 @@ module yrv_mcu
 
       if (fd)
         begin
-          $fclose(fd);
-          $readmemh(default_mem_file_name, mcu_mem);
+            $fclose(fd);
+            $readmemh(default_mem_file_name, mcu_mem);
+          end
+        else
+          begin
+            $warning("No default memory file '%s' found", default_mem_file_name);
+          end
         end
-      else
-        begin
-          $warning("No default memory file '%s' found", default_mem_file_name);
-        end
-      end
+    `endif
   `endif
-`endif
 `endif 
   /*****************************************************************************************/
   /* bus interface                                                                         */
@@ -467,12 +491,19 @@ module yrv_mcu
   /* serial port                                                                           */
   /*****************************************************************************************/
   // div_rate = 27*1000 *1000/(9600*16)
-
+  `ifndef SIMULATION
   serial_top SERIAL ( .bufr_done(bufr_done), .bufr_empty(bufr_empty), .bufr_full(bufr_full),
                       .bufr_ovr(bufr_ovr), .rx_rdata(rx_rdata), .ser_clk(ser_clk),
                       .ser_txd(ser_txd), .cks_mode(port6_reg[0]), .clkp(clk),
                       .div_rate(port6_reg[15:4]), .ld_wdata(ld_wdata), .rd_rdata(rd_rdata),
                       .s_reset(port6_reg[3]), .ser_rxd(ser_rxd), .tx_wdata(mem_wdata[23:16]) );
+  `else 
+  sim_serial_top SERIAL ( .bufr_done(bufr_done), .bufr_empty(bufr_empty), .bufr_full(bufr_full),
+                          .bufr_ovr(bufr_ovr), .rx_rdata(rx_rdata), .ser_clk(ser_clk),
+                          .ser_txd(ser_txd), .cks_mode(port6_reg[0]), .clkp(clk),
+                          .div_rate(port6_reg[15:4]), .ld_wdata(ld_wdata), .rd_rdata(rd_rdata),
+                          .s_reset(port6_reg[3]), .ser_rxd(ser_rxd), .tx_wdata(mem_wdata[23:16]) );
+  `endif 
 
   assign ld_wdata  = io_wr_reg && port76_dec && mem_ble_reg[2] && mem_ready;
   assign rd_rdata  = io_rd_reg && port76_dec && mem_ble_reg[2] && mem_ready;
