@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lattice Board Lineup</title>
-<meta name="description" content="Eight Lattice FPGA boards and five add-on boards identified from two photos, with their FPGAs, how to program them, and which ones basics-graphics-music already supports.">
+<meta name="description" content="Eight Lattice FPGA boards and five add-on boards identified from two photos, checked against the makers' pages, with how to program them and which ones basics-graphics-music supports.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -31,6 +31,8 @@
     --no-bg: #eceee9;
     --warn-ink: #7a4f00;
     --warn-bg: #fbefd6;
+    --info-ink: #1d4f73;
+    --info-bg: #e4eef5;
     --badge-bg: #0f1512;
     --badge-ink: #ffffff;
     --marker: #0f1512;
@@ -61,6 +63,8 @@
         --no-bg: #232a25;
         --warn-ink: #f1c46e;
         --warn-bg: #2f2610;
+        --info-ink: #8cc3e8;
+        --info-bg: #152832;
         --badge-bg: #e4eae5;
         --badge-ink: #111513;
         --hl: #5be0a0;
@@ -89,6 +93,8 @@
     --no-bg: #232a25;
     --warn-ink: #f1c46e;
     --warn-bg: #2f2610;
+    --info-ink: #8cc3e8;
+    --info-bg: #152832;
     --badge-bg: #e4eae5;
     --badge-ink: #111513;
     --hl: #5be0a0;
@@ -253,6 +259,7 @@ td a { font-weight: 500; }
 .label.yes { color: var(--ok-ink); background: var(--ok-bg); }
 .label.no { color: var(--no-ink); background: var(--no-bg); }
 .label.warn { color: var(--warn-ink); background: var(--warn-bg); }
+.label.info { color: var(--info-ink); background: var(--info-bg); }
 
 /* Board cards */
 
@@ -315,6 +322,14 @@ dd { margin: 0; }
 
 .unsure { font-size: 0.9rem; }
 
+.src { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.src a { overflow-wrap: anywhere; }
+.src .muted, .muted { color: var(--muted); }
+
+.pins table { min-width: 560px; }
+.pins td:first-child { font-variant-numeric: tabular-nums; color: var(--muted); width: 4em; }
+.pins td.bad { color: var(--warn-ink); }
+
 /* Add-on rows */
 
 .addons { display: grid; gap: 16px; }
@@ -361,12 +376,13 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
 <main class="wrap">
 
 <header>
-    <p class="eyebrow">Board identification · 2 photos · 26 October 2026</p>
+    <p class="eyebrow">Board identification · 2 photos · updated 26 October 2026</p>
     <h1>Lattice Board Lineup</h1>
     <p class="lead">Two photos: a bench shot of loose boards (<code>lattice_boards.jpg</code>) and an
     iCEBreaker driving a monitor (<code>icebreaker.jpg</code>). Board names are read from the silkscreen in
-    enlarged crops of the photos. The FPGA parts come from each board's published specs, because the chip
-    markings are too blurry to read. Click a number on a photo to jump to its board.</p>
+    enlarged crops of the photos. The FPGA parts and board features are checked against each maker's page,
+    linked on every card, because the chip markings are too blurry to read. The owner confirmed the
+    iCEBreaker revision and the STEP-MXO2. Click a number on a photo to jump to its board.</p>
     <ul class="stats">
         <li><b>8</b><span>FPGA boards</span></li>
         <li><b>5</b><span>add-on boards</span></li>
@@ -414,17 +430,17 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
                 <tr><th>No.</th><th>Board</th><th>Family</th><th>FPGA</th><th>How it is programmed</th><th>basics-graphics-music</th></tr>
             </thead>
             <tbody>
-                <tr><td class="n">1</td><td><a href="#b1">OrangeCrab</a></td><td><span class="fam ecp5">ECP5</span></td><td>LFE5U-25F or -85F</td><td>USB-C, DFU bootloader</td><td class="bgm"><code>orangecrab_ecp5_yosys</code></td></tr>
-                <tr><td class="n">2</td><td><a href="#b2">TinyFPGA BX</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40LP8K</td><td>Micro-USB, USB bootloader</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">1</td><td><a href="#b1">OrangeCrab r0.2.1</a></td><td><span class="fam ecp5">ECP5</span></td><td>LFE5U-25F or -85F, csfBGA285</td><td>USB-C, DFU bootloader</td><td class="bgm"><code>orangecrab_ecp5_yosys</code></td></tr>
+                <tr><td class="n">2</td><td><a href="#b2">TinyFPGA BX</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40LP8K-CM81</td><td>Micro-USB, USB bootloader</td><td class="bgm no">none</td></tr>
                 <tr><td class="n">3</td><td><a href="#b3">Olimex iCE40HX8K-EVB Rev.B</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40HX8K-CT256</td><td>External programmer, e.g. no. 7</td><td class="bgm"><code>ice40hx8k_evb_yosys</code></td></tr>
-                <tr><td class="n">4</td><td><a href="#b4">Olimex iCE40-IO Rev.A</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm">used by <code>ice40hx8k_evb_yosys</code></td></tr>
+                <tr><td class="n">4</td><td><a href="#b4">Olimex iCE40-IO Rev.A</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm">pinout differs from <code>ice40hx8k_evb_yosys</code> (<a href="#vga">see below</a>)</td></tr>
                 <tr><td class="n">5</td><td><a href="#b5">Olimex iCE40HX1K-EVB Rev.B</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40HX1K-VQ100</td><td>External programmer, e.g. no. 7</td><td class="bgm no">none</td></tr>
-                <tr><td class="n">6</td><td><a href="#b6">STEP-MXO2 V2.2</a></td><td><span class="fam mxo2">MachXO2</span></td><td>MachXO2-4000HC (assumed)</td><td>Micro-USB, on-board programmer</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">6</td><td><a href="#b6">STEP-MXO2 V2.2</a></td><td><span class="fam mxo2">MachXO2</span></td><td>LCMXO2-4000HC-4MG132</td><td>Micro-USB, on-board USB-JTAG</td><td class="bgm no">none</td></tr>
                 <tr><td class="n">7</td><td><a href="#b7">FTDI FT2232H Mini Module</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>It is the programmer</td><td class="bgm">wiring diagram in <code>ice40hx8k_evb_yosys</code></td></tr>
-                <tr><td class="n">8</td><td><a href="#b8">MuseLab iCESugar-nano v1.2</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40LP1K (per maker)</td><td>USB-C, on-board programmer</td><td class="bgm no">none</td></tr>
-                <tr><td class="n">9</td><td><a href="#b9">MuseLab iCESugar v1.5</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40UP5K-SG48</td><td>USB-C, on-board programmer</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">8</td><td><a href="#b8">MuseLab iCESugar-nano v1.2</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40LP1K-CM36</td><td>USB-C, on-board iCELink</td><td class="bgm no">none</td></tr>
+                <tr><td class="n">9</td><td><a href="#b9">MuseLab iCESugar v1.5</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40UP5K-SG48</td><td>USB-C, on-board iCELink</td><td class="bgm no">none</td></tr>
                 <tr><td class="n">10</td><td><a href="#b10">MuseLab PMOD-VGA v1.1</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm no">none</td></tr>
-                <tr><td class="n">11</td><td><a href="#b11">1BitSquared iCEBreaker V1</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40UP5K-SG48</td><td>Micro-USB, on-board FT2232H</td><td class="bgm"><code>icebreaker_*</code>, 7 folders</td></tr>
+                <tr><td class="n">11</td><td><a href="#b11">1BitSquared iCEBreaker V1.0e</a></td><td><span class="fam ice40">iCE40</span></td><td>iCE40UP5K-SG48</td><td>Micro-USB, on-board FT2232H</td><td class="bgm"><code>icebreaker_*</code>, 7 folders</td></tr>
                 <tr><td class="n">12</td><td><a href="#b12">24-bit DVI Pmod</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm">used by <code>icebreaker_dvi_*</code></td></tr>
                 <tr><td class="n">13</td><td><a href="#b13">TM1638 “LED&amp;KEY” module</a></td><td><span class="fam addon">Add-on</span></td><td>—</td><td>—</td><td class="bgm">used by <code>*_tm1638_*</code> folders</td></tr>
             </tbody>
@@ -439,13 +455,14 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
         <article class="card" id="b1">
             <div class="thumb"><svg viewBox="189 105 458 242" role="img" aria-label="OrangeCrab, cropped from the bench photo"><svg x="189" y="105" width="458" height="242"><image href="lattice_boards.jpg" x="-189" y="-105" width="1393" height="2105"/></svg></svg></div>
             <div class="body">
-                <div class="head"><span class="num">1</span><h3>OrangeCrab</h3><span class="fam ecp5">ECP5</span></div>
+                <div class="head"><span class="num">1</span><h3>OrangeCrab r0.2.1</h3><span class="fam ecp5">ECP5</span></div>
                 <dl class="facts">
-                    <dt>Maker</dt><dd>Greg Davill, whose “GsD” logo is on the silkscreen</dd>
-                    <dt>FPGA</dt><dd>ECP5 LFE5U-25F or LFE5U-85F</dd>
-                    <dt>On board</dt><dd>Feather-size board. The square chip with the QR label is the ECP5, and the tall chip to its right is DDR3L memory. USB-C wired straight to the FPGA, a LiPo battery connector and one button.</dd>
+                    <dt>Identified by</dt><dd>Orange Feather-size PCB with the “GsD” logo of its designer, Greg Davill. The USB-C port dates it: the maker's page says r0.2.1 switched from micro-USB to USB-C.</dd>
+                    <dt>FPGA</dt><dd>ECP5 LFE5U-25F or LFE5U-85F in the csfBGA285 package</dd>
+                    <dt>On board</dt><dd>The square chip with the QR label is the ECP5; the tall chip to its right is DDR3L memory, 128 MB or 512 MB. 128 Mbit QSPI flash, USB-C wired straight to the FPGA, a LiPo battery connector and one button.</dd>
                     <dt>Programming</dt><dd>DFU bootloader over USB-C, with <code>dfu-util</code></dd>
                     <dt>BGM</dt><dd><span class="label yes">Supported</span><code>orangecrab_ecp5_yosys</code>: 48 MHz clock, built for the 25F in the CSFBGA285 package with Yosys and nextpnr</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://orangecrab-fpga.github.io/orangecrab-hardware/docs/r0.2.1/">OrangeCrab r0.2.1 hardware page</a></li><li><a href="https://orangecrab-fpga.github.io/orangecrab-hardware/docs/getting-started/">Getting started (DFU upload)</a></li></ul></dd>
                 </dl>
                 <p class="unsure"><span class="label warn">Unsure</span>Whether this is the 25F or the 85F. The part number is under the QR label.</p>
             </div>
@@ -456,11 +473,12 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">2</span><h3>TinyFPGA BX</h3><span class="fam ice40">iCE40</span></div>
                 <dl class="facts">
-                    <dt>Maker</dt><dd>TinyFPGA (Luke Valenty)</dd>
-                    <dt>FPGA</dt><dd>iCE40LP8K, CM81 package</dd>
-                    <dt>On board</dt><dd>16 MHz oscillator, SPI flash, micro-USB and two rows of breadboard pins numbered on the silkscreen</dd>
+                    <dt>Identified by</dt><dd>Silkscreen “TinyFPGA” and “BX”</dd>
+                    <dt>FPGA</dt><dd>iCE40LP8K-CM81, 7,680 LUTs</dd>
+                    <dt>On board</dt><dd>16 MHz MEMS oscillator, 8 Mbit SPI flash, 41 user I/O pins, micro-USB, breadboard-friendly pin rows</dd>
                     <dt>Programming</dt><dd>A USB bootloader in the flash; upload with <code>tinyprog</code> or <code>apio</code></dd>
                     <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://github.com/tinyfpga/TinyFPGA-BX">TinyFPGA BX repository</a></li><li><a href="https://tinyfpga.com/bx/guide.html">TinyFPGA BX user guide</a></li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -470,11 +488,12 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">3</span><h3>Olimex iCE40HX8K-EVB Rev.B</h3><span class="fam ice40">iCE40</span></div>
                 <dl class="facts">
-                    <dt>Maker</dt><dd>Olimex, “(C)2016” on the silkscreen</dd>
-                    <dt>FPGA</dt><dd>iCE40HX8K-CT256, 7,680 LUTs</dd>
-                    <dt>On board</dt><dd>SRAM chip beside the FPGA, 100 MHz clock, RESET and two buttons, two LEDs, the 34-pin GPIO1 connector, four EXT headers, a 10-pin programming header and a 5 V power jack</dd>
+                    <dt>Identified by</dt><dd>Silkscreen “OLIMEX”, “iCE40HX8K-EVB” and “Rev.B”</dd>
+                    <dt>FPGA</dt><dd>iCE40HX8K-CT256, 7,680 logic cells</dd>
+                    <dt>On board</dt><dd>512 KB SRAM (256K × 16), 2 MB SPI flash, 100 MHz oscillator, RESET and two buttons, two LEDs, the 34-pin GPIO1 bus connector, four 40-pin EXT connectors, a 10-pin programming header and a 5 V power jack</dd>
                     <dt>Programming</dt><dd>No USB on the board. Use an external programmer: the BGM folder has a wiring diagram for the FT2232H Mini Module (<a href="#b7">no. 7</a>) with <code>iceprog</code> or <code>openFPGALoader</code>.</dd>
-                    <dt>BGM</dt><dd><span class="label yes">Supported</span><code>ice40hx8k_evb_yosys</code>: 100 MHz, VGA with 4 bits per colour on the 34-pin connector where the iCE40-IO (<a href="#b4">no. 4</a>) plugs in</dd>
+                    <dt>BGM</dt><dd><span class="label yes">Supported</span><code>ice40hx8k_evb_yosys</code>: 100 MHz, VGA with 4 bits per colour on GPIO1 pins 14–34. <span class="label warn">Check</span>Those pins don't match the iCE40-IO (<a href="#vga">see below</a>).</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://www.olimex.com/Products/FPGA/iCE40/iCE40HX8K-EVB/open-source-hardware">Olimex product page</a></li><li><a href="https://github.com/OLIMEX/iCE40HX8K-EVB">Olimex hardware files</a> (Rev.B netlist)</li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -484,11 +503,12 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">5</span><h3>Olimex iCE40HX1K-EVB Rev.B</h3><span class="fam ice40">iCE40</span></div>
                 <dl class="facts">
-                    <dt>Maker</dt><dd>Olimex</dd>
-                    <dt>FPGA</dt><dd>iCE40HX1K-VQ100, 1,280 LUTs, in a 100-pin TQFP</dd>
-                    <dt>On board</dt><dd>Samsung K6R4016V1D SRAM (256K × 16, marking readable in the photo), RESET plus BUT1 and BUT2, LED1 and LED2, the 34-pin GPIO1 connector, a 10-pin programming header and a 5 V power jack</dd>
+                    <dt>Identified by</dt><dd>Silkscreen “iCE40HX1K-EVB” and “Rev.B”, and the Samsung SRAM marking</dd>
+                    <dt>FPGA</dt><dd>iCE40HX1K-VQ100, 1,280 logic cells, in a 100-pin TQFP</dd>
+                    <dt>On board</dt><dd>512 KB SRAM: the Samsung K6R4016V1D (256K × 16) readable in the photo. 2 MB SPI flash, 100 MHz oscillator, RESET plus BUT1 and BUT2, LED1 and LED2, the 34-pin GPIO1 bus connector, a 10-pin programming header and a 5 V power jack.</dd>
                     <dt>Programming</dt><dd>Same as the HX8K-EVB: an external programmer such as the FT2232H (<a href="#b7">no. 7</a>)</dd>
-                    <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder. <code>ice40hx8k_evb_yosys</code> is the closest starting point: same maker and the same 34-pin connector.</dd>
+                    <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder. <code>ice40hx8k_evb_yosys</code> is the closest starting point: same maker, same 34-pin bus, and Olimex says the iCE40-IO fits both boards.</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://www.olimex.com/Products/FPGA/iCE40/iCE40HX1K-EVB/open-source-hardware">Olimex product page</a></li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -498,13 +518,15 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">6</span><h3>STEP-MXO2 V2.2</h3><span class="fam mxo2">MachXO2</span></div>
                 <dl class="facts">
+                    <dt>Identified by</dt><dd>Layout and the “V2.2” silkscreen; <span class="label yes">Confirmed</span>by the owner</dd>
                     <dt>Maker</dt><dd>The Chinese STEP FPGA series (小脚丫)</dd>
-                    <dt>FPGA</dt><dd>MachXO2-4000HC</dd>
-                    <dt>On board</dt><dd>Two 7-segment digits, four DIP switches, four buttons, eight LEDs (LD1–LD8), two RGB LEDs, micro-USB, and two 20-pin rows that fit a breadboard like a DIP-40 chip</dd>
-                    <dt>Programming</dt><dd>On-board USB programmer through the micro-USB; bitstreams come from Lattice Diamond</dd>
+                    <dt>FPGA</dt><dd>LCMXO2-4000HC-4MG132</dd>
+                    <dt>On board</dt><dd>Two 7-segment digits, four switches, four buttons, eight LEDs (LD1–LD8), two RGB LEDs and micro-USB. A 40-pin DIP outline with 36 user I/Os that fits a breadboard.</dd>
+                    <dt>Programming</dt><dd>On-board USB-JTAG circuit through the micro-USB; bitstreams come from Lattice Diamond</dd>
                     <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://github.com/stepfpga/STEP-MXO2">STEP-MXO2 repository</a></li></ul></dd>
                 </dl>
-                <p class="unsure"><span class="label warn">Unsure</span>STEP also sells a MAX10 board with almost the same layout. The FPGA marking isn't readable, so this card assumes the Lattice one.</p>
+                <p class="unsure"><span class="label info">Lookalike</span>STEP also sells STEP-MAX10, an Intel MAX 10 board with almost the same layout. Read the FPGA marking to tell them apart.</p>
             </div>
         </article>
 
@@ -513,13 +535,13 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">8</span><h3>MuseLab iCESugar-nano v1.2</h3><span class="fam ice40">iCE40</span></div>
                 <dl class="facts">
-                    <dt>Maker</dt><dd>MuseLab (muselab-tech.com)</dd>
-                    <dt>FPGA</dt><dd>iCE40LP1K, CM36 package, per MuseLab's spec</dd>
-                    <dt>On board</dt><dd>USB-C with a built-in programmer, 2 × 6 Pmod pads at the far end and a row of pins down each side</dd>
-                    <dt>Programming</dt><dd>MuseLab's iCELink: copy the bitstream onto the USB drive it presents, or use <code>icesprog</code></dd>
+                    <dt>Identified by</dt><dd>Silkscreen “iCESugar-nano” and “v1.2”</dd>
+                    <dt>FPGA</dt><dd>iCE40LP1K-CM36, 1,280 logic cells, a 2.5 mm BGA. It is the small square chip near the pin end, not the larger one beside the USB-C, which is the iCELink microcontroller (APM32F1).</dd>
+                    <dt>On board</dt><dd>USB-C, 2 MB SPI flash, one yellow LED, one 2 × 6 Pmod at the far end and a 1 × 6 Pmod down each side</dd>
+                    <dt>Programming</dt><dd>iCELink: copy the bitstream onto the USB drive it presents, or use <code>icesprog</code>. The same cable gives a USB serial port and a clock of 8, 12, 36 or 72 MHz for the FPGA (12 MHz after power-up).</dd>
                     <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://github.com/wuxx/icesugar-nano">iCESugar-nano repository</a>, including MuseLab's photo of v1.2</li></ul></dd>
                 </dl>
-                <p class="unsure"><span class="label warn">Unsure</span>The chip marked “Lattice” looks larger than the LP1K's 2.5 mm CM36 package. Worth a look under a magnifier.</p>
             </div>
         </article>
 
@@ -528,11 +550,12 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">9</span><h3>MuseLab iCESugar v1.5</h3><span class="fam ice40">iCE40</span></div>
                 <dl class="facts">
-                    <dt>Maker</dt><dd>MuseLab, logo and URL on the silkscreen</dd>
-                    <dt>FPGA</dt><dd>iCE40UP5K-SG48, 5,280 LUTs</dd>
-                    <dt>On board</dt><dd>USB-C programmer port, a micro-USB port, RGB LED, 4-way DIP switch, Pmod headers PMOD1–PMOD4, UART pins and jumpers labelled “Prog Flash” and “Prog iCE”</dd>
-                    <dt>Programming</dt><dd>iCELink: copy the bitstream onto its USB drive, or use <code>icesprog</code></dd>
+                    <dt>Identified by</dt><dd>Silkscreen “iCESugar v1.5”, MuseLab logo and URL</dd>
+                    <dt>FPGA</dt><dd>iCE40UP5K-SG48, 5,280 logic cells</dd>
+                    <dt>On board</dt><dd>8 MB SPI flash, USB-C for iCELink, a micro-USB port, RGB LED, 4-way DIP switch, Pmod headers PMOD1–PMOD4, UART pins, a JTAG header and jumpers labelled “Prog Flash” and “Prog iCE”</dd>
+                    <dt>Programming</dt><dd>iCELink: copy the bitstream onto its USB drive, or use <code>icesprog</code>. It also gives a USB serial port and a 12 MHz clock to the FPGA.</dd>
                     <dt>BGM</dt><dd><span class="label no">Not yet</span>No board folder. The iCEBreaker folders use the same UP5K-SG48 part, so they are the natural starting point.</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://github.com/wuxx/icesugar">iCESugar repository</a> (README in Chinese)</li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -540,15 +563,15 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
         <article class="card" id="b11">
             <div class="thumb"><svg viewBox="275 585 515 270" role="img" aria-label="iCEBreaker with its snap-off button section, cropped from the second photo"><svg x="275" y="585" width="515" height="270"><image href="icebreaker.jpg" x="-275" y="-585" width="970" height="1783"/></svg></svg></div>
             <div class="body">
-                <div class="head"><span class="num">11</span><h3>1BitSquared iCEBreaker V1</h3><span class="fam ice40">iCE40</span></div>
+                <div class="head"><span class="num">11</span><h3>1BitSquared iCEBreaker V1.0e</h3><span class="fam ice40">iCE40</span></div>
                 <dl class="facts">
-                    <dt>Maker</dt><dd>1BitSquared</dd>
-                    <dt>FPGA</dt><dd>iCE40UP5K-SG48, 5,280 LUTs</dd>
-                    <dt>On board</dt><dd>FT2232H on the board behind the micro-USB, 12 MHz clock, Pmod ports PMOD1A, PMOD1B and PMOD2, RGB LED and a user button. The snap-off section on PMOD2, with three buttons and five LEDs, is still attached in the photo.</dd>
-                    <dt>Programming</dt><dd>Micro-USB with <code>iceprog</code> or <code>openFPGALoader</code>; the same port carries a UART</dd>
-                    <dt>BGM</dt><dd><span class="label yes">Supported</span><code>icebreaker_dvi_24b_tm1638_yosys</code> matches this exact setup. There are also 12-bit DVI, no-DVI and no-TM1638 variants, plus <code>icebreaker_bare</code>.</dd>
+                    <dt>Identified by</dt><dd>Silkscreen “iCEBreaker V1”; <span class="label yes">Confirmed</span>V1.0e by the owner, as the minor revision is under the wires</dd>
+                    <dt>FPGA</dt><dd>iCE40UP5K-SG48, 5,280 logic cells</dd>
+                    <dt>On board</dt><dd>FT2232H behind the micro-USB, 12 MHz crystal shared with the FPGA, 16 MB QSPI flash, PMOD1A, PMOD1B and PMOD2, a pin header for an RGB LED, two LEDs and a user button. The snap-off section on PMOD2, with three buttons and five LEDs, is still attached in the photo.</dd>
+                    <dt>Programming</dt><dd>Micro-USB with <code>iceprog</code> or Lattice Diamond Programmer; the same port carries a UART</dd>
+                    <dt>BGM</dt><dd><span class="label yes">Supported</span><code>icebreaker_dvi_24b_tm1638_yosys</code> matches this exact setup. There are also 12-bit DVI, no-DVI and no-TM1638 variants, plus <code>icebreaker_bare</code>. The pin legend pictures in those folders show V1.0b.</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://docs.icebreaker-fpga.org/hardware/icebreaker/">iCEBreaker hardware documentation</a></li></ul></dd>
                 </dl>
-                <p class="unsure"><span class="label warn">Unsure</span>The minor revision, such as V1.0b or V1.1a, is hidden under the jumper wires.</p>
             </div>
         </article>
 
@@ -565,9 +588,11 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">4</span><h3>Olimex iCE40-IO Rev.A</h3><span class="fam addon">Add-on</span></div>
                 <dl class="facts">
-                    <dt>Adds</dt><dd>VGA connector with a resistor DAC, PS/2 keyboard socket and IrDA</dd>
-                    <dt>Connects</dt><dd>Plugs into the 34-pin GPIO connector of the Olimex EVBs (GPIO_In1) and passes the bus on (GPIO_Out1). In the photo it sits under the HX8K-EVB (<a href="#b3">no. 3</a>).</dd>
-                    <dt>BGM</dt><dd>The VGA pins of <code>ice40hx8k_evb_yosys</code> are on this 34-pin connector</dd>
+                    <dt>Identified by</dt><dd>Silkscreen “iCE40-IO”, “Rev.A” and “OLIMEX”</dd>
+                    <dt>Adds</dt><dd>VGA connector (DE-15) with 3 bits per colour, a PS/2 keyboard socket and a TFDU4100 IrDA transceiver</dd>
+                    <dt>Connects</dt><dd>Plugs into the 34-pin bus of the iCE40HX1K-EVB or iCE40HX8K-EVB (GPIO_In1) and passes the bus on (GPIO_Out1). In the photo it sits under the HX8K-EVB (<a href="#b3">no. 3</a>).</dd>
+                    <dt>BGM</dt><dd><span class="label warn">Check</span>Its VGA pins differ from those in <code>ice40hx8k_evb_yosys</code> (<a href="#vga">see below</a>)</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://www.olimex.com/Products/FPGA/iCE40/iCE40-IO/open-source-hardware">Olimex product page</a></li><li><a href="https://github.com/OLIMEX/iCE40-IO">Olimex hardware files</a> (Rev.A netlist)</li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -577,9 +602,11 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">7</span><h3>FTDI FT2232H Mini Module</h3><span class="fam addon">Programmer</span></div>
                 <dl class="facts">
+                    <dt>Identified by</dt><dd>Silkscreen “FT2232H Mini Module”</dd>
                     <dt>Adds</dt><dd>A two-channel USB 2.0 Hi-Speed bridge; each channel can drive JTAG or SPI. Mini-USB plus the CN2 and CN3 pin headers.</dd>
                     <dt>Role</dt><dd>Programmer for the two Olimex boards (<a href="#b3">no. 3</a>, <a href="#b5">no. 5</a>), which have no USB of their own</dd>
                     <dt>BGM</dt><dd>Wiring diagram: <code>boards/ice40hx8k_evb_yosys/JTAG_wiring_FT2232H_to_iCE40HX8K-EVB.svg</code></dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://ftdichip.com/products/ft2232h-mini-module/">FTDI product page</a> <span class="muted">(not checked: FTDI's site refuses scripted downloads)</span></li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -589,8 +616,10 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">10</span><h3>MuseLab PMOD-VGA v1.1</h3><span class="fam addon">Add-on</span></div>
                 <dl class="facts">
-                    <dt>Adds</dt><dd>VGA output through a resistor DAC (R1–R40 on the silkscreen)</dd>
-                    <dt>Connects</dt><dd>Two Pmod connectors; plugged into the iCESugar (<a href="#b9">no. 9</a>) in the photo</dd>
+                    <dt>Identified by</dt><dd>Silkscreen “PMOD-VGA v1.1” and the MuseLab logo</dd>
+                    <dt>Adds</dt><dd>VGA output with 4 bits per colour (R0–R3, G0–G3, B0–B3), buffered by two 74HCT245 chips</dd>
+                    <dt>Connects</dt><dd>Two Pmod connectors, for HS and VS plus the twelve colour bits; plugged into the iCESugar (<a href="#b9">no. 9</a>) in the photo</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://github.com/wuxx/icesugar/blob/master/schematic/pmod-vga-v1.1.pdf">PMOD-VGA v1.1 schematic</a></li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -600,9 +629,11 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">12</span><h3>24-bit DVI Pmod</h3><span class="fam addon">Add-on</span></div>
                 <dl class="facts">
-                    <dt>Adds</dt><dd>DVI video on an HDMI connector. Silkscreen: “iCEBreaker PMOD” and “24bit DVI”.</dd>
-                    <dt>Connects</dt><dd>Double Pmod on PMOD1A and PMOD1B, with pins D0–D11, CK, DE, HS and VS. Twelve data lines carry 24-bit colour by sending 12 bits on each clock edge. The transmitter chip is a 64-pin TQFP whose marking is unreadable.</dd>
+                    <dt>Identified by</dt><dd>Silkscreen “iCEBreaker PMOD” and “24bit DVI”. 1BitSquared sells 4-bit, 12-bit and 24-bit DDR versions.</dd>
+                    <dt>Adds</dt><dd>DVI video on an HDMI connector, through a TI TFP410 or its drop-in replacement, the SiI164. The chip marking in the photo can't tell which.</dd>
+                    <dt>Connects</dt><dd>Double Pmod on PMOD1A and PMOD1B, with pins D0–D11, CK, DE, HS and VS. Twelve data lines carry 24-bit colour by sending 12 bits on the rising and 12 on the falling clock edge.</dd>
                     <dt>BGM</dt><dd><code>DVI_24B</code>, 8 bits per colour, is the default in the <code>icebreaker_dvi_24b_*</code> folders; <code>DVI_12B</code> gives 4 bits per colour</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://1bitsquared.com/products/pmod-digital-video-interface">1BitSquared product page</a></li><li><a href="https://docs.icebreaker-fpga.org/hardware/pmod/dvi/">iCEBreaker DVI Pmod documentation</a></li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -612,9 +643,11 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
             <div class="body">
                 <div class="head"><span class="num">13</span><h3>TM1638 “LED&amp;KEY” module</h3><span class="fam addon">Add-on</span></div>
                 <dl class="facts">
-                    <dt>Adds</dt><dd>Eight 7-segment digits, eight LEDs and eight buttons behind one TM1638 driver chip</dd>
-                    <dt>Connects</dt><dd>Jumper wires to PMOD2: data on P2_8, clock on P2_9 and strobe on P2_10, as in <code>icebreaker_dvi_24b_tm1638_yosys/board_specific_top.sv</code></dd>
+                    <dt>Identified by</dt><dd>Eight digits, eight LEDs and eight buttons in the usual LED&amp;KEY layout</dd>
+                    <dt>Adds</dt><dd>Eight 7-segment digits, eight LEDs and eight buttons behind one TM1638 driver, which talks over three lines: CLK, STB and DIO</dd>
+                    <dt>Connects</dt><dd>Jumper wires to PMOD2. The photo doesn't show which pins they use; <code>icebreaker_dvi_24b_tm1638_yosys/board_specific_top.sv</code> expects DIO on P2_8, CLK on P2_9 and STB on P2_10.</dd>
                     <dt>BGM</dt><dd>The labs use it for digits, LEDs and keys on boards that lack them, in every <code>*_tm1638_*</code> folder</dd>
+                    <dt>Sources</dt><dd><ul class="src"><li><a href="https://www.handsontec.com/pdf_files/TM1638_V1.3_EN.pdf">TM1638 datasheet</a></li></ul></dd>
                 </dl>
             </div>
         </article>
@@ -622,19 +655,47 @@ footer { font-size: 0.86rem; color: var(--muted); max-width: 80ch; display: grid
     </div>
 </section>
 
+<section aria-labelledby="vga">
+    <h2 id="vga">iCE40-IO and basics-graphics-music</h2>
+    <p class="intro">Olimex's netlists for the iCE40HX8K-EVB Rev.B and the iCE40-IO Rev.A give each pin of the 34-pin bus.
+    Pins 1–4 match on both boards (+5V, GND, +3V3, GND), so the numbers line up. The VGA pins in
+    <code>ice40hx8k_evb_yosys/board_specific.pcf</code> don't follow the iCE40-IO: its sync signals land on the PS/2 pins
+    and its red bits on the iCE40-IO's sync pins. With this iCE40-IO plugged in, that folder can't show a correct picture.
+    Either it was written for a different VGA adapter, or it needs a variant for the iCE40-IO.</p>
+    <div class="table-wrap pins">
+        <table>
+            <thead><tr><th>Pin</th><th>iCE40-IO Rev.A</th><th><code>ice40hx8k_evb_yosys</code></th></tr></thead>
+            <tbody>
+                <tr><td>14</td><td>PS2_CLK</td><td class="bad">VGA_HS</td></tr>
+                <tr><td>16</td><td>PS2_DATA</td><td class="bad">VGA_VS</td></tr>
+                <tr><td>18</td><td>VGA_VSYNC</td><td class="bad">VGA_R[0]</td></tr>
+                <tr><td>20</td><td>VGA_HSYNC</td><td class="bad">VGA_R[1]</td></tr>
+                <tr><td>22</td><td>VGA_BLUE3</td><td class="bad">VGA_R[2]</td></tr>
+                <tr><td>24</td><td>VGA_BLUE2</td><td class="bad">VGA_R[3]</td></tr>
+                <tr><td>26</td><td>VGA_BLUE1</td><td class="bad">VGA_G[0]</td></tr>
+                <tr><td>27</td><td>VGA_RED1</td><td class="bad">GPIO[11]</td></tr>
+                <tr><td>28</td><td>VGA_GREEN3</td><td class="bad">VGA_G[1]</td></tr>
+                <tr><td>29</td><td>VGA_RED2</td><td class="bad">VGA_B[3]</td></tr>
+                <tr><td>30</td><td>VGA_GREEN2</td><td>VGA_G[2]</td></tr>
+                <tr><td>31</td><td>free</td><td>VGA_B[2]</td></tr>
+                <tr><td>32</td><td>VGA_GREEN1</td><td>VGA_G[3]</td></tr>
+                <tr><td>33</td><td>IrDA_Tx</td><td class="bad">VGA_B[1]</td></tr>
+                <tr><td>34</td><td>VGA_RED3</td><td class="bad">VGA_B[0]</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
 <section aria-labelledby="checks-h">
-    <h2 id="checks-h">What the photos can't settle</h2>
+    <h2 id="checks-h">Still open</h2>
     <ul class="checks">
-        <li><strong>OrangeCrab, 25F or 85F.</strong> Peel back or read around the QR label on the ECP5. BGM's folder is built for the 25F.</li>
-        <li><strong>STEP board, MachXO2 or MAX10.</strong> Read the FPGA marking. A MAX10 board would belong with the Intel boards and Quartus.</li>
-        <li><strong>iCESugar-nano FPGA.</strong> Check whether the chip marked “Lattice” is the LP1K in its 2.5 mm package or a larger part.</li>
-        <li><strong>iCEBreaker revision.</strong> Move the jumper wires and read the “V1.x” label.</li>
-        <li><strong>Colour depth of the two VGA add-ons.</strong> The photos show the resistor DACs but not how many bits per colour they take. BGM drives the iCE40-IO with 4 bits per colour.</li>
+        <li><strong>OrangeCrab, 25F or 85F.</strong> Peel back or read around the QR label on the ECP5. BGM's folder is built for the 25F; r0.2.1 boards come with either.</li>
+        <li><strong>Which VGA adapter <code>ice40hx8k_evb_yosys</code> expects.</strong> Its pins don't match the iCE40-IO in the photo (<a href="#vga">table above</a>).</li>
     </ul>
 </section>
 
 <footer>
-    <p>Method: board names and revisions were read from the silkscreen in 2× crops of the two photos. FPGA parts and board features come from each maker's published specs, not from chip markings, which are too blurry to read. The “BGM” lines come from the <code>boards/</code> folders of basics-graphics-music on <code>origin/main</code>; <code>origin/yuri_lattice</code> adds no other board from these photos.</p>
+    <p>Method: board names and revisions were read from the silkscreen in 2× crops of the two photos. FPGA parts and board features were checked on 26 October 2026 against the makers' pages linked on each card, and the VGA details against the published schematics and netlists. The owner confirmed the iCEBreaker V1.0e and the STEP-MXO2. The “BGM” lines come from the <code>boards/</code> folders of basics-graphics-music on <code>origin/main</code>; <code>origin/yuri_lattice</code> adds no other board from these photos.</p>
     <p>Photos: <a href="lattice_boards.jpg">lattice_boards.jpg</a> (1393 × 2105) and <a href="icebreaker.jpg">icebreaker.jpg</a> (970 × 1783), kept next to this page.</p>
 </footer>
 

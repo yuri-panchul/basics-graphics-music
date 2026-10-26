@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two Lattice Board Reports</title>
+<meta name="description" content="Codex's and Claude's identification of 13 Lattice boards from two photos, compared after the owner's confirmations and a check against the makers' pages.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground:   #f2f4f7;
+    --surface:  #ffffff;
+    --sunken:   #e8ebf0;
+    --ink:      #14171c;
+    --muted:    #566070;
+    --faint:    #87909f;
+    --rule:     #d8dde4;
+    --rule-firm:#b3bcc8;
+
+    --accent:   #1d4f73;
+    --accent-bg:#e4eef5;
+
+    --fault:    #9f2b25;
+    --fault-bg: #f9eae9;
+    --risk:     #7f5c05;
+    --risk-bg:  #f8f1dd;
+    --clear:    #2b6049;
+    --clear-bg: #e6f1ec;
+
+    --display: Archivo, "Helvetica Neue", Arial, sans-serif;
+    --body:    "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #0f1216;
+      --surface:  #171b21;
+      --sunken:   #1e242c;
+      --ink:      #e7eaef;
+      --muted:    #9aa3b2;
+      --faint:    #747e8d;
+      --rule:     #2a313a;
+      --rule-firm:#3d4652;
+
+      --accent:   #74b4df;
+      --accent-bg:#152832;
+
+      --fault:    #e49189;
+      --fault-bg: #2b1a19;
+      --risk:     #d9b05a;
+      --risk-bg:  #2a2314;
+      --clear:    #86c4a6;
+      --clear-bg: #16271f;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #0f1216;
+    --surface:  #171b21;
+    --sunken:   #1e242c;
+    --ink:      #e7eaef;
+    --muted:    #9aa3b2;
+    --faint:    #747e8d;
+    --rule:     #2a313a;
+    --rule-firm:#3d4652;
+
+    --accent:   #74b4df;
+    --accent-bg:#152832;
+
+    --fault:    #e49189;
+    --fault-bg: #2b1a19;
+    --risk:     #d9b05a;
+    --risk-bg:  #2a2314;
+    --clear:    #86c4a6;
+    --clear-bg: #16271f;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding-inline: 20px;
+    padding-block: 0 72px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .prose { max-width: 70ch; }
+
+  /* ---- header ---------------------------------------------------------- */
+
+  header { padding-block: 56px 36px; border-bottom: 2px solid var(--rule-firm); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(32px, 6vw, 52px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+
+  .deck { font-size: 18px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+
+  .branches { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .branch {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    border: 1px solid var(--rule-firm);
+    border-radius: 2px;
+    padding: 7px 11px;
+    background: var(--surface);
+  }
+  .branch b { color: var(--accent); font-weight: 500; }
+
+  /* ---- verdict cards --------------------------------------------------- */
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-block: 36px;
+  }
+
+  .card { background: var(--surface); padding: 20px 18px; }
+  .card .n {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .card .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .card p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+  /* ---- sections -------------------------------------------------------- */
+
+  section { padding-block: 34px 6px; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: 0; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  .sub {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 20px;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    margin: 26px 0 8px;
+  }
+
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 7px; max-width: 70ch; }
+
+  code, .m { font-family: var(--mono); font-size: 0.88em; }
+  code {
+    background: var(--sunken);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* ---- tables ---------------------------------------------------------- */
+
+  .scroll { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--rule); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+  th, td { padding: 9px 13px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 500;
+    background: var(--sunken);
+    border-bottom: 1px solid var(--rule-firm);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num, th.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.lab { font-weight: 500; }
+  .win { color: var(--clear); font-weight: 500; }
+
+  /* ---- two column ------------------------------------------------------ */
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 18px; }
+  .duo > div { background: var(--surface); padding: 20px 18px; }
+  @media (max-width: 720px) { .duo { grid-template-columns: 1fr; } }
+
+  .who {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .duo h4 { font-family: var(--display); font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .duo h4:first-of-type { margin-top: 0; }
+  .duo ul { padding-left: 18px; margin-bottom: 0; }
+  .duo li { font-size: 14px; margin-bottom: 6px; }
+
+  /* ---- findings -------------------------------------------------------- */
+
+  .finding {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule-firm);
+    background: var(--surface);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .finding.defect { border-left-color: var(--fault); }
+  .finding.risk   { border-left-color: var(--risk); }
+  .finding.doc    { border-left-color: var(--accent); }
+  .finding.clear  { border-left-color: var(--clear); }
+
+  .fhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+  .fid {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--faint);
+  }
+  .ftitle { font-family: var(--display); font-weight: 600; font-size: 16px; flex: 1 1 260px; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .chip.defect { background: var(--fault-bg); color: var(--fault); }
+  .chip.risk   { background: var(--risk-bg);  color: var(--risk); }
+  .chip.doc    { background: var(--accent-bg);color: var(--accent); }
+  .chip.clear  { background: var(--clear-bg); color: var(--clear); }
+  .chip.side   { background: var(--sunken);   color: var(--muted); }
+
+  .finding p { margin: 0 0 10px; font-size: 14.5px; }
+  .finding p:last-child { margin-bottom: 0; }
+  .ev {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    background: var(--sunken);
+    border-left: 2px solid var(--rule-firm);
+    padding: 8px 11px;
+    margin: 0 0 10px;
+    overflow-x: auto;
+  }
+
+  /* ---- checks ---------------------------------------------------------- */
+
+  .check { border-top: 1px solid var(--rule); padding: 14px 0; }
+  .check:last-of-type { border-bottom: 1px solid var(--rule); }
+  .check .q { font-family: var(--display); font-weight: 600; font-size: 15.5px; margin-bottom: 5px; }
+  .check .how { font-size: 14px; color: var(--muted); margin: 0; }
+  .check .how b { color: var(--ink); font-weight: 500; }
+
+  blockquote {
+    margin: 0 0 14px;
+    padding: 12px 16px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    font-size: 14.5px;
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 2px solid var(--rule-firm);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer h2 { font-size: 15px; margin-bottom: 10px; }
+  footer code { font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Lattice board identification · 26 October 2026 · second round</p>
+  <h1>Two Lattice Board Reports</h1>
+  <p class="deck">Codex and I identified the same 13 boards in your two photos, and both of us now record
+  your two confirmations: the iCEBreaker is V1.0e and the blue board is a STEP-MXO2. After the first
+  round each side took ideas from the other, so the reports are now close on identification. They still differ in
+  how far they go: mine maps every board to basics-graphics-music and checks the specs against the makers'
+  pages and schematics, which turned up a real VGA pinout problem. Codex's is a tighter
+  identification-only report in a single file. I compared Codex's files as updated at 07:02 with mine as
+  updated at 07:11. I did not open either one in a browser; headless Chromium crashes here.</p>
+  <div class="branches">
+    <span class="branch"><b>mine</b> &nbsp;~/claude/lattice_boards/lattice_boards.{html,md}</span>
+    <span class="branch"><b>theirs</b> &nbsp;~/codex/lattice_boards_identification.{html,md}</span>
+    <span class="branch">sources fetched 26 Oct 2026</span>
+  </div>
+</header>
+
+<div class="cards">
+  <div class="card">
+    <span class="k">Board models right, of 13</span>
+    <span class="n">13 / 13</span>
+    <p>Same models on both sides. Your confirmations and the makers' pages agree with every one.</p>
+  </div>
+  <div class="card">
+    <span class="k">Boards with a source link</span>
+    <span class="n">13 / 11</span>
+    <p>Codex has no link for the FT2232H module or the PMOD-VGA. I couldn't check my FTDI link: FTDI's site refuses scripted downloads.</p>
+  </div>
+  <div class="card">
+    <span class="k">Boards mapped to BGM folders</span>
+    <span class="n">13 / 0</span>
+    <p>Codex keeps to identification and lists a BGM table only as a suggestion for later.</p>
+  </div>
+  <div class="card">
+    <span class="k">First-version claims that didn't hold</span>
+    <span class="n">3 / 0</span>
+    <p>Mine had a false doubt, an overstated pin claim and a misleading VGA hint, all fixed now. Codex hedged where it wasn't sure; I found no wrong claim in it.</p>
+  </div>
+</div>
+
+<section>
+  <h2>What each side delivered</h2>
+  <p class="sub">As found on disk at 07:11</p>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>Mine</th><th>Theirs</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">Files</td>
+          <td>HTML page (42 KB) and Markdown, next to both photos, two numbered copies and 13 crops in <code>crops/</code></td>
+          <td>Single HTML file (2 MB, both photos embedded) and Markdown with the photos in <code>lattice_boards_identification_images/</code></td></tr>
+      <tr><td class="lab">Finding a board</td>
+          <td>Numbered markers on the photos that jump to each board's card, and a close-up of every board</td>
+          <td>The full photos, with each board found by a location such as “Middle right; smaller red board”</td></tr>
+      <tr><td class="lab">Per board</td>
+          <td>How it was identified, FPGA, what is on board, how to program it, basics-graphics-music status, sources</td>
+          <td>Board and FPGA, confidence, evidence and limits</td></tr>
+      <tr><td class="lab">Sources</td>
+          <td>18 links on 13 boards, all checked today except FTDI's: product pages, repositories, schematics, netlists, datasheet</td>
+          <td>11 links on 11 boards: product pages, repositories, the TM1638 datasheet</td></tr>
+      <tr><td class="lab">basics-graphics-music</td>
+          <td>Folder for each supported board, a starting point for each unsupported one, and the VGA pinout check</td>
+          <td>Not covered</td></tr>
+      <tr><td class="lab">Design</td>
+          <td>Light and dark themes; Google Fonts with system fallbacks</td>
+          <td>Light only; system fonts</td></tr>
+      <tr><td class="lab">Last updated</td>
+          <td>07:11, after your confirmations and Codex's comparison</td>
+          <td>07:02, after your confirmations, using revisions read from my crops (its own note says so)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Ground truth used</h2>
+  <p class="sub">What settled each question</p>
+  <ul>
+    <li><b>You:</b> the iCEBreaker is V1.0e; the blue board really is a STEP-MXO2, and the STEP-MAX10 lookalike warning stays.</li>
+    <li><b>OrangeCrab r0.2.1 page:</b> r0.2.1 switched from micro-USB to USB-C, so the board in the photo is r0.2.1. That revision ships with either the 25F or the 85F.</li>
+    <li><b>MuseLab's iCESugar-nano README and v1.2 photo:</b> the iCELink programmer runs on an APM32F1, the 48-pin chip beside the USB-C; the FPGA is the small 2.5 mm chip near the pins.</li>
+    <li><b>1BitSquared's DVI Pmod page:</b> sold in 4-bit, 12-bit and 24-bit DDR versions, with a TI TFP410 or a SiI164.</li>
+    <li><b>Olimex netlists</b> for the iCE40HX8K-EVB Rev.B and iCE40-IO Rev.A, and <b>MuseLab's PMOD-VGA v1.1 schematic:</b> colour depth and the 34-pin bus pinout.</li>
+    <li><b>Makers' pages</b> for TinyFPGA BX, the Olimex boards, STEP-MXO2, iCESugar and iCEBreaker: every spec in my first version that I could check matched.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Scorecard</h2>
+  <p class="sub">Current versions of both reports, against the checked answer</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Question</th><th>Mine</th><th>Theirs</th><th>Checked answer</th><th>Edge</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">Board models</td><td>All 13</td><td>All 13</td><td>All 13</td><td>Tie</td></tr>
+      <tr><td class="lab">STEP board</td><td>STEP-MXO2 V2.2, confirmed; MAX10 lookalike note</td><td>Same</td><td>STEP-MXO2 (you)</td><td>Tie</td></tr>
+      <tr><td class="lab">iCEBreaker revision</td><td>V1.0e, from you</td><td>V1.0e, from you</td><td>V1.0e (you)</td><td>Tie</td></tr>
+      <tr><td class="lab">OrangeCrab revision</td><td>r0.2.1, from the USB-C port</td><td>“To confirm”</td><td>r0.2.1 (maker's page)</td><td class="win">Mine</td></tr>
+      <tr><td class="lab">OrangeCrab 25F or 85F</td><td>Open</td><td>Open</td><td>Still open: under the QR label</td><td>Tie</td></tr>
+      <tr><td class="lab">iCESugar-nano chip</td><td>Says which chip is the FPGA and which is the iCELink MCU</td><td>Gives the maker's FPGA type without addressing the chips</td><td>APM32F1 beside USB-C; LP1K near the pins</td><td class="win">Mine</td></tr>
+      <tr><td class="lab">DVI Pmod</td><td>24-bit DDR; TFP410 or SiI164</td><td>Same</td><td>Same (1BitSquared)</td><td>Tie</td></tr>
+      <tr><td class="lab">TM1638 wiring</td><td>Photo can't show it; BGM expects P2_8, P2_9, P2_10</td><td>Photo can't show it</td><td>Not visible</td><td class="win">Mine, slightly</td></tr>
+      <tr><td class="lab">VGA colour depth</td><td>iCE40-IO 3 bits, PMOD-VGA 4 bits per colour</td><td>Not given</td><td>Same (netlist, schematic)</td><td class="win">Mine</td></tr>
+      <tr><td class="lab">iCE40-IO with BGM</td><td>Pin table: doesn't match <code>ice40hx8k_evb_yosys</code></td><td>Not covered</td><td>Doesn't match</td><td class="win">Mine</td></tr>
+      <tr><td class="lab">How to program</td><td>Per board, with links</td><td>Not covered</td><td>Matches makers' pages</td><td class="win">Mine</td></tr>
+      <tr><td class="lab">Single-file sharing</td><td>Needs its folder</td><td>One self-contained HTML</td><td>—</td><td class="win">Theirs</td></tr>
+      <tr><td class="lab">What the photo can't show</td><td>Noted per board</td><td>Noted per board, plus the running design, resolution and HDMI audio</td><td>—</td><td class="win">Theirs, slightly</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Pros and cons</h2>
+  <p class="sub">Current versions</p>
+  <div class="duo">
+    <div>
+      <p class="who">Mine</p>
+      <h4>Pros</h4>
+      <ul>
+        <li>Maps every board to basics-graphics-music and names a starting folder for each unsupported one.</li>
+        <li>Numbered photos and a close-up of every board, in both the HTML and the Markdown.</li>
+        <li>Specs and programming methods checked against 18 linked sources.</li>
+        <li>Goes past the photos: OrangeCrab r0.2.1, VGA colour depths, and the pinout mismatch below.</li>
+        <li>Light and dark themes.</li>
+      </ul>
+      <h4>Cons</h4>
+      <ul>
+        <li>The HTML needs its folder: photos, numbered copies and crops sit beside it.</li>
+        <li>Longer; much of it is about basics-graphics-music, not identification.</li>
+        <li>Three first-version claims didn't hold (fixed; see below).</li>
+      </ul>
+    </div>
+    <div>
+      <p class="who">Theirs</p>
+      <h4>Pros</h4>
+      <ul>
+        <li>One HTML file with the photos embedded: easy to mail or move.</li>
+        <li>Careful about evidence: confidence and limits for every board, owner facts marked as such.</li>
+        <li>No wrong claims that I found, in either version.</li>
+        <li>Short, and stays on its subject.</li>
+      </ul>
+      <h4>Cons</h4>
+      <ul>
+        <li>Nothing on basics-graphics-music or on how to program the boards.</li>
+        <li>Boards are found by location text only; no markers or close-ups.</li>
+        <li>Still lists the OrangeCrab revision as unknown, though USB-C identifies it.</li>
+        <li>No links for the FT2232H module or the PMOD-VGA; the TinyFPGA link goes to the site's home page.</li>
+        <li>Light theme only.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Found while checking sources</h2>
+  <p class="sub">Not a report error, but a problem in the repo</p>
+  <div class="finding risk">
+    <div class="fhead"><span class="fid">F1</span><span class="ftitle"><code>ice40hx8k_evb_yosys</code> doesn't fit the iCE40-IO in your photo</span><span class="chip risk">your call</span></div>
+    <p>Olimex's netlists give every pin of the 34-pin bus on both boards, and pins 1–4 (+5V, GND, +3V3, GND) line up. The folder's VGA pins
+    don't follow the iCE40-IO: HSYNC and VSYNC land on its PS/2 pins, the red bits on its sync pins, and blue bit 1 on its IrDA transmitter.
+    The iCE40-IO also has only 3 bits per colour, against the folder's 4. Its UART pins, 10 and 12, are the iCE40-IO's IrDA lines.</p>
+    <p class="ev">pin 14: iCE40-IO PS2_CLK    · BGM VGA_HS<br>pin 16: iCE40-IO PS2_DATA   · BGM VGA_VS<br>pin 18: iCE40-IO VGA_VSYNC  · BGM VGA_R[0]<br>pin 20: iCE40-IO VGA_HSYNC  · BGM VGA_R[1]<br>pin 34: iCE40-IO VGA_RED3   · BGM VGA_B[0]</p>
+    <p>Either the folder was written for a different VGA adapter, or it needs an iCE40-IO variant. The full pin table is in
+    <a href="lattice_boards.html#vga">my board page</a>. I haven't changed the repo.</p>
+  </div>
+</section>
+
+<section>
+  <h2>How the reports converged</h2>
+  <p class="sub">What each side changed after the first comparison</p>
+  <div class="duo">
+    <div>
+      <p class="who">Mine, 07:11</p>
+      <ul>
+        <li>Your confirmations; the STEP-MAX10 warning kept as a “Lookalike” note.</li>
+        <li>A source link and an “Identified by” line on every board, as Codex had.</li>
+        <li>TM1638: now says the photo can't show the wiring and gives BGM's pins as what the folder expects.</li>
+        <li>DVI Pmod: TFP410 or SiI164, from 1BitSquared.</li>
+        <li>iCESugar-nano: removed my false doubt about the chip, and named the chips.</li>
+        <li>iCEBreaker: an RGB LED <em>header</em>, not an RGB LED, which Codex's comparison caught.</li>
+        <li>New: OrangeCrab r0.2.1, VGA colour depths, makers' memory and clock specs, and the pinout section.</li>
+        <li>Dropped one detail I couldn't source: the TinyFPGA designer's name.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="who">Theirs, 07:02</p>
+      <ul>
+        <li>Your confirmations, attributed to you; the STEP-MAX10 warning kept.</li>
+        <li>STEP V2.2, iCESugar-nano v1.2 and iCE40-IO Rev.A, which its note says it read from my crops.</li>
+        <li>24-bit DVI stated firmly instead of “tentative”.</li>
+        <li>Nothing added beyond identification. Its comparison lists numbered photos, crops, programming methods and a BGM table as worth adding later.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="prose">My three first-version claims that didn't hold, for the record:</p>
+  <ol>
+    <li>I doubted that the iCESugar-nano's FPGA was the LP1K, because a chip “marked Lattice” looked too big. That chip is the iCELink microcontroller.</li>
+    <li>I gave the TM1638 pins as if the photo showed them; they came from the BGM board file.</li>
+    <li>I wrote that BGM's HX8K-EVB VGA pins are on the connector the iCE40-IO plugs into. True, but the pinouts don't match (F1).</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Still open</h2>
+  <p class="sub">Both reports</p>
+  <div class="check">
+    <p class="q">OrangeCrab: 25F or 85F?</p>
+    <p class="how"><b>How:</b> lift or read around the QR label on the ECP5. BGM's folder is built for the 25F.</p>
+  </div>
+  <div class="check">
+    <p class="q">Which VGA adapter does <code>ice40hx8k_evb_yosys</code> expect?</p>
+    <p class="how"><b>How:</b> your call, F1 above. If it is meant for the iCE40-IO, its VGA and UART pins need changing.</p>
+  </div>
+</section>
+
+<footer>
+  <h2>Method</h2>
+  <p>I read Codex's <code>lattice_boards_identification.md</code> and <code>.html</code> as updated at 07:02:47, and its own comparison,
+  <code>lattice_boards_comparison_updated.html</code> (07:06), which reviewed my first version. I fetched the makers' pages, the Olimex
+  netlists (iCE40HX8K-EVB Rev.B, iCE40-IO Rev.A), MuseLab's PMOD-VGA v1.1 schematic and its iCESugar-nano photo today, and checked every
+  link in both reports. Codex's 11 links all work. BGM facts come from <code>origin/main</code> @ 3b18fdba. My first versions are kept in my scratchpad.</p>
+</footer>
+
+</div>
+</body>
+</html>
