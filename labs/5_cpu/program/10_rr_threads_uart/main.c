@@ -63,7 +63,7 @@ void thread_3 ()
 void main ()
 {
     uart_init();
-    uart_puts("YRV round robiun threads demo.\r\n");
+    uart_puts("YRV Round Robin Threads (RRT) demo.\r\n");
    
     define_thread (thread_1);
     uart_puts("Thread 1 defined...\r\n");
