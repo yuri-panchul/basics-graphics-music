@@ -72,8 +72,11 @@ module tb;
         sw  <= '0;
 
         @ (negedge rst);
-
-        repeat (5000)
+        `ifndef __RR_THREADS__
+          repeat (5000)
+        `else 
+          repeat (500000)
+        `endif  
         begin
             @ (posedge clk);
         end
