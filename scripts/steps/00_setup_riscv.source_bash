@@ -367,7 +367,7 @@ riscv_software_toolchain_run ()
         -T linker_script.ld \
         -Wa,-adhln=asm.lst \
         -Wl,--build-id=none \
-        -Wl,-M=map.txt \
+        -Wl,-Map=map.txt \
         -Wl,--no-warn-rwx-segments \
         $src
 
