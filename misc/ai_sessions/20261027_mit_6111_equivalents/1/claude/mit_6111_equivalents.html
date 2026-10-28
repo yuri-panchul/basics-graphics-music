@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6.111 Counterparts</title>
+<meta name="description" content="Courses like MIT 6.111 (now 6.205) at top universities in California, Russia, Belarus, Ukraine and the other former Soviet republics, with links, plus the Digital Circuit Synthesis School.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Armenian:wght@400;600&family=Noto+Sans+Georgian:wght@400;600&family=Noto+Sans:wght@400;600&family=Unbounded:wght@500;600&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8;
+    --surface: #ffffff;
+    --surface-2: #e8ecf2;
+    --ink: #141a26;
+    --muted: #586174;
+    --line: #d8dde6;
+    --accent: #2b4fb3;
+    --accent-soft: #e3e9f8;
+    --close-ink: #17663f;
+    --close-bg: #dcefe3;
+    --partial-ink: #7a5100;
+    --partial-bg: #f7ebd2;
+    --short-ink: #4a3b9a;
+    --short-bg: #e9e5f8;
+    --none-ink: #5a6170;
+    --none-bg: #eceef3;
+    --req-ink: #8a2c3b;
+    --req-bg: #f8e3e6;
+    --warn-ink: #8a5a00;
+    --ref-bg: #142041;
+    --ref-ink: #eef2fb;
+    --ref-muted: #aab6d6;
+    --ref-accent: #8fb0ff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b;
+        --surface: #161b25;
+        --surface-2: #1d2430;
+        --ink: #e3e8f1;
+        --muted: #9aa4b7;
+        --line: #2a3242;
+        --accent: #8fb0ff;
+        --accent-soft: #1d2945;
+        --close-ink: #7fd8a8;
+        --close-bg: #17301f;
+        --partial-ink: #efc46e;
+        --partial-bg: #2f2610;
+        --short-ink: #bcaef5;
+        --short-bg: #252040;
+        --none-ink: #a3abba;
+        --none-bg: #222834;
+        --req-ink: #f2a3b0;
+        --req-bg: #3a1d24;
+        --warn-ink: #efc46e;
+        --ref-bg: #1a2747;
+        --ref-ink: #eef2fb;
+        --ref-muted: #aab6d6;
+        --ref-accent: #a9c1ff;
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f131b;
+    --surface: #161b25;
+    --surface-2: #1d2430;
+    --ink: #e3e8f1;
+    --muted: #9aa4b7;
+    --line: #2a3242;
+    --accent: #8fb0ff;
+    --accent-soft: #1d2945;
+    --close-ink: #7fd8a8;
+    --close-bg: #17301f;
+    --partial-ink: #efc46e;
+    --partial-bg: #2f2610;
+    --short-ink: #bcaef5;
+    --short-bg: #252040;
+    --none-ink: #a3abba;
+    --none-bg: #222834;
+    --req-ink: #f2a3b0;
+    --req-bg: #3a1d24;
+    --warn-ink: #efc46e;
+    --ref-bg: #1a2747;
+    --ref-ink: #eef2fb;
+    --ref-muted: #aab6d6;
+    --ref-accent: #a9c1ff;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    padding-inline: 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", "Noto Sans Armenian", "Noto Sans Georgian", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-block: 40px 64px;
+    display: grid;
+    gap: 56px;
+}
+
+h1, h2 {
+    font-family: Unbounded, "Golos Text", "Noto Sans", system-ui, sans-serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+    line-height: 1.15;
+}
+
+h1 { font-size: clamp(2rem, 1.3rem + 3vw, 3.2rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.65rem); font-weight: 500; }
+
+h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-wrap: balance;
+}
+
+p { margin: 0; }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+.eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+header { display: grid; gap: 16px; }
+header .lede { max-width: 68ch; font-size: 1.12rem; color: var(--ink); }
+header .scope { max-width: 72ch; color: var(--muted); }
+
+section { display: grid; gap: 20px; }
+section > .intro { max-width: 70ch; color: var(--muted); }
+
+nav.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 0.95rem;
+}
+
+/* The reference course */
+.ref {
+    background: var(--ref-bg);
+    color: var(--ref-ink);
+    border-radius: 14px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 28px;
+}
+.ref h2 { color: var(--ref-ink); }
+.ref .eyebrow { color: var(--ref-muted); }
+.ref .num6 {
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: clamp(2.6rem, 2rem + 3vw, 4rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+.ref .num6 s { color: var(--ref-muted); text-decoration-thickness: 2px; font-size: 0.55em; margin-left: 10px; }
+.ref .head { display: grid; gap: 12px; align-content: start; }
+.ref .head p { color: var(--ref-muted); }
+.ref ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.ref a { color: var(--ref-accent); }
+.ref .links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 4px; }
+
+/* Match levels */
+.m {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+.m.close { color: var(--close-ink); background: var(--close-bg); }
+.m.partial { color: var(--partial-ink); background: var(--partial-bg); }
+.m.short { color: var(--short-ink); background: var(--short-bg); }
+.m.none { color: var(--none-ink); background: var(--none-bg); }
+
+.legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px 24px;
+}
+.leg { display: grid; gap: 6px; align-content: start; }
+.leg p { color: var(--muted); font-size: 0.92rem; }
+
+/* Tables */
+.tablewrap { overflow-x: auto; }
+
+table { border-collapse: collapse; width: 100%; }
+
+table.summary { min-width: 620px; font-variant-numeric: tabular-nums; }
+table.summary th, table.summary td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+}
+table.summary thead th { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+table.summary .num { text-align: right; }
+table.summary tr.sum th, table.summary tr.sum td { font-weight: 600; border-bottom: 0; }
+
+table.unis {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+table.unis thead th {
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface-2);
+    padding: 10px 16px;
+}
+table.unis td {
+    vertical-align: top;
+    padding: 16px;
+    border-top: 1px solid var(--line);
+}
+table.unis tbody tr:first-child td { border-top: 0; }
+td.uni { width: 30%; }
+td.courses { width: 56%; }
+td.match { width: 14%; }
+
+.uni .local { display: block; font-weight: 600; line-height: 1.35; }
+.uni .alt { display: block; font-size: 0.9rem; line-height: 1.35; margin-top: 2px; }
+.uni .en { display: block; color: var(--muted); font-size: 0.9rem; line-height: 1.35; margin-top: 4px; }
+.uni .city { display: block; color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.chip.req { color: var(--req-ink); background: var(--req-bg); }
+.chip.school { color: var(--accent); background: var(--accent-soft); }
+a.chip.school:hover { text-decoration: underline; }
+
+.courses { display: block; }
+.course + .course { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.cname { font-weight: 600; line-height: 1.4; }
+.cen { display: block; color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+.code {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: var(--surface-2);
+    padding: 1px 7px;
+    border-radius: 5px;
+}
+.desc { margin-top: 6px; font-size: 0.95rem; max-width: 72ch; }
+.desc.muted { color: var(--muted); margin-top: 0; }
+.links { margin-top: 6px; font-size: 0.92rem; }
+
+.match .src { display: block; margin-top: 8px; font-size: 0.8rem; color: var(--muted); }
+.match .src.warn { color: var(--warn-ink); }
+
+h3.country { margin-top: 12px; font-size: 1.05rem; }
+h3.country:first-of-type { margin-top: 0; }
+
+/* Digital Circuit Synthesis School */
+.school {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+}
+.school .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px 24px;
+}
+.school dt { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.school dd { margin: 2px 0 0; }
+.school dl { margin: 0; display: contents; }
+.school .fact { display: grid; gap: 2px; }
+.school .prog { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px 32px; }
+.school ol { margin: 6px 0 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: 0.95rem; }
+.school ul.clusters {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.school ul.clusters li {
+    font-size: 0.85rem;
+    padding: 2px 9px;
+    border-radius: 6px;
+    background: var(--surface-2);
+}
+
+.method { display: grid; gap: 12px; max-width: 76ch; }
+.method ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 20px; }
+
+@media (max-width: 860px) {
+    .ref { grid-template-columns: 1fr; padding: 22px; }
+}
+
+@media (max-width: 760px) {
+    table.unis, table.unis tbody, table.unis tr, table.unis td { display: block; width: 100%; }
+    table.unis thead { display: none; }
+    table.unis tr { border-top: 1px solid var(--line); }
+    table.unis tbody tr:first-child { border-top: 0; }
+    table.unis td { border-top: 0; padding: 12px 16px 0; }
+    table.unis td.match { padding-bottom: 16px; }
+    .match .src { display: inline; margin: 0 0 0 8px; }
+    .school { padding: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <p class="eyebrow">Digital design lab courses · checked 27 October 2026</p>
+    <h1>6.111 Counterparts</h1>
+    <p class="lede">The course at each university that comes closest to MIT 6.111, the FPGA lab where students learn Verilog and then build a large project of their own, with a link to each course page.</p>
+    <p class="scope">64 universities: 12 in California, 13 in Russia, 4 in Belarus, 7 in Ukraine, and 28 in 12 other former Soviet republics. This isn't a formal ranking: each region lists its strongest engineering universities, plus the seven you named (marked “On your list”). Outside California, university names are in the local language with English below. Course names are as they appear on the source page.</p>
+    <nav class="toc" aria-label="Sections">
+        <a href="#mit">MIT 6.111</a>
+        <a href="#summary">Summary</a>
+        <a href="#school">Synthesis School</a>
+        <a href="#california">California</a>
+        <a href="#russia">Russia</a>
+        <a href="#belarus">Belarus</a>
+        <a href="#ukraine">Ukraine</a>
+        <a href="#other">Other republics</a>
+        <a href="#method">How this was checked</a>
+        <a href="mit_6111_equivalents_ru.html" lang="ru" hreflang="ru">Русская версия</a>
+    </nav>
+</header>
+
+<section id="mit" class="ref" aria-labelledby="mit-h">
+    <div class="head">
+        <p class="eyebrow">The reference course</p>
+        <p class="num6">6.205<s>6.111</s></p>
+        <h2 id="mit-h">Digital Systems Laboratory I</h2>
+        <p>MIT renumbered 6.111 (Introductory Digital Systems Laboratory) as 6.205 in its new numbering.</p>
+    </div>
+    <div>
+        <ul>
+            <li>Digital design on FPGAs in Verilog, simulated with iVerilog and built with AMD Vivado.</li>
+            <li>Each student borrows a Real Digital Urbana board for the term.</li>
+            <li>The first half is lectures and about eight weekly labs and exercises (48% of the grade). The second half is a large final project (52%). There are no exams.</li>
+            <li>12 units (1-5-6). The prerequisite is 6.191, formerly 6.004.</li>
+        </ul>
+        <p class="links">
+            <a href="https://fpga.mit.edu/6205/F25">6.205 Fall 2025 site</a>
+            <a href="https://fpga.mit.edu/6205/F23/information">Fall 2023 course information</a>
+            <a href="https://ocw.mit.edu/courses/6-111-introductory-digital-systems-laboratory-spring-2006/">6.111 on MIT OpenCourseWare (2006)</a>
+        </p>
+    </div>
+</section>
+
+<section id="summary" aria-labelledby="summary-h">
+    <h2 id="summary-h">How close each university gets</h2>
+    <div class="legend"><div class="leg"><span class="m close">Close</span><p>An FPGA lab course with HDL design and a substantial build, such as a processor, a system or a project of the student&#x27;s choice.</p></div><div class="leg"><span class="m partial">Partial</span><p>An FPGA or HDL course, but narrower: fewer labs, mostly the language or DSP, no large project, or FPGA use not confirmed.</p></div><div class="leg"><span class="m short">Short course</span><p>A non-credit or extracurricular program at the university.</p></div><div class="leg"><span class="m none">Not found</span><p>No public course page found in this search. That does not mean the university has no such course.</p></div></div>
+    <div class="tablewrap"><table class="summary"><thead><tr><th scope="col">Region</th><th scope="col" class="num">Universities</th><th scope="col" class="num"><span class="m close">Close</span></th><th scope="col" class="num"><span class="m partial">Partial</span></th><th scope="col" class="num"><span class="m short">Short course</span></th><th scope="col" class="num"><span class="m none">Not found</span></th></tr></thead><tbody><tr><th scope="row"><a href="#california">California</a></th><td class="num">12</td><td class="num">5</td><td class="num">7</td><td class="num">–</td><td class="num">–</td></tr><tr><th scope="row"><a href="#russia">Россия · Russia</a></th><td class="num">13</td><td class="num">4</td><td class="num">6</td><td class="num">2</td><td class="num">1</td></tr><tr><th scope="row"><a href="#belarus">Беларусь · Belarus</a></th><td class="num">4</td><td class="num">–</td><td class="num">1</td><td class="num">–</td><td class="num">3</td></tr><tr><th scope="row"><a href="#ukraine">Україна · Ukraine</a></th><td class="num">7</td><td class="num">1</td><td class="num">5</td><td class="num">–</td><td class="num">1</td></tr><tr><th scope="row"><a href="#other">Other former Soviet republics</a></th><td class="num">28</td><td class="num">1</td><td class="num">10</td><td class="num">–</td><td class="num">17</td></tr><tr class="sum"><th scope="row">All</th><td class="num">64</td><td class="num">11</td><td class="num">29</td><td class="num">2</td><td class="num">22</td></tr></tbody></table></div>
+</section>
+
+<section id="school" aria-labelledby="school-h">
+    <h2 id="school-h">Школа синтеза цифровых схем · Digital Circuit Synthesis School</h2>
+    <p class="intro">Not a university course, but the closest thing to 6.111 that many of these students can take: a free year-long program run by YADRO in classrooms at partner universities. The program page says it has more than 2,000 participants and 24 universities in Russia and Belarus.</p>
+    <div class="school">
+        <div class="facts">
+            <div class="fact"><span class="eyebrow">Season</span><span>Autumn 2026 – spring 2027, Saturdays 12:00–15:00 Moscow time</span></div>
+            <div class="fact"><span class="eyebrow">Formats</span><span>In person at a university cluster (that university's students, after selection) or online for anyone</span></div>
+            <div class="fact"><span class="eyebrow">In person</span><span>Boards provided, homework reviewed, a cluster curator, project work with YADRO engineers, a participation certificate</span></div>
+            <div class="fact"><span class="eyebrow">Apply</span><span>In person by 10 October 2026, online by 31 October 2026</span></div>
+        </div>
+        <div class="prog">
+            <div>
+                <h3>Октябрь – декабрь</h3>
+                <ol><li>Введение в маршрут проектирования и упражнения с логикой</li><li>Последовательностная логика на ПЛИС</li><li>Концепция конечного автомата в RTL-проектировании</li><li>Функциональная верификация: основные концепции, ООП</li><li>Функциональная верификация: тестбенчи</li><li>Как устроена микросхема ПЛИС (2 части)</li><li>Открытый маршрут проектирования ASIC</li><li>DFT</li></ol>
+            </div>
+            <div>
+                <h3>Февраль – май</h3>
+                <ol><li>Конвейеры и систолические массивы</li><li>Цифровая обработка сигнала</li><li>Внешние интерфейсы и распознавание музыки на ПЛИС</li><li>Генерация звука в цифровых схемах</li><li>Микроархитектура и буферы FIFO; valid/ready и flow control</li><li>FIFO на SRAM, backpressure, credit-based flow control</li><li>Микроархитектура конвейерного процессора на примере MIRISCV</li><li>Введение в кэши</li></ol>
+            </div>
+        </div>
+        <p class="eyebrow">Previous season's lectures, as listed on the program page; the new season may change slightly.</p>
+        <div>
+            <h3>Clusters</h3>
+            <ul class="clusters"><li>ИТМО</li><li>НИЯУ МИФИ</li><li>НИУ МЭИ</li><li>НГТУ (Нижний Новгород)</li><li>ННГУ</li><li>Центр проектирования МИРЭА</li><li>МИЭТ</li><li>YADRO (московский офис)</li><li>СПбПУ</li><li>УрФУ</li><li>МИЭМ НИУ ВШЭ</li><li>СевГУ</li><li>СибГУТИ</li><li>ГГУ им. Ф. Скорины (Гомель)</li><li>БГУИР</li><li>МФТИ</li><li>МГТУ им. Н. Э. Баумана</li><li>ОмГТУ</li><li>БелГУТ (Гомель)</li><li>МАИ</li><li>Иннополис</li><li>АлтГУ</li><li>СГУ им. Н. Г. Чернышевского</li><li>Пензенский ГУ</li><li>ТУСУР</li><li>Самарский университет</li></ul>
+        </div>
+        <p class="links"><a href="https://edu.yadro.com/chip-design-school/">Program page (edu.yadro.com)</a></p>
+    </div>
+</section>
+
+<section id="california" aria-labelledby="ca-h">
+    <h2 id="ca-h">California</h2>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Stanford University</span><span class="city">Stanford</span></td><td class="courses"><div class="course"><p class="cname">Digital System Design</p><span class="code">EE 108</span><p class="desc">5 units, lecture plus an optional lab section. Combinational and sequential logic, timing, clocks and synchronization, finite state machines, microcode, control and datapath partitioning. The current bulletin entry does not mention FPGAs.</p><p class="links"><a href="https://bulletin.stanford.edu/courses/2026971">Stanford Bulletin</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Berkeley</span><span class="city">Berkeley</span></td><td class="courses"><div class="course"><p class="cname">Introduction to Digital Design and Integrated Circuits, with the Field-Programmable Gate Array Laboratory</p><span class="code">EECS 151/251A + 151LB</span><p class="desc">Students take the lecture with either an ASIC lab or the FPGA lab. The FPGA lab teaches a full FPGA tool flow and ends with a large project, such as a three-stage RISC-V processor system with caches, graphics acceleration and external peripherals, demonstrated on an FPGA board.</p><p class="links"><a href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/">151LB description</a> · <a href="https://inst.eecs.berkeley.edu/~eecs151/">Course site</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">California Institute of Technology (Caltech)</span><span class="city">Pasadena</span></td><td class="courses"><div class="course"><p class="cname">Advanced Digital Systems Design</p><span class="code">EE/CS 119 abc</span><p class="desc">Three terms. Design with PLDs and ASICs: synchronous design, state machines, arithmetic circuits, design for testability, CPLDs, FPGAs, VHDL, timing analysis. Students build the systems covered in class and systems they propose themselves. Given in alternate years; offered 2026–27.</p><p class="links"><a href="https://catalog.caltech.edu/current/2026-27/department/EE/">Caltech Catalog 2026–27, EE</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Los Angeles (UCLA)</span><span class="city">Los Angeles</span></td><td class="courses"><div class="course"><p class="cname">Introductory Digital Design Laboratory</p><span class="code">COM SCI M152A</span><p class="desc">A 2-unit lab. The official catalog page gives only the title and units, so I couldn&#x27;t confirm its board or HDL from an official source.</p><p class="links"><a href="https://catalog.registrar.ucla.edu/course/2025/COMSCIM152A">UCLA catalog</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, San Diego (UCSD)</span><span class="city">La Jolla</span></td><td class="courses"><div class="course"><p class="cname">Advanced Digital Design Project</p><span class="code">ECE 111</span><p class="desc">4 units. Hazard elimination, FSM synthesis, synchronization and arbitration, pipelining and timing; problem sets and a large-scale design project with simulation and/or rapid prototyping. The catalog does not name FPGAs.</p><p class="links"><a href="https://catalog.ucsd.edu/courses/ECE.html">UCSD catalog, ECE</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">University of Southern California (USC)</span><span class="city">Los Angeles</span></td><td class="courses"><div class="course"><p class="cname">Introduction to Digital Circuits</p><span class="code">EE 354L</span><p class="desc">4 units. Synchronous design of datapath and control; schematic and Verilog design, simulation and implementation in FPGAs; timing analysis; a semester-end project.</p><p class="links"><a href="https://catalogue.usc.edu/preview_course_nopop.php?catoid=11&amp;coid=170081">USC Catalogue (2019–20 entry)</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Santa Barbara (UCSB)</span><span class="city">Santa Barbara</span></td><td class="courses"><div class="course"><p class="cname">Digital Design Principles</p><span class="code">ECE 152A</span><p class="desc">Synchronous digital systems: timing diagrams, flip-flops, counters, Mealy and Moore machines, Verilog, timing analysis. The department&#x27;s DigiLab FPGA board page lists ECE 152A among the courses that use it.</p><p class="links"><a href="https://catalog.ucsb.edu/courses/ECE%20152A">UCSB catalog</a> · <a href="https://courses.ece.ucsb.edu/ECE152/digilab-fpga/">DigiLab FPGA board</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Davis</span><span class="city">Davis</span></td><td class="courses"><div class="course"><p class="cname">Digital Systems II</p><span class="code">EEC 180</span><p class="desc">5 units, 3 hours of lecture and 2 hours of lab. Computer-aided design of digital systems with HDLs, logic synthesis and FPGAs; Verilog, testbenches, and designing complex systems on FPGAs.</p><p class="links"><a href="https://ece.ucdavis.edu/eec-180-digital-systems-ii">UC Davis ECE</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src warn">From search results</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Irvine</span><span class="city">Irvine</span></td><td class="courses"><div class="course"><p class="cname">Introduction to Digital Logic Laboratory</p><span class="code">EECS 31L</span><p class="desc">3 units. Design of simple combinational and sequential systems (arithmetic processors, game-playing machines) with hardware description languages and CAD tools. The catalog does not name FPGAs.</p><p class="links"><a href="https://catalogue.uci.edu/allcourses/eecs/">UCI catalogue, EECS</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Santa Cruz</span><span class="city">Santa Cruz</span></td><td class="courses"><div class="course"><p class="cname">Logic Design with Verilog</p><span class="code">CSE 125</span><p class="desc">Verilog design for ASIC and FPGA targets; students design and verify large-scale systems, with assignments and a project. It follows CSE 100 Logic Design with its lab, CSE 100L, which uses programmable logic.</p><p class="links"><a href="https://catalog.ucsc.edu/en/current/general-catalog/courses/cse-computer-science-and-engineering/upper-division/cse-125">CSE 125</a> · <a href="https://catalog.ucsc.edu/en/current/general-catalog/courses/cse-computer-science-and-engineering/upper-division/cse-100l">CSE 100L</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">California Polytechnic State University (Cal Poly)</span><span class="city">San Luis Obispo</span></td><td class="courses"><div class="course"><p class="cname">Digital Design</p><span class="code">CPE/EE 133</span><p class="desc">An introductory course: Boolean algebra, combinational and sequential logic, and HDL use in FPGA design and synthesis. The department&#x27;s lab page lists Basys 3 FPGA boards for 133 and the follow-on 233.</p><p class="links"><a href="https://ee.calpoly.edu/about/labs/design">Digital Systems Design Lab</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">San José State University</span><span class="city">San José</span></td><td class="courses"><div class="course"><p class="cname">Digital Design</p><span class="code">CMPE 125</span><p class="desc">In the 2026–27 catalog. RTL design with Verilog/SystemVerilog for design and verification; its lab uses industry CAD tools and FPGAs.</p><p class="links"><a href="https://catalog.sjsu.edu/preview_course_nopop.php?catoid=23&amp;coid=198756">SJSU catalog 2026–27</a></p></div><div class="course"><p class="cname">Digital Design with FPGAs</p><span class="code">EE 178</span><p class="desc">Student design projects with CAD tools for the design, simulation and implementation of systems on FPGAs. It appears in the 2022–23 catalog, which is now archived.</p><p class="links"><a href="https://catalog.sjsu.edu/preview_course_nopop.php?catoid=13&amp;coid=116788">SJSU catalog 2022–23</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="russia" aria-labelledby="ru-h">
+    <h2 id="ru-h">Россия · Russia</h2>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Московский государственный университет имени М. В. Ломоносова (МГУ)</span><span class="en">Lomonosov Moscow State University</span><span class="city">Москва</span><span class="chips"><span class="chip req">On your list</span></span></td><td class="courses"><div class="course"><p class="cname">Программируемые логические интегральные схемы</p><span class="cen">Programmable logic devices</span><span class="code">ВМК, кафедра математической кибернетики</span><p class="desc">A two-semester elective: FPGA design flow, Verilog, datapath and control automata, on the DE0-Nano board. The page says its information is for 2016–17.</p><p class="links"><a href="https://mk.cs.msu.ru/index.php/%D0%9F%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D1%83%D0%B5%D0%BC%D1%8B%D0%B5_%D0%BB%D0%BE%D0%B3%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D0%B8%D0%BD%D1%82%D0%B5%D0%B3%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5_%D1%81%D1%85%D0%B5%D0%BC%D1%8B">Course page</a></p></div><div class="course"><p class="cname">Проектирование на ПЛИС</p><span class="cen">FPGA design</span><span class="code">Физический факультет</span><p class="desc">An elective on Spartan-3E Starter Kit boards: VHDL in the first semester, students&#x27; own projects in the second. This page did not load from here; the details come from search results.</p><p class="links"><a href="https://engineering.phys.msu.ru/ru/programmirovanie-dlya-sstudentov-2-kursa/fpga-designing">Course page</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Московский физико-технический институт (МФТИ)</span><span class="en">Moscow Institute of Physics and Technology (MIPT)</span><span class="city">Долгопрудный</span><span class="chips"><span class="chip req">On your list</span><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Введение в проектирование на языке Verilog</p><span class="cen">Introduction to design in Verilog</span><span class="code">ФРКТ, 2025+</span><p class="desc">Digital design through two builds: a pipelined 32-bit RISC-V core and a pipelined floating-point unit, prototyped on FPGA; also simulation, testing, low-level programming and PPA analysis. The materials include Altera Cyclone IV with Quartus. A follow-on course, «Проектирование цифровых вычислительных систем», starts in 2026.</p><p class="links"><a href="https://viktor-prutyanov.github.io/drec-fpga-intro/">Course materials</a> · <a href="https://github.com/viktor-prutyanov/drec-fpga-intro">GitHub</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Национальный исследовательский ядерный университет «МИФИ» (НИЯУ МИФИ)</span><span class="en">National Research Nuclear University MEPhI</span><span class="city">Москва</span><span class="chips"><span class="chip req">On your list</span><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Проектирование процессора с архитектурой RISC-V</p><span class="cen">Designing a RISC-V processor</span><span class="code">Краткосрочная навыковая программа, Диджитал Центр</span><p class="desc">A short skills program for MEPhI students (free for the Moscow campus, entry test): SystemVerilog, Vivado, building RISC-V instructions step by step, and loading the design onto an FPGA. Its author is from the department «Компьютерные системы и технологии». Enrolment for the current run is closed.</p><p class="links"><a href="https://digital.mephi.ru/riscv">Program page</a></p></div></td><td class="match"><span class="m short">Short course</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Университет ИТМО</span><span class="en">ITMO University</span><span class="city">Санкт-Петербург</span><span class="chips"><span class="chip req">On your list</span><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Основы программирования на ПЛИС</p><span class="cen">Fundamentals of FPGA programming</span><span class="code">Бакалавриат «Беспроводные технологии», 7-й семестр</span><p class="desc">3 credits with an exam. Digital logic, FPGA architecture, VHDL, ModelSim, SignalTap and timing analysis, then DSP on FPGA and embedded systems.</p><p class="links"><a href="https://physics.itmo.ru/ru/print/pdf/node/40344">Course card (PDF)</a></p></div><div class="course"><p class="cname">Введение в проектирование на ПЛИС</p><span class="cen">Introduction to FPGA design</span><span class="code">Магистратура «Беспроводные технологии»</span><p class="desc">3 credits: designing and implementing digital circuits in VHDL or Verilog, debugging and timing analysis.</p><p class="links"><a href="https://physics.itmo.ru/en/print/pdf/node/19567">Course card (PDF)</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Национальный исследовательский университет «МЭИ» (НИУ «МЭИ»)</span><span class="en">Moscow Power Engineering Institute (MPEI)</span><span class="city">Москва</span><span class="chips"><span class="chip req">On your list</span><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Основы цифрового синтеза; Синтез цифровых интегральных схем</p><span class="cen">Digital synthesis basics; Synthesis of digital ICs</span><span class="code">ИРЭ, кафедра электроники и наноэлектроники</span><p class="desc">A shared lab manual with 12 labs: combinational logic, RTL, sequential logic, FSMs, adders, memories, a 7-segment display, an LCD1602, UART, GPIO/SPI/I2C, VGA and PS/2 keyboard. It uses Icarus Verilog, GTKWave and Cyclone IV boards.</p><p class="links"><a href="https://mpei.ru/Structure/Universe/ire/structure/se/DocLib/%D0%9F%D1%80%D0%B0%D0%BA%D1%82%D0%B8%D0%BA%D1%83%D0%BC_SystemVerilog.pdf">Lab manual (PDF)</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Национальный исследовательский университет «МИЭТ» (НИУ МИЭТ)</span><span class="en">MIET (Moscow Institute of Electronic Technology)</span><span class="city">Зеленоград</span><span class="chips"><span class="chip req">On your list</span><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Архитектуры процессорных систем</p><span class="cen">Processor system architectures</span><span class="code">Институт МПСУ</span><p class="desc">Taught to seven degree programs. 16 labs go from an adder and an ALU to a full RISC-V processor with a load/store unit, interrupts, peripherals, a programmer and a performance evaluation, in SystemVerilog, with board files for the Nexys A7. The institute also has an advanced «Практикум по ПЛИС» covering the Xilinx 7-series fabric, AXI-Stream and PLLs.</p><p class="links"><a href="https://mpsu.github.io/APS/">Course book</a> · <a href="https://github.com/MPSU/APS">GitHub</a> · <a href="https://github.com/MPSU/FPGA_pract">Практикум по ПЛИС</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Московский институт электроники и математики им. А. Н. Тихонова НИУ ВШЭ (МИЭМ)</span><span class="en">HSE Tikhonov Moscow Institute of Electronics and Mathematics (MIEM)</span><span class="city">Москва</span><span class="chips"><span class="chip req">On your list</span><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Проектирование систем на кристалле</p><span class="cen">System-on-chip design</span><span class="code">2023/2024</span><p class="desc">Verilog, basic digital blocks, MIPS soft processors (single-cycle, multicycle, pipelined), and the ASIC flow.</p><p class="links"><a href="https://www.hse.ru/edu/courses/835172336">HSE course page</a></p></div><div class="course"><p class="cname">Системное проектирование цифровых устройств</p><span class="cen">System design of digital devices</span><span class="code">4th-year elective, 2023/2024</span><p class="desc">Advanced Verilog/SystemVerilog, caches, Nios II and the ARM HPS. Students extend the schoolMIPS and schoolRISCV cores and attach a monitor, mouse, IR remote, DDR memory, audio and video on DE1-SoC, DE10-Standard and DE10-Nano boards.</p><p class="links"><a href="https://www.hse.ru/edu/courses/835156929">HSE course page</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Московский государственный технический университет им. Н. Э. Баумана</span><span class="en">Bauman Moscow State Technical University</span><span class="city">Москва</span><span class="chips"><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Технология проектирования ПЛИС фирмы Intel; Проектирование систем на кристалле на базе ПЛИС фирмы Intel</p><span class="cen">Intel FPGA design; Intel FPGA SoC design</span><span class="code">Кафедра ИУ3</span><p class="desc">Lab-based training courses of 40 and 32 hours: the Quartus II flow on MAX, Cyclone and Stratix, then SoCs with Nios II.</p><p class="links"><a href="https://www.iu3.bmstu.ru/Home/Altera">ИУ3 Intel FPGA lab</a></p></div></td><td class="match"><span class="m short">Short course</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Санкт-Петербургский политехнический университет Петра Великого (СПбПУ)</span><span class="en">Peter the Great St. Petersburg Polytechnic University</span><span class="city">Санкт-Петербург</span><span class="chips"><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Автоматизированная разработка устройств на ПЛИС</p><span class="cen">Computer-aided FPGA design</span><span class="code">Магистратура 11.04.04_07</span><p class="desc">A practical master&#x27;s course: HDL design and implementation on development boards in Vivado.</p><p class="links"><a href="https://hsemst.spbstu.ru/11_04_04_07_courses/">Program courses</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Санкт-Петербургский государственный электротехнический университет «ЛЭТИ»</span><span class="en">Saint Petersburg Electrotechnical University “LETI”</span><span class="city">Санкт-Петербург</span></td><td class="courses"><div class="course"><p class="cname">Проектирование и программирование устройств на программируемых логических интегральных схемах</p><span class="cen">Designing and programming FPGA devices</span><span class="code">Радиотехнический факультет</span><p class="desc">Verilog HDL and FPGA programming. Its lab has Verilog exercises (arithmetic, RAM, a PRNG) and a Nios II system on Cyclone II.</p><p class="links"><a href="https://etu.ru/sveden/files/RP22-596ProektirovanieIProgrammirovanieUstroystvNaProgrammiruemyxLogicheskixIntegralynyxSxemax.pdf">Course program (PDF)</a> · <a href="https://etu.ru/ru/fakultety/fakultet-radiotehniki-i-telekommunikaciy/sostav-fakulteta/kafedra-radioelektronnyh-sredstv/uchebno-nauchnye-laboratorii/kt-v-rt">FPGA lab</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Университет Иннополис</span><span class="en">Innopolis University</span><span class="city">Иннополис</span><span class="chips"><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Fundamentals of Computer Architecture</p><span class="code">BSc</span><p class="desc">Verilog, FPGA programming in Quartus Prime, testbenches in ModelSim, an ALU, then MIPS and pipelining; optional FPGA projects earn bonus points. This page did not load from here; the details come from search results.</p><p class="links"><a href="https://eduwiki.innopolis.university/index.php/BSc:_Computer_Architecture">Course wiki</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src warn">From search results</span></td></tr>
+<tr><td class="uni"><span class="local">Томский государственный университет систем управления и радиоэлектроники (ТУСУР)</span><span class="en">TUSUR</span><span class="city">Томск</span><span class="chips"><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Программирование логических интегральных схем</p><span class="cen">Programming logic ICs</span><span class="code">Кафедра радиотехнических систем</span><p class="desc">FPGA architecture and digital design in Verilog HDL, with 16 hours of labs on development boards.</p><p class="links"><a href="https://tusur.ru/sveden/files/Programmirovanie_logicheskih_integralnyh_shem.pdf">Course program (PDF)</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Новосибирский государственный университет (НГУ)</span><span class="en">Novosibirsk State University</span><span class="city">Новосибирск</span></td><td class="courses"><div class="course"><p class="desc">I found only a 2009 textbook, «Программируемая логика FPGA» (К. Ф. Лысаков, физический факультет), not a course page.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="belarus" aria-labelledby="by-h">
+    <h2 id="by-h">Беларусь · Belarus</h2>
+    <p class="intro">Belarus has two official languages, so each name is shown in Belarusian, then Russian, then English.</p>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Беларускі дзяржаўны ўніверсітэт інфарматыкі і радыёэлектронікі (БДУІР)</span><span class="alt">Белорусский государственный университет информатики и радиоэлектроники (БГУИР)</span><span class="en">Belarusian State University of Informatics and Radioelectronics (BSUIR)</span><span class="city">Мінск</span><span class="chips"><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="cname">Кафедра встраиваемых вычислительных систем</p><span class="cen">Department of Embedded Computing Systems</span><p class="desc">The department teaches VHDL and SystemVerilog and lists a master&#x27;s track in FPGA design of computing systems. I found no page for a single course. The university also has a joint BSUIR × YADRO lab.</p><p class="links"><a href="https://www.bsuir.by/ru/kaf-evs/uchebnaya-rabota2">Department page</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Беларускі дзяржаўны ўніверсітэт (БДУ)</span><span class="alt">Белорусский государственный университет (БГУ)</span><span class="en">Belarusian State University</span><span class="city">Мінск</span></td><td class="courses"><div class="course"><p class="desc">I found only a 2003 digital-electronics lab manual, with no FPGA.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Беларускі нацыянальны тэхнічны ўніверсітэт (БНТУ)</span><span class="alt">Белорусский национальный технический университет (БНТУ)</span><span class="en">Belarusian National Technical University</span><span class="city">Мінск</span></td><td class="courses"><div class="course"><p class="desc">I found only a conference paper on programming Basys 3 boards, not a course page.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Гомельскі дзяржаўны ўніверсітэт імя Францыска Скарыны</span><span class="alt">Гомельский государственный университет имени Франциска Скорины</span><span class="en">Francisk Skorina Gomel State University</span><span class="city">Гомель</span><span class="chips"><a class="chip school" href="#school">Synthesis School cluster</a></span></td><td class="courses"><div class="course"><p class="desc">I found no course page, but the university hosts a Digital Circuit Synthesis School cluster.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="ukraine" aria-labelledby="ua-h">
+    <h2 id="ua-h">Україна · Ukraine</h2>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Київський політехнічний інститут імені Ігоря Сікорського (КПІ)</span><span class="en">Igor Sikorsky Kyiv Polytechnic Institute</span><span class="city">Київ</span></td><td class="courses"><div class="course"><p class="cname">Технології програмування на ПЛІС (FPGA)</p><span class="cen">FPGA programming technologies</span><span class="code">ФІОТ, кафедра обчислювальної техніки</span><p class="desc">Year 3, semester 6, 4 credits, part of a certificate program. Verilog, testbenches, ModelSim and Quartus II, on DE2, DE10-Standard and DE1-SoC boards.</p><p class="links"><a href="https://comsys.kpi.ua/wp-content/uploads/2025/02/tehnologiyi-programuvannya-na-plis-fpga-2.pdf">Course description (PDF)</a></p></div><div class="course"><p class="cname">Проектування цифрових пристроїв на ПЛІС</p><span class="cen">Designing digital devices on FPGAs</span><span class="code">RE-121, кафедра прикладної радіоелектроніки</span><p class="desc">An elective from year 3: Verilog for combinational and sequential circuits, testing, and three labs ending with a DAC interface.</p><p class="links"><a href="https://my.kpi.ua/syllabus/121?trainform=1">Syllabus</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Київський національний університет імені Тараса Шевченка (КНУ)</span><span class="en">Taras Shevchenko National University of Kyiv</span><span class="city">Київ</span></td><td class="courses"><div class="course"><p class="cname">Особливості проєктування електронних систем з застосуванням мікроконтролерів та програмованих логічних інтегральних схем</p><span class="cen">Designing electronic systems with microcontrollers and FPGAs</span><span class="code">Інститут високих технологій</span><p class="desc">Microcontrollers plus CPLD/FPGA structure, with VHDL and Verilog for modelling, synthesis and FPGA design.</p><p class="links"><a href="https://iht.knu.ua/wp-content/uploads/2024/04/%D0%94%D0%92%D0%A1.1.2.05-%D0%9E%D1%81%D0%BE%D0%B1%D0%BB%D0%B8%D0%B2%D0%BE%D1%81%D1%82%D1%96-%D0%BF%D1%80%D0%BE%D1%94%D0%BA%D1%82%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F-%D0%B5%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D0%B8%D1%85-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC-%D0%B7-%D0%B7%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F%D0%BC-%D0%BC%D1%96%D0%BA%D1%80%D0%BE%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D0%B5%D1%80%D1%96%D0%B2-%D1%82%D0%B0-%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%85-%D0%BB%D0%BE%D0%B3%D1%96%D1%87%D0%BD%D0%B8%D1%85-%D1%96%D0%BD%D1%82%D0%B5%D0%B3%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D1%85-%D1%81%D1%85%D0%B5%D0%BC.pdf">Course program (PDF)</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Київська школа економіки (KSE)</span><span class="en">Kyiv School of Economics</span><span class="city">Київ</span></td><td class="courses"><div class="course"><p class="cname">НВРІ 1: Проектування на основі мов опису апаратури для ПЛІС</p><span class="cen">VLSI 1: HDL Based Design for FPGAs</span><span class="code">Магістерська програма «Мікро- та наноелектроніка», 1-й терм</span><p class="desc">A required course in the master&#x27;s program run with ETH Zürich: 6 ECTS, 30 hours of lectures and 30 of practice. It is followed by VLSI 2 (netlist to a complete SoC) and VLSI 3 (full-custom design). The lab uses Zybo Z7 (Zynq) boards.</p><p class="links"><a href="https://university.kse.ua/en/masters/mel">Program page</a> · <a href="https://kse.ua/wp-content/uploads/2025/03/Navchalniy-plan-_Mikro-ta-nanoelektronika_.pdf">Curriculum (PDF)</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Національний університет «Львівська політехніка»</span><span class="en">Lviv Polytechnic National University</span><span class="city">Львів</span></td><td class="courses"><div class="course"><p class="cname">Програмовані логічні інтегральні схеми</p><span class="cen">Programmable logic devices</span><span class="code">Кафедра ЕЗІКТ</span><p class="desc">5 credits. Combinational circuits on FPGAs, Verilog HDL and Quartus II. The page returned an error when checked; the details come from search results.</p><p class="links"><a href="https://old.lpnu.ua/education/majors/subject/ITRE/8.172.05/19/2017/ua/part/1/3786">Subject page</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src warn">From search results</span></td></tr>
+<tr><td class="uni"><span class="local">Харківський національний університет радіоелектроніки (ХНУРЕ)</span><span class="en">Kharkiv National University of Radio Electronics (NURE)</span><span class="city">Харків</span></td><td class="courses"><div class="course"><p class="cname">Основи мов SystemVerilog та VHDL для проєктування цифрових пристроїв на ПЛІС у прикладах і задачах</p><span class="cen">SystemVerilog and VHDL for FPGA design, with examples and exercises</span><span class="code">Навчальний посібник, 2025</span><p class="desc">A 2025 NURE textbook for practical classes. I didn&#x27;t find the course page that uses it; a department syllabus on microcontrollers and FPGAs uses VHDL.</p><p class="links"><a href="https://openarchive.nure.ua/entities/publication/bb48b656-bb4f-4e65-ab53-434920a1300a">Textbook</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Національний університет «Одеська політехніка»</span><span class="en">Odesa Polytechnic National University</span><span class="city">Одеса</span></td><td class="courses"><div class="course"><p class="cname">Проектування пристроїв на ПЛІС</p><span class="cen">Designing FPGA devices</span><p class="desc">4.5 ECTS. CPLD and FPGA circuitry, modelling digital devices in Quartus II, SoCs.</p><p class="links"><a href="https://op.edu.ua/education/programs/components/9590">Course page</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Національний технічний університет «Харківський політехнічний інститут»</span><span class="en">National Technical University “Kharkiv Polytechnic Institute”</span><span class="city">Харків</span></td><td class="courses"><div class="course"><p class="desc">I found only lab material that mentions Active-HDL, not a course page.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="other" aria-labelledby="ot-h">
+    <h2 id="ot-h">Other former Soviet republics</h2>
+    <p class="intro">Two or three leading universities for each country. Most course programs here are PDFs, behind student logins or not online at all, so “Not found” is common.</p>
+    <h3 class="country">Казахстан · Kazakhstan</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Назарбаев Университеті</span><span class="en">Nazarbayev University</span><span class="city">Астана</span></td><td class="courses"><div class="course"><p class="cname">Digital Logic Design + Lab</p><span class="code">ELCE 202 / ELCE 202L</span><p class="desc">An English-medium course. Search results describe combinational and sequential logic, state machines and VHDL, with an FPGA/HDL lab. The program page now returns 404, so I couldn&#x27;t confirm this.</p></div></td><td class="match"><span class="m partial">Partial</span><span class="src warn">From search results</span></td></tr>
+<tr><td class="uni"><span class="local">Әл-Фараби атындағы Қазақ ұлттық университеті</span><span class="en">Al-Farabi Kazakh National University</span><span class="city">Алматы</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Сәтбаев университеті</span><span class="en">Satbayev University</span><span class="city">Алматы</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Oʻzbekiston · Uzbekistan</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Mirzo Ulugʻbek nomidagi Oʻzbekiston Milliy universiteti</span><span class="en">National University of Uzbekistan</span><span class="city">Toshkent</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Muhammad al-Xorazmiy nomidagi Toshkent axborot texnologiyalari universiteti</span><span class="en">Tashkent University of Information Technologies</span><span class="city">Toshkent</span></td><td class="courses"><div class="course"><p class="desc">It has a joint faculty with BSUIR.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Toshkent shahridagi Inha universiteti</span><span class="en">Inha University in Tashkent</span><span class="city">Toshkent</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Кыргызстан · Kyrgyzstan</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Кыргыз-Россия Славян университети</span><span class="alt">Кыргызско-Российский Славянский университет</span><span class="en">Kyrgyz-Russian Slavic University</span><span class="city">Бишкек</span></td><td class="courses"><div class="course"><p class="cname">Проектирование цифровых систем на базе FPGA</p><span class="cen">Designing digital systems on FPGAs</span><span class="code">Магистратура 09.04.04</span><p class="desc">Listed in the master&#x27;s course descriptions: designing digital systems with FPGAs.</p><p class="links"><a href="https://www.krsu.kg/images/documents/obrazovanie/annotacii/magistr/Annot_Disc_09.04.04RPS2019_30.08.20.pdf">Course descriptions (PDF)</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">И. Раззаков атындагы Кыргыз мамлекеттик техникалык университети</span><span class="en">Kyrgyz State Technical University</span><span class="city">Бишкек</span></td><td class="courses"><div class="course"><p class="cname">Проектирование цифровых устройств на ЦСП и ПЛИС</p><span class="cen">Designing digital devices on DSPs and FPGAs</span><p class="desc">An elective listed in the curriculum. I found no course description.</p><p class="links"><a href="https://kstu.kg/fileadmin/user_upload/oop_vpo_sms__bak__01.pdf">Curriculum (PDF)</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Тоҷикистон · Tajikistan</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Донишгоҳи техникии Тоҷикистон ба номи академик М. Осимӣ</span><span class="en">Tajik Technical University</span><span class="city">Душанбе</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Донишгоҳи миллии Тоҷикистон</span><span class="en">Tajik National University</span><span class="city">Душанбе</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Türkmenistan · Turkmenistan</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Oguz han adyndaky Inžener-tehnologiýalar uniwersiteti</span><span class="en">Oguz Han Engineering and Technology University</span><span class="city">Aşgabat</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Magtymguly adyndaky Türkmen döwlet uniwersiteti</span><span class="en">Magtymguly Turkmen State University</span><span class="city">Aşgabat</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Azərbaycan · Azerbaijan</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">ADA Universiteti</span><span class="en">ADA University</span><span class="city">Bakı</span></td><td class="courses"><div class="course"><p class="desc">A March 2024 report on a SystemVerilog/ASIC/FPGA seminar there says the digital logic course covered neither HDLs nor FPGA labs. The university has Cyclone IV boards (ALINX AX4010).</p><p class="links"><a href="https://habr.com/en/articles/796255">Seminar report (Habr)</a></p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Qarabağ Universiteti</span><span class="en">Karabakh University</span><span class="city">Xankəndi</span></td><td class="courses"><div class="course"><p class="cname">Digital Logic Circuits</p><span class="code">EEM 301</span><p class="desc">Taught in Azerbaijani. Logic design with hands-on labs, plus basics of HDLs for FPGA implementation.</p><p class="links"><a href="https://qu.edu.az/en/digital-logic-circuits">Course page</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Azərbaycan Texniki Universiteti</span><span class="en">Azerbaijan Technical University</span><span class="city">Bakı</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Հայաստան · Armenia</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Երևանի պետական համալսարան (ԵՊՀ)</span><span class="en">Yerevan State University</span><span class="city">Երևան</span></td><td class="courses"><div class="course"><p class="cname">Ծրագրավորվող էլեկտրոնիկա</p><span class="cen">Programmable electronics</span><span class="code">Master&#x27;s plan, 3rd semester, required</span><p class="desc">6 credits; 3.4 hours of lecture and 3.4 of lab a week. VHDL and Verilog, simulation, and design in Xilinx ISE 14.7.</p><p class="links"><a href="https://www.ysu.am/en/faculty/525/educational-program-930/edu-plan">Educational plan</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Հայաստանի ազգային պոլիտեխնիկական համալսարան</span><span class="en">National Polytechnic University of Armenia</span><span class="city">Երևան</span></td><td class="courses"><div class="course"><p class="desc">Its “Microelectronic Circuits and Systems” chair sits at the Synopsys Armenia Educational Department, which teaches IC design and EDA. I found no FPGA course page.</p><p class="links"><a href="https://www.synopsys.com/company/contact-synopsys/office-locations/armenia/educational-programs/cooperation-with-universities.html">Synopsys Armenia university programs</a></p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">საქართველო · Georgia</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი</span><span class="en">Ivane Javakhishvili Tbilisi State University</span><span class="city">თბილისი</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">საქართველოს ტექნიკური უნივერსიტეტი</span><span class="en">Georgian Technical University</span><span class="city">თბილისი</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">San Diego State University – Georgia</span><span class="en">An SDSU branch campus; it uses its English name</span><span class="city">თბილისი</span></td><td class="courses"><div class="course"><p class="cname">Digital Circuits Laboratory</p><span class="code">COMPE 470L</span><p class="desc">SDSU&#x27;s lab syllabus: Verilog for FSMs, arithmetic and datapath/control, synthesis and timing analysis, programming an FPGA. One of its two instructors may teach in Tbilisi, but the syllabus doesn&#x27;t name the campus.</p><p class="links"><a href="https://khuang.sdsu.edu/Syllabus_COMPE470L.pdf">Syllabus (PDF)</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Moldova</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Universitatea Tehnică a Moldovei (UTM)</span><span class="en">Technical University of Moldova</span><span class="city">Chișinău</span></td><td class="courses"><div class="course"><p class="cname">Proiectarea cu dispozitive programabile</p><span class="cen">Design with programmable devices</span><span class="code">FCIM, anul III, semestrul 6</span><p class="desc">4 ECTS; 30 hours of lectures and 15 + 15 of lab and seminar. CPLDs and FPGAs, design flow in VHDL.</p><p class="links"><a href="https://else.fcim.utm.md/mod/resource/view.php?id=35562">Course sheet (PDF)</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+<tr><td class="uni"><span class="local">Universitatea de Stat din Moldova</span><span class="en">Moldova State University</span><span class="city">Chișinău</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Lietuva · Lithuania</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Vilniaus Gedimino technikos universitetas (VILNIUS TECH)</span><span class="en">Vilnius Gediminas Technical University</span><span class="city">Vilnius</span></td><td class="courses"><div class="course"><p class="cname">Sistemų projektavimas VHDL kalba</p><span class="cen">System design in VHDL</span><span class="code">ELKRM17208, Computer Engineering master&#x27;s</span><p class="desc">Taught in English: VHDL, Verilog and SystemC for complex digital devices. The module page returned 404 when checked; the details come from search results.</p></div></td><td class="match"><span class="m partial">Partial</span><span class="src warn">From search results</span></td></tr>
+<tr><td class="uni"><span class="local">Kauno technologijos universitetas (KTU)</span><span class="en">Kaunas University of Technology</span><span class="city">Kaunas</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+<tr><td class="uni"><span class="local">Vilniaus universitetas</span><span class="en">Vilnius University</span><span class="city">Vilnius</span></td><td class="courses"><div class="course"><p class="desc muted">No public FPGA or HDL course page found.</p></div></td><td class="match"><span class="m none">Not found</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Latvija · Latvia</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Rīgas Tehniskā universitāte (RTU)</span><span class="en">Riga Technical University</span><span class="city">Rīga</span></td><td class="courses"><div class="course"><p class="cname">Ciparu elektronisko sistēmu projektēšanas pamati, izmantojot HDL</p><span class="cen">Basics of digital electronic system design with HDL</span><span class="code">REA711</span><p class="desc">Bachelor level, 4.5 ECTS: RTL design, VHDL, sequential logic, synthesis.</p><p class="links"><a href="https://stud.rtu.lv/rtu/discpub/o.32189/REA711_Ciparu_elektronisko_sistemu_projektesanas_pamati_izmantojot_HDL">Course catalog</a></p></div><div class="course"><p class="cname">Funkcionālo un loģisko shēmu modelēšana</p><span class="cen">Modelling functional and logic circuits</span><span class="code">RTR832</span><p class="desc">FPGA programming with HDL, simulation and real devices; Quartus II and ModelSim; labs and an individual assignment.</p><p class="links"><a href="https://stud.rtu.lv/rtu/discpub/o.32951/RTR832_Funkcionalo_un_logisko_shemu_modelesana">Course catalog</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src warn">From search results</span></td></tr>
+<tr><td class="uni"><span class="local">Latvijas Universitāte (LU)</span><span class="en">University of Latvia</span><span class="city">Rīga</span></td><td class="courses"><div class="course"><p class="cname">Ievads digitālajā projektēšanā</p><span class="cen">Introduction to digital design</span><span class="code">DatZ3074, Datorikas fakultāte</span><p class="desc">A bachelor&#x27;s course; the wiki has the autumn 2026 calendar. It covers adders, ALUs, Verilog and FSMs, then single-cycle, multicycle and pipelined CPUs and FPGA architecture, with practical work on Spartan-3E hardware in Xilinx ISE. It ends with course projects and their presentations.</p><p class="links"><a href="http://andromeda.df.lu.lv/wiki/index.php/LU-DIP-b">Course wiki</a></p></div></td><td class="match"><span class="m close">Close</span><span class="src">Page checked</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Eesti · Estonia</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">University</th><th scope="col">Closest course to 6.111</th><th scope="col">Match</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Tallinna Tehnikaülikool (TalTech)</span><span class="en">Tallinn University of Technology</span><span class="city">Tallinn</span></td><td class="courses"><div class="course"><p class="cname">Digitaalsüsteemide disain VHDL-s</p><span class="cen">Digital Systems Design with VHDL</span><span class="code">IAS0600</span><p class="desc">6 ECTS. Taking a VHDL description through functional and timing simulation, synthesis and FPGA implementation, with labs.</p><p class="links"><a href="https://ois2.taltech.ee/uusois/subject/IAS0600">Course page</a></p></div><div class="course"><p class="cname">Digitaalsüsteemide disain</p><span class="cen">Digital Systems Design</span><span class="code">IAX0600</span><p class="desc">6 ECTS, required in its bachelor&#x27;s program. The same VHDL-to-FPGA/PSoC flow, plus lab work on rapid prototyping.</p><p class="links"><a href="https://ois2.taltech.ee/uusois/subject/IAX0600">Course page</a></p></div></td><td class="match"><span class="m partial">Partial</span><span class="src">Page checked</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="method" class="method" aria-labelledby="method-h">
+    <h2 id="method-h">How this was checked</h2>
+    <ul>
+        <li><strong>Page checked</strong> means I opened the course page or PDF on 27 October 2026 and the details in the row come from it.</li>
+        <li><strong>From search results</strong> means the page was blocked, timed out or had moved when I tried it from here, so the details come from the search engine's copy of the page. Open the link before relying on them.</li>
+        <li><strong>Not found</strong> means searches in English and the local language, usually limited to the university's own site, turned up no FPGA or HDL course page. It isn't proof the university has no such course.</li>
+        <li>The match level is my judgment from the course description, measured against 6.205: FPGA labs in an HDL plus a substantial build.</li>
+        <li>Course codes, credits and boards change from year to year. Several entries (MSU's VMK elective, the MIEM courses, the USC catalogue entry) are from earlier years.</li>
+    </ul>
+</section>
+
+<footer>
+    <p>Compiled 27 October 2026. Course names and descriptions are summarized from each university's own pages.</p>
+</footer>
+
+</div>
+</body>
+</html>

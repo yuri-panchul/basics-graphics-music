@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Аналоги 6.111</title>
+<meta name="description" content="Курсы, похожие на MIT 6.111 (теперь 6.205), в ведущих университетах Калифорнии, России, Беларуси, Украины и других бывших советских республик, со ссылками, а также Школа синтеза цифровых схем.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Armenian:wght@400;600&family=Noto+Sans+Georgian:wght@400;600&family=Noto+Sans:wght@400;600&family=Unbounded:wght@500;600&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8;
+    --surface: #ffffff;
+    --surface-2: #e8ecf2;
+    --ink: #141a26;
+    --muted: #586174;
+    --line: #d8dde6;
+    --accent: #2b4fb3;
+    --accent-soft: #e3e9f8;
+    --close-ink: #17663f;
+    --close-bg: #dcefe3;
+    --partial-ink: #7a5100;
+    --partial-bg: #f7ebd2;
+    --short-ink: #4a3b9a;
+    --short-bg: #e9e5f8;
+    --none-ink: #5a6170;
+    --none-bg: #eceef3;
+    --req-ink: #8a2c3b;
+    --req-bg: #f8e3e6;
+    --warn-ink: #8a5a00;
+    --ref-bg: #142041;
+    --ref-ink: #eef2fb;
+    --ref-muted: #aab6d6;
+    --ref-accent: #8fb0ff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b;
+        --surface: #161b25;
+        --surface-2: #1d2430;
+        --ink: #e3e8f1;
+        --muted: #9aa4b7;
+        --line: #2a3242;
+        --accent: #8fb0ff;
+        --accent-soft: #1d2945;
+        --close-ink: #7fd8a8;
+        --close-bg: #17301f;
+        --partial-ink: #efc46e;
+        --partial-bg: #2f2610;
+        --short-ink: #bcaef5;
+        --short-bg: #252040;
+        --none-ink: #a3abba;
+        --none-bg: #222834;
+        --req-ink: #f2a3b0;
+        --req-bg: #3a1d24;
+        --warn-ink: #efc46e;
+        --ref-bg: #1a2747;
+        --ref-ink: #eef2fb;
+        --ref-muted: #aab6d6;
+        --ref-accent: #a9c1ff;
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f131b;
+    --surface: #161b25;
+    --surface-2: #1d2430;
+    --ink: #e3e8f1;
+    --muted: #9aa4b7;
+    --line: #2a3242;
+    --accent: #8fb0ff;
+    --accent-soft: #1d2945;
+    --close-ink: #7fd8a8;
+    --close-bg: #17301f;
+    --partial-ink: #efc46e;
+    --partial-bg: #2f2610;
+    --short-ink: #bcaef5;
+    --short-bg: #252040;
+    --none-ink: #a3abba;
+    --none-bg: #222834;
+    --req-ink: #f2a3b0;
+    --req-bg: #3a1d24;
+    --warn-ink: #efc46e;
+    --ref-bg: #1a2747;
+    --ref-ink: #eef2fb;
+    --ref-muted: #aab6d6;
+    --ref-accent: #a9c1ff;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    padding-inline: 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", "Noto Sans Armenian", "Noto Sans Georgian", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-block: 40px 64px;
+    display: grid;
+    gap: 56px;
+}
+
+h1, h2 {
+    font-family: Unbounded, "Golos Text", "Noto Sans", system-ui, sans-serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+    line-height: 1.15;
+}
+
+h1 { font-size: clamp(2rem, 1.3rem + 3vw, 3.2rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.65rem); font-weight: 500; }
+
+h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-wrap: balance;
+}
+
+p { margin: 0; }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+.eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+header { display: grid; gap: 16px; }
+header .lede { max-width: 68ch; font-size: 1.12rem; color: var(--ink); }
+header .scope { max-width: 72ch; color: var(--muted); }
+
+section { display: grid; gap: 20px; }
+section > .intro { max-width: 70ch; color: var(--muted); }
+
+nav.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 0.95rem;
+}
+
+/* The reference course */
+.ref {
+    background: var(--ref-bg);
+    color: var(--ref-ink);
+    border-radius: 14px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 28px;
+}
+.ref h2 { color: var(--ref-ink); }
+.ref .eyebrow { color: var(--ref-muted); }
+.ref .num6 {
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: clamp(2.6rem, 2rem + 3vw, 4rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+.ref .num6 s { color: var(--ref-muted); text-decoration-thickness: 2px; font-size: 0.55em; margin-left: 10px; }
+.ref .head { display: grid; gap: 12px; align-content: start; }
+.ref .head p { color: var(--ref-muted); }
+.ref ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.ref a { color: var(--ref-accent); }
+.ref .links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 4px; }
+
+/* Match levels */
+.m {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+.m.close { color: var(--close-ink); background: var(--close-bg); }
+.m.partial { color: var(--partial-ink); background: var(--partial-bg); }
+.m.short { color: var(--short-ink); background: var(--short-bg); }
+.m.none { color: var(--none-ink); background: var(--none-bg); }
+
+.legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px 24px;
+}
+.leg { display: grid; gap: 6px; align-content: start; }
+.leg p { color: var(--muted); font-size: 0.92rem; }
+
+/* Tables */
+.tablewrap { overflow-x: auto; }
+
+table { border-collapse: collapse; width: 100%; }
+
+table.summary { min-width: 620px; font-variant-numeric: tabular-nums; }
+table.summary th, table.summary td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+}
+table.summary thead th { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+table.summary .num { text-align: right; }
+table.summary tr.sum th, table.summary tr.sum td { font-weight: 600; border-bottom: 0; }
+
+table.unis {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+table.unis thead th {
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface-2);
+    padding: 10px 16px;
+}
+table.unis td {
+    vertical-align: top;
+    padding: 16px;
+    border-top: 1px solid var(--line);
+}
+table.unis tbody tr:first-child td { border-top: 0; }
+td.uni { width: 30%; }
+td.courses { width: 56%; }
+td.match { width: 14%; }
+
+.uni .local { display: block; font-weight: 600; line-height: 1.35; }
+.uni .alt { display: block; font-size: 0.9rem; line-height: 1.35; margin-top: 2px; }
+.uni .en { display: block; color: var(--muted); font-size: 0.9rem; line-height: 1.35; margin-top: 4px; }
+.uni .city { display: block; color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.chip.req { color: var(--req-ink); background: var(--req-bg); }
+.chip.school { color: var(--accent); background: var(--accent-soft); }
+a.chip.school:hover { text-decoration: underline; }
+
+.courses { display: block; }
+.course + .course { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.cname { font-weight: 600; line-height: 1.4; }
+.cen { display: block; color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+.code {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: var(--surface-2);
+    padding: 1px 7px;
+    border-radius: 5px;
+}
+.desc { margin-top: 6px; font-size: 0.95rem; max-width: 72ch; }
+.desc.muted { color: var(--muted); margin-top: 0; }
+.links { margin-top: 6px; font-size: 0.92rem; }
+
+.match .src { display: block; margin-top: 8px; font-size: 0.8rem; color: var(--muted); }
+.match .src.warn { color: var(--warn-ink); }
+
+h3.country { margin-top: 12px; font-size: 1.05rem; }
+h3.country:first-of-type { margin-top: 0; }
+
+/* Digital Circuit Synthesis School */
+.school {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+}
+.school .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px 24px;
+}
+.school dt { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.school dd { margin: 2px 0 0; }
+.school dl { margin: 0; display: contents; }
+.school .fact { display: grid; gap: 2px; }
+.school .prog { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px 32px; }
+.school ol { margin: 6px 0 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: 0.95rem; }
+.school ul.clusters {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.school ul.clusters li {
+    font-size: 0.85rem;
+    padding: 2px 9px;
+    border-radius: 6px;
+    background: var(--surface-2);
+}
+
+.method { display: grid; gap: 12px; max-width: 76ch; }
+.method ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 20px; }
+
+@media (max-width: 860px) {
+    .ref { grid-template-columns: 1fr; padding: 22px; }
+}
+
+@media (max-width: 760px) {
+    table.unis, table.unis tbody, table.unis tr, table.unis td { display: block; width: 100%; }
+    table.unis thead { display: none; }
+    table.unis tr { border-top: 1px solid var(--line); }
+    table.unis tbody tr:first-child { border-top: 0; }
+    table.unis td { border-top: 0; padding: 12px 16px 0; }
+    table.unis td.match { padding-bottom: 16px; }
+    .match .src { display: inline; margin: 0 0 0 8px; }
+    .school { padding: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <p class="eyebrow">Лабораторные курсы цифрового проектирования · проверено 27 октября 2026 г.</p>
+    <h1>Аналоги 6.111</h1>
+    <p class="lede">Курс каждого университета, ближе всего подходящий к MIT 6.111 — лабораторному курсу по ПЛИС, где студенты осваивают Verilog, а затем делают крупный собственный проект. Для каждого курса дана ссылка на его страницу.</p>
+    <p class="scope">Всего 64 университета: Калифорния — 12, Россия — 13, Беларусь — 4, Украина — 7, другие бывшие советские республики — 28 (12 стран). Это не официальный рейтинг: в каждом регионе перечислены сильнейшие инженерные университеты, а также семь университетов из вашего списка (с пометкой «В вашем списке»). Названия университетов даны на местном языке (в Калифорнии — по-английски), под ними — по-русски. Названия курсов приведены так, как на странице источника, с переводом на русский, если курс назван на другом языке.</p>
+    <nav class="toc" aria-label="Разделы">
+        <a href="#mit">MIT 6.111</a>
+        <a href="#summary">Сводка</a>
+        <a href="#school">Школа синтеза</a>
+        <a href="#california">Калифорния</a>
+        <a href="#russia">Россия</a>
+        <a href="#belarus">Беларусь</a>
+        <a href="#ukraine">Украина</a>
+        <a href="#other">Другие республики</a>
+        <a href="#method">Как проверялось</a>
+        <a href="mit_6111_equivalents.html" lang="en" hreflang="en">English version</a>
+    </nav>
+</header>
+
+<section id="mit" class="ref" aria-labelledby="mit-h">
+    <div class="head">
+        <p class="eyebrow">Эталонный курс</p>
+        <p class="num6">6.205<s>6.111</s></p>
+        <h2 id="mit-h" lang="en">Digital Systems Laboratory I</h2>
+        <p>Лаборатория цифровых систем I. В новой системе нумерации MIT курс 6.111 (Introductory Digital Systems Laboratory) получил номер 6.205.</p>
+    </div>
+    <div>
+        <ul>
+            <li>Цифровое проектирование на ПЛИС на языке Verilog: моделирование в iVerilog, сборка проекта в AMD Vivado.</li>
+            <li>Каждый студент получает на семестр плату Real Digital Urbana.</li>
+            <li>Первая половина семестра — лекции и около восьми еженедельных лабораторных работ и упражнений (48% оценки). Вторая половина — крупный итоговый проект (52%). Экзаменов нет.</li>
+            <li>12 юнитов (1-5-6: часы лекций, лабораторных и самостоятельной работы в неделю). Предварительный курс — 6.191, бывший 6.004.</li>
+        </ul>
+        <p class="links">
+            <a href="https://fpga.mit.edu/6205/F25">Сайт 6.205, осень 2025</a>
+            <a href="https://fpga.mit.edu/6205/F23/information">Информация о курсе, осень 2023</a>
+            <a href="https://ocw.mit.edu/courses/6-111-introductory-digital-systems-laboratory-spring-2006/">6.111 на MIT OpenCourseWare (2006)</a>
+        </p>
+    </div>
+</section>
+
+<section id="summary" aria-labelledby="summary-h">
+    <h2 id="summary-h">Насколько близки курсы к 6.111</h2>
+    <div class="legend"><div class="leg"><span class="m close">Близкое</span><p>Лабораторный курс по ПЛИС с проектированием на HDL и крупной работой: процессором, системой или проектом на выбор студента.</p></div><div class="leg"><span class="m partial">Частичное</span><p>Курс по ПЛИС или HDL, но уже: меньше лабораторных, в основном язык или ЦОС, нет крупного проекта или использование ПЛИС не подтверждено.</p></div><div class="leg"><span class="m short">Краткий курс</span><p>Краткосрочная или внеучебная программа при университете, без зачётных единиц.</p></div><div class="leg"><span class="m none">Не найдено</span><p>Открытой страницы курса найти не удалось. Это не значит, что такого курса в университете нет.</p></div></div>
+    <div class="tablewrap"><table class="summary"><thead><tr><th scope="col">Регион</th><th scope="col" class="num">Университетов</th><th scope="col" class="num"><span class="m close">Близкое</span></th><th scope="col" class="num"><span class="m partial">Частичное</span></th><th scope="col" class="num"><span class="m short">Краткий курс</span></th><th scope="col" class="num"><span class="m none">Не найдено</span></th></tr></thead><tbody><tr><th scope="row"><a href="#california">Калифорния</a></th><td class="num">12</td><td class="num">5</td><td class="num">7</td><td class="num">–</td><td class="num">–</td></tr><tr><th scope="row"><a href="#russia">Россия</a></th><td class="num">13</td><td class="num">4</td><td class="num">6</td><td class="num">2</td><td class="num">1</td></tr><tr><th scope="row"><a href="#belarus">Беларусь</a></th><td class="num">4</td><td class="num">–</td><td class="num">1</td><td class="num">–</td><td class="num">3</td></tr><tr><th scope="row"><a href="#ukraine">Украина</a></th><td class="num">7</td><td class="num">1</td><td class="num">5</td><td class="num">–</td><td class="num">1</td></tr><tr><th scope="row"><a href="#other">Другие бывшие советские республики</a></th><td class="num">28</td><td class="num">1</td><td class="num">10</td><td class="num">–</td><td class="num">17</td></tr><tr class="sum"><th scope="row">Итого</th><td class="num">64</td><td class="num">11</td><td class="num">29</td><td class="num">2</td><td class="num">22</td></tr></tbody></table></div>
+</section>
+
+<section id="school" aria-labelledby="school-h">
+    <h2 id="school-h">Школа синтеза цифровых схем</h2>
+    <p class="intro">Это не университетский курс, но для многих из этих студентов — самое близкое к 6.111, что им доступно: бесплатная годовая программа YADRO, которая проходит в аудиториях вузов-партнёров. По данным страницы программы, в ней более 2000 участников и 24 университета России и Беларуси.</p>
+    <div class="school">
+        <div class="facts">
+            <div class="fact"><span class="eyebrow">Сезон</span><span>Осень 2026 — весна 2027, по субботам 12:00–15:00 по московскому времени</span></div>
+            <div class="fact"><span class="eyebrow">Форматы</span><span>Очно в кластере при университете (для студентов этого вуза, после отбора) или онлайн для всех</span></div>
+            <div class="fact"><span class="eyebrow">Очно</span><span>Выдаются платы, проверяются домашние задания, есть куратор кластера, проектная работа с инженерами YADRO, сертификат участника</span></div>
+            <div class="fact"><span class="eyebrow">Приём заявок</span><span>Очно — до 10 октября 2026 г., онлайн — до 31 октября 2026 г.</span></div>
+        </div>
+        <div class="prog">
+            <div>
+                <h3>Октябрь – декабрь</h3>
+                <ol><li>Введение в маршрут проектирования и упражнения с логикой</li><li>Последовательностная логика на ПЛИС</li><li>Концепция конечного автомата в RTL-проектировании</li><li>Функциональная верификация: основные концепции, ООП</li><li>Функциональная верификация: тестбенчи</li><li>Как устроена микросхема ПЛИС (2 части)</li><li>Открытый маршрут проектирования ASIC</li><li>DFT</li></ol>
+            </div>
+            <div>
+                <h3>Февраль – май</h3>
+                <ol><li>Конвейеры и систолические массивы</li><li>Цифровая обработка сигнала</li><li>Внешние интерфейсы и распознавание музыки на ПЛИС</li><li>Генерация звука в цифровых схемах</li><li>Микроархитектура и буферы FIFO; valid/ready и flow control</li><li>FIFO на SRAM, backpressure, credit-based flow control</li><li>Микроархитектура конвейерного процессора на примере MIRISCV</li><li>Введение в кэши</li></ol>
+            </div>
+        </div>
+        <p class="eyebrow">Лекции прошлого сезона по странице программы; в новом сезоне программа может немного измениться.</p>
+        <div>
+            <h3>Кластеры</h3>
+            <ul class="clusters"><li>ИТМО</li><li>НИЯУ МИФИ</li><li>НИУ МЭИ</li><li>НГТУ (Нижний Новгород)</li><li>ННГУ</li><li>Центр проектирования МИРЭА</li><li>МИЭТ</li><li>YADRO (московский офис)</li><li>СПбПУ</li><li>УрФУ</li><li>МИЭМ НИУ ВШЭ</li><li>СевГУ</li><li>СибГУТИ</li><li>ГГУ им. Ф. Скорины (Гомель)</li><li>БГУИР</li><li>МФТИ</li><li>МГТУ им. Н. Э. Баумана</li><li>ОмГТУ</li><li>БелГУТ (Гомель)</li><li>МАИ</li><li>Иннополис</li><li>АлтГУ</li><li>СГУ им. Н. Г. Чернышевского</li><li>Пензенский ГУ</li><li>ТУСУР</li><li>Самарский университет</li></ul>
+        </div>
+        <p class="links"><a href="https://edu.yadro.com/chip-design-school/">Страница программы (edu.yadro.com)</a></p>
+    </div>
+</section>
+
+<section id="california" aria-labelledby="ca-h">
+    <h2 id="ca-h">Калифорния</h2>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Stanford University</span><span class="en">Стэнфордский университет</span><span class="city">Стэнфорд</span></td><td class="courses"><div class="course"><p class="cname">Digital System Design</p><span class="cen">Проектирование цифровых систем</span><span class="code">EE 108</span><p class="desc">5 кредитов, лекции и необязательные лабораторные занятия. Комбинационная и последовательностная логика, временные соотношения, тактирование и синхронизация, конечные автоматы, микропрограммирование, разделение на тракт данных и устройство управления. В текущем описании в каталоге ПЛИС не упоминаются.</p><p class="links"><a href="https://bulletin.stanford.edu/courses/2026971">Каталог Stanford Bulletin</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Berkeley</span><span class="en">Калифорнийский университет в Беркли</span><span class="city">Беркли</span></td><td class="courses"><div class="course"><p class="cname">Introduction to Digital Design and Integrated Circuits, with the Field-Programmable Gate Array Laboratory</p><span class="cen">Введение в цифровое проектирование и интегральные схемы, с лабораторным практикумом по ПЛИС</span><span class="code">EECS 151/251A + 151LB</span><p class="desc">Студенты слушают лекции и выбирают либо практикум по ASIC, либо практикум по ПЛИС. Практикум по ПЛИС обучает полному маршруту проектирования для ПЛИС и завершается крупным проектом — например, системой на трёхстадийном процессоре RISC-V с кэшами, графическим ускорителем и внешней периферией, которую демонстрируют на плате с ПЛИС.</p><p class="links"><a href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/">Описание 151LB</a> · <a href="https://inst.eecs.berkeley.edu/~eecs151/">Сайт курса</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">California Institute of Technology (Caltech)</span><span class="en">Калифорнийский технологический институт (Калтех)</span><span class="city">Пасадина</span></td><td class="courses"><div class="course"><p class="cname">Advanced Digital Systems Design</p><span class="cen">Углублённое проектирование цифровых систем</span><span class="code">EE/CS 119 abc</span><p class="desc">Три триместра. Проектирование на PLD и ASIC: синхронное проектирование, конечные автоматы, арифметические схемы, проектирование с учётом тестопригодности, CPLD, ПЛИС, VHDL, временной анализ. Студенты собирают системы, разобранные на занятиях, и системы, которые предлагают сами. Курс читается раз в два года; в 2026–27 учебном году он есть в расписании.</p><p class="links"><a href="https://catalog.caltech.edu/current/2026-27/department/EE/">Каталог Caltech 2026–27, EE</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Los Angeles (UCLA)</span><span class="en">Калифорнийский университет в Лос-Анджелесе (UCLA)</span><span class="city">Лос-Анджелес</span></td><td class="courses"><div class="course"><p class="cname">Introductory Digital Design Laboratory</p><span class="cen">Вводный практикум по цифровому проектированию</span><span class="code">COM SCI M152A</span><p class="desc">Лабораторный курс на 2 кредита. На официальной странице каталога указаны только название и число кредитов, поэтому плату и HDL по официальному источнику подтвердить не удалось.</p><p class="links"><a href="https://catalog.registrar.ucla.edu/course/2025/COMSCIM152A">Каталог UCLA</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, San Diego (UCSD)</span><span class="en">Калифорнийский университет в Сан-Диего (UCSD)</span><span class="city">Ла-Холья</span></td><td class="courses"><div class="course"><p class="cname">Advanced Digital Design Project</p><span class="cen">Проект по углублённому цифровому проектированию</span><span class="code">ECE 111</span><p class="desc">4 кредита. Устранение состязаний, синтез конечных автоматов, синхронизация и арбитраж, конвейеризация и временные соотношения; домашние задания и крупный проект с моделированием и/или быстрым прототипированием. ПЛИС в каталоге не названы.</p><p class="links"><a href="https://catalog.ucsd.edu/courses/ECE.html">Каталог UCSD, ECE</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">University of Southern California (USC)</span><span class="en">Университет Южной Калифорнии (USC)</span><span class="city">Лос-Анджелес</span></td><td class="courses"><div class="course"><p class="cname">Introduction to Digital Circuits</p><span class="cen">Введение в цифровые схемы</span><span class="code">EE 354L</span><p class="desc">4 кредита. Синхронное проектирование тракта данных и устройства управления; проектирование схемами и на Verilog, моделирование и реализация на ПЛИС; временной анализ; проект в конце семестра.</p><p class="links"><a href="https://catalogue.usc.edu/preview_course_nopop.php?catoid=11&amp;coid=170081">Каталог USC (описание 2019–20)</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Santa Barbara (UCSB)</span><span class="en">Калифорнийский университет в Санта-Барбаре (UCSB)</span><span class="city">Санта-Барбара</span></td><td class="courses"><div class="course"><p class="cname">Digital Design Principles</p><span class="cen">Основы цифрового проектирования</span><span class="code">ECE 152A</span><p class="desc">Синхронные цифровые системы: временные диаграммы, триггеры, счётчики, автоматы Мили и Мура, Verilog, временной анализ. На странице кафедры о плате DigiLab с ПЛИС ECE 152A указан среди курсов, где она используется.</p><p class="links"><a href="https://catalog.ucsb.edu/courses/ECE%20152A">Каталог UCSB</a> · <a href="https://courses.ece.ucsb.edu/ECE152/digilab-fpga/">Плата DigiLab с ПЛИС</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Davis</span><span class="en">Калифорнийский университет в Дейвисе</span><span class="city">Дейвис</span></td><td class="courses"><div class="course"><p class="cname">Digital Systems II</p><span class="cen">Цифровые системы II</span><span class="code">EEC 180</span><p class="desc">5 кредитов, 3 часа лекций и 2 часа лабораторных. Автоматизированное проектирование цифровых систем с HDL, логическим синтезом и ПЛИС; Verilog, тестбенчи и проектирование сложных систем на ПЛИС.</p><p class="links"><a href="https://ece.ucdavis.edu/eec-180-digital-systems-ii">UC Davis ECE</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src warn">По результатам поиска</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Irvine</span><span class="en">Калифорнийский университет в Ирвайне</span><span class="city">Ирвайн</span></td><td class="courses"><div class="course"><p class="cname">Introduction to Digital Logic Laboratory</p><span class="cen">Вводный практикум по цифровой логике</span><span class="code">EECS 31L</span><p class="desc">3 кредита. Проектирование простых комбинационных и последовательностных систем (арифметических процессоров, игровых автоматов) с помощью языков описания аппаратуры и САПР. ПЛИС в каталоге не названы.</p><p class="links"><a href="https://catalogue.uci.edu/allcourses/eecs/">Каталог UCI, EECS</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">University of California, Santa Cruz</span><span class="en">Калифорнийский университет в Санта-Крузе</span><span class="city">Санта-Круз</span></td><td class="courses"><div class="course"><p class="cname">Logic Design with Verilog</p><span class="cen">Логическое проектирование на Verilog</span><span class="code">CSE 125</span><p class="desc">Проектирование на Verilog для ASIC и ПЛИС; студенты разрабатывают и верифицируют крупные системы, выполняют задания и проект. Курс идёт после CSE 100 Logic Design и его практикума CSE 100L, в котором используется программируемая логика.</p><p class="links"><a href="https://catalog.ucsc.edu/en/current/general-catalog/courses/cse-computer-science-and-engineering/upper-division/cse-125">CSE 125</a> · <a href="https://catalog.ucsc.edu/en/current/general-catalog/courses/cse-computer-science-and-engineering/upper-division/cse-100l">CSE 100L</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">California Polytechnic State University (Cal Poly)</span><span class="en">Калифорнийский политехнический университет (Cal Poly)</span><span class="city">Сан-Луис-Обиспо</span></td><td class="courses"><div class="course"><p class="cname">Digital Design</p><span class="cen">Цифровое проектирование</span><span class="code">CPE/EE 133</span><p class="desc">Вводный курс: булева алгебра, комбинационная и последовательностная логика, применение HDL для проектирования и синтеза на ПЛИС. На странице лаборатории кафедры для курса 133 и следующего за ним 233 указаны платы Basys 3 с ПЛИС.</p><p class="links"><a href="https://ee.calpoly.edu/about/labs/design">Лаборатория проектирования цифровых систем</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">San José State University</span><span class="en">Университет штата Калифорния в Сан-Хосе</span><span class="city">Сан-Хосе</span></td><td class="courses"><div class="course"><p class="cname">Digital Design</p><span class="cen">Цифровое проектирование</span><span class="code">CMPE 125</span><p class="desc">Есть в каталоге 2026–27. RTL-проектирование, а также верификация на Verilog/SystemVerilog; в практикуме используются промышленные САПР и ПЛИС.</p><p class="links"><a href="https://catalog.sjsu.edu/preview_course_nopop.php?catoid=23&amp;coid=198756">Каталог SJSU 2026–27</a></p></div><div class="course"><p class="cname">Digital Design with FPGAs</p><span class="cen">Цифровое проектирование на ПЛИС</span><span class="code">EE 178</span><p class="desc">Студенческие проекты с САПР для проектирования, моделирования и реализации систем на ПЛИС. Курс есть в каталоге 2022–23, который сейчас в архиве.</p><p class="links"><a href="https://catalog.sjsu.edu/preview_course_nopop.php?catoid=13&amp;coid=116788">Каталог SJSU 2022–23</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="russia" aria-labelledby="ru-h">
+    <h2 id="ru-h">Россия</h2>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Московский государственный университет имени М. В. Ломоносова (МГУ)</span><span class="city">Москва</span><span class="chips"><span class="chip req">В вашем списке</span></span></td><td class="courses"><div class="course"><p class="cname">Программируемые логические интегральные схемы</p><span class="code">ВМК, кафедра математической кибернетики</span><p class="desc">Двухсеместровый курс по выбору: маршрут проектирования для ПЛИС, Verilog, операционные и управляющие автоматы, на плате DE0-Nano. На странице указано, что сведения относятся к 2016–17 учебному году.</p><p class="links"><a href="https://mk.cs.msu.ru/index.php/%D0%9F%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D1%83%D0%B5%D0%BC%D1%8B%D0%B5_%D0%BB%D0%BE%D0%B3%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D0%B8%D0%BD%D1%82%D0%B5%D0%B3%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5_%D1%81%D1%85%D0%B5%D0%BC%D1%8B">Страница курса</a></p></div><div class="course"><p class="cname">Проектирование на ПЛИС</p><span class="code">Физический факультет</span><p class="desc">Курс по выбору на платах Spartan-3E Starter Kit: VHDL в первом семестре, собственные проекты студентов во втором. Страница не открылась отсюда; сведения взяты из результатов поиска.</p><p class="links"><a href="https://engineering.phys.msu.ru/ru/programmirovanie-dlya-sstudentov-2-kursa/fpga-designing">Страница курса</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Московский физико-технический институт (МФТИ)</span><span class="city">Долгопрудный</span><span class="chips"><span class="chip req">В вашем списке</span><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Введение в проектирование на языке Verilog</p><span class="code">ФРКТ, 2025+</span><p class="desc">Цифровое проектирование на двух проектах: конвейерное 32-битное ядро RISC-V и конвейерный блок операций с плавающей точкой, с прототипированием на ПЛИС; кроме того, моделирование, тестирование, низкоуровневое программирование и анализ PPA. В материалах используются Altera Cyclone IV и Quartus. Продолжение — курс «Проектирование цифровых вычислительных систем» — начинается в 2026 году.</p><p class="links"><a href="https://viktor-prutyanov.github.io/drec-fpga-intro/">Материалы курса</a> · <a href="https://github.com/viktor-prutyanov/drec-fpga-intro">GitHub</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Национальный исследовательский ядерный университет «МИФИ» (НИЯУ МИФИ)</span><span class="city">Москва</span><span class="chips"><span class="chip req">В вашем списке</span><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Проектирование процессора с архитектурой RISC-V</p><span class="code">Краткосрочная навыковая программа, Диджитал Центр</span><p class="desc">Краткосрочная навыковая программа для студентов МИФИ (бесплатно для московской площадки, по итогам вступительного тестирования): SystemVerilog, Vivado, пошаговая реализация инструкций RISC-V и загрузка проекта в ПЛИС. Автор программы — с кафедры «Компьютерные системы и технологии». Набор на текущий поток закрыт.</p><p class="links"><a href="https://digital.mephi.ru/riscv">Страница программы</a></p></div></td><td class="match"><span class="m short">Краткий курс</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Университет ИТМО</span><span class="city">Санкт-Петербург</span><span class="chips"><span class="chip req">В вашем списке</span><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Основы программирования на ПЛИС</p><span class="code">Бакалавриат «Беспроводные технологии», 7-й семестр</span><p class="desc">3 зачётные единицы, экзамен. Цифровая логика, архитектура ПЛИС, VHDL, ModelSim, SignalTap и временной анализ, затем ЦОС на ПЛИС и встраиваемые системы.</p><p class="links"><a href="https://physics.itmo.ru/ru/print/pdf/node/40344">Карточка дисциплины (PDF)</a></p></div><div class="course"><p class="cname">Введение в проектирование на ПЛИС</p><span class="code">Магистратура «Беспроводные технологии»</span><p class="desc">3 зачётные единицы: проектирование и реализация цифровых схем на VHDL или Verilog, отладка и временной анализ.</p><p class="links"><a href="https://physics.itmo.ru/en/print/pdf/node/19567">Карточка дисциплины (PDF)</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Национальный исследовательский университет «МЭИ» (НИУ «МЭИ»)</span><span class="city">Москва</span><span class="chips"><span class="chip req">В вашем списке</span><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Основы цифрового синтеза; Синтез цифровых интегральных схем</p><span class="code">ИРЭ, кафедра электроники и наноэлектроники</span><p class="desc">Общий лабораторный практикум из 12 работ: комбинационная логика, RTL, последовательностная логика, конечные автоматы, сумматоры, память, семисегментный индикатор, LCD1602, UART, GPIO/SPI/I2C, VGA и клавиатура PS/2. Используются Icarus Verilog, GTKWave и платы с Cyclone IV.</p><p class="links"><a href="https://mpei.ru/Structure/Universe/ire/structure/se/DocLib/%D0%9F%D1%80%D0%B0%D0%BA%D1%82%D0%B8%D0%BA%D1%83%D0%BC_SystemVerilog.pdf">Лабораторный практикум (PDF)</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Национальный исследовательский университет «МИЭТ» (НИУ МИЭТ)</span><span class="city">Зеленоград</span><span class="chips"><span class="chip req">В вашем списке</span><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Архитектуры процессорных систем</p><span class="code">Институт МПСУ</span><p class="desc">Читается на семи направлениях подготовки. 16 лабораторных работ ведут от сумматора и АЛУ к полноценному процессору RISC-V с блоком загрузки и сохранения, прерываниями, периферией, программатором и оценкой производительности, на SystemVerilog, с файлами для платы Nexys A7. В институте есть и продвинутый «Практикум по ПЛИС»: устройство ПЛИС Xilinx 7-й серии, AXI-Stream и PLL.</p><p class="links"><a href="https://mpsu.github.io/APS/">Учебник курса</a> · <a href="https://github.com/MPSU/APS">GitHub</a> · <a href="https://github.com/MPSU/FPGA_pract">Практикум по ПЛИС</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Московский институт электроники и математики им. А. Н. Тихонова НИУ ВШЭ (МИЭМ)</span><span class="city">Москва</span><span class="chips"><span class="chip req">В вашем списке</span><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Проектирование систем на кристалле</p><span class="code">2023/2024</span><p class="desc">Verilog, базовые цифровые блоки, процессорные ядра MIPS в ПЛИС (однотактное, многотактное, конвейерное) и маршрут проектирования ASIC.</p><p class="links"><a href="https://www.hse.ru/edu/courses/835172336">Страница курса на сайте ВШЭ</a></p></div><div class="course"><p class="cname">Системное проектирование цифровых устройств</p><span class="code">Дисциплина по выбору, 4-й курс, 2023/2024</span><p class="desc">Углублённый Verilog/SystemVerilog, кэши, Nios II и ARM HPS. Студенты дорабатывают ядра schoolMIPS и schoolRISCV и подключают монитор, мышь, ИК-пульт, память DDR, звук и видео на платах DE1-SoC, DE10-Standard и DE10-Nano.</p><p class="links"><a href="https://www.hse.ru/edu/courses/835156929">Страница курса на сайте ВШЭ</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Московский государственный технический университет им. Н. Э. Баумана</span><span class="city">Москва</span><span class="chips"><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Технология проектирования ПЛИС фирмы Intel; Проектирование систем на кристалле на базе ПЛИС фирмы Intel</p><span class="code">Кафедра ИУ3</span><p class="desc">Лабораторные учебные курсы на 40 и 32 часа: маршрут Quartus II для MAX, Cyclone и Stratix, затем системы на кристалле с Nios II.</p><p class="links"><a href="https://www.iu3.bmstu.ru/Home/Altera">Лаборатория Intel FPGA кафедры ИУ3</a></p></div></td><td class="match"><span class="m short">Краткий курс</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Санкт-Петербургский политехнический университет Петра Великого (СПбПУ)</span><span class="city">Санкт-Петербург</span><span class="chips"><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Автоматизированная разработка устройств на ПЛИС</p><span class="code">Магистратура 11.04.04_07</span><p class="desc">Практический магистерский курс: проектирование на HDL и реализация на отладочных платах в Vivado.</p><p class="links"><a href="https://hsemst.spbstu.ru/11_04_04_07_courses/">Дисциплины программы</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Санкт-Петербургский государственный электротехнический университет «ЛЭТИ»</span><span class="city">Санкт-Петербург</span></td><td class="courses"><div class="course"><p class="cname">Проектирование и программирование устройств на программируемых логических интегральных схемах</p><span class="code">Радиотехнический факультет</span><p class="desc">Verilog HDL и программирование ПЛИС. В лаборатории — упражнения на Verilog (арифметика, ОЗУ, генератор псевдослучайных чисел) и система на Nios II на Cyclone II.</p><p class="links"><a href="https://etu.ru/sveden/files/RP22-596ProektirovanieIProgrammirovanieUstroystvNaProgrammiruemyxLogicheskixIntegralynyxSxemax.pdf">Рабочая программа (PDF)</a> · <a href="https://etu.ru/ru/fakultety/fakultet-radiotehniki-i-telekommunikaciy/sostav-fakulteta/kafedra-radioelektronnyh-sredstv/uchebno-nauchnye-laboratorii/kt-v-rt">Лаборатория ПЛИС</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Университет Иннополис</span><span class="city">Иннополис</span><span class="chips"><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Fundamentals of Computer Architecture</p><span class="cen">Основы архитектуры компьютеров</span><span class="code">Бакалавриат</span><p class="desc">Verilog, программирование ПЛИС в Quartus Prime, тестбенчи в ModelSim, АЛУ, затем MIPS и конвейеризация; за необязательные проекты на ПЛИС начисляются бонусные баллы. Страница не открылась отсюда; сведения взяты из результатов поиска.</p><p class="links"><a href="https://eduwiki.innopolis.university/index.php/BSc:_Computer_Architecture">Вики курса</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src warn">По результатам поиска</span></td></tr>
+<tr><td class="uni"><span class="local">Томский государственный университет систем управления и радиоэлектроники (ТУСУР)</span><span class="city">Томск</span><span class="chips"><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Программирование логических интегральных схем</p><span class="code">Кафедра радиотехнических систем</span><p class="desc">Архитектура ПЛИС и цифровое проектирование на Verilog HDL, 16 часов лабораторных занятий на отладочных платах.</p><p class="links"><a href="https://tusur.ru/sveden/files/Programmirovanie_logicheskih_integralnyh_shem.pdf">Рабочая программа (PDF)</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Новосибирский государственный университет (НГУ)</span><span class="city">Новосибирск</span></td><td class="courses"><div class="course"><p class="desc">Нашёлся только учебник 2009 года «Программируемая логика FPGA» (К. Ф. Лысаков, физический факультет), а не страница курса.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="belarus" aria-labelledby="by-h">
+    <h2 id="by-h">Беларусь</h2>
+    <p class="intro">В Беларуси два государственных языка, поэтому названия даны по-белорусски, а под ними — по-русски.</p>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Беларускі дзяржаўны ўніверсітэт інфарматыкі і радыёэлектронікі (БДУІР)</span><span class="alt">Белорусский государственный университет информатики и радиоэлектроники (БГУИР)</span><span class="city">Минск</span><span class="chips"><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="cname">Кафедра встраиваемых вычислительных систем</p><p class="desc">Кафедра преподаёт VHDL и SystemVerilog и называет магистерскую траекторию по проектированию вычислительных систем на ПЛИС. Страницы отдельного курса найти не удалось. В университете также есть совместная лаборатория БГУИР × YADRO.</p><p class="links"><a href="https://www.bsuir.by/ru/kaf-evs/uchebnaya-rabota2">Страница кафедры</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Беларускі дзяржаўны ўніверсітэт (БДУ)</span><span class="alt">Белорусский государственный университет (БГУ)</span><span class="city">Минск</span></td><td class="courses"><div class="course"><p class="desc">Нашлось только методическое пособие 2003 года по цифровой электронике, без ПЛИС.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Беларускі нацыянальны тэхнічны ўніверсітэт (БНТУ)</span><span class="alt">Белорусский национальный технический университет (БНТУ)</span><span class="city">Минск</span></td><td class="courses"><div class="course"><p class="desc">Нашёлся только доклад на конференции о программировании плат Basys 3, а не страница курса.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Гомельскі дзяржаўны ўніверсітэт імя Францыска Скарыны</span><span class="alt">Гомельский государственный университет имени Франциска Скорины</span><span class="city">Гомель</span><span class="chips"><a class="chip school" href="#school">Кластер Школы синтеза</a></span></td><td class="courses"><div class="course"><p class="desc">Страницы курса найти не удалось, но в университете работает кластер Школы синтеза цифровых схем.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="ukraine" aria-labelledby="ua-h">
+    <h2 id="ua-h">Україна · Украина</h2>
+    <div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Київський політехнічний інститут імені Ігоря Сікорського (КПІ)</span><span class="en">Киевский политехнический институт имени Игоря Сикорского (КПИ)</span><span class="city">Киев</span></td><td class="courses"><div class="course"><p class="cname">Технології програмування на ПЛІС (FPGA)</p><span class="cen">Технологии программирования на ПЛИС (FPGA)</span><span class="code">ФІОТ, кафедра обчислювальної техніки</span><p class="desc">3-й курс, 6-й семестр, 4 кредита, входит в сертификатную программу. Verilog, тестбенчи, ModelSim и Quartus II на платах DE2, DE10-Standard и DE1-SoC.</p><p class="links"><a href="https://comsys.kpi.ua/wp-content/uploads/2025/02/tehnologiyi-programuvannya-na-plis-fpga-2.pdf">Описание дисциплины (PDF)</a></p></div><div class="course"><p class="cname">Проектування цифрових пристроїв на ПЛІС</p><span class="cen">Проектирование цифровых устройств на ПЛИС</span><span class="code">RE-121, кафедра прикладної радіоелектроніки</span><p class="desc">Дисциплина по выбору с 3-го курса: Verilog для комбинационных и последовательностных схем, тестирование и три лабораторные работы, последняя из которых — интерфейс ЦАП.</p><p class="links"><a href="https://my.kpi.ua/syllabus/121?trainform=1">Силлабус</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Київський національний університет імені Тараса Шевченка (КНУ)</span><span class="en">Киевский национальный университет имени Тараса Шевченко (КНУ)</span><span class="city">Киев</span></td><td class="courses"><div class="course"><p class="cname">Особливості проєктування електронних систем з застосуванням мікроконтролерів та програмованих логічних інтегральних схем</p><span class="cen">Особенности проектирования электронных систем с применением микроконтроллеров и программируемых логических интегральных схем</span><span class="code">Інститут високих технологій</span><p class="desc">Микроконтроллеры, а также устройство CPLD и ПЛИС, VHDL и Verilog для моделирования, синтеза и проектирования на ПЛИС.</p><p class="links"><a href="https://iht.knu.ua/wp-content/uploads/2024/04/%D0%94%D0%92%D0%A1.1.2.05-%D0%9E%D1%81%D0%BE%D0%B1%D0%BB%D0%B8%D0%B2%D0%BE%D1%81%D1%82%D1%96-%D0%BF%D1%80%D0%BE%D1%94%D0%BA%D1%82%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F-%D0%B5%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D0%B8%D1%85-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC-%D0%B7-%D0%B7%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F%D0%BC-%D0%BC%D1%96%D0%BA%D1%80%D0%BE%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D0%B5%D1%80%D1%96%D0%B2-%D1%82%D0%B0-%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%85-%D0%BB%D0%BE%D0%B3%D1%96%D1%87%D0%BD%D0%B8%D1%85-%D1%96%D0%BD%D1%82%D0%B5%D0%B3%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D1%85-%D1%81%D1%85%D0%B5%D0%BC.pdf">Рабочая программа (PDF)</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Київська школа економіки (KSE)</span><span class="en">Киевская школа экономики (KSE)</span><span class="city">Киев</span></td><td class="courses"><div class="course"><p class="cname">НВРІ 1: Проектування на основі мов опису апаратури для ПЛІС</p><span class="cen">СБИС 1: Проектирование на основе языков описания аппаратуры для ПЛИС</span><span class="code">Магістерська програма «Мікро- та наноелектроніка», 1-й терм</span><p class="desc">Обязательный курс магистерской программы, которую KSE ведёт совместно с ETH Zürich: 6 ECTS, 30 часов лекций и 30 часов практики. За ним следуют VLSI 2 (от нетлиста до полной системы на кристалле) и VLSI 3 (полностью заказное проектирование, full-custom). В лаборатории используются платы Zybo Z7 (Zynq).</p><p class="links"><a href="https://university.kse.ua/en/masters/mel">Страница программы</a> · <a href="https://kse.ua/wp-content/uploads/2025/03/Navchalniy-plan-_Mikro-ta-nanoelektronika_.pdf">Учебный план (PDF)</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Національний університет «Львівська політехніка»</span><span class="en">Национальный университет «Львовская политехника»</span><span class="city">Львов</span></td><td class="courses"><div class="course"><p class="cname">Програмовані логічні інтегральні схеми</p><span class="cen">Программируемые логические интегральные схемы</span><span class="code">Кафедра ЕЗІКТ</span><p class="desc">5 кредитов. Комбинационные схемы на ПЛИС, Verilog HDL и Quartus II. При проверке страница вернула ошибку; сведения взяты из результатов поиска.</p><p class="links"><a href="https://old.lpnu.ua/education/majors/subject/ITRE/8.172.05/19/2017/ua/part/1/3786">Страница дисциплины</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src warn">По результатам поиска</span></td></tr>
+<tr><td class="uni"><span class="local">Харківський національний університет радіоелектроніки (ХНУРЕ)</span><span class="en">Харьковский национальный университет радиоэлектроники (ХНУРЭ)</span><span class="city">Харьков</span></td><td class="courses"><div class="course"><p class="cname">Основи мов SystemVerilog та VHDL для проєктування цифрових пристроїв на ПЛІС у прикладах і задачах</p><span class="cen">Основы языков SystemVerilog и VHDL для проектирования цифровых устройств на ПЛИС в примерах и задачах</span><span class="code">Навчальний посібник, 2025</span><p class="desc">Учебное пособие ХНУРЭ 2025 года для практических занятий. Страницы курса, где оно используется, найти не удалось; в силлабусе кафедры по микроконтроллерам и ПЛИС используется VHDL.</p><p class="links"><a href="https://openarchive.nure.ua/entities/publication/bb48b656-bb4f-4e65-ab53-434920a1300a">Учебное пособие</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Національний університет «Одеська політехніка»</span><span class="en">Национальный университет «Одесская политехника»</span><span class="city">Одесса</span></td><td class="courses"><div class="course"><p class="cname">Проектування пристроїв на ПЛІС</p><span class="cen">Проектирование устройств на ПЛИС</span><p class="desc">4,5 ECTS. Схемотехника CPLD и ПЛИС, моделирование цифровых устройств в Quartus II, системы на кристалле.</p><p class="links"><a href="https://op.edu.ua/education/programs/components/9590">Страница курса</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Національний технічний університет «Харківський політехнічний інститут»</span><span class="en">Национальный технический университет «Харьковский политехнический институт»</span><span class="city">Харьков</span></td><td class="courses"><div class="course"><p class="desc">Нашлись только лабораторные материалы с упоминанием Active-HDL, а не страница курса.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="other" aria-labelledby="ot-h">
+    <h2 id="ot-h">Другие бывшие советские республики</h2>
+    <p class="intro">По два-три ведущих университета в каждой стране. Программы курсов здесь чаще всего лежат в PDF, закрыты студенческим входом или вовсе не опубликованы, поэтому «Не найдено» встречается часто.</p>
+    <h3 class="country">Қазақстан · Казахстан</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Назарбаев Университеті</span><span class="en">Назарбаев Университет</span><span class="city">Астана</span></td><td class="courses"><div class="course"><p class="cname">Digital Logic Design + Lab</p><span class="cen">Проектирование цифровой логики с практикумом</span><span class="code">ELCE 202 / ELCE 202L</span><p class="desc">Курс на английском языке. По результатам поиска: комбинационная и последовательностная логика, конечные автоматы и VHDL, практикум по ПЛИС и HDL. Страница программы теперь возвращает 404, поэтому подтвердить это не удалось.</p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src warn">По результатам поиска</span></td></tr>
+<tr><td class="uni"><span class="local">Әл-Фараби атындағы Қазақ ұлттық университеті</span><span class="en">Казахский национальный университет имени аль-Фараби</span><span class="city">Алматы</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Сәтбаев университеті</span><span class="en">Казахский национальный исследовательский технический университет имени К. И. Сатпаева</span><span class="city">Алматы</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Oʻzbekiston · Узбекистан</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Mirzo Ulugʻbek nomidagi Oʻzbekiston Milliy universiteti</span><span class="en">Национальный университет Узбекистана имени Мирзо Улугбека</span><span class="city">Ташкент</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Muhammad al-Xorazmiy nomidagi Toshkent axborot texnologiyalari universiteti</span><span class="en">Ташкентский университет информационных технологий имени Мухаммада аль-Хорезми</span><span class="city">Ташкент</span></td><td class="courses"><div class="course"><p class="desc">У университета есть совместный факультет с БГУИР.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Toshkent shahridagi Inha universiteti</span><span class="en">Университет Инха в Ташкенте</span><span class="city">Ташкент</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Кыргызстан</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Кыргыз-Россия Славян университети</span><span class="alt">Кыргызско-Российский Славянский университет</span><span class="city">Бишкек</span></td><td class="courses"><div class="course"><p class="cname">Проектирование цифровых систем на базе FPGA</p><span class="code">Магистратура 09.04.04</span><p class="desc">В аннотациях дисциплин магистратуры: проектирование цифровых систем на ПЛИС.</p><p class="links"><a href="https://www.krsu.kg/images/documents/obrazovanie/annotacii/magistr/Annot_Disc_09.04.04RPS2019_30.08.20.pdf">Аннотации дисциплин (PDF)</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">И. Раззаков атындагы Кыргыз мамлекеттик техникалык университети</span><span class="en">Кыргызский государственный технический университет имени И. Раззакова</span><span class="city">Бишкек</span></td><td class="courses"><div class="course"><p class="cname">Проектирование цифровых устройств на ЦСП и ПЛИС</p><p class="desc">Дисциплина по выбору в учебном плане. Описания курса найти не удалось.</p><p class="links"><a href="https://kstu.kg/fileadmin/user_upload/oop_vpo_sms__bak__01.pdf">Учебный план (PDF)</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Тоҷикистон · Таджикистан</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Донишгоҳи техникии Тоҷикистон ба номи академик М. Осимӣ</span><span class="en">Таджикский технический университет имени академика М. Осими</span><span class="city">Душанбе</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Донишгоҳи миллии Тоҷикистон</span><span class="en">Таджикский национальный университет</span><span class="city">Душанбе</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Türkmenistan · Туркменистан</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Oguz han adyndaky Inžener-tehnologiýalar uniwersiteti</span><span class="en">Инженерно-технологический университет Туркменистана имени Огуз хана</span><span class="city">Ашхабад</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Magtymguly adyndaky Türkmen döwlet uniwersiteti</span><span class="en">Туркменский государственный университет имени Махтумкули</span><span class="city">Ашхабад</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Azərbaycan · Азербайджан</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">ADA Universiteti</span><span class="en">Университет ADA</span><span class="city">Баку</span></td><td class="courses"><div class="course"><p class="desc">В отчёте о семинаре по SystemVerilog, ASIC и ПЛИС, который прошёл там в марте 2024 года, говорится, что курс цифровой логики не включал ни HDL, ни лабораторных работ на ПЛИС. В университете есть платы с Cyclone IV (ALINX AX4010).</p><p class="links"><a href="https://habr.com/en/articles/796255">Отчёт о семинаре (Хабр)</a></p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Qarabağ Universiteti</span><span class="en">Карабахский университет</span><span class="city">Ханкенди</span></td><td class="courses"><div class="course"><p class="cname">Digital Logic Circuits</p><span class="cen">Цифровые логические схемы</span><span class="code">EEM 301</span><p class="desc">Преподаётся на азербайджанском языке. Логическое проектирование с лабораторными занятиями и основы HDL для реализации на ПЛИС.</p><p class="links"><a href="https://qu.edu.az/en/digital-logic-circuits">Страница курса</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Azərbaycan Texniki Universiteti</span><span class="en">Азербайджанский технический университет</span><span class="city">Баку</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Հայաստան · Армения</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Երևանի պետական համալսարան (ԵՊՀ)</span><span class="en">Ереванский государственный университет (ЕГУ)</span><span class="city">Ереван</span></td><td class="courses"><div class="course"><p class="cname">Ծրագրավորվող էլեկտրոնիկա</p><span class="cen">Программируемая электроника</span><span class="code">Учебный план магистратуры, 3-й семестр, обязательная</span><p class="desc">6 кредитов; 3,4 часа лекций и 3,4 часа лабораторных в неделю. VHDL и Verilog, моделирование и проектирование в Xilinx ISE 14.7.</p><p class="links"><a href="https://www.ysu.am/en/faculty/525/educational-program-930/edu-plan">Учебный план</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Հայաստանի ազգային պոլիտեխնիկական համալսարան</span><span class="en">Национальный политехнический университет Армении</span><span class="city">Ереван</span></td><td class="courses"><div class="course"><p class="desc">Его кафедра «Микроэлектронные схемы и системы» работает при образовательном департаменте Synopsys Armenia, где преподают проектирование ИС и САПР. Страницы курса по ПЛИС найти не удалось.</p><p class="links"><a href="https://www.synopsys.com/company/contact-synopsys/office-locations/armenia/educational-programs/cooperation-with-universities.html">Университетские программы Synopsys Armenia</a></p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">საქართველო · Грузия</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი</span><span class="en">Тбилисский государственный университет имени Иванэ Джавахишвили</span><span class="city">Тбилиси</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">საქართველოს ტექნიკური უნივერსიტეტი</span><span class="en">Грузинский технический университет</span><span class="city">Тбилиси</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">San Diego State University – Georgia</span><span class="en">Грузинский кампус Университета штата Калифорния в Сан-Диего (SDSU); называется по-английски</span><span class="city">Тбилиси</span></td><td class="courses"><div class="course"><p class="cname">Digital Circuits Laboratory</p><span class="cen">Практикум по цифровым схемам</span><span class="code">COMPE 470L</span><p class="desc">Силлабус практикума SDSU: Verilog для конечных автоматов, арифметики и связки «тракт данных — устройство управления», синтез и временной анализ, программирование ПЛИС. Один из двух преподавателей, возможно, ведёт занятия в Тбилиси, но кампус в силлабусе не указан.</p><p class="links"><a href="https://khuang.sdsu.edu/Syllabus_COMPE470L.pdf">Силлабус (PDF)</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Moldova · Молдова</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Universitatea Tehnică a Moldovei (UTM)</span><span class="en">Технический университет Молдовы</span><span class="city">Кишинёв</span></td><td class="courses"><div class="course"><p class="cname">Proiectarea cu dispozitive programabile</p><span class="cen">Проектирование на программируемых устройствах</span><span class="code">FCIM, anul III, semestrul 6</span><p class="desc">4 ECTS; 30 часов лекций и по 15 часов лабораторных и семинаров. CPLD и ПЛИС, маршрут проектирования на VHDL.</p><p class="links"><a href="https://else.fcim.utm.md/mod/resource/view.php?id=35562">Карточка дисциплины (PDF)</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+<tr><td class="uni"><span class="local">Universitatea de Stat din Moldova</span><span class="en">Государственный университет Молдовы</span><span class="city">Кишинёв</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Lietuva · Литва</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Vilniaus Gedimino technikos universitetas (VILNIUS TECH)</span><span class="en">Вильнюсский технический университет имени Гедиминаса</span><span class="city">Вильнюс</span></td><td class="courses"><div class="course"><p class="cname">Sistemų projektavimas VHDL kalba</p><span class="cen">Проектирование систем на языке VHDL</span><span class="code">ELKRM17208, магистратура Computer Engineering</span><p class="desc">Преподаётся на английском: VHDL, Verilog и SystemC для сложных цифровых устройств. При проверке страница модуля вернула 404; сведения взяты из результатов поиска.</p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src warn">По результатам поиска</span></td></tr>
+<tr><td class="uni"><span class="local">Kauno technologijos universitetas (KTU)</span><span class="en">Каунасский технологический университет</span><span class="city">Каунас</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+<tr><td class="uni"><span class="local">Vilniaus universitetas</span><span class="en">Вильнюсский университет</span><span class="city">Вильнюс</span></td><td class="courses"><div class="course"><p class="desc muted">Открытой страницы курса по ПЛИС или HDL найти не удалось.</p></div></td><td class="match"><span class="m none">Не найдено</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Latvija · Латвия</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Rīgas Tehniskā universitāte (RTU)</span><span class="en">Рижский технический университет</span><span class="city">Рига</span></td><td class="courses"><div class="course"><p class="cname">Ciparu elektronisko sistēmu projektēšanas pamati, izmantojot HDL</p><span class="cen">Основы проектирования цифровых электронных систем с использованием HDL</span><span class="code">REA711</span><p class="desc">Бакалавриат, 4,5 ECTS: RTL-проектирование, VHDL, последовательностная логика, синтез.</p><p class="links"><a href="https://stud.rtu.lv/rtu/discpub/o.32189/REA711_Ciparu_elektronisko_sistemu_projektesanas_pamati_izmantojot_HDL">Каталог курсов</a></p></div><div class="course"><p class="cname">Funkcionālo un loģisko shēmu modelēšana</p><span class="cen">Моделирование функциональных и логических схем</span><span class="code">RTR832</span><p class="desc">Программирование ПЛИС на HDL, моделирование и работа с реальными устройствами; Quartus II и ModelSim; лабораторные работы и индивидуальное задание.</p><p class="links"><a href="https://stud.rtu.lv/rtu/discpub/o.32951/RTR832_Funkcionalo_un_logisko_shemu_modelesana">Каталог курсов</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src warn">По результатам поиска</span></td></tr>
+<tr><td class="uni"><span class="local">Latvijas Universitāte (LU)</span><span class="en">Латвийский университет</span><span class="city">Рига</span></td><td class="courses"><div class="course"><p class="cname">Ievads digitālajā projektēšanā</p><span class="cen">Введение в цифровое проектирование</span><span class="code">DatZ3074, Datorikas fakultāte</span><p class="desc">Курс бакалавриата; в вики есть календарь на осень 2026 года. Сумматоры, АЛУ, Verilog и конечные автоматы, затем однотактные, многотактные и конвейерные процессоры и архитектура ПЛИС, практические работы на оборудовании со Spartan-3E в Xilinx ISE. Завершается курсовыми проектами и их презентацией.</p><p class="links"><a href="http://andromeda.df.lu.lv/wiki/index.php/LU-DIP-b">Вики курса</a></p></div></td><td class="match"><span class="m close">Близкое</span><span class="src">Страница проверена</span></td></tr>
+</tbody></table></div>
+<h3 class="country">Eesti · Эстония</h3><div class="tablewrap"><table class="unis"><thead><tr><th scope="col">Университет</th><th scope="col">Ближайший курс к 6.111</th><th scope="col">Соответствие</th></tr></thead><tbody>
+<tr><td class="uni"><span class="local">Tallinna Tehnikaülikool (TalTech)</span><span class="en">Таллинский технический университет</span><span class="city">Таллин</span></td><td class="courses"><div class="course"><p class="cname">Digitaalsüsteemide disain VHDL-s</p><span class="cen">Проектирование цифровых систем на VHDL</span><span class="code">IAS0600</span><p class="desc">6 ECTS. Путь от описания на VHDL через функциональное и временное моделирование и синтез к реализации на ПЛИС, с лабораторными работами.</p><p class="links"><a href="https://ois2.taltech.ee/uusois/subject/IAS0600">Страница курса</a></p></div><div class="course"><p class="cname">Digitaalsüsteemide disain</p><span class="cen">Проектирование цифровых систем</span><span class="code">IAX0600</span><p class="desc">6 ECTS, обязательный курс своей программы бакалавриата. Тот же маршрут от VHDL к ПЛИС и PSoC, а также лабораторные работы по быстрому прототипированию.</p><p class="links"><a href="https://ois2.taltech.ee/uusois/subject/IAX0600">Страница курса</a></p></div></td><td class="match"><span class="m partial">Частичное</span><span class="src">Страница проверена</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="method" class="method" aria-labelledby="method-h">
+    <h2 id="method-h">Как проверялось</h2>
+    <ul>
+        <li><strong>Страница проверена</strong> — страница курса или PDF были открыты 27 октября 2026 г., и сведения в строке взяты из них.</li>
+        <li><strong>По результатам поиска</strong> — страница была заблокирована, не ответила вовремя или переехала, поэтому сведения взяты из копии страницы в поисковой системе. Прежде чем на них опираться, откройте ссылку.</li>
+        <li><strong>Не найдено</strong> — поиск по-английски и на местном языке, обычно в пределах сайта самого университета, не дал страницы курса по ПЛИС или HDL. Это не доказывает, что такого курса нет.</li>
+        <li>Степень соответствия — это оценка по описанию курса в сравнении с 6.205: лабораторные работы на ПЛИС на языке описания аппаратуры плюс крупный проект.</li>
+        <li>Коды курсов, кредиты и платы меняются от года к году. Часть записей (курс по выбору на ВМК МГУ, курсы МИЭМ, запись в каталоге USC) относится к прошлым годам.</li>
+        <li>Это перевод <a href="mit_6111_equivalents.html" lang="en" hreflang="en">английской версии</a> с теми же данными. Названия университетов и курсов на местных языках оставлены без изменений.</li>
+    </ul>
+</section>
+
+<footer>
+    <p>Составлено 27 октября 2026 г. Названия и описания курсов кратко пересказаны по страницам самих университетов.</p>
+</footer>
+
+</div>
+</body>
+</html>
