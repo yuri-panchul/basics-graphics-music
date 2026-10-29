@@ -5,3 +5,4 @@ log.txt
 fpga_board_selection
 riscv_core_selection
 last_uart_port
+program_bank?.mem8
