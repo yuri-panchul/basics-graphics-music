@@ -20,7 +20,7 @@ Now you need to research and rank the above-mentioned universities using an addi
 
 1. Top US: MIT, Princeton, Univ Michigan.
 
-2. Univ I am familiar with: North Carolina Univ, Portland State, Georgia Institute of Technology.
+2. Univ I am familiar with: NC State, Portland State, Georgia Institute of Technology.
 
 3. Top (in a sense of these topics) universities in Japan, China, South Korea, India and other Asian countries that educate many Verilog, microarchitectrure, FPGA and ASIC engineers.
 
@@ -76,11 +76,16 @@ Area 3. Verification.
 
 3.6. SystemVerilog functional coverage.
 
-3.7. Formal verification using SVA concurrent assertions, assumptions and cover statements.
+3.7. SVA concurrent assertions, assumptions and cover statements used in RTL simulation.
 
-3.8. Using emulators such as Mentor Veloce,  Synopsys Zebu or Cadence Palladium.
+3.8. Formal verification using SVA concurrent assertions, assumptions and cover statements,
+using tools such as Jasper Gold and VC Formal.
 
-3.9. Verifying a pipelined CPU RTL against an instruction-level-simulator-based model.
+3.9. UVM.
+
+3.10. Using emulators such as Mentor Veloce,  Synopsys Zebu or Cadence Palladium.
+
+3.11. Verifying a pipelined CPU RTL against an instruction-level-simulator-based model.
 
 Area 4. Timing and other PD topics for ASIC and FPGA
 
@@ -144,14 +149,34 @@ Then create English and Russian versions of the texts for the following:
 
 1. LinkedIn post.
 
-2. Facebook post.
+2. Habr.com article
 
-3. Telegram post.
+3. Habr.com post
 
-4. verilog-meetup.com wordpress post.
+4. Facebook post.
 
-5. silicon-russia.com post.
+5. Telegram post.
 
-6. ddvca.com post.
+6. verilog-meetup.com wordpress post.
+
+7. silicon-russia.com post.
+
+8. ddvca.com post.
 
 Put every post in a different HTML file.
+
+Clarifications on the decisions:
+
+* Item 1.1: it only counts pipelining outside a CPU, since that is my point; a CPU pipeline counts as 5.1.
+
+* Area 5: it only counts labs where students build or modify an RTL processor; lectures don't count.
+
+* UVM and cocotb: a UVM course earns items 3.2–3.5, and cocotb counts for the SystemVerilog items.
+However I would like to add UVM as a separate point as well because there are courses with 3.2-3.5 but without UVM,
+for example a textbook SystemVerilog for Verification: A Guide to Learning the Testbench Language Features by Chris Spear.
+
+* I split SVA assertions for simulation and formal verification.
+
+* Item 4.4: FPGA timing reports don't count.
+
+* Student repositories can be used them as evidence where universities publish little: Michigan, NYCU, Taiwan, Tokyo and the IITs.

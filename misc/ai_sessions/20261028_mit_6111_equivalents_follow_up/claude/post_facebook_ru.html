@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Facebook: пост на русском</title>
+<title>Пост для Facebook, русский</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,15 +61,15 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">После 6.111 · Facebook · русский</p>
     <h1 class="page">Пост для Facebook</h1>
-    <p class="meta"><span><b>1 999</b> знаков</span><span><a href="post_facebook_en.html" hreflang="en" lang="en">English version</a></span></p>
-    <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта.</p>
+    <p class="meta"><span><b>2 007</b> знаков</span><span><a href="post_facebook_en.html" hreflang="en" lang="en">English version</a></span></p>
+    <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует простой текст.</p>
     <div class="actions"><button id="copy" type="button">Скопировать текст</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post plain" id="post">А что после первого курса по ПЛИС?
 
 Во многих университетах цифровому проектированию посвящён один курс: вентили, конечные автоматы, UART или SPI, иногда пятистадийный конвейер MIPS. Потом выпускники приходят на собеседования в компании, проектирующие микросхемы, и их спрашивают про FIFO внутри конвейеров данных, valid/ready и управление потоком на кредитах, тестбенчи с ограниченной рандомизацией, функциональное покрытие, SVA, отчёты временного анализа и отрицательный запас (negative slack).
 
-Новый отчёт оценивает 111 университетов и программ по 47 таким темам. Лидеры: MIT (23 из 47), Мичиган (17), МИЭТ, NYCU и UC Berkeley (по 16), китайская программа «Один студент — один чип» (15), Portland State и Школа синтеза цифровых схем (по 11), МФТИ и NC State (по 10).
+Новый отчёт оценивает 111 университетов и программ по 49 таким темам. Лидеры: MIT (25 из 49), UC Berkeley (19), Мичиган (17), МИЭТ и NYCU (по 16), китайская программа «Один студент — один чип» (15), Portland State (13), NC State (12), Школа синтеза цифровых схем (11) и МФТИ (10).
 
 По бывшему СССР бросились в глаза две вещи.
 
@@ -95,7 +95,13 @@ a { color: var(--accent); }
             st.textContent = "Выделено: нажмите Ctrl+C или ⌘C.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }

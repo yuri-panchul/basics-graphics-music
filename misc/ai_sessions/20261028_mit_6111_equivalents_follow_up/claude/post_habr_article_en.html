@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Article for Habr.com, English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #e8ecf2; --ink: #141a26; --muted: #586174; --line: #d8dde6;
+    --accent: #2b4fb3; --accent-ink: #ffffff; --warn-bg: #fdf3dc; --warn-ink: #7a5100;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+        --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+    }
+}
+:root[data-theme="dark"] {
+    --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+    --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0; padding-inline: 16px; background: var(--bg); color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.wrap { max-width: 820px; margin-inline: auto; padding-block: 32px 56px; display: grid; gap: 20px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1.page { margin: 0; font-size: 1.5rem; line-height: 1.2; text-wrap: balance; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 0.9rem; margin: 0; }
+.meta b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.note { margin: 0; background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+button {
+    font: inherit; font-weight: 600; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+}
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.status { color: var(--muted); font-size: 0.9rem; }
+.post {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px;
+    overflow-wrap: anywhere;
+}
+.post.plain { white-space: pre-wrap; }
+.post h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; text-wrap: balance; }
+.post h2 { font-size: 1.15rem; margin: 22px 0 8px; }
+.post p { margin: 0 0 12px; max-width: 70ch; }
+.post ul, .post ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 6px; max-width: 72ch; }
+.post table { border-collapse: collapse; margin: 4px 0 14px; font-size: 0.92rem; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+.post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+.post th { background: var(--surface-2); }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+    <p class="eyebrow">After 6.111 · Habr.com · English</p>
+    <h1 class="page">Article for Habr.com</h1>
+    <p class="meta"><span><b>9,524</b> characters</span><span><a href="post_habr_article_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
+    <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the formatted article; paste it into Habr's editor, then check the tables.</p>
+    <div class="actions"><button id="copy" type="button">Copy article</button><span class="status" id="status" aria-live="polite"></span></div>
+</header>
+<article class="post" id="post"><h1>After 6.111: One FPGA Course Is Not a Curriculum. 111 Universities and Programs Checked Against 49 Topics</h1>
+<p>MIT 6.111, now 6.205, is the model FPGA lab: students learn Verilog, work through a series of labs and then build a large project of their own. A previous report looked for its counterparts at universities in California, Russia, Belarus, Ukraine and the other former Soviet republics. This article is about what comes after such a course, and why a single FPGA class doesn't make an engineer whom a chip company can put on a real block.</p>
+<h2>Three gaps</h2>
+<p><b>Microarchitecture.</b> Many courses go from gates to finite state machines and serial interfaces such as SPI. If they cover pipelining at all, it is the five-stage MIPS or RISC-V pipeline. In industry, networking chips, video processing blocks and fixed-function GPU units are full of data pipelines that have nothing to do with a CPU. Graduates know what a FIFO is but not how to combine one with a pipeline, and few can explain valid/ready or credit-based flow control in a job interview.</p>
+<p><b>Verification.</b> Testbenches in the style of the early 1990s are still common. Checking against a transaction-level model, constrained-random stimulus and functional coverage are rare; formal verification and concurrent assertions are rarer still, although AI-written résumés list them. An engineer who can't verify corner cases has to keep the microarchitecture simple.</p>
+<p><b>Physical design.</b> FPGA labs are disconnected from ASIC design. Without Synopsys or Cadence tools, and without the open-source OpenROAD and LibreLane flows, students get no intuition for static timing analysis, don't know how to fix negative slack and confuse power-saving techniques such as clock gating.</p>
+<p>These gaps come from slides 14–17 of the talk <a href="https://docs.google.com/presentation/d/14WxUKOwsAo6Yn8X19WpGPNV5fk2H3XappceqGRlxqdM/edit?usp=sharing">“Workforce Development for the Electronic Industry”</a> at EDA Connect 2025.</p>
+<h2>The checklist: 49 items in 7 areas</h2>
+<p>An entry earns a point for each item that a public source shows in its introductory FPGA course or in a related course on advanced digital design, computer architecture, verification, VLSI or VLSI CAD.</p>
+<ol><li><b>Microarchitecture with one clock</b><ul><li>1.1. Data pipelining, such as pipelined floating-point units</li><li>1.2. FIFO queues</li><li>1.3. Pipelines combined with FIFOs for flow control</li><li>1.4. Ready/valid protocols</li><li>1.5. Credit-based flow control</li><li>1.6. Systolic arrays</li><li>1.7. Arbiters, such as round-robin arbiters</li><li>1.8. Reorder buffers</li><li>1.9. AXI and related protocols</li></ul></li><li><b>Several clocks, memories and clock gating</b><ul><li>2.1. Banking of embedded SRAM</li><li>2.2. Linked-list controllers working with memories</li><li>2.3. Clock domain crossing (CDC)</li><li>2.4. CDC through an asynchronous FIFO</li><li>2.5. Fine-grained clock gating with enables</li><li>2.6. Mid-level clock gating with latch-based clock gaters</li></ul></li><li><b>Verification</b><ul><li>3.1. RTL simulation with self-checking testbenches</li><li>3.2. Self-checking against a transaction-level model</li><li>3.3. Bus functional models (BFMs)</li><li>3.4. Passive monitors and scoreboards</li><li>3.5. Constrained-random stimulus</li><li>3.6. Functional coverage</li><li>3.7. SVA concurrent assertions, assumptions and covers in RTL simulation</li><li>3.8. Formal verification with tools such as JasperGold or VC Formal</li><li>3.9. UVM</li><li>3.10. Hardware emulators (Veloce, ZeBu, Palladium)</li><li>3.11. Checking a pipelined CPU against an instruction-set simulator</li></ul></li><li><b>Timing and physical design</b><ul><li>4.1. Push-button ASIC flow with Tiny Tapeout</li><li>4.2. Open-source flow: LibreLane, OpenLane, OpenROAD, Yosys</li><li>4.3. Commercial tools (Synopsys, Cadence)</li><li>4.4. Labs with ASIC static timing analysis reports</li><li>4.5. Labs with power analysis</li><li>4.6. Labs with floorplanning, placement and routing</li></ul></li><li><b>Processor labs in RTL</b><ul><li>5.1. A static (in-order) pipeline</li><li>5.2. Out-of-order execution, with students designing the back end</li><li>5.3. Hardware multithreading</li><li>5.4. Caches</li><li>5.5. A cluster of cores without coherence, such as a mesh</li><li>5.6. Coherent caches (MSI, MESI)</li><li>5.7. A branch predictor designed by students</li></ul></li><li><b>Application RTL projects</b><ul><li>6.1. Camera and video processing</li><li>6.2. Computer graphics</li><li>6.3. Networking</li><li>6.4. DSP: filters</li><li>6.5. DSP: FFT</li><li>6.6. Sound processing</li><li>6.7. Machine-learning accelerators</li></ul></li><li><b>EDA algorithms: students write or modify EDA tools</b><ul><li>7.1. RTL simulation</li><li>7.2. Logic synthesis</li><li>7.3. Placement and routing</li></ul></li></ol>
+<p>A few rules matter for the numbers. Item 1.1 counts pipelining outside a CPU; a CPU pipeline counts as 5.1. Area 5 counts only labs in which students build or modify an RTL processor. A UVM course earns 3.9 and also 3.2–3.5, but 3.2–3.5 can be earned without UVM, with plain SystemVerilog classes as in Chris Spear's <em>SystemVerilog for Verification</em>. cocotb counts for the SystemVerilog items. Item 4.4 needs ASIC timing reports, not FPGA ones. Where a university publishes little, public repositories in which students post their coursework count as evidence.</p>
+<h2>Who was checked</h2>
+<p>The 111 entries are the 90 universities of the original report (17 in California, 28 in Russia, 5 in Belarus, 7 in Ukraine and 33 in other former Soviet republics), the Digital Circuit Synthesis School, and 20 universities and programs for comparison: MIT, Princeton, Michigan, NC State, Portland State, Georgia Tech, ETH Zürich, EPFL, Cambridge, UCL, Tsinghua, China's One Student One Chip, NYCU, National Taiwan University, the University of Tokyo, Science Tokyo, IIT Bombay, IIT Madras, KAIST and POSTECH.</p>
+<h2>The ranking</h2>
+<p>Points by area (1 to 7) and in total, out of 49:</p>
+<table><thead><tr><th>#</th><th>University or program</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>Σ</th></tr></thead><tbody><tr><td>1</td><td>MIT</td><td>5</td><td>2</td><td>7</td><td>·</td><td>4</td><td>7</td><td>·</td><td><b>25</b></td></tr><tr><td>2</td><td>UC Berkeley</td><td>3</td><td>·</td><td>9</td><td>4</td><td>2</td><td>1</td><td>·</td><td><b>19</b></td></tr><tr><td>3</td><td>Michigan</td><td>5</td><td>1</td><td>2</td><td>3</td><td>5</td><td>·</td><td>1</td><td><b>17</b></td></tr><tr><td>4</td><td>MIET</td><td>6</td><td>2</td><td>7</td><td>1</td><td>·</td><td>·</td><td>·</td><td><b>16</b></td></tr><tr><td>4</td><td>NYCU</td><td>3</td><td>3</td><td>4</td><td>4</td><td>1</td><td>1</td><td>·</td><td><b>16</b></td></tr><tr><td>6</td><td>One Student One Chip</td><td>5</td><td>·</td><td>3</td><td>4</td><td>3</td><td>·</td><td>·</td><td><b>15</b></td></tr><tr><td>7</td><td>Portland State</td><td>·</td><td>·</td><td>9</td><td>3</td><td>·</td><td>·</td><td>1</td><td><b>13</b></td></tr><tr><td>8</td><td>NC State</td><td>·</td><td>·</td><td>9</td><td>3</td><td>·</td><td>·</td><td>·</td><td><b>12</b></td></tr><tr><td>9</td><td>Synthesis School (YADRO)</td><td>8</td><td>·</td><td>1</td><td>1</td><td>·</td><td>1</td><td>·</td><td><b>11</b></td></tr><tr><td>10</td><td>MIPT</td><td>6</td><td>2</td><td>1</td><td>·</td><td>1</td><td>·</td><td>·</td><td><b>10</b></td></tr><tr><td>11</td><td>ETH Zürich</td><td>2</td><td>·</td><td>2</td><td>5</td><td>·</td><td>·</td><td>·</td><td><b>9</b></td></tr><tr><td>11</td><td>UC San Diego</td><td>2</td><td>1</td><td>·</td><td>3</td><td>3</td><td>·</td><td>·</td><td><b>9</b></td></tr><tr><td>13</td><td>IIT Madras</td><td>2</td><td>·</td><td>2</td><td>·</td><td>1</td><td>2</td><td>·</td><td><b>7</b></td></tr><tr><td>13</td><td>Stanford</td><td>1</td><td>·</td><td>2</td><td>3</td><td>·</td><td>1</td><td>·</td><td><b>7</b></td></tr><tr><td>15</td><td>National Taiwan University</td><td>·</td><td>·</td><td>·</td><td>1</td><td>3</td><td>·</td><td>1</td><td><b>5</b></td></tr><tr><td>15</td><td>Tsinghua</td><td>2</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td><b>5</b></td></tr><tr><td>15</td><td>UC Santa Cruz</td><td>·</td><td>·</td><td>1</td><td>2</td><td>1</td><td>·</td><td>1</td><td><b>5</b></td></tr><tr><td>18</td><td>Cambridge</td><td>·</td><td>·</td><td>1</td><td>3</td><td>·</td><td>·</td><td>·</td><td><b>4</b></td></tr><tr><td>18</td><td>Georgia Tech</td><td>2</td><td>·</td><td>·</td><td>·</td><td>1</td><td>·</td><td>1</td><td><b>4</b></td></tr><tr><td>20</td><td>EPFL</td><td>1</td><td>·</td><td>·</td><td>2</td><td>·</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>IIT Bombay</td><td>·</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>Kyiv School of Economics</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>Science Tokyo</td><td>·</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>University of Tokyo</td><td>1</td><td>·</td><td>·</td><td>·</td><td>2</td><td>·</td><td>·</td><td><b>3</b></td></tr></tbody></table>
+<p>72 of the 111 entries have no documented point.</p>
+<h2>Area by area</h2>
+<ul><li><b>Microarchitecture with one clock</b> (9 items): 19 entries have at least one point. Most complete: Synthesis School (YADRO), with 8 of 9; then MIET and MIPT, with 6.</li><li><b>Several clocks, memories and clock gating</b> (6 items): 7 entries have at least one point. Most complete: NYCU, with 3 of 6; then MIET, MIPT and MIT, with 2. Not documented anywhere: 2.2, 2.6.</li><li><b>Verification</b> (11 items): 18 entries have at least one point. Most complete: NC State, Portland State and UC Berkeley, with 9 of 11; then MIET and MIT, with 7.</li><li><b>Timing and physical design</b> (6 items): 20 entries have at least one point. Most complete: ETH Zürich, with 5 of 6; then NYCU, One Student One Chip and UC Berkeley, with 4.</li><li><b>Processor labs in RTL</b> (7 items): 20 entries have at least one point. Most complete: Michigan, with 5 of 7; then MIT, with 4. Not documented anywhere: 5.5.</li><li><b>Application RTL projects</b> (7 items): 8 entries have at least one point. Most complete: MIT, with 7 of 7; then IIT Madras, with 2.</li><li><b>EDA algorithms: students write or modify EDA tools</b> (3 items): 5 entries have at least one point. Most complete: Georgia Tech, Michigan, National Taiwan University, Portland State and UC Santa Cruz, with 1 of 3. Not documented anywhere: 7.1.</li></ul>
+<h2>By region</h2>
+<table><thead><tr><th>Region</th><th>Checked</th><th>With points</th><th>Best entry</th><th>Points</th><th>Items covered</th></tr></thead><tbody><tr><td>Other US states</td><td>6</td><td>5</td><td>MIT</td><td>25</td><td>40</td></tr><tr><td>California</td><td>17</td><td>8</td><td>UC Berkeley</td><td>19</td><td>28</td></tr><tr><td>Asia</td><td>10</td><td>9</td><td>NYCU</td><td>16</td><td>27</td></tr><tr><td>Russia</td><td>29</td><td>5</td><td>MIET</td><td>16</td><td>23</td></tr><tr><td>Europe</td><td>4</td><td>4</td><td>ETH Zürich</td><td>9</td><td>11</td></tr><tr><td>Ukraine</td><td>7</td><td>3</td><td>Kyiv School of Economics</td><td>3</td><td>5</td></tr><tr><td>Other former Soviet republics</td><td>33</td><td>5</td><td>Yerevan State (YSU)</td><td>1</td><td>3</td></tr><tr><td>Belarus</td><td>5</td><td>0</td><td>—</td><td>0</td><td>0</td></tr></tbody></table>
+<p>The comparison is tentative: abroad only strong universities were chosen, while the former Soviet list includes regional ones, and universities that don't publish syllabi lose points they may deserve.</p>
+<h2>Russia and the former Soviet Union</h2>
+<p>MIET (16 points) is the only university in the region near the top. Its open FPGA practicum covers pipelines and systolic arrays, AXI-Stream with credit-based flow control, clock-domain crossing with asynchronous FIFOs, APB and AXI-Lite; a verification elective teaches class-based testbenches, constrained random, coverage and SVA in simulation without UVM; and a joint master's program with Synopsys brings commercial tools. The Synthesis School (11) covers 8 of the 9 microarchitecture items, more than any university, through its lectures and <a href="https://github.com/yuri-panchul/systemverilog-homework">SystemVerilog homework</a>. MIPT (10) builds a pipelined RISC-V core, a pipelined FPU and an asynchronous FIFO and adds systolic arrays, AXI and cocotb in 2026. Outside Russia, only Armenia's Synopsys-linked programs and Kyiv School of Economics (Cadence tools, Tiny Tapeout) reach physical design. Most other universities in the region score zero, largely because their syllabi aren't public.</p>
+<h2>What would help</h2>
+<ol>
+<li>Pipelines that aren't CPUs, with FIFOs, valid/ready and credit-based flow control, in the first or second course.</li>
+<li>A verification course: checking against a model, constrained random, coverage, SVA in simulation and formal, then UVM.</li>
+<li>An ASIC flow, even an open one: Yosys, OpenROAD, LibreLane and OpenSTA with open PDKs and shuttles such as Tiny Tapeout make timing reports, slack and clock gating hands-on. ETH Zürich and One Student One Chip show it works.</li>
+<li>Published syllabi and lab handouts.</li>
+</ol>
+<h2>Limitations</h2>
+<p>A missing point means no public evidence was found. Several sites refused automated downloads or needed a login (Princeton, UCL, Stanford's catalog, MIT's 6.205 pages, Cambridge's engineering pages), so their scores are lower bounds. Student repositories show what one team built in one year.</p>
+<p>The full report, in English and Russian, links every point to its source: [link to the report]. It was compiled with Claude, an AI model, from public course pages. Corrections and links to missing syllabi are welcome in the comments.</p></article>
+</div>
+<script>
+(function () {
+    var btn = document.getElementById("copy"), st = document.getElementById("status"), post = document.getElementById("post");
+    var mode = "rich";
+    btn.addEventListener("click", function () {
+        var text = mode === "html" ? post.innerHTML.trim() : post.innerText;
+        function done() { st.textContent = "Copied."; }
+        function fallback() {
+            var r = document.createRange(); r.selectNodeContents(post);
+            var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+            st.textContent = "Selected: press Ctrl+C or ⌘C to copy.";
+        }
+        try {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done, fallback);
+            } else { fallback(); }
+        } catch (err) { fallback(); }
+    });
+})();
+</script>
+</body>
+</html>

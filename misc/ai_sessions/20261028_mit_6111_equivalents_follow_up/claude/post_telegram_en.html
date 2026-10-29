@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Telegram Post, English</title>
+<title>Post for Telegram, English</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,15 +61,15 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">After 6.111 · Telegram · English</p>
     <h1 class="page">Post for Telegram</h1>
-    <p class="meta"><span><b>600</b> characters</span><span>limit 4,096</span><span><a href="post_telegram_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
-    <p class="note">Replace “[link to the report]” with the report's address before posting.</p>
+    <p class="meta"><span><b>616</b> characters</span><span>limit 4,096</span><span><a href="post_telegram_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
+    <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the plain text.</p>
     <div class="actions"><button id="copy" type="button">Copy text</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post plain" id="post">After 6.111: one FPGA lab is not a curriculum
 
-A new report scores 111 universities and programs on 47 topics beyond the first FPGA course: pipelines with FIFOs and flow control, clock-domain crossing, verification with coverage and assertions, timing and physical design, processor labs, EDA algorithms.
+A new report scores 111 universities and programs on 49 topics beyond the first FPGA course: pipelines with FIFOs and flow control, clock-domain crossing, verification with coverage and assertions, timing and physical design, processor labs, EDA algorithms.
 
-Top: MIT 23/47, Michigan 17, MIET, NYCU and UC Berkeley 16, One Student One Chip 15, Portland State and the Synthesis School 11.
+Top: MIT 25/49, UC Berkeley 19, Michigan 17, MIET and NYCU 16, One Student One Chip 15, Portland State 13, NC State 12, the Synthesis School 11.
 
 72 of 111 have no documented point beyond the intro course. Four topics appear nowhere.
 
@@ -88,7 +88,13 @@ English and Russian, every point linked to its source: [link to the report]</art
             st.textContent = "Selected: press Ctrl+C or ⌘C to copy.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }

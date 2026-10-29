@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ddvca.com Post, English</title>
+<title>Blog post for ddvca.com, English</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,18 +61,20 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">After 6.111 · ddvca.com · English</p>
     <h1 class="page">Blog post for ddvca.com</h1>
-    <p class="meta"><span><b>2,934</b> characters</span><span><a href="post_ddvca_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
+    <p class="meta"><span><b>3,641</b> characters</span><span><a href="post_ddvca_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
     <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the post as HTML for the WordPress code editor.</p>
     <div class="actions"><button id="copy" type="button">Copy HTML</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post" id="post"><h1>Who Teaches Verification Beyond the Testbench?</h1>
 <p>Many graduates still write testbenches in the style of the early 1990s: a few vectors and a waveform window. They have not checked a design against a transaction-level model, written constrained-random stimulus or measured functional coverage, and few have used formal verification or concurrent assertions, although their résumés may list them. Engineers who can't verify corner cases keep their designs simple.</p>
-<p>A new report on teaching beyond the first FPGA course scores 111 universities and programs on 47 topics. Nine of them are about verification. This is who documents each one.</p>
-<table><thead><tr><th>Item</th><th>Topic</th><th>Entries</th><th>Where</th></tr></thead><tbody><tr><td>3.1</td><td>RTL simulation with self-checking testbenches</td><td>16</td><td>MIT, Michigan, MIET, NYCU, One Student One Chip, Portland State, Synthesis School (YADRO), MIPT, NC State, ETH Zürich, IIT Madras, UC Santa Cruz, Cambridge, Harvey Mudd, UC Davis, SibSUTIS</td></tr><tr><td>3.2</td><td>Self-checking against a transaction-level model</td><td>5</td><td>MIT, MIET, UC Berkeley, Portland State, ETH Zürich</td></tr><tr><td>3.3</td><td>Bus functional models (BFMs)</td><td>5</td><td>MIT, MIET, UC Berkeley, Portland State, NC State</td></tr><tr><td>3.4</td><td>Passive monitors and scoreboards</td><td>5</td><td>MIT, MIET, UC Berkeley, Portland State, NC State</td></tr><tr><td>3.5</td><td>Constrained-random stimulus</td><td>5</td><td>MIET, NYCU, UC Berkeley, Portland State, NC State</td></tr><tr><td>3.6</td><td>Functional coverage</td><td>6</td><td>MIT, MIET, NYCU, UC Berkeley, NC State, IIT Madras</td></tr><tr><td>3.7</td><td>SVA concurrent assertions and formal verification</td><td>9</td><td>Michigan, MIET, NYCU, UC Berkeley, One Student One Chip, Portland State, NC State, Stanford, UC Davis</td></tr><tr><td>3.8</td><td>Hardware emulators (Veloce, ZeBu, Palladium)</td><td>3</td><td>Portland State, NC State, Stanford</td></tr><tr><td>3.9</td><td>Checking a pipelined CPU against an instruction-set simulator</td><td>1</td><td>One Student One Chip</td></tr></tbody></table>
+<p>A new report on teaching beyond the first FPGA course scores 111 universities and programs on 49 topics. Eleven of them are about verification. This is who documents each one.</p>
+<table><thead><tr><th>Item</th><th>Topic</th><th>Entries</th><th>Where</th></tr></thead><tbody><tr><td>3.1</td><td>RTL simulation with self-checking testbenches</td><td>17</td><td>MIT, UC Berkeley, Michigan, MIET, NYCU, One Student One Chip, Portland State, NC State, Synthesis School (YADRO), MIPT, ETH Zürich, IIT Madras, UC Santa Cruz, Cambridge, Harvey Mudd, UC Davis, SibSUTIS</td></tr><tr><td>3.2</td><td>Self-checking against a transaction-level model</td><td>6</td><td>MIT, UC Berkeley, MIET, Portland State, NC State, ETH Zürich</td></tr><tr><td>3.3</td><td>Bus functional models (BFMs)</td><td>5</td><td>MIT, UC Berkeley, MIET, Portland State, NC State</td></tr><tr><td>3.4</td><td>Passive monitors and scoreboards</td><td>5</td><td>MIT, UC Berkeley, MIET, Portland State, NC State</td></tr><tr><td>3.5</td><td>Constrained-random stimulus</td><td>6</td><td>MIT, UC Berkeley, MIET, NYCU, Portland State, NC State</td></tr><tr><td>3.6</td><td>Functional coverage</td><td>6</td><td>MIT, UC Berkeley, MIET, NYCU, NC State, IIT Madras</td></tr><tr><td>3.7</td><td>SVA concurrent assertions, assumptions and covers in RTL simulation</td><td>3</td><td>UC Berkeley, MIET, Portland State</td></tr><tr><td>3.8</td><td>Formal verification with tools such as JasperGold or VC Formal</td><td>8</td><td>UC Berkeley, Michigan, NYCU, One Student One Chip, Portland State, NC State, Stanford, UC Davis</td></tr><tr><td>3.9</td><td>UVM</td><td>4</td><td>MIT, UC Berkeley, Portland State, NC State</td></tr><tr><td>3.10</td><td>Hardware emulators (Veloce, ZeBu, Palladium)</td><td>3</td><td>Portland State, NC State, Stanford</td></tr><tr><td>3.11</td><td>Checking a pipelined CPU against an instruction-set simulator</td><td>1</td><td>One Student One Chip</td></tr></tbody></table>
 <h2>What the table shows</h2>
 <ul>
-<li>Entries with four or more verification items (of 9): MIET (7), NC State (7), Portland State (7), UC Berkeley (6), MIT (5), NYCU (4). Almost all of them have a course dedicated to verification: NC State's ECE 745 and 748, Portland State's pre-silicon validation, assertion-based and formal courses, MIET's verification elective, the verification labs in Berkeley's EECS 151, MIT's 6.S965 and NYCU's ICLAB.</li>
-<li>cocotb now does in Python what used to need SystemVerilog classes: MIT's 6.S965 teaches monitors, drivers, scoreboards and functional coverage in it.</li>
+<li>Entries with four or more verification items (of 11): NC State (9), Portland State (9), UC Berkeley (9), MIET (7), MIT (7), NYCU (4). Almost all of them have a course dedicated to verification: NC State's ECE 745 and 748, Portland State's pre-silicon validation, assertion-based and formal courses, MIET's verification elective, the verification labs in Berkeley's EECS 151, MIT's 6.S965 and NYCU's ICLAB.</li>
+<li>UVM itself is documented at only four entries: UC Berkeley, MIT, NC State and Portland State. MIET's elective teaches the same testbench structure (drivers, monitors, checkers, constrained random, coverage) with plain SystemVerilog classes, in the style of Chris Spear's textbook <em>SystemVerilog for Verification</em>, so it earns those points but not the UVM one.</li>
+<li>Formal verification is documented at 8 entries, but SVA assertions in simulation at only 3: UC Berkeley, Portland State and MIET.</li>
+<li>cocotb now does in Python what used to need SystemVerilog classes: MIT's 6.S965 teaches monitors, drivers, scoreboards and functional coverage in it, and the catalog adds UVM.</li>
 <li>Only China's One Student One Chip program documents checking a processor against an instruction-set simulator, through DiffTest against its NEMU simulator. Emulators appear only at NC State, Portland State and in a Stanford lecture.</li>
 <li>Most of the former Soviet Union documents nothing beyond basic testbenches; MIET's elective is the exception. Exercise sets with self-checking testbenches, such as the <a href="https://github.com/yuri-panchul/systemverilog-homework">SystemVerilog homework</a> of the Synthesis School, are an easy first step.</li>
 </ul>
@@ -91,7 +93,13 @@ a { color: var(--accent); }
             st.textContent = "Selected: press Ctrl+C or ⌘C to copy.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>silicon-russia.com: пост на русском</title>
+<title>Запись в блог для silicon-russia.com, русский</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,16 +61,16 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">После 6.111 · silicon-russia.com · русский</p>
     <h1 class="page">Запись в блог для silicon-russia.com</h1>
-    <p class="meta"><span><b>3 358</b> знаков</span><span><a href="post_silicon_russia_en.html" hreflang="en" lang="en">English version</a></span></p>
+    <p class="meta"><span><b>3 411</b> знаков</span><span><a href="post_silicon_russia_en.html" hreflang="en" lang="en">English version</a></span></p>
     <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует запись в HTML для редактора кода WordPress.</p>
     <div class="actions"><button id="copy" type="button">Скопировать HTML</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post" id="post"><h1>Обучение проектированию микросхем в России после первого курса по ПЛИС</h1>
-<p>Новый отчёт проверяет 111 университетов и программ по 47 темам, до которых один курс по ПЛИС доходит редко: конвейеры данных с FIFO и управлением потоком, пересечение тактовых доменов и гейтирование, современная верификация, временной анализ и физическое проектирование, процессорные лабораторные, прикладные проекты и алгоритмы САПР. В нём 29 российских участников, включая Школу синтеза цифровых схем, а также Калифорния, остальные страны бывшего СССР и двадцать университетов и программ США, Европы и Азии для сравнения.</p>
+<p>Новый отчёт проверяет 111 университетов и программ по 49 темам, до которых один курс по ПЛИС доходит редко: конвейеры данных с FIFO и управлением потоком, пересечение тактовых доменов и гейтирование, современная верификация, временной анализ и физическое проектирование, процессорные лабораторные, прикладные проекты и алгоритмы САПР. В нём 29 российских участников, включая Школу синтеза цифровых схем, а также Калифорния, остальные страны бывшего СССР и двадцать университетов и программ США, Европы и Азии для сравнения.</p>
 <h2>Результаты России</h2>
 <p>Подтверждённые баллы есть только у пяти российских участников: НИУ МИЭТ (16), Школа синтеза (YADRO) (11), МФТИ (10), МИЭМ НИУ ВШЭ (2), СибГУТИ (1). У остальных 24 ноль — в основном потому, что их программы лежат в PDF, в Moodle или за входом в систему, а отчёт учитывает только открытое.</p>
 <ul>
-<li><strong>МИЭТ</strong> (16 из 47) делит третье место в общем рейтинге с NYCU и UC Berkeley. Его открытый «Практикум по ПЛИС» охватывает конвейеры и систолические массивы, AXI-Stream с valid/ready и управлением потоком на кредитах, пересечение тактовых доменов с асинхронными FIFO, APB и AXI-Lite. Факультатив по верификации добавляет классовые тестбенчи, ограниченную рандомизацию, функциональное покрытие, SVA и верификационные IP для APB и AXI, а совместная магистратура с Synopsys даёт коммерческие САПР.</li>
+<li><strong>МИЭТ</strong> (16 из 49) делит четвёртое место в общем рейтинге с NYCU — после MIT, UC Berkeley и Мичигана. Его открытый «Практикум по ПЛИС» охватывает конвейеры и систолические массивы, AXI-Stream с valid/ready и управлением потоком на кредитах, пересечение тактовых доменов с асинхронными FIFO, APB и AXI-Lite. Факультатив по верификации добавляет классовые тестбенчи, ограниченную рандомизацию, функциональное покрытие, утверждения SVA в моделировании и верификационные IP для APB и AXI, а совместная магистратура с Synopsys даёт коммерческие САПР.</li>
 <li><strong>Школа синтеза</strong> (11) покрывает 8 из 9 пунктов по микроархитектуре — больше любого университета в отчёте — за счёт лекций и сборника задач; вместе с МИЭТ это единственные участники, которые учат управлению потоком на кредитах. Её слушатели учатся в 26 кластерах в России и Беларуси.</li>
 <li><strong>МФТИ</strong> (10) строит конвейерное ядро RISC-V, конвейерный блок с плавающей точкой и асинхронный FIFO, а его курс-продолжение 2026 года добавляет систолические массивы, AXI и cocotb.</li>
 </ul>
@@ -103,7 +103,13 @@ a { color: var(--accent); }
             st.textContent = "Выделено: нажмите Ctrl+C или ⌘C.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Статья для Habr.com, русский</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #e8ecf2; --ink: #141a26; --muted: #586174; --line: #d8dde6;
+    --accent: #2b4fb3; --accent-ink: #ffffff; --warn-bg: #fdf3dc; --warn-ink: #7a5100;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+        --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+    }
+}
+:root[data-theme="dark"] {
+    --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+    --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0; padding-inline: 16px; background: var(--bg); color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.wrap { max-width: 820px; margin-inline: auto; padding-block: 32px 56px; display: grid; gap: 20px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1.page { margin: 0; font-size: 1.5rem; line-height: 1.2; text-wrap: balance; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 0.9rem; margin: 0; }
+.meta b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.note { margin: 0; background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+button {
+    font: inherit; font-weight: 600; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+}
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.status { color: var(--muted); font-size: 0.9rem; }
+.post {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px;
+    overflow-wrap: anywhere;
+}
+.post.plain { white-space: pre-wrap; }
+.post h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; text-wrap: balance; }
+.post h2 { font-size: 1.15rem; margin: 22px 0 8px; }
+.post p { margin: 0 0 12px; max-width: 70ch; }
+.post ul, .post ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 6px; max-width: 72ch; }
+.post table { border-collapse: collapse; margin: 4px 0 14px; font-size: 0.92rem; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+.post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+.post th { background: var(--surface-2); }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+    <p class="eyebrow">После 6.111 · Habr.com · русский</p>
+    <h1 class="page">Статья для Habr.com</h1>
+    <p class="meta"><span><b>10 024</b> знаков</span><span><a href="post_habr_article_en.html" hreflang="en" lang="en">English version</a></span></p>
+    <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует статью с форматированием; вставьте её в редактор Habr и проверьте таблицы.</p>
+    <div class="actions"><button id="copy" type="button">Скопировать статью</button><span class="status" id="status" aria-live="polite"></span></div>
+</header>
+<article class="post" id="post"><h1>После 6.111: одного курса по ПЛИС мало. 111 университетов и программ по 49 пунктам</h1>
+<p>MIT 6.111, теперь 6.205, — образцовый курс по ПЛИС: студенты осваивают Verilog, проходят серию лабораторных, а затем делают большой собственный проект. В предыдущем отчёте искались его аналоги в университетах Калифорнии, России, Беларуси, Украины и других бывших советских республик. Эта статья — о том, что должно идти после такого курса и почему одного курса по ПЛИС недостаточно, чтобы компания, проектирующая микросхемы, могла поручить выпускнику настоящий блок.</p>
+<h2>Три пробела</h2>
+<p><b>Микроархитектура.</b> Многие курсы идут от вентилей к конечным автоматам и последовательным интерфейсам вроде SPI. Если в них и говорят о конвейерах, то о пятистадийном конвейере MIPS или RISC-V. В промышленности сетевые микросхемы, блоки обработки видео и специализированные блоки GPU полны конвейеров данных, не имеющих отношения к процессору. Что такое FIFO, выпускники знают, но как сочетать его с конвейером — нет, и мало кто может объяснить на собеседовании valid/ready или управление потоком на кредитах.</p>
+<p><b>Верификация.</b> Тестбенчи в стиле начала 1990-х по-прежнему обычны. Проверка по транзакционной модели, ограниченная рандомизация и функциональное покрытие встречаются редко, а формальная верификация и параллельные утверждения — ещё реже, хотя в резюме, написанных с помощью ИИ, они есть. Инженер, который не может проверить крайние случаи, вынужден держать микроархитектуру простой.</p>
+<p><b>Физическое проектирование.</b> Лабораторные на ПЛИС оторваны от проектирования ASIC. Без САПР Synopsys или Cadence и без открытых маршрутов OpenROAD и LibreLane студенты не приобретают интуиции в статическом временном анализе, не знают, как исправить отрицательный запас, и путаются в приёмах снижения мощности, например в гейтировании тактового сигнала.</p>
+<p>Эти пробелы описаны на слайдах 14–17 доклада <a href="https://docs.google.com/presentation/d/14WxUKOwsAo6Yn8X19WpGPNV5fk2H3XappceqGRlxqdM/edit?usp=sharing">«Workforce Development for the Electronic Industry»</a> на EDA Connect 2025.</p>
+<h2>Список: 49 пунктов в 7 областях</h2>
+<p>Участник получает балл за каждый пункт, который открытый источник показывает в его вводном курсе по ПЛИС или в смежном курсе: углублённое цифровое проектирование, архитектура ЭВМ, верификация, VLSI, САПР для СБИС.</p>
+<ol><li><b>Микроархитектура с одним тактовым сигналом</b><ul><li>1.1. Конвейерная обработка данных, например конвейерные блоки с плавающей точкой</li><li>1.2. Очереди FIFO</li><li>1.3. Сочетание конвейеров и FIFO для управления потоком</li><li>1.4. Протоколы ready/valid</li><li>1.5. Управление потоком на кредитах</li><li>1.6. Систолические массивы</li><li>1.7. Арбитры, например циклические (round-robin)</li><li>1.8. Буферы переупорядочивания</li><li>1.9. AXI и родственные протоколы</li></ul></li><li><b>Несколько тактовых сигналов, память и гейтирование</b><ul><li>2.1. Разбиение встроенной SRAM на банки</li><li>2.2. Контроллеры связных списков в памяти</li><li>2.3. Пересечение тактовых доменов (CDC)</li><li>2.4. CDC через асинхронный FIFO</li><li>2.5. Тонкое гейтирование тактового сигнала через разрешения</li><li>2.6. Гейтирование среднего уровня ячейками на защёлках</li></ul></li><li><b>Верификация</b><ul><li>3.1. Моделирование RTL с самопроверяющимися тестбенчами</li><li>3.2. Самопроверка по транзакционной модели</li><li>3.3. Модели шин (BFM)</li><li>3.4. Пассивные мониторы и скорборды</li><li>3.5. Стимулы с ограниченной рандомизацией</li><li>3.6. Функциональное покрытие</li><li>3.7. Параллельные утверждения, допущения и cover на SVA в моделировании RTL</li><li>3.8. Формальная верификация в инструментах вроде JasperGold или VC Formal</li><li>3.9. UVM</li><li>3.10. Аппаратные эмуляторы (Veloce, ZeBu, Palladium)</li><li>3.11. Проверка конвейерного процессора по симулятору системы команд</li></ul></li><li><b>Временной анализ и физическое проектирование</b><ul><li>4.1. Маршрут ASIC «одной кнопкой» с Tiny Tapeout</li><li>4.2. Открытый маршрут: LibreLane, OpenLane, OpenROAD, Yosys</li><li>4.3. Коммерческие САПР (Synopsys, Cadence)</li><li>4.4. Лабораторные с отчётами статического временного анализа ASIC</li><li>4.5. Лабораторные с анализом мощности</li><li>4.6. Лабораторные с планировкой, размещением и трассировкой</li></ul></li><li><b>Процессорные лабораторные на RTL</b><ul><li>5.1. Статический конвейер</li><li>5.2. Внеочередное исполнение, бэкенд проектируют студенты</li><li>5.3. Аппаратная многопоточность</li><li>5.4. Кэши</li><li>5.5. Кластер ядер без когерентности, например mesh</li><li>5.6. Когерентные кэши (MSI, MESI)</li><li>5.7. Предсказатель переходов, спроектированный студентами</li></ul></li><li><b>Прикладные проекты на RTL</b><ul><li>6.1. Обработка видео с камеры</li><li>6.2. Компьютерная графика</li><li>6.3. Сетевые устройства</li><li>6.4. ЦОС: фильтры</li><li>6.5. ЦОС: БПФ</li><li>6.6. Обработка звука</li><li>6.7. Ускорители машинного обучения</li></ul></li><li><b>Алгоритмы САПР: студенты пишут или дорабатывают САПР</b><ul><li>7.1. Моделирование RTL</li><li>7.2. Логический синтез</li><li>7.3. Размещение и трассировка</li></ul></li></ol>
+<p>Несколько правил важны для чисел. Пункт 1.1 — конвейеры вне процессора; конвейер процессора идёт в 5.1. Область 5 засчитывается только за лабораторные, где студенты строят или меняют процессор на RTL. Курс по UVM получает 3.9 и вдобавок 3.2–3.5, но 3.2–3.5 можно получить и без UVM, на обычных классах SystemVerilog, как в учебнике Криса Спира <em>SystemVerilog for Verification</em>. cocotb засчитывается за пункты про SystemVerilog. Для пункта 4.4 нужны отчёты временного анализа ASIC, а не ПЛИС. Где университет публикует мало, доказательством служат открытые репозитории, в которые студенты выкладывают курсовые работы.</p>
+<h2>Кто проверен</h2>
+<p>111 участников — это 90 университетов исходного отчёта (17 в Калифорнии, 28 в России, 5 в Беларуси, 7 в Украине и 33 в других бывших советских республиках), Школа синтеза цифровых схем и 20 университетов и программ для сравнения: MIT, Принстон, Мичиган, NC State, Portland State, Georgia Tech, ETH Zürich, EPFL, Кембридж, UCL, Цинхуа, китайская программа «Один студент — один чип», NYCU, Национальный университет Тайваня, Токийский университет, Science Tokyo, IIT Bombay, IIT Madras, KAIST и POSTECH.</p>
+<h2>Рейтинг</h2>
+<p>Баллы по областям (с 1 по 7) и всего, из 49:</p>
+<table><thead><tr><th>№</th><th>Университет или программа</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>Σ</th></tr></thead><tbody><tr><td>1</td><td>MIT</td><td>5</td><td>2</td><td>7</td><td>·</td><td>4</td><td>7</td><td>·</td><td><b>25</b></td></tr><tr><td>2</td><td>UC Berkeley</td><td>3</td><td>·</td><td>9</td><td>4</td><td>2</td><td>1</td><td>·</td><td><b>19</b></td></tr><tr><td>3</td><td>Мичиган</td><td>5</td><td>1</td><td>2</td><td>3</td><td>5</td><td>·</td><td>1</td><td><b>17</b></td></tr><tr><td>4</td><td>НИУ МИЭТ</td><td>6</td><td>2</td><td>7</td><td>1</td><td>·</td><td>·</td><td>·</td><td><b>16</b></td></tr><tr><td>4</td><td>NYCU</td><td>3</td><td>3</td><td>4</td><td>4</td><td>1</td><td>1</td><td>·</td><td><b>16</b></td></tr><tr><td>6</td><td>«Один студент — один чип»</td><td>5</td><td>·</td><td>3</td><td>4</td><td>3</td><td>·</td><td>·</td><td><b>15</b></td></tr><tr><td>7</td><td>Портленд (PSU)</td><td>·</td><td>·</td><td>9</td><td>3</td><td>·</td><td>·</td><td>1</td><td><b>13</b></td></tr><tr><td>8</td><td>NC State</td><td>·</td><td>·</td><td>9</td><td>3</td><td>·</td><td>·</td><td>·</td><td><b>12</b></td></tr><tr><td>9</td><td>Школа синтеза (YADRO)</td><td>8</td><td>·</td><td>1</td><td>1</td><td>·</td><td>1</td><td>·</td><td><b>11</b></td></tr><tr><td>10</td><td>МФТИ</td><td>6</td><td>2</td><td>1</td><td>·</td><td>1</td><td>·</td><td>·</td><td><b>10</b></td></tr><tr><td>11</td><td>ETH Zürich</td><td>2</td><td>·</td><td>2</td><td>5</td><td>·</td><td>·</td><td>·</td><td><b>9</b></td></tr><tr><td>11</td><td>UC San Diego</td><td>2</td><td>1</td><td>·</td><td>3</td><td>3</td><td>·</td><td>·</td><td><b>9</b></td></tr><tr><td>13</td><td>IIT Madras</td><td>2</td><td>·</td><td>2</td><td>·</td><td>1</td><td>2</td><td>·</td><td><b>7</b></td></tr><tr><td>13</td><td>Стэнфорд</td><td>1</td><td>·</td><td>2</td><td>3</td><td>·</td><td>1</td><td>·</td><td><b>7</b></td></tr><tr><td>15</td><td>Национальный университет Тайваня</td><td>·</td><td>·</td><td>·</td><td>1</td><td>3</td><td>·</td><td>1</td><td><b>5</b></td></tr><tr><td>15</td><td>Цинхуа</td><td>2</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td><b>5</b></td></tr><tr><td>15</td><td>UC Santa Cruz</td><td>·</td><td>·</td><td>1</td><td>2</td><td>1</td><td>·</td><td>1</td><td><b>5</b></td></tr><tr><td>18</td><td>Кембридж</td><td>·</td><td>·</td><td>1</td><td>3</td><td>·</td><td>·</td><td>·</td><td><b>4</b></td></tr><tr><td>18</td><td>Georgia Tech</td><td>2</td><td>·</td><td>·</td><td>·</td><td>1</td><td>·</td><td>1</td><td><b>4</b></td></tr><tr><td>20</td><td>EPFL</td><td>1</td><td>·</td><td>·</td><td>2</td><td>·</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>IIT Bombay</td><td>·</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>KSE</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>Science Tokyo</td><td>·</td><td>·</td><td>·</td><td>·</td><td>3</td><td>·</td><td>·</td><td><b>3</b></td></tr><tr><td>20</td><td>Токийский университет</td><td>1</td><td>·</td><td>·</td><td>·</td><td>2</td><td>·</td><td>·</td><td><b>3</b></td></tr></tbody></table>
+<p>У 72 из 111 участников нет ни одного подтверждённого балла.</p>
+<h2>По областям</h2>
+<ul><li><b>Микроархитектура с одним тактовым сигналом</b> (9 пунктов): хотя бы один балл у 19 участников. Полнее всего — Школа синтеза (YADRO): 8 из 9; дальше НИУ МИЭТ и МФТИ: 6.</li><li><b>Несколько тактовых сигналов, память и гейтирование</b> (6 пунктов): хотя бы один балл у 7 участников. Полнее всего — NYCU: 3 из 6; дальше НИУ МИЭТ, МФТИ и MIT: 2. Нигде не документированы пункты 2.2, 2.6.</li><li><b>Верификация</b> (11 пунктов): хотя бы один балл у 18 участников. Полнее всего — NC State, Портленд (PSU) и UC Berkeley: 9 из 11; дальше НИУ МИЭТ и MIT: 7.</li><li><b>Временной анализ и физическое проектирование</b> (6 пунктов): хотя бы один балл у 20 участников. Полнее всего — ETH Zürich: 5 из 6; дальше NYCU, «Один студент — один чип» и UC Berkeley: 4.</li><li><b>Процессорные лабораторные на RTL</b> (7 пунктов): хотя бы один балл у 20 участников. Полнее всего — Мичиган: 5 из 7; дальше MIT: 4. Нигде не документирован пункт 5.5.</li><li><b>Прикладные проекты на RTL</b> (7 пунктов): хотя бы один балл у 8 участников. Полнее всего — MIT: 7 из 7; дальше IIT Madras: 2.</li><li><b>Алгоритмы САПР: студенты пишут или дорабатывают САПР</b> (3 пункта): хотя бы один балл у 5 участников. Полнее всего — Georgia Tech, Мичиган, Национальный университет Тайваня, Портленд (PSU) и UC Santa Cruz: 1 из 3. Нигде не документирован пункт 7.1.</li></ul>
+<h2>По регионам</h2>
+<table><thead><tr><th>Регион</th><th>Проверено</th><th>С баллами</th><th>Лучший участник</th><th>Баллы</th><th>Покрыто пунктов</th></tr></thead><tbody><tr><td>Другие штаты США</td><td>6</td><td>5</td><td>MIT</td><td>25</td><td>40</td></tr><tr><td>Калифорния</td><td>17</td><td>8</td><td>UC Berkeley</td><td>19</td><td>28</td></tr><tr><td>Азия</td><td>10</td><td>9</td><td>NYCU</td><td>16</td><td>27</td></tr><tr><td>Россия</td><td>29</td><td>5</td><td>НИУ МИЭТ</td><td>16</td><td>23</td></tr><tr><td>Европа</td><td>4</td><td>4</td><td>ETH Zürich</td><td>9</td><td>11</td></tr><tr><td>Украина</td><td>7</td><td>3</td><td>KSE</td><td>3</td><td>5</td></tr><tr><td>Другие бывшие советские республики</td><td>33</td><td>5</td><td>ЕГУ</td><td>1</td><td>3</td></tr><tr><td>Беларусь</td><td>5</td><td>0</td><td>—</td><td>0</td><td>0</td></tr></tbody></table>
+<p>Сравнение предварительное: за рубежом выбраны только сильные университеты, а в бывшем СССР — и региональные, и университеты, не публикующие программы, теряют баллы, которые, возможно, заслуживают.</p>
+<h2>Россия и бывший СССР</h2>
+<p>МИЭТ (16 баллов) — единственный университет региона в верхней части списка. Его открытый практикум по ПЛИС охватывает конвейеры и систолические массивы, AXI-Stream с управлением потоком на кредитах, пересечение тактовых доменов с асинхронными FIFO, APB и AXI-Lite; факультатив по верификации учит классовым тестбенчам, ограниченной рандомизации, покрытию и SVA в моделировании без UVM; совместная магистратура с Synopsys даёт коммерческие САПР. Школа синтеза (11) покрывает 8 из 9 пунктов по микроархитектуре — больше любого университета — за счёт лекций и <a href="https://github.com/yuri-panchul/systemverilog-homework">сборника задач на SystemVerilog</a>. МФТИ (10) строит конвейерное ядро RISC-V, конвейерный FPU и асинхронный FIFO, а в 2026 году добавляет систолические массивы, AXI и cocotb. За пределами России до физического проектирования доходят только связанные с Synopsys программы Армении и Киевская школа экономики (САПР Cadence, Tiny Tapeout). Большинство остальных университетов региона получают ноль — во многом потому, что их программы не опубликованы.</p>
+<h2>Что помогло бы</h2>
+<ol>
+<li>Конвейеры, которые не являются процессорами, с FIFO, valid/ready и управлением потоком на кредитах — уже в первом или втором курсе.</li>
+<li>Курс верификации: проверка по модели, ограниченная рандомизация, покрытие, SVA в моделировании и формальная верификация, затем UVM.</li>
+<li>Маршрут ASIC, хотя бы открытый: Yosys, OpenROAD, LibreLane и OpenSTA с открытыми PDK и коллективными запусками вроде Tiny Tapeout позволяют на практике разбирать отчёты временного анализа, запас и гейтирование. ETH Zürich и «Один студент — один чип» показывают, что это работает.</li>
+<li>Открытые программы курсов и методички.</li>
+</ol>
+<h2>Ограничения</h2>
+<p>Отсутствие балла значит, что открытого подтверждения не нашлось. Ряд сайтов не отдавал страницы автоматической загрузке или требовал входа (Принстон, UCL, каталог Стэнфорда, страницы MIT 6.205, страницы инженерного факультета Кембриджа), поэтому их баллы — нижняя оценка. Студенческие репозитории показывают, что сделала одна команда в один год.</p>
+<p>Полный отчёт на русском и английском, с источником для каждого балла: [ссылка на отчёт]. Он составлен с помощью Claude, модели ИИ, по открытым страницам курсов. Поправки и ссылки на недостающие программы приветствуются в комментариях.</p></article>
+</div>
+<script>
+(function () {
+    var btn = document.getElementById("copy"), st = document.getElementById("status"), post = document.getElementById("post");
+    var mode = "rich";
+    btn.addEventListener("click", function () {
+        var text = mode === "html" ? post.innerHTML.trim() : post.innerText;
+        function done() { st.textContent = "Скопировано."; }
+        function fallback() {
+            var r = document.createRange(); r.selectNodeContents(post);
+            var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+            st.textContent = "Выделено: нажмите Ctrl+C или ⌘C.";
+        }
+        try {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done, fallback);
+            } else { fallback(); }
+        } catch (err) { fallback(); }
+    });
+})();
+</script>
+</body>
+</html>

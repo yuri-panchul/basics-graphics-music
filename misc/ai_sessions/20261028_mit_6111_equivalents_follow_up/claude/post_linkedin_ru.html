@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LinkedIn: пост на русском</title>
+<title>Пост для LinkedIn, русский</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,21 +61,21 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">После 6.111 · LinkedIn · русский</p>
     <h1 class="page">Пост для LinkedIn</h1>
-    <p class="meta"><span><b>1 979</b> знаков</span><span>предел 3 000</span><span><a href="post_linkedin_en.html" hreflang="en" lang="en">English version</a></span></p>
-    <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта.</p>
+    <p class="meta"><span><b>1 971</b> знаков</span><span>предел 3 000</span><span><a href="post_linkedin_en.html" hreflang="en" lang="en">English version</a></span></p>
+    <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует простой текст.</p>
     <div class="actions"><button id="copy" type="button">Скопировать текст</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post plain" id="post">Одна лабораторная по ПЛИС — ещё не учебная программа.
 
 Курс уровня MIT 6.111 (теперь 6.205) — хорошее начало. Но компании, проектирующие микросхемы, ищут инженеров, которые умеют строить конвейеры данных с FIFO и управлением потоком, проверять их по транзакционной модели с ограниченной рандомизацией, покрытием и утверждениями и закрывать временные ограничения в маршруте ASIC. Сколько университетов этому учат?
 
-Новый отчёт оценивает 111 университетов и программ по 47 темам в семи областях: микроархитектура, несколько тактовых сигналов и гейтирование, верификация, временной анализ и физическое проектирование, процессорные лабораторные, прикладные проекты и алгоритмы САПР. В нём Калифорния, Россия, Беларусь, Украина и другие бывшие советские республики, а для сравнения — MIT, Мичиган, Georgia Tech, ETH Zürich, Кембридж, Цинхуа, NYCU, Токийский университет, IIT Bombay и другие.
+Новый отчёт оценивает 111 университетов и программ по 49 темам в семи областях: микроархитектура, несколько тактовых сигналов и гейтирование, верификация, временной анализ и физическое проектирование, процессорные лабораторные, прикладные проекты и алгоритмы САПР. В нём Калифорния, Россия, Беларусь, Украина и другие бывшие советские республики, а для сравнения — MIT, Мичиган, Georgia Tech, ETH Zürich, Кембридж, Цинхуа, NYCU, Токийский университет, IIT Bombay и другие.
 
 Что получилось:
-• Никто не покрывает и половины списка. Первое место у MIT — 23 из 47, дальше Мичиган (17), МИЭТ, NYCU и UC Berkeley (по 16) и китайская программа «Один студент — один чип» (15).
+• Больше половины списка покрывает только MIT — 25 из 49. Дальше UC Berkeley (19), Мичиган (17), МИЭТ и NYCU (по 16) и китайская программа «Один студент — один чип» (15).
 • Лидеры выстраивают цепочку курсов: лабораторная на ПЛИС, затем углублённое проектирование или верификация, затем маршрут ASIC.
 • Управление потоком на кредитах (credit-based flow control) документировано только в МИЭТ и в Школе синтеза цифровых схем.
-• Пересечение тактовых доменов встречается у 6 участников, гейтирование тактового сигнала — у 2. Четыре темы из 47 не встречаются нигде.
+• Пересечение тактовых доменов встречается у 6 участников, гейтирование тактового сигнала — у 2. Четыре темы из 49 не встречаются нигде.
 • У 72 из 111 участников нет ни одного подтверждённого балла сверх вводного курса — часто потому, что их программы не опубликованы.
 
 Список тем развивает слайды 14–17 доклада «Workforce Development for the Electronic Industry» на EDA Connect 2025. Каждый балл в отчёте снабжён ссылкой на источник; поправки приветствуются.
@@ -98,7 +98,13 @@ a { color: var(--accent); }
             st.textContent = "Выделено: нажмите Ctrl+C или ⌘C.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }

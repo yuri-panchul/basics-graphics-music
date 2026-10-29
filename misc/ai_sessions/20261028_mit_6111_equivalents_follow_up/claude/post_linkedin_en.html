@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LinkedIn Post, English</title>
+<title>Post for LinkedIn, English</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,21 +61,21 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">After 6.111 · LinkedIn · English</p>
     <h1 class="page">Post for LinkedIn</h1>
-    <p class="meta"><span><b>1,770</b> characters</span><span>limit 3,000</span><span><a href="post_linkedin_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
-    <p class="note">Replace “[link to the report]” with the report's address before posting.</p>
+    <p class="meta"><span><b>1,782</b> characters</span><span>limit 3,000</span><span><a href="post_linkedin_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
+    <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the plain text.</p>
     <div class="actions"><button id="copy" type="button">Copy text</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post plain" id="post">One FPGA lab is not a curriculum.
 
 A course like MIT 6.111 (now 6.205) is a fine start. But chip companies hire people to build data pipelines with FIFOs and flow control, verify them against transaction-level models with constrained-random tests, coverage and assertions, and close timing in an ASIC flow. How many universities teach that?
 
-A new report scores 111 universities and programs on 47 topics in seven areas: microarchitecture, multiple clocks and clock gating, verification, timing and physical design, processor labs, application projects and EDA algorithms. It covers California, Russia, Belarus, Ukraine and the other former Soviet republics, with MIT, Michigan, Georgia Tech, ETH Zürich, Cambridge, Tsinghua, NYCU, the University of Tokyo, IIT Bombay and others for comparison.
+A new report scores 111 universities and programs on 49 topics in seven areas: microarchitecture, multiple clocks and clock gating, verification, timing and physical design, processor labs, application projects and EDA algorithms. It covers California, Russia, Belarus, Ukraine and the other former Soviet republics, with MIT, Michigan, Georgia Tech, ETH Zürich, Cambridge, Tsinghua, NYCU, the University of Tokyo, IIT Bombay and others for comparison.
 
 What it found:
-• No one covers half the list. MIT leads with 23 of 47, then Michigan (17), MIET, NYCU and UC Berkeley (16 each) and China&#x27;s One Student One Chip program (15).
+• Only MIT covers more than half the list, with 25 of 49. Then come UC Berkeley (19), Michigan (17), MIET and NYCU (16 each) and China&#x27;s One Student One Chip program (15).
 • The leaders stack courses: an FPGA lab, then advanced design or verification, then an ASIC flow.
 • Credit-based flow control is documented only at MIET and the Digital Circuit Synthesis School.
-• Clock-domain crossing appears at 6 entries, clock gating at 2. Four of the 47 topics appear nowhere.
+• Clock-domain crossing appears at 6 entries, clock gating at 2. Four of the 49 topics appear nowhere.
 • 72 of 111 entries have no documented point beyond the first course, often because their syllabi aren&#x27;t public.
 
 The checklist expands slides 14–17 of the talk &quot;Workforce Development for the Electronic Industry&quot; at EDA Connect 2025. Every point in the report links to its source, and corrections are welcome.
@@ -98,7 +98,13 @@ Compiled with Claude, an AI model, from public course pages.
             st.textContent = "Selected: press Ctrl+C or ⌘C to copy.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }

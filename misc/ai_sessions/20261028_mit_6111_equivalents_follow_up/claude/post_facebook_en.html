@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Facebook Post, English</title>
+<title>Post for Facebook, English</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,15 +61,15 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">After 6.111 · Facebook · English</p>
     <h1 class="page">Post for Facebook</h1>
-    <p class="meta"><span><b>1,819</b> characters</span><span><a href="post_facebook_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
-    <p class="note">Replace “[link to the report]” with the report's address before posting.</p>
+    <p class="meta"><span><b>1,821</b> characters</span><span><a href="post_facebook_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
+    <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the plain text.</p>
     <div class="actions"><button id="copy" type="button">Copy text</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post plain" id="post">After the first FPGA course, then what?
 
 Many universities teach one digital design course: gates, state machines, a UART or an SPI interface, maybe a five-stage MIPS pipeline. Then their graduates interview at chip companies and get asked about FIFOs inside data pipelines, valid/ready and credit-based flow control, constrained-random testbenches, functional coverage, SVA, timing reports and negative slack.
 
-A new report scores 111 universities and programs on 47 such topics. The leaders: MIT (23 of 47), Michigan (17), MIET, NYCU and UC Berkeley (16 each), China&#x27;s One Student One Chip (15), Portland State and the Digital Circuit Synthesis School (11 each), MIPT and NC State (10 each).
+A new report scores 111 universities and programs on 49 such topics. The leaders: MIT (25 of 49), UC Berkeley (19), Michigan (17), MIET and NYCU (16 each), China&#x27;s One Student One Chip (15), Portland State (13), NC State (12), the Digital Circuit Synthesis School (11) and MIPT (10).
 
 Two things stood out for the former Soviet Union.
 
@@ -95,7 +95,13 @@ It was compiled with Claude, an AI model, from public course pages.</article>
             st.textContent = "Selected: press Ctrl+C or ⌘C to copy.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }

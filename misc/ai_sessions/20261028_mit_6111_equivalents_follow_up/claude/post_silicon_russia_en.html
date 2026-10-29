@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>silicon-russia.com Post, English</title>
+<title>Blog post for silicon-russia.com, English</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -61,16 +61,16 @@ a { color: var(--accent); }
 <header>
     <p class="eyebrow">After 6.111 · silicon-russia.com · English</p>
     <h1 class="page">Blog post for silicon-russia.com</h1>
-    <p class="meta"><span><b>3,133</b> characters</span><span><a href="post_silicon_russia_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
+    <p class="meta"><span><b>3,180</b> characters</span><span><a href="post_silicon_russia_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
     <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the post as HTML for the WordPress code editor.</p>
     <div class="actions"><button id="copy" type="button">Copy HTML</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
 <article class="post" id="post"><h1>Chip-Design Education in Russia After the First FPGA Course</h1>
-<p>A new report checks 111 universities and programs against 47 topics that a single FPGA course rarely reaches: data pipelines with FIFOs and flow control, clock-domain crossing and clock gating, modern verification, timing and physical design, processor labs, application projects and EDA algorithms. It covers 29 Russian entries, including the Digital Circuit Synthesis School, alongside California, the rest of the former Soviet Union and twenty comparison universities and programs in the US, Europe and Asia.</p>
+<p>A new report checks 111 universities and programs against 49 topics that a single FPGA course rarely reaches: data pipelines with FIFOs and flow control, clock-domain crossing and clock gating, modern verification, timing and physical design, processor labs, application projects and EDA algorithms. It covers 29 Russian entries, including the Digital Circuit Synthesis School, alongside California, the rest of the former Soviet Union and twenty comparison universities and programs in the US, Europe and Asia.</p>
 <h2>Russia's results</h2>
 <p>Only five Russian entries have documented points: MIET (16), Synthesis School (YADRO) (11), MIPT (10), HSE MIEM (2), SibSUTIS (1). The other 24 score zero, mostly because their syllabi sit in PDFs, in Moodle or behind logins, so the report counts only what is public.</p>
 <ul>
-<li><strong>MIET</strong> (16 of 47) ties NYCU and UC Berkeley for third place overall. Its open «Практикум по ПЛИС» covers pipelines and systolic arrays, AXI-Stream with valid/ready and credit-based flow control, clock-domain crossing with asynchronous FIFOs, APB and AXI-Lite. A verification elective adds class-based testbenches, constrained random, functional coverage, SVA and APB/AXI verification IP, and the joint master's program with Synopsys brings commercial tools.</li>
+<li><strong>MIET</strong> (16 of 49) ties NYCU for fourth place overall, after MIT, UC Berkeley and Michigan. Its open «Практикум по ПЛИС» covers pipelines and systolic arrays, AXI-Stream with valid/ready and credit-based flow control, clock-domain crossing with asynchronous FIFOs, APB and AXI-Lite. A verification elective adds class-based testbenches, constrained random, functional coverage, SVA assertions in simulation and APB/AXI verification IP, and the joint master's program with Synopsys brings commercial tools.</li>
 <li><strong>The Synthesis School</strong> (11) covers 8 of the 9 microarchitecture items, more than any university in the report, through its lectures and homework; with MIET it is the only entry that teaches credit-based flow control. Its students come from 26 clusters in Russia and Belarus.</li>
 <li><strong>MIPT</strong> (10) builds a pipelined RISC-V core, a pipelined floating-point unit and an asynchronous FIFO, and its 2026 follow-on course adds systolic arrays, AXI and cocotb.</li>
 </ul>
@@ -103,7 +103,13 @@ a { color: var(--accent); }
             st.textContent = "Selected: press Ctrl+C or ⌘C to copy.";
         }
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            if (mode === "rich" && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+                var item = new ClipboardItem({
+                    "text/html": new Blob([post.innerHTML], { type: "text/html" }),
+                    "text/plain": new Blob([post.innerText], { type: "text/plain" })
+                });
+                navigator.clipboard.write([item]).then(done, fallback);
+            } else if (mode !== "rich" && navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(done, fallback);
             } else { fallback(); }
         } catch (err) { fallback(); }
