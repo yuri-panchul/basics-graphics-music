@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>silicon-russia.com Post, English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #e8ecf2; --ink: #141a26; --muted: #586174; --line: #d8dde6;
+    --accent: #2b4fb3; --accent-ink: #ffffff; --warn-bg: #fdf3dc; --warn-ink: #7a5100;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+        --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+    }
+}
+:root[data-theme="dark"] {
+    --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+    --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0; padding-inline: 16px; background: var(--bg); color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.wrap { max-width: 820px; margin-inline: auto; padding-block: 32px 56px; display: grid; gap: 20px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1.page { margin: 0; font-size: 1.5rem; line-height: 1.2; text-wrap: balance; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 0.9rem; margin: 0; }
+.meta b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.note { margin: 0; background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+button {
+    font: inherit; font-weight: 600; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+}
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.status { color: var(--muted); font-size: 0.9rem; }
+.post {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px;
+    overflow-wrap: anywhere;
+}
+.post.plain { white-space: pre-wrap; }
+.post h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; text-wrap: balance; }
+.post h2 { font-size: 1.15rem; margin: 22px 0 8px; }
+.post p { margin: 0 0 12px; max-width: 70ch; }
+.post ul, .post ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 6px; max-width: 72ch; }
+.post table { border-collapse: collapse; margin: 4px 0 14px; font-size: 0.92rem; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+.post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+.post th { background: var(--surface-2); }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+    <p class="eyebrow">After 6.111 · silicon-russia.com · English</p>
+    <h1 class="page">Blog post for silicon-russia.com</h1>
+    <p class="meta"><span><b>3,133</b> characters</span><span><a href="post_silicon_russia_ru.html" hreflang="ru" lang="ru">Русская версия</a></span></p>
+    <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the post as HTML for the WordPress code editor.</p>
+    <div class="actions"><button id="copy" type="button">Copy HTML</button><span class="status" id="status" aria-live="polite"></span></div>
+</header>
+<article class="post" id="post"><h1>Chip-Design Education in Russia After the First FPGA Course</h1>
+<p>A new report checks 111 universities and programs against 47 topics that a single FPGA course rarely reaches: data pipelines with FIFOs and flow control, clock-domain crossing and clock gating, modern verification, timing and physical design, processor labs, application projects and EDA algorithms. It covers 29 Russian entries, including the Digital Circuit Synthesis School, alongside California, the rest of the former Soviet Union and twenty comparison universities and programs in the US, Europe and Asia.</p>
+<h2>Russia's results</h2>
+<p>Only five Russian entries have documented points: MIET (16), Synthesis School (YADRO) (11), MIPT (10), HSE MIEM (2), SibSUTIS (1). The other 24 score zero, mostly because their syllabi sit in PDFs, in Moodle or behind logins, so the report counts only what is public.</p>
+<ul>
+<li><strong>MIET</strong> (16 of 47) ties NYCU and UC Berkeley for third place overall. Its open «Практикум по ПЛИС» covers pipelines and systolic arrays, AXI-Stream with valid/ready and credit-based flow control, clock-domain crossing with asynchronous FIFOs, APB and AXI-Lite. A verification elective adds class-based testbenches, constrained random, functional coverage, SVA and APB/AXI verification IP, and the joint master's program with Synopsys brings commercial tools.</li>
+<li><strong>The Synthesis School</strong> (11) covers 8 of the 9 microarchitecture items, more than any university in the report, through its lectures and homework; with MIET it is the only entry that teaches credit-based flow control. Its students come from 26 clusters in Russia and Belarus.</li>
+<li><strong>MIPT</strong> (10) builds a pipelined RISC-V core, a pipelined floating-point unit and an asynchronous FIFO, and its 2026 follow-on course adds systolic arrays, AXI and cocotb.</li>
+</ul>
+<h2>The weak spots</h2>
+<ul>
+<li><strong>Physical design.</strong> In Russia only MIET's Synopsys program and the Synthesis School's lecture on the open ASIC flow reach this area. None of the Russian entries documents labs with STA reports, power analysis or place and route.</li>
+<li><strong>Verification</strong> beyond simple testbenches appears only at MIET.</li>
+<li><strong>Processors.</strong> Pipelined cores appear at MIPT and HSE MIEM; no Russian course documents out-of-order cores, branch predictors or coherent caches.</li>
+</ul>
+<h2>A comparison worth noting</h2>
+<p>China's One Student One Chip program (15 points) plays a role similar to the Synthesis School's. It adds checking every processor against an instruction-set simulator (DiffTest), timing analysis with open tools, physical design on an open 55 nm PDK and real tapeouts for student cores. ETH Zürich teaches its VLSI course on an open-source flow with Yosys, OpenROAD and the IHP 130 nm PDK. Neither depends on commercial licences.</p>
+<h2>What would help</h2>
+<ol>
+<li>An ASIC flow in teaching, even with open tools and open PDKs, so that students see timing reports, negative slack and clock gating.</li>
+<li>Verification courses on the model of MIET's elective.</li>
+<li>Published syllabi and lab handouts, so that what is taught can be seen and compared.</li>
+</ol>
+<p>The full report, in Russian and English, with a source for every point: [link to the report]. It was compiled with Claude, an AI model, from public course pages; corrections are welcome.</p></article>
+</div>
+<script>
+(function () {
+    var btn = document.getElementById("copy"), st = document.getElementById("status"), post = document.getElementById("post");
+    var mode = "html";
+    btn.addEventListener("click", function () {
+        var text = mode === "html" ? post.innerHTML.trim() : post.innerText;
+        function done() { st.textContent = "Copied."; }
+        function fallback() {
+            var r = document.createRange(); r.selectNodeContents(post);
+            var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+            st.textContent = "Selected: press Ctrl+C or ⌘C to copy.";
+        }
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done, fallback);
+            } else { fallback(); }
+        } catch (err) { fallback(); }
+    });
+})();
+</script>
+</body>
+</html>

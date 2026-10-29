@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facebook: пост на русском</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #e8ecf2; --ink: #141a26; --muted: #586174; --line: #d8dde6;
+    --accent: #2b4fb3; --accent-ink: #ffffff; --warn-bg: #fdf3dc; --warn-ink: #7a5100;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+        --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+    }
+}
+:root[data-theme="dark"] {
+    --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+    --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0; padding-inline: 16px; background: var(--bg); color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.wrap { max-width: 820px; margin-inline: auto; padding-block: 32px 56px; display: grid; gap: 20px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1.page { margin: 0; font-size: 1.5rem; line-height: 1.2; text-wrap: balance; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 0.9rem; margin: 0; }
+.meta b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.note { margin: 0; background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+button {
+    font: inherit; font-weight: 600; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+}
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.status { color: var(--muted); font-size: 0.9rem; }
+.post {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px;
+    overflow-wrap: anywhere;
+}
+.post.plain { white-space: pre-wrap; }
+.post h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; text-wrap: balance; }
+.post h2 { font-size: 1.15rem; margin: 22px 0 8px; }
+.post p { margin: 0 0 12px; max-width: 70ch; }
+.post ul, .post ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 6px; max-width: 72ch; }
+.post table { border-collapse: collapse; margin: 4px 0 14px; font-size: 0.92rem; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+.post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+.post th { background: var(--surface-2); }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+    <p class="eyebrow">После 6.111 · Facebook · русский</p>
+    <h1 class="page">Пост для Facebook</h1>
+    <p class="meta"><span><b>1 999</b> знаков</span><span><a href="post_facebook_en.html" hreflang="en" lang="en">English version</a></span></p>
+    <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта.</p>
+    <div class="actions"><button id="copy" type="button">Скопировать текст</button><span class="status" id="status" aria-live="polite"></span></div>
+</header>
+<article class="post plain" id="post">А что после первого курса по ПЛИС?
+
+Во многих университетах цифровому проектированию посвящён один курс: вентили, конечные автоматы, UART или SPI, иногда пятистадийный конвейер MIPS. Потом выпускники приходят на собеседования в компании, проектирующие микросхемы, и их спрашивают про FIFO внутри конвейеров данных, valid/ready и управление потоком на кредитах, тестбенчи с ограниченной рандомизацией, функциональное покрытие, SVA, отчёты временного анализа и отрицательный запас (negative slack).
+
+Новый отчёт оценивает 111 университетов и программ по 47 таким темам. Лидеры: MIT (23 из 47), Мичиган (17), МИЭТ, NYCU и UC Berkeley (по 16), китайская программа «Один студент — один чип» (15), Portland State и Школа синтеза цифровых схем (по 11), МФТИ и NC State (по 10).
+
+По бывшему СССР бросились в глаза две вещи.
+
+Первое: МИЭТ в Зеленограде — единственный университет региона в верхней части списка. Его открытый практикум по ПЛИС охватывает конвейеры, систолические массивы, AXI-Stream с управлением потоком на кредитах и асинхронные FIFO, а факультатив по верификации добавляет ограниченную рандомизацию, покрытие и SVA.
+
+Второе: самое слабое место — физическое проектирование. До него доходят только KSE в Киеве (САПР Cadence, Tiny Tapeout), программы, связанные с Synopsys, в Армении и в МИЭТ, и лекция Школы синтеза об открытом маршруте ASIC. ETH Zürich и китайская программа «Один студент — один чип» показывают, что открытых инструментов и открытых PDK достаточно, чтобы учить временному анализу, работе с запасом и всему маршруту до отправки на фабрику.
+
+У 72 из 111 участников нет ни одного подтверждённого балла сверх вводного курса — часто потому, что программы не опубликованы. Если ваш университет учит этим темам, а отчёт этого не видит, пришлите ссылку на программу или методички.
+
+Отчёт на русском и английском, каждый балл со ссылкой на страницу курса, программу или студенческий репозиторий: [ссылка на отчёт]
+Составлен с помощью Claude, модели ИИ, по открытым страницам курсов.</article>
+</div>
+<script>
+(function () {
+    var btn = document.getElementById("copy"), st = document.getElementById("status"), post = document.getElementById("post");
+    var mode = "plain";
+    btn.addEventListener("click", function () {
+        var text = mode === "html" ? post.innerHTML.trim() : post.innerText;
+        function done() { st.textContent = "Скопировано."; }
+        function fallback() {
+            var r = document.createRange(); r.selectNodeContents(post);
+            var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+            st.textContent = "Выделено: нажмите Ctrl+C или ⌘C.";
+        }
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done, fallback);
+            } else { fallback(); }
+        } catch (err) { fallback(); }
+    });
+})();
+</script>
+</body>
+</html>

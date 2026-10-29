@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ddvca.com: пост на русском</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8; --surface: #ffffff; --surface-2: #e8ecf2; --ink: #141a26; --muted: #586174; --line: #d8dde6;
+    --accent: #2b4fb3; --accent-ink: #ffffff; --warn-bg: #fdf3dc; --warn-ink: #7a5100;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+        --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+    }
+}
+:root[data-theme="dark"] {
+    --bg: #0f131b; --surface: #161b25; --surface-2: #1d2430; --ink: #e3e8f1; --muted: #9aa4b7; --line: #2a3242;
+    --accent: #8fb0ff; --accent-ink: #0f131b; --warn-bg: #2f2610; --warn-ink: #efc46e;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0; padding-inline: 16px; background: var(--bg); color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.wrap { max-width: 820px; margin-inline: auto; padding-block: 32px 56px; display: grid; gap: 20px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1.page { margin: 0; font-size: 1.5rem; line-height: 1.2; text-wrap: balance; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 0.9rem; margin: 0; }
+.meta b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.note { margin: 0; background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+button {
+    font: inherit; font-weight: 600; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+}
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.status { color: var(--muted); font-size: 0.9rem; }
+.post {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px;
+    overflow-wrap: anywhere;
+}
+.post.plain { white-space: pre-wrap; }
+.post h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; text-wrap: balance; }
+.post h2 { font-size: 1.15rem; margin: 22px 0 8px; }
+.post p { margin: 0 0 12px; max-width: 70ch; }
+.post ul, .post ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 6px; max-width: 72ch; }
+.post table { border-collapse: collapse; margin: 4px 0 14px; font-size: 0.92rem; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+.post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+.post th { background: var(--surface-2); }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+    <p class="eyebrow">После 6.111 · ddvca.com · русский</p>
+    <h1 class="page">Запись в блог для ddvca.com</h1>
+    <p class="meta"><span><b>2 993</b> знаков</span><span><a href="post_ddvca_en.html" hreflang="en" lang="en">English version</a></span></p>
+    <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует запись в HTML для редактора кода WordPress.</p>
+    <div class="actions"><button id="copy" type="button">Скопировать HTML</button><span class="status" id="status" aria-live="polite"></span></div>
+</header>
+<article class="post" id="post"><h1>Кто учит верификации сложнее тестбенча?</h1>
+<p>Многие выпускники до сих пор пишут тестбенчи в стиле начала 1990-х: несколько векторов и окно временных диаграмм. Они не проверяли проект по транзакционной модели, не писали стимулы с ограниченной рандомизацией и не измеряли функциональное покрытие, и немногие работали с формальной верификацией и параллельными утверждениями, хотя в резюме это может быть указано. Инженер, который не может проверить крайние случаи, делает проекты попроще.</p>
+<p>Новый отчёт об обучении после первого курса по ПЛИС оценивает 111 университетов и программ по 47 темам. Девять из них — про верификацию. Вот кто документирует каждую.</p>
+<table><thead><tr><th>Пункт</th><th>Тема</th><th>Участников</th><th>Где</th></tr></thead><tbody><tr><td>3.1</td><td>Моделирование RTL с самопроверяющимися тестбенчами</td><td>16</td><td>MIT, Мичиган, НИУ МИЭТ, NYCU, «Один студент — один чип», Портленд (PSU), Школа синтеза (YADRO), МФТИ, NC State, ETH Zürich, IIT Madras, UC Santa Cruz, Кембридж, Харви-Мадд, UC Davis, СибГУТИ</td></tr><tr><td>3.2</td><td>Самопроверка по транзакционной модели</td><td>5</td><td>MIT, НИУ МИЭТ, UC Berkeley, Портленд (PSU), ETH Zürich</td></tr><tr><td>3.3</td><td>Модели шин (BFM)</td><td>5</td><td>MIT, НИУ МИЭТ, UC Berkeley, Портленд (PSU), NC State</td></tr><tr><td>3.4</td><td>Пассивные мониторы и скорборды</td><td>5</td><td>MIT, НИУ МИЭТ, UC Berkeley, Портленд (PSU), NC State</td></tr><tr><td>3.5</td><td>Стимулы с ограниченной рандомизацией</td><td>5</td><td>НИУ МИЭТ, NYCU, UC Berkeley, Портленд (PSU), NC State</td></tr><tr><td>3.6</td><td>Функциональное покрытие</td><td>6</td><td>MIT, НИУ МИЭТ, NYCU, UC Berkeley, NC State, IIT Madras</td></tr><tr><td>3.7</td><td>Параллельные утверждения SVA и формальная верификация</td><td>9</td><td>Мичиган, НИУ МИЭТ, NYCU, UC Berkeley, «Один студент — один чип», Портленд (PSU), NC State, Стэнфорд, UC Davis</td></tr><tr><td>3.8</td><td>Аппаратные эмуляторы (Veloce, ZeBu, Palladium)</td><td>3</td><td>Портленд (PSU), NC State, Стэнфорд</td></tr><tr><td>3.9</td><td>Проверка конвейерного процессора по симулятору системы команд</td><td>1</td><td>«Один студент — один чип»</td></tr></tbody></table>
+<h2>Что видно из таблицы</h2>
+<ul>
+<li>Участники с четырьмя и более пунктами по верификации (из 9): НИУ МИЭТ (7), NC State (7), Портленд (PSU) (7), UC Berkeley (6), MIT (5), NYCU (4). Почти у всех есть отдельный курс верификации: ECE 745 и 748 в NC State, курсы Portland State по предкремниевой валидации, утверждениям и формальной верификации, факультатив МИЭТ, верификационные лабораторные в EECS 151 в Беркли, 6.S965 в MIT и ICLAB в NYCU.</li>
+<li>cocotb позволяет делать на Python то, для чего раньше нужны были классы SystemVerilog: в 6.S965 MIT на нём учат мониторам, драйверам, скорбордам и функциональному покрытию.</li>
+<li>Проверку процессора по симулятору системы команд документирует только китайская программа «Один студент — один чип» — через DiffTest с симулятором NEMU. Эмуляторы встречаются только в NC State, Portland State и в лекции Стэнфорда.</li>
+<li>Большинство вузов бывшего СССР не документирует ничего сложнее базовых тестбенчей; исключение — факультатив МИЭТ. Простой первый шаг — сборники задач с самопроверяющимися тестбенчами, такие как <a href="https://github.com/yuri-panchul/systemverilog-homework">задачи на SystemVerilog</a> Школы синтеза.</li>
+</ul>
+<p>Полный отчёт на русском и английском, у каждого балла ссылка на источник: [ссылка на отчёт]. Он составлен с помощью Claude, модели ИИ, по открытым страницам курсов. Если ваш курс учит этим приёмам, а в списке его нет, пришлите ссылку на программу.</p></article>
+</div>
+<script>
+(function () {
+    var btn = document.getElementById("copy"), st = document.getElementById("status"), post = document.getElementById("post");
+    var mode = "html";
+    btn.addEventListener("click", function () {
+        var text = mode === "html" ? post.innerHTML.trim() : post.innerText;
+        function done() { st.textContent = "Скопировано."; }
+        function fallback() {
+            var r = document.createRange(); r.selectNodeContents(post);
+            var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+            st.textContent = "Выделено: нажмите Ctrl+C или ⌘C.";
+        }
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done, fallback);
+            } else { fallback(); }
+        } catch (err) { fallback(); }
+    });
+})();
+</script>
+</body>
+</html>

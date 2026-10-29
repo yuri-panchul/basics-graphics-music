@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two 6.111 Course Surveys</title>
+<meta name="description" content="A comparison of two reports on courses like MIT 6.111 in California and the former Soviet republics: this one and Codex&#x27;s.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Armenian:wght@400;600&family=Noto+Sans+Georgian:wght@400;600&family=Noto+Sans:wght@400;600&family=Unbounded:wght@500;600&display=swap">
+<style>
+:root {
+    --bg: #f3f5f8;
+    --surface: #ffffff;
+    --surface-2: #e8ecf2;
+    --ink: #141a26;
+    --muted: #586174;
+    --line: #d8dde6;
+    --accent: #2b4fb3;
+    --accent-soft: #e3e9f8;
+    --close-ink: #17663f;
+    --close-bg: #dcefe3;
+    --partial-ink: #7a5100;
+    --partial-bg: #f7ebd2;
+    --short-ink: #4a3b9a;
+    --short-bg: #e9e5f8;
+    --none-ink: #5a6170;
+    --none-bg: #eceef3;
+    --req-ink: #8a2c3b;
+    --req-bg: #f8e3e6;
+    --warn-ink: #8a5a00;
+    --ref-bg: #142041;
+    --ref-ink: #eef2fb;
+    --ref-muted: #aab6d6;
+    --ref-accent: #8fb0ff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f131b;
+        --surface: #161b25;
+        --surface-2: #1d2430;
+        --ink: #e3e8f1;
+        --muted: #9aa4b7;
+        --line: #2a3242;
+        --accent: #8fb0ff;
+        --accent-soft: #1d2945;
+        --close-ink: #7fd8a8;
+        --close-bg: #17301f;
+        --partial-ink: #efc46e;
+        --partial-bg: #2f2610;
+        --short-ink: #bcaef5;
+        --short-bg: #252040;
+        --none-ink: #a3abba;
+        --none-bg: #222834;
+        --req-ink: #f2a3b0;
+        --req-bg: #3a1d24;
+        --warn-ink: #efc46e;
+        --ref-bg: #1a2747;
+        --ref-ink: #eef2fb;
+        --ref-muted: #aab6d6;
+        --ref-accent: #a9c1ff;
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f131b;
+    --surface: #161b25;
+    --surface-2: #1d2430;
+    --ink: #e3e8f1;
+    --muted: #9aa4b7;
+    --line: #2a3242;
+    --accent: #8fb0ff;
+    --accent-soft: #1d2945;
+    --close-ink: #7fd8a8;
+    --close-bg: #17301f;
+    --partial-ink: #efc46e;
+    --partial-bg: #2f2610;
+    --short-ink: #bcaef5;
+    --short-bg: #252040;
+    --none-ink: #a3abba;
+    --none-bg: #222834;
+    --req-ink: #f2a3b0;
+    --req-bg: #3a1d24;
+    --warn-ink: #efc46e;
+    --ref-bg: #1a2747;
+    --ref-ink: #eef2fb;
+    --ref-muted: #aab6d6;
+    --ref-accent: #a9c1ff;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    padding-inline: 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 1rem/1.6 "Golos Text", "Noto Sans", "Noto Sans Armenian", "Noto Sans Georgian", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-block: 40px 64px;
+    display: grid;
+    gap: 56px;
+}
+
+h1, h2 {
+    font-family: Unbounded, "Golos Text", "Noto Sans", system-ui, sans-serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+    line-height: 1.15;
+}
+
+h1 { font-size: clamp(2rem, 1.3rem + 3vw, 3.2rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.65rem); font-weight: 500; }
+
+h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-wrap: balance;
+}
+
+p { margin: 0; }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+.eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+header { display: grid; gap: 16px; }
+header .lede { max-width: 68ch; font-size: 1.12rem; color: var(--ink); }
+header .scope { max-width: 72ch; color: var(--muted); }
+
+section { display: grid; gap: 20px; }
+section > .intro { max-width: 70ch; color: var(--muted); }
+
+nav.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 0.95rem;
+}
+
+/* The reference course */
+.ref {
+    background: var(--ref-bg);
+    color: var(--ref-ink);
+    border-radius: 14px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 28px;
+}
+.ref h2 { color: var(--ref-ink); }
+.ref .eyebrow { color: var(--ref-muted); }
+.ref .num6 {
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: clamp(2.6rem, 2rem + 3vw, 4rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+.ref .num6 s { color: var(--ref-muted); text-decoration-thickness: 2px; font-size: 0.55em; margin-left: 10px; }
+.ref .head { display: grid; gap: 12px; align-content: start; }
+.ref .head p { color: var(--ref-muted); }
+.ref ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.ref a { color: var(--ref-accent); }
+.ref .links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 4px; }
+
+/* Match levels */
+.m {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+.m.close { color: var(--close-ink); background: var(--close-bg); }
+.m.partial { color: var(--partial-ink); background: var(--partial-bg); }
+.m.short { color: var(--short-ink); background: var(--short-bg); }
+.m.none { color: var(--none-ink); background: var(--none-bg); }
+
+.legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px 24px;
+}
+.leg { display: grid; gap: 6px; align-content: start; }
+.leg p { color: var(--muted); font-size: 0.92rem; }
+
+/* Tables */
+.tablewrap { overflow-x: auto; }
+
+table { border-collapse: collapse; width: 100%; }
+
+table.summary { min-width: 620px; font-variant-numeric: tabular-nums; }
+table.summary th, table.summary td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+}
+table.summary thead th { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+table.summary .num { text-align: right; }
+table.summary tr.sum th, table.summary tr.sum td { font-weight: 600; border-bottom: 0; }
+
+table.unis {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+table.unis thead th {
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface-2);
+    padding: 10px 16px;
+}
+table.unis td {
+    vertical-align: top;
+    padding: 16px;
+    border-top: 1px solid var(--line);
+}
+table.unis tbody tr:first-child td { border-top: 0; }
+td.uni { width: 30%; }
+td.courses { width: 56%; }
+td.match { width: 14%; }
+
+.uni .local { display: block; font-weight: 600; line-height: 1.35; }
+.uni .alt { display: block; font-size: 0.9rem; line-height: 1.35; margin-top: 2px; }
+.uni .en { display: block; color: var(--muted); font-size: 0.9rem; line-height: 1.35; margin-top: 4px; }
+.uni .city { display: block; color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.chip.req { color: var(--req-ink); background: var(--req-bg); }
+.chip.school { color: var(--accent); background: var(--accent-soft); }
+a.chip.school:hover { text-decoration: underline; }
+
+.courses { display: block; }
+.course + .course { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.cname { font-weight: 600; line-height: 1.4; }
+.cen { display: block; color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+.code {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: var(--surface-2);
+    padding: 1px 7px;
+    border-radius: 5px;
+}
+.desc { margin-top: 6px; font-size: 0.95rem; max-width: 72ch; }
+.desc.muted { color: var(--muted); margin-top: 0; }
+.links { margin-top: 6px; font-size: 0.92rem; }
+
+.match .src { display: block; margin-top: 8px; font-size: 0.8rem; color: var(--muted); }
+.match .src.warn { color: var(--warn-ink); }
+
+h3.country { margin-top: 12px; font-size: 1.05rem; }
+h3.country:first-of-type { margin-top: 0; }
+
+/* Digital Circuit Synthesis School */
+.school {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+}
+.school .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px 24px;
+}
+.school dt { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.school dd { margin: 2px 0 0; }
+.school dl { margin: 0; display: contents; }
+.school .fact { display: grid; gap: 2px; }
+.school .prog { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px 32px; }
+.school ol { margin: 6px 0 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: 0.95rem; }
+.school ul.clusters {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.school ul.clusters li {
+    font-size: 0.85rem;
+    padding: 2px 9px;
+    border-radius: 6px;
+    background: var(--surface-2);
+}
+
+.regions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+.region {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: grid;
+    gap: 8px;
+    align-content: start;
+}
+.region h3 a { color: var(--ink); text-decoration: none; }
+.region h3 a:hover { text-decoration: underline; }
+.region .tally {
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    color: var(--close-ink);
+}
+.region p:last-child { font-size: 0.95rem; }
+.across { display: grid; gap: 10px; max-width: 76ch; }
+.across ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+
+.method { display: grid; gap: 12px; max-width: 76ch; }
+.method ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 20px; }
+
+@media (max-width: 860px) {
+    .ref { grid-template-columns: 1fr; padding: 22px; }
+}
+
+@media (max-width: 760px) {
+    table.unis, table.unis tbody, table.unis tr, table.unis td { display: block; width: 100%; }
+    table.unis thead { display: none; }
+    table.unis tr { border-top: 1px solid var(--line); }
+    table.unis tbody tr:first-child { border-top: 0; }
+    table.unis td { border-top: 0; padding: 12px 16px 0; }
+    table.unis td.match { padding-bottom: 16px; }
+    .match .src { display: inline; margin: 0 0 0 8px; }
+    .school { padding: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+}
+
+.m.program { color: var(--short-ink); background: var(--short-bg); }
+table.cmp { min-width: 760px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+table.cmp th, table.cmp td { text-align: left; vertical-align: top; padding: 12px 14px; border-top: 1px solid var(--line); }
+table.cmp thead th { border-top: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
+table.cmp tbody th { font-weight: 600; width: 16%; }
+table.cmp td { width: 24%; }
+table.cmp td:last-child { width: 36%; }
+table.cmp .cc { display: block; font-size: 0.92rem; margin-bottom: 6px; }
+table.cmp .note { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
+.v { display: inline-block; font-size: 0.78rem; font-weight: 600; padding: 2px 9px; border-radius: 6px; }
+.v.agree { color: var(--close-ink); background: var(--close-bg); }
+.v.adopted { color: var(--accent); background: var(--accent-soft); }
+.v.differ { color: var(--partial-ink); background: var(--partial-bg); }
+.v.open { color: var(--none-ink); background: var(--none-bg); }
+table.facts { min-width: 640px; font-variant-numeric: tabular-nums; }
+table.facts th, table.facts td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+table.facts thead th { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+table.facts tbody th { font-weight: 600; width: 22%; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px 32px; }
+.cols ul, section ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.cols .side { display: grid; gap: 10px; align-content: start; }
+.cols .side .eyebrow { margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <p class="eyebrow">Report comparison · 27 October 2026</p>
+    <h1>Two 6.111 Course Surveys</h1>
+    <p class="lede">Codex and I each wrote a report on which courses at universities in California, Russia, Belarus, Ukraine and the other former Soviet republics come closest to MIT 6.111. This page compares the two, lists what I adopted from Codex after checking its sources, and shows where we still disagree.</p>
+    <p class="scope"><a href="mit_6111_equivalents.html">This report</a> · <a href="mit_6111_equivalents_ru.html" lang="ru" hreflang="ru">Русская версия отчёта</a> · <a href="claude_mit_6111_compare_1_ru.html" lang="ru" hreflang="ru">Это сравнение по-русски</a> · <a href="../../codex/universities_fpga_courses.html">Codex's report</a> (local file)</p>
+</header>
+
+<section aria-labelledby="d-h">
+    <h2 id="d-h">What each side delivered</h2>
+    <div class="tablewrap"><table class="facts"><thead><tr><th scope="col"></th><th scope="col">Codex</th><th scope="col">This report</th></tr></thead><tbody><tr><th scope="row">Universities</th><td>26, plus 5 leads listed as evidence gaps</td><td>86 (was 64 before this update)</td></tr><tr><th scope="row">Coverage</th><td>Russia 7, Belarus 2, Ukraine 4, California 6, and 1 each in 7 other republics; 5 republics have no entry</td><td>California 17, Russia 27, Belarus 5, Ukraine 7, 30 in 12 other republics</td></tr><tr><th scope="row">Ratings</th><td>Close 11, Partial 14, Program-level 1</td><td>Close 18, Partial 42, Short course 2, Not found 24</td></tr><tr><th scope="row">Synthesis School</th><td>A short section; names 7 of the clusters</td><td>Format, dates, both lecture lists, all 26 clusters, cluster chips on university rows</td></tr><tr><th scope="row">Evidence</th><td>An evidence date and a “what students do / comparison” split on every entry</td><td>Each row marked “Page checked” or “From search results”; 14 rows rely on search results</td></tr><tr><th scope="row">Pages</th><td>English and Russian; filters, search and print; no external fonts</td><td>English and Russian; regional summary; no filters</td></tr></tbody></table></div>
+</section>
+
+<section aria-labelledby="a-h">
+    <h2 id="a-h">What changed in this report</h2>
+    <ul class="plain"><li>Ratings raised after checking Codex&#x27;s sources: Stanford (EE 109), UCLA (M152A and 152B), BSUIR (YADRO lab course), MEPhI (department 3), and MSU, where both reports agree on the own-project semester.</li><li>Courses added from Codex&#x27;s report: MPEI&#x27;s 2026 master&#x27;s course, ITMO&#x27;s 4-day Xilinx course, KNU&#x27;s Мікропроцесорна техніка, TalTech IAS0640, RTU DE0092 (replacing RTR832), two UTM courses, UCSD CSE 140L, SJSU&#x27;s Xilinx lab, and the American University of Armenia.</li><li>Rows confirmed through Codex&#x27;s links: Nazarbayev University&#x27;s program page, which replaced my dead link, and RTU&#x27;s English course PDF.</li><li>From Codex&#x27;s evidence-gap list: Baku Engineering University, added as Not found with its 2019 FPGA teaching paper.</li><li>Added at your request, not from Codex: 14 Russian universities (Voronezh ×2, Saratov, Samara, Novosibirsk&#x27;s SibSUTIS and the other School clusters), BelGUT in Gomel, and five California schools (Harvey Mudd, Santa Clara, SF State, Cal State East Bay, Sonoma State); Bauman, Innopolis and NSU updated. The regional summary is also new.</li></ul>
+</section>
+
+<section aria-labelledby="t-h">
+    <h2 id="t-h">University by university</h2>
+    <p class="intro">The 26 universities in Codex&#x27;s report. “Adopted” means I checked Codex&#x27;s source and updated my row; “Differ” means we read the same evidence differently or picked different courses; “Unverified” means Codex&#x27;s source didn&#x27;t load from here.</p>
+    <div class="tablewrap"><table class="cmp"><thead><tr><th scope="col">University</th><th scope="col">Codex</th><th scope="col">This report</th><th scope="col">Result</th></tr></thead><tbody><tr><th scope="row">MSU</th><td><span class="cc">Проектирование на ПЛИС (физфак)</span><span class="m close">Close</span></td><td><span class="cc">Same course</span><span class="m close">Close</span></td><td><span class="v agree">Agree</span><p class="note">Raised from Partial. Both reports say the second semester is students&#x27; own projects. The page doesn&#x27;t load from here, so the row is still marked “From search results”.</p></td></tr>
+<tr><th scope="row">MEPhI</th><td><span class="cc">Paid catalog courses + department 3</span><span class="m partial">Partial</span></td><td><span class="cc">Department 3, RISC-V program, catalog courses</span><span class="m partial">Partial</span></td><td><span class="v adopted">Adopted</span><p class="note">Raised from Short course after checking the department 3 page.</p></td></tr>
+<tr><th scope="row">MIPT</th><td><span class="cc">Импульсные и цифровые устройства</span><span class="m partial">Partial</span></td><td><span class="cc">Введение в проектирование на языке Verilog (ФРКТ)</span><span class="m close">Close</span></td><td><span class="v differ">Differ</span><p class="note">Codex&#x27;s course is a lecture-and-lab listing with materials behind a login. The ФРКТ course builds a pipelined RISC-V core and an FPU on an FPGA, with open materials.</p></td></tr>
+<tr><th scope="row">ITMO</th><td><span class="cc">Введение в проектирование на ПЛИС + 4-day Xilinx course</span><span class="m partial">Partial</span></td><td><span class="cc">Two degree courses + the same 4-day course</span><span class="m partial">Partial</span></td><td><span class="v adopted">Adopted</span><p class="note">Added the 4-day course and the discipline page.</p></td></tr>
+<tr><th scope="row">MPEI</th><td><span class="cc">Основы разработки электронных устройств на базе ПЛИС (2026)</span><span class="m partial">Partial</span></td><td><span class="cc">12-lab SystemVerilog manual</span><span class="m close">Close</span></td><td><span class="v differ">Differ</span><p class="note">Codex&#x27;s 2026 course is added here too, rated on its own as partial (three labs, no project). The 12-lab manual goes up to VGA, PS/2 and UART.</p></td></tr>
+<tr><th scope="row">MIET</th><td><span class="cc">Практикум по ПЛИС на основе Verilog (2020)</span><span class="m close">Close</span></td><td><span class="cc">Архитектуры процессорных систем (APS)</span><span class="m close">Close</span></td><td><span class="v agree">Agree</span><p class="note">Codex&#x27;s syllabus PDF now returns 404. APS has 16 labs up to a RISC-V processor, with an open course book.</p></td></tr>
+<tr><th scope="row">MIEM HSE</th><td><span class="cc">Системное проектирование цифровых устройств</span><span class="m partial">Partial</span></td><td><span class="cc">The same course + Проектирование систем на кристалле</span><span class="m close">Close</span></td><td><span class="v differ">Differ</span><p class="note">The SoC course covers single-cycle, multicycle and pipelined MIPS cores; in the system design course students extend schoolMIPS and schoolRISCV and attach peripherals on DE-series boards.</p></td></tr>
+<tr><th scope="row">BSUIR</th><td><span class="cc">YADRO–BSUIR lab course</span><span class="m close">Close</span></td><td><span class="cc">The same course + department</span><span class="m close">Close</span></td><td><span class="v adopted">Adopted</span><p class="note">Raised from Partial after checking the course announcement.</p></td></tr>
+<tr><th scope="row">BNTU</th><td><span class="cc">2013 lab manual (Uzbek mirror)</span><span class="m partial">Partial</span></td><td><span class="cc">None found</span><span class="m none">Not found</span></td><td><span class="v open">Unverified</span><p class="note">The mirror didn&#x27;t respond from here, so the manual couldn&#x27;t be checked.</p></td></tr>
+<tr><th scope="row">KPI</th><td><span class="cc">RE-121 Проектування цифрових пристроїв на ПЛІС</span><span class="m close">Close</span></td><td><span class="cc">The same course + ФІОТ course</span><span class="m partial">Partial</span></td><td><span class="v differ">Differ</span><p class="note">Details adopted. The labs and individual assignments are real, but there&#x27;s no large project of the student&#x27;s own design.</p></td></tr>
+<tr><th scope="row">KNU</th><td><span class="cc">Мікропроцесорна техніка</span><span class="m partial">Partial</span></td><td><span class="cc">Institute of High Technologies course + the same course</span><span class="m partial">Partial</span></td><td><span class="v adopted">Adopted</span><p class="note">Added Codex&#x27;s course.</p></td></tr>
+<tr><th scope="row">Odesa Polytechnic</th><td><span class="cc">Проектування пристроїв на ПЛІС</span><span class="m partial">Partial</span></td><td><span class="cc">Same course</span><span class="m partial">Partial</span></td><td><span class="v adopted">Adopted</span><p class="note">Added the lab details (DIGIASIC, Nios II, FIR filter).</p></td></tr>
+<tr><th scope="row">KSE</th><td><span class="cc">The master&#x27;s program as a whole</span><span class="m program">Program-level</span></td><td><span class="cc">НВРІ 1 / VLSI 1: HDL Based Design for FPGAs</span><span class="m close">Close</span></td><td><span class="v differ">Differ</span><p class="note">The program&#x27;s curriculum PDF names the course: 6 ECTS, required, term 1.</p></td></tr>
+<tr><th scope="row">TalTech</th><td><span class="cc">IAS0640 (SystemVerilog)</span><span class="m close">Close</span></td><td><span class="cc">IAS0640 + IAS0600 + IAX0600</span><span class="m partial">Partial</span></td><td><span class="v differ">Differ</span><p class="note">IAS0640 adopted. It ends with a mini-project, not a large one.</p></td></tr>
+<tr><th scope="row">RTU</th><td><span class="cc">DE0092</span><span class="m close">Close</span></td><td><span class="cc">DE0092 + REA711</span><span class="m partial">Partial</span></td><td><span class="v differ">Differ</span><p class="note">DE0092 adopted (it replaces RTR832). Its individual project is checked on the device, but its scale isn&#x27;t stated.</p></td></tr>
+<tr><th scope="row">VILNIUS TECH</th><td><span class="cc">Kompiuterių architektūra (2021 article)</span><span class="m partial">Partial</span></td><td><span class="cc">Sistemų projektavimas VHDL kalba</span><span class="m partial">Partial</span></td><td><span class="v open">Unverified</span><p class="note">Same rating, different course. The article didn&#x27;t load from here.</p></td></tr>
+<tr><th scope="row">UTM</th><td><span class="cc">Arhitecturi avansate; Testarea sistemelor electronice</span><span class="m partial">Partial</span></td><td><span class="cc">Those two + Proiectarea cu dispozitive programabile</span><span class="m partial">Partial</span></td><td><span class="v adopted">Adopted</span><p class="note">Added both courses.</p></td></tr>
+<tr><th scope="row">American University of Armenia</th><td><span class="cc">2015 pilot training</span><span class="m partial">Partial</span></td><td><span class="cc">Same</span><span class="m short">Short course</span></td><td><span class="v adopted">Adopted</span><p class="note">Added. Rated Short course here because it was a one-off non-credit program.</p></td></tr>
+<tr><th scope="row">Nazarbayev University</th><td><span class="cc">ELCE 202/202L + ECE 482</span><span class="m close">Close</span></td><td><span class="cc">ELCE 202/202L</span><span class="m partial">Partial</span></td><td><span class="v differ">Differ</span><p class="note">The ELCE 202L page now checks out; the ECE 482 page has an expired certificate. The introductory pair alone is partial.</p></td></tr>
+<tr><th scope="row">KRSU</th><td><span class="cc">Схемотехника + PLD course (2012 Tempus report)</span><span class="m partial">Partial</span></td><td><span class="cc">Проектирование цифровых систем на базе FPGA</span><span class="m partial">Partial</span></td><td><span class="v agree">Agree</span><p class="note">Same rating from different documents. The Tempus report didn&#x27;t load from here.</p></td></tr>
+<tr><th scope="row">Berkeley</th><td><span class="cc">EECS 151 + 151LB</span><span class="m close">Close</span></td><td><span class="cc">Same</span><span class="m close">Close</span></td><td><span class="v agree">Agree</span><p class="note">Switched to the Fall 2026 course site Codex linked.</p></td></tr>
+<tr><th scope="row">Stanford</th><td><span class="cc">EE 109</span><span class="m close">Close</span></td><td><span class="cc">EE 109 + EE 108</span><span class="m close">Close</span></td><td><span class="v adopted">Adopted</span><p class="note">Raised from Partial: EE 109 is the better match than EE 108.</p></td></tr>
+<tr><th scope="row">Caltech</th><td><span class="cc">EE/CS/MedE 125</span><span class="m close">Close</span></td><td><span class="cc">EE/CS 119 abc</span><span class="m close">Close</span></td><td><span class="v differ">Differ</span><p class="note">Same rating, different course. 125 isn&#x27;t in the 2026–27 catalog and its page now returns 404; 119 is offered in 2026–27.</p></td></tr>
+<tr><th scope="row">UCLA</th><td><span class="cc">CS M152A + CS 152B</span><span class="m close">Close</span></td><td><span class="cc">Same</span><span class="m close">Close</span></td><td><span class="v adopted">Adopted</span><p class="note">Raised from Partial. The 152B description comes from search results because the catalog page needs JavaScript.</p></td></tr>
+<tr><th scope="row">UC San Diego</th><td><span class="cc">CSE 140L (2013–14)</span><span class="m partial">Partial</span></td><td><span class="cc">ECE 111 + CSE 140L</span><span class="m partial">Partial</span></td><td><span class="v adopted">Adopted</span><p class="note">Added CSE 140L.</p></td></tr>
+<tr><th scope="row">San José State</th><td><span class="cc">EE 178 + Xilinx lab page</span><span class="m partial">Partial</span></td><td><span class="cc">CMPE 125 + EE 178</span><span class="m partial">Partial</span></td><td><span class="v adopted">Adopted</span><p class="note">Added the lab page.</p></td></tr></tbody></table></div>
+</section>
+
+<section aria-labelledby="s-h">
+    <h2 id="s-h">Where Codex&#x27;s sources didn&#x27;t hold up</h2>
+    <ul class="plain"><li>Caltech EE/CS/MedE 125: its page now returns 404 and the course isn&#x27;t in the 2026–27 catalog. Codex itself noted it wasn&#x27;t offered in 2025–26. EE/CS 119, which is offered in 2026–27, is the better pick.</li><li>MIET&#x27;s Verilog practicum syllabus: the PDF Codex linked now returns 404.</li><li>KSE: Codex rated the whole master&#x27;s program. The curriculum names a specific required course, VLSI 1: HDL Based Design for FPGAs.</li><li>Unreachable from here, so not checked: the MSU physics page, the BNTU manual mirror, the KRSU Tempus report, the VILNIUS TECH article, the Agricultural University of Georgia presentation and Nazarbayev&#x27;s ECE 482 page (expired certificate).</li></ul>
+</section>
+
+<section aria-labelledby="p-h">
+    <h2 id="p-h">Strengths and gaps</h2>
+    <div class="cols">
+        <div class="side"><h3>Codex&#x27;s report</h3><p class="eyebrow">Strengths</p><ul class="plain"><li>Strong evidence discipline: every entry has a dated source and separates what students do from how it compares.</li><li>Picked up good courses I&#x27;d missed: Stanford EE 109, UCLA 152B and the BSUIR lab course.</li><li>Useful as a tool: filters, search and print, with no external fonts or scripts.</li><li>Rendered and screenshot-checked in a browser.</li></ul><p class="eyebrow">Gaps</p><ul class="plain"><li>Less than a third of the universities; five republics have no entry at all.</li><li>Missed the strongest open Moscow materials: MIET&#x27;s APS course, MIPT&#x27;s Verilog course and MIEM&#x27;s SoC course.</li><li>Rates some lab-only courses as close (KPI, TalTech, RTU, Nazarbayev).</li><li>Some sources were already stale on the day (Caltech 125, MIET&#x27;s PDF).</li><li>Covers the Synthesis School only briefly.</li></ul></div>
+        <div class="side"><h3>This report</h3><p class="eyebrow">Strengths</p><ul class="plain"><li>Broader: every School cluster university, the Bay Area schools and Harvey Mudd, and 2 to 4 universities in each republic.</li><li>Chooses specific courses (KSE VLSI 1, MIET APS, MIPT, MIEM) instead of programs.</li><li>Full Synthesis School section, local-language names everywhere, and a regional summary.</li></ul><p class="eyebrow">Gaps</p><ul class="plain"><li>14 rows still rest on search results because their pages didn&#x27;t load from here.</li><li>No filters or search, and no evidence date on each row.</li><li>Loads fonts from Google Fonts, and hasn&#x27;t been checked in a browser.</li></ul></div>
+    </div>
+</section>
+
+<section aria-labelledby="o-h">
+    <h2 id="o-h">Still open</h2>
+    <ul class="plain"><li>BNTU: Codex cites a 2013 VHDL lab manual through an Uzbek library mirror. If it checks out, BNTU becomes Partial.</li><li>MSU physics: Codex describes 48 contact hours each semester and a project defense. The page has to load before the row can be marked checked.</li><li>Nazarbayev ECE 482: if the page confirms the FPGA accelerator project, Nazarbayev becomes Close.</li><li>The rating disagreements (KPI, TalTech, RTU, MIPT, MPEI, MIEM) come down to whether a lab sequence without a large project of the student&#x27;s own design counts as close. This report says it doesn&#x27;t.</li></ul>
+</section>
+
+<section id="method" class="method" aria-labelledby="m-h">
+    <h2 id="m-h">Method</h2>
+    <p>I read Codex&#x27;s English page and its course_data.json, fetched its 38 course source links with curl, and tried WebFetch on several that failed. Its claims were adopted only where the source loaded and said what Codex reported. Counts for this report are computed from its generator data, so they match the report pages.</p>
+</section>
+
+<footer>
+    <p>Prepared 27 October 2026.</p>
+</footer>
+
+</div>
+</body>
+</html>
