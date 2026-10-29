@@ -76,11 +76,15 @@ Area 3. Verification.
 
 3.6. SystemVerilog functional coverage.
 
-3.7. Formal verification using SVA concurrent assertions, assumptions and cover statements.
+3.7. SVA concurrent assertions, assumptions and cover statements used in RTL simulation.
 
-3.8. Using emulators such as Mentor Veloce,  Synopsys Zebu or Cadence Palladium.
+3.8. Formal verification using SVA concurrent assertions, assumptions and cover statements.
 
-3.9. Verifying a pipelined CPU RTL against an instruction-level-simulator-based model.
+3.9. UVM.
+
+3.10. Using emulators such as Mentor Veloce,  Synopsys Zebu or Cadence Palladium.
+
+3.11. Verifying a pipelined CPU RTL against an instruction-level-simulator-based model.
 
 Area 4. Timing and other PD topics for ASIC and FPGA
 
@@ -138,20 +142,32 @@ Area 7. EDA algorithms. Students doing practical labs where they create or modif
 
 Assess each university and Synthesis School in the combined list (California - former USSR - out of state of CA - representative international) in those items, create 7 tables with anything you can find, then create university ranking and tentative country/region ranking.
 
+Finally, create a separate chapter with three sub-chapters:
+
+1. Grouping all the countries in the report into groups with different levels of digital chip design education using the criteria above.
+
+2. Ranking the countries of former USSR.
+
+3. Recommendation for improving education in the area of digital chip design education for each ex-USSR country based on the criteria in this report.
+
 Put a combined report (MIT 6.111 + follow-ups and related) into new HTML files: English and Russian versions.
 
 Then create English and Russian versions of the texts for the following:
 
 1. LinkedIn post.
 
-2. Facebook post.
+2. Habr.com article
 
-3. Telegram post.
+3. Habr.com post
 
-4. verilog-meetup.com wordpress post.
+4. Facebook post.
 
-5. silicon-russia.com post.
+5. Telegram post.
 
-6. ddvca.com post.
+6. verilog-meetup.com wordpress post.
+
+7. silicon-russia.com post.
+
+8. ddvca.com post.
 
 Put every post in a different HTML file.
