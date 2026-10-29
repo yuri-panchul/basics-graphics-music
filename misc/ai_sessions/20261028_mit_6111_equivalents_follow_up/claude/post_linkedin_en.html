@@ -54,6 +54,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 .post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
 .post th { background: var(--surface-2); }
 a { color: var(--accent); }
+.imgs { display: grid; gap: 8px; }
+.imgs h2 { margin: 0; font-size: 1.05rem; }
+.imgs p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.imgs .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.imgs figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; }
+.imgs img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+.imgs figcaption { padding: 6px 10px 8px; font-size: 0.82rem; display: grid; gap: 2px; }
+.imgs figcaption code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; overflow-wrap: anywhere; }
+.imgs figcaption span { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -65,6 +74,7 @@ a { color: var(--accent); }
     <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the plain text.</p>
     <div class="actions"><button id="copy" type="button">Copy text</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
+<section class="imgs" aria-label="Pictures for this post"><h2>Pictures for this post</h2><p>Upload them with the post; the copied text doesn&#x27;t include them.</p><div class="grid"><figure><a href="images/beyond_ranking_en.png"><img src="images/beyond_ranking_en.png" alt="" loading="lazy"></a><figcaption><code>beyond_ranking_en.png</code><span>first image</span></figcaption></figure><figure><a href="images/beyond_three_gaps_en.png"><img src="images/beyond_three_gaps_en.png" alt="" loading="lazy"></a><figcaption><code>beyond_three_gaps_en.png</code><span>second image</span></figcaption></figure></div></section>
 <article class="post plain" id="post">One FPGA lab is not a curriculum.
 
 A course like MIT 6.111 (now 6.205) is a fine start. But chip companies hire people to build data pipelines with FIFOs and flow control, verify them against transaction-level models with constrained-random tests, coverage and assertions, and close timing in an ASIC flow. How many universities teach that?

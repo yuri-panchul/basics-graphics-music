@@ -54,6 +54,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 .post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
 .post th { background: var(--surface-2); }
 a { color: var(--accent); }
+.imgs { display: grid; gap: 8px; }
+.imgs h2 { margin: 0; font-size: 1.05rem; }
+.imgs p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.imgs .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.imgs figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; }
+.imgs img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+.imgs figcaption { padding: 6px 10px 8px; font-size: 0.82rem; display: grid; gap: 2px; }
+.imgs figcaption code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; overflow-wrap: anywhere; }
+.imgs figcaption span { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -65,6 +74,7 @@ a { color: var(--accent); }
     <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the post as HTML for the WordPress code editor.</p>
     <div class="actions"><button id="copy" type="button">Copy HTML</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
+<section class="imgs" aria-label="Pictures for this post"><h2>Pictures for this post</h2><p>Upload them with the post; the copied text doesn&#x27;t include them.</p><div class="grid"><figure><a href="images/beyond_fsu_map_en.png"><img src="images/beyond_fsu_map_en.png" alt="" loading="lazy"></a><figcaption><code>beyond_fsu_map_en.png</code><span>featured image, at the top</span></figcaption></figure><figure><a href="images/beyond_ranking_en.png"><img src="images/beyond_ranking_en.png" alt="" loading="lazy"></a><figcaption><code>beyond_ranking_en.png</code><span>after “Russia&#x27;s results”</span></figcaption></figure><figure><a href="images/beyond_regions_en.png"><img src="images/beyond_regions_en.png" alt="" loading="lazy"></a><figcaption><code>beyond_regions_en.png</code><span>after “A comparison worth noting”</span></figcaption></figure></div></section>
 <article class="post" id="post"><h1>Chip-Design Education in Russia After the First FPGA Course</h1>
 <p>A new report checks 111 universities and programs against 49 topics that a single FPGA course rarely reaches: data pipelines with FIFOs and flow control, clock-domain crossing and clock gating, modern verification, timing and physical design, processor labs, application projects and EDA algorithms. It covers 29 Russian entries, including the Digital Circuit Synthesis School, alongside California, the rest of the former Soviet Union and twenty comparison universities and programs in the US, Europe and Asia.</p>
 <h2>Russia's results</h2>

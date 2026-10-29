@@ -54,6 +54,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 .post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
 .post th { background: var(--surface-2); }
 a { color: var(--accent); }
+.imgs { display: grid; gap: 8px; }
+.imgs h2 { margin: 0; font-size: 1.05rem; }
+.imgs p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.imgs .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.imgs figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; }
+.imgs img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+.imgs figcaption { padding: 6px 10px 8px; font-size: 0.82rem; display: grid; gap: 2px; }
+.imgs figcaption code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; overflow-wrap: anywhere; }
+.imgs figcaption span { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -65,6 +74,7 @@ a { color: var(--accent); }
     <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует запись в HTML для редактора кода WordPress.</p>
     <div class="actions"><button id="copy" type="button">Скопировать HTML</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
+<section class="imgs" aria-label="Картинки к этому посту"><h2>Картинки к этому посту</h2><p>Загрузите их вместе с постом; в скопированный текст они не входят.</p><div class="grid"><figure><a href="images/beyond_three_gaps_ru.png"><img src="images/beyond_three_gaps_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_three_gaps_ru.png</code><span>главная картинка, в начале</span></figcaption></figure><figure><a href="images/beyond_checklist_ru.png"><img src="images/beyond_checklist_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_checklist_ru.png</code><span>после «Список тем»</span></figcaption></figure><figure><a href="images/beyond_ranking_ru.png"><img src="images/beyond_ranking_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_ranking_ru.png</code><span>в разделе «Рейтинг», перед таблицей</span></figcaption></figure><figure><a href="images/beyond_world_map_ru.png"><img src="images/beyond_world_map_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_world_map_ru.png</code><span>после таблицы рейтинга</span></figcaption></figure></div></section>
 <article class="post" id="post"><h1>После 6.111: как 111 университетов и программ покрывают 49 тем за пределами первого курса по ПЛИС</h1>
 <p>Курс уровня MIT 6.111 (теперь 6.205) — место, где многие инженеры впервые встречают Verilog и плату с ПЛИС. Во многих университетах на нём же обучение цифровой схемотехнике и заканчивается: вентили, конечные автоматы, UART или SPI, иногда пятистадийный конвейер MIPS или RISC-V. А компании, проектирующие микросхемы, потом поручают этим выпускникам конвейеры данных, не имеющие отношения к процессору, их верификацию и закрытие временных ограничений.</p>
 <p>В докладе <a href="https://docs.google.com/presentation/d/14WxUKOwsAo6Yn8X19WpGPNV5fk2H3XappceqGRlxqdM/edit?usp=sharing">«Workforce Development for the Electronic Industry»</a> на EDA Connect 2025 названы три пробела, которые видны на собеседованиях (слайды 14–17): микроархитектура (конвейеры, FIFO, управление потоком), верификация (проверка по транзакционной модели, крайние случаи) и физическое проектирование (статический временной анализ, отрицательный запас, гейтирование тактового сигнала). Новый отчёт превращает эти пробелы в список из 49 пунктов и оценивает по нему 111 университетов и программ.</p>

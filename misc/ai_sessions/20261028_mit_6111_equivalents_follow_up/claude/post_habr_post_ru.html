@@ -54,6 +54,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 .post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
 .post th { background: var(--surface-2); }
 a { color: var(--accent); }
+.imgs { display: grid; gap: 8px; }
+.imgs h2 { margin: 0; font-size: 1.05rem; }
+.imgs p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.imgs .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.imgs figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; }
+.imgs img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+.imgs figcaption { padding: 6px 10px 8px; font-size: 0.82rem; display: grid; gap: 2px; }
+.imgs figcaption code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; overflow-wrap: anywhere; }
+.imgs figcaption span { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -65,6 +74,7 @@ a { color: var(--accent); }
     <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует простой текст.</p>
     <div class="actions"><button id="copy" type="button">Скопировать текст</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
+<section class="imgs" aria-label="Картинки к этому посту"><h2>Картинки к этому посту</h2><p>Загрузите их вместе с постом; в скопированный текст они не входят.</p><div class="grid"><figure><a href="images/beyond_top10_square_ru.png"><img src="images/beyond_top10_square_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_top10_square_ru.png</code><span>приложить к посту</span></figcaption></figure></div></section>
 <article class="post plain" id="post">Одного курса по ПЛИС мало
 
 Курс уровня MIT 6.111 учит Verilog на плате с ПЛИС. А компании, проектирующие микросхемы, ждут от выпускника конвейеров данных с FIFO и управлением потоком на кредитах, верификации с ограниченной рандомизацией, покрытием, утверждениями и UVM и умения исправить отрицательный запас в маршруте ASIC.

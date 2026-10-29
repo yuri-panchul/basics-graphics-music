@@ -54,6 +54,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 .post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
 .post th { background: var(--surface-2); }
 a { color: var(--accent); }
+.imgs { display: grid; gap: 8px; }
+.imgs h2 { margin: 0; font-size: 1.05rem; }
+.imgs p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.imgs .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.imgs figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; }
+.imgs img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+.imgs figcaption { padding: 6px 10px 8px; font-size: 0.82rem; display: grid; gap: 2px; }
+.imgs figcaption code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; overflow-wrap: anywhere; }
+.imgs figcaption span { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -65,6 +74,7 @@ a { color: var(--accent); }
     <p class="note">Перед публикацией замените «[ссылка на отчёт]» адресом отчёта. Кнопка копирует статью с форматированием; вставьте её в редактор Habr и проверьте таблицы.</p>
     <div class="actions"><button id="copy" type="button">Скопировать статью</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
+<section class="imgs" aria-label="Картинки к этому посту"><h2>Картинки к этому посту</h2><p>Загрузите их вместе с постом; в скопированный текст они не входят.</p><div class="grid"><figure><a href="images/beyond_three_gaps_ru.png"><img src="images/beyond_three_gaps_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_three_gaps_ru.png</code><span>после «Три пробела»</span></figcaption></figure><figure><a href="images/beyond_checklist_ru.png"><img src="images/beyond_checklist_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_checklist_ru.png</code><span>после списка из 49 пунктов</span></figcaption></figure><figure><a href="images/beyond_world_map_ru.png"><img src="images/beyond_world_map_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_world_map_ru.png</code><span>в разделе «Кто проверен»</span></figcaption></figure><figure><a href="images/beyond_ranking_ru.png"><img src="images/beyond_ranking_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_ranking_ru.png</code><span>в разделе «Рейтинг», перед таблицей</span></figcaption></figure><figure><a href="images/beyond_heatmap_ru.png"><img src="images/beyond_heatmap_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_heatmap_ru.png</code><span>после таблицы рейтинга</span></figcaption></figure><figure><a href="images/beyond_regions_ru.png"><img src="images/beyond_regions_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_regions_ru.png</code><span>в разделе «По регионам»</span></figcaption></figure><figure><a href="images/beyond_fsu_map_ru.png"><img src="images/beyond_fsu_map_ru.png" alt="" loading="lazy"></a><figcaption><code>beyond_fsu_map_ru.png</code><span>в разделе «Россия и бывший СССР»</span></figcaption></figure></div></section>
 <article class="post" id="post"><h1>После 6.111: одного курса по ПЛИС мало. 111 университетов и программ по 49 пунктам</h1>
 <p>MIT 6.111, теперь 6.205, — образцовый курс по ПЛИС: студенты осваивают Verilog, проходят серию лабораторных, а затем делают большой собственный проект. В предыдущем отчёте искались его аналоги в университетах Калифорнии, России, Беларуси, Украины и других бывших советских республик. Эта статья — о том, что должно идти после такого курса и почему одного курса по ПЛИС недостаточно, чтобы компания, проектирующая микросхемы, могла поручить выпускнику настоящий блок.</p>
 <h2>Три пробела</h2>

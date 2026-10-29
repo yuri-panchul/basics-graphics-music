@@ -54,6 +54,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 .post th, .post td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
 .post th { background: var(--surface-2); }
 a { color: var(--accent); }
+.imgs { display: grid; gap: 8px; }
+.imgs h2 { margin: 0; font-size: 1.05rem; }
+.imgs p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.imgs .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.imgs figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; }
+.imgs img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+.imgs figcaption { padding: 6px 10px 8px; font-size: 0.82rem; display: grid; gap: 2px; }
+.imgs figcaption code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; overflow-wrap: anywhere; }
+.imgs figcaption span { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -65,6 +74,7 @@ a { color: var(--accent); }
     <p class="note">Replace “[link to the report]” with the report's address before posting. The button copies the post as HTML for the WordPress code editor.</p>
     <div class="actions"><button id="copy" type="button">Copy HTML</button><span class="status" id="status" aria-live="polite"></span></div>
 </header>
+<section class="imgs" aria-label="Pictures for this post"><h2>Pictures for this post</h2><p>Upload them with the post; the copied text doesn&#x27;t include them.</p><div class="grid"><figure><a href="images/beyond_verification_en.png"><img src="images/beyond_verification_en.png" alt="" loading="lazy"></a><figcaption><code>beyond_verification_en.png</code><span>featured image, replaces or follows the table</span></figcaption></figure><figure><a href="images/beyond_heatmap_en.png"><img src="images/beyond_heatmap_en.png" alt="" loading="lazy"></a><figcaption><code>beyond_heatmap_en.png</code><span>at the end, before the link</span></figcaption></figure></div></section>
 <article class="post" id="post"><h1>Who Teaches Verification Beyond the Testbench?</h1>
 <p>Many graduates still write testbenches in the style of the early 1990s: a few vectors and a waveform window. They have not checked a design against a transaction-level model, written constrained-random stimulus or measured functional coverage, and few have used formal verification or concurrent assertions, although their résumés may list them. Engineers who can't verify corner cases keep their designs simple.</p>
 <p>A new report on teaching beyond the first FPGA course scores 111 universities and programs on 49 topics. Eleven of them are about verification. This is who documents each one.</p>
