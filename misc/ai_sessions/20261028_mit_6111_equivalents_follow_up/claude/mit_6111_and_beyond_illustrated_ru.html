@@ -467,6 +467,30 @@ details.src[open] > summary { margin-bottom: 10px; }
 figure.pic { margin: 0; display: grid; gap: 8px; max-width: 1120px; }
 figure.pic img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 12px; background: #f4f6fa; }
 figure.pic figcaption { color: var(--muted); font-size: 0.9rem; max-width: 84ch; }
+
+p.credit { margin: 0; max-width: 76ch; font-size: 0.95rem; color: var(--muted); border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; }
+p.credit code { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 0.88em; }
+#appendix { gap: 16px; }
+#appendix > .intro { max-width: 76ch; }
+.apx { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: grid; gap: 10px; }
+.apx-h { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.apx-no { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; background: var(--accent-soft); color: var(--accent); border-radius: 7px; min-width: 2.2em; text-align: center; padding: 0 7px; }
+.apx-when { font-variant-numeric: tabular-nums; font-weight: 500; }
+.apx-mid { font-size: 0.78rem; font-weight: 600; color: var(--partial-ink); background: var(--partial-bg); border-radius: 999px; padding: 1px 9px; }
+.apx-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.apx-pair.one { grid-template-columns: 1fr; }
+.apx-col { display: grid; gap: 3px; align-content: start; min-width: 0; }
+.apx-lab { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.apx-txt { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface-2); border-radius: 9px; padding: 9px 12px; font-size: 0.95rem; }
+.apx-col[lang="en"] .apx-txt { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 0.84rem; line-height: 1.55; }
+.apx-led { margin: 0; font-size: 0.9rem; color: var(--muted); }
+.apx-led b { color: var(--ink); font-weight: 600; }
+.apx-att { display: grid; gap: 8px; border-top: 1px dashed var(--line); padding-top: 10px; }
+.apx-att h3 { margin: 0; font-size: 0.98rem; }
+.apx-att code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.9em; }
+ol.apx-changes { margin: 0; padding-left: 1.3em; display: grid; gap: 12px; }
+ol.apx-changes p { margin: 0 0 6px; }
+@media (max-width: 760px) { .apx-pair { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -475,6 +499,7 @@ figure.pic figcaption { color: var(--muted); font-size: 0.9rem; max-width: 84ch;
 <header>
     <p class="eyebrow">Лабораторные курсы цифрового проектирования и что после них · проверено 27–28 октября 2026 г.</p>
     <h1>Аналоги 6.111 и что дальше</h1>
+    <p class="credit">Создано Claude Opus 5.5 (<code>claude-opus-5-5</code>) в Claude Code 2.1.296, уровень усилий xhigh, по промптам Юрия Панчула. Дословные промпты — в <a href="#appendix">приложении</a>.</p>
     <p class="lede">Курс каждого университета, ближе всего подходящий к MIT 6.111 — лабораторному курсу по ПЛИС, где студенты осваивают Verilog, а затем делают крупный собственный проект. Для каждого курса дана ссылка на его страницу. В главе-продолжении <a href="#beyond">«После 6.111»</a> эти университеты, Школа синтеза и ещё 20 университетов и программ оценены по 49 темам, до которых один курс по ПЛИС доходит редко: управление потоком, пересечение тактовых доменов, современная верификация, временной анализ и физическое проектирование.</p>
     <p class="scope">Всего 90 университетов: Калифорния — 17, Россия — 28, Беларусь — 5, Украина — 7, другие бывшие советские республики — 33 (12 стран). Это не официальный рейтинг: в каждом регионе перечислены сильнейшие инженерные университеты, университеты с кластерами Школы синтеза цифровых схем и все университеты, о которых вы просили (с пометкой «По запросу»). Названия университетов даны на местном языке (в Калифорнии — по-английски), под ними — по-русски. Названия курсов приведены так, как на странице источника, с переводом на русский, если курс назван на другом языке.</p>
     <nav class="toc" aria-label="Разделы">
@@ -489,6 +514,7 @@ figure.pic figcaption { color: var(--muted); font-size: 0.9rem; max-width: 84ch;
         <a href="#other">Другие республики</a>
         <a href="#beyond">После 6.111</a>
         <a href="#method">Как проверялось</a>
+        <a href="#appendix">Приложение: промпты</a>
         <a href="mit_6111_and_beyond_illustrated.html" lang="en" hreflang="en">English version</a>
     </nav>
 </header>
@@ -811,8 +837,428 @@ figure.pic figcaption { color: var(--muted); font-size: 0.9rem; max-width: 84ch;
     </ul>
 </section>
 
+<section id="appendix" aria-labelledby="appendix-h">
+    <h2 id="appendix-h">Приложение: промпты</h2>
+    <p class="intro">15 промптов Юрия Панчула к этому отчёту в порядке отправки: слева — дословный оригинал на английском, с опечатками, справа — перевод на русский. Время — тихоокеанское (UTC−7), по журналу сессии. Промпты 2 и 5 пришли, пока Claude работал над предыдущим. Промпты 10 и 11 ссылались на файл с промптом: его первая версия приведена целиком, исправленная — списком изменений.</p>
+    <div class="apx" id="prompt-1"><div class="apx-h"><span class="apx-no">1</span><span class="apx-when">27 октября 2026 г., 08:17</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Create a list of top universities in Russia, Belarus, Ukraine and California. Make sure to include MSU, MEFI, MPhTI, ITMO, MEI, MIET, MIEM.
+
+Than find in each university an equivalent of MIT 6.111 and list them with a link. Put all findings in HTML file.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Составь список ведущих университетов России, Беларуси, Украины и Калифорнии. Обязательно включи МГУ, МИФИ, МФТИ, ИТМО, МЭИ, МИЭТ и МИЭМ.
+
+Затем найди в каждом университете аналог курса MIT 6.111 и перечисли их со ссылками. Сохрани все находки в HTML-файл.</div></div></div><p class="apx-led"><b>Результат:</b> Первая версия отчёта на английском.</p></div><div class="apx" id="prompt-2"><div class="apx-h"><span class="apx-no">2</span><span class="apx-when">27 октября 2026 г., 08:29</span><span class="apx-mid">Отправлено во время работы</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Also add Kyiv School of Economics (KSE) Master&#x27;s Program in Micro- and Nanoelectronics.
+
+Also add Digital Circuit Synthesis School <a href="https://edu.yadro.com/chip-design-school/">https://edu.yadro.com/chip-design-school/</a>
+
+Add other other republics of the former Soviet Union
+
+For non-California places, put names in their local languages</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Добавь также магистерскую программу Киевской школы экономики (KSE) по микро- и наноэлектронике.
+
+Добавь также Школу синтеза цифровых схем <a href="https://edu.yadro.com/chip-design-school/">https://edu.yadro.com/chip-design-school/</a>
+
+Добавь другие республики бывшего Советского Союза.
+
+Для мест за пределами Калифорнии пиши названия на местных языках.</div></div></div><p class="apx-led"><b>Результат:</b> KSE, раздел о Школе синтеза, другие бывшие советские республики, названия на местных языках.</p></div><div class="apx" id="prompt-3"><div class="apx-h"><span class="apx-no">3</span><span class="apx-when">27 октября 2026 г., 19:02</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">put another page with the same information in Russian</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Сделай ещё одну страницу с той же информацией на русском.</div></div></div><p class="apx-led"><b>Результат:</b> Русская версия отчёта.</p></div><div class="apx" id="prompt-4"><div class="apx-h"><span class="apx-no">4</span><span class="apx-when">27 октября 2026 г., 19:23</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Learn and check what your competitor found. Update your information. Add Bauman, Innopolis, Voronezh, Saratov, Novosibirsk, Samara and other universities you can find from the School of Synthesis website. Add smaller universities in California, particularly Harvey Mudd and more in the Bay Area if you can find the information about FPGA classes. Create a comparison with competition in both English and Russian and store it in the report files.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Изучи и проверь, что нашёл конкурент. Обнови свою информацию. Добавь МГТУ им. Баумана, Иннополис, Воронеж, Саратов, Новосибирск, Самару и другие университеты, которые найдёшь на сайте Школы синтеза. Добавь небольшие университеты Калифорнии, в частности Harvey Mudd, и ещё университеты района залива Сан-Франциско, если найдёшь сведения о курсах по ПЛИС. Сделай сравнение с конкурентом на английском и русском и сохрани его в файлах отчёта.</div></div></div><p class="apx-led"><b>Результат:</b> Отчёт Codex проверен; добавлены университеты с кластерами Школы синтеза и небольшие университеты Калифорнии; страницы сравнения.</p></div><div class="apx" id="prompt-5"><div class="apx-h"><span class="apx-no">5</span><span class="apx-when">27 октября 2026 г., 19:29</span><span class="apx-mid">Отправлено во время работы</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Add a summary comparing the state of affairs in this area in the listed regions in your reports</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Добавь в отчёты сводку, сравнивающую положение дел в этой области в перечисленных регионах.</div></div></div><p class="apx-led"><b>Результат:</b> Раздел «Сравнение регионов».</p></div><div class="apx" id="prompt-6"><div class="apx-h"><span class="apx-no">6</span><span class="apx-when">27 октября 2026 г., 21:37</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">In Armenia add Russian-Armenian University, in Kyrgzhyzstan add American University in Central Asia, with sources as <a href="https://ddvca.com/2022/08/08/%d1%81%d0%be%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%bd%d1%8b%d0%b9-%d1%81%d0%b5%d0%bc%d0%b8%d0%bd%d0%b0%d1%80-%d0%b0%d1%83%d1%86%d0%b0-%d0%b8-siemens/">https://ddvca.com/2022/08/08/%d1%81%d0%be%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%bd%d1%8b%d0%b9-%d1%81%d0%b5%d0%bc%d0%b8%d0%bd%d0%b0%d1%80-%d0%b0%d1%83%d1%86%d0%b0-%d0%b8-siemens/</a> and <a href="https://verilog-meetup.com/2025/04/13/armenia-eda-connect/">https://verilog-meetup.com/2025/04/13/armenia-eda-connect/</a> . Try to find what FPGA board are used in each school. In Donetsk try to reach <a href="https://donntu.ru/fisp/ki">https://donntu.ru/fisp/ki</a> / Update both English and Russian reports</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">В Армении добавь Российско-Армянский университет, в Киргизии — Американский университет в Центральной Азии, с источниками <a href="https://ddvca.com/2022/08/08/%d1%81%d0%be%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%bd%d1%8b%d0%b9-%d1%81%d0%b5%d0%bc%d0%b8%d0%bd%d0%b0%d1%80-%d0%b0%d1%83%d1%86%d0%b0-%d0%b8-siemens/">https://ddvca.com/2022/08/08/%d1%81%d0%be%d0%b2%d0%bc%d0%b5%d1%81%d1%82%d0%bd%d1%8b%d0%b9-%d1%81%d0%b5%d0%bc%d0%b8%d0%bd%d0%b0%d1%80-%d0%b0%d1%83%d1%86%d0%b0-%d0%b8-siemens/</a> и <a href="https://verilog-meetup.com/2025/04/13/armenia-eda-connect/">https://verilog-meetup.com/2025/04/13/armenia-eda-connect/</a>. Попробуй выяснить, какие платы ПЛИС используются в каждом университете. В Донецке попробуй открыть <a href="https://donntu.ru/fisp/ki">https://donntu.ru/fisp/ki</a>. Обнови отчёты на английском и на русском.</div></div></div><p class="apx-led"><b>Результат:</b> Добавлены РАУ и АУЦА; столбец с платами ПЛИС; ДонНТУ проверен по копиям в Web Archive.</p></div><div class="apx" id="prompt-7"><div class="apx-h"><span class="apx-no">7</span><span class="apx-when">28 октября 2026 г., 04:21</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">See the new update in your competitor&#x27;s files and update yours if necessary</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Посмотри новое обновление в файлах конкурента и, если нужно, обнови свои.</div></div></div><p class="apx-led"><b>Результат:</b> Поправки по расширенному отчёту Codex и новые источники (БНТУ, КРСУ, VILNIUS TECH, Аграрный университет Грузии).</p></div><div class="apx" id="prompt-8"><div class="apx-h"><span class="apx-no">8</span><span class="apx-when">28 октября 2026 г., 09:22</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">You have broken text layout in both English and Russian Version. Text in the second column does not fill the column, there is a space on the right, see ~/Dowloads/broken.png</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">У тебя сломана вёрстка в обеих версиях, английской и русской. Текст во втором столбце не заполняет столбец, справа остаётся пустое место, см. ~/Dowloads/broken.png</div></div></div></div><div class="apx" id="prompt-9"><div class="apx-h"><span class="apx-no">9</span><span class="apx-when">28 октября 2026 г., 09:23</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">You have broken text layout in both English and Russian Version. Text in the second column does not fill the column, there is a space on the right, see ~/Downloads/broken.png</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">У тебя сломана вёрстка в обеих версиях, английской и русской. Текст во втором столбце не заполняет столбец, справа остаётся пустое место, см. ~/Downloads/broken.png</div></div></div><p class="apx-led"><b>Результат:</b> Отправлено ещё раз с исправленным путём. Лишнее правило CSS удалено, оба отчёта исправлены.</p></div><div class="apx" id="prompt-10"><div class="apx-h"><span class="apx-no">10</span><span class="apx-when">28 октября 2026 г., 21:42</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">read the follow-up prompt in 20261028_university_prompts_2.md</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Прочитай следующий промпт в 20261028_university_prompts_2.md</div></div></div><p class="apx-led"><b>Результат:</b> Глава «После 6.111», 20 университетов и программ для сравнения, оценка по 47 пунктам, объединённый отчёт на английском и русском и 12 постов.</p><div class="apx-att"><h3>Файл <code>20261028_university_prompts_2.md</code>, первая версия (28 октября 2026 г., 21:38)</h3><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">After the main text about the universities and programs like the Synthesis School, create a follow-up chapter. Invent a title with the meaning &quot;Beyond MIT 6.111: Not all HDL+FPGA cirriculums are the same&quot;.
+
+Explain that having a single introductory FPGA class is not enough. For example, many countries and universities have only classes that covers material from simple gates to FSMs and interfacing with sequential protocols like SPI. If they cover pipelining, this is usually only in the context of a classic 5-stage MIPS/RISC-V static pipeline. However when students graduate and start working in electronic companies, they discover that many designs in industry (such as networking chips, video processing blocks, GPU fixed functions) have data pipelining outside of CPU scope. Students know about FIFOs but don&#x27;t know how to use them together with pipelines. Not many graduate students demonstrate the knowledge of such techniques as credit-based flow control during job interviews.
+
+Equally problematic is the fact that many graduate students are not familiar with modern verification techniques and write primitive testbenches in style of early 1990s. Many don&#x27;t know how to use self-checking against a transactional model, constraint randomization in SystemVerilog and functional coverage. Very few have any experience with formal verification and concurrent assertions, despite many claim them in their AI-generated resumes. As a result, the microarchitectural complexity of their designs is limited because they cannot verify the corner cases in their designs.
+
+Another cluster of problems is that FPGA labs are not connected to ASIC design labs. Some schools have no access to Synopsys Fusion or Cadence Genus / Innovus toolchains, and at the same time do not have expertise in open-source EDA toolchains such as OpenROAD and LibreLane. AS a result,
+
+* Most students do not develop the intuition about the static timing analysis.
+
+* Do not know how to solve negative slack problem.
+
+* Are frequently confused about power savings techniques, such as clock gating.
+
+You can refer to the presentation at EDA, slides 14-17:
+
+<a href="https://docs.google.com/presentation/d/14WxUKOwsAo6Yn8X19WpGPNV5fk2H3XappceqGRlxqdM/edit?usp=sharing">https://docs.google.com/presentation/d/14WxUKOwsAo6Yn8X19WpGPNV5fk2H3XappceqGRlxqdM/edit?usp=sharing</a>
+
+Now you need to research and rank the above-mentioned universities using an additional set of criteria. For the purpose of ranking and comparison, you need to add to the group approximately 20 put-of-state and international universities, including:
+
+1. Top US: MIT, Princeton, Univ Michigan.
+
+2. Univ I am familiar with: North Carolina Univ, Portland State, Georgia Institute of Technology.
+
+3. Top (in a sense of these topics) universities in Japan, China, South Korea, India and other Asian countries that educate many Verilog, microarchitectrure, FPGA and ASIC engineers.
+
+4. Representative Europeans - make sure to add ETH Zurich, UCL, Cambridge.
+
+Here how we are going to rank them. We add a point for each item in the following list. This item can be either a part of their introductory HDL+FPGA class (similar to MIT 6.111), or a part of some closely related class (such a separate advanced Verilog, verification or physical design class).
+
+Area 1. Microarchitecture using single clock, gates and D-flip-flops.
+
+1.1. Data pipelining, such as pipelined floating point arithmetic units.
+
+1.2. FIFO queues.
+
+1.3. Combinations of data pipelines and FIFOs for the purpose of flow control.
+
+1.4. Ready/Valid protocols.
+
+1.5. Credit-based flow control.
+
+1.6. Systolic arrays.
+
+1.7. Arbiters, such as round robin arbiters.
+
+1.8. Reorder buffers.
+
+1.9. AXI and the related protocols.
+
+Area 2. Microarchitecture with multiple clocks, memories and power gating.
+
+2.1. Memory banking of embedded into ASIC SRAM memories.
+
+2.2. Linked list hardware controllers working with memories.
+
+2.3. Clock Domain Crossing (CDC).
+
+2.4. CDC using CDC FIFO.
+
+2.5. Clock gating on fine level using enables.
+
+2.6. Mid-range clock gating using latch-and-gate clock gaters.
+
+Area 3. Verification.
+
+3.1. RTL simulation with self-checking testbenches.
+
+3.2. RTL simulation with self-checking against a transaction model.
+
+3.3. Bus functional models (BFMs).
+
+3.4. Passive monitors and scoreboards.
+
+3.5. SystemVerilog constraint random stimuli generation.
+
+3.6. SystemVerilog functional coverage.
+
+3.7. Formal verification using SVA concurrent assertions, assumptions and cover statements.
+
+3.8. Using emulators such as Mentor Veloce,  Synopsys Zebu or Cadence Palladium.
+
+3.9. Verifying a pipelined CPU RTL against an instruction-level-simulator-based model.
+
+Area 4. Timing and other PD topics for ASIC and FPGA
+
+4.1. Simple push-button ASIC design flow using Tiny Tapeout
+
+4.2. Simple push-button ASIC design flow using open-source LibreLane and OpenROAD.
+
+4.3. Commercial tools such as Synopsys and Cadence.
+
+4.4. Labs with ASIC static timing analysis (STA) reports.
+
+4.5. Labs with power analysis tools such as Synopsys PTPX or Cadence Joule.
+
+4.6. Labs with floorplanning tools.
+
+Area 5. CPU specific.
+
+5.1. Labs and exercises (simulation and FPGA) with an RTL CPU core with static pipeline.
+
+5.2. Same with a dynamic out of order pipeline (a students designs his own CPU pipeline back-end).
+
+5.3. Same with hardware supported multithreading.
+
+5.4. Same with caches.
+
+5.5. Same with a cluster of RTL CPU cores without cache coherency, like a mesh interconnect.
+
+5.6. Same with coherent caches with MESI protocols.
+
+5.7. Same with branch predictor (a students designs his own branch predictor).
+
+Area 6. Application-specific
+
+6.1. RTL projects in camera video processing.
+
+6.2. RTL projects in computer graphics.
+
+6.3. RTL projects in networking chips.
+
+6.4. RTL projects in DSP: filters.
+
+6.5. RTL projects in DSP: FFT.
+
+6.6. RTL projects in sound processing.
+
+6.7. ML accelerators.
+
+Area 7. EDA algorithms. Students doing practical labs where they create or modify software EDA tools, specifically.
+
+7.1. RTL simulation.
+
+7.2. Logic synthesis.
+
+7.3. Placement &amp; routing.
+
+Assess each university and Synthesis School in the combined list (California - former USSR - out of state of CA - representative international) in those items, create 7 tables with anything you can find, then create university ranking and tentative country/region ranking.
+
+Put a combined report (MIT 6.111 + follow-ups and related) into new HTML files: English and Russian versions.
+
+Then create English and Russian versions of the texts for the following:
+
+1. LinkedIn post.
+
+2. Facebook post.
+
+3. Telegram post.
+
+4. verilog-meetup.com wordpress post.
+
+5. silicon-russia.com post.
+
+6. ddvca.com post.
+
+Put every post in a different HTML file.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">После основного текста об университетах и программах вроде Школы синтеза создай главу-продолжение. Придумай заголовок со смыслом «За пределами MIT 6.111: не все учебные программы по HDL и ПЛИС одинаковы».
+
+Объясни, что одного вводного курса по ПЛИС недостаточно. Например, во многих странах и университетах есть только курсы, которые охватывают материал от простых вентилей до конечных автоматов и подключения последовательных протоколов вроде SPI. Если в них и есть конвейеры, то обычно только в контексте классического пятистадийного статического конвейера MIPS/RISC-V. Однако, окончив университет и начав работать в электронных компаниях, студенты обнаруживают, что во многих промышленных проектах (например, в сетевых микросхемах, блоках обработки видео, специализированных блоках GPU) есть конвейерная обработка данных вне процессора. Студенты знают о FIFO, но не умеют использовать их вместе с конвейерами. Немногие выпускники показывают на собеседованиях знание таких приёмов, как управление потоком на кредитах (credit-based flow control).
+
+Не менее серьёзная проблема в том, что многие выпускники не знакомы с современными методами верификации и пишут примитивные тестбенчи в стиле начала 1990-х. Многие не умеют проверять проект по транзакционной модели, использовать ограниченную рандомизацию в SystemVerilog и функциональное покрытие. Совсем немногие имеют опыт формальной верификации и параллельных утверждений (concurrent assertions), хотя многие указывают их в резюме, написанных с помощью ИИ. В результате микроархитектурная сложность их проектов ограничена, потому что они не могут проверить крайние случаи.
+
+Ещё одна группа проблем: лабораторные на ПЛИС не связаны с лабораторными по проектированию ASIC. У некоторых университетов нет доступа к Synopsys Fusion или Cadence Genus / Innovus, и при этом нет опыта работы с открытыми САПР вроде OpenROAD и LibreLane. В результате
+
+* большинство студентов не приобретают интуиции в статическом временном анализе;
+
+* не знают, как решить проблему отрицательного запаса (negative slack);
+
+* часто путаются в приёмах снижения мощности, например в гейтировании тактового сигнала.
+
+Можно сослаться на презентацию на EDA, слайды 14–17:
+
+<a href="https://docs.google.com/presentation/d/14WxUKOwsAo6Yn8X19WpGPNV5fk2H3XappceqGRlxqdM/edit?usp=sharing">https://docs.google.com/presentation/d/14WxUKOwsAo6Yn8X19WpGPNV5fk2H3XappceqGRlxqdM/edit?usp=sharing</a>
+
+Теперь нужно исследовать и ранжировать упомянутые выше университеты по дополнительному набору критериев. Для ранжирования и сравнения добавь в группу примерно 20 университетов из других штатов и других стран, в том числе:
+
+1. Ведущие в США: MIT, Принстон, Мичиганский университет.
+
+2. Университеты, которые я знаю: North Carolina Univ, Portland State, Технологический институт Джорджии.
+
+3. Ведущие (в смысле этих тем) университеты Японии, Китая, Южной Кореи, Индии и других стран Азии, которые готовят много инженеров по Verilog, микроархитектуре, ПЛИС и ASIC.
+
+4. Представительные европейские — обязательно добавь ETH Zürich, UCL и Кембридж.
+
+Вот как мы будем их ранжировать. Добавляем балл за каждый пункт следующего списка. Пункт может быть частью вводного курса по HDL и ПЛИС (аналога MIT 6.111) или частью близкого курса (например, отдельного курса по углублённому Verilog, верификации или физическому проектированию).
+
+Область 1. Микроархитектура с одним тактовым сигналом, вентилями и D-триггерами.
+
+1.1. Конвейерная обработка данных, например конвейерные блоки арифметики с плавающей точкой.
+
+1.2. Очереди FIFO.
+
+1.3. Сочетание конвейеров данных и FIFO для управления потоком.
+
+1.4. Протоколы ready/valid.
+
+1.5. Управление потоком на кредитах.
+
+1.6. Систолические массивы.
+
+1.7. Арбитры, например циклические (round robin).
+
+1.8. Буферы переупорядочивания.
+
+1.9. AXI и родственные протоколы.
+
+Область 2. Микроархитектура с несколькими тактовыми сигналами, памятью и отключением питания.
+
+2.1. Разбиение на банки встроенной в ASIC памяти SRAM.
+
+2.2. Аппаратные контроллеры связных списков, работающие с памятью.
+
+2.3. Пересечение тактовых доменов (CDC).
+
+2.4. CDC через CDC FIFO.
+
+2.5. Тонкое гейтирование тактового сигнала через разрешения.
+
+2.6. Гейтирование среднего уровня ячейками «защёлка и вентиль».
+
+Область 3. Верификация.
+
+3.1. Моделирование RTL с самопроверяющимися тестбенчами.
+
+3.2. Моделирование RTL с самопроверкой по транзакционной модели.
+
+3.3. Модели шин (BFM).
+
+3.4. Пассивные мониторы и скорборды.
+
+3.5. Генерация стимулов с ограниченной рандомизацией на SystemVerilog.
+
+3.6. Функциональное покрытие на SystemVerilog.
+
+3.7. Формальная верификация с параллельными утверждениями, допущениями и cover на SVA.
+
+3.8. Использование эмуляторов, таких как Mentor Veloce, Synopsys Zebu или Cadence Palladium.
+
+3.9. Проверка RTL конвейерного процессора по модели на основе симулятора уровня команд.
+
+Область 4. Временной анализ и другие темы физического проектирования для ASIC и ПЛИС.
+
+4.1. Простой маршрут проектирования ASIC «одной кнопкой» с Tiny Tapeout.
+
+4.2. Простой маршрут проектирования ASIC «одной кнопкой» на открытых LibreLane и OpenROAD.
+
+4.3. Коммерческие САПР, такие как Synopsys и Cadence.
+
+4.4. Лабораторные с отчётами статического временного анализа (STA) для ASIC.
+
+4.5. Лабораторные с инструментами анализа мощности, такими как Synopsys PTPX или Cadence Joule.
+
+4.6. Лабораторные с инструментами планировки кристалла.
+
+Область 5. Процессоры.
+
+5.1. Лабораторные и упражнения (в моделировании и на ПЛИС) с RTL-ядром процессора со статическим конвейером.
+
+5.2. То же с динамическим конвейером с внеочередным исполнением (студент проектирует собственный бэкенд конвейера).
+
+5.3. То же с аппаратной многопоточностью.
+
+5.4. То же с кэшами.
+
+5.5. То же с кластером RTL-ядер без когерентности кэшей, например с сетью mesh.
+
+5.6. То же с когерентными кэшами на протоколах MESI.
+
+5.7. То же с предсказателем переходов (студент проектирует собственный предсказатель).
+
+Область 6. Прикладные проекты.
+
+6.1. Проекты на RTL по обработке видео с камеры.
+
+6.2. Проекты на RTL по компьютерной графике.
+
+6.3. Проекты на RTL для сетевых микросхем.
+
+6.4. Проекты на RTL по ЦОС: фильтры.
+
+6.5. Проекты на RTL по ЦОС: БПФ.
+
+6.6. Проекты на RTL по обработке звука.
+
+6.7. Ускорители машинного обучения.
+
+Область 7. Алгоритмы САПР. Студенты выполняют практические лабораторные, в которых создают или дорабатывают программы САПР, а именно:
+
+7.1. Моделирование RTL.
+
+7.2. Логический синтез.
+
+7.3. Размещение и трассировка.
+
+Оцени каждый университет и Школу синтеза из объединённого списка (Калифорния — бывший СССР — другие штаты США — представительные зарубежные) по этим пунктам, сделай 7 таблиц со всем, что найдёшь, затем составь рейтинг университетов и предварительный рейтинг стран и регионов.
+
+Помести объединённый отчёт (MIT 6.111 + продолжение и смежные темы) в новые HTML-файлы: английскую и русскую версии.
+
+Затем сделай английскую и русскую версии текстов для:
+
+1. Поста в LinkedIn.
+
+2. Поста в Facebook.
+
+3. Поста в Telegram.
+
+4. Записи WordPress на verilog-meetup.com.
+
+5. Поста на silicon-russia.com.
+
+6. Поста на ddvca.com.
+
+Помести каждый пост в отдельный HTML-файл.</div></div></div></div></div><div class="apx" id="prompt-11"><div class="apx-h"><span class="apx-no">11</span><span class="apx-when">28 октября 2026 г., 23:13</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Yes, most decisions are correct, however I decided to split SVA and UVM into multiple points. Please re-read 20261028_university_prompts_2.md and update the reports based on what changed comparing with the previous version</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Да, большинство решений верны, но я решил разделить SVA и UVM на несколько пунктов. Перечитай 20261028_university_prompts_2.md и обнови отчёты с учётом того, что изменилось по сравнению с предыдущей версией.</div></div></div><p class="apx-led"><b>Результат:</b> Область 3 выросла до 11 пунктов, всего их стало 49; источники пересортированы; добавлены статья и пост для Habr.com.</p><div class="apx-att"><h3>Что изменилось в файле: исправленная версия (28 октября 2026 г., 23:10)</h3><ol class="apx-changes"><li><p>Во второй группе университетов вместо «North Carolina Univ» указан NC State.</p><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">2. Univ I am familiar with: NC State, Portland State, Georgia Institute of Technology.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">2. Университеты, которые я знаю: NC State, Portland State, Технологический институт Джорджии.</div></div></div></li><li><p>В области 3 теперь 11 пунктов: SVA в моделировании и формальная верификация разделены, добавлен UVM, эмуляторы и проверка процессора стали пунктами 3.10 и 3.11.</p><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">3.7. SVA concurrent assertions, assumptions and cover statements used in RTL simulation.
+
+3.8. Formal verification using SVA concurrent assertions, assumptions and cover statements,
+using tools such as Jasper Gold and VC Formal.
+
+3.9. UVM.
+
+3.10. Using emulators such as Mentor Veloce,  Synopsys Zebu or Cadence Palladium.
+
+3.11. Verifying a pipelined CPU RTL against an instruction-level-simulator-based model.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">3.7. Параллельные утверждения, допущения и cover на SVA, используемые при моделировании RTL.
+
+3.8. Формальная верификация с параллельными утверждениями, допущениями и cover на SVA
+в инструментах вроде Jasper Gold и VC Formal.
+
+3.9. UVM.
+
+3.10. Использование эмуляторов, таких как Mentor Veloce, Synopsys Zebu или Cadence Palladium.
+
+3.11. Проверка RTL конвейерного процессора по модели на основе симулятора уровня команд.</div></div></div></li><li><p>В список постов добавлены статья и пост для Habr.com; теперь их восемь.</p><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">1. LinkedIn post.
+
+2. Habr.com article
+
+3. Habr.com post
+
+4. Facebook post.
+
+5. Telegram post.
+
+6. verilog-meetup.com wordpress post.
+
+7. silicon-russia.com post.
+
+8. ddvca.com post.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">1. Пост в LinkedIn.
+
+2. Статья на Habr.com.
+
+3. Пост на Habr.com.
+
+4. Пост в Facebook.
+
+5. Пост в Telegram.
+
+6. Запись WordPress на verilog-meetup.com.
+
+7. Пост на silicon-russia.com.
+
+8. Пост на ddvca.com.</div></div></div></li><li><p>Новый раздел в конце подтверждает решения по подсчёту и вводит разделение UVM и SVA.</p><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Clarifications on the decisions:
+
+* Item 1.1: it only counts pipelining outside a CPU, since that is my point; a CPU pipeline counts as 5.1.
+
+* Area 5: it only counts labs where students build or modify an RTL processor; lectures don&#x27;t count.
+
+* UVM and cocotb: a UVM course earns items 3.2–3.5, and cocotb counts for the SystemVerilog items.
+However I would like to add UVM as a separate point as well because there are courses with 3.2-3.5 but without UVM,
+for example a textbook SystemVerilog for Verification: A Guide to Learning the Testbench Language Features by Chris Spear.
+
+* I split SVA assertions for simulation and formal verification.
+
+* Item 4.4: FPGA timing reports don&#x27;t count.
+
+* Student repositories can be used them as evidence where universities publish little: Michigan, NYCU, Taiwan, Tokyo and the IITs.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Пояснения к решениям:
+
+* Пункт 1.1: засчитываются только конвейеры вне процессора, потому что в этом и состоит мой тезис; конвейер процессора идёт в пункт 5.1.
+
+* Область 5: засчитываются только лабораторные, где студенты строят или меняют процессор на RTL; лекции не засчитываются.
+
+* UVM и cocotb: курс по UVM получает пункты 3.2–3.5, а cocotb засчитывается за пункты про SystemVerilog.
+Однако я хотел бы добавить UVM и отдельным пунктом, потому что есть курсы с пунктами 3.2–3.5, но без UVM,
+например учебник Криса Спира «SystemVerilog for Verification: A Guide to Learning the Testbench Language Features».
+
+* Я разделил утверждения SVA для моделирования и для формальной верификации.
+
+* Пункт 4.4: отчёты временного анализа для ПЛИС не засчитываются.
+
+* Студенческие репозитории можно использовать как доказательство там, где университеты публикуют мало: Мичиган, NYCU, Тайвань, Токио и IIT.</div></div></div></li></ol></div></div><div class="apx" id="prompt-12"><div class="apx-h"><span class="apx-no">12</span><span class="apx-when">28 октября 2026 г., 23:40</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">make several pictures and diagrams to insert into posts and articles. They should illustrate rankings and criterias. You can use maps, university and country symbols and images.</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Сделай несколько картинок и диаграмм для вставки в посты и статьи. Они должны иллюстрировать рейтинги и критерии. Можно использовать карты, символы университетов и стран, изображения.</div></div></div><p class="apx-led"><b>Результат:</b> Девять картинок на английском и русском, страница-галерея и блоки с картинками на страницах постов.</p></div><div class="apx" id="prompt-13"><div class="apx-h"><span class="apx-no">13</span><span class="apx-when">29 октября 2026 г., 07:08</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Create in separate files English and Russian versions of the report with pictures integrated</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Создай в отдельных файлах английскую и русскую версии отчёта со встроенными картинками.</div></div></div><p class="apx-led"><b>Результат:</b> mit_6111_and_beyond_illustrated.html и его русская версия.</p></div><div class="apx" id="prompt-14"><div class="apx-h"><span class="apx-no">14</span><span class="apx-when">29 октября 2026 г., 10:44</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Create a separate html file with all my prompts related to these reports and their translations in Russian</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Создай отдельный HTML-файл со всеми моими промптами к этим отчётам и их переводами на русский.</div></div></div><p class="apx-led"><b>Результат:</b> Отдельная страница со всеми промптами и их переводом на русский (mit_6111_prompts.html).</p></div><div class="apx" id="prompt-15"><div class="apx-h"><span class="apx-no">15</span><span class="apx-when">29 октября 2026 г., 19:11</span></div><div class="apx-pair"><div class="apx-col" lang="en"><span class="apx-lab">Оригинал</span><div class="apx-txt">Put at the beginning:
+
+Generated by Claude &lt;version, model, effort level&gt; using prompt from Yuri Panchul. See the Appendix for the verbatim prompt.
+
+Add prompts to the main report as an Appendix.
+
+Russian report should have bilingual English-Russian prompts</div></div><div class="apx-col"><span class="apx-lab">Перевод</span><div class="apx-txt">Помести в начало:
+
+Создано Claude &lt;версия, модель, уровень усилий&gt; по промпту Юрия Панчула. Дословный промпт — в приложении.
+
+Добавь промпты в основной отчёт в виде приложения.
+
+В русском отчёте промпты должны быть на двух языках, английском и русском.</div></div></div><p class="apx-led"><b>Результат:</b> Строка об авторстве в начале объединённого отчёта и это приложение, в русском отчёте — на двух языках.</p></div>
+</section>
+
 <footer>
-    <p>Составлено 27 октября 2026 г., обновлено 28 октября 2026 г.; глава «После 6.111» добавлена 28 октября 2026 г. Названия и описания курсов кратко пересказаны по страницам самих университетов.</p>
+    <p>Составлено 27 октября 2026 г., обновлено 28 октября 2026 г.; глава «После 6.111» добавлена 28 октября 2026 г., приложение с промптами — 29 октября 2026 г. Названия и описания курсов кратко пересказаны по страницам самих университетов.</p>
 </footer>
 
 </div>
