@@ -1,0 +1,1127 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1008pt" height="1080pt" viewBox="0 0 1008 1080" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <title>All 49 criteria: how often did the audit find evidence?</title>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title>All 49 criteria: how often did the audit find evidence?</dc:title>
+    <dc:date>2026-10-29</dc:date>
+    <dc:description>All 49 criterion frequencies, with UVM-only support distinguished. A count of zero means no qualifying evidence found in this audit.</dc:description>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 1080 
+L 1008 1080 
+L 1008 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 292.32 982.8 
+L 483.84 982.8 
+L 483.84 226.8 
+L 292.32 226.8 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 292.32 982.8 
+L 292.32 226.8 
+" clip-path="url(#p0abb135d23)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="m5ee6436785" d="M 0 0 
+L 0 3.5 
+" style="stroke: #526674; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m5ee6436785" x="292.32" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="292.32" y="998.158281" transform="rotate(-0 292.32 998.158281)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 347.04 982.8 
+L 347.04 226.8 
+" clip-path="url(#p0abb135d23)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m5ee6436785" x="347.04" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="347.04" y="998.158281" transform="rotate(-0 347.04 998.158281)">4</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 401.76 982.8 
+L 401.76 226.8 
+" clip-path="url(#p0abb135d23)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m5ee6436785" x="401.76" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="401.76" y="998.158281" transform="rotate(-0 401.76 998.158281)">8</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 456.48 982.8 
+L 456.48 226.8 
+" clip-path="url(#p0abb135d23)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m5ee6436785" x="456.48" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="456.48" y="998.158281" transform="rotate(-0 456.48 998.158281)">12</text>
+     </g>
+    </g>
+    <g id="text_5">
+     <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="388.08" y="1012.044375" transform="rotate(-0 388.08 1012.044375)">Universities / 90</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_9"/>
+     <g id="text_6">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="272.390967" transform="rotate(-0 284.32 272.390967)">1.1  Non-CPU data pipelines</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_10"/>
+     <g id="text_7">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="297.455618" transform="rotate(-0 284.32 297.455618)">1.2  FIFO queues</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_11"/>
+     <g id="text_8">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="322.520269" transform="rotate(-0 284.32 322.520269)">1.3  Pipelines + FIFOs for flow control</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_12"/>
+     <g id="text_9">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="347.58492" transform="rotate(-0 284.32 347.58492)">1.4  Ready/valid protocols</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_13"/>
+     <g id="text_10">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="372.649571" transform="rotate(-0 284.32 372.649571)">1.5  Credit-based flow control</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_14"/>
+     <g id="text_11">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="397.714222" transform="rotate(-0 284.32 397.714222)">1.6  Systolic arrays</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_15"/>
+     <g id="text_12">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="422.778873" transform="rotate(-0 284.32 422.778873)">1.7  Arbiters</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_16"/>
+     <g id="text_13">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="447.843523" transform="rotate(-0 284.32 447.843523)">1.8  Reorder buffers</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_17"/>
+     <g id="text_14">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="472.908174" transform="rotate(-0 284.32 472.908174)">1.9  AXI and related protocols</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_18"/>
+     <g id="text_15">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="520.531011" transform="rotate(-0 284.32 520.531011)">2.1  Banked embedded ASIC SRAM</text>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_19"/>
+     <g id="text_16">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(132.537688 541.192115)">2.2  Hardware linked-list memory</text>
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(236.172469 551.382124)">controllers</text>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_20"/>
+     <g id="text_17">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="570.660313" transform="rotate(-0 284.32 570.660313)">2.3  Clock-domain crossing (CDC)</text>
+     </g>
+    </g>
+    <g id="ytick_13">
+     <g id="line2d_21"/>
+     <g id="text_18">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="595.724964" transform="rotate(-0 284.32 595.724964)">2.4  Asynchronous CDC FIFOs</text>
+     </g>
+    </g>
+    <g id="ytick_14">
+     <g id="line2d_22"/>
+     <g id="text_19">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="620.789615" transform="rotate(-0 284.32 620.789615)">2.5  Fine-grained enables / clock gating</text>
+     </g>
+    </g>
+    <g id="ytick_15">
+     <g id="line2d_23"/>
+     <g id="text_20">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="645.854265" transform="rotate(-0 284.32 645.854265)">2.6  Latch-and-gate clock gaters</text>
+     </g>
+    </g>
+    <g id="ytick_16">
+     <g id="line2d_24"/>
+     <g id="text_21">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="693.477102" transform="rotate(-0 284.32 693.477102)">3.1  Self-checking RTL testbenches</text>
+     </g>
+    </g>
+    <g id="ytick_17">
+     <g id="line2d_25"/>
+     <g id="text_22">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="718.541753" transform="rotate(-0 284.32 718.541753)">3.2  Checking against a transaction model</text>
+     </g>
+    </g>
+    <g id="ytick_18">
+     <g id="line2d_26"/>
+     <g id="text_23">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="743.606404" transform="rotate(-0 284.32 743.606404)">3.3  Bus functional models (BFMs)</text>
+     </g>
+    </g>
+    <g id="ytick_19">
+     <g id="line2d_27"/>
+     <g id="text_24">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="768.671055" transform="rotate(-0 284.32 768.671055)">3.4  Passive monitors and scoreboards</text>
+     </g>
+    </g>
+    <g id="ytick_20">
+     <g id="line2d_28"/>
+     <g id="text_25">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="793.735706" transform="rotate(-0 284.32 793.735706)">3.5  Constrained-random stimuli</text>
+     </g>
+    </g>
+    <g id="ytick_21">
+     <g id="line2d_29"/>
+     <g id="text_26">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="818.800356" transform="rotate(-0 284.32 818.800356)">3.6  Functional coverage</text>
+     </g>
+    </g>
+    <g id="ytick_22">
+     <g id="line2d_30"/>
+     <g id="text_27">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="843.865007" transform="rotate(-0 284.32 843.865007)">3.7  Concurrent assertions in simulation</text>
+     </g>
+    </g>
+    <g id="ytick_23">
+     <g id="line2d_31"/>
+     <g id="text_28">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="868.929658" transform="rotate(-0 284.32 868.929658)">3.8  Assertion-based formal verification</text>
+     </g>
+    </g>
+    <g id="ytick_24">
+     <g id="line2d_32"/>
+     <g id="text_29">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="284.32" y="893.994309" transform="rotate(-0 284.32 893.994309)">3.9  UVM</text>
+     </g>
+    </g>
+    <g id="ytick_25">
+     <g id="line2d_33"/>
+     <g id="text_30">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(91.070125 914.655413)">3.10  Hardware emulators: Veloce / ZeBu /</text>
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(240.096844 924.845423)">Palladium</text>
+     </g>
+    </g>
+    <g id="ytick_26">
+     <g id="line2d_34"/>
+     <g id="text_31">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(119.093859 939.720064)">3.11  RTL CPU versus instruction-set</text>
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(241.439094 949.910073)">simulator</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 292.32 261.163636 
+L 388.08 261.163636 
+L 388.08 276.70372 
+L 292.32 276.70372 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 292.32 286.228287 
+L 415.44 286.228287 
+L 415.44 301.768371 
+L 292.32 301.768371 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 292.32 311.292938 
+L 333.36 311.292938 
+L 333.36 326.833022 
+L 292.32 326.833022 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 292.32 336.357589 
+L 333.36 336.357589 
+L 333.36 351.897673 
+L 292.32 351.897673 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 292.32 361.42224 
+L 306 361.42224 
+L 306 376.962323 
+L 292.32 376.962323 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 292.32 386.486891 
+L 333.36 386.486891 
+L 333.36 402.026974 
+L 292.32 402.026974 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 292.32 411.551542 
+L 306 411.551542 
+L 306 427.091625 
+L 292.32 427.091625 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 292.32 436.616193 
+L 306 436.616193 
+L 306 452.156276 
+L 292.32 452.156276 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 292.32 461.680843 
+L 347.04 461.680843 
+L 347.04 477.220927 
+L 292.32 477.220927 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #007c83"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 292.32 509.30368 
+L 292.32 509.30368 
+L 292.32 524.843764 
+L 292.32 524.843764 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #455fb8"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 292.32 534.368331 
+L 292.32 534.368331 
+L 292.32 549.908415 
+L 292.32 549.908415 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #455fb8"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 292.32 559.432982 
+L 347.04 559.432982 
+L 347.04 574.973065 
+L 292.32 574.973065 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #455fb8"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 292.32 584.497633 
+L 333.36 584.497633 
+L 333.36 600.037716 
+L 292.32 600.037716 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #455fb8"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 292.32 609.562284 
+L 306 609.562284 
+L 306 625.102367 
+L 292.32 625.102367 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #455fb8"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 292.32 634.626935 
+L 292.32 634.626935 
+L 292.32 650.167018 
+L 292.32 650.167018 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #455fb8"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 292.32 682.249771 
+L 429.12 682.249771 
+L 429.12 697.789855 
+L 292.32 697.789855 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 292.32 707.314422 
+L 319.68 707.314422 
+L 319.68 722.854506 
+L 292.32 722.854506 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 319.68 707.314422 
+L 374.4 707.314422 
+L 374.4 722.854506 
+L 319.68 722.854506 
+z
+" clip-path="url(#p0abb135d23)" style="fill: url(#h5e6ecae023); stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 292.32 732.379073 
+L 319.68 732.379073 
+L 319.68 747.919157 
+L 292.32 747.919157 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 319.68 732.379073 
+L 374.4 732.379073 
+L 374.4 747.919157 
+L 319.68 747.919157 
+z
+" clip-path="url(#p0abb135d23)" style="fill: url(#h5e6ecae023); stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 292.32 757.443724 
+L 319.68 757.443724 
+L 319.68 772.983807 
+L 292.32 772.983807 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 319.68 757.443724 
+L 374.4 757.443724 
+L 374.4 772.983807 
+L 319.68 772.983807 
+z
+" clip-path="url(#p0abb135d23)" style="fill: url(#h5e6ecae023); stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 292.32 782.508375 
+L 306 782.508375 
+L 306 798.048458 
+L 292.32 798.048458 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 306 782.508375 
+L 374.4 782.508375 
+L 374.4 798.048458 
+L 306 798.048458 
+z
+" clip-path="url(#p0abb135d23)" style="fill: url(#h5e6ecae023); stroke: #ffffff; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 292.32 807.573026 
+L 347.04 807.573026 
+L 347.04 823.113109 
+L 292.32 823.113109 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 292.32 832.637677 
+L 333.36 832.637677 
+L 333.36 848.17776 
+L 292.32 848.17776 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 292.32 857.702327 
+L 333.36 857.702327 
+L 333.36 873.242411 
+L 292.32 873.242411 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 292.32 882.766978 
+L 360.72 882.766978 
+L 360.72 898.307062 
+L 292.32 898.307062 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 292.32 907.831629 
+L 306 907.831629 
+L 306 923.371713 
+L 292.32 923.371713 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 292.32 932.89628 
+L 292.32 932.89628 
+L 292.32 948.436364 
+L 292.32 948.436364 
+z
+" clip-path="url(#p0abb135d23)" style="fill: #bb4d75"/>
+   </g>
+   <g id="text_32">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="390.816" y="271.693053" transform="rotate(-0 390.816 271.693053)">7</text>
+   </g>
+   <g id="text_33">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="418.176" y="296.757704" transform="rotate(-0 418.176 296.757704)">9</text>
+   </g>
+   <g id="text_34">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="336.096" y="321.822355" transform="rotate(-0 336.096 321.822355)">3</text>
+   </g>
+   <g id="text_35">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="336.096" y="346.887006" transform="rotate(-0 336.096 346.887006)">3</text>
+   </g>
+   <g id="text_36">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="308.736" y="371.951657" transform="rotate(-0 308.736 371.951657)">1</text>
+   </g>
+   <g id="text_37">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="336.096" y="397.016308" transform="rotate(-0 336.096 397.016308)">3</text>
+   </g>
+   <g id="text_38">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="308.736" y="422.080958" transform="rotate(-0 308.736 422.080958)">1</text>
+   </g>
+   <g id="text_39">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="308.736" y="447.145609" transform="rotate(-0 308.736 447.145609)">1</text>
+   </g>
+   <g id="text_40">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="349.776" y="472.21026" transform="rotate(-0 349.776 472.21026)">4</text>
+   </g>
+   <g id="text_41">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="295.056" y="519.833097" transform="rotate(-0 295.056 519.833097)">0</text>
+   </g>
+   <g id="text_42">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="295.056" y="544.897748" transform="rotate(-0 295.056 544.897748)">0</text>
+   </g>
+   <g id="text_43">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="349.776" y="569.962399" transform="rotate(-0 349.776 569.962399)">4</text>
+   </g>
+   <g id="text_44">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="336.096" y="595.02705" transform="rotate(-0 336.096 595.02705)">3</text>
+   </g>
+   <g id="text_45">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="308.736" y="620.0917" transform="rotate(-0 308.736 620.0917)">1</text>
+   </g>
+   <g id="text_46">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="295.056" y="645.156351" transform="rotate(-0 295.056 645.156351)">0</text>
+   </g>
+   <g id="text_47">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="431.856" y="692.779188" transform="rotate(-0 431.856 692.779188)">10</text>
+   </g>
+   <g id="text_48">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="377.136" y="717.843839" transform="rotate(-0 377.136 717.843839)">6</text>
+   </g>
+   <g id="text_49">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="377.136" y="742.90849" transform="rotate(-0 377.136 742.90849)">6</text>
+   </g>
+   <g id="text_50">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="377.136" y="767.973141" transform="rotate(-0 377.136 767.973141)">6</text>
+   </g>
+   <g id="text_51">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="377.136" y="793.037792" transform="rotate(-0 377.136 793.037792)">6</text>
+   </g>
+   <g id="text_52">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="349.776" y="818.102442" transform="rotate(-0 349.776 818.102442)">4</text>
+   </g>
+   <g id="text_53">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="336.096" y="843.167093" transform="rotate(-0 336.096 843.167093)">3</text>
+   </g>
+   <g id="text_54">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="336.096" y="868.231744" transform="rotate(-0 336.096 868.231744)">3</text>
+   </g>
+   <g id="text_55">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="363.456" y="893.296395" transform="rotate(-0 363.456 893.296395)">5</text>
+   </g>
+   <g id="text_56">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="308.736" y="918.361046" transform="rotate(-0 308.736 918.361046)">1</text>
+   </g>
+   <g id="text_57">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="295.056" y="943.425697" transform="rotate(-0 295.056 943.425697)">0</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_33">
+    <path d="M 781.2 982.8 
+L 972.72 982.8 
+L 972.72 226.8 
+L 781.2 226.8 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_5">
+     <g id="line2d_35">
+      <path d="M 781.2 982.8 
+L 781.2 226.8 
+" clip-path="url(#pc99720768e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_36">
+      <g>
+       <use xlink:href="#m5ee6436785" x="781.2" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_58">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="781.2" y="998.158281" transform="rotate(-0 781.2 998.158281)">0</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_37">
+      <path d="M 835.92 982.8 
+L 835.92 226.8 
+" clip-path="url(#pc99720768e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_38">
+      <g>
+       <use xlink:href="#m5ee6436785" x="835.92" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_59">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="835.92" y="998.158281" transform="rotate(-0 835.92 998.158281)">4</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_39">
+      <path d="M 890.64 982.8 
+L 890.64 226.8 
+" clip-path="url(#pc99720768e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_40">
+      <g>
+       <use xlink:href="#m5ee6436785" x="890.64" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_60">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="890.64" y="998.158281" transform="rotate(-0 890.64 998.158281)">8</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_41">
+      <path d="M 945.36 982.8 
+L 945.36 226.8 
+" clip-path="url(#pc99720768e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.14; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_42">
+      <g>
+       <use xlink:href="#m5ee6436785" x="945.36" y="982.8" style="fill: #526674; stroke: #526674; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_61">
+      <text style="fill: #526674; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="945.36" y="998.158281" transform="rotate(-0 945.36 998.158281)">12</text>
+     </g>
+    </g>
+    <g id="text_62">
+     <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="876.96" y="1012.044375" transform="rotate(-0 876.96 1012.044375)">Universities / 90</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_27">
+     <g id="line2d_43"/>
+     <g id="text_63">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="273.035402" transform="rotate(-0 773.2 273.035402)">4.1  Tiny Tapeout flow</text>
+     </g>
+    </g>
+    <g id="ytick_28">
+     <g id="line2d_44"/>
+     <g id="text_64">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="300.178875" transform="rotate(-0 773.2 300.178875)">4.2  LibreLane / OpenROAD open-source flow</text>
+     </g>
+    </g>
+    <g id="ytick_29">
+     <g id="line2d_45"/>
+     <g id="text_65">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="327.322347" transform="rotate(-0 773.2 327.322347)">4.3  Commercial Synopsys / Cadence tools</text>
+     </g>
+    </g>
+    <g id="ytick_30">
+     <g id="line2d_46"/>
+     <g id="text_66">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="354.46582" transform="rotate(-0 773.2 354.46582)">4.4  Labs reading ASIC STA reports</text>
+     </g>
+    </g>
+    <g id="ytick_31">
+     <g id="line2d_47"/>
+     <g id="text_67">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="381.609293" transform="rotate(-0 773.2 381.609293)">4.5  Labs using ASIC power-analysis tools</text>
+     </g>
+    </g>
+    <g id="ytick_32">
+     <g id="line2d_48"/>
+     <g id="text_68">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="408.752765" transform="rotate(-0 773.2 408.752765)">4.6  Floorplanning labs</text>
+     </g>
+    </g>
+    <g id="ytick_33">
+     <g id="line2d_49"/>
+     <g id="text_69">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="460.325363" transform="rotate(-0 773.2 460.325363)">5.1  Static pipeline</text>
+     </g>
+    </g>
+    <g id="ytick_34">
+     <g id="line2d_50"/>
+     <g id="text_70">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="487.468836" transform="rotate(-0 773.2 487.468836)">5.2  Student-built out-of-order backend</text>
+     </g>
+    </g>
+    <g id="ytick_35">
+     <g id="line2d_51"/>
+     <g id="text_71">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="514.612308" transform="rotate(-0 773.2 514.612308)">5.3  Hardware multithreading</text>
+     </g>
+    </g>
+    <g id="ytick_36">
+     <g id="line2d_52"/>
+     <g id="text_72">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="541.755781" transform="rotate(-0 773.2 541.755781)">5.4  Caches</text>
+     </g>
+    </g>
+    <g id="ytick_37">
+     <g id="line2d_53"/>
+     <g id="text_73">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="568.899254" transform="rotate(-0 773.2 568.899254)">5.5  Non-coherent multicore cluster / mesh</text>
+     </g>
+    </g>
+    <g id="ytick_38">
+     <g id="line2d_54"/>
+     <g id="text_74">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="596.042726" transform="rotate(-0 773.2 596.042726)">5.6  Coherent caches with MESI</text>
+     </g>
+    </g>
+    <g id="ytick_39">
+     <g id="line2d_55"/>
+     <g id="text_75">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="623.186199" transform="rotate(-0 773.2 623.186199)">5.7  Student-built branch predictor</text>
+     </g>
+    </g>
+    <g id="ytick_40">
+     <g id="line2d_56"/>
+     <g id="text_76">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="674.758797" transform="rotate(-0 773.2 674.758797)">6.1  Camera / video processing</text>
+     </g>
+    </g>
+    <g id="ytick_41">
+     <g id="line2d_57"/>
+     <g id="text_77">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="701.90227" transform="rotate(-0 773.2 701.90227)">6.2  Computer graphics</text>
+     </g>
+    </g>
+    <g id="ytick_42">
+     <g id="line2d_58"/>
+     <g id="text_78">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="729.045742" transform="rotate(-0 773.2 729.045742)">6.3  Networking</text>
+     </g>
+    </g>
+    <g id="ytick_43">
+     <g id="line2d_59"/>
+     <g id="text_79">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="756.189215" transform="rotate(-0 773.2 756.189215)">6.4  DSP filters</text>
+     </g>
+    </g>
+    <g id="ytick_44">
+     <g id="line2d_60"/>
+     <g id="text_80">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="783.332688" transform="rotate(-0 773.2 783.332688)">6.5  DSP FFT</text>
+     </g>
+    </g>
+    <g id="ytick_45">
+     <g id="line2d_61"/>
+     <g id="text_81">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="810.47616" transform="rotate(-0 773.2 810.47616)">6.6  Sound processing</text>
+     </g>
+    </g>
+    <g id="ytick_46">
+     <g id="line2d_62"/>
+     <g id="text_82">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="837.619633" transform="rotate(-0 773.2 837.619633)">6.7  ML accelerators</text>
+     </g>
+    </g>
+    <g id="ytick_47">
+     <g id="line2d_63"/>
+     <g id="text_83">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="889.192231" transform="rotate(-0 773.2 889.192231)">7.1  RTL simulation algorithms/tools</text>
+     </g>
+    </g>
+    <g id="ytick_48">
+     <g id="line2d_64"/>
+     <g id="text_84">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="773.2" y="916.335704" transform="rotate(-0 773.2 916.335704)">7.2  Logic synthesis algorithms/tools</text>
+     </g>
+    </g>
+    <g id="ytick_49">
+     <g id="line2d_65"/>
+     <g id="text_85">
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(649.535266 939.075629)">7.3  Placement and routing</text>
+      <text style="fill: #1d3446; font: 9.1px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(699.504219 949.265639)">algorithms/tools</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_34">
+    <path d="M 781.2 261.163636 
+L 781.2 261.163636 
+L 781.2 277.992589 
+L 781.2 277.992589 
+z
+" clip-path="url(#pc99720768e)" style="fill: #b07916"/>
+   </g>
+   <g id="patch_35">
+    <path d="M 781.2 288.307109 
+L 808.56 288.307109 
+L 808.56 305.136062 
+L 781.2 305.136062 
+z
+" clip-path="url(#pc99720768e)" style="fill: #b07916"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 781.2 315.450582 
+L 890.64 315.450582 
+L 890.64 332.279535 
+L 781.2 332.279535 
+z
+" clip-path="url(#pc99720768e)" style="fill: #b07916"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 781.2 342.594054 
+L 835.92 342.594054 
+L 835.92 359.423007 
+L 781.2 359.423007 
+z
+" clip-path="url(#pc99720768e)" style="fill: #b07916"/>
+   </g>
+   <g id="patch_38">
+    <path d="M 781.2 369.737527 
+L 808.56 369.737527 
+L 808.56 386.56648 
+L 781.2 386.56648 
+z
+" clip-path="url(#pc99720768e)" style="fill: #b07916"/>
+   </g>
+   <g id="patch_39">
+    <path d="M 781.2 396.881 
+L 822.24 396.881 
+L 822.24 413.709953 
+L 781.2 413.709953 
+z
+" clip-path="url(#pc99720768e)" style="fill: #b07916"/>
+   </g>
+   <g id="patch_40">
+    <path d="M 781.2 448.453598 
+L 945.36 448.453598 
+L 945.36 465.282551 
+L 781.2 465.282551 
+z
+" clip-path="url(#pc99720768e)" style="fill: #7658a7"/>
+   </g>
+   <g id="patch_41">
+    <path d="M 781.2 475.59707 
+L 808.56 475.59707 
+L 808.56 492.426023 
+L 781.2 492.426023 
+z
+" clip-path="url(#pc99720768e)" style="fill: #7658a7"/>
+   </g>
+   <g id="patch_42">
+    <path d="M 781.2 502.740543 
+L 781.2 502.740543 
+L 781.2 519.569496 
+L 781.2 519.569496 
+z
+" clip-path="url(#pc99720768e)" style="fill: #7658a7"/>
+   </g>
+   <g id="patch_43">
+    <path d="M 781.2 529.884016 
+L 904.32 529.884016 
+L 904.32 546.712969 
+L 781.2 546.712969 
+z
+" clip-path="url(#pc99720768e)" style="fill: #7658a7"/>
+   </g>
+   <g id="patch_44">
+    <path d="M 781.2 557.027488 
+L 781.2 557.027488 
+L 781.2 573.856441 
+L 781.2 573.856441 
+z
+" clip-path="url(#pc99720768e)" style="fill: #7658a7"/>
+   </g>
+   <g id="patch_45">
+    <path d="M 781.2 584.170961 
+L 781.2 584.170961 
+L 781.2 600.999914 
+L 781.2 600.999914 
+z
+" clip-path="url(#pc99720768e)" style="fill: #7658a7"/>
+   </g>
+   <g id="patch_46">
+    <path d="M 781.2 611.314433 
+L 876.96 611.314433 
+L 876.96 628.143386 
+L 781.2 628.143386 
+z
+" clip-path="url(#pc99720768e)" style="fill: #7658a7"/>
+   </g>
+   <g id="patch_47">
+    <path d="M 781.2 662.887031 
+L 794.88 662.887031 
+L 794.88 679.715984 
+L 781.2 679.715984 
+z
+" clip-path="url(#pc99720768e)" style="fill: #38834e"/>
+   </g>
+   <g id="patch_48">
+    <path d="M 781.2 690.030504 
+L 808.56 690.030504 
+L 808.56 706.859457 
+L 781.2 706.859457 
+z
+" clip-path="url(#pc99720768e)" style="fill: #38834e"/>
+   </g>
+   <g id="patch_49">
+    <path d="M 781.2 717.173977 
+L 808.56 717.173977 
+L 808.56 734.00293 
+L 781.2 734.00293 
+z
+" clip-path="url(#pc99720768e)" style="fill: #38834e"/>
+   </g>
+   <g id="patch_50">
+    <path d="M 781.2 744.317449 
+L 835.92 744.317449 
+L 835.92 761.146402 
+L 781.2 761.146402 
+z
+" clip-path="url(#pc99720768e)" style="fill: #38834e"/>
+   </g>
+   <g id="patch_51">
+    <path d="M 781.2 771.460922 
+L 808.56 771.460922 
+L 808.56 788.289875 
+L 781.2 788.289875 
+z
+" clip-path="url(#pc99720768e)" style="fill: #38834e"/>
+   </g>
+   <g id="patch_52">
+    <path d="M 781.2 798.604395 
+L 808.56 798.604395 
+L 808.56 815.433348 
+L 781.2 815.433348 
+z
+" clip-path="url(#pc99720768e)" style="fill: #38834e"/>
+   </g>
+   <g id="patch_53">
+    <path d="M 781.2 825.747867 
+L 822.24 825.747867 
+L 822.24 842.57682 
+L 781.2 842.57682 
+z
+" clip-path="url(#pc99720768e)" style="fill: #38834e"/>
+   </g>
+   <g id="patch_54">
+    <path d="M 781.2 877.320465 
+L 781.2 877.320465 
+L 781.2 894.149418 
+L 781.2 894.149418 
+z
+" clip-path="url(#pc99720768e)" style="fill: #476270"/>
+   </g>
+   <g id="patch_55">
+    <path d="M 781.2 904.463938 
+L 794.88 904.463938 
+L 794.88 921.292891 
+L 781.2 921.292891 
+z
+" clip-path="url(#pc99720768e)" style="fill: #476270"/>
+   </g>
+   <g id="patch_56">
+    <path d="M 781.2 931.607411 
+L 835.92 931.607411 
+L 835.92 948.436364 
+L 781.2 948.436364 
+z
+" clip-path="url(#pc99720768e)" style="fill: #476270"/>
+   </g>
+   <g id="text_86">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="783.936" y="272.337488" transform="rotate(-0 783.936 272.337488)">0</text>
+   </g>
+   <g id="text_87">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="811.296" y="299.480961" transform="rotate(-0 811.296 299.480961)">2</text>
+   </g>
+   <g id="text_88">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="893.376" y="326.624433" transform="rotate(-0 893.376 326.624433)">8</text>
+   </g>
+   <g id="text_89">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="838.656" y="353.767906" transform="rotate(-0 838.656 353.767906)">4</text>
+   </g>
+   <g id="text_90">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="811.296" y="380.911378" transform="rotate(-0 811.296 380.911378)">2</text>
+   </g>
+   <g id="text_91">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="824.976" y="408.054851" transform="rotate(-0 824.976 408.054851)">3</text>
+   </g>
+   <g id="text_92">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="948.096" y="459.627449" transform="rotate(-0 948.096 459.627449)">12</text>
+   </g>
+   <g id="text_93">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="811.296" y="486.770922" transform="rotate(-0 811.296 486.770922)">2</text>
+   </g>
+   <g id="text_94">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="783.936" y="513.914394" transform="rotate(-0 783.936 513.914394)">0</text>
+   </g>
+   <g id="text_95">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="907.056" y="541.057867" transform="rotate(-0 907.056 541.057867)">9</text>
+   </g>
+   <g id="text_96">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="783.936" y="568.20134" transform="rotate(-0 783.936 568.20134)">0</text>
+   </g>
+   <g id="text_97">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="783.936" y="595.344812" transform="rotate(-0 783.936 595.344812)">0</text>
+   </g>
+   <g id="text_98">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="879.696" y="622.488285" transform="rotate(-0 879.696 622.488285)">7</text>
+   </g>
+   <g id="text_99">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="797.616" y="674.060883" transform="rotate(-0 797.616 674.060883)">1</text>
+   </g>
+   <g id="text_100">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="811.296" y="701.204356" transform="rotate(-0 811.296 701.204356)">2</text>
+   </g>
+   <g id="text_101">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="811.296" y="728.347828" transform="rotate(-0 811.296 728.347828)">2</text>
+   </g>
+   <g id="text_102">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="838.656" y="755.491301" transform="rotate(-0 838.656 755.491301)">4</text>
+   </g>
+   <g id="text_103">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="811.296" y="782.634774" transform="rotate(-0 811.296 782.634774)">2</text>
+   </g>
+   <g id="text_104">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="811.296" y="809.778246" transform="rotate(-0 811.296 809.778246)">2</text>
+   </g>
+   <g id="text_105">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="824.976" y="836.921719" transform="rotate(-0 824.976 836.921719)">3</text>
+   </g>
+   <g id="text_106">
+    <text style="fill: #536875; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="783.936" y="888.494317" transform="rotate(-0 783.936 888.494317)">0</text>
+   </g>
+   <g id="text_107">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="797.616" y="915.637789" transform="rotate(-0 797.616 915.637789)">1</text>
+   </g>
+   <g id="text_108">
+    <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="838.656" y="942.781262" transform="rotate(-0 838.656 942.781262)">4</text>
+   </g>
+  </g>
+  <g id="text_109">
+   <text style="fill: #007c83; font: 700 9px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="41.398594" transform="rotate(-0 45.36 41.398594)">BEYOND MIT 6.111  /  EVIDENCE ATLAS</text>
+  </g>
+  <g id="text_110">
+   <text style="fill: #1d3446; font: 700 21px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="96.956719" transform="rotate(-0 45.36 96.956719)">All 49 criteria: how often did the audit find evidence?</text>
+  </g>
+  <g id="text_111">
+   <text style="fill: #536875; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="164.958281" transform="rotate(-0 45.36 164.958281)">Number of universities, out of 90. Programs excluded. Hatched segments rely only on the requested UVM convention.</text>
+  </g>
+  <g id="text_112">
+   <text style="fill: #536875; font: 9px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="1051.128281" transform="rotate(-0 45.36 1051.128281)">Source: report evidence snapshot, 29 Oct 2026. Unverified does not mean not taught.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0abb135d23">
+   <rect x="292.32" y="226.8" width="191.52" height="756"/>
+  </clipPath>
+  <clipPath id="pc99720768e">
+   <rect x="781.2" y="226.8" width="191.52" height="756"/>
+  </clipPath>
+ </defs>
+ <defs>
+  <pattern id="h5e6ecae023" patternUnits="userSpaceOnUse" x="0" y="0" width="72" height="72">
+   <rect x="0" y="0" width="73" height="73" fill="#bb4d75"/>
+   <path d="M -36 36 
+L 36 -36 
+M -32 40 
+L 40 -32 
+M -28 44 
+L 44 -28 
+M -24 48 
+L 48 -24 
+M -20 52 
+L 52 -20 
+M -16 56 
+L 56 -16 
+M -12 60 
+L 60 -12 
+M -8 64 
+L 64 -8 
+M -4 68 
+L 68 -4 
+M 0 72 
+L 72 0 
+M 4 76 
+L 76 4 
+M 8 80 
+L 80 8 
+M 12 84 
+L 84 12 
+M 16 88 
+L 88 16 
+M 20 92 
+L 92 20 
+M 24 96 
+L 96 24 
+M 28 100 
+L 100 28 
+M 32 104 
+L 104 32 
+M 36 108 
+L 108 36 
+" style="fill: #ffffff; stroke: #ffffff; stroke-width: 1.0; stroke-linecap: butt; stroke-linejoin: miter"/>
+  </pattern>
+ </defs>
+</svg>

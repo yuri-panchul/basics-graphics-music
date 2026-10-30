@@ -1,0 +1,1913 @@
+{
+  "rankings": {
+    "universities": [
+      {
+        "id": "mit",
+        "rank": 1,
+        "score": 22,
+        "areas": [
+          5,
+          1,
+          7,
+          0,
+          2,
+          7,
+          0
+        ]
+      },
+      {
+        "id": "berkeley",
+        "rank": 2,
+        "score": 17,
+        "areas": [
+          2,
+          0,
+          8,
+          3,
+          2,
+          2,
+          0
+        ]
+      },
+      {
+        "id": "miet",
+        "rank": 2,
+        "score": 17,
+        "areas": [
+          7,
+          3,
+          7,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "pdx",
+        "rank": 4,
+        "score": 13,
+        "areas": [
+          0,
+          0,
+          9,
+          2,
+          0,
+          0,
+          2
+        ]
+      },
+      {
+        "id": "nycu",
+        "rank": 4,
+        "score": 13,
+        "areas": [
+          3,
+          2,
+          4,
+          2,
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "id": "mipt",
+        "rank": 6,
+        "score": 7,
+        "areas": [
+          4,
+          2,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ncsu",
+        "rank": 7,
+        "score": 6,
+        "areas": [
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ntu",
+        "rank": 7,
+        "score": 6,
+        "areas": [
+          0,
+          0,
+          1,
+          1,
+          3,
+          0,
+          1
+        ]
+      },
+      {
+        "id": "eth",
+        "rank": 9,
+        "score": 5,
+        "areas": [
+          0,
+          0,
+          1,
+          4,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "sjsu",
+        "rank": 9,
+        "score": 5,
+        "areas": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "michigan",
+        "rank": 9,
+        "score": 5,
+        "areas": [
+          2,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "harvey_mudd",
+        "rank": 12,
+        "score": 4,
+        "areas": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      {
+        "id": "ucsd",
+        "rank": 12,
+        "score": 4,
+        "areas": [
+          1,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "iitm",
+        "rank": 12,
+        "score": 4,
+        "areas": [
+          3,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "gatech",
+        "rank": 15,
+        "score": 3,
+        "areas": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "id": "stanford",
+        "rank": 15,
+        "score": 3,
+        "areas": [
+          1,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "cambridge",
+        "rank": 15,
+        "score": 3,
+        "areas": [
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "science_tokyo",
+        "rank": 15,
+        "score": 3,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "calpoly",
+        "rank": 19,
+        "score": 2,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ucsc",
+        "rank": 19,
+        "score": 2,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "id": "kpi",
+        "rank": 19,
+        "score": 2,
+        "areas": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "id": "iitb",
+        "rank": 19,
+        "score": 2,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "tokyo",
+        "rank": 19,
+        "score": 2,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "tsinghua",
+        "rank": 19,
+        "score": 2,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "kaist",
+        "rank": 19,
+        "score": 2,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "id": "utm",
+        "rank": 26,
+        "score": 1,
+        "areas": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "epfl",
+        "rank": 26,
+        "score": 1,
+        "areas": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "kse",
+        "rank": 26,
+        "score": 1,
+        "areas": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "odesa",
+        "rank": 26,
+        "score": 1,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "id": "sibsutis",
+        "rank": 26,
+        "score": 1,
+        "areas": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "postech",
+        "rank": 26,
+        "score": 1,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "beu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "caltech",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "east_bay",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "latvia_university",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "tuit",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "princeton",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "qarabag",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "rtu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "sdsu_georgia",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "sfsu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "santa_clara",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "sonoma",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "taltech",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "tdbgi",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ucl",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ucdavis",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "uci",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ucla",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ucsb",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "usc",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "vilnius",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "altai",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "belgut",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "bsuir",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "bntu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "auca",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "vstu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "vsu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "gomel",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "donntu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "tnu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "knu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "krsu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "mirea",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "mai",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "bauman",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "msu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "nu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "unn",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "mpei",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "mephi",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "nntu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "miem",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "nsu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "omgtu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "penza",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "samara",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "leti",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "spbstu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "saratov",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "sevsu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "tusur",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "innopolis",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "itmo",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "urfu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "ysu",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "aua",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "rau",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "agruni",
+        "rank": 32,
+        "score": 0,
+        "areas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "programs": [
+      {
+        "id": "school",
+        "score": 8
+      },
+      {
+        "id": "ucas",
+        "score": 7
+      }
+    ],
+    "countries": [
+      {
+        "group": "TW",
+        "n": 2,
+        "zero": 0,
+        "mean": 9.5,
+        "median": 9.5,
+        "maximum": 13,
+        "union": 16,
+        "keys": [
+          "nycu",
+          "ntu"
+        ]
+      },
+      {
+        "group": "US",
+        "n": 23,
+        "zero": 11,
+        "mean": 3.739130434782609,
+        "median": 2,
+        "maximum": 22,
+        "union": 36,
+        "keys": [
+          "mit",
+          "berkeley",
+          "pdx",
+          "ncsu",
+          "sjsu",
+          "michigan",
+          "harvey_mudd",
+          "ucsd",
+          "gatech",
+          "stanford",
+          "calpoly",
+          "ucsc",
+          "caltech",
+          "east_bay",
+          "princeton",
+          "sfsu",
+          "santa_clara",
+          "sonoma",
+          "ucdavis",
+          "uci",
+          "ucla",
+          "ucsb",
+          "usc"
+        ]
+      },
+      {
+        "group": "CH",
+        "n": 2,
+        "zero": 0,
+        "mean": 3,
+        "median": 3.0,
+        "maximum": 5,
+        "union": 6,
+        "keys": [
+          "eth",
+          "epfl"
+        ]
+      },
+      {
+        "group": "IN",
+        "n": 2,
+        "zero": 0,
+        "mean": 3,
+        "median": 3.0,
+        "maximum": 4,
+        "union": 5,
+        "keys": [
+          "iitm",
+          "iitb"
+        ]
+      },
+      {
+        "group": "JP",
+        "n": 2,
+        "zero": 0,
+        "mean": 2.5,
+        "median": 2.5,
+        "maximum": 3,
+        "union": 3,
+        "keys": [
+          "science_tokyo",
+          "tokyo"
+        ]
+      },
+      {
+        "group": "CN",
+        "n": 1,
+        "zero": 0,
+        "mean": 2,
+        "median": 2,
+        "maximum": 2,
+        "union": 2,
+        "keys": [
+          "tsinghua"
+        ]
+      },
+      {
+        "group": "GB",
+        "n": 2,
+        "zero": 1,
+        "mean": 1.5,
+        "median": 1.5,
+        "maximum": 3,
+        "union": 3,
+        "keys": [
+          "cambridge",
+          "ucl"
+        ]
+      },
+      {
+        "group": "KR",
+        "n": 2,
+        "zero": 0,
+        "mean": 1.5,
+        "median": 1.5,
+        "maximum": 2,
+        "union": 2,
+        "keys": [
+          "kaist",
+          "postech"
+        ]
+      },
+      {
+        "group": "MD",
+        "n": 1,
+        "zero": 0,
+        "mean": 1,
+        "median": 1,
+        "maximum": 1,
+        "union": 1,
+        "keys": [
+          "utm"
+        ]
+      },
+      {
+        "group": "UA",
+        "n": 4,
+        "zero": 1,
+        "mean": 1,
+        "median": 1.0,
+        "maximum": 2,
+        "union": 3,
+        "keys": [
+          "kpi",
+          "kse",
+          "odesa",
+          "knu"
+        ]
+      },
+      {
+        "group": "RU",
+        "n": 26,
+        "zero": 23,
+        "mean": 0.9615384615384616,
+        "median": 0.0,
+        "maximum": 17,
+        "union": 18,
+        "keys": [
+          "miet",
+          "mipt",
+          "sibsutis",
+          "altai",
+          "vstu",
+          "vsu",
+          "mirea",
+          "mai",
+          "bauman",
+          "msu",
+          "unn",
+          "mpei",
+          "mephi",
+          "nntu",
+          "miem",
+          "nsu",
+          "omgtu",
+          "penza",
+          "samara",
+          "leti",
+          "spbstu",
+          "saratov",
+          "tusur",
+          "innopolis",
+          "itmo",
+          "urfu"
+        ]
+      },
+      {
+        "group": "AM",
+        "n": 3,
+        "zero": 3,
+        "mean": 0,
+        "median": 0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "ysu",
+          "aua",
+          "rau"
+        ]
+      },
+      {
+        "group": "AZ",
+        "n": 2,
+        "zero": 2,
+        "mean": 0,
+        "median": 0.0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "beu",
+          "qarabag"
+        ]
+      },
+      {
+        "group": "BY",
+        "n": 4,
+        "zero": 4,
+        "mean": 0,
+        "median": 0.0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "belgut",
+          "bsuir",
+          "bntu",
+          "gomel"
+        ]
+      },
+      {
+        "group": "EE",
+        "n": 1,
+        "zero": 1,
+        "mean": 0,
+        "median": 0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "taltech"
+        ]
+      },
+      {
+        "group": "GE",
+        "n": 2,
+        "zero": 2,
+        "mean": 0,
+        "median": 0.0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "sdsu_georgia",
+          "agruni"
+        ]
+      },
+      {
+        "group": "KG",
+        "n": 2,
+        "zero": 2,
+        "mean": 0,
+        "median": 0.0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "auca",
+          "krsu"
+        ]
+      },
+      {
+        "group": "KZ",
+        "n": 1,
+        "zero": 1,
+        "mean": 0,
+        "median": 0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "nu"
+        ]
+      },
+      {
+        "group": "LT",
+        "n": 1,
+        "zero": 1,
+        "mean": 0,
+        "median": 0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "vilnius"
+        ]
+      },
+      {
+        "group": "LV",
+        "n": 2,
+        "zero": 2,
+        "mean": 0,
+        "median": 0.0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "latvia_university",
+          "rtu"
+        ]
+      },
+      {
+        "group": "TJ",
+        "n": 1,
+        "zero": 1,
+        "mean": 0,
+        "median": 0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "tnu"
+        ]
+      },
+      {
+        "group": "TM",
+        "n": 1,
+        "zero": 1,
+        "mean": 0,
+        "median": 0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "tdbgi"
+        ]
+      },
+      {
+        "group": "UZ",
+        "n": 1,
+        "zero": 1,
+        "mean": 0,
+        "median": 0,
+        "maximum": 0,
+        "union": 0,
+        "keys": [
+          "tuit"
+        ]
+      }
+    ],
+    "regions": [
+      {
+        "group": "Other US",
+        "n": 6,
+        "zero": 1,
+        "mean": 8.166666666666666,
+        "median": 5.5,
+        "maximum": 22,
+        "union": 32,
+        "keys": [
+          "mit",
+          "pdx",
+          "ncsu",
+          "michigan",
+          "gatech",
+          "princeton"
+        ]
+      },
+      {
+        "group": "Asia",
+        "n": 9,
+        "zero": 0,
+        "mean": 3.888888888888889,
+        "median": 2,
+        "maximum": 13,
+        "union": 18,
+        "keys": [
+          "nycu",
+          "ntu",
+          "iitm",
+          "science_tokyo",
+          "iitb",
+          "tokyo",
+          "tsinghua",
+          "kaist",
+          "postech"
+        ]
+      },
+      {
+        "group": "Europe",
+        "n": 4,
+        "zero": 1,
+        "mean": 2.25,
+        "median": 2.0,
+        "maximum": 5,
+        "union": 7,
+        "keys": [
+          "eth",
+          "cambridge",
+          "epfl",
+          "ucl"
+        ]
+      },
+      {
+        "group": "California",
+        "n": 17,
+        "zero": 10,
+        "mean": 2.176470588235294,
+        "median": 0,
+        "maximum": 17,
+        "union": 26,
+        "keys": [
+          "berkeley",
+          "sjsu",
+          "harvey_mudd",
+          "ucsd",
+          "stanford",
+          "calpoly",
+          "ucsc",
+          "caltech",
+          "east_bay",
+          "sfsu",
+          "santa_clara",
+          "sonoma",
+          "ucdavis",
+          "uci",
+          "ucla",
+          "ucsb",
+          "usc"
+        ]
+      },
+      {
+        "group": "Former USSR",
+        "n": 54,
+        "zero": 47,
+        "mean": 0.5555555555555556,
+        "median": 0.0,
+        "maximum": 17,
+        "union": 20,
+        "keys": [
+          "miet",
+          "mipt",
+          "kpi",
+          "utm",
+          "kse",
+          "odesa",
+          "sibsutis",
+          "beu",
+          "latvia_university",
+          "tuit",
+          "qarabag",
+          "rtu",
+          "sdsu_georgia",
+          "taltech",
+          "tdbgi",
+          "vilnius",
+          "altai",
+          "belgut",
+          "bsuir",
+          "bntu",
+          "auca",
+          "vstu",
+          "vsu",
+          "gomel",
+          "donntu",
+          "tnu",
+          "knu",
+          "krsu",
+          "mirea",
+          "mai",
+          "bauman",
+          "msu",
+          "nu",
+          "unn",
+          "mpei",
+          "mephi",
+          "nntu",
+          "miem",
+          "nsu",
+          "omgtu",
+          "penza",
+          "samara",
+          "leti",
+          "spbstu",
+          "saratov",
+          "sevsu",
+          "tusur",
+          "innopolis",
+          "itmo",
+          "urfu",
+          "ysu",
+          "aua",
+          "rau",
+          "agruni"
+        ]
+      }
+    ]
+  },
+  "coverage": {
+    "counts": {
+      "1.1": 7,
+      "1.2": 9,
+      "1.3": 3,
+      "1.4": 3,
+      "1.5": 1,
+      "1.6": 3,
+      "1.7": 1,
+      "1.8": 1,
+      "1.9": 4,
+      "2.1": 0,
+      "2.2": 0,
+      "2.3": 4,
+      "2.4": 3,
+      "2.5": 1,
+      "2.6": 0,
+      "3.1": 10,
+      "3.2": 6,
+      "3.3": 6,
+      "3.4": 6,
+      "3.5": 6,
+      "3.6": 4,
+      "3.7": 3,
+      "3.8": 3,
+      "3.9": 5,
+      "3.10": 1,
+      "3.11": 0,
+      "4.1": 0,
+      "4.2": 2,
+      "4.3": 8,
+      "4.4": 4,
+      "4.5": 2,
+      "4.6": 3,
+      "5.1": 12,
+      "5.2": 2,
+      "5.3": 0,
+      "5.4": 9,
+      "5.5": 0,
+      "5.6": 0,
+      "5.7": 7,
+      "6.1": 1,
+      "6.2": 2,
+      "6.3": 2,
+      "6.4": 4,
+      "6.5": 2,
+      "6.6": 2,
+      "6.7": 3,
+      "7.1": 0,
+      "7.2": 1,
+      "7.3": 4
+    },
+    "uvm_only": {
+      "1.1": 0,
+      "1.2": 0,
+      "1.3": 0,
+      "1.4": 0,
+      "1.5": 0,
+      "1.6": 0,
+      "1.7": 0,
+      "1.8": 0,
+      "1.9": 0,
+      "2.1": 0,
+      "2.2": 0,
+      "2.3": 0,
+      "2.4": 0,
+      "2.5": 0,
+      "2.6": 0,
+      "3.1": 0,
+      "3.2": 4,
+      "3.3": 4,
+      "3.4": 4,
+      "3.5": 5,
+      "3.6": 0,
+      "3.7": 0,
+      "3.8": 0,
+      "3.9": 0,
+      "3.10": 0,
+      "3.11": 0,
+      "4.1": 0,
+      "4.2": 0,
+      "4.3": 0,
+      "4.4": 0,
+      "4.5": 0,
+      "4.6": 0,
+      "5.1": 0,
+      "5.2": 0,
+      "5.3": 0,
+      "5.4": 0,
+      "5.5": 0,
+      "5.6": 0,
+      "5.7": 0,
+      "6.1": 0,
+      "6.2": 0,
+      "6.3": 0,
+      "6.4": 0,
+      "6.5": 0,
+      "6.6": 0,
+      "6.7": 0,
+      "7.1": 0,
+      "7.2": 0,
+      "7.3": 0
+    }
+  },
+  "top_ids": [
+    "mit",
+    "berkeley",
+    "miet",
+    "pdx",
+    "nycu",
+    "mipt",
+    "ncsu",
+    "ntu",
+    "eth",
+    "sjsu",
+    "michigan",
+    "harvey_mudd",
+    "ucsd",
+    "iitm"
+  ],
+  "area_maxima": [
+    9,
+    6,
+    11,
+    6,
+    7,
+    7,
+    3
+  ],
+  "country_map_groups": [
+    "RU",
+    "BY",
+    "UA",
+    "EE",
+    "LV",
+    "LT",
+    "MD",
+    "GE",
+    "AM",
+    "AZ",
+    "KZ",
+    "KG",
+    "UZ",
+    "TJ",
+    "TM"
+  ],
+  "snapshot": "2026-10-29"
+}

@@ -1,0 +1,1369 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1008pt" height="648pt" viewBox="0 0 1008 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <title>За одинаковой суммой могут стоять разные темы</title>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title>За одинаковой суммой могут стоять разные темы</dc:title>
+    <dc:date>2026-10-29</dc:date>
+    <dc:description>Те же 14 вузов; под разделительной линией — две программы. Нулевая сумма подтверждений не доказывает отсутствия темы.</dc:description>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648 
+L 1008 648 
+L 1008 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 292.32 563.76 
+L 897.12 563.76 
+L 897.12 149.04 
+L 292.32 149.04 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g clip-path="url(#pea08321dd8)">
+    <image xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAA0gAAAJACAYAAAC3w0YCAAANoElEQVR4nO3Zv6sedh2GYV+JFElxSpAMGgJFSUGrrWtCQ5ZAMIhLliyWg7Qi4uIPFBJIaVEL6iQpFIfSduwggi7HQM/i5mYUSks9Y8LxIIoUhNflHju98OUjnuv6C5715tlcf/2t7cf4v3XvxrXpCSz09p//Oj2Bhb7+5OenJ7DQ7f13piew0N2rl6cnADv6+PQAAACA/xUCCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIJvTN1/YTo9gnb+8+tL0BBZ68PDR9AQWunj2zPQEADhxPEgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAADn17PVL0xuAHV08e2Z6ArCj++9/MD2Bha5cOD89AdiRBwkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIKe++ZUvTW8AgBPn9v7B9AQWOtg7Pz0B2JEHCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgm8Pjo+30CGA3Dx4+mp7AQhfPnpmeAOzo0mtvTE9goYO9W9MTWMiDBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAACQzZ39+9vpEayz98xT0xMA+AiXXntjegILHezdmp4A7MiDBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAACQzeHx0XZ6BLCbL//q19MTWOhP33puegIAnDgeJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACAbA6Pj7bTI4DdPHj4aHoCC331lVenJ7DQuz/78fQEAD6CBwkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIJvD46Pt9AhgNw8ePpqewELvHR1PT2Chnxz8cXoCCx3s3ZqewELP/+b30xNYyIMEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAABCBBAAAEIEEAAAQgQQAAJDN4fHRdnoEsJvPvvzL6Qks9LcffXd6AgCcOB4kAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIBszv30F9vpEazz9LlPT09goXs3rk1PAHZ0//0Ppiew0JUL56cnADvyIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAARCABAABEIAEAAEQgAQAAZHP99be20yOA3fzjww+nJ7DQpx57bHoCC938wsXpCcCOrlw4Pz2BhTxIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAAARSAAAABFIAAAAEUgAAADZHB4fbadHALt58rkfTE9goctfuzI9gYXu3bg2PQHY0RPff2l6Agt5kAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAIpAAAAAikAAAACKQAAAAsjl984Xt9AjW+dcT56YnsNAn/v7P6Qks9N7LP5yeAAAnjgcJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACCbO/v3t9MjWGfvmaemJ7DQ575zZ3oCC/37M2enJ7DQN57+4vQEYEd3r16ensBCHiQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgJx68Xd/mN7AQucePz09gYX+8/gnpyew0OH3vj09gYVu778zPYGFfvvzN6cnsNDdq5enJ7CQBwkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIAIJAAAgAgkAACACCQAAIP8FR1WBN7A2PUQAAAAASUVORK5CYII=" id="image2019923569" transform="scale(1 -1) translate(0 -414.72)" x="292.32" y="-149.04" width="604.8" height="414.72"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 551.52 149.04 
+L 637.92 149.04 
+L 637.92 174.96 
+L 551.52 174.96 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 810.72 149.04 
+L 897.12 149.04 
+L 897.12 174.96 
+L 810.72 174.96 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 378.72 174.96 
+L 465.12 174.96 
+L 465.12 200.88 
+L 378.72 200.88 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 810.72 174.96 
+L 897.12 174.96 
+L 897.12 200.88 
+L 810.72 200.88 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 551.52 200.88 
+L 637.92 200.88 
+L 637.92 226.8 
+L 551.52 226.8 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 637.92 200.88 
+L 724.32 200.88 
+L 724.32 226.8 
+L 637.92 226.8 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 724.32 200.88 
+L 810.72 200.88 
+L 810.72 226.8 
+L 724.32 226.8 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 810.72 200.88 
+L 897.12 200.88 
+L 897.12 226.8 
+L 810.72 226.8 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 292.32 226.8 
+L 378.72 226.8 
+L 378.72 252.72 
+L 292.32 252.72 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 378.72 226.8 
+L 465.12 226.8 
+L 465.12 252.72 
+L 378.72 252.72 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 637.92 226.8 
+L 724.32 226.8 
+L 724.32 252.72 
+L 637.92 252.72 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 724.32 226.8 
+L 810.72 226.8 
+L 810.72 252.72 
+L 724.32 252.72 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 810.72 252.72 
+L 897.12 252.72 
+L 897.12 278.64 
+L 810.72 278.64 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 465.12 278.64 
+L 551.52 278.64 
+L 551.52 304.56 
+L 465.12 304.56 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 551.52 278.64 
+L 637.92 278.64 
+L 637.92 304.56 
+L 551.52 304.56 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 724.32 278.64 
+L 810.72 278.64 
+L 810.72 304.56 
+L 724.32 304.56 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 810.72 278.64 
+L 897.12 278.64 
+L 897.12 304.56 
+L 810.72 304.56 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 292.32 304.56 
+L 378.72 304.56 
+L 378.72 330.48 
+L 292.32 330.48 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 378.72 304.56 
+L 465.12 304.56 
+L 465.12 330.48 
+L 378.72 330.48 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 551.52 304.56 
+L 637.92 304.56 
+L 637.92 330.48 
+L 551.52 330.48 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 637.92 304.56 
+L 724.32 304.56 
+L 724.32 330.48 
+L 637.92 330.48 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 724.32 304.56 
+L 810.72 304.56 
+L 810.72 330.48 
+L 724.32 330.48 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 810.72 304.56 
+L 897.12 304.56 
+L 897.12 330.48 
+L 810.72 330.48 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 292.32 330.48 
+L 378.72 330.48 
+L 378.72 356.4 
+L 292.32 356.4 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 378.72 330.48 
+L 465.12 330.48 
+L 465.12 356.4 
+L 378.72 356.4 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 724.32 330.48 
+L 810.72 330.48 
+L 810.72 356.4 
+L 724.32 356.4 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 292.32 356.4 
+L 378.72 356.4 
+L 378.72 382.32 
+L 292.32 382.32 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 378.72 356.4 
+L 465.12 356.4 
+L 465.12 382.32 
+L 378.72 382.32 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 637.92 356.4 
+L 724.32 356.4 
+L 724.32 382.32 
+L 637.92 382.32 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 724.32 356.4 
+L 810.72 356.4 
+L 810.72 382.32 
+L 724.32 382.32 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_33">
+    <path d="M 810.72 356.4 
+L 897.12 356.4 
+L 897.12 382.32 
+L 810.72 382.32 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_34">
+    <path d="M 292.32 382.32 
+L 378.72 382.32 
+L 378.72 408.24 
+L 292.32 408.24 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_35">
+    <path d="M 378.72 382.32 
+L 465.12 382.32 
+L 465.12 408.24 
+L 378.72 408.24 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 551.52 382.32 
+L 637.92 382.32 
+L 637.92 408.24 
+L 551.52 408.24 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 637.92 382.32 
+L 724.32 382.32 
+L 724.32 408.24 
+L 637.92 408.24 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_38">
+    <path d="M 724.32 382.32 
+L 810.72 382.32 
+L 810.72 408.24 
+L 724.32 408.24 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_39">
+    <path d="M 810.72 382.32 
+L 897.12 382.32 
+L 897.12 408.24 
+L 810.72 408.24 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_40">
+    <path d="M 378.72 408.24 
+L 465.12 408.24 
+L 465.12 434.16 
+L 378.72 434.16 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_41">
+    <path d="M 465.12 408.24 
+L 551.52 408.24 
+L 551.52 434.16 
+L 465.12 434.16 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_42">
+    <path d="M 551.52 408.24 
+L 637.92 408.24 
+L 637.92 434.16 
+L 551.52 434.16 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_43">
+    <path d="M 724.32 408.24 
+L 810.72 408.24 
+L 810.72 434.16 
+L 724.32 434.16 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_44">
+    <path d="M 810.72 408.24 
+L 897.12 408.24 
+L 897.12 434.16 
+L 810.72 434.16 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_45">
+    <path d="M 292.32 434.16 
+L 378.72 434.16 
+L 378.72 460.08 
+L 292.32 460.08 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_46">
+    <path d="M 378.72 434.16 
+L 465.12 434.16 
+L 465.12 460.08 
+L 378.72 460.08 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_47">
+    <path d="M 551.52 434.16 
+L 637.92 434.16 
+L 637.92 460.08 
+L 551.52 460.08 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_48">
+    <path d="M 637.92 434.16 
+L 724.32 434.16 
+L 724.32 460.08 
+L 637.92 460.08 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_49">
+    <path d="M 810.72 434.16 
+L 897.12 434.16 
+L 897.12 460.08 
+L 810.72 460.08 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_50">
+    <path d="M 378.72 460.08 
+L 465.12 460.08 
+L 465.12 486 
+L 378.72 486 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_51">
+    <path d="M 465.12 460.08 
+L 551.52 460.08 
+L 551.52 486 
+L 465.12 486 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_52">
+    <path d="M 551.52 460.08 
+L 637.92 460.08 
+L 637.92 486 
+L 551.52 486 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_53">
+    <path d="M 724.32 460.08 
+L 810.72 460.08 
+L 810.72 486 
+L 724.32 486 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_54">
+    <path d="M 810.72 460.08 
+L 897.12 460.08 
+L 897.12 486 
+L 810.72 486 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_55">
+    <path d="M 378.72 486 
+L 465.12 486 
+L 465.12 511.92 
+L 378.72 511.92 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_56">
+    <path d="M 465.12 486 
+L 551.52 486 
+L 551.52 511.92 
+L 465.12 511.92 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_57">
+    <path d="M 551.52 486 
+L 637.92 486 
+L 637.92 511.92 
+L 551.52 511.92 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_58">
+    <path d="M 724.32 486 
+L 810.72 486 
+L 810.72 511.92 
+L 724.32 511.92 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_59">
+    <path d="M 810.72 486 
+L 897.12 486 
+L 897.12 511.92 
+L 810.72 511.92 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_60">
+    <path d="M 378.72 511.92 
+L 465.12 511.92 
+L 465.12 537.84 
+L 378.72 537.84 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_61">
+    <path d="M 551.52 511.92 
+L 637.92 511.92 
+L 637.92 537.84 
+L 551.52 537.84 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_62">
+    <path d="M 637.92 511.92 
+L 724.32 511.92 
+L 724.32 537.84 
+L 637.92 537.84 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_63">
+    <path d="M 724.32 511.92 
+L 810.72 511.92 
+L 810.72 537.84 
+L 724.32 537.84 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_64">
+    <path d="M 810.72 511.92 
+L 897.12 511.92 
+L 897.12 537.84 
+L 810.72 537.84 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_65">
+    <path d="M 378.72 537.84 
+L 465.12 537.84 
+L 465.12 563.76 
+L 378.72 563.76 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_66">
+    <path d="M 551.52 537.84 
+L 637.92 537.84 
+L 637.92 563.76 
+L 551.52 563.76 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_67">
+    <path d="M 724.32 537.84 
+L 810.72 537.84 
+L 810.72 563.76 
+L 724.32 563.76 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="patch_68">
+    <path d="M 810.72 537.84 
+L 897.12 537.84 
+L 897.12 563.76 
+L 810.72 563.76 
+z
+" clip-path="url(#pea08321dd8)" style="fill: #edf1f4"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(329.248516 126.426375)">A1</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(309.296289 137.064297)">Микроарх.</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(415.648516 115.788453)">A2</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(383.528125 126.426375)">Тактирование /</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(403.896719 137.064297)">память</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3"/>
+     <g id="text_3">
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(502.048516 126.426375)">A3</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(473.930742 137.064297)">Верификация</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4"/>
+     <g id="text_4">
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(588.448516 115.788453)">A4</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(580.627344 126.426375)">ASIC /</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(585.922109 137.064297)">STA</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5"/>
+     <g id="text_5">
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(674.848516 115.788453)">A5</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(672.616016 126.426375)">RTL</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(651.880781 137.064297)">процессора</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6"/>
+     <g id="text_6">
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(761.248516 126.426375)">A6</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(735.651211 137.064297)">Приложения</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7"/>
+     <g id="text_7">
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(847.648516 126.426375)">A7</text>
+      <text style="fill: #526674; font: 9.5px 'DejaVu Sans', 'Droid Sans Fallback'" transform="translate(840.917617 137.064297)">САПР</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <path d="M 292.32 563.76 
+L 292.32 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_9"/>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_10">
+      <path d="M 378.72 563.76 
+L 378.72 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_11"/>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_12">
+      <path d="M 465.12 563.76 
+L 465.12 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_13"/>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_14">
+      <path d="M 551.52 563.76 
+L 551.52 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_15"/>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_16">
+      <path d="M 637.92 563.76 
+L 637.92 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_17"/>
+    </g>
+    <g id="xtick_13">
+     <g id="line2d_18">
+      <path d="M 724.32 563.76 
+L 724.32 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_19"/>
+    </g>
+    <g id="xtick_14">
+     <g id="line2d_20">
+      <path d="M 810.72 563.76 
+L 810.72 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_21"/>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_22">
+      <path d="M 897.12 563.76 
+L 897.12 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_23"/>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_24"/>
+     <g id="text_8">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="165.799219" transform="rotate(-0 282.32 165.799219)">MIT</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_25"/>
+     <g id="text_9">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="191.719219" transform="rotate(-0 282.32 191.719219)">UC Berkeley</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_26"/>
+     <g id="text_10">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="217.639219" transform="rotate(-0 282.32 217.639219)">МИЭТ</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_27"/>
+     <g id="text_11">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="243.559219" transform="rotate(-0 282.32 243.559219)">Portland State</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_28"/>
+     <g id="text_12">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="269.479219" transform="rotate(-0 282.32 269.479219)">國立陽明交通大學 · NYCU</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_29"/>
+     <g id="text_13">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="295.399219" transform="rotate(-0 282.32 295.399219)">МФТИ</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_30"/>
+     <g id="text_14">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="321.319219" transform="rotate(-0 282.32 321.319219)">NC State</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_31"/>
+     <g id="text_15">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="347.239219" transform="rotate(-0 282.32 347.239219)">國立臺灣大學 · NTU</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_32"/>
+     <g id="text_16">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="373.159219" transform="rotate(-0 282.32 373.159219)">ETH Zürich</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_33"/>
+     <g id="text_17">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="399.240156" transform="rotate(-0 282.32 399.240156)">San José State</text>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_34"/>
+     <g id="text_18">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="424.999219" transform="rotate(-0 282.32 424.999219)">University of Michigan</text>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_35"/>
+     <g id="text_19">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="450.919219" transform="rotate(-0 282.32 450.919219)">Harvey Mudd</text>
+     </g>
+    </g>
+    <g id="ytick_13">
+     <g id="line2d_36"/>
+     <g id="text_20">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="476.839219" transform="rotate(-0 282.32 476.839219)">UC San Diego</text>
+     </g>
+    </g>
+    <g id="ytick_14">
+     <g id="line2d_37"/>
+     <g id="text_21">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="502.759219" transform="rotate(-0 282.32 502.759219)">IIT Madras</text>
+     </g>
+    </g>
+    <g id="ytick_15">
+     <g id="line2d_38"/>
+     <g id="text_22">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="528.679219" transform="rotate(-0 282.32 528.679219)">Школа синтеза</text>
+     </g>
+    </g>
+    <g id="ytick_16">
+     <g id="line2d_39"/>
+     <g id="text_23">
+      <text style="fill: #1d3446; font: 10px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: end" x="282.32" y="554.599219" transform="rotate(-0 282.32 554.599219)">一生一芯 · YSYX</text>
+     </g>
+    </g>
+    <g id="ytick_17">
+     <g id="line2d_40">
+      <path d="M 292.32 149.04 
+L 897.12 149.04 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_41"/>
+    </g>
+    <g id="ytick_18">
+     <g id="line2d_42">
+      <path d="M 292.32 174.96 
+L 897.12 174.96 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_43"/>
+    </g>
+    <g id="ytick_19">
+     <g id="line2d_44">
+      <path d="M 292.32 200.88 
+L 897.12 200.88 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_45"/>
+    </g>
+    <g id="ytick_20">
+     <g id="line2d_46">
+      <path d="M 292.32 226.8 
+L 897.12 226.8 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_47"/>
+    </g>
+    <g id="ytick_21">
+     <g id="line2d_48">
+      <path d="M 292.32 252.72 
+L 897.12 252.72 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_49"/>
+    </g>
+    <g id="ytick_22">
+     <g id="line2d_50">
+      <path d="M 292.32 278.64 
+L 897.12 278.64 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_51"/>
+    </g>
+    <g id="ytick_23">
+     <g id="line2d_52">
+      <path d="M 292.32 304.56 
+L 897.12 304.56 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_53"/>
+    </g>
+    <g id="ytick_24">
+     <g id="line2d_54">
+      <path d="M 292.32 330.48 
+L 897.12 330.48 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_55"/>
+    </g>
+    <g id="ytick_25">
+     <g id="line2d_56">
+      <path d="M 292.32 356.4 
+L 897.12 356.4 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_57"/>
+    </g>
+    <g id="ytick_26">
+     <g id="line2d_58">
+      <path d="M 292.32 382.32 
+L 897.12 382.32 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_59"/>
+    </g>
+    <g id="ytick_27">
+     <g id="line2d_60">
+      <path d="M 292.32 408.24 
+L 897.12 408.24 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_61"/>
+    </g>
+    <g id="ytick_28">
+     <g id="line2d_62">
+      <path d="M 292.32 434.16 
+L 897.12 434.16 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_63"/>
+    </g>
+    <g id="ytick_29">
+     <g id="line2d_64">
+      <path d="M 292.32 460.08 
+L 897.12 460.08 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_65"/>
+    </g>
+    <g id="ytick_30">
+     <g id="line2d_66">
+      <path d="M 292.32 486 
+L 897.12 486 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_67"/>
+    </g>
+    <g id="ytick_31">
+     <g id="line2d_68">
+      <path d="M 292.32 511.92 
+L 897.12 511.92 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_69"/>
+    </g>
+    <g id="ytick_32">
+     <g id="line2d_70">
+      <path d="M 292.32 537.84 
+L 897.12 537.84 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_71"/>
+    </g>
+    <g id="ytick_33">
+     <g id="line2d_72">
+      <path d="M 292.32 563.76 
+L 897.12 563.76 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_73"/>
+    </g>
+   </g>
+   <g id="line2d_74">
+    <path d="M 292.32 511.92 
+L 897.12 511.92 
+" clip-path="url(#pea08321dd8)" style="fill: none; stroke: #1d3446; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="text_24">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="165.035312" transform="rotate(-0 335.52 165.035312)">5/9</text>
+   </g>
+   <g id="text_25">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="165.035312" transform="rotate(-0 421.92 165.035312)">1/6</text>
+   </g>
+   <g id="text_26">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="165.035312" transform="rotate(-0 508.32 165.035312)">7/11</text>
+   </g>
+   <g id="text_27">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="165.035312" transform="rotate(-0 594.72 165.035312)">0/6</text>
+   </g>
+   <g id="text_28">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="165.035312" transform="rotate(-0 681.12 165.035312)">2/7</text>
+   </g>
+   <g id="text_29">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="165.035312" transform="rotate(-0 767.52 165.035312)">7/7</text>
+   </g>
+   <g id="text_30">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="165.035312" transform="rotate(-0 853.92 165.035312)">0/3</text>
+   </g>
+   <g id="text_31">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="190.955312" transform="rotate(-0 335.52 190.955312)">2/9</text>
+   </g>
+   <g id="text_32">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="190.955312" transform="rotate(-0 421.92 190.955312)">0/6</text>
+   </g>
+   <g id="text_33">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="190.955312" transform="rotate(-0 508.32 190.955312)">8/11</text>
+   </g>
+   <g id="text_34">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="190.955312" transform="rotate(-0 594.72 190.955312)">3/6</text>
+   </g>
+   <g id="text_35">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="190.955312" transform="rotate(-0 681.12 190.955312)">2/7</text>
+   </g>
+   <g id="text_36">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="190.955312" transform="rotate(-0 767.52 190.955312)">2/7</text>
+   </g>
+   <g id="text_37">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="190.955312" transform="rotate(-0 853.92 190.955312)">0/3</text>
+   </g>
+   <g id="text_38">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="216.875312" transform="rotate(-0 335.52 216.875312)">7/9</text>
+   </g>
+   <g id="text_39">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="216.875312" transform="rotate(-0 421.92 216.875312)">3/6</text>
+   </g>
+   <g id="text_40">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="216.875312" transform="rotate(-0 508.32 216.875312)">7/11</text>
+   </g>
+   <g id="text_41">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="216.875312" transform="rotate(-0 594.72 216.875312)">0/6</text>
+   </g>
+   <g id="text_42">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="216.875312" transform="rotate(-0 681.12 216.875312)">0/7</text>
+   </g>
+   <g id="text_43">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="216.875312" transform="rotate(-0 767.52 216.875312)">0/7</text>
+   </g>
+   <g id="text_44">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="216.875312" transform="rotate(-0 853.92 216.875312)">0/3</text>
+   </g>
+   <g id="text_45">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="242.795312" transform="rotate(-0 335.52 242.795312)">0/9</text>
+   </g>
+   <g id="text_46">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="242.795312" transform="rotate(-0 421.92 242.795312)">0/6</text>
+   </g>
+   <g id="text_47">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="242.795312" transform="rotate(-0 508.32 242.795312)">9/11</text>
+   </g>
+   <g id="text_48">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="242.795312" transform="rotate(-0 594.72 242.795312)">2/6</text>
+   </g>
+   <g id="text_49">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="242.795312" transform="rotate(-0 681.12 242.795312)">0/7</text>
+   </g>
+   <g id="text_50">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="242.795312" transform="rotate(-0 767.52 242.795312)">0/7</text>
+   </g>
+   <g id="text_51">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="242.795312" transform="rotate(-0 853.92 242.795312)">2/3</text>
+   </g>
+   <g id="text_52">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="268.715312" transform="rotate(-0 335.52 268.715312)">3/9</text>
+   </g>
+   <g id="text_53">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="268.715312" transform="rotate(-0 421.92 268.715312)">2/6</text>
+   </g>
+   <g id="text_54">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="268.715312" transform="rotate(-0 508.32 268.715312)">4/11</text>
+   </g>
+   <g id="text_55">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="268.715312" transform="rotate(-0 594.72 268.715312)">2/6</text>
+   </g>
+   <g id="text_56">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="268.715312" transform="rotate(-0 681.12 268.715312)">1/7</text>
+   </g>
+   <g id="text_57">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="268.715312" transform="rotate(-0 767.52 268.715312)">1/7</text>
+   </g>
+   <g id="text_58">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="268.715312" transform="rotate(-0 853.92 268.715312)">0/3</text>
+   </g>
+   <g id="text_59">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="294.635312" transform="rotate(-0 335.52 294.635312)">4/9</text>
+   </g>
+   <g id="text_60">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="294.635312" transform="rotate(-0 421.92 294.635312)">2/6</text>
+   </g>
+   <g id="text_61">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="294.635312" transform="rotate(-0 508.32 294.635312)">0/11</text>
+   </g>
+   <g id="text_62">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="294.635312" transform="rotate(-0 594.72 294.635312)">0/6</text>
+   </g>
+   <g id="text_63">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="294.635312" transform="rotate(-0 681.12 294.635312)">1/7</text>
+   </g>
+   <g id="text_64">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="294.635312" transform="rotate(-0 767.52 294.635312)">0/7</text>
+   </g>
+   <g id="text_65">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="294.635312" transform="rotate(-0 853.92 294.635312)">0/3</text>
+   </g>
+   <g id="text_66">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="320.555312" transform="rotate(-0 335.52 320.555312)">0/9</text>
+   </g>
+   <g id="text_67">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="320.555312" transform="rotate(-0 421.92 320.555312)">0/6</text>
+   </g>
+   <g id="text_68">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="320.555312" transform="rotate(-0 508.32 320.555312)">6/11</text>
+   </g>
+   <g id="text_69">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="320.555312" transform="rotate(-0 594.72 320.555312)">0/6</text>
+   </g>
+   <g id="text_70">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="320.555312" transform="rotate(-0 681.12 320.555312)">0/7</text>
+   </g>
+   <g id="text_71">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="320.555312" transform="rotate(-0 767.52 320.555312)">0/7</text>
+   </g>
+   <g id="text_72">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="320.555312" transform="rotate(-0 853.92 320.555312)">0/3</text>
+   </g>
+   <g id="text_73">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="346.475312" transform="rotate(-0 335.52 346.475312)">0/9</text>
+   </g>
+   <g id="text_74">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="346.475312" transform="rotate(-0 421.92 346.475312)">0/6</text>
+   </g>
+   <g id="text_75">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="346.475312" transform="rotate(-0 508.32 346.475312)">1/11</text>
+   </g>
+   <g id="text_76">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="346.475312" transform="rotate(-0 594.72 346.475312)">1/6</text>
+   </g>
+   <g id="text_77">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="346.475312" transform="rotate(-0 681.12 346.475312)">3/7</text>
+   </g>
+   <g id="text_78">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="346.475312" transform="rotate(-0 767.52 346.475312)">0/7</text>
+   </g>
+   <g id="text_79">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="346.475312" transform="rotate(-0 853.92 346.475312)">1/3</text>
+   </g>
+   <g id="text_80">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="372.395312" transform="rotate(-0 335.52 372.395312)">0/9</text>
+   </g>
+   <g id="text_81">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="372.395312" transform="rotate(-0 421.92 372.395312)">0/6</text>
+   </g>
+   <g id="text_82">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="372.395312" transform="rotate(-0 508.32 372.395312)">1/11</text>
+   </g>
+   <g id="text_83">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="372.395312" transform="rotate(-0 594.72 372.395312)">4/6</text>
+   </g>
+   <g id="text_84">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="372.395312" transform="rotate(-0 681.12 372.395312)">0/7</text>
+   </g>
+   <g id="text_85">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="372.395312" transform="rotate(-0 767.52 372.395312)">0/7</text>
+   </g>
+   <g id="text_86">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="372.395312" transform="rotate(-0 853.92 372.395312)">0/3</text>
+   </g>
+   <g id="text_87">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="398.315313" transform="rotate(-0 335.52 398.315313)">0/9</text>
+   </g>
+   <g id="text_88">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="398.315313" transform="rotate(-0 421.92 398.315313)">0/6</text>
+   </g>
+   <g id="text_89">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="398.315313" transform="rotate(-0 508.32 398.315313)">5/11</text>
+   </g>
+   <g id="text_90">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="398.315313" transform="rotate(-0 594.72 398.315313)">0/6</text>
+   </g>
+   <g id="text_91">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="398.315313" transform="rotate(-0 681.12 398.315313)">0/7</text>
+   </g>
+   <g id="text_92">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="398.315313" transform="rotate(-0 767.52 398.315313)">0/7</text>
+   </g>
+   <g id="text_93">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="398.315313" transform="rotate(-0 853.92 398.315313)">0/3</text>
+   </g>
+   <g id="text_94">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="424.235312" transform="rotate(-0 335.52 424.235312)">2/9</text>
+   </g>
+   <g id="text_95">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="424.235312" transform="rotate(-0 421.92 424.235312)">0/6</text>
+   </g>
+   <g id="text_96">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="424.235312" transform="rotate(-0 508.32 424.235312)">0/11</text>
+   </g>
+   <g id="text_97">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="424.235312" transform="rotate(-0 594.72 424.235312)">0/6</text>
+   </g>
+   <g id="text_98">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="424.235312" transform="rotate(-0 681.12 424.235312)">3/7</text>
+   </g>
+   <g id="text_99">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="424.235312" transform="rotate(-0 767.52 424.235312)">0/7</text>
+   </g>
+   <g id="text_100">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="424.235312" transform="rotate(-0 853.92 424.235312)">0/3</text>
+   </g>
+   <g id="text_101">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="450.155312" transform="rotate(-0 335.52 450.155312)">0/9</text>
+   </g>
+   <g id="text_102">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="450.155312" transform="rotate(-0 421.92 450.155312)">0/6</text>
+   </g>
+   <g id="text_103">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="450.155312" transform="rotate(-0 508.32 450.155312)">1/11</text>
+   </g>
+   <g id="text_104">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="450.155312" transform="rotate(-0 594.72 450.155312)">0/6</text>
+   </g>
+   <g id="text_105">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="450.155312" transform="rotate(-0 681.12 450.155312)">0/7</text>
+   </g>
+   <g id="text_106">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="450.155312" transform="rotate(-0 767.52 450.155312)">3/7</text>
+   </g>
+   <g id="text_107">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="450.155312" transform="rotate(-0 853.92 450.155312)">0/3</text>
+   </g>
+   <g id="text_108">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="476.075312" transform="rotate(-0 335.52 476.075312)">1/9</text>
+   </g>
+   <g id="text_109">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="476.075312" transform="rotate(-0 421.92 476.075312)">0/6</text>
+   </g>
+   <g id="text_110">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="476.075312" transform="rotate(-0 508.32 476.075312)">0/11</text>
+   </g>
+   <g id="text_111">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="476.075312" transform="rotate(-0 594.72 476.075312)">0/6</text>
+   </g>
+   <g id="text_112">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="476.075312" transform="rotate(-0 681.12 476.075312)">3/7</text>
+   </g>
+   <g id="text_113">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="476.075312" transform="rotate(-0 767.52 476.075312)">0/7</text>
+   </g>
+   <g id="text_114">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="476.075312" transform="rotate(-0 853.92 476.075312)">0/3</text>
+   </g>
+   <g id="text_115">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="501.995312" transform="rotate(-0 335.52 501.995312)">3/9</text>
+   </g>
+   <g id="text_116">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="501.995312" transform="rotate(-0 421.92 501.995312)">0/6</text>
+   </g>
+   <g id="text_117">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="501.995312" transform="rotate(-0 508.32 501.995312)">0/11</text>
+   </g>
+   <g id="text_118">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="501.995312" transform="rotate(-0 594.72 501.995312)">0/6</text>
+   </g>
+   <g id="text_119">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="501.995312" transform="rotate(-0 681.12 501.995312)">1/7</text>
+   </g>
+   <g id="text_120">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="501.995312" transform="rotate(-0 767.52 501.995312)">0/7</text>
+   </g>
+   <g id="text_121">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="501.995312" transform="rotate(-0 853.92 501.995312)">0/3</text>
+   </g>
+   <g id="text_122">
+    <text style="fill: #ffffff; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="527.915312" transform="rotate(-0 335.52 527.915312)">7/9</text>
+   </g>
+   <g id="text_123">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="527.915312" transform="rotate(-0 421.92 527.915312)">0/6</text>
+   </g>
+   <g id="text_124">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="527.915312" transform="rotate(-0 508.32 527.915312)">1/11</text>
+   </g>
+   <g id="text_125">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="527.915312" transform="rotate(-0 594.72 527.915312)">0/6</text>
+   </g>
+   <g id="text_126">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="527.915312" transform="rotate(-0 681.12 527.915312)">0/7</text>
+   </g>
+   <g id="text_127">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="527.915312" transform="rotate(-0 767.52 527.915312)">0/7</text>
+   </g>
+   <g id="text_128">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="527.915312" transform="rotate(-0 853.92 527.915312)">0/3</text>
+   </g>
+   <g id="text_129">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="335.52" y="553.835312" transform="rotate(-0 335.52 553.835312)">3/9</text>
+   </g>
+   <g id="text_130">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="421.92" y="553.835312" transform="rotate(-0 421.92 553.835312)">0/6</text>
+   </g>
+   <g id="text_131">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="508.32" y="553.835312" transform="rotate(-0 508.32 553.835312)">2/11</text>
+   </g>
+   <g id="text_132">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="594.72" y="553.835312" transform="rotate(-0 594.72 553.835312)">0/6</text>
+   </g>
+   <g id="text_133">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="681.12" y="553.835312" transform="rotate(-0 681.12 553.835312)">2/7</text>
+   </g>
+   <g id="text_134">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="767.52" y="553.835312" transform="rotate(-0 767.52 553.835312)">0/7</text>
+   </g>
+   <g id="text_135">
+    <text style="fill: #1d3446; font: 700 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: middle" x="853.92" y="553.835312" transform="rotate(-0 853.92 553.835312)">0/3</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_69">
+    <path d="M 922.32 498.96 
+L 937.44 498.96 
+L 937.44 220.32 
+L 922.32 220.32 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <image xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAABUAAAGDCAYAAADEX1t8AAABtklEQVR4nO2bwRHCMBADHSb9N8mfoQJCE9JjZ3UFaCK0Pp+dcL2/n+eE65UWPOec+/fEH7Qj2rH/dOzHNVHpH3n6FPultR/XJNlvIAWyL4e/oNmyX2jS9vQ59jf2MERB9u0bX1wSZd+e/uynq7XxFUQ59u3p24feiijHPuVJdy/VEI1rLv1C7WbCfS8lh3+HM4QoaUDb67h0Df58deBf64uLguyT0m+IYjq/HH79xlcRpdjXp++23xAlbXzmJwXZ13epiijHvns8t99JF0RB6dtbn9r+PhkpiLpvJkitryLKsS9PX9357d+h2Idetf39RYQhCrIv3/gK7JfsH0pQHfsXpkudxhZd0CSlP/jjNfjzJbffgl+99jHpD/58Df686ODPV2VAu6+4JInTClIc+6guNfjjomr47fZJ8EOC4qS/AQ0iutNJXnTw56tjH3Mpu40vX4M/rslKXw6/2j4Gfvm+P/jzNfjjmrNfKPmB1x6UvEmXLmUhv+nghwQlt195zcGBfxNKvgZ/XnTw58tuvwQ/ZO3Lp77BXxDVwy+3nxdtwW9e+4M/X5z0B3++Bj/E/g685rX/B2dK1HmTRujfAAAAAElFTkSuQmCC" id="image58406c5b3c" transform="scale(1 -1) translate(0 -278.64)" x="922.32" y="-220.32" width="15.12" height="278.64"/>
+   <g id="matplotlib.axis_3"/>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_34">
+     <g id="line2d_75">
+      <defs>
+       <path id="m4f01e83a66" d="M 0 0 
+L 3.5 0 
+" style="stroke: #1d3446; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m4f01e83a66" x="937.44" y="498.96" style="fill: #1d3446; stroke: #1d3446; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_136">
+      <text style="fill: #1d3446; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="944.44" y="503.139141" transform="rotate(-0 944.44 503.139141)">0%</text>
+     </g>
+    </g>
+    <g id="ytick_35">
+     <g id="line2d_76">
+      <g>
+       <use xlink:href="#m4f01e83a66" x="937.44" y="429.3" style="fill: #1d3446; stroke: #1d3446; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_137">
+      <text style="fill: #1d3446; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="944.44" y="433.479141" transform="rotate(-0 944.44 433.479141)">25%</text>
+     </g>
+    </g>
+    <g id="ytick_36">
+     <g id="line2d_77">
+      <g>
+       <use xlink:href="#m4f01e83a66" x="937.44" y="359.64" style="fill: #1d3446; stroke: #1d3446; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_138">
+      <text style="fill: #1d3446; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="944.44" y="363.819141" transform="rotate(-0 944.44 363.819141)">50%</text>
+     </g>
+    </g>
+    <g id="ytick_37">
+     <g id="line2d_78">
+      <g>
+       <use xlink:href="#m4f01e83a66" x="937.44" y="289.98" style="fill: #1d3446; stroke: #1d3446; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_139">
+      <text style="fill: #1d3446; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="944.44" y="294.159141" transform="rotate(-0 944.44 294.159141)">75%</text>
+     </g>
+    </g>
+    <g id="ytick_38">
+     <g id="line2d_79">
+      <g>
+       <use xlink:href="#m4f01e83a66" x="937.44" y="220.32" style="fill: #1d3446; stroke: #1d3446; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_140">
+      <text style="fill: #1d3446; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="944.44" y="224.499141" transform="rotate(-0 944.44 224.499141)">100%</text>
+     </g>
+    </g>
+   </g>
+   <g id="LineCollection_1"/>
+   <g id="patch_70">
+    <path d="M 922.32 498.96 
+L 929.88 498.96 
+L 937.44 498.96 
+L 937.44 220.32 
+L 929.88 220.32 
+L 922.32 220.32 
+L 922.32 498.96 
+z
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+  </g>
+  <g id="text_141">
+   <text style="fill: #007c83; font: 700 9px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="28.601156" transform="rotate(-0 45.36 28.601156)">ЗА ПРЕДЕЛАМИ MIT 6.111  /  АТЛАС ПОДТВЕРЖДЕНИЙ</text>
+  </g>
+  <g id="text_142">
+   <text style="fill: #1d3446; font: 700 21px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="64.648594" transform="rotate(-0 45.36 64.648594)">За одинаковой суммой могут стоять разные темы</text>
+  </g>
+  <g id="text_143">
+   <text style="fill: #536875; font: 11px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="102.505625" transform="rotate(-0 45.36 102.505625)">В ячейке: подтверждено / всего пунктов области. Цвет отражает долю, а не абсолютное число.</text>
+  </g>
+  <g id="text_144">
+   <text style="fill: #536875; font: 9px 'DejaVu Sans', 'Droid Sans Fallback'; text-anchor: start" x="45.36" y="629.928281" transform="rotate(-0 45.36 629.928281)">Источник: база отчёта, 29 октября 2026. Отсутствие подтверждения не означает отсутствия обучения.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pea08321dd8">
+   <rect x="292.32" y="149.04" width="604.8" height="414.72"/>
+  </clipPath>
+ </defs>
+</svg>

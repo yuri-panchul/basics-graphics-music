@@ -1,0 +1,130 @@
+[
+  {
+    "key": "criteria_atlas",
+    "lang": "en",
+    "title": "Seven areas, 49 independent criteria",
+    "description": "The seven scoring areas, each with its criterion count and examples. The counts sum to 49.",
+    "svg": "criteria_atlas_en.svg",
+    "png": "criteria_atlas_en.png"
+  },
+  {
+    "key": "pipeline_verification",
+    "lang": "en",
+    "title": "Beyond a CPU pipeline: flow control and verification",
+    "description": "A non-CPU arithmetic pipeline with a finite FIFO, backpressure, input/output monitors and transaction-level checking.",
+    "svg": "pipeline_verification_en.svg",
+    "png": "pipeline_verification_en.png"
+  },
+  {
+    "key": "rankings",
+    "lang": "en",
+    "title": "University rankings: what makes up the score",
+    "description": "Stacked scores by seven areas, on the full 49-point scale. Gray means unverified.",
+    "svg": "rankings_en.svg",
+    "png": "rankings_en.png"
+  },
+  {
+    "key": "area_profiles",
+    "lang": "en",
+    "title": "Similar totals can hide different strengths",
+    "description": "The same 14 universities as the ranking, then the two programs below the dividing line. Zero is a verified-count value, not proof of absence.",
+    "svg": "area_profiles_en.svg",
+    "png": "area_profiles_en.png"
+  },
+  {
+    "key": "criteria_coverage",
+    "lang": "en",
+    "title": "All 49 criteria: how often did the audit find evidence?",
+    "description": "All 49 criterion frequencies, with UVM-only support distinguished. A count of zero means no qualifying evidence found in this audit.",
+    "svg": "criteria_coverage_en.svg",
+    "png": "criteria_coverage_en.png"
+  },
+  {
+    "key": "regional_comparison",
+    "lang": "en",
+    "title": "Regional means depend on the selected sample",
+    "description": "Means, medians and observed score ranges; n and zero-verified counts are explicit. This is not a national-quality ranking.",
+    "svg": "regional_comparison_en.svg",
+    "png": "regional_comparison_en.png"
+  },
+  {
+    "key": "world_map",
+    "lang": "en",
+    "title": "Where the regional samples come from",
+    "description": "Five report regions on a world map; bubble area encodes sample size and text gives mean scores.",
+    "svg": "world_map_en.svg",
+    "png": "world_map_en.png"
+  },
+  {
+    "key": "eurasia_map",
+    "lang": "en",
+    "title": "Former Soviet republics: sample size and evidence",
+    "description": "Country sample sizes and mean evidence scores in the former Soviet republics. The map is a geographic summary, not an assessment of all universities in a country.",
+    "svg": "eurasia_map_en.svg",
+    "png": "eurasia_map_en.png"
+  },
+  {
+    "key": "criteria_atlas",
+    "lang": "ru",
+    "title": "Семь областей, 49 самостоятельных критериев",
+    "description": "Семь областей оценки с числом критериев и примерами. Суммарно 49 критериев.",
+    "svg": "criteria_atlas_ru.svg",
+    "png": "criteria_atlas_ru.png"
+  },
+  {
+    "key": "pipeline_verification",
+    "lang": "ru",
+    "title": "За пределами CPU: управление потоком и проверка",
+    "description": "Арифметический конвейер вне CPU с конечным FIFO, обратным давлением, мониторами входа/выхода и транзакционной проверкой.",
+    "svg": "pipeline_verification_ru.svg",
+    "png": "pipeline_verification_ru.png"
+  },
+  {
+    "key": "rankings",
+    "lang": "ru",
+    "title": "Рейтинг вузов: из чего складывается сумма",
+    "description": "Сумма баллов по семи областям на полной шкале 49 пунктов. Серый означает отсутствие подтверждения.",
+    "svg": "rankings_ru.svg",
+    "png": "rankings_ru.png"
+  },
+  {
+    "key": "area_profiles",
+    "lang": "ru",
+    "title": "За одинаковой суммой могут стоять разные темы",
+    "description": "Те же 14 вузов; под разделительной линией — две программы. Нулевая сумма подтверждений не доказывает отсутствия темы.",
+    "svg": "area_profiles_ru.svg",
+    "png": "area_profiles_ru.png"
+  },
+  {
+    "key": "criteria_coverage",
+    "lang": "ru",
+    "title": "Все 49 критериев: для скольких вузов найдены подтверждения?",
+    "description": "Частоты всех 49 критериев с выделением подтверждений только по правилу UVM. Ноль означает, что эта проверка не нашла подходящего источника.",
+    "svg": "criteria_coverage_ru.svg",
+    "png": "criteria_coverage_ru.png"
+  },
+  {
+    "key": "regional_comparison",
+    "lang": "ru",
+    "title": "Средние по регионам зависят от состава выборки",
+    "description": "Средние, медианы и диапазоны оценок; указаны размер выборки и число записей без баллов. Это не рейтинг качества национального образования.",
+    "svg": "regional_comparison_ru.svg",
+    "png": "regional_comparison_ru.png"
+  },
+  {
+    "key": "world_map",
+    "lang": "ru",
+    "title": "География региональных выборок",
+    "description": "Пять региональных выборок на карте мира: площадь круга — число вузов, подпись — средняя оценка.",
+    "svg": "world_map_ru.svg",
+    "png": "world_map_ru.png"
+  },
+  {
+    "key": "eurasia_map",
+    "lang": "ru",
+    "title": "Бывшие советские республики: выборка и подтверждения",
+    "description": "Размеры выборок и средние суммы подтверждений в бывших советских республиках. Карта не оценивает все вузы каждой страны.",
+    "svg": "eurasia_map_ru.svg",
+    "png": "eurasia_map_ru.png"
+  }
+]

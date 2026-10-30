@@ -1,0 +1,14 @@
+{
+  "snapshot": "2026-10-29",
+  "source": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson",
+  "map_sha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f",
+  "report_inputs": {
+    "universities_fpga_curricula.html": "e32a37ad89cd90e422970c5f2aec1d277a363c18f6c5e21bbf1076d49dd9439e",
+    "universities_fpga_curricula_ru.html": "b3deba1b07d3ece4138ec23ccd40226021bf38840dce79ebeb79ce9ccdffdfba"
+  },
+  "data_inputs": {
+    "entities.json": "bc07ec16da6974434958fd4220930ccea369d8786f5cede31c1e59615f58b1ea",
+    "claims.json": "4a86a3ca6c153d067a40dedfad1dbc218ea96a3e148698433df5412ff3ef83b7",
+    "rankings.json": "286f6d00a93b3388ed4977d7e1feaa43439cf32e36d419deca71228a0c05dc98"
+  }
+}
