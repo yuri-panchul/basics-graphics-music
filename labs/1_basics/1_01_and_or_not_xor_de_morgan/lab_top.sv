@@ -114,7 +114,7 @@ module lab_top
 
     // Exercise 3: Create an illustration to De Morgan's laws:
     //
-    // ~ (a & b) == ~ a | ~ b
-    // ~ (a | b) == ~ a & ~ b
+    // ~ (a & b) == (~ a | ~ b)
+    // ~ (a | b) == (~ a & ~ b)
 
 endmodule
