@@ -298,8 +298,8 @@ module board_specific_top
 
         TLVDS_OBUF tmds_buf_red (
             .I  ( red_serial  ),
-            .O  ( TMDS_D_P[0] ),
-            .OB ( TMDS_D_N[0] )
+            .O  ( TMDS_D_P[2] ),
+            .OB ( TMDS_D_N[2] )
         );
 
         TLVDS_OBUF tmds_buf_green (
@@ -310,8 +310,8 @@ module board_specific_top
 
         TLVDS_OBUF tmds_buf_blue (
             .I  ( blue_serial ),
-            .O  ( TMDS_D_P[2] ),
-            .OB ( TMDS_D_N[2] )
+            .O  ( TMDS_D_P[0] ),
+            .OB ( TMDS_D_N[0] )
         );
 
         TLVDS_OBUF tmds_buf_clk (
