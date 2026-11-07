@@ -73,17 +73,41 @@ rars_setup ()
 
 rars_assembly ()
 {
-    if ! [ -f ../program.s ] ; then
-        return
-    fi
+#    if ! [ -f ../program.s ] ; then
+#        return
+#    fi
+#
+#
+#    #  nc                              - Copyright notice will not be displayed
+#    #  a                               - assembly only, do not simulate
+#    #  ae<n>                           - terminate RARS with integer exit code if an assemble error occurs
+#    #  dump .text HexText program.hex  - dump segment .text to program.hex file in HexText format
+#
+#    rars_args="nc a ae1 dump .text HexText program.hex"
+#    $rars_cmd $rars_args ../program.s
 
-    #  nc                              - Copyright notice will not be displayed
-    #  a                               - assembly only, do not simulate
-    #  ae<n>                           - terminate RARS with integer exit code if an assemble error occurs
-    #  dump .text HexText program.hex  - dump segment .text to program.hex file in HexText format
+#  files=find -type f -name "..\*.s"  
 
-    rars_args="nc a ae1 dump .text HexText program.hex"
-    $rars_cmd $rars_args ../program.s
+ #tmp=`pwd`;
+ #echo $tmp
+ #tmp=`find ../*.s`
+ #echo $tmp
+ 
+ files=`find  ../*.s  -print`   
+
+
+function tr_rars {
+
+  for prog_name in "$@"; do
+    len=${#prog_name}
+    base_prog_name=${prog_name:3:len-4}          # "../program.s" -> "program."
+    #echo $base_prog_name
+	$rars_cmd nc a ae1 dump .text HexText $base_prog_name"hex" $prog_name
+  done
+  } 
+  
+  files=`find ../*.s -print`                     # create list *.s files
+  tr_rars $files                                 # translate  *.s files to *.hex files 
 }
 
 #-----------------------------------------------------------------------------
