@@ -75,7 +75,7 @@ See [documentation](./docs/wsl.md).
       [VScode](https://apps.microsoft.com/detail/xp9khm4bk9fz7q)
 
 :warning: Examples and scripts can _only_ be run with a _Git Bash_ terminal.
-There are mutliple different options to open it.
+There are multiple different options to open it.
 Choose one that works best for you:
 
 * Open _Git Bash_ from the Start menu or from
@@ -83,7 +83,7 @@ Choose one that works best for you:
 * Alternatively, you can use VSCode:
    * Optionally: Set it as a default in _Settings > Features > Terminal > Integrated > Default Profile > Windows > Git Bash_.
    * Open a new _Git Bash_ as a one-off
-     by clikcing on the dropdown arrow next to the plus icon in the terminal panel and selecting _Git Bash_.
+     by clicking on the dropdown arrow next to the plus icon in the terminal panel and selecting _Git Bash_.
 
 You can tell that it's a _Git Bash_ terminal if you see a prompt that looks like this:
 ```bash
@@ -94,7 +94,7 @@ $
 
 ## Linux
 
-You may need to install git if not alredy installed:
+You may need to install git if not already installed:
 ```bash
 sudo apt-get install git
 ```
@@ -103,7 +103,7 @@ You can use any terminal including built-in.
 
 ## macOS
 
-No special stesps are required. You can use any terminal including built-in.
+No special steps are required. You can use any terminal including built-in.
 
 * Optional: If you hit issues with `bash`, you may have a version older than
   is currently supported. If so, you can use
