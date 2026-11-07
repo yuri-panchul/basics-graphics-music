@@ -10,7 +10,7 @@
 //  for systemverilog-homework project.
 //
 
-`define  ORIGINAL_TB          // This line determines which execution variant of the program and testbench is used — H&H or School_RISKV
+//`define  ORIGINAL_TB          // This line determines which execution variant of the program and testbench is used — H&H or School_RISKV
 
 module tb;
 
@@ -104,7 +104,7 @@ module tb;
         @ (negedge rst);
 
         repeat (1000)
-    `ifdef SCHOOL
+    `ifdef  ORIGINAL_TB 
         begin
             @ (posedge clk);
 

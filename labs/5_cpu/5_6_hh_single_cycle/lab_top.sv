@@ -107,7 +107,7 @@ module lab_top
         .rd         ( rRAMData )
     );
 
-`ifdef SCHOOL
+`ifdef ORIGINAL_TB 
 
     instruction_rom # (.SIZE (64), .NAME("program.hex")) rom
     (
@@ -125,7 +125,7 @@ module lab_top
 
     // assign regAddr = 5'd10;  // a0
 
-    `ifdef SCHOOL
+    `ifdef ORIGINAL_TB 
        assign led              = '0;
     `else
        assign led[0]            = we;
