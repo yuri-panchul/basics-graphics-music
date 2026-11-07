@@ -118,7 +118,7 @@ Step 7 Running Shift register example
 
 Navigate to shift register example by typing
 
-> cd labs/08_shift_register
+> cd labs/1_basics/1_07_shift_register
 
 ![08 shift register example location](https://github.com/sisaphilip/myconfigs/blob/main/Pictures/mm3.png)
 
