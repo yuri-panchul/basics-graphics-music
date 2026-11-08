@@ -140,11 +140,14 @@ setup_run_directory_for_fpga_synthesis_yosys ()
     printf "source %s/%s/board_info.source_bash\n\n" $board_dir $fpga_board >> "$dir/synth.source_bash"
 
     cat << EOF >> "$dir/synth.source_bash"
-yosys -p "read_verilog                         \\
+yosys -p "read_slang -DYOSYS                   \\
 -I $(adj_path_for_gowin_win "$main_src_dir")   \\
 -I $(adj_path_for_gowin_win "$peripheral_dir") \\
 -I $(adj_path_for_gowin_win "$lab_dir")/common \\
--sv $sources;                                  \\
+$sources                                       \\
+--top board_specific_top                       \\
+-Wno-unconnected-input-port                    \\
+-Wno-unconnected-output-port;                  \\
 \${SYNTH_CMD} -json netlist.json -top board_specific_top"
 
 EOF
@@ -184,12 +187,15 @@ EOF
     elif [[ "$fpga_board" =~ "tang" ]]
     then
 
+        # --timing-allow-fail is needed because of hold time violations
+        # due to inaccurate reverse engineered timing models in PnR
         cat << EOF >> "$dir/synth.source_bash"
 nextpnr-himbaechel --json netlist.json             \\
                    --write pnr.pack                \\
                    --device \${DEVICE_PART}        \\
                    --vopt family=\${DEVICE_FAMILY} \\
                    --vopt cst=board_specific.cst   \\
+                   --timing-allow-fail             \\
                    --sdc board_specific.sdc \${GUI_OPT}
 
 gowin_pack -d \${DEVICE_PACK} -o bitstream.fs pnr.pack
