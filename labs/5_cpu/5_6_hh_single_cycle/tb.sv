@@ -104,7 +104,7 @@ module tb;
         @ (negedge rst);
 
         repeat (1000)
-    `ifdef  ORIGINAL_TB 
+    `ifdef  ORIGINAL_TB
         begin
             @ (posedge clk);
 
@@ -118,7 +118,7 @@ module tb;
     `else
          // check results
         //always
-        @(negedge clk)
+        @(posedge clk)
         begin
             if(we) begin
             if(dAddr === 108 & wRAMData === 32'hABCDE7D5) begin

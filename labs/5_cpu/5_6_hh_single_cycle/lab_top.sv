@@ -1,5 +1,5 @@
 `include "config.svh"
-//`define ORIGINAL_TB              // This line determines which execution variant of the program and testbench is used — H&H or School_RISCV
+//`define ORIGINAL_PROG              // This line determines which execution variant of the program and testbench is used — H&H or School_RISCV
 
 
 
@@ -107,7 +107,7 @@ module lab_top
         .rd         ( rRAMData )
     );
 
-`ifdef ORIGINAL_TB 
+`ifdef ORIGINAL_PROG
 
     instruction_rom # (.SIZE (64), .NAME("program.hex")) rom
     (
@@ -125,7 +125,7 @@ module lab_top
 
     // assign regAddr = 5'd10;  // a0
 
-    `ifdef ORIGINAL_TB 
+    `ifdef ORIGINAL_PROG
        assign led              = '0;
     `else
        assign led[0]            = we;

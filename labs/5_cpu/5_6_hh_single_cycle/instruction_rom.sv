@@ -9,7 +9,6 @@
 //  Modified in 2024 by Yuri Panchul & Mike Kuskov
 //  for systemverilog-homework project.
 //
-// `define SCHOOL
 
 module instruction_rom
 #(
@@ -23,12 +22,5 @@ module instruction_rom
     logic [31:0] rom [0:SIZE - 1];
     assign rd = rom [a];
    initial $readmemh (NAME, rom);
-/*
-`ifdef SCHOOL
-    initial $readmemh ("program.hex", rom);
-`else
-    initial $readmemh ("riscvtest.hex", rom);
-`endif
-*/
 
 endmodule
