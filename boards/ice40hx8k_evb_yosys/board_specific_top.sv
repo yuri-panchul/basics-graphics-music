@@ -145,9 +145,6 @@ module board_specific_top
         .x        ( x         ),
         .y        ( y         ),
 
-        .x        ( x         ),
-        .y        ( y         ),
-
         .red      ( VGA_R     ),
         .green    ( VGA_G     ),
         .blue     ( VGA_B     ),
