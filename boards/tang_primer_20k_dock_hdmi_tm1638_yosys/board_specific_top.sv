@@ -115,6 +115,7 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
+        logic pixel_clk;
         localparam lab_mhz = pixel_mhz;
         assign     clk     = pixel_clk;
 
@@ -236,7 +237,7 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire serial_clk, pixel_clk_div2, pixel_clk, pll_lock;
+        wire serial_clk, pixel_clk_div2, pll_lock;
 
         rPLL #(
             .FCLKIN    ( "27" ),
