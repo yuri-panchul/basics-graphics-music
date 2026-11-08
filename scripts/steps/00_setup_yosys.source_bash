@@ -277,7 +277,8 @@ configure_fpga_yosys ()
         fi
     elif [[ "$fpga_board" =~ "ecp5" ]]
     then
-        if [[ -n "$CABLE" ]]
+        # Variable exists and is a non-empty string
+        if [[ -n ${var:-} ]]
         then
             # Boards with a custom cable (e.g. iCESugar-pro / iCELink via CMSIS-DAP)
             # require a udev rule to allow non-root access to the USB device.
