@@ -40,9 +40,7 @@ setup_yosys ()
         fi
 
         source ~/oss-cad-suite/environment
-    fi
-
-    if [ -d ~/Downloads/oss-cad-suite ]
+    elif [ -d ~/Downloads/oss-cad-suite ]
     then
         if [[ "$OSTYPE" = "darwin"* ]] ; then
             remove_macos_quarantine_attr ~/Downloads/oss-cad-suite
