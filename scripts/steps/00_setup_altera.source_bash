@@ -749,7 +749,10 @@ EOF
 
     $find_to_run  \
         "$main_src_dir" "$board_dir/$fpga_board" "$peripheral_dir" "$lab_dir/common"  \
-        -type d \( -path "$quartus_run_path" -o -exec test -f '{}.ip' \; \) -prune -o  \
+        -type d \( -path "$quartus_run_path" \
+		-o -exec test -f '{}.ip' \; \
+		-o -exec test -f '{}/no_sources_in_this_dir' \; \) \
+		-prune -o  \
         -type f -name '*.sv' -not -name tb.sv  \
         -printf "set_global_assignment -name SYSTEMVERILOG_FILE %P\n"  \
         >> "$dir/fpga_project.qsf"

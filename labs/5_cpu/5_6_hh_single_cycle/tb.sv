@@ -10,6 +10,8 @@
 //  for systemverilog-homework project.
 //
 
+//`define  ORIGINAL_TB          // This line determines which execution variant of the program and testbench is used — H&H or School_RISKV
+
 module tb;
 
     logic        clk;
@@ -21,24 +23,50 @@ module tb;
     logic [ 4:0] regAddr;  // debug access reg address
     wire  [31:0] regData;  // debug access reg data
 
-    sr_cpu cpu
+    wire [31:0] PC;
+    wire [31:0] wRAMData; // data for writing to RAM
+    wire [31:0] rRAMData; // data read from  RAM
+    wire [31:0] dAddr;    // addres for RAM
+    wire [31:0] ALUResult;//
+    wire        we;       // enable write to data memory
+
+    riscvsingle cpu
     (
-        .clk     ( clk     ),
-        .rst     ( rst     ),
+        .clk        ( clk      ),
+        .reset      ( rst      ),
+        .PC         ( PC       ),
+        .Instr      ( imData   ) ,
+        .MemWrite   ( we       ),
+        .ALUResult  ( ALUResult),
+        .WriteData  ( wRAMData ),
+        .ReadData   ( rRAMData )
+    );
+    assign imAddr = PC >> 2 ;
+    assign dAddr  = ALUResult;
 
-        .imAddr  ( imAddr  ),
-        .imData  ( imData  ),
-
-        .regAddr ( regAddr ),
-        .regData ( regData )
+    dmem ram
+    (
+        .clk        ( clk      ),
+        .we         ( we       ),
+        .a          ( dAddr    ),
+        .wd         ( wRAMData ),
+        .rd         ( rRAMData )
     );
 
-    instruction_rom # (.SIZE (1024)) rom
+`ifdef ORIGINAL_TB
+
+    instruction_rom # (.SIZE (1024), .NAME("program.hex")) rom
     (
         .a       ( imAddr  ),
         .rd      ( imData  )
     );
-
+`else
+    instruction_rom # (.SIZE (1024), .NAME("riscvtest.hex")) rom
+    (
+        .a       ( imAddr  ),
+        .rd      ( imData  )
+    );
+`endif
     //------------------------------------------------------------------------
 
     initial
@@ -76,19 +104,40 @@ module tb;
         @ (negedge rst);
 
         repeat (1000)
+    `ifdef  ORIGINAL_TB
         begin
             @ (posedge clk);
 
-            if (  regData == 32'h00213d05    // Fibonacci
-                | regData == 32'h1c8cfc00 )  // Factorial
+            if (  ALUResult == 32'h00213d05    // Fibonacci
+                | ALUResult == 32'h1c8cfc00 )  // Factorial
             begin
                 $display ("%s PASS", `__FILE__);
                 $finish;
             end
         end
+    `else
+         // check results
+        //always
+        @(posedge clk)
+        begin
+            if(we) begin
+            if(dAddr === 108 & wRAMData === 32'hABCDE7D5) begin
+            $display("Simulation succeeded");
+            //$stop;
+            $finish;
+        end else if (dAddr !== 96) begin
+            $display("Simulation failed");
+          //  $stop;
+            $finish;
+            end
+        end
+        end
+    `endif
+
 
         $display ("%s FAIL: none of expected register values occured",
             `__FILE__);
+
 
         $finish;
     end

@@ -1,4 +1,7 @@
 `include "config.svh"
+//`define ORIGINAL_PROG              // This line determines which execution variant of the program and testbench is used — H&H or School_RISCV
+
+
 
 module lab_top
 # (
@@ -59,7 +62,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-       assign led        = '0;
+    // assign led        = '0;
     // assign abcdefgh   = '0;
     // assign digit      = '0;
        assign red        = '0;
@@ -74,31 +77,67 @@ module lab_top
     wire [31:0] regData;  // debug access reg data
     wire [31:0] imAddr;   // instruction memory address
     wire [31:0] imData;   // instruction memory data
+    wire [31:0] wRAMData; // data for writing to RAM
+    wire [31:0] rRAMData; // data read from  RAM
+    wire [31:0] dAddr;    // addres for RAM
+    wire [31:0] ALUResult;//
+    wire        we;       // enable write to data memory
+    wire [31:0] PC;       //
 
-    sr_cpu cpu
+    riscvsingle cpu
     (
-        .clk     ( slow_clk ),
-        .rst     ( rst      ),
-        .regAddr ( regAddr  ),
-        .regData ( regData  ),
-        .imAddr  ( imAddr   ),
-        .imData  ( imData   )
+        .clk        ( slow_clk ),
+        .reset      ( rst      ),
+        .PC         ( PC       ),
+        .Instr      ( imData   ) ,
+        .MemWrite   ( we       ),
+        .ALUResult  ( ALUResult),
+        .WriteData  ( wRAMData ),
+        .ReadData   ( rRAMData )
+    );
+    assign imAddr = PC >> 2 ;
+    assign dAddr  = ALUResult;
+
+   dmem ram
+    (
+        .clk        ( clk      ),
+        .we         ( we       ),
+        .a          ( dAddr    ),
+        .wd         ( wRAMData ),
+        .rd         ( rRAMData )
     );
 
-    instruction_rom # (.SIZE (64)) rom
-    (
-        .a       ( imAddr   ),
-        .rd      ( imData   )
-    );
+`ifdef ORIGINAL_PROG
 
+    instruction_rom # (.SIZE (64), .NAME("program.hex")) rom
+    (
+        .a       ( imAddr  ),
+        .rd      ( imData  )
+    );
+`else
+    instruction_rom # (.SIZE (64), .NAME("riscvtest.hex")) rom
+    (
+        .a       ( imAddr  ),
+        .rd      ( imData  )
+    );
+`endif
     //------------------------------------------------------------------------
 
-    assign regAddr = 5'd10;  // a0
+    // assign regAddr = 5'd10;  // a0
+
+    `ifdef ORIGINAL_PROG
+       assign led              = '0;
+    `else
+       assign led[0]            = we;
+       assign led[w_led-1:1]    ='0;
+    `endif
 
     localparam w_number = w_digit * 4;
 
     wire [w_number - 1:0] number
-        = w_number' ( key [0] ? regData : imAddr );
+        = w_number' ( key [0] ? ALUResult : imAddr );
+
+
 
     seven_segment_display
     # (
