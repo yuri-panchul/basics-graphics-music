@@ -175,10 +175,6 @@ module lab_top
     // The syntax below does not work with Icarus Verilog
     wire mux8 = mux0;
 
-    `elsif YOSYS
-
-    wire mux8 = mux0;
-
     `else
 
     wire [0:1][0:1][0:1] table8 =
@@ -202,10 +198,6 @@ module lab_top
     `ifdef __ICARUS__
 
     // The syntax below does not work with Icarus Verilog
-    wire mux9 = mux0;
-
-    `elsif YOSYS
-
     wire mux9 = mux0;
 
     `else
