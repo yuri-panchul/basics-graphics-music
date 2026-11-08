@@ -12,8 +12,7 @@
 
 module board_specific_top
 # (
-    parameter   clk_mhz       = 27,
-                pixel_mhz     = 25,
+    parameter   clk_mhz       = 50,
 
                 w_key         = 5,  // The last key is used for a reset
                 w_sw          = 4,
@@ -97,7 +96,7 @@ module board_specific_top
     wire  [w_lab_led   - 1:0] lab_led;
     wire  [w_lab_digit - 1:0] lab_digit;
 
-    wire                      clk;
+    wire                      clk_50;
     wire                      rst;
     wire  [              7:0] abcdefgh;
 
@@ -110,21 +109,6 @@ module board_specific_top
 
     wire  [             23:0] mic;
     wire  [             15:0] sound;
-
-    //------------------------------------------------------------------------
-
-    `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
-
-        logic pixel_clk;
-        localparam lab_mhz = pixel_mhz;
-        assign     clk     = pixel_clk;
-
-    `else
-
-        localparam lab_mhz = clk_mhz;
-        assign     clk     = CLK;
-
-    `endif
 
     //------------------------------------------------------------------------
 
@@ -152,16 +136,50 @@ module board_specific_top
 
     //------------------------------------------------------------------------
 
-    wire slow_clk;
+    wire pll_lock, slow_clk;
 
-    slow_clk_gen # (.fast_clk_mhz (clk_mhz), .slow_clk_hz (1))
-    i_slow_clk_gen (.slow_clk (slow_clk), .*);
+    rPLL #(
+        .FCLKIN    ( "27" ),
+        .IDIV_SEL  ( 3    ),
+        .FBDIV_SEL ( 36   ),
+        .ODIV_SEL  ( 2    )
+    ) rpll_inst (
+        .CLKIN   ( CLK      ), // 27 MHZ
+        .CLKOUT  ( clk_250  ), // 250 MHz
+        .LOCK    ( pll_lock ),
+        .RESET   ( '0       ),
+        .RESET_P ( '0       ),
+        .CLKFB   ( '0       ),
+        .FBDSEL  ( '0       ),
+        .IDSEL   ( '0       ),
+        .ODSEL   ( '0       ),
+        .PSDA    ( '0       ),
+        .DUTYDA  ( '0       ),
+        .FDLY    ( '0       )
+    );
+
+    CLKDIV #(
+        .DIV_MODE ("5")
+    ) div_5 (
+        .HCLKIN ( clk_250  ),
+        .CLKOUT ( clk_50   ),  // 50 MHz lab clock
+        .RESETN ( pll_lock )
+    );
+
+    slow_clk_gen # (
+        .fast_clk_mhz ( clk_mhz ),
+        .slow_clk_hz  ( 1       )
+    ) i_slow_clk_gen (
+        .clk      ( clk_50   ),
+        .rst      ( rst      ),
+        .slow_clk ( slow_clk )
+    );
 
     //------------------------------------------------------------------------
 
     lab_top
     # (
-        .clk_mhz       ( lab_mhz       ),
+        .clk_mhz       ( clk_mhz       ),
 
         .w_key         ( w_lab_key     ),  // The last key is used for a reset
         .w_sw          ( w_lab_key     ),
@@ -178,7 +196,7 @@ module board_specific_top
     )
     i_lab_top
     (
-        .clk           ( clk           ),
+        .clk           ( clk_50        ),
         .slow_clk      ( slow_clk      ),
         .rst           ( rst           ),
 
@@ -215,12 +233,12 @@ module board_specific_top
 
         tm1638_board_controller
         # (
-            .clk_mhz   ( lab_mhz     ),
+            .clk_mhz   ( clk_mhz     ),
             .w_digit   ( w_tm_digit  )
         )
         i_tm1638
         (
-            .clk       ( clk         ),
+            .clk       ( clk_50      ),
             .rst       ( rst         ),
             .hgfedcba  ( hgfedcba    ),
             .digit     ( tm_digit    ),
@@ -237,56 +255,26 @@ module board_specific_top
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
 
-        wire serial_clk, pixel_clk_div2, pll_lock;
-
-        rPLL #(
-            .FCLKIN    ( "27" ),
-            .IDIV_SEL  ( 2    ),
-            .FBDIV_SEL ( 27   ),
-            .ODIV_SEL  ( 4    )
-        ) rpll_inst (
-            .CLKIN   ( CLK        ), // 27 MHZ
-            .CLKOUT  ( serial_clk ), // 252 MHz
-            .LOCK    ( pll_lock   ),
-            .RESET   ( '0         ),
-            .RESET_P ( '0         ),
-            .CLKFB   ( '0         ),
-            .FBDSEL  ( '0         ),
-            .IDSEL   ( '0         ),
-            .ODSEL   ( '0         ),
-            .PSDA    ( '0         ),
-            .DUTYDA  ( '0         ),
-            .FDLY    ( '0         )
-        );
-
-        // Divide by 10 to get 25.2 MHz pixel clock
-
-        CLKDIV2 div_2 (
-            .HCLKIN ( serial_clk     ),
-            .CLKOUT ( pixel_clk_div2 ),
-            .RESETN ( pll_lock       )
-        );
-
-        CLKDIV #(
-            .DIV_MODE ("5")
-        ) div_5 (
-            .HCLKIN ( pixel_clk_div2 ),
-            .CLKOUT ( pixel_clk      ),
-            .RESETN ( pll_lock       )
-        );
-
-        //--------------------------------------------------------------------
-
         wire hsync, vsync, display_on;
         wire red_serial, green_serial, blue_serial;
+        logic enable;
 
         wire [9:0] x10; assign x = x10;
         wire [9:0] y10; assign y = y10;
 
+        // Clock enable to drive logic at 25 MHz (half of 50 MHz)
+        always_ff @(posedge clk_50) begin
+            if (rst)
+                enable <= '0;
+            else
+                enable <= !enable;
+        end
+
         dvi_top i_dvi_top (
-            .serial_clk_i   ( serial_clk   ),
-            .pixel_clk_i    ( pixel_clk    ),
+            .serial_clk_i   ( clk_250      ),
+            .clk_50         ( clk_50       ),
             .rst_i          ( rst          ),
+            .enable_i       ( enable       ),
             .red_i          ( red          ),
             .green_i        ( green        ),
             .blue_i         ( blue         ),
@@ -316,7 +304,7 @@ module board_specific_top
         );
 
         TLVDS_OBUF tmds_buf_clk (
-            .I  ( pixel_clk  ),
+            .I  ( enable     ),
             .O  ( TMDS_CLK_P ),
             .OB ( TMDS_CLK_N )
         );
@@ -329,7 +317,7 @@ module board_specific_top
 
         inmp441_mic_i2s_receiver
         # (
-            .clk_mhz ( lab_mhz    )
+            .clk_mhz ( clk_mhz    )
         )
         i_microphone
         (
@@ -354,7 +342,7 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz             ( lab_mhz    ),
+            .clk_mhz             ( clk_mhz    ),
             .in_res              ( w_sound    ),
             .align_right         ( 1'b1       ), // PT8211 DAC data format
             .offset_by_one_cycle ( 1'b0       )
@@ -377,7 +365,7 @@ module board_specific_top
 
         i2s_audio_out
         # (
-            .clk_mhz             ( lab_mhz    ),
+            .clk_mhz             ( clk_mhz    ),
             .in_res              ( w_sound    ),
             .align_right         ( 1'b0       ),
             .offset_by_one_cycle ( 1'b1       )
