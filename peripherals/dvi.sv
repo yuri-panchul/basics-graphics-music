@@ -2,8 +2,9 @@
 
 module dvi_top (
     input  logic               serial_clk_i,
-    input  logic               pixel_clk_i,
+    input  logic               clk_50,  // 2x pixel clk
     input  logic               rst_i,
+    input  logic               enable_i,
 
     input  logic [COLOR_W-1:0] red_i,
     input  logic [COLOR_W-1:0] green_i,
@@ -33,8 +34,9 @@ module dvi_top (
     // ------------------------------------------------------------------------
 
     dvi_sync i_dvi_sync (
-        .clk_i           ( pixel_clk_i   ),
+        .clk_i           ( clk_50        ),
         .rst_i           ( rst_i         ),
+        .enable_i        ( enable_i      ),
         .hsync_o         ( hsync         ),
         .vsync_o         ( vsync         ),
         .pixel_x_o       ( x_o           ),
@@ -46,14 +48,12 @@ module dvi_top (
     // Encode
     // ------------------------------------------------------------------------
 
-    // Delay hsync/vsync and visible_range by 1 clock cycle to account for color
-    // delay in image_gen
-    always_ff @(posedge pixel_clk_i) begin
+    always_ff @(posedge clk_50) begin
         if (rst_i) begin
             hsync_r         <= '0;
             vsync_r         <= '0;
             visible_range_r <= '0;
-        end else begin
+        end else if (enable_i) begin
             hsync_r         <= hsync;
             vsync_r         <= vsync;
             visible_range_r <= visible_range;
@@ -61,33 +61,36 @@ module dvi_top (
     end
 
     tmds_encoder blue_encoder (
-        .clk_i ( pixel_clk_i     ),
-        .rst_i ( rst_i           ),
-        .C0    ( hsync_r         ),
-        .C1    ( vsync_r         ),
-        .DE    ( visible_range_r ),
-        .D     ( blue_i          ),
-        .q_out ( blue_tmds       )
+        .clk_i    ( clk_50          ),
+        .rst_i    ( rst_i           ),
+        .enable_i ( enable_i        ),
+        .C0       ( hsync_r         ),
+        .C1       ( vsync_r         ),
+        .DE       ( visible_range_r ),
+        .D        ( blue_i          ),
+        .q_out    ( blue_tmds       )
     );
 
     tmds_encoder green_encoder (
-        .clk_i ( pixel_clk_i     ),
-        .rst_i ( rst_i           ),
-        .C0    ( 1'b0            ),
-        .C1    ( 1'b0            ),
-        .DE    ( visible_range_r ),
-        .D     ( green_i         ),
-        .q_out ( green_tmds      )
+        .clk_i    ( clk_50          ),
+        .rst_i    ( rst_i           ),
+        .enable_i ( enable_i        ),
+        .C0       ( 1'b0            ),
+        .C1       ( 1'b0            ),
+        .DE       ( visible_range_r ),
+        .D        ( green_i         ),
+        .q_out    ( green_tmds      )
     );
 
     tmds_encoder red_encoder (
-        .clk_i ( pixel_clk_i     ),
-        .rst_i ( rst_i           ),
-        .C0    ( 1'b0            ),
-        .C1    ( 1'b0            ),
-        .DE    ( visible_range_r ),
-        .D     ( red_i           ),
-        .q_out ( red_tmds        )
+        .clk_i    ( clk_50          ),
+        .rst_i    ( rst_i           ),
+        .enable_i ( enable_i        ),
+        .C0       ( 1'b0            ),
+        .C1       ( 1'b0            ),
+        .DE       ( visible_range_r ),
+        .D        ( red_i           ),
+        .q_out    ( red_tmds        )
     );
 
     // ------------------------------------------------------------------------
@@ -97,28 +100,28 @@ module dvi_top (
     serializer #(
         .DATA_W ( 10 )
     ) blue_serializer (
-        .clk_i  ( serial_clk_i ),
-        .rst_i  ( rst_i        ),
-        .data_i ( blue_tmds    ),
-        .data_o ( blue_serial_o  )
+        .clk_i  ( serial_clk_i  ),
+        .rst_i  ( rst_i         ),
+        .data_i ( blue_tmds     ),
+        .data_o ( blue_serial_o )
     );
 
     serializer #(
         .DATA_W ( 10 )
     ) green_serializer (
-        .clk_i  ( serial_clk_i ),
-        .rst_i  ( rst_i        ),
-        .data_i ( green_tmds   ),
+        .clk_i  ( serial_clk_i   ),
+        .rst_i  ( rst_i          ),
+        .data_i ( green_tmds     ),
         .data_o ( green_serial_o )
     );
 
     serializer #(
         .DATA_W ( 10 )
     ) red_serializer (
-        .clk_i  ( serial_clk_i ),
-        .rst_i  ( rst_i        ),
-        .data_i ( red_tmds     ),
-        .data_o ( red_serial_o   )
+        .clk_i  ( serial_clk_i  ),
+        .rst_i  ( rst_i         ),
+        .data_i ( red_tmds      ),
+        .data_o ( red_serial_o  )
     );
 
 endmodule
@@ -127,6 +130,7 @@ endmodule
 module dvi_sync (
     input  logic               clk_i,
     input  logic               rst_i,
+    input  logic               enable_i,
     output logic               hsync_o,
     output logic               vsync_o,
     output logic [X_POS_W-1:0] pixel_x_o,
@@ -157,7 +161,7 @@ module dvi_sync (
         if (rst_i) begin
             h_cnt <= '0;
             v_cnt <= '0;
-        end else begin
+        end else if (enable_i) begin
             h_cnt <= h_cnt_next;
             v_cnt <= v_cnt_next;
         end
@@ -171,7 +175,7 @@ module dvi_sync (
             pixel_x_o       <= '0;
             pixel_y_o       <= '0;
             visible_range_o <= '0;
-        end else begin
+        end else if (enable_i) begin
             hsync_o         <= !(h_cnt_next >= HSYNC_START && h_cnt_next < HSYNC_END);
             vsync_o         <= !(v_cnt_next >= VSYNC_START && v_cnt_next < VSYNC_END);
 
@@ -229,6 +233,7 @@ endmodule
 module tmds_encoder (
     input  logic       clk_i,
     input  logic       rst_i,
+    input  logic       enable_i,
     input  logic       C0,
     input  logic       C1,
     input  logic       DE,
@@ -322,13 +327,14 @@ module tmds_encoder (
     always_ff @(posedge clk_i) begin
         if (rst_i) begin
             cnt <= '0;
-        end else begin
+        end else if (enable_i) begin
             cnt <= cnt_next;
         end
     end
 
     always_ff @(posedge clk_i) begin
-        q_out <= q_next;
+        if (enable_i)
+            q_out <= q_next;
     end
 
 endmodule
