@@ -167,7 +167,7 @@ Your contributions are welcome.
 Not all boards include everything on the same board. To compensate for this we use external boards and hardware to extend input and output capabilities. The most common external hardware is:
 
 * All variants: [INMP441](https://aliexpress.com/item/32965793029.html?sku_id=12000046411935883), [MSM261S4030H0](https://aliexpress.com/item/1005004732421731.html) [I2S](https://en.wikipedia.org/wiki/I%C2%B2S) microphone
-* Almost all variants: [PCM5102A](https://aliexpress.com/item/1005008807353970.html), [PCM5100A](https://aliexpress.com/item/1005009581227956.html), [MAX98357](https://aliexpress.com/item/1005009765862559.html?sku_id=12000050095438985), [UDA1334A](https://aliexpress.com/item/1005012023315078.html?sku_id=12000057312033149) [I2S](https://en.wikipedia.org/wiki/I%C2%B2S) stereo audio DAC.
+* Almost all variants: [PCM5102A](https://aliexpress.com/item/1005008807353970.html), [PCM5100A](https://aliexpress.com/item/1005009581227956.html), [MAX98357](https://aliexpress.com/item/1005009765862559.html), [UDA1334A](https://aliexpress.com/item/1005008835338473.html) [I2S](https://en.wikipedia.org/wiki/I%C2%B2S) stereo audio DAC.
   Some boards do not require an external DAC as they have an on-board DAC (Tang Nano 20K)
 * `tm1638` or `no_tm1638`: with and without [TM1638](https://www.aliexpress.us/item/3256802635508991.html): 8-digit 7-segment display with 8 buttons (enabled in `tm1638` variants)
 * `hdmi`: HDMI on-board output
