@@ -142,7 +142,7 @@ module board_specific_top
         .FCLKIN    ( "27" ),
         .IDIV_SEL  ( 3    ),
         .FBDIV_SEL ( 36   ),
-        .ODIV_SEL  ( 2    )
+        .ODIV_SEL  ( 4    )
     ) rpll_inst (
         .CLKIN   ( CLK      ), // 27 MHZ
         .CLKOUT  ( clk_250  ), // 250 MHz
