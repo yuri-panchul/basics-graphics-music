@@ -98,7 +98,7 @@ module lab_top
     assign imAddr = PC >> 2 ;
     assign dAddr  = ALUResult;
 
-   dmem ram
+   dmem dmem_i
     (
         .clk        ( clk      ),
         .we         ( we       ),
