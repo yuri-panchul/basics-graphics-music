@@ -48,7 +48,6 @@ module board_specific_top
     (
         .clk_out1   ( serial_clk ),  // 250 mhz
         .clk_out2   ( clk        ),  // 50 mhz
-        .clk_out3   ( pixel_clk  ),  // 25 mhz
         .clk_in1    ( CLK_50M    )   // 50 mhz
     );
 
@@ -261,11 +260,21 @@ module board_specific_top
         wire [9:0] y10; assign y = y10;
 
         wire red_serial, green_serial, blue_serial;
+        logic enable;
+
+        // Clock enable to drive logic at 25 MHz (half of 50 MHz)
+        always_ff @(posedge clk) begin
+            if (rst)
+                enable <= '0;
+            else
+                enable <= !enable;
+        end
 
         dvi_top i_dvi_top (
             .serial_clk_i   ( serial_clk   ),
-            .pixel_clk_i    ( pixel_clk    ),
+            .clk_50         ( clk          ),
             .rst_i          ( rst          ),
+            .enable_i       ( enable       ),
             .red_i          ( red          ),
             .green_i        ( green        ),
             .blue_i         ( blue         ),
@@ -309,7 +318,7 @@ module board_specific_top
         ) OBUFDS_pixel_clk (
             .O  (TMDS_CLK_P   ),
             .OB (TMDS_CLK_N   ),
-            .I  (pixel_clk    )
+            .I  (enable       )
         );
 
     `endif

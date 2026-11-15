@@ -53,7 +53,7 @@ module i2s_audio_out
     // We are grouping together clk_mhz ranges of
     // (12-19), (20-35), (36-67), (68-131).
 
-    localparam MCLK_BIT  =  $clog2 (clk_mhz - 4) - 4,
+    localparam MCLK_BIT  =  (clk_mhz <= 12) ? 0 : $clog2 (clk_mhz - 4) - 4,
                BCLK_BIT  =  MCLK_BIT + 2,
                LRCLK_BIT =  BCLK_BIT + 6;
 

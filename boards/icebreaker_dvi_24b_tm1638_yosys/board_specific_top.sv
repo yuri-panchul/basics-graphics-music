@@ -330,7 +330,8 @@ module board_specific_top
 
         `ifdef DVI_24B
 
-            logic [15:0] rising_edge_data, falling_edge_data, ddr_data;
+            logic [15:0] rising_edge_data, falling_edge_data;
+            wire  [15:0] ddr_data;  // Can't be logic, connected to inout port
 
             always_ff @(posedge pixel_clk) begin
                 rising_edge_data <= {

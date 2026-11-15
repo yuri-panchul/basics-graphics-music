@@ -74,7 +74,8 @@ module seven_segment_display
             r_number <= number;
 
 
-    localparam w_index = $clog2 (w_digit);
+    // Index width can't be 0
+    localparam w_index = (w_digit <= 1) ? 1 : $clog2 (w_digit);
     logic [w_index - 1:0] index;
 
 

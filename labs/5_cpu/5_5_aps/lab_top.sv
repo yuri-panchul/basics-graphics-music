@@ -176,7 +176,7 @@ generate
     if(w_digit > 8) begin
         assign digit[w_digit-1:8] = '0;
         assign digit[7:0] = ~hex_sel;
-    end else begin
+    end else if (w_digit > 0) begin
         assign digit = ~hex_sel[0+:w_digit];
     end
 endgenerate
