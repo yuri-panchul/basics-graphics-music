@@ -1,5 +1,5 @@
 `include "config.svh"
-//`define ORIGINAL_PROG              // This line determines which execution variant of the program and testbench is used — H&H or School_RISCV
+//`define ORIGINAL_PROG              // This line determines which execution variant of the program is used — H&H or School_RISCV
 
 
 
