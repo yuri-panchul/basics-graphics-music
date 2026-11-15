@@ -16,7 +16,7 @@ module waveform_gen
     // (12-19), (20-35), (36-67), (68-131).
 
     localparam CLK_BIT  =  $clog2 ( clk_mhz - 4 ) + 4;
-    localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 2 { 1'b0 } }, 1'b1 };
+    localparam CLK_DIV_DATA_OFFSET = { { CLK_BIT - 1 { 1'b0 } }, 1'b1 };
 
     wire   [y_width - 1:0] tone_y     [4:0];
     wire             [8:0] tone_x;

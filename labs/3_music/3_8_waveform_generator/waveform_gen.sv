@@ -16,12 +16,12 @@ module waveform_gen
 
     // We are grouping together clk_mhz ranges of
     // (12-19), (20-35), (36-67), (68-131).
-    // Sampling_rate = clk (mhz) / 512  ( < 36 mhz)
-    //               = clk (mhz) / 1024 (36-67 mhz)
-    //               = clk (mhz) / 2048 ( > 67 mhz)
+    // Sampling_rate = clk (mhz) / 32  ( < 36 mhz)
+    //               = clk (mhz) / 64  (36-67 mhz)
+    //               = clk (mhz) / 128 ( > 67 mhz)
 
     localparam CLK_BIT  =  $clog2 (clk_mhz - 4);
-    localparam CLK_DIV_DATA_OFFSET = {{CLK_BIT - 2 {1'b0}}, 1'b1};
+    localparam CLK_DIV_DATA_OFFSET = {{CLK_BIT - 1 {1'b0}}, 1'b1};
 
     //  Vertical step of triangle waveform generator
 
@@ -110,7 +110,7 @@ module sinus
 );
     localparam   [y_width - 1:0] MAX = '1;
 
-    // Made as analog waveform generator ICL8038.
+    // Works as analog waveform generator ICL8038.
     // The sine wave is created by feeding the triangle wave into a
     // nonlinear sine converter. This converter provides a
     // decreasing transmission ratio as the level of the triangle
@@ -162,3 +162,47 @@ module square
               (((yt < (y_max >> 6))) ? '0 : y_max);
 
 endmodule
+
+    // ---------------------------------------------------------------------------
+    //
+    // The waveforms are "drawn" like vector graphics: there is no lookup table
+    // with precomputed samples, the value of the signal is computed on the fly.
+    // The "waveform" input selects what is drawn:
+    // 'b0001 - sine, 'b0010 - triangle, 'b0100 - square.
+    //
+    // 1. Triangle. The easy part: a signed accumulator yt is incremented and
+    //    decremented by a fixed step at the sample rate, bouncing between
+    //    -y_max and +y_max. The step sets the frequency, y_max sets the
+    //    amplitude. The amplitude is an arbitrary parameter: any value that
+    //    does not overflow the intermediate computations.
+    //
+    // 2. Sine. The triangle is fed to the "sinus" module together with y_max,
+    //    so the sine follows whatever amplitude is chosen. The converter
+    //    mimics the analog function generator chip ICL8038: the corners of
+    //    the triangle are smoothed by a nonlinear converter whose gain
+    //    decreases as the level approaches the peak (in the original chip
+    //    this is done by analog means, see the figure in the ICL8038
+    //    datasheet; ICL8038.jpg and Waves.jpg in this directory illustrate
+    //    the idea).
+    //
+    //    Digitally, the converter is a piecewise-linear approximation.
+    //    Both polarities are processed separately, by symmetric branches of
+    //    the if statement. Each half-wave is split at 3 points - where the
+    //    triangle reaches 43.75%, 62.5% and 81.25% of y_max - into 4 segments.
+    //    Within a segment the output is computed by shifts and additions
+    //    only: every coefficient is a combination of powers of two, so no
+    //    hardware multiplier is needed. A fixed fraction of y_max (the input
+    //    amplitude) is added at the same time to restore the level at the
+    //    segment transitions. The segment gains are 1.46875, 0.9375, 0.5625
+    //    and 0.15625 of the input - see the comments with the coefficients
+    //    at the end of the sinus module. The accuracy of the resulting sine
+    //    is about 1% for any chosen amplitude.
+    //
+    // 3. Square. Derived from the triangle by threshold comparison in the
+    //    "square" module.
+    //
+    // The module is also handy as a test signal generator in testbenches:
+    // instantiate (or copy) it in tb.sv and drive the DUT with it instead
+    // of, for example, a microphone - see labs/3_music/3_11_microphone_monitor.
+    //
+    // ---------------------------------------------------------------------------

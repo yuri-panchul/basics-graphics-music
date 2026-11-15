@@ -162,7 +162,7 @@ module waveform_gen
 );
 
     localparam CLK_BIT  =  $clog2 (clk_mhz - 4);
-    localparam CLK_DIV_DATA_OFFSET = {{CLK_BIT - 2 {1'b0}}, 1'b1};
+    localparam CLK_DIV_DATA_OFFSET = {{CLK_BIT - 1 {1'b0}}, 1'b1};
 
     //  Vertical step of triangle waveform generator
 
