@@ -74,20 +74,18 @@ rars_setup ()
 rars_assembly ()
 {
 
-#    #  nc                              - Copyright notice will not be displayed
-#    #  a                               - assembly only, do not simulate
-#    #  ae<n>                           - terminate RARS with integer exit code if an assemble error occurs
-#    #  dump .text HexText program.hex  - dump segment .text to program.hex file in HexText format
-#
+    #  nc                              - Copyright notice will not be displayed
+    #  a                               - assembly only, do not simulate
+    #  ae<n>                           - terminate RARS with integer exit code if an assemble error occurs
+    #  dump .text HexText program.hex  - dump segment .text to program.hex file in HexText format
+
 
 
 function tr_rars {
-
+  local short_name
   for prog_name in "$@"; do
-    len=${#prog_name}
-    basename=${prog_name:3:len-4}               # "../program.s" -> "program."
-    #echo $basename
-	$rars_cmd nc a ae1 dump .text HexText $basename"hex" $prog_name
+    short_name=$(basename -s .s $prog_name)                  # "../program.s" -> "program."
+    $rars_cmd nc a ae1 dump .text HexText $short_name".hex" $prog_name
   done
   }
 
