@@ -125,14 +125,22 @@ xilinx_setup_vivado ()
 
     if [ -n "${XILINX_VIVADO-}" ]
     then
-        if [ -d "$XILINX_VIVADO/bin" ]
+        # FIX for Issue #320: Normalize Windows-style drive paths (e.g., d:\... or d:/...)
+        # to WSL-compatible Unix paths (e.g., /mnt/d/...) when running in WSL.
+        local normalized_vivado_path="$XILINX_VIVADO"
+        if [[ "$normalized_vivado_path" =~ ^[a-zA-Z]:[\\/] ]] && command -v wslpath >/dev/null 2>&1; then
+            normalized_vivado_path=$(wslpath -u "$XILINX_VIVADO" 2>/dev/null || echo "$XILINX_VIVADO")
+        fi
+
+        if [ -d "$normalized_vivado_path/bin" ]
         then
+            export XILINX_VIVADO="$normalized_vivado_path"
             export PATH="${PATH:+$PATH:}$XILINX_VIVADO/bin"
             return
         fi
 
         warning "XILINX_VIVADO variable is set to '$XILINX_VIVADO',"  \
-                "but there is no directory '$XILINX_VIVADO/bin'."     \
+                "but there is no directory '$normalized_vivado_path/bin'." \
                 "Trying to find Vivado directory elsewhere."
     fi
 
