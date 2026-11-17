@@ -37,10 +37,18 @@ blanking counters use 10-bit vertical position; the lab gets its usual
 Physical mappings are entirely inside `board_specific_top.sv`:
 
 - `gpio[0..7]` → pio1..pio8.
-- TM1638 DIO/CLK/STB → pio26/27/28, with an external level translator.
+- TM1638 DIO/CLK/STB → pio26/27/28 directly; module VCC and all signal
+  pull-ups use the accessory 3.3 V supply.
 - INMP441 SCK/WS/SD → pio29/30/31; L/R wired to ground.
 - DAC BCK/DIN/LRCK → pio32/33/34; DAC MCLK/SCK wired to ground.
 - USB RX/TX retain Digilent's `uart_txd_in` / `uart_rxd_out` port names.
+
+The accessory 3.3 V regulator powers both TM1638 and INMP441 and must be sized
+for the display load plus the microphone. TM1638 uses no level translator.
+Its supply and pull-ups must remain at 3.3 V for the direct FPGA connection.
+The DAC retains its own documented supply arrangement. The guides cite
+reported 3.3 V TM1638 operation and distinguish it from Titan's electrical
+characterization at 4.5–5.5 V; check the actual module during bring-up.
 
 The wrapper honors the common `INSTANTIATE_*` macros for video, TM1638,
 microphone and audio. Disabled outputs have explicit inactive values; the
@@ -104,6 +112,10 @@ registers or unconstrained internal endpoints. External I/O delays are not
 specified by the preserved Digilent master XDC, so passing constrained-path
 timing does not establish external-interface timing closure. Physical board
 testing remains outstanding.
+
+The TM1638 3.3 V wiring revision changes the assembly documentation and HDL
+comments only. The FPGA logic and LVCMOS33 pin constraints are identical to
+those used for the builds above; the existing bitstreams remain applicable.
 
 The five board regression tests passed, including elaboration of 17 labs
 and five TM1638 configurations. All 22 board-menu tests passed across 114

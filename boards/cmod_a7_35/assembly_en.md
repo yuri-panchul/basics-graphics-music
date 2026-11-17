@@ -4,7 +4,7 @@ Board configuration: **cmod_a7_35** · Digilent Cmod A7-35T rev. B · prepared 1
 
 [Русская инструкция](assembly_ru.html) · [Markdown](assembly_en.md) · [Implementation notes](README.md)
 
-This configuration connects Tiny VGA through the Pmod socket, an INMP441 I²S microphone, a TM1638 LED&KEY module, and either of the two audio boards below. The nine accessory signals occupy consecutive DIP positions **26–34**. Physical DIP numbers, FPGA package balls, and Pmod contact numbers are different numbering systems; use the tables below.
+This configuration connects Tiny VGA through the Pmod socket, an INMP441 I²S microphone, a TM1638 LED&KEY module, and either of the two audio boards below. **TM1638 runs from 3.3 V and connects directly to the FPGA.** The nine accessory signals occupy consecutive DIP positions **26–34**. Physical DIP numbers, FPGA package balls, and Pmod contact numbers are different numbering systems; use the tables below.
 
 The code and simulated signal timing have been checked. The graphics and microphone-monitor examples also passed Vivado 2026.1 synthesis, routing and bitstream generation, with positive setup/hold margins on constrained paths. The master XDC leaves external I/O delays unspecified. **Physical assembly, monitor compatibility and audio playback still require a board trial.**
 
@@ -14,28 +14,27 @@ The code and simulated signal timing have been checked. The graphics and microph
 - Breadboard space for the 48-pin module, short jumpers and a multimeter. Use two breadboards or a DIP breakout if the module hides the contact strips; both pin rows must remain accessible and electrically separate.
 - **Tiny VGA Pmod by mole99**, with two bits per colour, plus a VGA cable and monitor. A two-Pmod Digilent Pmod VGA has a different interface and is not a direct substitute.
 - **INMP441** breakout with VDD, GND, SCK, WS, SD and L/R labels.
-- Standard **TM1638 LED&KEY** board with eight buttons, eight LEDs and eight digits.
-- **TXS0108E** bidirectional level-translator breakout for the three TM1638 signals. A four-channel TXS0104E breakout can also provide the required three channels. This guide uses A1/B1 through A3/B3 and an OE pin.
-- A regulated **3.3 V accessory supply**, for example a low-dropout 3.3 V regulator breakout fed from the USB-derived VU rail. Choose a regulator whose input range and dropout suit the measured VU voltage; use its specified input/output capacitors. Do not assume every “AMS1117” module will regulate with every USB cable.
+- Standard **TM1638 LED&KEY** board with eight buttons, eight LEDs and eight digits, operated at **3.3 V**. Its supply and signal pull-ups all use 3.3 V; no level translator is fitted.
+- A regulated **3.3 V accessory supply** for TM1638 and INMP441, for example a low-dropout 3.3 V regulator breakout fed from the USB-derived VU rail. Choose a regulator whose input range and dropout suit the measured VU voltage and whose current and thermal ratings cover the display at maximum brightness plus the microphone; use its specified input/output capacitors. Do not assume every “AMS1117” module will regulate with every USB cable.
 - One DAC: **WeAct I2S Earphone Module PCM5100A Stereo HP AMP 32 Ω 160 mW**, or **GY-PCM5102 PCM5102A pHAT-format I²S DAC**. Use headphones for the WeAct headphone jack; use an amplifier or powered speakers for the GY board’s line output.
 
 Place the Cmod across separate breadboard contact groups. Identify pin 1 from the board marking and the [Digilent DIP drawing, Figure 8.1](https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf#page=9), then locate **24 = VU**, **25 = GND**, and **26–34**. Use the printed numbers, not a guessed left/right orientation: turning the board over mirrors the view. Check continuity before plugging in USB.
 
-Put the translator and TM1638 cable near pins 26–28, the microphone near 29–31, and the DAC near 32–34. Keep the microphone opening unobstructed and away from speakers. The drawing is a connection map, not a scale drawing of breadboard holes.
+Put the TM1638 cable near pins 26–28, the microphone near 29–31, and the DAC near 32–34. Keep the microphone opening unobstructed and away from speakers. The drawing is a connection map, not a scale drawing of breadboard holes.
 
-![Connection map: Cmod A7, Tiny VGA, translated TM1638, INMP441 and DAC](wiring.svg)
+![Connection map: Cmod A7, Tiny VGA, direct 3.3 V TM1638, INMP441 and DAC](wiring.svg)
 
 ## 2. Power wiring — complete this before signal wiring
 
 1. Unplug USB and all supplies before moving wires. Leave the analog DIP pins 15/16, SRAM and flash connections unused.
 2. Use USB as the board’s sole power source for the initial build. Digilent documents **VU, DIP 24**, as USB-derived power when USB is connected; it is approximately 5 V, with a diode drop. **DIP 25 is ground.** Never attach an external supply to VU while USB is connected.
-3. Connect pin 25 to the common ground rail. Connect every accessory ground and the translator GND to that rail. Bridge split breadboard rails only after checking them with a meter.
-4. Feed the TM1638 VCC, translator VCCB and the DAC’s verified 5 V/VIN input from the USB-derived VU rail. Allow for the combined FPGA, display and audio current: a connector is not an unlimited power supply. If the rails sag or the board disconnects, use a suitable powered USB source or a separate regulated accessory supply. With a separate accessory supply, disconnect the VU-to-accessory feed and keep only the grounds common.
-5. Feed the accessory regulator input from the same accessory power rail. Its **3.3 V output** supplies INMP441 VDD and translator VCCA. Do not connect this regulator output to the Cmod’s Pmod 3.3 V outputs; Tiny VGA obtains its power directly through the Pmod socket.
-6. Set translator OE high to **VCCA = 3.3 V** after both sides are powered. Follow the translator breakout’s enable/power-up circuit; OE must not be pulled to 5 V. Add the manufacturer-required supply decoupling if the breakout does not have it. Keep translator signal wires short and avoid additional large capacitive loads.
-7. Measure VU, accessory 3.3 V and the grounds before fitting the modules. No FPGA signal pin supplies power, and no 5 V signal is wired directly to the FPGA. A direct TM1638 DIO connection is especially unsuitable because data returns from the module.
+3. Connect pin 25 to the common ground rail. Connect every accessory ground to that rail. Bridge split breadboard rails only after checking them with a meter.
+4. Feed the DAC’s verified 5 V/VIN input and the **input of the 3.3 V accessory regulator** from the USB-derived VU rail. Allow for the combined FPGA, display and audio current: a connector is not an unlimited power supply. If the rails sag or the board disconnects, use a suitable powered USB source or a separate regulated accessory supply. With a separate accessory supply, disconnect the VU-to-accessory feed and keep only the grounds common.
+5. Connect the regulator’s **3.3 V output to TM1638 VCC and INMP441 VDD**. The regulator must maintain 3.3 V with the display at maximum brightness. Do not connect this regulator output to the Cmod’s Pmod 3.3 V outputs; Tiny VGA obtains its power directly through the Pmod socket.
+6. Keep every TM1638 signal pull-up connected to the module’s **3.3 V VCC**. Wire DIO, CLK and STB directly to DIP 26, 27 and 28 respectively, using short wires. Keep TM1638 powered from 3.3 V with this direct connection; do not connect its VCC or pull-ups to VU/5 V.
+7. Measure VU, accessory 3.3 V and the grounds before fitting the modules, then check the 3.3 V rail again with the display lit. No FPGA signal pin supplies power, and no 5 V signal is wired directly to the FPGA.
 
-References: [Digilent power and DIP documentation](https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf), [TI TXS0108E](https://www.ti.com/lit/ds/symlink/txs0108e.pdf). For the translator, A is the 3.3 V side and B is the 5 V side.
+References: [Digilent power and DIP documentation](https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf). [TM1638 library authors report successful 3.3 V supply and logic operation](https://github.com/bitbank2/tm1638). This assembly uses that arrangement; check the buttons and display on your module during bring-up. Titan’s [TM1638 data sheet](https://futuranet.it/futurashop/image/catalog/data/Download/TM1638_V1.3_EN.pdf#page=15) characterizes electrical behavior at 4.5–5.5 V, so it does not guarantee the 3.3 V operating point.
 
 ## 3. Compact accessory pin map
 
@@ -43,9 +42,9 @@ The names in the XDC are retained verbatim. All functional mapping is inside `bo
 
 | DIP position | XDC/top port | FPGA ball | Function | Wire destination |
 | --- | --- | --- | --- | --- |
-| 26 | pio26 | R3 | TM1638 bidirectional data | Translator A1; B1 → TM1638 DIO |
-| 27 | pio27 | T3 | TM1638 clock | Translator A2; B2 → TM1638 CLK |
-| 28 | pio28 | R2 | TM1638 strobe | Translator A3; B3 → TM1638 STB |
+| 26 | pio26 | R3 | TM1638 bidirectional data | TM1638 DIO, direct 3.3 V logic |
+| 27 | pio27 | T3 | TM1638 clock | TM1638 CLK, direct 3.3 V logic |
+| 28 | pio28 | R2 | TM1638 strobe | TM1638 STB, direct 3.3 V logic |
 | 29 | pio29 | T1 | Microphone bit clock | INMP441 SCK |
 | 30 | pio30 | T2 | Microphone word select | INMP441 WS |
 | 31 | pio31 | U1 | Microphone data input | INMP441 SD |
@@ -140,7 +139,7 @@ The repository’s synthesis wrapper proceeds to configuration after a successfu
 
 1. First connect only the Cmod and USB. Confirm that Vivado detects the **35T** part. Inspect clock, timing and DRC reports after the build: the 12 MHz input and approximately 100 MHz MMCM output must be present, with no unexplained timing or pin-assignment errors.
 2. With power removed, add Tiny VGA. Run the graphics lab and check geometry, colour ordering and blanking. A working VGA image is the first clock/video check.
-3. Add the translator and TM1638. In `lab_specific_board_config.svh`, enable `INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` when the lab needs the display/keys. Check each button and digit before adding audio.
+3. Add TM1638 with **VCC = 3.3 V**, common ground, and direct DIO/CLK/STB connections to DIP 26/27/28. In `lab_specific_board_config.svh`, enable `INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` when the lab needs the display/keys. Check each button, LED and digit, and verify the 3.3 V supply under display load before adding audio.
 4. Add the INMP441. Enable `INSTANTIATE_MICROPHONE_INTERFACE_MODULE`; run `labs/3_music/3_0_oscilloscope` and speak or clap near the microphone. Check for a changing waveform, not just an active clock.
 5. Fit **one** DAC option. Enable `INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE`. Run `labs/3_music/3_3_note_synthesizer` to check a generated tone, then `labs/3_music/3_11_microphone_monitor` for the microphone-to-DAC route. Keep the microphone away from the output speaker to avoid feedback.
 6. If a peripheral macro is disabled, its clocks/data are held inactive and its input value is zero. This is intentional; changing wiring cannot enable a compiled-out peripheral. Graphics also needs `INSTANTIATE_GRAPHICS_INTERFACE_MODULE`.
@@ -152,7 +151,8 @@ The repository’s synthesis wrapper proceeds to configuration after a successfu
 | Red RGB LED stays on | BTN0 not held; 12 MHz oscillator, MMCM lock and power stable; correct part selected |
 | Monitor reports no signal | Tiny VGA orientation; JA4 = VS and JA10 = HS; graphics macro; measured sync rates; monitor accepts the 25 MHz convention |
 | Image has incorrect colours or borders | Use the R1/R0 table, not an 8-colour Pmod map; inspect blanking and colour-bit order |
-| TM1638 digits work but keys do not | DIO really uses a bidirectional translator; all grounds common; both translator supplies and OE correct |
+| TM1638 digits work but keys do not | DIO connects directly to DIP 26; pull-ups use 3.3 V; common ground; correct LED&KEY module variant |
+| TM1638 display is dim or unstable | Measure 3.3 V at module VCC under load; check regulator current/thermal capacity, short power leads and brightness setting |
 | Microphone is silent | VDD = 3.3 V; L/R = GND; SD/SCK not swapped; microphone macro enabled |
 | DAC clocks exist but no sound | Unmute and I²S settings; MCLK/SCK grounded; correct output load; nonzero lab sound samples |
 | USB disconnects when display/audio starts | Supply/cable voltage drop or excessive combined current; stop and check the power distribution |
@@ -163,7 +163,8 @@ The repository’s synthesis wrapper proceeds to configuration after a successfu
 - [Digilent master XDC, pinned revision](https://github.com/Digilent/digilent-xdc/blob/c8644a9fe31cc803789643124545d56b3bef4600/Cmod-A7-Master.xdc): original pin definitions. [Local unchanged copy](reference/Cmod-A7-Master.xdc) and [provenance](reference/source.json).
 - [Tiny VGA designer repository](https://github.com/mole99/tiny-vga): RGB222 Pmod assignment.
 - [WeAct manufacturer repository](https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1): V1.0 schematic and header.
-- [TI PCM510xA data sheet](https://www.ti.com/lit/ds/symlink/pcm5102a.pdf), [TI TXS0108E data sheet](https://www.ti.com/lit/ds/symlink/txs0108e.pdf), [INMP441 data sheet](https://invensense.tdk.com/wp-content/uploads/2015/02/INMP441.pdf).
+- [TM1638 3.3 V operation report](https://github.com/bitbank2/tm1638) and [Titan TM1638 data sheet](https://futuranet.it/futurashop/image/catalog/data/Download/TM1638_V1.3_EN.pdf): practical operation and published electrical specifications.
+- [TI PCM510xA data sheet](https://www.ti.com/lit/ds/symlink/pcm5102a.pdf), [INMP441 data sheet](https://invensense.tdk.com/wp-content/uploads/2015/02/INMP441.pdf).
 - [AMD MMCME2_BASE documentation](https://docs.amd.com/r/en-US/ug953-vivado-7series-libraries/MMCME2_BASE): clock primitive and lock/reset behavior.
 
 Run the board-specific automated checks from the repository root:

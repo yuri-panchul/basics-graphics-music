@@ -27,9 +27,9 @@ module board_specific_top
 
     inout        pio1, pio2, pio3, pio4, pio5, pio6, pio7, pio8,
 
-    inout        pio26,  // TM1638 DIO, through a 3.3 V / 5 V translator
-    output       pio27,  // TM1638 CLK, through the translator
-    output       pio28,  // TM1638 STB, through the translator
+    inout        pio26,  // TM1638 DIO, direct; module VCC and pull-ups at 3.3 V
+    output       pio27,  // TM1638 CLK, direct 3.3 V logic
+    output       pio28,  // TM1638 STB, direct 3.3 V logic
     output       pio29,  // INMP441 SCK
     output       pio30,  // INMP441 WS
     input        pio31,  // INMP441 SD; L/R is wired to GND
