@@ -43,6 +43,9 @@
 | Частота выборок микрофона | 48,8 кГц | 11,7 кГц | 11,7 кГц |
 | Частота выборок ЦАП | 48,8 кГц | 46,9 кГц | 46,9 кГц |
 
+Каждая из трёх есть и без TM1638, с двумя кнопками, двумя светодиодами и без
+семисегментного индикатора: [cmod_a7_35_no_tm1638](../cmod_a7_35_no_tm1638/README_ru.md), [cmod_a7_35_no_pll_vga_304_no_tm1638](../cmod_a7_35_no_pll_vga_304_no_tm1638/README_ru.md), [cmod_a7_35_no_pll_vga_320_no_tm1638](../cmod_a7_35_no_pll_vga_320_no_tm1638/README_ru.md).
+
 Выберите эту конфигурацию, чтобы увидеть проект без генератора тактовой
 частоты с ровными пикселями шириной ровно в два пикселя монитора. Если
 монитор не показывает картинку или сообщает, что режим вне диапазона,
@@ -265,4 +268,18 @@ rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304
 
 ```text
 переименуй cmod_a7_35_no_pll_304 в cmod_a7_35_no_pll_vga_304
+```
+
+**23:17**:
+
+```text
+keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638
+```
+
+```text
+пока оставь README.csv с CR-LF, я исправлю это позже; сначала сделай коммит и push, затем создай 3 новые конфигурации, которые не используют TM1638, а имеют только 2 кнопки, 2 светодиода и никакого семисегментного индикатора: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638
 ```

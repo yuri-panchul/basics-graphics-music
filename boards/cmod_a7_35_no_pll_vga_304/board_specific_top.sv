@@ -2,6 +2,15 @@
 `include "lab_specific_board_config.svh"
 `include "swap_bits.svh"
 
+// A board configuration named like this one with _no_tm1638 at the end
+// defines the macro below and includes this file. The design then has no
+// TM1638: the two buttons and the two LEDs of Cmod A7 are the keys and the
+// LEDs of the labs, and there is no seven-segment display.
+
+`ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+`endif
+
 // Digilent Cmod A7-35T on a breadboard, with the hardware and the wiring of
 // boards/cmod_a7_35, but without the MMCM: the whole design runs on the
 // 12 MHz oscillator. See README.md. The breadboard holds:

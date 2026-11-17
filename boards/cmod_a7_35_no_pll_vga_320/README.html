@@ -76,6 +76,7 @@
 <h2 id="which-configuration-to-choose">Which configuration to choose</h2>
 <p>The three configurations share the hardware, the pins and the wiring:</p>
 <div class="scroll"><table><thead><tr><th></th><th><a href="../cmod_a7_35/README.md">cmod_a7_35</a></th><th>cmod_a7_35_no_pll_vga_320, this one</th><th><a href="../cmod_a7_35_no_pll_vga_304/README.md">cmod_a7_35_no_pll_vga_304</a></th></tr></thead><tbody><tr><td>Clock of the design</td><td>50 MHz from an MMCM</td><td>12 MHz, the oscillator</td><td>12 MHz, the oscillator</td></tr><tr><td>Screen the labs draw on</td><td>640x480</td><td>320x480</td><td>304x480</td></tr><tr><td>Width of a pixel on the monitor, in pixels of 640</td><td>1</td><td>2</td><td>2.1: some 2, some 3</td></tr><tr><td>Line rate</td><td>31.25 kHz</td><td>30.0 kHz</td><td>31.50 kHz</td></tr><tr><td>Frame rate</td><td>59.5 Hz</td><td>57.1 Hz</td><td>59.99 Hz</td></tr><tr><td>Monitors</td><td>Accept it</td><td>Some refuse 30 kHz</td><td>Accept it as 640x480</td></tr><tr><td>Microphone sample rate</td><td>48.8 kHz</td><td>11.7 kHz</td><td>11.7 kHz</td></tr><tr><td>DAC sample rate</td><td>48.8 kHz</td><td>46.9 kHz</td><td>46.9 kHz</td></tr></tbody></table></div>
+<p>Each of the three also comes without TM1638, with two buttons, two LEDs and no seven-segment display: <a href="../cmod_a7_35_no_tm1638/README.md">cmod_a7_35_no_tm1638</a>, <a href="../cmod_a7_35_no_pll_vga_304_no_tm1638/README.md">cmod_a7_35_no_pll_vga_304_no_tm1638</a>, <a href="../cmod_a7_35_no_pll_vga_320_no_tm1638/README.md">cmod_a7_35_no_pll_vga_320_no_tm1638</a>.</p>
 <p>Choose this configuration to see a design without a clock generator with clean pixels of exactly two monitor pixels each. If your monitor shows no picture or reports the mode as out of range, use <a href="../cmod_a7_35_no_pll_vga_304/README.md">cmod_a7_35_no_pll_vga_304</a>, whose timing is close to the standard one, or <a href="../cmod_a7_35/README.md">cmod_a7_35</a>.</p>
 <h2 id="vga-timing">VGA timing</h2>
 <p><a href="../../peripherals/vga.sv">peripherals/vga.sv</a> takes its horizontal timing as parameters, so it is used unchanged. board_specific_top.sv passes the timing below; with <code>CLK_MHZ</code> and <code>PIXEL_MHZ</code> both 12, <code>vga.sv</code> moves to the next pixel on every clock. The vertical timing is the standard one.</p>
@@ -133,6 +134,10 @@ done</code></pre>
 <pre><code class="language-text">also make pictures with weact in addition to gy</code></pre>
 <p><strong>23:04</strong>:</p>
 <pre><code class="language-text">rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304</code></pre>
+<p><strong>23:17</strong>:</p>
+<pre><code class="language-text">keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
 </main>
 </body>
 </html>

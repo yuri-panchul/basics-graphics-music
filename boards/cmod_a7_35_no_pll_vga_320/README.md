@@ -43,6 +43,9 @@ The three configurations share the hardware, the pins and the wiring:
 | Microphone sample rate | 48.8 kHz | 11.7 kHz | 11.7 kHz |
 | DAC sample rate | 48.8 kHz | 46.9 kHz | 46.9 kHz |
 
+Each of the three also comes without TM1638, with two buttons, two LEDs
+and no seven-segment display: [cmod_a7_35_no_tm1638](../cmod_a7_35_no_tm1638/README.md), [cmod_a7_35_no_pll_vga_304_no_tm1638](../cmod_a7_35_no_pll_vga_304_no_tm1638/README.md), [cmod_a7_35_no_pll_vga_320_no_tm1638](../cmod_a7_35_no_pll_vga_320_no_tm1638/README.md).
+
 Choose this configuration to see a design without a clock generator with
 clean pixels of exactly two monitor pixels each. If your monitor shows no
 picture or reports the mode as out of range, use
@@ -248,4 +251,12 @@ also make pictures with weact in addition to gy
 
 ```text
 rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304
+```
+
+**23:17**:
+
+```text
+keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638
 ```

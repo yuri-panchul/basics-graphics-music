@@ -76,6 +76,7 @@
 <h2 id="какую-конфигурацию-выбрать">Какую конфигурацию выбрать</h2>
 <p>У трёх конфигураций общие оборудование, выводы и соединения:</p>
 <div class="scroll"><table><thead><tr><th></th><th><a href="../cmod_a7_35/README_ru.md">cmod_a7_35</a></th><th>cmod_a7_35_no_pll_vga_320, эта</th><th><a href="../cmod_a7_35_no_pll_vga_304/README_ru.md">cmod_a7_35_no_pll_vga_304</a></th></tr></thead><tbody><tr><td>Тактовая частота проекта</td><td>50 МГц от MMCM</td><td>12 МГц, кварцевый генератор</td><td>12 МГц, кварцевый генератор</td></tr><tr><td>Экран, на котором рисуют упражнения</td><td>640x480</td><td>320x480</td><td>304x480</td></tr><tr><td>Ширина пикселя на мониторе, в пикселях из 640</td><td>1</td><td>2</td><td>2,1: одни 2, другие 3</td></tr><tr><td>Частота строк</td><td>31,25 кГц</td><td>30,0 кГц</td><td>31,50 кГц</td></tr><tr><td>Частота кадров</td><td>59,5 Гц</td><td>57,1 Гц</td><td>59,99 Гц</td></tr><tr><td>Мониторы</td><td>Принимают</td><td>Некоторые не принимают 30 кГц</td><td>Принимают как 640x480</td></tr><tr><td>Частота выборок микрофона</td><td>48,8 кГц</td><td>11,7 кГц</td><td>11,7 кГц</td></tr><tr><td>Частота выборок ЦАП</td><td>48,8 кГц</td><td>46,9 кГц</td><td>46,9 кГц</td></tr></tbody></table></div>
+<p>Каждая из трёх есть и без TM1638, с двумя кнопками, двумя светодиодами и без семисегментного индикатора: <a href="../cmod_a7_35_no_tm1638/README_ru.md">cmod_a7_35_no_tm1638</a>, <a href="../cmod_a7_35_no_pll_vga_304_no_tm1638/README_ru.md">cmod_a7_35_no_pll_vga_304_no_tm1638</a>, <a href="../cmod_a7_35_no_pll_vga_320_no_tm1638/README_ru.md">cmod_a7_35_no_pll_vga_320_no_tm1638</a>.</p>
 <p>Выберите эту конфигурацию, чтобы увидеть проект без генератора тактовой частоты с ровными пикселями шириной ровно в два пикселя монитора. Если монитор не показывает картинку или сообщает, что режим вне диапазона, возьмите <a href="../cmod_a7_35_no_pll_vga_304/README_ru.md">cmod_a7_35_no_pll_vga_304</a>, у которой синхронизация близка к стандартной, или <a href="../cmod_a7_35/README_ru.md">cmod_a7_35</a>.</p>
 <h2 id="синхронизация-vga">Синхронизация VGA</h2>
 <p><a href="../../peripherals/vga.sv">peripherals/vga.sv</a> получает горизонтальную синхронизацию через параметры, поэтому используется без изменений. board_specific_top.sv передаёт синхронизацию из таблицы ниже; когда <code>CLK_MHZ</code> и <code>PIXEL_MHZ</code> оба равны 12, <code>vga.sv</code> переходит к следующему пикселю на каждом такте. Вертикальная синхронизация стандартная.</p>
@@ -137,6 +138,13 @@ done</code></pre>
 <p><strong>23:04</strong>:</p>
 <pre><code class="language-text">rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304</code></pre>
 <pre><code class="language-text">переименуй cmod_a7_35_no_pll_304 в cmod_a7_35_no_pll_vga_304</code></pre>
+<p><strong>23:17</strong>:</p>
+<pre><code class="language-text">keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
+<pre><code class="language-text">пока оставь README.csv с CR-LF, я исправлю это позже; сначала сделай коммит и push, затем создай 3 новые конфигурации, которые не используют TM1638, а имеют только 2 кнопки, 2 светодиода и никакого семисегментного индикатора: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
 </main>
 </body>
 </html>

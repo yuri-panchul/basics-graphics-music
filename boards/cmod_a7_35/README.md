@@ -428,7 +428,9 @@ Good first labs:
 The design is also reset after loading, until the clock generator is ready.
 Without TM1638 there is no reset button: both buttons are keys. With the
 scripts of the repository as they are, though, TM1638 is always on for this
-board; see [Status](#status).
+board; see [Status](#status). For a design without TM1638, with two buttons,
+two LEDs and no seven-segment display, use
+[cmod_a7_35_no_tm1638](../cmod_a7_35_no_tm1638/README.md).
 
 ## Clock and VGA
 
@@ -815,6 +817,20 @@ also make pictures with weact in addition to gy
 
 ```text
 rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304
+```
+
+**23:17**:
+
+```text
+keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638
+```
+
+**23:53**:
+
+```text
+commit and push
 ```
 
 Yuri Panchul also ran the shell command

@@ -150,7 +150,7 @@
 <ul><li><code>labs/2_graphics/2_3_color_stripes</code>: the VGA output;</li><li><code>labs/1_basics/1_01_and_or_not_xor_de_morgan</code>: the TM1638 keys and LEDs;</li><li><code>labs/3_music/3_0_oscilloscope</code>: the microphone signal on the monitor; the microphone, the DAC and the TM1638 are all used by the labs in <code>labs/3_music</code>.</li></ul>
 <h2 id="buttons-and-leds">Buttons and LEDs</h2>
 <div class="scroll"><table><thead><tr><th>On Cmod A7</th><th class="r">FPGA pin</th><th>Port</th><th>Use</th></tr></thead><tbody><tr><td>BTN0, BTN1</td><td class="r">A18, B18</td><td><code>btn[0]</code>, <code>btn[1]</code></td><td>With TM1638, as in most labs: either button resets the design, and the labs take their keys from TM1638. Without TM1638: <code>key[0]</code> and <code>key[1]</code> of the labs.</td></tr><tr><td>LED1, LED2</td><td class="r">A17, C16</td><td><code>led[0]</code>, <code>led[1]</code></td><td><code>led[0]</code> and <code>led[1]</code> of the labs; TM1638 shows all eight.</td></tr><tr><td>RGB LED</td><td class="r">B17, B16, C17</td><td><code>led0_b</code>, <code>led0_g</code>, <code>led0_r</code></td><td>Off. Its pins are driven high, because it lights when a pin is low, and the default pull-downs of unused pins would make it glow.</td></tr><tr><td>USB UART</td><td class="r">J17, J18</td><td><code>uart_txd_in</code>, <code>uart_rxd_out</code></td><td><code>uart_rx</code> and <code>uart_tx</code> of the labs.</td></tr></tbody></table></div>
-<p>The design is also reset after loading, until the clock generator is ready. Without TM1638 there is no reset button: both buttons are keys. With the scripts of the repository as they are, though, TM1638 is always on for this board; see <a href="#status">Status</a>.</p>
+<p>The design is also reset after loading, until the clock generator is ready. Without TM1638 there is no reset button: both buttons are keys. With the scripts of the repository as they are, though, TM1638 is always on for this board; see <a href="#status">Status</a>. For a design without TM1638, with two buttons, two LEDs and no seven-segment display, use <a href="../cmod_a7_35_no_tm1638/README.md">cmod_a7_35_no_tm1638</a>.</p>
 <h2 id="clock-and-vga">Clock and VGA</h2>
 <p>The oscillator of Cmod A7 runs at 12 MHz. The VGA module of the repository, <a href="../../peripherals/vga.sv">peripherals/vga.sv</a>, makes its 25 MHz pixel rate from a faster clock with a clock enable: it counts <code>CLK_MHZ / PIXEL_MHZ</code> cycles of the clock per pixel. This needs a clock that is a multiple of 25 MHz. With 12 MHz, <code>CLK_MHZ / PIXEL_MHZ</code> is 0 and the module never produces a pixel, and a pixel clock of 12 MHz cannot make the standard 640x480 at 60 Hz either, which needs about 25 MHz.</p>
 <p>So board_specific_top.sv starts with a clock generator of the FPGA, an MMCM, that turns 12 MHz into 50 MHz:</p>
@@ -350,6 +350,12 @@ https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
 <pre><code class="language-text">also make pictures with weact in addition to gy</code></pre>
 <p><strong>23:04</strong>:</p>
 <pre><code class="language-text">rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304</code></pre>
+<p><strong>23:17</strong>:</p>
+<pre><code class="language-text">keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
+<p><strong>23:53</strong>:</p>
+<pre><code class="language-text">commit and push</code></pre>
 <p>Yuri Panchul also ran the shell command <code>git -C ~/claude/basics-graphics-music push origin claude_cmod_a7</code> twice, at 18:45 and 18:46; it is a command, not a prompt, and is left out above.</p>
 </main>
 </body>

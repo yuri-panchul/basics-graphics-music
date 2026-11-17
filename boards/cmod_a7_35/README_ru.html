@@ -150,7 +150,7 @@
 <ul><li><code>labs/2_graphics/2_3_color_stripes</code> — выход VGA;</li><li><code>labs/1_basics/1_01_and_or_not_xor_de_morgan</code> — кнопки и светодиоды TM1638;</li><li><code>labs/3_music/3_0_oscilloscope</code> — сигнал микрофона на мониторе; микрофон, ЦАП и TM1638 используют упражнения в <code>labs/3_music</code>.</li></ul>
 <h2 id="кнопки-и-светодиоды">Кнопки и светодиоды</h2>
 <div class="scroll"><table><thead><tr><th>На Cmod A7</th><th class="r">Вывод ПЛИС</th><th>Порт</th><th>Назначение</th></tr></thead><tbody><tr><td>BTN0, BTN1</td><td class="r">A18, B18</td><td><code>btn[0]</code>, <code>btn[1]</code></td><td>С TM1638, как в большинстве упражнений: любая из кнопок сбрасывает проект, а упражнения получают кнопки от TM1638. Без TM1638 — <code>key[0]</code> и <code>key[1]</code> упражнений.</td></tr><tr><td>LED1, LED2</td><td class="r">A17, C16</td><td><code>led[0]</code>, <code>led[1]</code></td><td><code>led[0]</code> и <code>led[1]</code> упражнений; TM1638 показывает все восемь.</td></tr><tr><td>RGB-светодиод</td><td class="r">B17, B16, C17</td><td><code>led0_b</code>, <code>led0_g</code>, <code>led0_r</code></td><td>Выключен. На его выводы подаётся высокий уровень: он горит при низком уровне, а подтяжка неиспользуемых выводов к земле по умолчанию заставила бы его светиться.</td></tr><tr><td>UART через USB</td><td class="r">J17, J18</td><td><code>uart_txd_in</code>, <code>uart_rxd_out</code></td><td><code>uart_rx</code> и <code>uart_tx</code> упражнений.</td></tr></tbody></table></div>
-<p>Проект сбрасывается и после загрузки, пока не будет готов генератор тактовой частоты. Без TM1638 кнопки сброса нет: обе кнопки — это кнопки упражнений. Однако со скриптами репозитория в нынешнем виде TM1638 на этой плате включён всегда; см. раздел <a href="#состояние">Состояние</a>.</p>
+<p>Проект сбрасывается и после загрузки, пока не будет готов генератор тактовой частоты. Без TM1638 кнопки сброса нет: обе кнопки — это кнопки упражнений. Однако со скриптами репозитория в нынешнем виде TM1638 на этой плате включён всегда; см. раздел <a href="#состояние">Состояние</a>. Для проекта без TM1638, с двумя кнопками, двумя светодиодами и без семисегментного индикатора, возьмите <a href="../cmod_a7_35_no_tm1638/README_ru.md">cmod_a7_35_no_tm1638</a>.</p>
 <h2 id="тактовая-частота-и-vga">Тактовая частота и VGA</h2>
 <p>Генератор Cmod A7 работает на 12 МГц. Модуль VGA репозитория, <a href="../../peripherals/vga.sv">peripherals/vga.sv</a>, получает частоту пикселей 25 МГц из более высокой тактовой частоты с помощью разрешения такта: он отсчитывает <code>CLK_MHZ / PIXEL_MHZ</code> тактов на пиксель. Для этого нужна частота, кратная 25 МГц. При 12 МГц <code>CLK_MHZ / PIXEL_MHZ</code> равно 0, и модуль не выдаёт ни одного пикселя; а частота пикселей 12 МГц не даёт и стандартного режима 640x480 при 60 Гц, которому нужно около 25 МГц.</p>
 <p>Поэтому board_specific_top.sv начинается с генератора тактовой частоты ПЛИС, MMCM, который превращает 12 МГц в 50 МГц:</p>
@@ -365,6 +365,16 @@ https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
 <p><strong>23:04</strong>:</p>
 <pre><code class="language-text">rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304</code></pre>
 <pre><code class="language-text">переименуй cmod_a7_35_no_pll_304 в cmod_a7_35_no_pll_vga_304</code></pre>
+<p><strong>23:17</strong>:</p>
+<pre><code class="language-text">keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
+<pre><code class="language-text">пока оставь README.csv с CR-LF, я исправлю это позже; сначала сделай коммит и push, затем создай 3 новые конфигурации, которые не используют TM1638, а имеют только 2 кнопки, 2 светодиода и никакого семисегментного индикатора: cmod_a7_35_no_tm1638
+cmod_a7_35_no_pll_vga_304_no_tm1638
+cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
+<p><strong>23:53</strong>:</p>
+<pre><code class="language-text">commit and push</code></pre>
+<pre><code class="language-text">сделай коммит и push</code></pre>
 <p>Кроме того, Юрий Панчул дважды, в 18:45 и 18:46, выполнил команду оболочки <code>git -C ~/claude/basics-graphics-music push origin claude_cmod_a7</code>; это команда, а не промпт, поэтому её здесь нет.</p>
 </main>
 </body>

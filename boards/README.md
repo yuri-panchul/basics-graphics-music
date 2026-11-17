@@ -1,6 +1,6 @@
 # FPGA boards in basics-graphics-music
 
-58 boards, one line each. The Quartus ranges are **measured**: each installed version was asked whether it can build the board's exact part. A range marked with a dagger reaches past the versions available here, so its boundary is not measured.
+61 boards, one line each. The Quartus ranges are **measured**: each installed version was asked whether it can build the board's exact part. A range marked with a dagger reaches past the versions available here, so its boundary is not measured.
 
 Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under /opt, and 26.1.1 Pro. The repository states no version requirement for Vivado, Gowin EDA or the Yosys flow, so those entries are the author's knowledge.
 
@@ -54,7 +54,10 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 | Xilinx | Digilent | basys3 | Artix-7 | Vivado, any version † | never | VGA |
 | Xilinx | Digilent | cmod_a7_35 | Artix-7 | Vivado, any version † | always | VGA |
 | Xilinx | Digilent | cmod_a7_35_no_pll_vga_304 | Artix-7 | Vivado, any version † | always | VGA |
+| Xilinx | Digilent | cmod_a7_35_no_pll_vga_304_no_tm1638 | Artix-7 | Vivado, any version † | never | VGA |
 | Xilinx | Digilent | cmod_a7_35_no_pll_vga_320 | Artix-7 | Vivado, any version † | always | VGA |
+| Xilinx | Digilent | cmod_a7_35_no_pll_vga_320_no_tm1638 | Artix-7 | Vivado, any version † | never | VGA |
+| Xilinx | Digilent | cmod_a7_35_no_tm1638 | Artix-7 | Vivado, any version † | never | VGA |
 | Xilinx | Digilent | cmod_s7 | Spartan-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | eclypse_z7 | Zynq-7000 | Vivado, any version † | always | none |
 | Xilinx | Digilent | nexys4 | Artix-7 | Vivado, any version † | never | VGA |
@@ -78,4 +81,4 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 * **MAX 10** — 21.1 and 25.1std build it, 13.x do not; the 14.0.2 bound is not measured here
 * **MAX II** — all four free editions build it
 
-Ranges fully measured for 23 of 58 boards.
+Ranges fully measured for 23 of 61 boards.

@@ -34,6 +34,11 @@ from xml.sax.saxutils import escape
 HERE = Path(__file__).resolve().parent
 BOARD = "cmod_a7_35"  # the board directory to write to
 
+
+def has_tm1638():
+    """The configurations named *_no_tm1638 have no TM1638."""
+    return not BOARD.endswith("_no_tm1638")
+
 FONT = "DejaVu Sans, Liberation Sans, Arial, sans-serif"
 MONO = "DejaVu Sans Mono, Liberation Mono, monospace"
 
@@ -254,11 +259,13 @@ def draw(variant):
                      f"and the 3.3 V regulator", 26, "bold")
     svg.text(40, 76, f"Board configuration {BOARD}, seen from above. The microphone, the DAC "
                      "and the 3.3 V regulator of variant B go straight into the breadboard; "
-                     "TinyVGA and TM1638 connect as in the wiring diagrams.", 15, fill=C["muted"])
+                     + ("TinyVGA and TM1638 connect" if has_tm1638() else "TinyVGA connects")
+                     + " as in the wiring diagrams.", 15, fill=C["muted"])
     svg.text(40, 98, "Tinted holes are the strips in use: the five holes of a strip are "
                      "connected. A dot is a jumper wire in a hole.", 15, fill=C["muted"])
-    legend = [("TM1638", C["TM"]), ("INMP441", C["MIC"]), ("DAC", C["DAC"]),
-              ("+3.3 V", C["3V3"]), ("GND", C["GND"])]
+    tm = has_tm1638()
+    legend = [("TM1638", C["TM"])] if tm else []
+    legend += [("INMP441", C["MIC"]), ("DAC", C["DAC"]), ("+3.3 V", C["3V3"]), ("GND", C["GND"])]
     x = 40
     for label, color in legend:
         svg.line(x, 128, x + 30, 128, color, 5)
@@ -297,9 +304,11 @@ def draw(variant):
 
     # Tint the strips in use
 
-    tints = [(17, True, C["MIC"]), (19, True, C["MIC"]), (20, True, C["MIC"]),
-             (21, True, C["TM"]), (22, True, C["TM"]), (23, True, C["TM"]), (24, True, C["GND"]),
-             (21, False, C["DAC"]), (22, False, C["DAC"]), (23, False, C["DAC"])]
+    tints = [(17, True, C["MIC"]), (19, True, C["MIC"]), (20, True, C["MIC"])]
+    if tm:
+        tints += [(21, True, C["TM"]), (22, True, C["TM"]), (23, True, C["TM"])]
+    tints += [(24, True, C["GND"]),
+              (21, False, C["DAC"]), (22, False, C["DAC"]), (23, False, C["DAC"])]
     for k, name in enumerate(REG_PINS):
         tints.append((REG_ROW + k, False, {"VIN": C["5V"], "GND": C["GND"],
                                            "VOUT": C["3V3"]}[name]))
@@ -336,7 +345,7 @@ def draw(variant):
         svg.circle(x, y, 5.5, "#f2c14e", "#5c4a12", 1)
         ny = y + 17 if col == CMOD_TOP else y - 10
         svg.text(x, ny, str(pin), 9, fill="#ffffff", anchor="middle", family=MONO)
-        if pin in CMOD_NAMES:
+        if pin in CMOD_NAMES and (tm or pin not in (26, 27, 28)):
             color = "#9fb2cf" if pin in CMOD_FREE else "#ffe08a"
             if col == CMOD_TOP:
                 svg.text(x + 3.5, y + 24, CMOD_NAMES[pin], 9, "bold", color, "end", MONO, rotate=-90)
@@ -355,24 +364,30 @@ def draw(variant):
     for k, s in enumerate(("in Pmod JA;", "in variant A", "through Pmod TPH2")):
         svg.text(tv0 + 95, Y(cmid) - 18 + 18 * k, s, 12, fill="#d0d0d0", anchor="middle")
 
-    # TM1638, off the breadboard above it, and its wires
+    if tm:
+        # TM1638, off the breadboard above it, and its wires
 
-    tm_y = Y("TO") - 6.6 * P
-    tm_pins = [("DIO", 21), ("CLK", 22), ("STB", 23), ("GND", 24), ("VCC", 25)]
-    svg.rect(X(19), tm_y - 3.6 * P, X(34) - X(19), 3.6 * P, "#f3f1ea", "#8a8577", 1.5, 6)
-    svg.rect(X(19), tm_y - 3.6 * P, 10, 3.6 * P, C["TM"], rx=3)
-    svg.text(X(19) + 22, tm_y - 2.55 * P, "TM1638 LED&KEY, off the breadboard", 14, "bold")
-    svg.text(X(19) + 22, tm_y - 1.75 * P, "female-to-male wires to its 5-pin header", 11,
-             fill=C["muted"])
-    for name, row in tm_pins:
-        svg.circle(X(row), tm_y, 5, "#f2c14e", "#5c4a12", 1)
-        svg.text(X(row), tm_y - 10, name, 9, "bold", anchor="middle", family=MONO)
-    for name, row in tm_pins[:4]:
-        color = C["GND"] if name == "GND" else C["TM"]
-        svg.wire(f"M{X(row):.1f},{Y('a'):.1f} L{X(row):.1f},{tm_y:.1f}", color)
-        wire_end(svg, row, "a", color)
-    svg.wire(f"M{X(25):.1f},{Y('TO'):.1f} L{X(25):.1f},{tm_y:.1f}", C["3V3"])
-    wire_end(svg, 25, "TO", C["3V3"])
+        tm_y = Y("TO") - 6.6 * P
+        tm_pins = [("DIO", 21), ("CLK", 22), ("STB", 23), ("GND", 24), ("VCC", 25)]
+        svg.rect(X(19), tm_y - 3.6 * P, X(34) - X(19), 3.6 * P, "#f3f1ea", "#8a8577", 1.5, 6)
+        svg.rect(X(19), tm_y - 3.6 * P, 10, 3.6 * P, C["TM"], rx=3)
+        svg.text(X(19) + 22, tm_y - 2.55 * P, "TM1638 LED&KEY, off the breadboard", 14, "bold")
+        svg.text(X(19) + 22, tm_y - 1.75 * P, "female-to-male wires to its 5-pin header", 11,
+                 fill=C["muted"])
+        for name, row in tm_pins:
+            svg.circle(X(row), tm_y, 5, "#f2c14e", "#5c4a12", 1)
+            svg.text(X(row), tm_y - 10, name, 9, "bold", anchor="middle", family=MONO)
+        for name, row in tm_pins[:4]:
+            color = C["GND"] if name == "GND" else C["TM"]
+            svg.wire(f"M{X(row):.1f},{Y('a'):.1f} L{X(row):.1f},{tm_y:.1f}", color)
+            wire_end(svg, row, "a", color)
+        svg.wire(f"M{X(25):.1f},{Y('TO'):.1f} L{X(25):.1f},{tm_y:.1f}", C["3V3"])
+        wire_end(svg, 25, "TO", C["3V3"])
+    else:
+        ny0 = Y("TO") - 9.6 * P
+        svg.text(X(19), ny0, "No TM1638 in this configuration:", 14, "bold")
+        svg.text(X(19), ny0 + 18, "the labs use the two buttons and the two LEDs of "
+                 "Cmod A7; DIP 26, 27 and 28 stay unconnected.", 12, fill=C["muted"])
 
     # DIP 25, GND, to the top GND rail
 
