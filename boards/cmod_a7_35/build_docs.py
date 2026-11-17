@@ -7,6 +7,7 @@ text is escaped verbatim, so historical instructions cannot become page markup.
 from pathlib import Path
 from html import escape
 import re
+import xml.etree.ElementTree as ET
 
 HERE = Path(__file__).resolve().parent
 
@@ -20,7 +21,10 @@ def inline(text):
         if code is not None:
             parts.append('<code>' + escape(code) + '</code>')
         elif image is not None:
-            parts.append(f'<figure><a href="{escape(image, quote=True)}"><img src="{escape(image, quote=True)}" alt="{escape(alt, quote=True)}" width="1100" height="760"></a><figcaption>{escape(alt)}</figcaption></figure>')
+            # Reserve the actual SVG aspect ratio for both connection diagrams.
+            svg = ET.parse(HERE / image).getroot()
+            width, height = svg.attrib['viewBox'].split()[2:]
+            parts.append(f'<figure><a href="{escape(image, quote=True)}"><img src="{escape(image, quote=True)}" alt="{escape(alt, quote=True)}" width="{escape(width, quote=True)}" height="{escape(height, quote=True)}"></a><figcaption>{escape(alt)}</figcaption></figure>')
         elif target is not None:
             parts.append(f'<a href="{escape(target, quote=True)}">{escape(label)}</a>')
         else:

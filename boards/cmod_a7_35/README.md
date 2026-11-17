@@ -2,6 +2,7 @@
 
 - [English assembly guide](assembly_en.md) · [HTML](assembly_en.html)
 - [Инструкция по сборке на русском](assembly_ru.md) · [HTML](assembly_ru.html)
+- DAC breadboard drawing: [English](breadboard_dac_en.svg) · [Русский](breadboard_dac_ru.svg)
 
 Target: `xc7a35tcpg236-1`, hardware-manager device `xc7a35t_0`.
 The configuration was added on branch `codex_cmod_a7`, based on main
@@ -148,3 +149,10 @@ python3 boards/cmod_a7_35/build_docs.py
 The SVG connection map is shared by both editions. The GY sales description
 does not identify a unique PCB revision: its guide specifies electrical
 signal names and settings without inventing header or jumper numbers.
+
+The separate DAC breadboard drawings show Cmod at c4–c27 / g4–g27, WeAct's
+verified P1 order, the VU-to-DAC power route, and the accessory 3.3 V regulator.
+Each guide includes a matching jumper table and GY substitution instructions.
+Rebuild these editable SVGs with `python3 boards/cmod_a7_35/draw_breadboard.py`
+before rebuilding HTML. The generator preserves the distinction between
+breadboard row numbers, DIP pins and DAC header contacts.

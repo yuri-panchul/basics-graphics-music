@@ -77,6 +77,8 @@ The FPGA’s MMCM converts the onboard 12 MHz oscillator to 100 MHz. No rewrite 
 
 ## 5. DAC option A: WeAct PCM5100A earphone board
 
+**DAC power path: USB → Cmod VU (DIP 24) → WeAct VCC (P1 contact 1). Ground: Cmod DIP 25 → WeAct GND (P1 contact 2).** VU is near 5 V, reduced by the USB power-path diode. The module's onboard regulator supplies its 3.3 V circuitry; the I²S signals from the FPGA are also 3.3 V logic. The separate accessory regulator supplies TM1638 and INMP441.
+
 The [official WeAct V1.0 schematic](https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1/blob/master/Hardware/WeAct-I2SEarphoneModuleV1_V10%20SchDoc.pdf) identifies a seven-contact header. Match the labels on your board; a photograph taken from the reverse side changes apparent order.
 
 | WeAct P1 contact | Label | Connection |
@@ -91,9 +93,38 @@ The [official WeAct V1.0 schematic](https://github.com/WeActStudio/WeActStudio.I
 
 The schematic contains a 3.3 V regulator, PCM5100A and an HT97226 headphone amplifier. The factory circuit selects I²S; leave the de-emphasis bridge in its default off state. Start with a quiet signal and connect headphones to the jack. The `/SD` control is **not** the INMP441 `SD` data signal. Do not connect `/SD` to the microphone or tie it to 5 V.
 
+### Breadboard placement and jumpers
+
+![Breadboard: USB-derived DAC power, direct I²S, and the separate 3.3 V accessory regulator](breadboard_dac_en.svg)
+
+Click the drawing to open it at full size. This is a **DAC-focused top view**; the earlier connection map supplies the TM1638 and microphone signal wiring. The WeAct board and regulator sit beside the breadboard and connect with jumper leads. Their drawn component outlines are simplified; the WeAct P1 order follows the manufacturer's image and schematic. Regulator terminal positions vary, so identify **IN, OUT and GND** on the selected breakout.
+
+Use a 30-row breadboard with Cmod's left header in **c4–c27** and right header in **g4–g27**, Pmod at the top and USB at the bottom. This matches its 0.6-inch header-row spacing. DIP 1 is c4, DIP 48 is g4, DIP 24/VU is c27, and DIP 25/GND is g27. Confirm the printed pin-1 mark and the [Digilent DIP drawing](https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf#page=9). Each row connects a–e together and f–j together, with no connection across the centre gap. Thus b27 accesses VU, while j27 accesses ground. Pins must fit without force, with spare holes accessible beside the module.
+
+Label the left positive rail **VU**, the right positive rail **3.3 V**, and both negative rails **GND**. The drawing uses continuous rails; if yours are split, bridge the breaks within each rail after checking continuity. The red and orange positive rails remain separate. Numbers below are breadboard rows; DIP pin numbers appear explicitly where relevant.
+
+| Jumper from | Jumper to | Purpose |
+| --- | --- | --- |
+| b27 (Cmod DIP 24/VU) | Left VU rail, row 27 | USB-derived accessory power |
+| j27 (Cmod DIP 25/GND) | Right GND rail, row 27 | Common ground |
+| Left GND rail, row 29 | Right GND rail, row 29 | Join the two ground rails |
+| Left VU rail, row 1 | WeAct P1.1 VCC | DAC and headphone-board supply |
+| Right GND rail, row 6 | WeAct P1.2 GND | DAC ground |
+| Right GND rail, row 7 | WeAct P1.4 MCLK | Select BCK-derived internal clock |
+| j20 (Cmod DIP 32) | WeAct P1.5 BCK | I²S bit clock |
+| j19 (Cmod DIP 33) | WeAct P1.6 DIN | I²S audio data |
+| j18 (Cmod DIP 34) | WeAct P1.7 WS | I²S word clock |
+| Left VU rail, row 30 | Accessory regulator IN | Regulator input |
+| Right GND rail, row 30 | Accessory regulator GND | Regulator ground |
+| Accessory regulator OUT, 3.3 V | Right 3.3 V rail, row 23 | TM1638 and INMP441 supply |
+
+Leave **WeAct P1.3 /SD open**. Connect TM1638 VCC and INMP441 VDD to the right 3.3 V rail and their grounds to GND. The regulator's current and thermal ratings must cover both loads. Verify rail voltages before connecting the modules and again under load. With USB attached, do not connect an external supply to VU. If using separate accessory power, remove the VU feed first as described in section 2.
+
 ## 6. DAC option B: GY-PCM5102 / PCM5102A pHAT-format board
 
 GY boards are sold in multiple PCB layouts. The sales name alone does not identify a unique header order or solder-bridge numbering. Use the printed **signal labels** below and verify the regulator/jumper arrangement on the actual module; do not copy the WeAct contact numbers.
+
+For a GY module with a verified regulated **VIN/5V input**, replace WeAct in the drawing: VU → VIN/5V, GND → GND, DIP 32 → BCK, DIP 33 → DIN, DIP 34 → LCK/WS, and GND → SCK/MCLK. Apply the control settings in the table below. A pin marked **3V3** must use that board's documented 3.3 V supply arrangement.
 
 | GY board label | Connection or setting |
 | --- | --- |
