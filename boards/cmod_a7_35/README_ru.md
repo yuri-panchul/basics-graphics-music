@@ -1,4 +1,4 @@
-*Создано Claude Opus 5.5 (`claude-opus-5-5`) в Claude Code 2.1.325, уровень усилий xhigh, по промпту Юрия Панчула. Дословный промпт — в [приложении](#приложение-промпт).*
+*Создано Claude Opus 5.5 (`claude-opus-5-5`) в Claude Code 2.1.325, уровень усилий xhigh, по промпту Юрия Панчула. Дословный промпт — в [приложении](#приложение-промпты).*
 
 # Cmod A7-35T на макетной плате с TinyVGA, TM1638, микрофоном и ЦАП I2S
 
@@ -49,7 +49,7 @@ RGB-светодиод, порт USB для JTAG и UART, один разъём 
 * [Состояние](#состояние)
 * [Файлы](#файлы)
 * [Источники](#источники)
-* [Приложение: промпт](#приложение-промпт)
+* [Приложение: промпты](#приложение-промпты)
 
 ## Детали
 
@@ -187,6 +187,31 @@ DIP 25.
 [wiring_gy_pcm5102_tph2.svg](wiring_gy_pcm5102_tph2.svg),
 [wiring_weact_regulator.svg](wiring_weact_regulator.svg),
 [wiring_gy_pcm5102_regulator.svg](wiring_gy_pcm5102_regulator.svg).
+
+### Микрофон и ЦАП, вставленные в макетную плату
+
+Вместо того чтобы подвешивать микрофон и ЦАП на проводах «мама-папа», можно
+вставить их прямо в макетную плату и соединить их полосы проводами
+«папа-папа». Такую раскладку показывают отдельные рисунки:
+[breadboard_weact.png](breadboard_weact.png) с модулем WeAct и
+[breadboard_gy_pcm5102.png](breadboard_gy_pcm5102.png) с GY-PCM5102; векторные
+версии — [breadboard_weact.svg](breadboard_weact.svg) и
+[breadboard_gy_pcm5102.svg](breadboard_gy_pcm5102.svg). Коротко:
+
+* Cmod A7 вставляется выводами DIP с 25 по 48 в столбец c, а с 1 по 24 — в
+  столбец g. С одной стороны остаются свободными отверстия a и b, с другой —
+  h, i и j.
+* INMP441 встаёт поперёк центральной канавки, как микросхема DIP с 6
+  выводами, надписями вверх, в ряды с 44 по 46: SCK, WS и L/R в столбце e, SD,
+  VDD и GND в столбце f. Его L/R идёт на шину GND, поэтому вывод DIP 31
+  остаётся свободным.
+* ЦАП вставляется своим разъёмом в столбец j: модуль WeAct в ряды с 29 по 35,
+  GY-PCM5102 в ряды с 30 по 35. Его плата и гнездо свисают над нижними шинами и
+  краем макетной платы, поэтому провода его питания и GND идут к верхним
+  шинам. В отверстия можно вставлять только основной разъём GY-PCM5102, а его
+  контур на рисунке приблизительный.
+* Середину рядов с 25 по 29 оставьте свободной для штекера USB.
+* Источник 3,3 В, TinyVGA и TM1638 подключаются, как в варианте A или B выше.
 
 ## Таблицы подключения
 
@@ -501,20 +526,23 @@ generate принимают все средства синтеза, которы
 | [board_specific.xdc](board_specific.xdc) | Cmod-A7-Master.xdc от Digilent, раскомментированы только используемые строки |
 | [board_specific_top.sv](board_specific_top.sv) | Сопоставление выводов, генератор тактовой частоты 50 МГц, сброс и экземпляры модулей упражнения, VGA, TM1638, микрофона и ЦАП |
 | [board_specific.tcl](board_specific.tcl) | ПЛИС для Vivado |
-| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Создаёт wiring_weact.svg и wiring_gy_pcm5102.svg |
+| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Создаёт четыре схемы подключения, `wiring_*.svg` |
 | `wiring_*.svg`, `wiring_*.png` | Схемы подключения |
+| [generate_breadboard_diagram.py](generate_breadboard_diagram.py) | Создаёт две раскладки на макетной плате, `breadboard_*.svg` |
+| `breadboard_*.svg`, `breadboard_*.png` | Раскладки на макетной плате с вставленными микрофоном и ЦАП |
 | README.md, README.html | Эта инструкция на английском |
 | README_ru.md, README_ru.html | Эта инструкция на русском |
-| [claude_prompt.txt](claude_prompt.txt) | Промпт, как в приложении |
+| [claude_prompt.txt](claude_prompt.txt) | Файл задачи из первого промпта, как в приложении |
 
-Схемы создаёт [generate_wiring_diagram.py](generate_wiring_diagram.py), в
-котором есть копия данных о выводах; при изменении board_specific_top.sv
-обновляйте и его.
+Рисунки создают [generate_wiring_diagram.py](generate_wiring_diagram.py) и
+[generate_breadboard_diagram.py](generate_breadboard_diagram.py), в которых есть
+копия данных о выводах; при изменении board_specific_top.sv обновляйте и их.
 
 ```bash
 python3 generate_wiring_diagram.py
+python3 generate_breadboard_diagram.py
 
-for f in wiring_*.svg
+for f in wiring_*.svg breadboard_*.svg
 do
     # ${f%.svg} — имя файла без расширения .svg
     inkscape "$f" --export-type=png --export-dpi=96 \
@@ -539,7 +567,13 @@ done
 * INMP441: [peripherals/inmp441.pdf](../../peripherals/inmp441.pdf) и
   [peripherals/inmp441.jpeg](../../peripherals/inmp441.jpeg) в этом репозитории.
 
-## Приложение: промпт
+## Приложение: промпты
+
+Первый промпт поставил задачу, а последующие, отправленные в той же сессии
+Claude Code, изменили и дополнили её. Все они приведены дословно, с опечатками
+оригинала, и в переводе на русский.
+
+### Первый промпт
 
 Отправлен Юрием Панчулом в Claude Code 16 ноября 2026 года в 09:29 по
 тихоокеанскому времени (UTC−8), дословно:
@@ -612,7 +646,7 @@ Add this prompt as an appendix to .md and HTML files.
 In addition to the instriction in English create an instruction in Russian (also .md and .html). In prompt appendix put both the original prompt in English and its transaction to Russian.
 ```
 
-### Перевод на русский
+#### Перевод на русский
 
 ```text
 Выполни новую задачу из cmod_a7/AGENTS.md
@@ -678,3 +712,113 @@ https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
 
 Кроме инструкции на английском, создай инструкцию на русском (тоже .md и .html). В приложение с промптом помести и исходный промпт на английском, и его перевод на русский.
 ```
+
+### Последующие промпты
+
+Отправлены Юрием Панчулом в той же сессии Claude Code 16 ноября 2026 года.
+Время тихоокеанское (UTC−8). Каждый промпт дан сначала дословно на
+английском, затем в переводе на русский.
+
+**11:05**:
+
+```text
+Why did you put 5V? It should work with 3.3V. Is 5V necessary?
+```
+
+```text
+Почему ты поставил 5 В? Всё должно работать от 3,3 В. 5 В действительно нужны?
+```
+
+**11:23**:
+
+```text
+Why do you need a regulator now? Are you dumb?
+```
+
+```text
+Зачем теперь нужен стабилизатор? Ты что, тупой?
+```
+
+**11:28**:
+
+```text
+Are you saying the board has not 3.3V pin ouside Pmod?
+```
+
+```text
+Ты хочешь сказать, что у платы нет вывода 3,3 В вне Pmod?
+```
+
+**11:31**:
+
+```text
+Can you drive 3.3V using digital pin with logic 1?
+```
+
+```text
+Можно ли получить 3,3 В с цифрового вывода, выставив на нём логическую 1?
+```
+
+**18:32**:
+
+```text
+what if I use this part : https://digilent.com/shop/pmod-tph2-12-pin-test-point-header/
+```
+
+```text
+а если я использую эту деталь: https://digilent.com/shop/pmod-tph2-12-pin-test-point-header/
+```
+
+**18:36**, отправлен, пока готовился ответ на предыдущий:
+
+```text
+No, I need two variants: with TPH2 and with voltage regulator. You need to update the instruction so a user can do either way
+```
+
+```text
+Нет, мне нужны два варианта: с TPH2 и со стабилизатором напряжения. Обнови инструкцию так, чтобы пользователь мог сделать и так, и так
+```
+
+**18:44**:
+
+```text
+commit
+```
+
+```text
+сделай коммит
+```
+
+**18:44**:
+
+```text
+push
+```
+
+```text
+сделай push
+```
+
+**18:52**:
+
+```text
+add all other prompts to the appendix in the instruction verbatim in English, plus a Russian translation in Russian instruction. Next, in a separate file create a breadboard diagram with microphone and sound DAC inserted straight to the breadboard.
+```
+
+```text
+добавь все остальные промпты в приложение к инструкции дословно на английском, а в русскую инструкцию — ещё и перевод на русский. Затем в отдельном файле создай схему макетной платы, в которой микрофон и звуковой ЦАП вставлены прямо в макетную плату.
+```
+
+**21:39**:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
+Кроме того, Юрий Панчул дважды, в 18:45 и 18:46, выполнил команду оболочки
+`git -C ~/claude/basics-graphics-music push origin claude_cmod_a7`; это
+команда, а не промпт, поэтому её здесь нет.

@@ -35,6 +35,7 @@
   h2 { font-weight:600; font-size:1.35rem; margin:2.6rem 0 0.7rem; padding-top:1rem;
        border-top:1px solid var(--rule2); text-wrap:balance; }
   h3 { font-weight:600; font-size:1.07rem; margin:1.8rem 0 0.5rem; }
+  h4 { font-weight:600; font-size:0.98rem; margin:1.4rem 0 0.4rem; color:var(--muted); }
   p, li { max-width:46rem; }
   p { margin:0 0 0.9rem; }
   ul, ol { margin:0 0 1rem; padding-left:1.4rem; }
@@ -65,7 +66,7 @@
 </head>
 <body>
 <main class="wrap">
-<p class="credit"><em>Создано Claude Opus 5.5 (<code>claude-opus-5-5</code>) в Claude Code 2.1.325, уровень усилий xhigh, по промпту Юрия Панчула. Дословный промпт — в <a href="#приложение-промпт">приложении</a>.</em></p>
+<p class="credit"><em>Создано Claude Opus 5.5 (<code>claude-opus-5-5</code>) в Claude Code 2.1.325, уровень усилий xhigh, по промпту Юрия Панчула. Дословный промпт — в <a href="#приложение-промпты">приложении</a>.</em></p>
 <h1 id="cmod-a7-35t-на-макетной-плате-с-tinyvga-tm1638-микрофоном-и-цап-i2s">Cmod A7-35T на макетной плате с TinyVGA, TM1638, микрофоном и ЦАП I2S</h1>
 <p>Конфигурация платы <code>cmod_a7_35</code>. English version: <a href="README.html">README.md</a>.</p>
 <p><a href="https://digilent.com/reference/programmable-logic/cmod-a7/start">Digilent Cmod A7-35T</a> — это ПЛИС Artix-7 (XC7A35T-1CPG236C) на модуле в корпусе DIP с 48 выводами, размером 0,7 на 2,75 дюйма, который вставляется прямо в беспаечную макетную плату. На модуле есть генератор 12 МГц, две кнопки, два светодиода, RGB-светодиод, порт USB для JTAG и UART, один разъём Pmod и 44 цифровых вывода ввода-вывода на выводах DIP. Эта конфигурация добавляет к нему:</p>
@@ -75,7 +76,7 @@
 <ul><li><strong>A: Pmod TPH2.</strong> Проходной модуль Digilent между JA и TinyVGA выводит собственные 3,3 В модуля с разъёма Pmod. На макетной плате нет 5 В.</li><li><strong>B: стабилизатор 3,3 В.</strong> Модуль стабилизатора делает 3,3 В из VU — 5 В от USB на выводе DIP 24.</li></ul>
 <p>Старая конфигурация в <a href="../zzz_postponed_and_retired/cmod_a7">zzz_postponed_and_retired/cmod_a7</a> рассчитана на другую ПЛИС, XC7A15T, и не используется.</p>
 <h2 id="содержание">Содержание</h2>
-<ul><li><a href="#детали">Детали</a></li><li><a href="#распределение-выводов">Распределение выводов</a></li><li><a href="#питание">Питание</a></li><li><a href="#схемы-подключения">Схемы подключения</a></li><li><a href="#таблицы-подключения">Таблицы подключения</a></li><li><a href="#сборка-по-шагам">Сборка по шагам</a></li><li><a href="#сборка-и-запуск-упражнений">Сборка и запуск упражнений</a></li><li><a href="#кнопки-и-светодиоды">Кнопки и светодиоды</a></li><li><a href="#тактовая-частота-и-vga">Тактовая частота и VGA</a></li><li><a href="#если-что-то-не-работает">Если что-то не работает</a></li><li><a href="#состояние">Состояние</a></li><li><a href="#файлы">Файлы</a></li><li><a href="#источники">Источники</a></li><li><a href="#приложение-промпт">Приложение: промпт</a></li></ul>
+<ul><li><a href="#детали">Детали</a></li><li><a href="#распределение-выводов">Распределение выводов</a></li><li><a href="#питание">Питание</a></li><li><a href="#схемы-подключения">Схемы подключения</a></li><li><a href="#таблицы-подключения">Таблицы подключения</a></li><li><a href="#сборка-по-шагам">Сборка по шагам</a></li><li><a href="#сборка-и-запуск-упражнений">Сборка и запуск упражнений</a></li><li><a href="#кнопки-и-светодиоды">Кнопки и светодиоды</a></li><li><a href="#тактовая-частота-и-vga">Тактовая частота и VGA</a></li><li><a href="#если-что-то-не-работает">Если что-то не работает</a></li><li><a href="#состояние">Состояние</a></li><li><a href="#файлы">Файлы</a></li><li><a href="#источники">Источники</a></li><li><a href="#приложение-промпты">Приложение: промпты</a></li></ul>
 <h2 id="детали">Детали</h2>
 <div class="scroll"><table><thead><tr><th>Деталь</th><th>Примечание</th></tr></thead><tbody><tr><td>Digilent Cmod A7-35T</td><td>Не 15T: в <a href="board_specific.tcl">board_specific.tcl</a> указана ПЛИС <code>xc7a35tcpg236-1</code>.</td></tr><tr><td>Кабель micro-USB</td><td>Кабель для передачи данных, а не только для зарядки. Угловой штекер не даёт кабелю лежать на макетной плате.</td></tr><tr><td>Беспаечная макетная плата</td><td>Полноразмерная, на 830 отверстий, с парой шин питания вдоль каждой длинной стороны.</td></tr><tr><td>TinyVGA Pmod</td><td>Автор — Leo Moser, <a href="https://github.com/mole99/tiny-vga">mole99/tiny-vga</a>. Ещё нужны кабель VGA и монитор, который принимает 640x480 при 60 Гц.</td></tr><tr><td>Модуль TM1638 LED&amp;KEY</td><td>8 индикаторов, 8 светодиодов, 8 кнопок, разъём из 5 выводов VCC, GND, STB, CLK, DIO.</td></tr><tr><td>Модуль INMP441</td><td>Круглая плата микрофона I2S с 6 выводами.</td></tr><tr><td>Один модуль ЦАП</td><td>WeAct I2S Earphone Module (PCM5100A) или GY-PCM5102 (PCM5102A). Наушники или активные колонки со штекером 3,5 мм.</td></tr><tr><td>Для варианта A: Digilent Pmod TPH2</td><td>Проходной модуль на 12 выводов с контрольной точкой для каждого вывода Pmod. Ставится между JA и TinyVGA.</td></tr><tr><td>Для варианта B: модуль стабилизатора 3,3 В</td><td>Например, модуль AMS1117-3.3, который работает от 5 В и даёт не меньше 300 мА.</td></tr><tr><td>Провода-перемычки</td><td>«Папа-папа» для макетной платы, «мама-папа» для разъёмов модулей и контрольной точки TPH2.</td></tr><tr><td>Мультиметр</td><td>Чтобы проверить шины питания до подключения модулей.</td></tr></tbody></table></div>
 <h2 id="распределение-выводов">Распределение выводов</h2>
@@ -108,6 +109,9 @@
 <p>С модулем GY-PCM5102:</p>
 <figure><img src="wiring_gy_pcm5102_regulator.png" alt="Подключение с GY-PCM5102 и стабилизатором 3,3 В" loading="lazy"></figure>
 <p>Векторные версии: <a href="wiring_weact_tph2.svg">wiring_weact_tph2.svg</a>, <a href="wiring_gy_pcm5102_tph2.svg">wiring_gy_pcm5102_tph2.svg</a>, <a href="wiring_weact_regulator.svg">wiring_weact_regulator.svg</a>, <a href="wiring_gy_pcm5102_regulator.svg">wiring_gy_pcm5102_regulator.svg</a>.</p>
+<h3 id="микрофон-и-цап-вставленные-в-макетную-плату">Микрофон и ЦАП, вставленные в макетную плату</h3>
+<p>Вместо того чтобы подвешивать микрофон и ЦАП на проводах «мама-папа», можно вставить их прямо в макетную плату и соединить их полосы проводами «папа-папа». Такую раскладку показывают отдельные рисунки: <a href="breadboard_weact.png">breadboard_weact.png</a> с модулем WeAct и <a href="breadboard_gy_pcm5102.png">breadboard_gy_pcm5102.png</a> с GY-PCM5102; векторные версии — <a href="breadboard_weact.svg">breadboard_weact.svg</a> и <a href="breadboard_gy_pcm5102.svg">breadboard_gy_pcm5102.svg</a>. Коротко:</p>
+<ul><li>Cmod A7 вставляется выводами DIP с 25 по 48 в столбец c, а с 1 по 24 — в столбец g. С одной стороны остаются свободными отверстия a и b, с другой — h, i и j.</li><li>INMP441 встаёт поперёк центральной канавки, как микросхема DIP с 6 выводами, надписями вверх, в ряды с 44 по 46: SCK, WS и L/R в столбце e, SD, VDD и GND в столбце f. Его L/R идёт на шину GND, поэтому вывод DIP 31 остаётся свободным.</li><li>ЦАП вставляется своим разъёмом в столбец j: модуль WeAct в ряды с 29 по 35, GY-PCM5102 в ряды с 30 по 35. Его плата и гнездо свисают над нижними шинами и краем макетной платы, поэтому провода его питания и GND идут к верхним шинам. В отверстия можно вставлять только основной разъём GY-PCM5102, а его контур на рисунке приблизительный.</li><li>Середину рядов с 25 по 29 оставьте свободной для штекера USB.</li><li>Источник 3,3 В, TinyVGA и TM1638 подключаются, как в варианте A или B выше.</li></ul>
 <h2 id="таблицы-подключения">Таблицы подключения</h2>
 <h3 id="выводы-dip-модуля-cmod-a7">Выводы DIP модуля Cmod A7</h3>
 <div class="scroll"><table><thead><tr><th class="r">Вывод DIP</th><th class="r">Вывод ПЛИС</th><th>Порт в board_specific.xdc</th><th>Сигнал</th><th>Подключить к</th></tr></thead><tbody><tr><td class="r">21</td><td class="r">N1</td><td><code>pio21</code></td><td><code>DAC_BCK</code></td><td>BCK ЦАП</td></tr><tr><td class="r">22</td><td class="r">N2</td><td><code>pio22</code></td><td><code>DAC_DIN</code></td><td>DIN ЦАП</td></tr><tr><td class="r">23</td><td class="r">P1</td><td><code>pio23</code></td><td><code>DAC_LCK</code></td><td>LCK GY-PCM5102, WS WeAct</td></tr><tr><td class="r">24</td><td class="r">—</td><td>—</td><td>VU, около 5 В</td><td>A: ничего. B: вход стабилизатора, и больше ничего</td></tr><tr><td class="r">25</td><td class="r">—</td><td>—</td><td>GND</td><td>шина GND и GND модуля TM1638</td></tr><tr><td class="r">26</td><td class="r">R3</td><td><code>pio26</code></td><td><code>TM_STB</code></td><td>STB TM1638</td></tr><tr><td class="r">27</td><td class="r">T3</td><td><code>pio27</code></td><td><code>TM_CLK</code></td><td>CLK TM1638</td></tr><tr><td class="r">28</td><td class="r">R2</td><td><code>pio28</code></td><td>DIO TM1638</td><td>DIO TM1638</td></tr><tr><td class="r">29</td><td class="r">T1</td><td><code>pio29</code></td><td><code>MIC_SCK</code></td><td>SCK INMP441</td></tr><tr><td class="r">30</td><td class="r">T2</td><td><code>pio30</code></td><td><code>MIC_WS</code></td><td>WS INMP441</td></tr><tr><td class="r">31</td><td class="r">U1</td><td><code>pio31</code></td><td><code>MIC_LR</code></td><td>L/R INMP441</td></tr><tr><td class="r">32</td><td class="r">W2</td><td><code>pio32</code></td><td><code>MIC_SD</code></td><td>SD INMP441</td></tr></tbody></table></div>
@@ -175,11 +179,12 @@ clk = 750 MHz / 15  =  50 MHz</code></pre>
 <p>Ещё Vivado выдаёт предупреждение проверки правил CFGBVS-1: в файле Digilent не заданы свойства <code>CFGBVS</code> и <code>CONFIG_VOLTAGE</code>, а эта конфигурация только раскомментирует строки этого файла. Это предупреждение не мешает созданию файла конфигурации ПЛИС.</p>
 <p>Ещё не проверено на настоящей плате.</p>
 <h2 id="файлы">Файлы</h2>
-<div class="scroll"><table><thead><tr><th>Файл</th><th>Что это</th></tr></thead><tbody><tr><td><a href="board_specific.xdc">board_specific.xdc</a></td><td>Cmod-A7-Master.xdc от Digilent, раскомментированы только используемые строки</td></tr><tr><td><a href="board_specific_top.sv">board_specific_top.sv</a></td><td>Сопоставление выводов, генератор тактовой частоты 50 МГц, сброс и экземпляры модулей упражнения, VGA, TM1638, микрофона и ЦАП</td></tr><tr><td><a href="board_specific.tcl">board_specific.tcl</a></td><td>ПЛИС для Vivado</td></tr><tr><td><a href="generate_wiring_diagram.py">generate_wiring_diagram.py</a></td><td>Создаёт wiring_weact.svg и wiring_gy_pcm5102.svg</td></tr><tr><td><code>wiring_*.svg</code>, <code>wiring_*.png</code></td><td>Схемы подключения</td></tr><tr><td>README.md, README.html</td><td>Эта инструкция на английском</td></tr><tr><td>README_ru.md, README_ru.html</td><td>Эта инструкция на русском</td></tr><tr><td><a href="claude_prompt.txt">claude_prompt.txt</a></td><td>Промпт, как в приложении</td></tr></tbody></table></div>
-<p>Схемы создаёт <a href="generate_wiring_diagram.py">generate_wiring_diagram.py</a>, в котором есть копия данных о выводах; при изменении board_specific_top.sv обновляйте и его.</p>
+<div class="scroll"><table><thead><tr><th>Файл</th><th>Что это</th></tr></thead><tbody><tr><td><a href="board_specific.xdc">board_specific.xdc</a></td><td>Cmod-A7-Master.xdc от Digilent, раскомментированы только используемые строки</td></tr><tr><td><a href="board_specific_top.sv">board_specific_top.sv</a></td><td>Сопоставление выводов, генератор тактовой частоты 50 МГц, сброс и экземпляры модулей упражнения, VGA, TM1638, микрофона и ЦАП</td></tr><tr><td><a href="board_specific.tcl">board_specific.tcl</a></td><td>ПЛИС для Vivado</td></tr><tr><td><a href="generate_wiring_diagram.py">generate_wiring_diagram.py</a></td><td>Создаёт четыре схемы подключения, <code>wiring_*.svg</code></td></tr><tr><td><code>wiring_*.svg</code>, <code>wiring_*.png</code></td><td>Схемы подключения</td></tr><tr><td><a href="generate_breadboard_diagram.py">generate_breadboard_diagram.py</a></td><td>Создаёт две раскладки на макетной плате, <code>breadboard_*.svg</code></td></tr><tr><td><code>breadboard_*.svg</code>, <code>breadboard_*.png</code></td><td>Раскладки на макетной плате с вставленными микрофоном и ЦАП</td></tr><tr><td>README.md, README.html</td><td>Эта инструкция на английском</td></tr><tr><td>README_ru.md, README_ru.html</td><td>Эта инструкция на русском</td></tr><tr><td><a href="claude_prompt.txt">claude_prompt.txt</a></td><td>Файл задачи из первого промпта, как в приложении</td></tr></tbody></table></div>
+<p>Рисунки создают <a href="generate_wiring_diagram.py">generate_wiring_diagram.py</a> и <a href="generate_breadboard_diagram.py">generate_breadboard_diagram.py</a>, в которых есть копия данных о выводах; при изменении board_specific_top.sv обновляйте и их.</p>
 <pre><code class="language-bash">python3 generate_wiring_diagram.py
+python3 generate_breadboard_diagram.py
 
-for f in wiring_*.svg
+for f in wiring_*.svg breadboard_*.svg
 do
     # ${f%.svg} — имя файла без расширения .svg
     inkscape "$f" --export-type=png --export-dpi=96 \
@@ -187,7 +192,9 @@ do
 done</code></pre>
 <h2 id="источники">Источники</h2>
 <ul><li>Digilent, <em>Cmod A7 Reference Manual</em>, Rev. B: питание, выводы DIP, разъём Pmod, кнопки и светодиоды.</li><li>Digilent, <a href="https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc">Cmod-A7-Master.xdc</a>, исходный файл для board_specific.xdc.</li><li>Leo Moser, <a href="https://github.com/mole99/tiny-vga">TinyVGA</a>: выводы Pmod и питание 3,3 В.</li><li>Digilent, <a href="https://digilent.com/reference/pmod/pmodtph2/reference-manual">Pmod TPH2 Reference Manual</a>: проходной модуль с контрольными точками.</li><li>WeAct Studio, <a href="https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1">I2S Earphone Module V1</a>: схема и надписи на разъёме.</li><li>GY-PCM5102: <a href="https://github.com/dwhinham/mt32-pi/wiki/GY-PCM5102-DAC-module">вики mt32-pi</a> и <a href="https://www.makerguides.com/playing-audio-with-esp32-and-pcm5102/">Makerguides</a> о паяных перемычках, SCK и питании.</li><li>INMP441: <a href="../../peripherals/inmp441.pdf">peripherals/inmp441.pdf</a> и <a href="../../peripherals/inmp441.jpeg">peripherals/inmp441.jpeg</a> в этом репозитории.</li></ul>
-<h2 id="приложение-промпт">Приложение: промпт</h2>
+<h2 id="приложение-промпты">Приложение: промпты</h2>
+<p>Первый промпт поставил задачу, а последующие, отправленные в той же сессии Claude Code, изменили и дополнили её. Все они приведены дословно, с опечатками оригинала, и в переводе на русский.</p>
+<h3 id="первый-промпт">Первый промпт</h3>
 <p>Отправлен Юрием Панчулом в Claude Code 16 ноября 2026 года в 09:29 по тихоокеанскому времени (UTC−8), дословно:</p>
 <pre><code class="language-text">do a new task in cmod_a7/AGENTS.md</code></pre>
 <p>Файл <code>~/claude/cmod_a7/AGENTS.md</code>, на который он ссылается, дословно, с опечатками оригинала. Тот же текст — в <a href="claude_prompt.txt">claude_prompt.txt</a>.</p>
@@ -249,7 +256,7 @@ When planning what pins to use for the TM1638, microphone and sound DAC connecti
 Add this prompt as an appendix to .md and HTML files.
 
 In addition to the instriction in English create an instruction in Russian (also .md and .html). In prompt appendix put both the original prompt in English and its transaction to Russian.</code></pre>
-<h3 id="перевод-на-русский">Перевод на русский</h3>
+<h4 id="перевод-на-русский">Перевод на русский</h4>
 <pre><code class="language-text">Выполни новую задачу из cmod_a7/AGENTS.md</code></pre>
 <pre><code class="language-text"># Задача
 
@@ -309,6 +316,39 @@ https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
 Добавь этот промпт приложением к файлам .md и HTML.
 
 Кроме инструкции на английском, создай инструкцию на русском (тоже .md и .html). В приложение с промптом помести и исходный промпт на английском, и его перевод на русский.</code></pre>
+<h3 id="последующие-промпты">Последующие промпты</h3>
+<p>Отправлены Юрием Панчулом в той же сессии Claude Code 16 ноября 2026 года. Время тихоокеанское (UTC−8). Каждый промпт дан сначала дословно на английском, затем в переводе на русский.</p>
+<p><strong>11:05</strong>:</p>
+<pre><code class="language-text">Why did you put 5V? It should work with 3.3V. Is 5V necessary?</code></pre>
+<pre><code class="language-text">Почему ты поставил 5 В? Всё должно работать от 3,3 В. 5 В действительно нужны?</code></pre>
+<p><strong>11:23</strong>:</p>
+<pre><code class="language-text">Why do you need a regulator now? Are you dumb?</code></pre>
+<pre><code class="language-text">Зачем теперь нужен стабилизатор? Ты что, тупой?</code></pre>
+<p><strong>11:28</strong>:</p>
+<pre><code class="language-text">Are you saying the board has not 3.3V pin ouside Pmod?</code></pre>
+<pre><code class="language-text">Ты хочешь сказать, что у платы нет вывода 3,3 В вне Pmod?</code></pre>
+<p><strong>11:31</strong>:</p>
+<pre><code class="language-text">Can you drive 3.3V using digital pin with logic 1?</code></pre>
+<pre><code class="language-text">Можно ли получить 3,3 В с цифрового вывода, выставив на нём логическую 1?</code></pre>
+<p><strong>18:32</strong>:</p>
+<pre><code class="language-text">what if I use this part : https://digilent.com/shop/pmod-tph2-12-pin-test-point-header/</code></pre>
+<pre><code class="language-text">а если я использую эту деталь: https://digilent.com/shop/pmod-tph2-12-pin-test-point-header/</code></pre>
+<p><strong>18:36</strong>, отправлен, пока готовился ответ на предыдущий:</p>
+<pre><code class="language-text">No, I need two variants: with TPH2 and with voltage regulator. You need to update the instruction so a user can do either way</code></pre>
+<pre><code class="language-text">Нет, мне нужны два варианта: с TPH2 и со стабилизатором напряжения. Обнови инструкцию так, чтобы пользователь мог сделать и так, и так</code></pre>
+<p><strong>18:44</strong>:</p>
+<pre><code class="language-text">commit</code></pre>
+<pre><code class="language-text">сделай коммит</code></pre>
+<p><strong>18:44</strong>:</p>
+<pre><code class="language-text">push</code></pre>
+<pre><code class="language-text">сделай push</code></pre>
+<p><strong>18:52</strong>:</p>
+<pre><code class="language-text">add all other prompts to the appendix in the instruction verbatim in English, plus a Russian translation in Russian instruction. Next, in a separate file create a breadboard diagram with microphone and sound DAC inserted straight to the breadboard.</code></pre>
+<pre><code class="language-text">добавь все остальные промпты в приложение к инструкции дословно на английском, а в русскую инструкцию — ещё и перевод на русский. Затем в отдельном файле создай схему макетной платы, в которой микрофон и звуковой ЦАП вставлены прямо в макетную плату.</code></pre>
+<p><strong>21:39</strong>:</p>
+<pre><code class="language-text">commit and push</code></pre>
+<pre><code class="language-text">сделай коммит и push</code></pre>
+<p>Кроме того, Юрий Панчул дважды, в 18:45 и 18:46, выполнил команду оболочки <code>git -C ~/claude/basics-graphics-music push origin claude_cmod_a7</code>; это команда, а не промпт, поэтому её здесь нет.</p>
 </main>
 </body>
 </html>
