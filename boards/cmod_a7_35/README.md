@@ -833,6 +833,18 @@ cmod_a7_35_no_pll_vga_320_no_tm1638
 commit and push
 ```
 
+**00:29 on 17 November**:
+
+```text
+check the changes I did manually. Tell why they are needed
+```
+
+**00:37 on 17 November**:
+
+```text
+yes, fix the catalog, then commit and push
+```
+
 Yuri Panchul also ran the shell command
 `git -C ~/claude/basics-graphics-music push origin claude_cmod_a7` twice, at
 18:45 and 18:46; it is a command, not a prompt, and is left out above.

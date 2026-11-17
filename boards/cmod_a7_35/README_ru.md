@@ -918,6 +918,26 @@ commit and push
 сделай коммит и push
 ```
 
+**00:29, 17 ноября**:
+
+```text
+check the changes I did manually. Tell why they are needed
+```
+
+```text
+проверь изменения, которые я сделал вручную. Объясни, зачем они нужны
+```
+
+**00:37, 17 ноября**:
+
+```text
+yes, fix the catalog, then commit and push
+```
+
+```text
+да, исправь каталог, затем сделай коммит и push
+```
+
 Кроме того, Юрий Панчул дважды, в 18:45 и 18:46, выполнил команду оболочки
 `git -C ~/claude/basics-graphics-music push origin claude_cmod_a7`; это
 команда, а не промпт, поэтому её здесь нет.
