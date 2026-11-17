@@ -187,6 +187,7 @@ class BoardMenuTests(unittest.TestCase):
             "new_hdmi_board": "new_hdmi_board",
             "new_board_hub75e_led_matrix": "new_board",
             "new_board_no_hdmi_no_tm1638_yosys": "new_board",
+            "cmod_a7_35_no_pll": "cmod_a7_35",
             "_yosys": "_yosys",
         }
         wrapper = self.lab / "test_helpers.bash"

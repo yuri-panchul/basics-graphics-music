@@ -1,12 +1,14 @@
 # Cmod A7-35T: breadboard assembly and first run
 
-Board configuration: **cmod_a7_35** · Digilent Cmod A7-35T rev. B · prepared 16 November 2026.
+Board configurations: **cmod_a7_35**, **cmod_a7_35_no_pll** · Digilent Cmod A7-35T rev. B · prepared 16 November 2026.
 
 [Русская инструкция](assembly_ru.html) · [Markdown](assembly_en.md) · [Implementation notes](README.md)
 
 This configuration connects Tiny VGA through the Pmod socket, an INMP441 I²S microphone, a TM1638 LED&KEY module, and either of the two audio boards below. **TM1638 runs from 3.3 V and connects directly to the FPGA.** The nine accessory signals occupy consecutive DIP positions **26–34**. Physical DIP numbers, FPGA package balls, and Pmod contact numbers are different numbering systems; use the tables below.
 
 The code and simulated signal timing have been checked. The graphics and microphone-monitor examples also passed Vivado 2026.1 synthesis, routing and bitstream generation, with positive setup/hold margins on constrained paths. The master XDC leaves external I/O delays unspecified. **Physical assembly, monitor compatibility and audio playback still require a board trial.**
+
+The frequencies and MMCM behavior below describe the default **cmod_a7_35** configuration. The optional **cmod_a7_35_no_pll** mode uses the same assembly; its differences are listed under VGA.
 
 ## 1. Parts and physical arrangement
 
@@ -74,6 +76,14 @@ Fit Tiny VGA with its numbered contacts aligned to Cmod **JA**. Contacts 5/11 ar
 This is **64-colour RGB222**. The wrapper forces RGB black during blanking. Timing uses 640 × 480 visible pixels, 800 × 525 total, a 25 MHz pixel rate, 31.25 kHz horizontal rate and about **59.524 Hz** vertical refresh. This follows the repository’s existing 25 MHz VGA convention, rather than the nominal 25.175 MHz VGA clock; verify acceptance by your monitor.
 
 The FPGA’s MMCM converts the onboard 12 MHz oscillator to 100 MHz. No rewrite of `peripherals/vga.sv` is necessary. [Tiny VGA’s designer pinout](https://github.com/mole99/tiny-vga#tiny-vga-pinout) is the mapping authority.
+
+### Optional VGA without PLL or MMCM
+
+In the board selector choose **cmod_a7_35 → cmod_a7_35_no_pll**. The FPGA runs directly from **12 MHz** through a BUFG. The lab receives **305 × 480** coordinates; timing is **382 clocks per line and 525 lines per frame**, giving **31.413613 kHz HS and 59.835453 Hz refresh**. Horizontal active/front/sync/back intervals are **305/8/46/23** clocks; vertical intervals are **480/10/2/33** lines. Both syncs are negative. These intervals approximate the analogue timings in the [IBM 640×480 timing chart](https://www.ibm.com/docs/TI0003M/p8egb/p8egb_supportedresolution.htm), rounded to 12 MHz cycles.
+
+The monitor may report 640×480, but the design supplies only **305 independent colour samples per line**. Horizontal pixels are about twice as wide as vertical pixels on a 4:3 monitor. Layouts that assume 640 columns or square pixels may need adjustment. Physical monitor acceptance and alignment still need testing. See the [no-PLL configuration notes](../cmod_a7_35_no_pll/README.md).
+
+Wiring and power remain as drawn. **DAC BCK = 3 MHz, LRCK = 46.875 kHz; microphone SCK = 750 kHz, WS = 11.71875 kHz.** The microphone sample rate and bandwidth decrease; its samples are held across several DAC frames. BTN0 releases reset after three 12 MHz edges, without waiting for clock lock. In the Vivado reports expect a single 12 MHz clock and **zero PLL/MMCM cells**. The DAC still uses its own internal PLL; this option removes the FPGA clock manager.
 
 ## 5. DAC option A: WeAct PCM5100A earphone board
 

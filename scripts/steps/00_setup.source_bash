@@ -299,6 +299,7 @@ fpga_board_base_name ()
         _dvi_12b
         _dvi_24b
         _no_hdmi
+        _no_pll
         _bright
         _no_dvi
         _tm1638
@@ -618,6 +619,7 @@ update_fpga_toolchain_var ()
         basys3                           | \
         cmod_a7                          | \
         cmod_a7_35                       | \
+        cmod_a7_35_no_pll                | \
         cmod_s7                          | \
         eclypse_z7                       | \
         nexys4                           | \

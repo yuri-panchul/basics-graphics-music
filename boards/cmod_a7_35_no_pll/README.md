@@ -1,0 +1,127 @@
+# Cmod A7-35T: VGA without PLL or MMCM
+
+Select **cmod_a7_35 → cmod_a7_35_no_pll** in the board menu. This configuration
+uses the onboard **12 MHz** oscillator through one BUFG. All application logic
+runs at 12 MHz; there is no PLL, MMCM, clock multiplication or clock made from
+ordinary logic. BTN0 asserts reset immediately and releases it after three
+clock edges. There is no clock-lock wait in this mode.
+
+The pinout and power wiring match the standard configuration:
+[English assembly guide](../cmod_a7_35/assembly_en.html),
+[инструкция на русском](../cmod_a7_35/assembly_ru.html),
+[DAC breadboard](../cmod_a7_35/breadboard_dac_en.svg).
+The XDC is an identical copy of `cmod_a7_35/board_specific.xdc`; the top-level
+source includes the shared wrapper with `CMOD_A7_NO_PLL` enabled.
+
+## Video timing and resolution
+
+There are **305 × 480 drawable pixels**, with RGB222 (64 colours). The lab
+receives `screen_width=305`, `screen_height=480`, and consecutive x/y coordinates.
+The common VGA peripheral advances once per 12 MHz cycle. VGA carries RGB and
+sync signals, without a pixel-clock wire to the monitor.
+
+| Interval | Horizontal: 12 MHz cycles | Vertical: lines |
+| --- | --- | --- |
+| Active | 305 | 480 |
+| Front porch | 8 | 10 |
+| Negative sync pulse | 46 | 2 |
+| Back porch | 23 | 33 |
+| Total | 382 | 525 |
+
+The horizontal rate is **31.413613 kHz** and frame rate **59.835453 Hz**.
+Each line lasts 31.833333 µs, with 25.416667 µs active video and a 3.833333 µs
+HS pulse. These values approximate the analogue timing of 640×480 at 60 Hz;
+the [IBM timing chart](https://www.ibm.com/docs/TI0003M/p8egb/p8egb_supportedresolution.htm)
+lists 31.778 µs per line, 25.422 µs active video and 3.813 µs HS for that mode.
+Rounding the active, porch and sync intervals separately to whole 12 MHz cycles
+gives the values above.
+Simply halving the usual 800-pixel line would instead give 30 kHz / 57.143 Hz.
+
+This is a custom sampling mode, not full 640-column detail. A monitor may
+identify the signal as 640×480; there are still only 305 independent colour
+samples per active line. Horizontal pixels are approximately twice as wide as
+vertical pixels on a 4:3 display. Labs with hard-coded geometry, small fonts
+or square-pixel assumptions may need adjustment. Changing only `screen_width`
+changes sync timing too; use the supplied 305×480 parameters for this mode.
+Monitor acceptance and picture alignment require a physical trial; use the
+monitor's analogue auto-adjust if needed.
+
+The original **cmod_a7_35** option retains its 100 MHz MMCM and 640×480 output.
+
+## Audio and other peripherals
+
+The existing peripheral dividers now run from 12 MHz:
+
+| Signal | Frequency |
+| --- | --- |
+| DAC BCK | 3 MHz |
+| DAC LRCK | 46.875 kHz |
+| INMP441 SCK | 750 kHz |
+| INMP441 WS | 11.71875 kHz |
+
+Both interfaces still have 64 bit clocks per stereo frame. The microphone
+updates at one quarter of the DAC frame rate; microphone-monitor playback
+holds each microphone sample across multiple DAC frames. Its audio bandwidth
+is correspondingly lower. TM1638 and time-based lab logic receive `clk_mhz=12`.
+DAC supply wiring is unchanged, including MCLK/SCK tied to ground. **The DAC's
+internal BCK-derived PLL is still used**; “no PLL” describes the FPGA clocking.
+
+## Build and checks
+
+From a lab directory:
+
+```bash
+./06_choose_another_fpga_board.bash
+./03_synthesize_for_fpga.bash
+```
+
+Choose the `cmod_a7_35` group, then `cmod_a7_35_no_pll`. The normal synthesis
+script also invokes FPGA programming. To build without programming, run from
+a separate empty output directory with Vivado on PATH:
+
+```bash
+vivado -mode batch -source /path/to/basics-graphics-music/scripts/tests/build_cmod_a7_35.tcl \
+    -tclargs labs/2_graphics/2_1_rectangle_ellipse_parabola cmod_a7_35_no_pll
+```
+
+The driver checks that synthesis contains zero PLL/MMCM cells, writes clock,
+timing, utilization and DRC reports, and creates `cmod_a7_35_no_pll.bit` after
+constrained setup/hold timing passes. The inherited XDC does not specify
+external I/O delays. Hardware acceptance remains a separate check.
+
+From the repository root, `python3 scripts/tests/test_cmod_a7_35.py` exercises
+both configurations, including full frames, sync position and real-time periods,
+blanking, I²S words/rates, reset, GPIO/UART, 17 lab elaborations and TM1638 options.
+The no-PLL simulation provides only a BUFG model; an accidental MMCM instance
+fails elaboration. `python3 scripts/tests/test_board_menu.py` checks selection
+and Vivado dispatch.
+
+Vivado 2026.1 validation on 17 November 2026 produced both bitstreams:
+
+| Lab | Setup WNS | Hold WHS | LUTs | Registers |
+| --- | --- | --- | --- | --- |
+| `2_graphics/2_1_rectangle_ellipse_parabola` | +74.793 ns | +0.131 ns | 285 | 104 |
+| `3_music/3_11_microphone_monitor` | +71.468 ns | +0.082 ns | 2007 | 1348 |
+
+Both routed designs use **one BUFG, zero MMCMs and zero PLLs**, with only the
+83.33 ns input clock in the clock report. Neither has unclocked registers or
+unconstrained internal endpoints. DRC has zero errors and retains the inherited
+`CFGBVS-1` warning. External I/O delays remain unspecified. Six board regression
+tests and all 22 menu tests passed; both HTML editions passed desktop/mobile
+checks. No physical board or monitor was tested.
+
+## Кратко по-русски
+
+В меню выберите **cmod_a7_35 → cmod_a7_35_no_pll**. Вся логика FPGA работает
+на 12 МГц от генератора платы через BUFG, без PLL и MMCM. Разрешение —
+**305 × 480**, частота строк — **31,413613 кГц**, кадров — **59,835453 Гц**.
+Тайминги близки к VGA 640×480, но независимых отсчётов цвета в строке только
+305; горизонтальные пиксели шире вертикальных. Работу с конкретным монитором
+нужно проверить на плате. Исходный вариант `cmod_a7_35` сохраняет MMCM и 640×480.
+
+Монтаж тот же, что в [русской HTML-инструкции](../cmod_a7_35/assembly_ru.html).
+BTN0 снимает сброс через три такта без ожидания захвата MMCM. Частоты ЦАП:
+BCK 3 МГц, LRCK 46,875 кГц. Частоты микрофона: SCK 750 кГц, WS 11,71875 кГц;
+полоса звука микрофона уменьшается. Внутренняя PLL ЦАП по-прежнему используется:
+отсутствие PLL относится к FPGA. Команда выше создаёт битовый файл без загрузки
+на плату и проверяет отсутствие PLL/MMCM после синтеза.

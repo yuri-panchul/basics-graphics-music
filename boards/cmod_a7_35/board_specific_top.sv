@@ -6,7 +6,11 @@
 module board_specific_top
 # (
     parameter w_gpio        = 8,
+    `ifdef CMOD_A7_NO_PLL
+              screen_width  = 305,
+    `else
               screen_width  = 640,
+    `endif
               screen_height = 480,
               w_red         = 2,
               w_green       = 2,
@@ -38,11 +42,22 @@ module board_specific_top
     output       pio34   // DAC LRCK / WS; DAC SCK / MCLK is wired to GND
 );
 
-    // 12 MHz is too slow for the common VGA divider. Use the Artix-7 MMCM:
+    wire clk, locked;
+
+    `ifdef CMOD_A7_NO_PLL
+    // One 12 MHz clock domain, with no PLL/MMCM or fabric-generated clock.
+    // 305 + 8 + 46 + 23 = 382 clocks/line; 525 lines => 59.83545 Hz.
+    localparam clk_mhz = 12, pixel_mhz = 12;
+    localparam h_front = 8, h_sync = 46, h_back = 23;
+    assign locked = 1'b1;
+    BUFG i_clock_buf (.I (sysclk), .O (clk));
+    `else
+    // Full-width VGA uses the Artix-7 MMCM:
     // 12 / 1 * 50 = 600 MHz VCO; 600 / 6 = 100 MHz system clock.
     // The common vga then advances one pixel every four cycles (25 MHz).
     localparam clk_mhz = 100, pixel_mhz = 25;
-    wire clk, clk_unbuffered, feedback, feedback_buffered, locked;
+    localparam h_front = 16, h_sync = 96, h_back = 48;
+    wire clk_unbuffered, feedback, feedback_buffered;
 
     MMCME2_BASE
     # (
@@ -65,8 +80,10 @@ module board_specific_top
 
     BUFG i_feedback_buf (.I (feedback),       .O (feedback_buffered));
     BUFG i_clock_buf    (.I (clk_unbuffered), .O (clk));
+    `endif
 
-    // BTN0 is a dedicated reset. Assert on loss of lock, release in clk domain.
+    // BTN0 asserts reset asynchronously; three clk edges release it.
+    // In MMCM mode, loss of lock also asserts reset.
     wire reset_request = btn [0] | ~locked;
     (* ASYNC_REG = "TRUE" *) logic [2:0] reset_pipe = '1;
 
@@ -150,7 +167,7 @@ module board_specific_top
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
         wire hs, vs, display_on;
         // Include blanking in the timing-counter widths (525 lines need 10 bits).
-        localparam w_video_x = $clog2 (screen_width + 160),
+        localparam w_video_x = $clog2 (screen_width + h_front + h_sync + h_back),
                    w_video_y = $clog2 (screen_height + 45);
         wire [w_video_x - 1:0] video_x;
         wire [w_video_y - 1:0] video_y;
@@ -161,6 +178,7 @@ module board_specific_top
         # (
             .HPOS_WIDTH (w_video_x), .VPOS_WIDTH (w_video_y),
             .H_DISPLAY (screen_width), .V_DISPLAY (screen_height),
+            .H_FRONT (h_front), .H_SYNC (h_sync), .H_BACK (h_back),
             .CLK_MHZ (clk_mhz), .PIXEL_MHZ (pixel_mhz)
         )
         i_vga

@@ -1,5 +1,14 @@
 `timescale 1ns/1ps
 module tb;
+    `ifdef CMOD_TEST_NO_PLL
+        localparam H_ACTIVE=305, H_TOTAL=382, H_FRONT=8, H_SYNC=46, PIXEL_DIV=1;
+        localparam real SYS_PERIOD=83.333334;
+        localparam MIC_DIV=1024, DAC_DIV=256;
+    `else
+        localparam H_ACTIVE=640, H_TOTAL=800, H_FRONT=16, H_SYNC=96, PIXEL_DIV=4;
+        localparam real SYS_PERIOD=10.0;
+        localparam MIC_DIV=2048, DAC_DIV=2048;
+    `endif
     reg sysclk=0;
     always #41.666667 sysclk=~sysclk;
     reg [1:0] btn=0;
@@ -64,6 +73,36 @@ module tb;
 
     integer cycles, pixels, active_pixels, hs_pixels, vs_lines;
     integer last_x, last_y;
+    realtime last_hs=0, last_mic_ws=0, last_dac_ws=0;
+    integer hs_periods=0, mic_periods=0, dac_periods=0;
+
+    task check_period(input realtime elapsed, input realtime expected);
+        if (elapsed < expected-1.0 || elapsed > expected+1.0)
+            $fatal(1,"Clock period %0.3f ns, expected %0.3f ns",elapsed,expected);
+    endtask
+
+    // Measure actual pins in nanoseconds, independently of counter values.
+    always @(negedge ja[7]) if (!dut.rst) begin
+        if(last_hs!=0) begin
+            check_period($realtime-last_hs,H_TOTAL*PIXEL_DIV*SYS_PERIOD);
+            hs_periods=hs_periods+1;
+        end
+        last_hs=$realtime;
+    end
+    always @(posedge pio30) if (!dut.rst) begin
+        if(last_mic_ws!=0) begin
+            check_period($realtime-last_mic_ws,MIC_DIV*SYS_PERIOD);
+            mic_periods=mic_periods+1;
+        end
+        last_mic_ws=$realtime;
+    end
+    always @(posedge pio34) if (!dut.rst) begin
+        if(last_dac_ws!=0) begin
+            check_period($realtime-last_dac_ws,DAC_DIV*SYS_PERIOD);
+            dac_periods=dac_periods+1;
+        end
+        last_dac_ws=$realtime;
+    end
     initial begin
         #1;
         if(dut.rst!==1 || led0_r!==0) $fatal(1,"Startup reset");
@@ -86,9 +125,17 @@ module tb;
         @(negedge dut.clk);
         cycles=0; pixels=0; active_pixels=0; hs_pixels=0; vs_lines=0;
         last_x=-1;last_y=-1;
-        repeat(800*525*4) begin
+        repeat(H_TOTAL*525*PIXEL_DIV) begin
             if(dut.i_vga.hpos!=last_x || dut.i_vga.vpos!=last_y) begin
                 pixels=pixels+1;
+                if(ja[7] !== !(dut.i_vga.hpos >= H_ACTIVE+H_FRONT &&
+                              dut.i_vga.hpos < H_ACTIVE+H_FRONT+H_SYNC) ||
+                   ja[3] !== !(dut.i_vga.vpos >= 490 && dut.i_vga.vpos < 492))
+                    $fatal(1,"Sync position/polarity");
+                if(dut.i_vga.display_on !== (dut.i_vga.hpos < H_ACTIVE && dut.i_vga.vpos < 480))
+                    $fatal(1,"Active video window");
+                if(dut.i_vga.display_on && (dut.x != dut.i_vga.hpos || dut.y != dut.i_vga.vpos))
+                    $fatal(1,"Lab coordinates");
                 if(dut.i_vga.display_on) begin
                     active_pixels=active_pixels+1;
                     if({ja[4],ja[0]}!==2'b01 || {ja[5],ja[1]}!==2'b10 || {ja[6],ja[2]}!==2'b11)
@@ -102,18 +149,24 @@ module tb;
             cycles=cycles+1;
             @(negedge dut.clk);
         end
-        if(pixels!=800*525 || active_pixels!=640*480 || hs_pixels!=96*525 || vs_lines!=2)
+        if(pixels!=H_TOTAL*525 || active_pixels!=H_ACTIVE*480 || hs_pixels!=H_SYNC*525 || vs_lines!=2)
             $fatal(1,"Raster: pixels=%d active=%d hs=%d vs=%d",pixels,active_pixels,hs_pixels,vs_lines);
         if(dut.mic!==MIC_SAMPLE) $fatal(1,"Microphone sample %h",dut.mic);
         if(dac_words<4) $fatal(1,"DAC clocks absent");
+        if(hs_periods<525 || mic_periods<4 || dac_periods<4) $fatal(1,"Clock measurements absent");
         btn[0]=1;#1;
         if(dut.rst!==1 || led0_r!==0) $fatal(1,"Asynchronous reset assertion");
+        last_hs=0; last_mic_ws=0; last_dac_ws=0;
         #500;btn[0]=0;
+        repeat(2) @(negedge dut.clk);
+        if(dut.rst!==1) $fatal(1,"Button reset released too early");
         wait(dut.rst===0);
+        `ifndef CMOD_TEST_NO_PLL
         force dut.i_mmcm.LOCKED=0;#1;
         if(dut.rst!==1) $fatal(1,"Lock loss reset");
         release dut.i_mmcm.LOCKED;
-        $display("PASS: reset, GPIO/UART, full VGA frame, RGB blanking, INMP441, I2S DAC");
+        `endif
+        $display("PASS: %0dx480, reset, GPIO/UART, full VGA frame, blanking, INMP441, I2S DAC", H_ACTIVE);
         $finish;
     end
 endmodule

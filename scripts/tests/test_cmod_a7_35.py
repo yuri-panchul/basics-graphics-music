@@ -27,16 +27,20 @@ class CmodTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         return r.stdout + r.stderr
 
-    def compile(self, lab, config=None, simulate=False):
+    def compile(self, lab, config=None, simulate=False, no_pll=False):
+        board = REPO/'boards/cmod_a7_35_no_pll' if no_pll else BOARD
         if config is not None:
             (self.work / 'lab_specific_board_config.svh').write_text(config)
         output = self.work / 'test.vvp'
         args = ['iverilog', '-g2012', '-DNO_SIMULATION', '-s',
                 'tb' if simulate else 'board_specific_top', '-o', str(output)]
-        for directory in [self.work, lab, BOARD, REPO/'labs/common', REPO/'peripherals']:
+        if no_pll:
+            # No MMCM model is available: accidentally retaining one must fail elaboration.
+            args += ['-DCMOD_TEST_NO_PLL']
+        for directory in [self.work, lab, board, REPO/'labs/common', REPO/'peripherals']:
             args += ['-I', str(directory)]
         sources = [FIX/'clock_primitives.sv']
-        for directory in [lab, BOARD, REPO/'labs/common', REPO/'peripherals']:
+        for directory in [lab, board, REPO/'labs/common', REPO/'peripherals']:
             sources += [p for p in sorted(directory.glob('*.sv')) if p.name not in ('tb.sv', 'clock_primitives.sv')]
             sources += sorted(directory.glob('*.v'))
         filelist = lab/'filelist.f'
@@ -66,6 +70,7 @@ class CmodTests(unittest.TestCase):
                          ['R3','T3','R2','T1','T2','U1','W2','V2','W3'])
         self.assertEqual([pins[f'ja[{i}]'] for i in range(8)],
                          ['G17','G19','N18','L18','H17','H19','J19','K18'])
+        self.assertEqual(actual, (REPO/'boards/cmod_a7_35_no_pll/board_specific.xdc').read_bytes())
 
     def test_top_ports_have_exact_xdc_coverage(self):
         netlist = self.compile(FIX, config='// All optional modules disabled.\n').read_text()
@@ -87,24 +92,32 @@ class CmodTests(unittest.TestCase):
             '3_music/3_11_microphone_monitor',
             '4_microarchitecture/4_1_pipelines_1/4_1_1_pow5_single_cycle',
             '4_microarchitecture/4_2_fifo/4_2_1_start_with_shift_register']]
-        for lab in labs:
-            with self.subTest(lab=str(lab.relative_to(REPO))):
-                self.compile(lab.parent)
+        for no_pll in (False, True):
+            for lab in labs:
+                with self.subTest(lab=str(lab.relative_to(REPO)), no_pll=no_pll):
+                    self.compile(lab.parent, no_pll=no_pll)
 
     def test_tm_options_elaborate(self):
-        for option in ['', 'CONCAT_TM1638_SIGNALS_AND_REGULAR',
-                       'CONCAT_REGULAR_SIGNALS_AND_TM1638',
-                       'SPLIT_TM1638_DIO_INOUT_SIGNAL',
-                       'USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE']:
-            with self.subTest(option=option):
-                self.compile(FIX, config='`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE\n'
-                             + (f'`define {option}\n' if option else ''))
+        for no_pll in (False, True):
+            for option in ['', 'CONCAT_TM1638_SIGNALS_AND_REGULAR',
+                           'CONCAT_REGULAR_SIGNALS_AND_TM1638',
+                           'SPLIT_TM1638_DIO_INOUT_SIGNAL',
+                           'USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE']:
+                with self.subTest(option=option, no_pll=no_pll):
+                    self.compile(FIX, config='`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE\n'
+                                 + (f'`define {option}\n' if option else ''), no_pll=no_pll)
 
     def test_frame_audio_microphone_and_reset(self):
+        self.check_frame(no_pll=False)
+
+    def test_no_pll_frame_audio_microphone_and_reset(self):
+        self.check_frame(no_pll=True)
+
+    def check_frame(self, no_pll):
         config = ''.join(f'`define INSTANTIATE_{s}_MODULE\n' for s in [
             'GRAPHICS_INTERFACE', 'MICROPHONE_INTERFACE', 'SOUND_OUTPUT_INTERFACE',
             'TM1638_BOARD_CONTROLLER'])
-        output = self.compile(FIX, config=config, simulate=True)
+        output = self.compile(FIX, config=config, simulate=True, no_pll=no_pll)
         result = self.run_command(['vvp', str(output)])
         self.assertIn('PASS:', result)
         print(result.strip())

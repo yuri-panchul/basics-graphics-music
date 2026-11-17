@@ -3,6 +3,7 @@
 - [English assembly guide](assembly_en.md) · [HTML](assembly_en.html)
 - [Инструкция по сборке на русском](assembly_ru.md) · [HTML](assembly_ru.html)
 - DAC breadboard drawing: [English](breadboard_dac_en.svg) · [Русский](breadboard_dac_ru.svg)
+- [VGA without PLL/MMCM: cmod_a7_35_no_pll](../cmod_a7_35_no_pll/README.md)
 
 Target: `xc7a35tcpg236-1`, hardware-manager device `xc7a35t_0`.
 The configuration was added on branch `codex_cmod_a7`, based on main
@@ -23,7 +24,10 @@ Its 600 MHz VCO produces a 100 MHz system clock through a BUFG, with a BUFG
 feedback path. The existing VGA module divides the system clock by four;
 the audio modules operate in their existing 100 MHz mode. Shared peripherals
 are unchanged. The MMCM is always a hardware primitive in production; only
-the test fixture provides a behavioral clock model.
+the test fixture provides a behavioral clock model. This describes the default
+`cmod_a7_35` configuration. The separately selectable `cmod_a7_35_no_pll` variant
+uses a direct 12 MHz clock and 305×480 video at 59.835453 Hz with the same wiring.
+See its linked notes for timing, audio rates and display limitations.
 
 BTN0 resets the MMCM and asynchronously asserts the application reset; loss
 of lock also asserts reset. Three clock edges release reset after lock.
@@ -118,9 +122,10 @@ The TM1638 3.3 V wiring revision changes the assembly documentation and HDL
 comments only. The FPGA logic and LVCMOS33 pin constraints are identical to
 those used for the builds above; the existing bitstreams remain applicable.
 
-The five board regression tests passed, including elaboration of 17 labs
-and five TM1638 configurations. All 22 board-menu tests passed across 114
-configurations. Both HTML guides passed desktop (1440 px) and mobile (390 px)
+The six board regression tests passed, including full-frame simulations,
+elaboration of 17 labs and five TM1638 options in each clock configuration.
+All 22 board-menu tests passed across 115 configurations. Both HTML guides
+passed desktop (1440 px) and mobile (390 px)
 layout checks; their local links, diagram and bilingual prompt appendices
 were checked.
 

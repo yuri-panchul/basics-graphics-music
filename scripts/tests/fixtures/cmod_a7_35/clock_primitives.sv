@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Test-only functional clock source. This does not model MMCM analog behavior.
-// Production always instantiates the real primitives; Vivado uses UNISIM.
+// Production uses UNISIM. No-PLL tests deliberately have no MMCM model.
+`ifndef CMOD_TEST_NO_PLL
 module MMCME2_BASE
 # (
     parameter real CLKIN1_PERIOD = 83.333,
@@ -32,6 +33,7 @@ module MMCME2_BASE
         else
             edges <= edges + 1;
 endmodule
+`endif
 
 module BUFG (input I, output O);
     assign O = I;

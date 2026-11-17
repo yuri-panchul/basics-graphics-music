@@ -77,3 +77,5 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 * **MAX II** — all four free editions build it
 
 Ranges fully measured for 23 of 55 boards.
+
+Cmod A7-35T also offers [cmod_a7_35_no_pll](cmod_a7_35_no_pll/README.md): direct 12 MHz VGA, 305×480 at 59.835 Hz, using the same wiring. Select it under the cmod_a7_35 board group.
