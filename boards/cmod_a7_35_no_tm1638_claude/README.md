@@ -8,7 +8,7 @@ This is [cmod_a7_35_claude](../cmod_a7_35_claude/README.md) without the TM1638 m
 labs get the two buttons of Cmod A7 as their keys and its two LEDs as their
 LEDs, and there is no seven-segment display.** Everything else is that of
 cmod_a7_35_claude: VGA 640x480 through TinyVGA, the microphone, the DAC, the 50 MHz clock from the MMCM, the pins and the wiring. The other configurations without TM1638 are
-[cmod_a7_35_no_pll_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_vga_304_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_vga_320_no_tm1638_claude/README.md).
+[cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README.md).
 
 ## Contents
 
@@ -69,6 +69,17 @@ its five wires. DIP 25 still goes to the GND rail. The pins in short:
 | DIP 25 | GND rail |
 | DIP 26, 27, 28 | Nothing |
 | DIP 29, 30, 31, 32 | INMP441 SCK, WS, L/R, SD |
+
+**TinyVGA.** The VGA output is TinyVGA, the Pmod board of Leo Moser, in Pmod
+socket JA; its design files are in
+[github.com/mole99/tiny-vga](https://github.com/mole99/tiny-vga). The Tiny
+Tapeout store sells it assembled as
+[Tiny VGA Pmod](https://store.tinytapeout.com/products/TinyVGA-Pmod-p678647356),
+€15.00 in November 2026. It can also be ordered assembled from JLCPCB with
+`GERBER-tiny-vga.zip`, `BOM-tiny-vga.csv` and `CPL-tiny-vga.csv` from
+`pcb/jlcpcb/production_files/` of the repository; the steps are in
+[Where to get TinyVGA](../cmod_a7_35_claude/README.md#where-to-get-tinyvga)
+of cmod_a7_35_claude.
 
 The drawings of this directory have no TM1638, for both DAC modules, WeAct
 I2S Earphone Module (PCM5100A) and GY-PCM5102 (PCM5102A).
@@ -160,8 +171,13 @@ done
 
 The rest of the design comes from the prompts in the appendix of
 [cmod_a7_35_claude](../cmod_a7_35_claude/README.md#appendix-the-prompts). This configuration
-comes from the following prompt, sent by Yuri Panchul in the same Claude Code
-session on 16 November 2026, verbatim. The time is Pacific time (UTC−8).
+comes from the following prompts, sent by Yuri Panchul in the same Claude
+Code session on 16 and 17 November 2026, verbatim. They are all the prompts
+of the session from the first one about this configuration on, the requests
+to commit and push included, and the prompts that follow and concern this
+configuration are added here too. The prompts name the configurations as
+they were called then: the suffix `_claude` came at 00:43 and `tiny_` at
+09:47 on 17 November. The times are Pacific time (UTC−8).
 
 **23:17**:
 
@@ -171,8 +187,50 @@ cmod_a7_35_no_pll_vga_304_no_tm1638
 cmod_a7_35_no_pll_vga_320_no_tm1638
 ```
 
+**23:53**:
+
+```text
+commit and push
+```
+
+**00:29 on 17 November**, about the suffixes `_vga_320`, `_vga_304` and
+`_no_pll` that Yuri Panchul had added to the board menu in
+`scripts/steps/00_setup.source_bash`, so that the menu lists the
+configurations without an MMCM under `cmod_a7_35`:
+
+```text
+check the changes I did manually. Tell why they are needed
+```
+
+**00:37 on 17 November**; the catalog `boards/README.csv` went back to one
+line for the physical board, `cmod_a7_35`:
+
+```text
+yes, fix the catalog, then commit and push
+```
+
 **00:43 on 17 November**:
 
 ```text
 Add to all your cmod_a7 configurations suffix _claude. Update all the relevant files.
+```
+
+**00:56 on 17 November**:
+
+```text
+commit and push
+```
+
+**09:47 on 17 November**; it added `tiny_` before `vga` in the names of the
+configurations without an MMCM and the paragraph on TinyVGA in
+[The hardware and the wiring](#the-hardware-and-the-wiring):
+
+```text
+convert all mentions to vga in configuration names and the related texts to tiny_vga. Specifically mention TinyVGA in documentation, repository https://github.com/mole99/tiny-vga and where to buy it retail or order from JLCPCB. Make sure to add this and other previous and follow-up related prompt as appendices to the instructions you generate.
+```
+
+**10:20 on 17 November**:
+
+```text
+commit and push; then rename cmod_a7_35_claude to cmod_a7_35_claude_tiny_vga_640 and cmod_a7_35_no_tm1638_claude into cmod_a7_35_tiny_vga_640_no_tm1638_claude
 ```

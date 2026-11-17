@@ -57,7 +57,7 @@ targets the wrong FPGA, XC7A15T, and is not used.
 | Digilent Cmod A7-35T | Not the 15T: the FPGA part in [board_specific.tcl](board_specific.tcl) is `xc7a35tcpg236-1`. |
 | Micro-USB cable | A data cable, not a charge-only one. A right-angle plug keeps the cable off the breadboard. |
 | Solderless breadboard | A full-size one, 830 holes, with a pair of power rails on each long side. |
-| TinyVGA Pmod | By Leo Moser, [mole99/tiny-vga](https://github.com/mole99/tiny-vga). Plus a VGA cable and a monitor that accepts 640x480 at 60 Hz. |
+| TinyVGA Pmod | By Leo Moser, [mole99/tiny-vga](https://github.com/mole99/tiny-vga). Bought assembled or ordered from JLCPCB: see [Where to get TinyVGA](#where-to-get-tinyvga). Plus a VGA cable and a monitor that accepts 640x480 at 60 Hz. |
 | TM1638 LED&KEY module | 8 digits, 8 LEDs, 8 keys, a 5-pin header VCC, GND, STB, CLK, DIO. |
 | INMP441 module | The round I2S microphone board with 6 pins. |
 | One DAC module | WeAct I2S Earphone Module (PCM5100A) or GY-PCM5102 (PCM5102A). Headphones or active speakers with a 3.5 mm plug. |
@@ -65,6 +65,49 @@ targets the wrong FPGA, XC7A15T, and is not used.
 | For variant B: a 3.3 V regulator module | A 3-pin AMS1117-3.3 module, for example [Amazon B08CDMZMDN](https://www.amazon.com/dp/B08CDMZMDN), a pack of 20: 4.75 to 12 V in, 3.3 V out, up to 800 mA, about 8.6 x 12.3 mm, pins VIN, GND, VOUT. Any 3.3 V module that works from 5 V and gives at least 300 mA will do. |
 | Jumper wires | Male-to-male for the breadboard, female-to-male for the module headers and the TPH2 test point. |
 | Multimeter | To check the power rails before the modules are connected. |
+
+### Where to get TinyVGA
+
+TinyVGA, spelled Tiny VGA by its author, is an open hardware Pmod board by
+Leo Moser. It was made for the chips of [Tiny Tapeout](https://tinytapeout.com/)
+and works with any FPGA board that has a Pmod socket. Its repository,
+[github.com/mole99/tiny-vga](https://github.com/mole99/tiny-vga), holds the
+KiCad project, the pinout and the files for ordering it, under the CC BY-SA
+4.0 license. The board has a right-angle 12-pin Pmod plug, a 74LVC245 buffer,
+a resistor DAC of 2 bits for each color and a VGA socket. Its VCC must be
+3.3 V, which JA gives.
+
+There are two ways to get one.
+
+**Buy it assembled.** The Tiny Tapeout store sells it as
+[Tiny VGA Pmod](https://store.tinytapeout.com/products/TinyVGA-Pmod-p678647356),
+fully assembled, for €15.00 in November 2026; the page shows the current
+price and stock. The author does not sell it directly.
+
+**Order it from JLCPCB.** The board is laid out to be made and assembled by
+[JLCPCB](https://jlcpcb.com/), and the repository holds the files for that in
+`pcb/jlcpcb/production_files/`:
+
+| File | What it is |
+|------|------------|
+| `GERBER-tiny-vga.zip` | The Gerber files of the board |
+| `BOM-tiny-vga.csv` | The parts list, with the LCSC part number of each part, the Pmod plug and the VGA socket included |
+| `CPL-tiny-vga.csv` | The placement of the parts |
+
+The steps, as in the README of the repository:
+
+1. Create an account at JLCPCB.
+2. Upload `GERBER-tiny-vga.zip`. The default options will do; you may change
+   the quantity or the color of the board, and remove the order number.
+3. Turn on PCB Assembly and keep its settings.
+4. Click Next and upload `BOM-tiny-vga.csv` and `CPL-tiny-vga.csv`.
+5. Check the placement of the parts in the preview: some may need to be
+   rotated.
+6. Check out.
+
+A board costs less when several are ordered at once; the author suggests
+ordering about ten and giving the spare ones to others nearby. The author is
+not affiliated with JLCPCB.
 
 ## The pin plan
 
@@ -458,10 +501,10 @@ The labs get `clk_mhz = 50`.
 
 **Without the MMCM.** Two other board configurations use the same hardware
 and wiring and run the whole design from the 12 MHz oscillator:
-[cmod_a7_35_no_pll_vga_320_claude](../cmod_a7_35_no_pll_vga_320_claude/README.md) draws
+[cmod_a7_35_no_pll_tiny_vga_320_claude](../cmod_a7_35_no_pll_tiny_vga_320_claude/README.md) draws
 320x480 with every pixel exactly two wide, at a line rate of 30 kHz that
 some monitors refuse, and
-[cmod_a7_35_no_pll_vga_304_claude](../cmod_a7_35_no_pll_vga_304_claude/README.md) draws 304x480 at
+[cmod_a7_35_no_pll_tiny_vga_304_claude](../cmod_a7_35_no_pll_tiny_vga_304_claude/README.md) draws 304x480 at
 the standard line and frame rates. Their instructions compare the three.
 
 **A proposed change to vga.sv, not made here.** `vga.sv` does not notice a
@@ -537,7 +580,7 @@ Not yet tried on a real board.
 | [board_specific.xdc](board_specific.xdc) | Cmod-A7-Master.xdc of Digilent, only the used lines uncommented |
 | [board_specific_top.sv](board_specific_top.sv) | Pin mapping, the 50 MHz clock generator, reset, and the instances of the lab, VGA, TM1638, microphone and DAC modules |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
-| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Makes the four wiring diagrams, `wiring_*.svg`; with a board name, those of cmod_a7_35_no_pll_vga_320_claude or cmod_a7_35_no_pll_vga_304_claude |
+| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Makes the four wiring diagrams, `wiring_*.svg`; with a board name, those of cmod_a7_35_no_pll_tiny_vga_320_claude or cmod_a7_35_no_pll_tiny_vga_304_claude |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams |
 | [generate_breadboard_diagram.py](generate_breadboard_diagram.py) | Makes the two breadboard layouts, `breadboard_*.svg`; with a board name, those of the other two configurations |
 | `breadboard_*.svg`, `breadboard_*.png` | The breadboard layouts with the microphone, the DAC and the regulator plugged in |
@@ -567,7 +610,10 @@ done
   buttons and LEDs.
 * Digilent, [Cmod-A7-Master.xdc](https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc),
   the source of board_specific.xdc.
-* Leo Moser, [TinyVGA](https://github.com/mole99/tiny-vga): the Pmod pinout and the 3.3 V supply.
+* Leo Moser, [Tiny VGA](https://github.com/mole99/tiny-vga): the Pmod pinout,
+  the 3.3 V supply, the parts list and the steps of ordering it from JLCPCB.
+* Tiny Tapeout store, [Tiny VGA Pmod](https://store.tinytapeout.com/products/TinyVGA-Pmod-p678647356):
+  the assembled board and its price.
 * Digilent, [Pmod TPH2 Reference Manual](https://digilent.com/reference/pmod/pmodtph2/reference-manual):
   the pass-through test point header.
 * WeAct Studio, [I2S Earphone Module V1](https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1):
@@ -855,6 +901,18 @@ Add to all your cmod_a7 configurations suffix _claude. Update all the relevant f
 
 ```text
 commit and push
+```
+
+**09:47 on 17 November**:
+
+```text
+convert all mentions to vga in configuration names and the related texts to tiny_vga. Specifically mention TinyVGA in documentation, repository https://github.com/mole99/tiny-vga and where to buy it retail or order from JLCPCB. Make sure to add this and other previous and follow-up related prompt as appendices to the instructions you generate.
+```
+
+**10:20 on 17 November**:
+
+```text
+commit and push; then rename cmod_a7_35_claude to cmod_a7_35_claude_tiny_vga_640 and cmod_a7_35_no_tm1638_claude into cmod_a7_35_tiny_vga_640_no_tm1638_claude
 ```
 
 Yuri Panchul also ran the shell command

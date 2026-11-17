@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1720" height="1250" viewBox="0 0 1720 1250">
 <rect width="1720" height="1250" fill="#ffffff"/>
 <text x="40" y="46" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="26" font-weight="bold" fill="#1b1b1b" text-anchor="start">Cmod A7-35T + TinyVGA + TM1638 + INMP441 + WeAct PCM5100A, 3.3 V from a regulator</text>
-<text x="40" y="76" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Board configuration cmod_a7_35_no_pll_vga_304_claude. The Cmod A7 sits in a breadboard across its center channel; the modules connect with jumper wires.</text>
+<text x="40" y="76" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Board configuration cmod_a7_35_no_pll_tiny_vga_304_claude. The Cmod A7 sits in a breadboard across its center channel; the modules connect with jumper wires.</text>
 <text x="40" y="98" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Cmod A7 is seen from the component side. Each board pin shows its DIP pin number; the used pins also show their signal.</text>
 <line x1="40" y1="128" x2="70" y2="128" stroke="#c99100" stroke-width="5" stroke-linecap="round"/>
 <text x="78" y="133" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start">TM1638</text>

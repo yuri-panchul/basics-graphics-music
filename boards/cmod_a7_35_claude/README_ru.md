@@ -58,7 +58,7 @@ RGB-светодиод, порт USB для JTAG и UART, один разъём 
 | Digilent Cmod A7-35T | Не 15T: в [board_specific.tcl](board_specific.tcl) указана ПЛИС `xc7a35tcpg236-1`. |
 | Кабель micro-USB | Кабель для передачи данных, а не только для зарядки. Угловой штекер не даёт кабелю лежать на макетной плате. |
 | Беспаечная макетная плата | Полноразмерная, на 830 отверстий, с парой шин питания вдоль каждой длинной стороны. |
-| TinyVGA Pmod | Автор — Leo Moser, [mole99/tiny-vga](https://github.com/mole99/tiny-vga). Ещё нужны кабель VGA и монитор, который принимает 640x480 при 60 Гц. |
+| TinyVGA Pmod | Автор — Leo Moser, [mole99/tiny-vga](https://github.com/mole99/tiny-vga). Её покупают собранной или заказывают на JLCPCB: см. [Где взять TinyVGA](#где-взять-tinyvga). Ещё нужны кабель VGA и монитор, который принимает 640x480 при 60 Гц. |
 | Модуль TM1638 LED&KEY | 8 индикаторов, 8 светодиодов, 8 кнопок, разъём из 5 выводов VCC, GND, STB, CLK, DIO. |
 | Модуль INMP441 | Круглая плата микрофона I2S с 6 выводами. |
 | Один модуль ЦАП | WeAct I2S Earphone Module (PCM5100A) или GY-PCM5102 (PCM5102A). Наушники или активные колонки со штекером 3,5 мм. |
@@ -66,6 +66,49 @@ RGB-светодиод, порт USB для JTAG и UART, один разъём 
 | Для варианта B: модуль стабилизатора 3,3 В | Модуль AMS1117-3.3 с 3 выводами, например [Amazon B08CDMZMDN](https://www.amazon.com/dp/B08CDMZMDN), набор из 20 штук: вход от 4,75 до 12 В, выход 3,3 В, до 800 мА, около 8,6 x 12,3 мм, выводы VIN, GND, VOUT. Подойдёт любой модуль на 3,3 В, который работает от 5 В и даёт не меньше 300 мА. |
 | Провода-перемычки | «Папа-папа» для макетной платы, «мама-папа» для разъёмов модулей и контрольной точки TPH2. |
 | Мультиметр | Чтобы проверить шины питания до подключения модулей. |
+
+### Где взять TinyVGA
+
+TinyVGA, у автора — Tiny VGA, это открытая плата Pmod, которую сделал Leo
+Moser. Она создана для микросхем [Tiny Tapeout](https://tinytapeout.com/) и
+работает с любой платой ПЛИС, у которой есть разъём Pmod. В её репозитории,
+[github.com/mole99/tiny-vga](https://github.com/mole99/tiny-vga), лежат проект
+KiCad, назначение выводов и файлы для заказа, под лицензией CC BY-SA 4.0. На
+плате — угловая 12-контактная вилка Pmod, буфер 74LVC245, резисторный ЦАП на
+2 бита для каждого цвета и разъём VGA. На её VCC должно быть 3,3 В, и JA их
+даёт.
+
+Получить её можно двумя способами.
+
+**Купить собранной.** Магазин Tiny Tapeout продаёт её под названием
+[Tiny VGA Pmod](https://store.tinytapeout.com/products/TinyVGA-Pmod-p678647356),
+полностью собранной, за 15,00 € в ноябре 2026 года; текущие цену и наличие
+показывает страница магазина. Сам автор её не продаёт.
+
+**Заказать на JLCPCB.** Плата разведена так, чтобы её изготовил и собрал
+[JLCPCB](https://jlcpcb.com/), и файлы для этого лежат в репозитории в
+`pcb/jlcpcb/production_files/`:
+
+| Файл | Что это |
+|------|---------|
+| `GERBER-tiny-vga.zip` | Файлы Gerber платы |
+| `BOM-tiny-vga.csv` | Список деталей с номером LCSC каждой детали, включая вилку Pmod и разъём VGA |
+| `CPL-tiny-vga.csv` | Расположение деталей |
+
+Шаги — как в README репозитория:
+
+1. Создайте учётную запись на JLCPCB.
+2. Загрузите `GERBER-tiny-vga.zip`. Настройки по умолчанию подойдут; можно
+   изменить количество или цвет платы и убрать номер заказа.
+3. Включите PCB Assembly и оставьте его настройки как есть.
+4. Нажмите Next и загрузите `BOM-tiny-vga.csv` и `CPL-tiny-vga.csv`.
+5. Проверьте расположение деталей на предварительном просмотре: некоторые,
+   возможно, придётся повернуть.
+6. Оформите заказ.
+
+Плата обходится дешевле, если заказать сразу несколько; автор советует
+заказать штук десять и раздать лишние тем, кто живёт рядом. Автор не связан
+с JLCPCB.
 
 ## Распределение выводов
 
@@ -471,10 +514,10 @@ clk = 750 MHz / 15  =  50 MHz
 
 **Без MMCM.** Две другие конфигурации платы используют то же оборудование и
 соединения и запускают весь проект от генератора 12 МГц:
-[cmod_a7_35_no_pll_vga_320_claude](../cmod_a7_35_no_pll_vga_320_claude/README_ru.md) рисует
+[cmod_a7_35_no_pll_tiny_vga_320_claude](../cmod_a7_35_no_pll_tiny_vga_320_claude/README_ru.md) рисует
 320x480, каждый пиксель ровно в два, с частотой строк 30 кГц, которую
 некоторые мониторы не принимают, а
-[cmod_a7_35_no_pll_vga_304_claude](../cmod_a7_35_no_pll_vga_304_claude/README_ru.md) рисует 304x480
+[cmod_a7_35_no_pll_tiny_vga_304_claude](../cmod_a7_35_no_pll_tiny_vga_304_claude/README_ru.md) рисует 304x480
 со стандартными частотами строк и кадров. Их инструкции сравнивают все три.
 
 **Предлагаемое изменение vga.sv, здесь не сделанное.** `vga.sv` не замечает
@@ -551,7 +594,7 @@ generate принимают все средства синтеза, которы
 | [board_specific.xdc](board_specific.xdc) | Cmod-A7-Master.xdc от Digilent, раскомментированы только используемые строки |
 | [board_specific_top.sv](board_specific_top.sv) | Сопоставление выводов, генератор тактовой частоты 50 МГц, сброс и экземпляры модулей упражнения, VGA, TM1638, микрофона и ЦАП |
 | [board_specific.tcl](board_specific.tcl) | ПЛИС для Vivado |
-| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Создаёт четыре схемы подключения, `wiring_*.svg`; с именем платы — схемы cmod_a7_35_no_pll_vga_320_claude или cmod_a7_35_no_pll_vga_304_claude |
+| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Создаёт четыре схемы подключения, `wiring_*.svg`; с именем платы — схемы cmod_a7_35_no_pll_tiny_vga_320_claude или cmod_a7_35_no_pll_tiny_vga_304_claude |
 | `wiring_*.svg`, `wiring_*.png` | Схемы подключения |
 | [generate_breadboard_diagram.py](generate_breadboard_diagram.py) | Создаёт две раскладки на макетной плате, `breadboard_*.svg`; с именем платы — раскладки двух других конфигураций |
 | `breadboard_*.svg`, `breadboard_*.png` | Раскладки на макетной плате с вставленными микрофоном, ЦАП и стабилизатором |
@@ -581,7 +624,10 @@ done
   Pmod, кнопки и светодиоды.
 * Digilent, [Cmod-A7-Master.xdc](https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc),
   исходный файл для board_specific.xdc.
-* Leo Moser, [TinyVGA](https://github.com/mole99/tiny-vga): выводы Pmod и питание 3,3 В.
+* Leo Moser, [Tiny VGA](https://github.com/mole99/tiny-vga): выводы Pmod,
+  питание 3,3 В, список деталей и шаги заказа на JLCPCB.
+* Магазин Tiny Tapeout, [Tiny VGA Pmod](https://store.tinytapeout.com/products/TinyVGA-Pmod-p678647356):
+  собранная плата и её цена.
 * Digilent, [Pmod TPH2 Reference Manual](https://digilent.com/reference/pmod/pmodtph2/reference-manual):
   проходной модуль с контрольными точками.
 * WeAct Studio, [I2S Earphone Module V1](https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1):
@@ -956,6 +1002,26 @@ commit and push
 
 ```text
 сделай коммит и push
+```
+
+**09:47, 17 ноября**:
+
+```text
+convert all mentions to vga in configuration names and the related texts to tiny_vga. Specifically mention TinyVGA in documentation, repository https://github.com/mole99/tiny-vga and where to buy it retail or order from JLCPCB. Make sure to add this and other previous and follow-up related prompt as appendices to the instructions you generate.
+```
+
+```text
+замени все упоминания vga в именах конфигураций и в связанных с ними текстах на tiny_vga. Отдельно упомяни в документации TinyVGA, репозиторий https://github.com/mole99/tiny-vga и где купить его в розницу или заказать на JLCPCB. Обязательно добавь этот и другие предыдущие и последующие связанные промпты в приложения к инструкциям, которые ты создаёшь.
+```
+
+**10:20, 17 ноября**:
+
+```text
+commit and push; then rename cmod_a7_35_claude to cmod_a7_35_claude_tiny_vga_640 and cmod_a7_35_no_tm1638_claude into cmod_a7_35_tiny_vga_640_no_tm1638_claude
+```
+
+```text
+сделай коммит и push; затем переименуй cmod_a7_35_claude в cmod_a7_35_claude_tiny_vga_640, а cmod_a7_35_no_tm1638_claude — в cmod_a7_35_tiny_vga_640_no_tm1638_claude
 ```
 
 Кроме того, Юрий Панчул дважды, в 18:45 и 18:46, выполнил команду оболочки

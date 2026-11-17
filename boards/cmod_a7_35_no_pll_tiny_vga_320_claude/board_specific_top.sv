@@ -43,8 +43,8 @@
 //
 // 30 kHz is at the low end of what monitors accept: many show the picture,
 // some report the mode as out of range.
-// boards/cmod_a7_35_no_pll_vga_304_claude has a timing closer to the standard
-// one.
+// boards/cmod_a7_35_no_pll_tiny_vga_304_claude has a timing closer to the
+// standard one.
 
 module board_specific_top
 # (

@@ -45,7 +45,7 @@
 // A monitor takes this for 640x480 and samples each line at its own 640
 // points, so each of the 304 pixels covers 2.1 of them: on a sharp pattern
 // some pixels look 2 and some 3 points wide.
-// boards/cmod_a7_35_no_pll_vga_320_claude has pixels of exactly 2 points,
+// boards/cmod_a7_35_no_pll_tiny_vga_320_claude has pixels of exactly 2 points,
 // with a line rate further from the standard one.
 
 module board_specific_top

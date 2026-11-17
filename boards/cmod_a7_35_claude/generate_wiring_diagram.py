@@ -5,11 +5,12 @@ Run from any directory:
 
     python3 generate_wiring_diagram.py
 
-The boards cmod_a7_35_no_pll_vga_320_claude and cmod_a7_35_no_pll_vga_304_claude share this
-wiring. Give the name of one of them to write its drawings into its own
-directory, with its name in the drawings:
+The boards cmod_a7_35_no_pll_tiny_vga_320_claude and
+cmod_a7_35_no_pll_tiny_vga_304_claude share this wiring. Give the name of
+one of them to write its drawings into its own directory, with its name in
+the drawings:
 
-    python3 generate_wiring_diagram.py cmod_a7_35_no_pll_vga_320_claude
+    python3 generate_wiring_diagram.py cmod_a7_35_no_pll_tiny_vga_320_claude
 
 It writes four diagrams, one for each pair of 3.3 V source and DAC module:
 

@@ -8,11 +8,12 @@ any directory:
 
     python3 generate_breadboard_diagram.py
 
-The boards cmod_a7_35_no_pll_vga_320_claude and cmod_a7_35_no_pll_vga_304_claude share this
-wiring. Give the name of one of them to write its drawings into its own
-directory, with its name in the drawings:
+The boards cmod_a7_35_no_pll_tiny_vga_320_claude and
+cmod_a7_35_no_pll_tiny_vga_304_claude share this wiring. Give the name of
+one of them to write its drawings into its own directory, with its name in
+the drawings:
 
-    python3 generate_breadboard_diagram.py cmod_a7_35_no_pll_vga_320_claude
+    python3 generate_breadboard_diagram.py cmod_a7_35_no_pll_tiny_vga_320_claude
 
 It writes breadboard_weact.svg and breadboard_gy_pcm5102.svg, one for each DAC
 module. Convert them to PNG, for example with Inkscape:

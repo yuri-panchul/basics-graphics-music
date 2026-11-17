@@ -69,7 +69,7 @@
 <p class="credit"><em>Создано Claude Opus 5.5 (<code>claude-opus-5-5</code>) в Claude Code 2.1.325, уровень усилий xhigh, по промпту Юрия Панчула. Дословный промпт — в <a href="#приложение-промпты">приложении</a>.</em></p>
 <h1 id="cmod-a7-35t-без-tm1638-две-кнопки-и-два-светодиода">Cmod A7-35T без TM1638: две кнопки и два светодиода</h1>
 <p>Конфигурация платы <code>cmod_a7_35_no_tm1638_claude</code>. English version: <a href="README.html">README.md</a>.</p>
-<p>Это <a href="../cmod_a7_35_claude/README_ru.md">cmod_a7_35_claude</a> без модуля TM1638. <strong>Упражнения получают две кнопки Cmod A7 в качестве своих кнопок и два её светодиода в качестве своих светодиодов, а семисегментного индикатора нет.</strong> Всё остальное — как у cmod_a7_35_claude: VGA 640x480 через TinyVGA, микрофон, ЦАП, тактовая частота 50 МГц от MMCM, выводы и соединения. Другие конфигурации без TM1638 — <a href="../cmod_a7_35_no_pll_vga_304_no_tm1638_claude/README_ru.md">cmod_a7_35_no_pll_vga_304_no_tm1638_claude</a>, <a href="../cmod_a7_35_no_pll_vga_320_no_tm1638_claude/README_ru.md">cmod_a7_35_no_pll_vga_320_no_tm1638_claude</a>.</p>
+<p>Это <a href="../cmod_a7_35_claude/README_ru.md">cmod_a7_35_claude</a> без модуля TM1638. <strong>Упражнения получают две кнопки Cmod A7 в качестве своих кнопок и два её светодиода в качестве своих светодиодов, а семисегментного индикатора нет.</strong> Всё остальное — как у cmod_a7_35_claude: VGA 640x480 через TinyVGA, микрофон, ЦАП, тактовая частота 50 МГц от MMCM, выводы и соединения. Другие конфигурации без TM1638 — <a href="../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README_ru.md">cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude</a>, <a href="../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README_ru.md">cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude</a>.</p>
 <h2 id="содержание">Содержание</h2>
 <ul><li><a href="#чем-отличается">Чем отличается</a></li><li><a href="#как-это-сделано">Как это сделано</a></li><li><a href="#оборудование-и-соединения">Оборудование и соединения</a></li><li><a href="#сборка-и-запуск-упражнений">Сборка и запуск упражнений</a></li><li><a href="#состояние">Состояние</a></li><li><a href="#файлы">Файлы</a></li><li><a href="#приложение-промпты">Приложение: промпты</a></li></ul>
 <h2 id="чем-отличается">Чем отличается</h2>
@@ -83,6 +83,7 @@
 <h2 id="оборудование-и-соединения">Оборудование и соединения</h2>
 <p>Детали, источник 3,3 В, сборка и таблицы соединений — как у <a href="../cmod_a7_35_claude/README_ru.md">cmod_a7_35_claude</a>, но без TM1638: не ставьте модуль и его пять проводов. Вывод DIP 25 по-прежнему идёт на шину GND. Выводы коротко:</p>
 <div class="scroll"><table><thead><tr><th>Cmod A7</th><th>Подключить к</th></tr></thead><tbody><tr><td>Pmod JA</td><td>TinyVGA</td></tr><tr><td>DIP 21, 22, 23</td><td>ЦАП BCK, DIN и LCK у GY-PCM5102 или WS у WeAct</td></tr><tr><td>DIP 24, VU</td><td>Вариант A: ничего. Вариант B: только вход стабилизатора</td></tr><tr><td>DIP 25</td><td>Шина GND</td></tr><tr><td>DIP 26, 27, 28</td><td>Ничего</td></tr><tr><td>DIP 29, 30, 31, 32</td><td>INMP441 SCK, WS, L/R, SD</td></tr></tbody></table></div>
+<p><strong>TinyVGA.</strong> Выход VGA — это TinyVGA, плата Pmod, которую сделал Leo Moser, в разъёме Pmod JA; её проект лежит в <a href="https://github.com/mole99/tiny-vga">github.com/mole99/tiny-vga</a>. Магазин Tiny Tapeout продаёт её собранной под названием <a href="https://store.tinytapeout.com/products/TinyVGA-Pmod-p678647356">Tiny VGA Pmod</a>, за 15,00 € в ноябре 2026 года. Её можно и заказать собранной на JLCPCB по файлам <code>GERBER-tiny-vga.zip</code>, <code>BOM-tiny-vga.csv</code> и <code>CPL-tiny-vga.csv</code> из каталога <code>pcb/jlcpcb/production_files/</code> репозитория; шаги описаны в разделе <a href="../cmod_a7_35_claude/README_ru.md#где-взять-tinyvga">Где взять TinyVGA</a> инструкции cmod_a7_35_claude.</p>
 <p>На рисунках этого каталога нет TM1638; они есть для обоих модулей ЦАП: WeAct I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на рисунках — на английском.</p>
 <h3 id="вариант-a-33-в-от-pmod-tph2">Вариант A: 3,3 В от Pmod TPH2</h3>
 <figure><img src="wiring_weact_tph2.png" alt="Соединения с WeAct PCM5100A и Pmod TPH2" loading="lazy"></figure>
@@ -117,7 +118,7 @@ do
         --export-background=white --export-filename="${f%.svg}.png"
 done</code></pre>
 <h2 id="приложение-промпты">Приложение: промпты</h2>
-<p>Остальной проект появился из промптов в приложении к <a href="../cmod_a7_35_claude/README_ru.md#приложение-промпты">cmod_a7_35_claude</a>. Эта конфигурация появилась из следующего промпта, который Юрий Панчул отправил в том же сеансе Claude Code 16 ноября 2026 года, дословно, с переводом на русский. Время — тихоокеанское (UTC−8).</p>
+<p>Остальной проект появился из промптов в приложении к <a href="../cmod_a7_35_claude/README_ru.md#приложение-промпты">cmod_a7_35_claude</a>. Эта конфигурация появилась из следующих промптов, которые Юрий Панчул отправил в том же сеансе Claude Code 16 и 17 ноября 2026 года, дословно, с переводом на русский. Здесь все промпты сеанса, начиная с первого об этой конфигурации, включая просьбы сделать коммит и push; последующие промпты, которые касаются этой конфигурации, тоже добавляются сюда. Промпты называют конфигурации так, как они назывались в то время: суффикс <code>_claude</code> появился в 00:43, а <code>tiny_</code> — в 09:47 17 ноября. Время — тихоокеанское (UTC−8).</p>
 <p><strong>23:17</strong>:</p>
 <pre><code class="language-text">keep README.csv with CR-LF for now; I will fix it later; first commint and push, then create 3 new configurations that do not use tm1638, just have 2 buttons, 2 leds and no 7-segement display: cmod_a7_35_no_tm1638
 cmod_a7_35_no_pll_vga_304_no_tm1638
@@ -125,9 +126,27 @@ cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
 <pre><code class="language-text">пока оставь README.csv с CR-LF, я исправлю это позже; сначала сделай коммит и push, затем создай 3 новые конфигурации, которые не используют TM1638, а имеют только 2 кнопки, 2 светодиода и никакого семисегментного индикатора: cmod_a7_35_no_tm1638
 cmod_a7_35_no_pll_vga_304_no_tm1638
 cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
+<p><strong>23:53</strong>:</p>
+<pre><code class="language-text">commit and push</code></pre>
+<pre><code class="language-text">сделай коммит и push</code></pre>
+<p><strong>00:29, 17 ноября</strong>, о суффиксах <code>_vga_320</code>, <code>_vga_304</code> и <code>_no_pll</code>, которые Юрий Панчул добавил в меню плат в <code>scripts/steps/00_setup.source_bash</code>, чтобы меню показывало конфигурации без MMCM под <code>cmod_a7_35</code>:</p>
+<pre><code class="language-text">check the changes I did manually. Tell why they are needed</code></pre>
+<pre><code class="language-text">проверь изменения, которые я сделал вручную. Объясни, зачем они нужны</code></pre>
+<p><strong>00:37, 17 ноября</strong>; в каталоге <code>boards/README.csv</code> снова осталась одна строка для физической платы, <code>cmod_a7_35</code>:</p>
+<pre><code class="language-text">yes, fix the catalog, then commit and push</code></pre>
+<pre><code class="language-text">да, исправь каталог, затем сделай коммит и push</code></pre>
 <p><strong>00:43, 17 ноября</strong>:</p>
 <pre><code class="language-text">Add to all your cmod_a7 configurations suffix _claude. Update all the relevant files.</code></pre>
 <pre><code class="language-text">Добавь ко всем своим конфигурациям cmod_a7 суффикс _claude. Обнови все связанные файлы.</code></pre>
+<p><strong>00:56, 17 ноября</strong>:</p>
+<pre><code class="language-text">commit and push</code></pre>
+<pre><code class="language-text">сделай коммит и push</code></pre>
+<p><strong>09:47, 17 ноября</strong>; он добавил <code>tiny_</code> перед <code>vga</code> в имена конфигураций без MMCM и абзац о TinyVGA в раздел <a href="#оборудование-и-соединения">Оборудование и соединения</a>:</p>
+<pre><code class="language-text">convert all mentions to vga in configuration names and the related texts to tiny_vga. Specifically mention TinyVGA in documentation, repository https://github.com/mole99/tiny-vga and where to buy it retail or order from JLCPCB. Make sure to add this and other previous and follow-up related prompt as appendices to the instructions you generate.</code></pre>
+<pre><code class="language-text">замени все упоминания vga в именах конфигураций и в связанных с ними текстах на tiny_vga. Отдельно упомяни в документации TinyVGA, репозиторий https://github.com/mole99/tiny-vga и где купить его в розницу или заказать на JLCPCB. Обязательно добавь этот и другие предыдущие и последующие связанные промпты в приложения к инструкциям, которые ты создаёшь.</code></pre>
+<p><strong>10:20, 17 ноября</strong>:</p>
+<pre><code class="language-text">commit and push; then rename cmod_a7_35_claude to cmod_a7_35_claude_tiny_vga_640 and cmod_a7_35_no_tm1638_claude into cmod_a7_35_tiny_vga_640_no_tm1638_claude</code></pre>
+<pre><code class="language-text">сделай коммит и push; затем переименуй cmod_a7_35_claude в cmod_a7_35_claude_tiny_vga_640, а cmod_a7_35_no_tm1638_claude — в cmod_a7_35_tiny_vga_640_no_tm1638_claude</code></pre>
 </main>
 </body>
 </html>
