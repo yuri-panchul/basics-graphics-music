@@ -72,7 +72,7 @@ update_fpga_toolchain_var ()
         arty_a7*                         | \
         arty_s7                          | \
         basys3                           | \
-        cmod_a7                          | \
+        cmod_a7*                         | \
         cmod_s7                          | \
         nexys4                           | \
         nexys4_ddr                       | \
