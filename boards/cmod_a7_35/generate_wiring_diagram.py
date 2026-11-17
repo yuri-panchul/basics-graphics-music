@@ -5,6 +5,12 @@ Run from any directory:
 
     python3 generate_wiring_diagram.py
 
+The boards cmod_a7_35_no_pll_vga_320 and cmod_a7_35_no_pll_vga_304 share this
+wiring. Give the name of one of them to write its drawings into its own
+directory, with its name in the drawings:
+
+    python3 generate_wiring_diagram.py cmod_a7_35_no_pll_vga_320
+
 It writes four diagrams, one for each pair of 3.3 V source and DAC module:
 
     wiring_weact_tph2.svg            wiring_weact_regulator.svg
@@ -22,10 +28,12 @@ Convert them to PNG, for example with Inkscape:
 The pin data below must match board_specific_top.sv.
 """
 
+import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
 HERE = Path(__file__).resolve().parent
+BOARD = "cmod_a7_35"  # the board directory to write to
 
 W, H = 1720, 1250
 
@@ -212,7 +220,7 @@ def draw(variant, power):
 
     svg.text(40, 46, f"Cmod A7-35T + TinyVGA + TM1638 + INMP441 + {dac['short']}, "
                      f"{pw['title']}", 26, "bold")
-    svg.text(40, 76, "Board configuration cmod_a7_35. The Cmod A7 sits in a breadboard across "
+    svg.text(40, 76, f"Board configuration {BOARD}. The Cmod A7 sits in a breadboard across "
                      "its center channel; the modules connect with jumper wires.", 15, fill=C["muted"])
     svg.text(40, 98, "Cmod A7 is seen from the component side. Each board pin shows its DIP "
                      "pin number; the used pins also show their signal.", 15, fill=C["muted"])
@@ -407,11 +415,19 @@ def draw(variant, power):
 
 
 def main():
+    global BOARD
+    if len(sys.argv) > 2:
+        sys.exit(f"usage: {Path(sys.argv[0]).name} [board directory name]")
+    if len(sys.argv) == 2:
+        BOARD = sys.argv[1]
+    out_dir = HERE.parent / BOARD
+    if not (out_dir / "board_specific_top.sv").is_file():
+        sys.exit(f"{out_dir} is not a board directory")
     for variant in DACS:
         for power in POWER:
-            out = HERE / f"wiring_{variant}_{power}.svg"
+            out = out_dir / f"wiring_{variant}_{power}.svg"
             out.write_text(draw(variant, power), encoding="utf-8")
-            print(f"wrote {out.name}")
+            print(f"wrote {out.relative_to(HERE.parent)}")
 
 
 if __name__ == "__main__":

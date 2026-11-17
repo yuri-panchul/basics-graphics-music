@@ -2,10 +2,17 @@
 """Generate the breadboard layouts of the board configuration cmod_a7_35.
 
 Unlike the wiring diagrams of generate_wiring_diagram.py, these drawings show
-the holes of a full-size breadboard, with the INMP441 microphone and the DAC
-module plugged straight into it. Run from any directory:
+the holes of a full-size breadboard, with the INMP441 microphone, the DAC
+module and the 3.3 V regulator of variant B plugged straight into it. Run from
+any directory:
 
     python3 generate_breadboard_diagram.py
+
+The boards cmod_a7_35_no_pll_vga_320 and cmod_a7_35_no_pll_vga_304 share this
+wiring. Give the name of one of them to write its drawings into its own
+directory, with its name in the drawings:
+
+    python3 generate_breadboard_diagram.py cmod_a7_35_no_pll_vga_320
 
 It writes breadboard_weact.svg and breadboard_gy_pcm5102.svg, one for each DAC
 module. Convert them to PNG, for example with Inkscape:
@@ -20,10 +27,12 @@ module. Convert them to PNG, for example with Inkscape:
 The pin data below must match board_specific_top.sv.
 """
 
+import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
 HERE = Path(__file__).resolve().parent
+BOARD = "cmod_a7_35"  # the board directory to write to
 
 FONT = "DejaVu Sans, Liberation Sans, Arial, sans-serif"
 MONO = "DejaVu Sans Mono, Liberation Mono, monospace"
@@ -70,7 +79,7 @@ def rail_hole(row):
 
 P = 24             # pixels per 0.1 inch
 BX, BY = 360, 380  # position of row 1, rail TO
-W, H = 1960, 1130
+W = 1960
 
 
 def X(row):
@@ -106,6 +115,17 @@ CMOD_NAMES = {21: "BCK", 22: "DIN", 23: "LCK", 24: "VU", 25: "GND", 26: "STB", 2
               28: "DIO", 29: "SCK", 30: "WS", 31: "L/R", 32: "SD"}
 CMOD_FREE = (31,)  # DIP 31 stays free: INMP441 L/R goes to GND here
 
+# The 3.3 V regulator of variant B: a 3-pin AMS1117-3.3 module, as Amazon
+# B08CDMZMDN, listed as about 8.6 x 12.3 mm with the pins VIN, GND, VOUT. It
+# goes in by its header in column j, with VIN in the strip of DIP 24, VU, so
+# that no wire carries 5 V, and its body hangs over the bottom rails. The
+# outline and the pin order come from the listing, not from a drawing.
+
+REG_ROW = 24
+REG_PINS = ["VIN", "GND", "VOUT"]
+REG_MARGIN = 0.69  # from the outer pins to the board edges, in pitches
+REG_DEPTH = 4.85   # the board from its header edge, in pitches
+
 # INMP441 sits across the channel like a 6-pin DIP chip: its two rows of
 # three pins are 0.3 inch apart, in columns e and f.
 
@@ -123,8 +143,9 @@ DACS = {
         "title": "WeAct I2S Earphone Module V1",
         "subtitle": "PCM5100A; 28.0 x 18.2 mm",
         "short": "WeAct PCM5100A",
-        "row": 29,
+        "row": 30,
         "pins": ["WS", "DIN", "BCK", "MC", "/SD", "GND", "VCC"],
+        "ends": {"WS": "i", "DIN": "i", "BCK": "h"},
         "body": (0.6, 0.6, 10.4),
         "exact": True,
         "power": "VCC",
@@ -136,8 +157,9 @@ DACS = {
         "title": "GY-PCM5102",
         "subtitle": "PCM5102A; outline approximate",
         "short": "GY-PCM5102",
-        "row": 30,
+        "row": 31,
         "pins": ["SCK", "BCK", "DIN", "LCK", "GND", "VIN"],
+        "ends": {"BCK": "g", "DIN": "h", "LCK": "i"},
         "body": (1.0, 2.5, 8.6),
         "exact": False,
         "power": "VIN",
@@ -190,9 +212,9 @@ class Svg:
         self.add(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{width}" '
                  f'stroke-linecap="round" stroke-linejoin="round"{da}/>')
 
-    def svg(self):
-        return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
-                f'viewBox="0 0 {W} {H}">\n<rect width="{W}" height="{H}" fill="#ffffff"/>\n'
+    def svg(self, h):
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{h}" '
+                f'viewBox="0 0 {W} {h}">\n<rect width="{W}" height="{h}" fill="#ffffff"/>\n'
                 + "\n".join(self.parts) + "\n</svg>\n")
 
 
@@ -228,11 +250,11 @@ def draw(variant):
 
     # Title and notes on top
 
-    svg.text(40, 46, f"Breadboard layout: Cmod A7-35T, INMP441 and {dac['short']} "
-                     f"plugged into the breadboard", 26, "bold")
-    svg.text(40, 76, "Board configuration cmod_a7_35, seen from above. The microphone and the "
-                     "DAC go straight into the breadboard; TinyVGA and TM1638 connect as in the "
-                     "wiring diagrams.", 15, fill=C["muted"])
+    svg.text(40, 46, f"Breadboard layout: Cmod A7-35T, INMP441, {dac['short']} "
+                     f"and the 3.3 V regulator", 26, "bold")
+    svg.text(40, 76, f"Board configuration {BOARD}, seen from above. The microphone, the DAC "
+                     "and the 3.3 V regulator of variant B go straight into the breadboard; "
+                     "TinyVGA and TM1638 connect as in the wiring diagrams.", 15, fill=C["muted"])
     svg.text(40, 98, "Tinted holes are the strips in use: the five holes of a strip are "
                      "connected. A dot is a jumper wire in a hole.", 15, fill=C["muted"])
     legend = [("TM1638", C["TM"]), ("INMP441", C["MIC"]), ("DAC", C["DAC"]),
@@ -241,7 +263,9 @@ def draw(variant):
     for label, color in legend:
         svg.line(x, 128, x + 30, 128, color, 5)
         svg.text(x + 38, 133, label, 14)
-        x += 130
+        x += 115
+    svg.rect(x, 121, 30, 14, C["5V"], rx=3, opacity=0.3)
+    svg.text(x + 38, 133, "VU strip, about 5 V", 14)
 
     # Breadboard
 
@@ -275,8 +299,10 @@ def draw(variant):
 
     tints = [(17, True, C["MIC"]), (19, True, C["MIC"]), (20, True, C["MIC"]),
              (21, True, C["TM"]), (22, True, C["TM"]), (23, True, C["TM"]), (24, True, C["GND"]),
-             (21, False, C["DAC"]), (22, False, C["DAC"]), (23, False, C["DAC"]),
-             (24, False, "#9aa3b2")]
+             (21, False, C["DAC"]), (22, False, C["DAC"]), (23, False, C["DAC"])]
+    for k, name in enumerate(REG_PINS):
+        tints.append((REG_ROW + k, False, {"VIN": C["5V"], "GND": C["GND"],
+                                           "VOUT": C["3V3"]}[name]))
     for k in range(3):
         tints.append((MIC_ROW + k, True, C["GND"] if MIC_TOP[k] == "L/R" else C["MIC"]))
         bot = MIC_BOT[k]
@@ -311,8 +337,7 @@ def draw(variant):
         ny = y + 17 if col == CMOD_TOP else y - 10
         svg.text(x, ny, str(pin), 9, fill="#ffffff", anchor="middle", family=MONO)
         if pin in CMOD_NAMES:
-            free = pin in CMOD_FREE or (pin == 24)
-            color = "#9fb2cf" if free else "#ffe08a"
+            color = "#9fb2cf" if pin in CMOD_FREE else "#ffe08a"
             if col == CMOD_TOP:
                 svg.text(x + 3.5, y + 24, CMOD_NAMES[pin], 9, "bold", color, "end", MONO, rotate=-90)
             else:
@@ -334,10 +359,10 @@ def draw(variant):
 
     tm_y = Y("TO") - 6.6 * P
     tm_pins = [("DIO", 21), ("CLK", 22), ("STB", 23), ("GND", 24), ("VCC", 25)]
-    svg.rect(X(16), tm_y - 3.6 * P, X(31) - X(16), 3.6 * P, "#f3f1ea", "#8a8577", 1.5, 6)
-    svg.rect(X(16), tm_y - 3.6 * P, 10, 3.6 * P, C["TM"], rx=3)
-    svg.text(X(16) + 22, tm_y - 2.55 * P, "TM1638 LED&KEY, off the breadboard", 14, "bold")
-    svg.text(X(16) + 22, tm_y - 1.75 * P, "female-to-male wires to its 5-pin header", 11,
+    svg.rect(X(19), tm_y - 3.6 * P, X(34) - X(19), 3.6 * P, "#f3f1ea", "#8a8577", 1.5, 6)
+    svg.rect(X(19), tm_y - 3.6 * P, 10, 3.6 * P, C["TM"], rx=3)
+    svg.text(X(19) + 22, tm_y - 2.55 * P, "TM1638 LED&KEY, off the breadboard", 14, "bold")
+    svg.text(X(19) + 22, tm_y - 1.75 * P, "female-to-male wires to its 5-pin header", 11,
              fill=C["muted"])
     for name, row in tm_pins:
         svg.circle(X(row), tm_y, 5, "#f2c14e", "#5c4a12", 1)
@@ -378,19 +403,21 @@ def draw(variant):
         if name in dac["nc"]:
             svg.text(x, Y("j") + 2.25 * P, "n.c.", 9, fill=C["muted"], anchor="middle")
 
-    # Cmod A7 to the DAC. The wires leave Cmod A7 from holes h, i and j and
-    # keep that order, BCK highest, so that they do not cross.
+    # Cmod A7 to the DAC. The wires run in three lanes, BCK highest, between
+    # the edge of Cmod A7 and the wires of the regulator; each ends in the
+    # hole of its DAC strip that keeps them from crossing.
 
     pin_row = {name: row0 + k for k, name in enumerate(dac["pins"])}
     lck = "WS" if "WS" in pin_row else "LCK"
-    ends = {"BCK": "g", "DIN": "h", lck: "i"}
-    for dip_pin, name, start_col, c1 in ((21, "BCK", "h", (24.3, 11.75)),
-                                         (22, "DIN", "i", (25.0, 12.6)),
-                                         (23, lck, "j", (24.6, 13.25))):
-        r1, u1 = pin_row[name], U[ends[name]]
-        d = path([(dip_pin, start_col), c1, (r1 - 1.6, u1), (r1, u1)])
+    for dip_pin, name, start, lane in ((21, "BCK", "h", 11.7), (22, "DIN", "i", 12.1),
+                                       (23, lck, "i", 12.5)):
+        r1, u1 = pin_row[name], U[dac["ends"][name]]
+        a, b = dip_pin + 1.3, r1 - 1.4  # the straight part along the lane
+        d = path([(dip_pin, start), (dip_pin + 0.3, lane), (dip_pin + 0.8, lane), (a, lane),
+                  (a + (b - a) / 3, lane), (b - (b - a) / 3, lane), (b, lane),
+                  (r1 - 0.6, lane), (r1, lane + 0.3 * (u1 - lane)), (r1, u1)])
         svg.wire(d, C["DAC"])
-        wire_end(svg, dip_pin, start_col, C["DAC"])
+        wire_end(svg, dip_pin, start, C["DAC"])
         wire_end(svg, r1, u1, C["DAC"])
 
     # DAC power, and SCK of GY-PCM5102, to the top rails: the module covers
@@ -409,6 +436,42 @@ def draw(variant):
         svg.wire(path([(r_sck, "f"), (r_sck + 1, "TI")]), C["GND"])
         wire_end(svg, r_sck, "f", C["GND"])
         wire_end(svg, r_sck + 1, "TI", C["GND"])
+
+    # The regulator, plugged in by its header in column j, VIN in the strip
+    # of DIP 24. Its body hangs over the bottom rails, so GND goes to the GND
+    # rail before it and VOUT to the + rail after it, both under the DAC wires.
+
+    reg_row = {name: REG_ROW + k for k, name in enumerate(REG_PINS)}
+    r_first, r_last = REG_ROW, REG_ROW + len(REG_PINS) - 1
+    rx0, rx1 = X(r_first - REG_MARGIN), X(r_last + REG_MARGIN)
+    ry0 = Y("j") - 0.5 * P
+    ry1 = ry0 + REG_DEPTH * P
+    svg.rect(rx0, ry0, rx1 - rx0, ry1 - ry0, "#dde7f3", "#4f6f99", 1.5, 4, opacity=0.95,
+             dash="7 4")
+    chip_w, chip_h = 2.3 * P, 1.45 * P
+    chip_x, chip_y = (rx0 + rx1) / 2 - chip_w / 2, ry1 - chip_h - 0.35 * P
+    svg.rect(chip_x + 0.3 * P, chip_y - 0.45 * P, chip_w - 0.6 * P, 0.5 * P, "#8d939c", rx=1)
+    svg.rect(chip_x, chip_y, chip_w, chip_h, "#262626", "#000000", 1, 2)
+    svg.text((rx0 + rx1) / 2, chip_y + chip_h / 2 + 3, "AMS1117", 8, "bold", "#d8d8d8",
+             "middle")
+    for name, row in reg_row.items():
+        x, y = xy(row, "j")
+        svg.circle(x, y, 5.5, "#f2c14e", "#5c4a12", 1)
+        svg.text(x + 3.5, y + 14, name, 10, "bold", anchor="end", family=MONO, rotate=-90)
+
+    r = reg_row["GND"]
+    svg.wire(path([(r, "i"), (r - 0.6, 13.15), (r - 1.1, 13.15), (r - 1.6, 13.15),
+                   (r - 2.4, 13.15), (r - 3.0, 14.0), (r - 3.0, "BO")]), C["GND"])
+    wire_end(svg, r, "i", C["GND"])
+    wire_end(svg, r - 3, "BO", C["GND"])
+    r = reg_row["VOUT"]
+    svg.wire(path([(r, "i"), (r + 1.5, 13.05), (r + 2.0, 13.8), (r + 2.0, "BI")]), C["3V3"])
+    wire_end(svg, r, "i", C["3V3"])
+    wire_end(svg, r + 2, "BI", C["3V3"])
+
+    svg.text(rx1, ry1 + 18, "3.3 V regulator, AMS1117-3.3 module", 12, "bold", anchor="end")
+    svg.text(rx1, ry1 + 34, "VIN in the strip of DIP 24, VU; outline approximate", 11,
+             fill=C["muted"], anchor="end")
 
     # INMP441, across the channel
 
@@ -466,37 +529,49 @@ def draw(variant):
     wire_end(svg, jr - 1, "TI", C["GND"])
     wire_end(svg, jr - 1, "BO", C["GND"])
 
-    # Labels of the rails and of DIP 24
+    # Labels of the rails
 
-    svg.text(X(1) - 1.0 * P, Y("TO") - 0.75 * P, "+3.3 V from TPH2 (A) or the regulator (B)",
+    svg.text(X(1) - 1.0 * P, Y("TO") - 0.75 * P, "+3.3 V from the regulator (variant A: from TPH2)",
              11, "bold", C["3V3"])
     svg.text(X(1) - 1.0 * P, Y("BO") + 1.0 * P + 4, "Both + rails and both GND rails are joined "
              "at the far end.", 11, "bold", C["GND"])
-    x = X(24)
-    svg.line(x, Y("BO") + 1.2 * P, x, Y("BO") + 1.9 * P, C["5V"], 1.5)
-    svg.text(x + 6, Y("BO") + 2.6 * P, "VU, DIP 24: variant B only, a wire to the regulator input",
-             11, "bold", C["5V"], "end")
 
     # Notes
 
-    ny = H - 112
     notes = ["INMP441 goes across the center channel like a 6-pin DIP chip, SCK, WS, L/R on the "
              "side of DIP 25 to 48. L/R goes to GND here, so DIP 31 stays free.",
              "The DAC goes in by its header in column j; its body and jack hang over the bottom "
              "rails and the edge of the breadboard, so it takes its power from the top rails.",
+             "The regulator of variant B is a 3-pin AMS1117-3.3 module, as Amazon B08CDMZMDN. It "
+             "goes in by its header in column j, rows 24 to 26, so VIN is in the strip of DIP 24, "
+             "VU, and no wire carries 5 V.",
+             "Its pin order, VIN, GND, VOUT from the Cmod A7 end, and its outline come from the "
+             "listing: check the labels. If VIN is at the other end, connect the module by wires "
+             "as in the variant B wiring diagram.",
+             "Variant A, Pmod TPH2: leave the regulator out and wire test point 6 of TPH2 to the "
+             "+ rail; DIP 24, VU, then stays unconnected.",
              "Keep the middle of rows 25 to 29 free for the USB plug. "
              "Unplug USB before changing the wiring."] + dac["notes"]
+    ny = 1018
     for k, s in enumerate(notes):
         svg.text(40, ny + 20 * k, s, 13, fill=C["muted"])
 
-    return svg.svg()
+    return svg.svg(ny + 20 * len(notes) + 8)
 
 
 def main():
+    global BOARD
+    if len(sys.argv) > 2:
+        sys.exit(f"usage: {Path(sys.argv[0]).name} [board directory name]")
+    if len(sys.argv) == 2:
+        BOARD = sys.argv[1]
+    out_dir = HERE.parent / BOARD
+    if not (out_dir / "board_specific_top.sv").is_file():
+        sys.exit(f"{out_dir} is not a board directory")
     for variant in DACS:
-        out = HERE / f"breadboard_{variant}.svg"
+        out = out_dir / f"breadboard_{variant}.svg"
         out.write_text(draw(variant), encoding="utf-8")
-        print(f"wrote {out.name}")
+        print(f"wrote {out.relative_to(HERE.parent)}")
 
 
 if __name__ == "__main__":

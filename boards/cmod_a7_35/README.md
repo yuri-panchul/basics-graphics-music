@@ -62,7 +62,7 @@ targets the wrong FPGA, XC7A15T, and is not used.
 | INMP441 module | The round I2S microphone board with 6 pins. |
 | One DAC module | WeAct I2S Earphone Module (PCM5100A) or GY-PCM5102 (PCM5102A). Headphones or active speakers with a 3.5 mm plug. |
 | For variant A: Digilent Pmod TPH2 | A 12-pin pass-through with a test point for each Pmod pin. It goes between JA and TinyVGA. |
-| For variant B: a 3.3 V regulator module | For example an AMS1117-3.3 module that works from 5 V and gives at least 300 mA. |
+| For variant B: a 3.3 V regulator module | A 3-pin AMS1117-3.3 module, for example [Amazon B08CDMZMDN](https://www.amazon.com/dp/B08CDMZMDN), a pack of 20: 4.75 to 12 V in, 3.3 V out, up to 800 mA, about 8.6 x 12.3 mm, pins VIN, GND, VOUT. Any 3.3 V module that works from 5 V and gives at least 300 mA will do. |
 | Jumper wires | Male-to-male for the breadboard, female-to-male for the module headers and the TPH2 test point. |
 | Multimeter | To check the power rails before the modules are connected. |
 
@@ -185,11 +185,11 @@ Vector versions: [wiring_weact_tph2.svg](wiring_weact_tph2.svg),
 [wiring_weact_regulator.svg](wiring_weact_regulator.svg),
 [wiring_gy_pcm5102_regulator.svg](wiring_gy_pcm5102_regulator.svg).
 
-### Microphone and DAC plugged into the breadboard
+### Microphone, DAC and regulator plugged into the breadboard
 
 Instead of hanging the microphone and the DAC on female-to-male wires, you can
-plug both straight into the breadboard and connect their strips with
-male-to-male wires. Separate drawings show this layout:
+plug both straight into the breadboard, together with the regulator of variant B,
+and connect their strips with male-to-male wires. Separate drawings show this layout:
 [breadboard_weact.png](breadboard_weact.png) with the WeAct module and
 [breadboard_gy_pcm5102.png](breadboard_gy_pcm5102.png) with GY-PCM5102; vector
 versions [breadboard_weact.svg](breadboard_weact.svg) and
@@ -200,13 +200,22 @@ versions [breadboard_weact.svg](breadboard_weact.svg) and
 * INMP441 goes across the center channel like a 6-pin DIP chip, label side
   up, in rows 44 to 46: SCK, WS and L/R in column e, SD, VDD and GND in
   column f. Its L/R goes to the GND rail, so DIP 31 stays free.
-* The DAC goes in by its header in column j, the WeAct module in rows 29 to
-  35, GY-PCM5102 in rows 30 to 35. Its body and jack hang over the bottom
+* The DAC goes in by its header in column j, the WeAct module in rows 30 to
+  36, GY-PCM5102 in rows 31 to 36. Its body and jack hang over the bottom
   rails and the edge of the breadboard, so its power and GND wires go to the
   top rails. Only the main header of GY-PCM5102 may go into the holes, and
   its outline in the drawing is approximate.
+* The regulator, a 3-pin AMS1117-3.3 module, goes in by its header in column
+  j, rows 24 to 26, so that VIN is in the strip of DIP 24, VU: no wire carries
+  5 V. Its body hangs over the bottom rails; its GND goes to the GND rail at
+  row 22 and its VOUT to the + rail at row 28.
+* The drawing follows the pin order of the listing, VIN, GND, VOUT from the
+  Cmod A7 end, and the outline of the module is approximate: check the labels
+  on yours. If VIN is at the other end, connect the module with
+  female-to-male wires as in the variant B wiring diagram instead.
 * Keep the middle of rows 25 to 29 free for the USB plug.
-* The 3.3 V source, TinyVGA and TM1638 connect as in variant A or B above.
+* In variant A, leave the regulator out and wire test point 6 of TPH2 to the
+  + rail as above. TinyVGA and TM1638 connect as in the wiring diagrams.
 
 ## Wiring tables
 
@@ -263,6 +272,11 @@ Variant B, regulator module; the pins may be labeled VIN, GND, VOUT:
 | IN | DIP 24, VU |
 | GND | GND rail |
 | OUT | + rail on the side of DIP pins 25 to 48 |
+
+VU is USB 5 V less the drop of a diode, so it can be a little under the 4.75 V for which
+the AMS1117-3.3 module is rated. AMS1117 needs at most 1.3 V more at its input than at
+its output, even at its full 800 mA, so 4.5 V at the input still gives at least 3.2 V;
+step 5 of the assembly checks it.
 
 In both variants, join the two + rails to each other.
 
@@ -440,6 +454,14 @@ the I2S bit clocks are 50 MHz / 16 = 3.125 MHz and the sample rate is
 50 MHz / 1024 = 48.8 kHz. The picture is 640x480 at 25 MHz / (800 × 525) = 59.5 Hz.
 The labs get `clk_mhz = 50`.
 
+**Without the MMCM.** Two other board configurations use the same hardware
+and wiring and run the whole design from the 12 MHz oscillator:
+[cmod_a7_35_no_pll_vga_320](../cmod_a7_35_no_pll_vga_320/README.md) draws
+320x480 with every pixel exactly two wide, at a line rate of 30 kHz that
+some monitors refuse, and
+[cmod_a7_35_no_pll_vga_304](../cmod_a7_35_no_pll_vga_304/README.md) draws 304x480 at
+the standard line and frame rates. Their instructions compare the three.
+
 **A proposed change to vga.sv, not made here.** `vga.sv` does not notice a
 clock it cannot divide: with `CLK_MHZ` below `PIXEL_MHZ`, or not a multiple of
 it, it silently produces no picture or a wrong one. A check at elaboration time
@@ -513,10 +535,10 @@ Not yet tried on a real board.
 | [board_specific.xdc](board_specific.xdc) | Cmod-A7-Master.xdc of Digilent, only the used lines uncommented |
 | [board_specific_top.sv](board_specific_top.sv) | Pin mapping, the 50 MHz clock generator, reset, and the instances of the lab, VGA, TM1638, microphone and DAC modules |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
-| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Makes the four wiring diagrams, `wiring_*.svg` |
+| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Makes the four wiring diagrams, `wiring_*.svg`; with a board name, those of cmod_a7_35_no_pll_vga_320 or cmod_a7_35_no_pll_vga_304 |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams |
-| [generate_breadboard_diagram.py](generate_breadboard_diagram.py) | Makes the two breadboard layouts, `breadboard_*.svg` |
-| `breadboard_*.svg`, `breadboard_*.png` | The breadboard layouts with the microphone and the DAC plugged in |
+| [generate_breadboard_diagram.py](generate_breadboard_diagram.py) | Makes the two breadboard layouts, `breadboard_*.svg`; with a board name, those of the other two configurations |
+| `breadboard_*.svg`, `breadboard_*.png` | The breadboard layouts with the microphone, the DAC and the regulator plugged in |
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 | [claude_prompt.txt](claude_prompt.txt) | The task file of the first prompt, as in the appendix |
@@ -763,6 +785,36 @@ add all other prompts to the appendix in the instruction verbatim in English, pl
 
 ```text
 commit and push
+```
+
+**21:41**:
+
+```text
+Add the following regulator to the variant of breadboard where microphone and dac are also inserted into breadboard https://www.amazon.com/dp/B08CDMZMDN?ref=ppx_yo2ov_dt_b_fed_asin_title
+```
+
+**22:10**:
+
+```text
+Is it possible to run VGA on 12 MHz without PLL?
+```
+
+**22:23**:
+
+```text
+create two other configurations called cmod_a7_35_no_pll_vga_320 and cmod_a7_35_no_pll_304 and implement A and B. Document everything inside directories.
+```
+
+**22:25**, sent while the answer to the previous one was in progress:
+
+```text
+also make pictures with weact in addition to gy
+```
+
+**23:04**:
+
+```text
+rename cmod_a7_35_no_pll_304 to cmod_a7_35_no_pll_vga_304
 ```
 
 Yuri Panchul also ran the shell command
