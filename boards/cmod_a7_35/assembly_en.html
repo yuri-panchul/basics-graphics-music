@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Cmod A7-35T: breadboard assembly and first run</title><style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef3f4;color:#203541;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;overflow-wrap:anywhere}main{max-width:1060px;background:#fff;margin:28px auto;padding:38px 48px;border-top:7px solid #196f75;border-radius:7px}h1{font-size:2.2rem;line-height:1.18;margin-top:0;color:#124e55}h2{font-size:1.5rem;margin:42px 0 16px;border-top:1px solid #d3dfe1;padding-top:24px;scroll-margin-top:16px}h3{font-size:1.15rem}a{color:#086e80;text-underline-offset:3px}p{margin:14px 0}li{margin:9px 0}code{font:0.9em ui-monospace,Consolas,monospace;background:#f0f4f5;padding:1px 4px;border-radius:3px}pre{padding:18px;background:#edf3f4;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem;line-height:1.55;border-left:3px solid #699b9f}pre code{padding:0;background:none}figure{margin:24px 0}img{max-width:100%;height:auto;display:block;border:1px solid #ccdadd}figcaption{font-size:.85rem;color:#536c78;margin-top:8px}.table-wrap{overflow:auto;border:1px solid #cbdadd;border-radius:6px;margin:20px 0}table{width:100%;border-collapse:collapse;font-size:.91rem}th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid #dce5e7}th{background:#e5f0ef}tr:last-child td{border:0}tr:nth-child(even) td{background:#f8fbfb}nav{background:#ecf4f2;padding:18px 22px;border-radius:8px;display:grid;grid-template-columns:1fr 1fr;gap:7px 22px;font-size:.9rem}nav strong{grid-column:1/-1}button{font:inherit;border:1px solid #9eb8bd;background:#fff;padding:8px 16px;border-radius:5px;cursor:pointer}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:26px}.toolbar span{font-size:.85rem;color:#526975}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #b66b1f;outline-offset:2px}@media(max-width:700px){main{margin:0;padding:25px 18px;border-radius:0}h1{font-size:1.75rem}nav{grid-template-columns:1fr}th,td{padding:9px}.toolbar{flex-wrap:wrap}}@media print{@page{margin:15mm}body{font-size:10pt;background:#fff}main{margin:0;padding:0;border:0;max-width:none}.toolbar,nav{display:none}h2{break-after:avoid}table{font-size:9pt}tr,figure{break-inside:avoid}thead{display:table-header-group}.table-wrap{overflow:visible}a{color:inherit}pre{font-size:8pt}}
+</style></head>
+<body><main><div class="toolbar"><span>BGM · codex_cmod_a7 · 2026-11-16</span><button onclick="window.print()">Print / save PDF</button></div>
+<h1 id="section-1">Cmod A7-35T: breadboard assembly and first run</h1>
+<p>Board configuration: <strong>cmod_a7_35</strong> · Digilent Cmod A7-35T rev. B · prepared 16 November 2026.</p>
+<p><a href="assembly_ru.html">Русская инструкция</a> · <a href="assembly_en.md">Markdown</a> · <a href="README.md">Implementation notes</a></p>
+<p>This configuration connects Tiny VGA through the Pmod socket, an INMP441 I²S microphone, a TM1638 LED&amp;KEY module, and either of the two audio boards below. The nine accessory signals occupy consecutive DIP positions <strong>26–34</strong>. Physical DIP numbers, FPGA package balls, and Pmod contact numbers are different numbering systems; use the tables below.</p>
+<p>The code and simulated signal timing have been checked. The graphics and microphone-monitor examples also passed Vivado 2026.1 synthesis, routing and bitstream generation, with positive setup/hold margins on constrained paths. The master XDC leaves external I/O delays unspecified. <strong>Physical assembly, monitor compatibility and audio playback still require a board trial.</strong></p>
+<nav aria-label="Contents"><strong>Contents</strong><a href="#section-2">1. Parts and physical arrangement</a>
+<a href="#section-3">2. Power wiring — complete this before signal wiring</a>
+<a href="#section-4">3. Compact accessory pin map</a>
+<a href="#section-5">4. Tiny VGA on the Pmod socket</a>
+<a href="#section-6">5. DAC option A: WeAct PCM5100A earphone board</a>
+<a href="#section-7">6. DAC option B: GY-PCM5102 / PCM5102A pHAT-format board</a>
+<a href="#section-8">7. Buttons, display, GPIO and reset</a>
+<a href="#section-9">8. Build and bring-up</a>
+<a href="#section-10">9. Troubleshooting</a>
+<a href="#section-11">10. Sources and reproducibility</a>
+<a href="#section-12">Appendix: original task and Russian translation</a></nav><h2 id="section-2">1. Parts and physical arrangement</h2>
+<ul><li>Digilent <strong>Cmod A7-35T</strong>, not the 15T model; Micro-USB data cable and a computer with Vivado and Artix-7 device support.</li><li>Breadboard space for the 48-pin module, short jumpers and a multimeter. Use two breadboards or a DIP breakout if the module hides the contact strips; both pin rows must remain accessible and electrically separate.</li><li><strong>Tiny VGA Pmod by mole99</strong>, with two bits per colour, plus a VGA cable and monitor. A two-Pmod Digilent Pmod VGA has a different interface and is not a direct substitute.</li><li><strong>INMP441</strong> breakout with VDD, GND, SCK, WS, SD and L/R labels.</li><li>Standard <strong>TM1638 LED&amp;KEY</strong> board with eight buttons, eight LEDs and eight digits.</li><li><strong>TXS0108E</strong> bidirectional level-translator breakout for the three TM1638 signals. A four-channel TXS0104E breakout can also provide the required three channels. This guide uses A1/B1 through A3/B3 and an OE pin.</li><li>A regulated <strong>3.3 V accessory supply</strong>, for example a low-dropout 3.3 V regulator breakout fed from the USB-derived VU rail. Choose a regulator whose input range and dropout suit the measured VU voltage; use its specified input/output capacitors. Do not assume every “AMS1117” module will regulate with every USB cable.</li><li>One DAC: <strong>WeAct I2S Earphone Module PCM5100A Stereo HP AMP 32 Ω 160 mW</strong>, or <strong>GY-PCM5102 PCM5102A pHAT-format I²S DAC</strong>. Use headphones for the WeAct headphone jack; use an amplifier or powered speakers for the GY board’s line output.</li></ul>
+<p>Place the Cmod across separate breadboard contact groups. Identify pin 1 from the board marking and the <a href="https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf#page=9">Digilent DIP drawing, Figure 8.1</a>, then locate <strong>24 = VU</strong>, <strong>25 = GND</strong>, and <strong>26–34</strong>. Use the printed numbers, not a guessed left/right orientation: turning the board over mirrors the view. Check continuity before plugging in USB.</p>
+<p>Put the translator and TM1638 cable near pins 26–28, the microphone near 29–31, and the DAC near 32–34. Keep the microphone opening unobstructed and away from speakers. The drawing is a connection map, not a scale drawing of breadboard holes.</p>
+<figure><a href="wiring.svg"><img src="wiring.svg" alt="Connection map: Cmod A7, Tiny VGA, translated TM1638, INMP441 and DAC" width="1100" height="760"></a><figcaption>Connection map: Cmod A7, Tiny VGA, translated TM1638, INMP441 and DAC</figcaption></figure>
+<h2 id="section-3">2. Power wiring — complete this before signal wiring</h2>
+<ol><li>Unplug USB and all supplies before moving wires. Leave the analog DIP pins 15/16, SRAM and flash connections unused.</li><li>Use USB as the board’s sole power source for the initial build. Digilent documents <strong>VU, DIP 24</strong>, as USB-derived power when USB is connected; it is approximately 5 V, with a diode drop. <strong>DIP 25 is ground.</strong> Never attach an external supply to VU while USB is connected.</li><li>Connect pin 25 to the common ground rail. Connect every accessory ground and the translator GND to that rail. Bridge split breadboard rails only after checking them with a meter.</li><li>Feed the TM1638 VCC, translator VCCB and the DAC’s verified 5 V/VIN input from the USB-derived VU rail. Allow for the combined FPGA, display and audio current: a connector is not an unlimited power supply. If the rails sag or the board disconnects, use a suitable powered USB source or a separate regulated accessory supply. With a separate accessory supply, disconnect the VU-to-accessory feed and keep only the grounds common.</li><li>Feed the accessory regulator input from the same accessory power rail. Its <strong>3.3 V output</strong> supplies INMP441 VDD and translator VCCA. Do not connect this regulator output to the Cmod’s Pmod 3.3 V outputs; Tiny VGA obtains its power directly through the Pmod socket.</li><li>Set translator OE high to <strong>VCCA = 3.3 V</strong> after both sides are powered. Follow the translator breakout’s enable/power-up circuit; OE must not be pulled to 5 V. Add the manufacturer-required supply decoupling if the breakout does not have it. Keep translator signal wires short and avoid additional large capacitive loads.</li><li>Measure VU, accessory 3.3 V and the grounds before fitting the modules. No FPGA signal pin supplies power, and no 5 V signal is wired directly to the FPGA. A direct TM1638 DIO connection is especially unsuitable because data returns from the module.</li></ol>
+<p>References: <a href="https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf">Digilent power and DIP documentation</a>, <a href="https://www.ti.com/lit/ds/symlink/txs0108e.pdf">TI TXS0108E</a>. For the translator, A is the 3.3 V side and B is the 5 V side.</p>
+<h2 id="section-4">3. Compact accessory pin map</h2>
+<p>The names in the XDC are retained verbatim. All functional mapping is inside <code>board_specific_top.sv</code>.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">DIP position</th><th scope="col">XDC/top port</th><th scope="col">FPGA ball</th><th scope="col">Function</th><th scope="col">Wire destination</th></tr></thead><tbody><tr><td>26</td><td>pio26</td><td>R3</td><td>TM1638 bidirectional data</td><td>Translator A1; B1 → TM1638 DIO</td></tr><tr><td>27</td><td>pio27</td><td>T3</td><td>TM1638 clock</td><td>Translator A2; B2 → TM1638 CLK</td></tr><tr><td>28</td><td>pio28</td><td>R2</td><td>TM1638 strobe</td><td>Translator A3; B3 → TM1638 STB</td></tr><tr><td>29</td><td>pio29</td><td>T1</td><td>Microphone bit clock</td><td>INMP441 SCK</td></tr><tr><td>30</td><td>pio30</td><td>T2</td><td>Microphone word select</td><td>INMP441 WS</td></tr><tr><td>31</td><td>pio31</td><td>U1</td><td>Microphone data input</td><td>INMP441 SD</td></tr><tr><td>32</td><td>pio32</td><td>W2</td><td>DAC bit clock</td><td>WeAct BCK or GY BCK</td></tr><tr><td>33</td><td>pio33</td><td>V2</td><td>DAC data output</td><td>WeAct DIN or GY DIN</td></tr><tr><td>34</td><td>pio34</td><td>W3</td><td>DAC word clock</td><td>WeAct WS or GY LCK/LRCK</td></tr></tbody></table></div>
+<p>Connect <strong>INMP441 L/R to ground</strong> to select the left channel. Power it from the accessory <strong>3.3 V</strong> rail, never VU. Keep its SCK and SD labels distinct: SCK is a clock from the FPGA, SD is data back to the FPGA. The <a href="https://invensense.tdk.com/wp-content/uploads/2015/02/INMP441.pdf">INMP441 data sheet</a> describes a 24-bit I²S output; the wrapper receives the left-channel signed sample.</p>
+<p>With the common 100 MHz clock, the existing microphone receiver produces approximately <strong>3.125 MHz SCK and 48.828125 kHz WS</strong>. These are the expected measurement values, not exactly 3.072 MHz and 48 kHz.</p>
+<h2 id="section-5">4. Tiny VGA on the Pmod socket</h2>
+<p>Fit Tiny VGA with its numbered contacts aligned to Cmod <strong>JA</strong>. Contacts 5/11 are ground and 6/12 are 3.3 V; verify the connector orientation before applying power. Use a straight-through Pmod extension only if necessary.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Physical JA contact</th><th scope="col">XDC/top port</th><th scope="col">FPGA ball</th><th scope="col">Tiny VGA signal</th></tr></thead><tbody><tr><td>1</td><td>ja[0]</td><td>G17</td><td>R1, red MSB</td></tr><tr><td>2</td><td>ja[1]</td><td>G19</td><td>G1, green MSB</td></tr><tr><td>3</td><td>ja[2]</td><td>N18</td><td>B1, blue MSB</td></tr><tr><td>4</td><td>ja[3]</td><td>L18</td><td>VS, vertical sync</td></tr><tr><td>7</td><td>ja[4]</td><td>H17</td><td>R0, red LSB</td></tr><tr><td>8</td><td>ja[5]</td><td>H19</td><td>G0, green LSB</td></tr><tr><td>9</td><td>ja[6]</td><td>J19</td><td>B0, blue LSB</td></tr><tr><td>10</td><td>ja[7]</td><td>K18</td><td>HS, horizontal sync</td></tr></tbody></table></div>
+<p>This is <strong>64-colour RGB222</strong>. The wrapper forces RGB black during blanking. Timing uses 640 × 480 visible pixels, 800 × 525 total, a 25 MHz pixel rate, 31.25 kHz horizontal rate and about <strong>59.524 Hz</strong> vertical refresh. This follows the repository’s existing 25 MHz VGA convention, rather than the nominal 25.175 MHz VGA clock; verify acceptance by your monitor.</p>
+<p>The FPGA’s MMCM converts the onboard 12 MHz oscillator to 100 MHz. No rewrite of <code>peripherals/vga.sv</code> is necessary. <a href="https://github.com/mole99/tiny-vga#tiny-vga-pinout">Tiny VGA’s designer pinout</a> is the mapping authority.</p>
+<h2 id="section-6">5. DAC option A: WeAct PCM5100A earphone board</h2>
+<p>The <a href="https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1/blob/master/Hardware/WeAct-I2SEarphoneModuleV1_V10%20SchDoc.pdf">official WeAct V1.0 schematic</a> identifies a seven-contact header. Match the labels on your board; a photograph taken from the reverse side changes apparent order.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">WeAct P1 contact</th><th scope="col">Label</th><th scope="col">Connection</th></tr></thead><tbody><tr><td>1</td><td>VCC</td><td>Accessory 5 V/VU rail, subject to supply budget</td></tr><tr><td>2</td><td>GND</td><td>Common ground</td></tr><tr><td>3</td><td>/SD</td><td>Leave open: the V1.0 schematic pulls CTRL up to 3.3 V; grounding it mutes/shuts down</td></tr><tr><td>4</td><td>MCLK / MC</td><td>Ground for three-wire I²S operation</td></tr><tr><td>5</td><td>BCK / BC</td><td>Cmod DIP 32</td></tr><tr><td>6</td><td>DIN / DI</td><td>Cmod DIP 33</td></tr><tr><td>7</td><td>WS</td><td>Cmod DIP 34</td></tr></tbody></table></div>
+<p>The schematic contains a 3.3 V regulator, PCM5100A and an HT97226 headphone amplifier. The factory circuit selects I²S; leave the de-emphasis bridge in its default off state. Start with a quiet signal and connect headphones to the jack. The <code>/SD</code> control is <strong>not</strong> the INMP441 <code>SD</code> data signal. Do not connect <code>/SD</code> to the microphone or tie it to 5 V.</p>
+<h2 id="section-7">6. DAC option B: GY-PCM5102 / PCM5102A pHAT-format board</h2>
+<p>GY boards are sold in multiple PCB layouts. The sales name alone does not identify a unique header order or solder-bridge numbering. Use the printed <strong>signal labels</strong> below and verify the regulator/jumper arrangement on the actual module; do not copy the WeAct contact numbers.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">GY board label</th><th scope="col">Connection or setting</th></tr></thead><tbody><tr><td>VIN / 5V</td><td>Accessory 5 V rail only if this is the module’s regulated input</td></tr><tr><td>3V3, if present</td><td>Use only according to that PCB’s documented supply circuit; never apply 5 V to this label</td></tr><tr><td>GND</td><td>Common ground</td></tr><tr><td>BCK / BCLK</td><td>Cmod DIP 32</td></tr><tr><td>DIN / DATA</td><td>Cmod DIP 33</td></tr><tr><td>LCK / LRCK / WS</td><td>Cmod DIP 34</td></tr><tr><td>SCK / MCLK</td><td>Ground for the DAC’s BCK-derived internal PLL</td></tr><tr><td>XSMT / XMT</td><td>High at the DAC’s 3.3 V logic rail to unmute; confirm any existing pull-up</td></tr><tr><td>FMT</td><td>Low: I²S</td></tr><tr><td>FLT</td><td>Low: normal-latency filter</td></tr><tr><td>DEMP</td><td>Low: de-emphasis off</td></tr></tbody></table></div>
+<p>Inspect existing solder bridges before adding wires; do not short an existing high strap to ground. The exact GY PCB revision has not been supplied, so bridge numbers and physical header order are intentionally not guessed. The electrical settings above come from the <a href="https://www.ti.com/lit/ds/symlink/pcm5102a.pdf">TI PCM510xA data sheet</a>.</p>
+<p>The GY jack or L/R pads are normally <strong>line-level outputs</strong>. Connect them to powered speakers or a separate headphone amplifier. A PCM5102A alone is not a 32 Ω headphone driver; TI specifies line loads down to 1 kΩ. Never connect the two output channels together.</p>
+<p>Both options use the same FPGA image and three data/clock wires. The existing serializer sends the mono 16-bit <code>sound</code> value in both channels of 32-bit I²S slots, one bit after each LRCK transition. Expected BCK is <strong>3.125 MHz</strong>, LRCK <strong>48.828125 kHz</strong>, with <strong>64 BCK periods per stereo frame</strong>. No external MCLK wire is required; the unused FPGA MCLK output stays internal.</p>
+<h2 id="section-8">7. Buttons, display, GPIO and reset</h2>
+<ul><li><strong>BTN0</strong> resets the MMCM and the design. Reset also asserts when clock lock is lost; it releases after three system-clock edges following lock. If lock is lost, press and release BTN0 to restart the clock manager.</li><li><strong>BTN1</strong> is the onboard lab key. In the default duplicate mode it is ORed into <code>key[0]</code>; TM1638 S1–S8 supply <code>key[0]</code>–<code>key[7]</code>.</li><li>There are no slide switches. The same TM1638 buttons supply <code>sw[0]</code>–<code>sw[7]</code> as <strong>momentary inputs</strong>, not latched toggles. Labs requiring sustained switch combinations need the buttons held or an explicitly adapted input scheme.</li><li>The two onboard LEDs duplicate the lowest two lab LED bits. The TM1638 shows all eight lab LED bits and eight digits. The common concatenation macros are also supported; their alternate key/LED ordering is described in the implementation notes.</li><li>The active-low RGB LED is red while reset is asserted and green while running; blue is off. It is a clock/reset indicator, not a proof that every peripheral works.</li><li>Generic <code>gpio[0]</code>–<code>gpio[7]</code> map to DIP <strong>1–8</strong>. These pins are separate from accessory pins 26–34; leave them unconnected unless the chosen lab calls for them.</li><li>The onboard USB-UART uses <code>uart_txd_in</code> toward the FPGA and <code>uart_rxd_out</code> toward the PC. No external UART wiring is needed.</li></ul>
+<h2 id="section-9">8. Build and bring-up</h2>
+<p>From a lab directory, run the normal board selector and choose <strong>cmod_a7_35</strong>. The setup script dispatches this configuration to Vivado and targets <strong>xc7a35tcpg236-1</strong>, hardware device <strong>xc7a35t_0</strong>.</p>
+<pre class="bash"><code>cd labs/2_graphics/2_1_rectangle_ellipse_parabola
+./06_choose_another_fpga_board.bash
+./03_synthesize_for_fpga.bash</code></pre>
+<p>The repository’s synthesis wrapper proceeds to configuration after a successful build. Use a powered, checked assembly and read the tool output. For a later programming run, use <code>./04_configure_fpga.bash</code>; this performs volatile FPGA programming, not a new flash-programming procedure.</p>
+<ol><li>First connect only the Cmod and USB. Confirm that Vivado detects the <strong>35T</strong> part. Inspect clock, timing and DRC reports after the build: the 12 MHz input and approximately 100 MHz MMCM output must be present, with no unexplained timing or pin-assignment errors.</li><li>With power removed, add Tiny VGA. Run the graphics lab and check geometry, colour ordering and blanking. A working VGA image is the first clock/video check.</li><li>Add the translator and TM1638. In <code>lab_specific_board_config.svh</code>, enable <code>INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE</code> when the lab needs the display/keys. Check each button and digit before adding audio.</li><li>Add the INMP441. Enable <code>INSTANTIATE_MICROPHONE_INTERFACE_MODULE</code>; run <code>labs/3_music/3_0_oscilloscope</code> and speak or clap near the microphone. Check for a changing waveform, not just an active clock.</li><li>Fit <strong>one</strong> DAC option. Enable <code>INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE</code>. Run <code>labs/3_music/3_3_note_synthesizer</code> to check a generated tone, then <code>labs/3_music/3_11_microphone_monitor</code> for the microphone-to-DAC route. Keep the microphone away from the output speaker to avoid feedback.</li><li>If a peripheral macro is disabled, its clocks/data are held inactive and its input value is zero. This is intentional; changing wiring cannot enable a compiled-out peripheral. Graphics also needs <code>INSTANTIATE_GRAPHICS_INTERFACE_MODULE</code>.</li></ol>
+<h2 id="section-10">9. Troubleshooting</h2>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Symptom</th><th scope="col">First checks</th></tr></thead><tbody><tr><td>Red RGB LED stays on</td><td>BTN0 not held; 12 MHz oscillator, MMCM lock and power stable; correct part selected</td></tr><tr><td>Monitor reports no signal</td><td>Tiny VGA orientation; JA4 = VS and JA10 = HS; graphics macro; measured sync rates; monitor accepts the 25 MHz convention</td></tr><tr><td>Image has incorrect colours or borders</td><td>Use the R1/R0 table, not an 8-colour Pmod map; inspect blanking and colour-bit order</td></tr><tr><td>TM1638 digits work but keys do not</td><td>DIO really uses a bidirectional translator; all grounds common; both translator supplies and OE correct</td></tr><tr><td>Microphone is silent</td><td>VDD = 3.3 V; L/R = GND; SD/SCK not swapped; microphone macro enabled</td></tr><tr><td>DAC clocks exist but no sound</td><td>Unmute and I²S settings; MCLK/SCK grounded; correct output load; nonzero lab sound samples</td></tr><tr><td>USB disconnects when display/audio starts</td><td>Supply/cable voltage drop or excessive combined current; stop and check the power distribution</td></tr></tbody></table></div>
+<h2 id="section-11">10. Sources and reproducibility</h2>
+<ul><li><a href="https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf">Digilent Cmod A7 reference manual</a>: board, power and connector details.</li><li><a href="https://github.com/Digilent/digilent-xdc/blob/c8644a9fe31cc803789643124545d56b3bef4600/Cmod-A7-Master.xdc">Digilent master XDC, pinned revision</a>: original pin definitions. <a href="reference/Cmod-A7-Master.xdc">Local unchanged copy</a> and <a href="reference/source.json">provenance</a>.</li><li><a href="https://github.com/mole99/tiny-vga">Tiny VGA designer repository</a>: RGB222 Pmod assignment.</li><li><a href="https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1">WeAct manufacturer repository</a>: V1.0 schematic and header.</li><li><a href="https://www.ti.com/lit/ds/symlink/pcm5102a.pdf">TI PCM510xA data sheet</a>, <a href="https://www.ti.com/lit/ds/symlink/txs0108e.pdf">TI TXS0108E data sheet</a>, <a href="https://invensense.tdk.com/wp-content/uploads/2015/02/INMP441.pdf">INMP441 data sheet</a>.</li><li><a href="https://docs.amd.com/r/en-US/ug953-vivado-7series-libraries/MMCME2_BASE">AMD MMCME2_BASE documentation</a>: clock primitive and lock/reset behavior.</li></ul>
+<p>Run the board-specific automated checks from the repository root:</p>
+<pre class="bash"><code>python3 scripts/tests/test_cmod_a7_35.py
+python3 scripts/tests/test_board_menu.py</code></pre>
+<p>The functional tests use a test-only clock model. They check pin preservation and coverage, existing-lab elaboration, a complete VGA raster and blanking, microphone data, I²S serialization, UART/GPIO mapping and reset. They do not simulate analog levels, breadboard signal integrity, monitor acceptance or the actual MMCM lock dynamics.</p>
+<h2 id="section-12">Appendix: original task and Russian translation</h2>
+<h3 id="section-13">Original English prompt / Английский оригинал</h3>
+<pre class="text"><code># Task
+
+Create a new branch of basics_graphics_music called claude_cmod_a7 starting from main.
+The branch should be called claude_cmod_a7 is you are claude and codex_cmod_a7 is you are codex.
+
+Read board implementations:
+
+* alinx_ax7035b
+* arty_a7_100
+* arty_a7_100_pmod_mic3
+* arty_a7_35
+* arty_a7_35_pmod_mic3
+* basys3
+* nexys4
+* nexys4_ddr
+* nexys_a7  
+* nexys_a7_100
+* nexys_a7_50 
+* zybo_z7
+* zzz_postponed_and_retired/cmod_a7
+
+Specifically the files:
+
+* board_specific.tcl
+* board_specific_top.sv
+* board_specific.xdc
+
+Create a new board implementation cmod_a7_35 for Digilent Cmod A7-35T.
+
+The existing zzz_postponed_and_retired/cmod_a7 is wrong.
+
+Copy the following file into boards/cmod_a7_35/board_specific.xdc
+
+https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
+
+Uncomment only the necessary pins. Do not modify any pin names or definitions - only uncomment the existing.
+
+All name mapping should be inside board_specific_top.sv.
+
+Use Pmod socket to accomodate TinyVGA.
+
+If necessary, write your own VGA interface module if basics-graphics-music/peripherals/vga.sv is not suitable.
+
+Or alternatively propose a modification of basics-graphics-music/peripherals/vga.sv to accomodate the clock frequency.
+
+Update the relevant bash scripts in scripts/steps
+
+Create .md and HTML files with an instruction on how to assemble a breadboard with this board, microphone and either of the following DAC modules:
+
+* WeAct I2S Earphone Module PCM5100A Stereo HP AMP 32Ω 160mW DAC Decoder Audio Board
+
+* Interface I2S PCM5102A DAC Decoder GY-PCM5102 I2S Player Module For Raspberry Pi PHAT Format Board Digital PCM5102 Audio Board
+
+When planning what pins to use for the TM1638, microphone and sound DAC connection, make them compact and easy to assemple.
+
+Add this prompt as an appendix to .md and HTML files.
+
+In addition to the instriction in English create an instruction in Russian (also .md and .html). In prompt appendix put both the original prompt in English and its transaction to Russian.</code></pre>
+<h3 id="section-14">Russian translation / Русский перевод</h3>
+<pre class="text"><code># Задание
+
+Создайте новую ветку basics_graphics_music с именем claude_cmod_a7, начиная с main.
+Ветка должна называться claude_cmod_a7, если вы Claude, и codex_cmod_a7, если вы Codex.
+
+Изучите реализации плат:
+
+* alinx_ax7035b
+* arty_a7_100
+* arty_a7_100_pmod_mic3
+* arty_a7_35
+* arty_a7_35_pmod_mic3
+* basys3
+* nexys4
+* nexys4_ddr
+* nexys_a7
+* nexys_a7_100
+* nexys_a7_50
+* zybo_z7
+* zzz_postponed_and_retired/cmod_a7
+
+В частности, файлы:
+
+* board_specific.tcl
+* board_specific_top.sv
+* board_specific.xdc
+
+Создайте новую реализацию платы cmod_a7_35 для Digilent Cmod A7-35T.
+
+Существующая реализация zzz_postponed_and_retired/cmod_a7 неправильная.
+
+Скопируйте следующий файл в boards/cmod_a7_35/board_specific.xdc:
+
+https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
+
+Раскомментируйте только необходимые выводы. Не изменяйте имена или определения выводов — только раскомментируйте существующие строки.
+
+Все сопоставления имён должны находиться в board_specific_top.sv.
+
+Используйте разъём Pmod для подключения TinyVGA.
+
+При необходимости напишите собственный модуль интерфейса VGA, если basics-graphics-music/peripherals/vga.sv не подходит.
+
+Либо предложите изменение basics-graphics-music/peripherals/vga.sv с учётом тактовой частоты.
+
+Обновите соответствующие Bash-скрипты в scripts/steps.
+
+Создайте файлы .md и HTML с инструкцией по сборке на макетной плате схемы с этой платой, микрофоном и одним из следующих модулей ЦАП:
+
+* WeAct I2S Earphone Module PCM5100A Stereo HP AMP 32Ω 160mW DAC Decoder Audio Board
+
+* Interface I2S PCM5102A DAC Decoder GY-PCM5102 I2S Player Module For Raspberry Pi PHAT Format Board Digital PCM5102 Audio Board
+
+Планируя использование выводов для TM1638, микрофона и звукового ЦАП, сделайте соединения компактными и удобными для сборки.
+
+Добавьте этот запрос в качестве приложения к файлам .md и HTML.
+
+Кроме английской инструкции создайте русскую инструкцию (также .md и .html). В приложении с запросом приведите и английский оригинал, и его перевод на русский язык.</code></pre>
+<h3 id="section-15">Microphone clarification / Уточнение микрофона</h3>
+<p>The user selected: “INMP441 I²S microphone (recommended)”.</p>
+<p>Пользователь выбрал: «Микрофон INMP441 с интерфейсом I²S (рекомендуется)».</p>
+</main></body></html>

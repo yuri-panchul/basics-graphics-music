@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Cmod A7-35T: сборка на макетной плате и первый запуск</title><style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef3f4;color:#203541;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;overflow-wrap:anywhere}main{max-width:1060px;background:#fff;margin:28px auto;padding:38px 48px;border-top:7px solid #196f75;border-radius:7px}h1{font-size:2.2rem;line-height:1.18;margin-top:0;color:#124e55}h2{font-size:1.5rem;margin:42px 0 16px;border-top:1px solid #d3dfe1;padding-top:24px;scroll-margin-top:16px}h3{font-size:1.15rem}a{color:#086e80;text-underline-offset:3px}p{margin:14px 0}li{margin:9px 0}code{font:0.9em ui-monospace,Consolas,monospace;background:#f0f4f5;padding:1px 4px;border-radius:3px}pre{padding:18px;background:#edf3f4;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem;line-height:1.55;border-left:3px solid #699b9f}pre code{padding:0;background:none}figure{margin:24px 0}img{max-width:100%;height:auto;display:block;border:1px solid #ccdadd}figcaption{font-size:.85rem;color:#536c78;margin-top:8px}.table-wrap{overflow:auto;border:1px solid #cbdadd;border-radius:6px;margin:20px 0}table{width:100%;border-collapse:collapse;font-size:.91rem}th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid #dce5e7}th{background:#e5f0ef}tr:last-child td{border:0}tr:nth-child(even) td{background:#f8fbfb}nav{background:#ecf4f2;padding:18px 22px;border-radius:8px;display:grid;grid-template-columns:1fr 1fr;gap:7px 22px;font-size:.9rem}nav strong{grid-column:1/-1}button{font:inherit;border:1px solid #9eb8bd;background:#fff;padding:8px 16px;border-radius:5px;cursor:pointer}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:26px}.toolbar span{font-size:.85rem;color:#526975}a:focus-visible,button:focus-visible,.table-wrap:focus-visible{outline:3px solid #b66b1f;outline-offset:2px}@media(max-width:700px){main{margin:0;padding:25px 18px;border-radius:0}h1{font-size:1.75rem}nav{grid-template-columns:1fr}th,td{padding:9px}.toolbar{flex-wrap:wrap}}@media print{@page{margin:15mm}body{font-size:10pt;background:#fff}main{margin:0;padding:0;border:0;max-width:none}.toolbar,nav{display:none}h2{break-after:avoid}table{font-size:9pt}tr,figure{break-inside:avoid}thead{display:table-header-group}.table-wrap{overflow:visible}a{color:inherit}pre{font-size:8pt}}
+</style></head>
+<body><main><div class="toolbar"><span>BGM · codex_cmod_a7 · 2026-11-16</span><button onclick="window.print()">Печать / сохранить PDF</button></div>
+<h1 id="section-1">Cmod A7-35T: сборка на макетной плате и первый запуск</h1>
+<p>Конфигурация: <strong>cmod_a7_35</strong> · Digilent Cmod A7-35T, ревизия B · подготовлено 16 ноября 2026 года.</p>
+<p><a href="assembly_en.html">English instructions</a> · <a href="assembly_ru.md">Markdown</a> · <a href="README.md">Сведения о реализации</a></p>
+<p>Конфигурация соединяет Tiny VGA через разъём Pmod, микрофон INMP441 с интерфейсом I²S, модуль TM1638 LED&amp;KEY и один из двух звуковых модулей, описанных ниже. Девять сигнальных проводов периферии подключаются к последовательным выводам DIP <strong>26–34</strong>. Номера выводов DIP, контактов Pmod и шариков корпуса FPGA — разные обозначения; пользуйтесь таблицами.</p>
+<p>Код и временные соотношения сигналов проверены моделированием. Графический пример и пример микрофонного монитора также прошли синтез, трассировку и создание файлов конфигурации в Vivado 2026.1 с положительным запасом по setup/hold для путей с временными ограничениями. Исходный XDC не задаёт внешние задержки ввода-вывода. <strong>Физическая сборка, совместимость монитора и воспроизведение звука ещё требуют проверки на плате.</strong></p>
+<nav aria-label="Содержание"><strong>Содержание</strong><a href="#section-2">1. Компоненты и размещение</a>
+<a href="#section-3">2. Питание: сначала подключите и проверьте его</a>
+<a href="#section-4">3. Компактная распиновка периферии</a>
+<a href="#section-5">4. Tiny VGA в разъёме Pmod</a>
+<a href="#section-6">5. Вариант ЦАП A: WeAct PCM5100A с усилителем наушников</a>
+<a href="#section-7">6. Вариант ЦАП B: GY-PCM5102 / PCM5102A в формате pHAT</a>
+<a href="#section-8">7. Кнопки, индикатор, GPIO и сброс</a>
+<a href="#section-9">8. Сборка проекта и последовательный запуск</a>
+<a href="#section-10">9. Поиск неисправностей</a>
+<a href="#section-11">10. Источники и воспроизводимость</a>
+<a href="#section-12">Приложение: исходное задание и русский перевод</a></nav><h2 id="section-2">1. Компоненты и размещение</h2>
+<ul><li><strong>Digilent Cmod A7-35T</strong>, не вариант 15T; кабель Micro-USB с передачей данных; компьютер с Vivado и поддержкой Artix-7.</li><li>Макетная плата, короткие перемычки и мультиметр. Если модуль закрывает контактные группы, используйте две макетные платы или переходник DIP. Оба ряда выводов должны оставаться доступными и электрически раздельными.</li><li><strong>Tiny VGA Pmod от mole99</strong>, два бита на цвет; VGA-кабель и монитор. Digilent Pmod VGA, занимающий два разъёма Pmod, имеет другую распиновку и напрямую его не заменяет.</li><li>Микрофонная плата <strong>INMP441</strong> с обозначениями VDD, GND, SCK, WS, SD и L/R.</li><li>Обычный модуль <strong>TM1638 LED&amp;KEY</strong>: восемь кнопок, восемь светодиодов, восемь семисегментных разрядов.</li><li>Плата двунаправленного преобразователя уровней <strong>TXS0108E</strong> для трёх сигналов TM1638. Подойдёт и четырёхканальная TXS0104E с необходимыми тремя каналами. В инструкции используются A1/B1–A3/B3 и вход OE.</li><li>Стабилизированный источник <strong>3,3 В для периферии</strong>, например плата стабилизатора с малым падением напряжения, питаемая от VU. Проверьте допустимый входной диапазон и запас по падению напряжения; установите требуемые производителем конденсаторы. Произвольный модуль «AMS1117» не обязательно обеспечит 3,3 В с любым USB-кабелем.</li><li>Один ЦАП: <strong>WeAct I2S Earphone Module PCM5100A Stereo HP AMP 32 Ω 160 mW</strong> либо <strong>GY-PCM5102 PCM5102A в формате pHAT</strong>. Наушники подключаются к усиленному выходу WeAct; линейный выход GY требует активных колонок или отдельного усилителя.</li></ul>
+<p>Разместите Cmod так, чтобы противоположные выводы не замыкались контактными полосами макетной платы. Найдите вывод 1 по маркировке и <a href="https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf#page=9">рисунку 8.1 руководства Digilent</a>, затем <strong>24 = VU</strong>, <strong>25 = GND</strong>, <strong>26–34</strong>. Ориентируйтесь на номера: вид снизу зеркален виду сверху. До подключения USB проверьте соединения мультиметром.</p>
+<p>Преобразователь уровней и кабель TM1638 расположите возле 26–28, микрофон возле 29–31, ЦАП возле 32–34. Не закрывайте акустическое отверстие микрофона и не помещайте его вплотную к динамику. Рисунок показывает электрические соединения, а не точные координаты отверстий макетной платы.</p>
+<figure><a href="wiring.svg"><img src="wiring.svg" alt="Карта соединений: Cmod A7, Tiny VGA, TM1638 через преобразователь уровней, INMP441 и ЦАП" width="1100" height="760"></a><figcaption>Карта соединений: Cmod A7, Tiny VGA, TM1638 через преобразователь уровней, INMP441 и ЦАП</figcaption></figure>
+<h2 id="section-3">2. Питание: сначала подключите и проверьте его</h2>
+<ol><li>Перед перестановкой проводов отключите USB и все источники питания. Аналоговые выводы 15/16, SRAM и flash в этой сборке не используются.</li><li>При первом запуске питайте Cmod только через USB. По документации Digilent, при подключённом USB на <strong>VU, вывод 24</strong>, присутствует напряжение USB с падением на диоде — примерно 5 В. <strong>Вывод 25 — земля.</strong> Не подключайте внешний источник к VU одновременно с USB.</li><li>Соедините вывод 25 с общей шиной земли. Подключите к ней GND всех модулей и преобразователя уровней. Проверьте мультиметром разрывы шин макетной платы, прежде чем соединять их перемычками.</li><li>Подайте питание VU на VCC TM1638, VCCB преобразователя уровней и проверенный вход 5 V/VIN выбранного ЦАП. Учитывайте суммарный ток FPGA, индикатора и звука. При просадке напряжения или отключении USB используйте подходящий USB-источник либо отдельный стабилизированный источник для периферии. Во втором случае отсоедините провод VU от питания периферии; земли оставьте общими.</li><li>Вход стабилизатора 3,3 В подключите к той же шине питания периферии. Его выход <strong>3,3 В</strong> питает VDD INMP441 и VCCA преобразователя уровней. Не соединяйте этот выход с выходом 3,3 В Cmod на Pmod: Tiny VGA получает своё питание непосредственно через Pmod.</li><li>После появления обоих напряжений установите OE преобразователя в высокий уровень <strong>VCCA = 3,3 В</strong>. Соблюдайте схему включения и последовательность питания его платы. Не подтягивайте OE к 5 В. Если развязывающих конденсаторов на плате нет, добавьте их по документации. Делайте сигнальные провода короткими, без больших дополнительных ёмкостей.</li><li>До установки модулей измерьте VU и 3,3 В, проверьте общую землю. Не используйте сигнальные выводы FPGA как питание. Сигналы 5 В нельзя подключать к FPGA напрямую; особенно это касается DIO TM1638, по которому модуль возвращает данные.</li></ol>
+<p>Источники: <a href="https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf">питание и разъёмы Cmod</a>, <a href="https://www.ti.com/lit/ds/symlink/txs0108e.pdf">TI TXS0108E</a>. Сторона A преобразователя работает при 3,3 В, сторона B — при 5 В.</p>
+<h2 id="section-4">3. Компактная распиновка периферии</h2>
+<p>Имена в XDC сохранены дословно. Все сопоставления функций находятся в <code>board_specific_top.sv</code>.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Вывод DIP</th><th scope="col">Порт XDC/верхнего модуля</th><th scope="col">Шарик FPGA</th><th scope="col">Назначение</th><th scope="col">Куда подключать</th></tr></thead><tbody><tr><td>26</td><td>pio26</td><td>R3</td><td>Двунаправленные данные TM1638</td><td>A1 преобразователя; B1 → DIO TM1638</td></tr><tr><td>27</td><td>pio27</td><td>T3</td><td>Тактовый сигнал TM1638</td><td>A2; B2 → CLK TM1638</td></tr><tr><td>28</td><td>pio28</td><td>R2</td><td>Строб TM1638</td><td>A3; B3 → STB TM1638</td></tr><tr><td>29</td><td>pio29</td><td>T1</td><td>Битовый тактовый сигнал микрофона</td><td>SCK INMP441</td></tr><tr><td>30</td><td>pio30</td><td>T2</td><td>Выбор слова микрофона</td><td>WS INMP441</td></tr><tr><td>31</td><td>pio31</td><td>U1</td><td>Вход данных микрофона</td><td>SD INMP441</td></tr><tr><td>32</td><td>pio32</td><td>W2</td><td>Битовый тактовый сигнал ЦАП</td><td>BCK WeAct или GY</td></tr><tr><td>33</td><td>pio33</td><td>V2</td><td>Данные на ЦАП</td><td>DIN WeAct или GY</td></tr><tr><td>34</td><td>pio34</td><td>W3</td><td>Тактовый сигнал слов ЦАП</td><td>WS WeAct или LCK/LRCK GY</td></tr></tbody></table></div>
+<p><strong>L/R микрофона INMP441 соедините с землёй</strong>, выбирая левый канал. VDD подключите к <strong>3,3 В</strong>, не к VU. Не путайте SCK и SD: SCK идёт из FPGA, SD возвращает данные в FPGA. <a href="https://invensense.tdk.com/wp-content/uploads/2015/02/INMP441.pdf">Документация INMP441</a> описывает 24-битный выход I²S; верхний модуль принимает знаковый отсчёт левого канала.</p>
+<p>При тактовой частоте системы 100 МГц существующий приёмник формирует около <strong>3,125 МГц SCK и 48,828125 кГц WS</strong>. Именно эти значения следует ожидать при измерении, а не ровно 3,072 МГц и 48 кГц.</p>
+<h2 id="section-5">4. Tiny VGA в разъёме Pmod</h2>
+<p>Совместите нумерацию контактов Tiny VGA и разъёма <strong>JA</strong> на Cmod. Контакты 5/11 — земля, 6/12 — 3,3 В. Проверьте ориентацию до подачи питания. При необходимости используйте только прямой Pmod-удлинитель без перестановки проводов.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Контакт JA</th><th scope="col">Порт XDC/верхнего модуля</th><th scope="col">Шарик FPGA</th><th scope="col">Сигнал Tiny VGA</th></tr></thead><tbody><tr><td>1</td><td>ja[0]</td><td>G17</td><td>R1, старший бит красного</td></tr><tr><td>2</td><td>ja[1]</td><td>G19</td><td>G1, старший бит зелёного</td></tr><tr><td>3</td><td>ja[2]</td><td>N18</td><td>B1, старший бит синего</td></tr><tr><td>4</td><td>ja[3]</td><td>L18</td><td>VS, кадровая синхронизация</td></tr><tr><td>7</td><td>ja[4]</td><td>H17</td><td>R0, младший бит красного</td></tr><tr><td>8</td><td>ja[5]</td><td>H19</td><td>G0, младший бит зелёного</td></tr><tr><td>9</td><td>ja[6]</td><td>J19</td><td>B0, младший бит синего</td></tr><tr><td>10</td><td>ja[7]</td><td>K18</td><td>HS, строчная синхронизация</td></tr></tbody></table></div>
+<p>Получается <strong>64 цвета, RGB222</strong>. Во время гашения верхний модуль выдаёт чёрный цвет. Видимая область — 640 × 480, полная развёртка — 800 × 525. Частота пикселей — 25 МГц, строк — 31,25 кГц, кадров — примерно <strong>59,524 Гц</strong>. Это существующий в репозитории вариант с 25 МГц, а не номинальные 25,175 МГц VGA; совместимость следует проверить на вашем мониторе.</p>
+<p>MMCM внутри FPGA преобразует 12 МГц генератора платы в 100 МГц. Переделывать <code>peripherals/vga.sv</code> не требуется. Основание распиновки — <a href="https://github.com/mole99/tiny-vga#tiny-vga-pinout">таблица разработчика Tiny VGA</a>.</p>
+<h2 id="section-6">5. Вариант ЦАП A: WeAct PCM5100A с усилителем наушников</h2>
+<p>В <a href="https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1/blob/master/Hardware/WeAct-I2SEarphoneModuleV1_V10%20SchDoc.pdf">официальной схеме WeAct V1.0</a> показан семиконтактный разъём. Проверяйте маркировку своей платы: вид с обратной стороны меняет кажущийся порядок контактов.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Контакт P1 WeAct</th><th scope="col">Обозначение</th><th scope="col">Соединение</th></tr></thead><tbody><tr><td>1</td><td>VCC</td><td>Шина питания периферии 5 В/VU с учётом допустимого тока</td></tr><tr><td>2</td><td>GND</td><td>Общая земля</td></tr><tr><td>3</td><td>/SD</td><td>Оставить неподключённым: в схеме V1.0 CTRL подтянут к 3,3 В; заземление выключает звук</td></tr><tr><td>4</td><td>MCLK / MC</td><td>Земля для трёхпроводного I²S</td></tr><tr><td>5</td><td>BCK / BC</td><td>DIP 32 Cmod</td></tr><tr><td>6</td><td>DIN / DI</td><td>DIP 33 Cmod</td></tr><tr><td>7</td><td>WS</td><td>DIP 34 Cmod</td></tr></tbody></table></div>
+<p>На плате находятся стабилизатор 3,3 В, PCM5100A и усилитель наушников HT97226. Заводская схема выбирает I²S; перемычку деэмфазиса оставьте в исходном выключенном положении. Начните с тихого сигнала и подключите наушники к гнезду. Вход <strong>/SD не является SD микрофона</strong>: не соединяйте их и не подавайте на /SD напряжение 5 В.</p>
+<h2 id="section-7">6. Вариант ЦАП B: GY-PCM5102 / PCM5102A в формате pHAT</h2>
+<p>Под названием GY продаются разные печатные платы. Название товара не определяет однозначно порядок контактов и номера паяных перемычек. Подключайтесь по <strong>обозначениям сигналов</strong>, проверив схему стабилизатора и перемычки конкретного модуля; номера разъёма WeAct здесь неприменимы.</p>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Обозначение GY</th><th scope="col">Соединение или состояние</th></tr></thead><tbody><tr><td>VIN / 5V</td><td>Шина 5 В только при подтверждённом входе через стабилизатор</td></tr><tr><td>3V3, если имеется</td><td>По схеме питания конкретной платы; никогда не подавать сюда 5 В</td></tr><tr><td>GND</td><td>Общая земля</td></tr><tr><td>BCK / BCLK</td><td>DIP 32 Cmod</td></tr><tr><td>DIN / DATA</td><td>DIP 33 Cmod</td></tr><tr><td>LCK / LRCK / WS</td><td>DIP 34 Cmod</td></tr><tr><td>SCK / MCLK</td><td>Земля: внутренний PLL ЦАП использует BCK</td></tr><tr><td>XSMT / XMT</td><td>Высокий уровень от логической шины 3,3 В ЦАП для включения звука; проверьте имеющуюся подтяжку</td></tr><tr><td>FMT</td><td>Низкий уровень: I²S</td></tr><tr><td>FLT</td><td>Низкий уровень: фильтр с обычной задержкой</td></tr><tr><td>DEMP</td><td>Низкий уровень: деэмфазис выключен</td></tr></tbody></table></div>
+<p>Перед добавлением проводов осмотрите паяные перемычки. Нельзя замыкать на землю вывод, уже соединённый перемычкой с питанием. Ревизия вашей GY-платы не задана, поэтому номера перемычек и физический порядок разъёма не предполагаются. Электрические настройки взяты из <a href="https://www.ti.com/lit/ds/symlink/pcm5102a.pdf">документации TI PCM510xA</a>.</p>
+<p>Гнездо или площадки L/R GY обычно являются <strong>линейными выходами</strong>. Подключайте активные колонки либо отдельный усилитель наушников. Сам PCM5102A не рассчитан на непосредственное управление наушниками 32 Ω: TI указывает линейную нагрузку от 1 кΩ. Не соединяйте левый и правый выходы друг с другом.</p>
+<p>Оба варианта работают с одной конфигурацией FPGA и тремя сигнальными проводами. Существующий передатчик помещает монофонический 16-битный <code>sound</code> в оба канала 32-битных слотов I²S, начиная на один бит позже изменения LRCK. Ожидаемые частоты: BCK <strong>3,125 МГц</strong>, LRCK <strong>48,828125 кГц</strong>, <strong>64 периода BCK на стереокадр</strong>. Провод внешнего MCLK не нужен; неиспользуемый выход MCLK передатчика остаётся внутри FPGA.</p>
+<h2 id="section-8">7. Кнопки, индикатор, GPIO и сброс</h2>
+<ul><li><strong>BTN0</strong> сбрасывает MMCM и схему. Потеря захвата частоты также вызывает сброс; после восстановления захвата сброс снимается через три фронта системного тактового сигнала. При потере захвата нажмите и отпустите BTN0 для перезапуска MMCM.</li><li><strong>BTN1</strong> — кнопка лабораторной работы. По умолчанию её состояние объединяется по ИЛИ с <code>key[0]</code>; S1–S8 TM1638 соответствуют <code>key[0]</code>–<code>key[7]</code>.</li><li>Движковых переключателей нет. Эти же кнопки TM1638 подаются на <code>sw[0]</code>–<code>sw[7]</code> как <strong>входы без фиксации</strong>. Для длительного удержания комбинации кнопки нужно держать нажатыми либо отдельно адаптировать ввод лабораторной работы.</li><li>Два светодиода Cmod дублируют младшие два бита лабораторных светодиодов. TM1638 выводит восемь бит и восемь разрядов. Поддерживаются и общие макросы конкатенации; альтернативный порядок описан в сведениях о реализации.</li><li>RGB-светодиод с активным низким уровнем горит красным во время сброса, зелёным при работе; синий выключен. Он показывает состояние тактирования и сброса, а не исправность всей периферии.</li><li><code>gpio[0]</code>–<code>gpio[7]</code> соответствуют DIP <strong>1–8</strong> и не пересекаются с периферией на 26–34. Оставьте их свободными, если лабораторная работа их не использует.</li><li>Встроенный USB-UART передаёт данные в FPGA через <code>uart_txd_in</code>, в компьютер — через <code>uart_rxd_out</code>. Дополнительный UART-кабель не нужен.</li></ul>
+<h2 id="section-9">8. Сборка проекта и последовательный запуск</h2>
+<p>В каталоге лабораторной работы запустите обычный выбор платы и укажите <strong>cmod_a7_35</strong>. Скрипт выбирает Vivado, кристалл <strong>xc7a35tcpg236-1</strong> и устройство программатора <strong>xc7a35t_0</strong>.</p>
+<pre class="bash"><code>cd labs/2_graphics/2_1_rectangle_ellipse_parabola
+./06_choose_another_fpga_board.bash
+./03_synthesize_for_fpga.bash</code></pre>
+<p>После успешной сборки скрипт репозитория переходит к конфигурированию. Подключайте только проверенную сборку и читайте сообщения инструмента. Для повторного программирования используйте <code>./04_configure_fpga.bash</code>: это загрузка в энергозависимую конфигурацию FPGA, а не новая процедура записи flash.</p>
+<ol><li>Начните с Cmod и USB без периферии. Проверьте, что Vivado видит <strong>35T</strong>. После сборки изучите отчёты тактирования, временного анализа и DRC: должны присутствовать входные 12 МГц и выход MMCM около 100 МГц; необъяснённые ошибки выводов и временных ограничений нужно устранить.</li><li>Сняв питание, подключите Tiny VGA. Запустите графическую работу, проверьте форму, цвета и гашение. Изображение служит первой проверкой тактирования и видео.</li><li>Добавьте преобразователь уровней и TM1638. В <code>lab_specific_board_config.svh</code> включите <code>INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE</code>, если работе нужны кнопки и индикатор. Проверьте каждую кнопку и разряд до подключения звука.</li><li>Подключите INMP441. Включите <code>INSTANTIATE_MICROPHONE_INTERFACE_MODULE</code>, запустите <code>labs/3_music/3_0_oscilloscope</code>, произнесите звук или хлопните возле микрофона. Проверяйте изменение осциллограммы, а не только наличие тактового сигнала.</li><li>Подключите <strong>один</strong> из вариантов ЦАП. Включите <code>INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE</code>. Сначала проверьте тон в <code>labs/3_music/3_3_note_synthesizer</code>, затем тракт микрофон–ЦАП в <code>labs/3_music/3_11_microphone_monitor</code>. Разнесите микрофон и динамик, чтобы избежать акустической обратной связи.</li><li>Если макрос периферии выключен, соответствующие выходы тактирования и данных неактивны, а значение входного сигнала равно нулю. Перестановка проводов не включает исключённый при сборке блок. Для графики нужен <code>INSTANTIATE_GRAPHICS_INTERFACE_MODULE</code>.</li></ol>
+<h2 id="section-10">9. Поиск неисправностей</h2>
+<div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Симптом</th><th scope="col">Что проверить сначала</th></tr></thead><tbody><tr><td>RGB постоянно красный</td><td>BTN0 не удерживается; питание и генератор 12 МГц стабильны; MMCM захватил частоту; выбран нужный кристалл</td></tr><tr><td>Монитор не видит сигнал</td><td>Ориентация Tiny VGA; JA4 = VS, JA10 = HS; макрос графики; измеренные частоты синхронизации; поддержка монитором режима с 25 МГц</td></tr><tr><td>Неверные цвета или полосы за изображением</td><td>Таблица R1/R0, а не восьмицветная распиновка; гашение и порядок цветовых битов</td></tr><tr><td>Индикатор TM1638 работает, кнопки нет</td><td>DIO проходит через двунаправленный преобразователь; общая земля; обе шины питания и OE</td></tr><tr><td>Микрофон молчит</td><td>VDD = 3,3 В; L/R = GND; SD и SCK не перепутаны; включён макрос микрофона</td></tr><tr><td>Тактирование ЦАП есть, звука нет</td><td>Снято приглушение; режим I²S; SCK/MCLK заземлён; правильная нагрузка; лабораторная работа выдаёт ненулевой sound</td></tr><tr><td>USB отключается при включении индикатора/звука</td><td>Падение напряжения на кабеле или превышение доступного тока; остановиться и проверить питание</td></tr></tbody></table></div>
+<h2 id="section-11">10. Источники и воспроизводимость</h2>
+<ul><li><a href="https://digilent.com/reference/_media/reference/programmable-logic/cmod-a7/cmod_a7_rm.pdf">Руководство Digilent Cmod A7</a>: плата, питание, разъёмы.</li><li><a href="https://github.com/Digilent/digilent-xdc/blob/c8644a9fe31cc803789643124545d56b3bef4600/Cmod-A7-Master.xdc">Исходный XDC Digilent, фиксированная ревизия</a>, <a href="reference/Cmod-A7-Master.xdc">локальная неизменённая копия</a>, <a href="reference/source.json">происхождение файла</a>.</li><li><a href="https://github.com/mole99/tiny-vga">Репозиторий разработчика Tiny VGA</a>: RGB222 и Pmod.</li><li><a href="https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1">Репозиторий производителя WeAct</a>: схема V1.0 и разъём.</li><li><a href="https://www.ti.com/lit/ds/symlink/pcm5102a.pdf">TI PCM510xA</a>, <a href="https://www.ti.com/lit/ds/symlink/txs0108e.pdf">TI TXS0108E</a>, <a href="https://invensense.tdk.com/wp-content/uploads/2015/02/INMP441.pdf">INMP441</a>.</li><li><a href="https://docs.amd.com/r/en-US/ug953-vivado-7series-libraries/MMCME2_BASE">AMD MMCME2_BASE</a>: примитив тактирования, захват частоты и сброс.</li></ul>
+<p>Запуск автоматических проверок из корня репозитория:</p>
+<pre class="bash"><code>python3 scripts/tests/test_cmod_a7_35.py
+python3 scripts/tests/test_board_menu.py</code></pre>
+<p>В функциональном тесте используется отдельная модель тактирования только для проверки. Проверяются сохранность и полнота ограничений выводов, развёртывание существующих лабораторных работ, полный кадр VGA и гашение, данные микрофона, передача I²S, UART/GPIO и сброс. Аналоговые уровни, качество сигналов на макетной плате, совместимость монитора и реальные процессы захвата MMCM этим тестом не проверяются.</p>
+<h2 id="section-12">Приложение: исходное задание и русский перевод</h2>
+<h3 id="section-13">Original English prompt / Английский оригинал</h3>
+<pre class="text"><code># Task
+
+Create a new branch of basics_graphics_music called claude_cmod_a7 starting from main.
+The branch should be called claude_cmod_a7 is you are claude and codex_cmod_a7 is you are codex.
+
+Read board implementations:
+
+* alinx_ax7035b
+* arty_a7_100
+* arty_a7_100_pmod_mic3
+* arty_a7_35
+* arty_a7_35_pmod_mic3
+* basys3
+* nexys4
+* nexys4_ddr
+* nexys_a7  
+* nexys_a7_100
+* nexys_a7_50 
+* zybo_z7
+* zzz_postponed_and_retired/cmod_a7
+
+Specifically the files:
+
+* board_specific.tcl
+* board_specific_top.sv
+* board_specific.xdc
+
+Create a new board implementation cmod_a7_35 for Digilent Cmod A7-35T.
+
+The existing zzz_postponed_and_retired/cmod_a7 is wrong.
+
+Copy the following file into boards/cmod_a7_35/board_specific.xdc
+
+https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
+
+Uncomment only the necessary pins. Do not modify any pin names or definitions - only uncomment the existing.
+
+All name mapping should be inside board_specific_top.sv.
+
+Use Pmod socket to accomodate TinyVGA.
+
+If necessary, write your own VGA interface module if basics-graphics-music/peripherals/vga.sv is not suitable.
+
+Or alternatively propose a modification of basics-graphics-music/peripherals/vga.sv to accomodate the clock frequency.
+
+Update the relevant bash scripts in scripts/steps
+
+Create .md and HTML files with an instruction on how to assemble a breadboard with this board, microphone and either of the following DAC modules:
+
+* WeAct I2S Earphone Module PCM5100A Stereo HP AMP 32Ω 160mW DAC Decoder Audio Board
+
+* Interface I2S PCM5102A DAC Decoder GY-PCM5102 I2S Player Module For Raspberry Pi PHAT Format Board Digital PCM5102 Audio Board
+
+When planning what pins to use for the TM1638, microphone and sound DAC connection, make them compact and easy to assemple.
+
+Add this prompt as an appendix to .md and HTML files.
+
+In addition to the instriction in English create an instruction in Russian (also .md and .html). In prompt appendix put both the original prompt in English and its transaction to Russian.</code></pre>
+<h3 id="section-14">Russian translation / Русский перевод</h3>
+<pre class="text"><code># Задание
+
+Создайте новую ветку basics_graphics_music с именем claude_cmod_a7, начиная с main.
+Ветка должна называться claude_cmod_a7, если вы Claude, и codex_cmod_a7, если вы Codex.
+
+Изучите реализации плат:
+
+* alinx_ax7035b
+* arty_a7_100
+* arty_a7_100_pmod_mic3
+* arty_a7_35
+* arty_a7_35_pmod_mic3
+* basys3
+* nexys4
+* nexys4_ddr
+* nexys_a7
+* nexys_a7_100
+* nexys_a7_50
+* zybo_z7
+* zzz_postponed_and_retired/cmod_a7
+
+В частности, файлы:
+
+* board_specific.tcl
+* board_specific_top.sv
+* board_specific.xdc
+
+Создайте новую реализацию платы cmod_a7_35 для Digilent Cmod A7-35T.
+
+Существующая реализация zzz_postponed_and_retired/cmod_a7 неправильная.
+
+Скопируйте следующий файл в boards/cmod_a7_35/board_specific.xdc:
+
+https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc
+
+Раскомментируйте только необходимые выводы. Не изменяйте имена или определения выводов — только раскомментируйте существующие строки.
+
+Все сопоставления имён должны находиться в board_specific_top.sv.
+
+Используйте разъём Pmod для подключения TinyVGA.
+
+При необходимости напишите собственный модуль интерфейса VGA, если basics-graphics-music/peripherals/vga.sv не подходит.
+
+Либо предложите изменение basics-graphics-music/peripherals/vga.sv с учётом тактовой частоты.
+
+Обновите соответствующие Bash-скрипты в scripts/steps.
+
+Создайте файлы .md и HTML с инструкцией по сборке на макетной плате схемы с этой платой, микрофоном и одним из следующих модулей ЦАП:
+
+* WeAct I2S Earphone Module PCM5100A Stereo HP AMP 32Ω 160mW DAC Decoder Audio Board
+
+* Interface I2S PCM5102A DAC Decoder GY-PCM5102 I2S Player Module For Raspberry Pi PHAT Format Board Digital PCM5102 Audio Board
+
+Планируя использование выводов для TM1638, микрофона и звукового ЦАП, сделайте соединения компактными и удобными для сборки.
+
+Добавьте этот запрос в качестве приложения к файлам .md и HTML.
+
+Кроме английской инструкции создайте русскую инструкцию (также .md и .html). В приложении с запросом приведите и английский оригинал, и его перевод на русский язык.</code></pre>
+<h3 id="section-15">Microphone clarification / Уточнение микрофона</h3>
+<p>The user selected: “INMP441 I²S microphone (recommended)”.</p>
+<p>Пользователь выбрал: «Микрофон INMP441 с интерфейсом I²S (рекомендуется)».</p>
+</main></body></html>

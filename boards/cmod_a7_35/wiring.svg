@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760" role="img" aria-labelledby="title desc">
+<title id="title">Cmod A7-35T accessory connection map / карта соединений</title>
+<desc id="desc">Pmod JA connects to Tiny VGA. DIP 26 to 28 connect to TM1638 through a bidirectional 3.3 to 5 volt translator. DIP 29 to 31 connect to INMP441. DIP 32 to 34 connect to either DAC. DIP 24 supplies USB-derived VU, DIP 25 is ground. This is not a physical breadboard-hole layout.</desc>
+<defs><style>text{font-family:Arial,sans-serif;fill:#193143} .title{font-size:25px;font-weight:700}.h{font-size:20px;font-weight:700}.t{font-size:16px}.s{font-size:14px}.box{fill:#fff;stroke:#93aeb8;stroke-width:2}.wire{fill:none;stroke:#177a80;stroke-width:3}.power{fill:none;stroke:#b15331;stroke-width:3}</style></defs>
+<rect width="1100" height="760" fill="#f1f5f5"/>
+<text x="35" y="40" class="title">Cmod A7-35T · Tiny VGA + INMP441 + TM1638 + DAC</text>
+<text x="35" y="67" class="t">Signal map / карта сигналов · DIP numbers / номера DIP · not to scale / не в масштабе</text>
+<rect x="35" y="110" width="270" height="530" rx="12" class="box"/>
+<text x="55" y="145" class="h">Cmod A7-35T</text><text x="55" y="174" class="t">USB → JTAG + UART + power</text>
+<text x="55" y="214" class="t">JA: 1–4, 7–10</text>
+<text x="55" y="269" class="t">26 / pio26 · DIO ↔</text><text x="55" y="297" class="t">27 / pio27 · CLK →</text><text x="55" y="325" class="t">28 / pio28 · STB →</text>
+<text x="55" y="389" class="t">29 / pio29 · SCK →</text><text x="55" y="417" class="t">30 / pio30 · WS →</text><text x="55" y="445" class="t">31 / pio31 · SD ←</text>
+<text x="55" y="509" class="t">32 / pio32 · BCK →</text><text x="55" y="537" class="t">33 / pio33 · DIN →</text><text x="55" y="565" class="t">34 / pio34 · LRCK →</text>
+<text x="55" y="608" class="t">24 = VU (~5 V USB)</text><text x="55" y="632" class="t">25 = GND</text>
+<path d="M305 208 H365" class="wire"/>
+<rect x="365" y="110" width="685" height="120" rx="10" class="box"/>
+<text x="385" y="143" class="h">Tiny VGA · direct Pmod / напрямую Pmod</text>
+<text x="385" y="174" class="t">JA1 R1 · JA2 G1 · JA3 B1 · JA4 VS</text><text x="385" y="200" class="t">JA7 R0 · JA8 G0 · JA9 B0 · JA10 HS · JA5/11 GND · JA6/12 3.3 V</text>
+<rect x="365" y="250" width="300" height="100" rx="10" class="box"/>
+<text x="385" y="280" class="h">TXS0108E / TXS0104E</text><text x="385" y="308" class="t">A1–A3 ↔ B1–B3</text><text x="385" y="333" class="s">VCCA 3.3 V · VCCB 5 V · OE 3.3 V</text>
+<path d="M305 264 H355 M305 292 H355 M305 320 H355 M675 264 H725 M675 292 H725 M675 320 H725" class="wire"/>
+<rect x="735" y="250" width="315" height="100" rx="10" class="box"/>
+<text x="755" y="282" class="h">TM1638 LED&amp;KEY</text><text x="755" y="310" class="t">DIO · CLK · STB</text><text x="755" y="336" class="s">VCC 5 V · GND common / общая</text>
+<path d="M305 384 H355 M305 412 H355 M305 440 H355" class="wire"/>
+<rect x="365" y="370" width="685" height="100" rx="10" class="box"/>
+<text x="385" y="402" class="h">INMP441 · left channel / левый канал</text><text x="385" y="431" class="t">SCK ← 29 · WS ← 30 · SD → 31 · L/R → GND</text><text x="385" y="457" class="s">VDD 3.3 V ONLY / ТОЛЬКО 3,3 В · GND common / общая</text>
+<path d="M305 504 H355 M305 532 H355 M305 560 H355" class="wire"/>
+<rect x="365" y="490" width="685" height="150" rx="10" class="box"/>
+<text x="385" y="522" class="h">WeAct PCM5100A OR / ИЛИ GY-PCM5102</text><text x="385" y="551" class="t">BCK ← 32 · DIN ← 33 · WS/LCK/LRCK ← 34 · SCK/MCLK → GND</text><text x="385" y="579" class="t">WeAct: /SD open / не подключён · headphones / наушники</text><text x="385" y="607" class="t">GY: XSMT high / высокий · FMT low / низкий · line out / линейный</text><text x="385" y="629" class="s">Use verified VIN / VCC supply labels · проверяйте вход питания конкретной платы</text>
+<rect x="35" y="665" width="1015" height="70" rx="10" fill="#fff0df" stroke="#bd8058"/>
+<text x="55" y="692" class="t">VU → accessory 5 V + 3.3 V regulator / питание периферии + стабилизатор 3,3 В</text><text x="55" y="718" class="t">Common GND / общая земля · No 5 V on FPGA I/O / не подавайте 5 В на сигнальные выводы FPGA</text>
+</svg>
