@@ -302,11 +302,13 @@ fpga_board_base_name ()
         _vga_320
         _vga_304
         _bright
+        _claude
         _no_dvi
         _no_pll
         _tm1638
         _vga666
         _50mhz
+        _codex
         _yosys
         _bare
         _hdmi
