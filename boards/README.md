@@ -52,7 +52,7 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 | Xilinx | Digilent | arty_a7_100 | Artix-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | arty_a7_35 | Artix-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | basys3 | Artix-7 | Vivado, any version † | never | VGA |
-| Xilinx | Digilent | [cmod_a7_35](cmod_a7_35/assembly_en.md) | Artix-7 | Vivado (Artix-7 device support) | optional | Tiny VGA Pmod |
+| Xilinx | Digilent | [cmod_a7_35_codex](cmod_a7_35_codex/assembly_en.md) | Artix-7 | Vivado (Artix-7 device support) | optional | Tiny VGA Pmod |
 | Xilinx | Digilent | cmod_s7 | Spartan-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | eclypse_z7 | Zynq-7000 | Vivado, any version † | always | none |
 | Xilinx | Digilent | nexys4 | Artix-7 | Vivado, any version † | never | VGA |
@@ -78,4 +78,4 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 
 Ranges fully measured for 23 of 55 boards.
 
-Cmod A7-35T also offers [cmod_a7_35_no_pll](cmod_a7_35_no_pll/README.md): direct 12 MHz VGA, 305×480 at 59.835 Hz, using the same wiring. Select it under the cmod_a7_35 board group.
+Cmod A7-35T also offers [cmod_a7_35_no_pll_codex](cmod_a7_35_no_pll_codex/README.md): direct 12 MHz VGA, 305×480 at 59.835 Hz, using the same wiring. Select it under the cmod_a7_35 board group.

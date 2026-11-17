@@ -1,6 +1,6 @@
 """Cmod A7-35T constraints, lab elaboration and functional wrapper simulation.
 
-Run: python3 scripts/tests/test_cmod_a7_35.py
+Run: python3 scripts/tests/test_cmod_a7_35_codex.py
 Icarus uses test-only MMCM/BUFG models. Real clock placement/timing requires Vivado.
 """
 from pathlib import Path
@@ -12,8 +12,8 @@ import tempfile
 import unittest
 
 REPO = Path(__file__).resolve().parents[2]
-BOARD = REPO / 'boards/cmod_a7_35'
-FIX = Path(__file__).resolve().parent / 'fixtures/cmod_a7_35'
+BOARD = REPO / 'boards/cmod_a7_35_codex'
+FIX = Path(__file__).resolve().parent / 'fixtures/cmod_a7_35_codex'
 
 
 class CmodTests(unittest.TestCase):
@@ -28,7 +28,7 @@ class CmodTests(unittest.TestCase):
         return r.stdout + r.stderr
 
     def compile(self, lab, config=None, simulate=False, no_pll=False):
-        board = REPO/'boards/cmod_a7_35_no_pll' if no_pll else BOARD
+        board = REPO/'boards/cmod_a7_35_no_pll_codex' if no_pll else BOARD
         if config is not None:
             (self.work / 'lab_specific_board_config.svh').write_text(config)
         output = self.work / 'test.vvp'
@@ -70,7 +70,7 @@ class CmodTests(unittest.TestCase):
                          ['R3','T3','R2','T1','T2','U1','W2','V2','W3'])
         self.assertEqual([pins[f'ja[{i}]'] for i in range(8)],
                          ['G17','G19','N18','L18','H17','H19','J19','K18'])
-        self.assertEqual(actual, (REPO/'boards/cmod_a7_35_no_pll/board_specific.xdc').read_bytes())
+        self.assertEqual(actual, (REPO/'boards/cmod_a7_35_no_pll_codex/board_specific.xdc').read_bytes())
 
     def test_top_ports_have_exact_xdc_coverage(self):
         netlist = self.compile(FIX, config='// All optional modules disabled.\n').read_text()

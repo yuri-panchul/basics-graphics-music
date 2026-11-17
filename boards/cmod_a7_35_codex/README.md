@@ -3,7 +3,7 @@
 - [English assembly guide](assembly_en.md) · [HTML](assembly_en.html)
 - [Инструкция по сборке на русском](assembly_ru.md) · [HTML](assembly_ru.html)
 - DAC breadboard drawing: [English](breadboard_dac_en.svg) · [Русский](breadboard_dac_ru.svg)
-- [VGA without PLL/MMCM: cmod_a7_35_no_pll](../cmod_a7_35_no_pll/README.md)
+- [VGA without PLL/MMCM: cmod_a7_35_no_pll_codex](../cmod_a7_35_no_pll_codex/README.md)
 
 Target: `xc7a35tcpg236-1`, hardware-manager device `xc7a35t_0`.
 The configuration was added on branch `codex_cmod_a7`, based on main
@@ -25,7 +25,7 @@ feedback path. The existing VGA module divides the system clock by four;
 the audio modules operate in their existing 100 MHz mode. Shared peripherals
 are unchanged. The MMCM is always a hardware primitive in production; only
 the test fixture provides a behavioral clock model. This describes the default
-`cmod_a7_35` configuration. The separately selectable `cmod_a7_35_no_pll` variant
+`cmod_a7_35_codex` configuration. The separately selectable `cmod_a7_35_no_pll_codex` variant
 uses a direct 12 MHz clock and 305×480 video at 59.835453 Hz with the same wiring.
 See its linked notes for timing, audio rates and display limitations.
 
@@ -89,7 +89,7 @@ other boards, and has no working VGA integration.
 From the repository root:
 
 ```bash
-python3 scripts/tests/test_cmod_a7_35.py
+python3 scripts/tests/test_cmod_a7_35_codex.py
 python3 scripts/tests/test_board_menu.py
 ```
 
@@ -133,13 +133,13 @@ A separate batch driver builds without programming the FPGA. From a fresh
 output directory, with Vivado on PATH, substitute the repository location:
 
 ```bash
-vivado -mode batch -source /path/to/basics-graphics-music/scripts/tests/build_cmod_a7_35.tcl \
+vivado -mode batch -source /path/to/basics-graphics-music/scripts/tests/build_cmod_a7_35_codex.tcl \
     -tclargs labs/3_music/3_11_microphone_monitor
 ```
 
 Omit `-tclargs` and the lab path to build the rectangle/ellipse/parabola example.
 The driver writes timing, clock, utilization and DRC reports, a routed checkpoint
-and `cmod_a7_35.bit`. It stops before bitstream generation if constrained setup
+and `cmod_a7_35_codex.bit`. It stops before bitstream generation if constrained setup
 or hold timing fails. Read the report's missing I/O-delay checks as well.
 
 ## Documentation maintenance
@@ -148,7 +148,7 @@ The Markdown guides are the editable source. Each includes the verbatim task
 prompt and its Russian translation. Rebuild the two HTML files with:
 
 ```bash
-python3 boards/cmod_a7_35/build_docs.py
+python3 boards/cmod_a7_35_codex/build_docs.py
 ```
 
 The SVG connection map is shared by both editions. The GY sales description
@@ -158,6 +158,6 @@ signal names and settings without inventing header or jumper numbers.
 The separate DAC breadboard drawings show Cmod at c4–c27 / g4–g27, WeAct's
 verified P1 order, the VU-to-DAC power route, and the accessory 3.3 V regulator.
 Each guide includes a matching jumper table and GY substitution instructions.
-Rebuild these editable SVGs with `python3 boards/cmod_a7_35/draw_breadboard.py`
+Rebuild these editable SVGs with `python3 boards/cmod_a7_35_codex/draw_breadboard.py`
 before rebuilding HTML. The generator preserves the distinction between
 breadboard row numbers, DIP pins and DAC header contacts.

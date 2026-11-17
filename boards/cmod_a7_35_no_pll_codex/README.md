@@ -1,16 +1,16 @@
 # Cmod A7-35T: VGA without PLL or MMCM
 
-Select **cmod_a7_35 → cmod_a7_35_no_pll** in the board menu. This configuration
+Select **cmod_a7_35 → cmod_a7_35_no_pll_codex** in the board menu. This configuration
 uses the onboard **12 MHz** oscillator through one BUFG. All application logic
 runs at 12 MHz; there is no PLL, MMCM, clock multiplication or clock made from
 ordinary logic. BTN0 asserts reset immediately and releases it after three
 clock edges. There is no clock-lock wait in this mode.
 
 The pinout and power wiring match the standard configuration:
-[English assembly guide](../cmod_a7_35/assembly_en.html),
-[инструкция на русском](../cmod_a7_35/assembly_ru.html),
-[DAC breadboard](../cmod_a7_35/breadboard_dac_en.svg).
-The XDC is an identical copy of `cmod_a7_35/board_specific.xdc`; the top-level
+[English assembly guide](../cmod_a7_35_codex/assembly_en.html),
+[инструкция на русском](../cmod_a7_35_codex/assembly_ru.html),
+[DAC breadboard](../cmod_a7_35_codex/breadboard_dac_en.svg).
+The XDC is an identical copy of `cmod_a7_35_codex/board_specific.xdc`; the top-level
 source includes the shared wrapper with `CMOD_A7_NO_PLL` enabled.
 
 ## Video timing and resolution
@@ -46,7 +46,7 @@ changes sync timing too; use the supplied 305×480 parameters for this mode.
 Monitor acceptance and picture alignment require a physical trial; use the
 monitor's analogue auto-adjust if needed.
 
-The original **cmod_a7_35** option retains its 100 MHz MMCM and 640×480 output.
+The original **cmod_a7_35_codex** option retains its 100 MHz MMCM and 640×480 output.
 
 ## Audio and other peripherals
 
@@ -75,21 +75,21 @@ From a lab directory:
 ./03_synthesize_for_fpga.bash
 ```
 
-Choose the `cmod_a7_35` group, then `cmod_a7_35_no_pll`. The normal synthesis
+Choose the `cmod_a7_35` group, then `cmod_a7_35_no_pll_codex`. The normal synthesis
 script also invokes FPGA programming. To build without programming, run from
 a separate empty output directory with Vivado on PATH:
 
 ```bash
-vivado -mode batch -source /path/to/basics-graphics-music/scripts/tests/build_cmod_a7_35.tcl \
-    -tclargs labs/2_graphics/2_1_rectangle_ellipse_parabola cmod_a7_35_no_pll
+vivado -mode batch -source /path/to/basics-graphics-music/scripts/tests/build_cmod_a7_35_codex.tcl \
+    -tclargs labs/2_graphics/2_1_rectangle_ellipse_parabola cmod_a7_35_no_pll_codex
 ```
 
 The driver checks that synthesis contains zero PLL/MMCM cells, writes clock,
-timing, utilization and DRC reports, and creates `cmod_a7_35_no_pll.bit` after
+timing, utilization and DRC reports, and creates `cmod_a7_35_no_pll_codex.bit` after
 constrained setup/hold timing passes. The inherited XDC does not specify
 external I/O delays. Hardware acceptance remains a separate check.
 
-From the repository root, `python3 scripts/tests/test_cmod_a7_35.py` exercises
+From the repository root, `python3 scripts/tests/test_cmod_a7_35_codex.py` exercises
 both configurations, including full frames, sync position and real-time periods,
 blanking, I²S words/rates, reset, GPIO/UART, 17 lab elaborations and TM1638 options.
 The no-PLL simulation provides only a BUFG model; an accidental MMCM instance
@@ -112,14 +112,14 @@ checks. No physical board or monitor was tested.
 
 ## Кратко по-русски
 
-В меню выберите **cmod_a7_35 → cmod_a7_35_no_pll**. Вся логика FPGA работает
+В меню выберите **cmod_a7_35 → cmod_a7_35_no_pll_codex**. Вся логика FPGA работает
 на 12 МГц от генератора платы через BUFG, без PLL и MMCM. Разрешение —
 **305 × 480**, частота строк — **31,413613 кГц**, кадров — **59,835453 Гц**.
 Тайминги близки к VGA 640×480, но независимых отсчётов цвета в строке только
 305; горизонтальные пиксели шире вертикальных. Работу с конкретным монитором
-нужно проверить на плате. Исходный вариант `cmod_a7_35` сохраняет MMCM и 640×480.
+нужно проверить на плате. Исходный вариант `cmod_a7_35_codex` сохраняет MMCM и 640×480.
 
-Монтаж тот же, что в [русской HTML-инструкции](../cmod_a7_35/assembly_ru.html).
+Монтаж тот же, что в [русской HTML-инструкции](../cmod_a7_35_codex/assembly_ru.html).
 BTN0 снимает сброс через три такта без ожидания захвата MMCM. Частоты ЦАП:
 BCK 3 МГц, LRCK 46,875 кГц. Частоты микрофона: SCK 750 кГц, WS 11,71875 кГц;
 полоса звука микрофона уменьшается. Внутренняя PLL ЦАП по-прежнему используется:

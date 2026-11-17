@@ -24,8 +24,9 @@ SETUP = REPO / "scripts/steps/00_setup.source_bash"
 ALL_CONFIGURATIONS = sorted(path.name for path in (REPO / "boards").iterdir() if path.is_dir())
 CONFIGURATIONS = [name for name in ALL_CONFIGURATIONS
                   if name != "zzz_postponed_and_retired" and not name.endswith("_hackathon")]
+# The catalog names the Codex configuration; group it by its physical board.
 CATALOG = {
-    row["Board"]: row["FPGA Manufacturer"]
+    row["Board"].removesuffix("_codex"): row["FPGA Manufacturer"]
     for row in csv.DictReader(io.StringIO((REPO / "boards/README.csv").read_text().replace("\\r\\n", "\n")))
 }
 # Independent expected results: the catalog describes models, while the menu
@@ -187,7 +188,8 @@ class BoardMenuTests(unittest.TestCase):
             "new_hdmi_board": "new_hdmi_board",
             "new_board_hub75e_led_matrix": "new_board",
             "new_board_no_hdmi_no_tm1638_yosys": "new_board",
-            "cmod_a7_35_no_pll": "cmod_a7_35",
+            "cmod_a7_35_codex": "cmod_a7_35",
+            "cmod_a7_35_no_pll_codex": "cmod_a7_35",
             "_yosys": "_yosys",
         }
         wrapper = self.lab / "test_helpers.bash"
