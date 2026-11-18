@@ -60,7 +60,7 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 | Xilinx | Digilent | nexys_a7_50 | Artix-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | zybo_z7 | Zynq-7000 | Vivado, any version † | never | none |
 | Xilinx | QMTech | qmtech_kintex_7 | Kintex-7 | Vivado, any version † | never | none |
-| Xilinx | unknown | a7_lite_35t | Artix-7 | Vivado, any version † | always | HDMI/DVI |
+| Xilinx | MicroPhase | microphase_a7_lite_35t | Artix-7 | Vivado, any version † | always | HDMI/DVI |
 
 † A boundary of this range was not measured here.
 
