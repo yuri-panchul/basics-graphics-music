@@ -191,6 +191,8 @@ class BoardMenuTests(unittest.TestCase):
             "new_board_no_hdmi_no_tm1638_yosys": "new_board",
             "cmod_a7_35_tiny_vga_codex": "cmod_a7_35",
             "cmod_a7_35_tiny_vga_no_pll_codex": "cmod_a7_35",
+            "cmod_a7_35_tiny_vga_no_tm1638_codex": "cmod_a7_35",
+            "cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex": "cmod_a7_35",
             "_yosys": "_yosys",
         }
         wrapper = self.lab / "test_helpers.bash"

@@ -8,13 +8,14 @@ set board_name cmod_a7_35_tiny_vga_codex
 if {$argc > 2} { error "Expected: optional lab directory, optional Cmod configuration" }
 if {$argc >= 1} { set lab_name [lindex $argv 0] }
 if {$argc == 2} { set board_name [lindex $argv 1] }
-if {$board_name ni {cmod_a7_35_tiny_vga_codex cmod_a7_35_tiny_vga_no_pll_codex}} { error "Unknown Cmod configuration: $board_name" }
+if {$board_name ni {cmod_a7_35_tiny_vga_codex cmod_a7_35_tiny_vga_no_pll_codex cmod_a7_35_tiny_vga_no_tm1638_codex cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex}} { error "Unknown Cmod configuration: $board_name" }
 set lab [file join $root $lab_name]
 if {![file exists $lab/lab_top.sv]} { error "No lab_top.sv in $lab" }
 set board $root/boards/$board_name
 source $board/board_specific.tcl
 
 create_project cmod_a7_validation ./project -part $part_name -force
+set_param general.maxThreads 2
 set_property include_dirs [list $lab $root/labs/common $root/peripherals $board] [current_fileset]
 read_verilog -sv [glob $root/labs/common/*.sv]
 read_verilog -sv [glob $root/peripherals/*.sv]
@@ -24,10 +25,19 @@ foreach source [glob $lab/*.sv] {
 read_verilog -sv [glob $board/*.sv]
 read_xdc $board/board_specific.xdc
 synth_design -top board_specific_top -part $part_name -verilog_define XILINX_VIVADO
-if {$board_name eq "cmod_a7_35_tiny_vga_no_pll_codex"} {
+if {[string match *_no_pll_* $board_name]} {
     set clock_managers [get_cells -hier -filter {REF_NAME =~ MMCME* || REF_NAME =~ PLLE*}]
     if {[llength $clock_managers] != 0} { error "No-PLL configuration contains a clock manager" }
     puts "CMOD_A7_NO_PLL_CHECK: zero PLL/MMCM cells"
+}
+if {[string match *_no_tm1638_* $board_name]} {
+    if {[llength [get_ports -quiet {pio26 pio27 pio28}]] != 0} {
+        error "No-TM1638 configuration exposes TM1638 pins"
+    }
+    if {[llength [get_cells -quiet -hier -filter {NAME =~ *i_tm1638*}]] != 0} {
+        error "No-TM1638 configuration contains a TM1638 controller"
+    }
+    puts "CMOD_A7_NO_TM1638_CHECK: no TM1638 ports or controller cells"
 }
 opt_design
 place_design

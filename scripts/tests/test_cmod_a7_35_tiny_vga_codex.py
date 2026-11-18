@@ -6,6 +6,7 @@ Icarus uses test-only MMCM/BUFG models. Real clock placement/timing requires Viv
 """
 from pathlib import Path
 import hashlib
+import itertools
 import json
 import re
 import subprocess
@@ -15,6 +16,12 @@ import unittest
 REPO = Path(__file__).resolve().parents[2]
 BOARD = REPO / 'boards/cmod_a7_35_tiny_vga_codex'
 FIX = Path(__file__).resolve().parent / 'fixtures/cmod_a7_35_tiny_vga_codex'
+MODES = list(itertools.product((False, True), repeat=2))  # no_pll, no_tm1638
+
+
+def board_path(no_pll=False, no_tm1638=False):
+    return REPO / ('boards/cmod_a7_35_tiny_vga_' + ('no_pll_' if no_pll else '')
+                   + ('no_tm1638_' if no_tm1638 else '') + 'codex')
 
 
 class CmodTests(unittest.TestCase):
@@ -28,8 +35,8 @@ class CmodTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         return r.stdout + r.stderr
 
-    def compile(self, lab, config=None, simulate=False, no_pll=False):
-        board = REPO/'boards/cmod_a7_35_tiny_vga_no_pll_codex' if no_pll else BOARD
+    def compile(self, lab, config=None, simulate=False, no_pll=False, no_tm1638=False):
+        board = board_path(no_pll, no_tm1638)
         if config is not None:
             (self.work / 'lab_specific_board_config.svh').write_text(config)
         output = self.work / 'test.vvp'
@@ -38,12 +45,17 @@ class CmodTests(unittest.TestCase):
         if no_pll:
             # No MMCM model is available: accidentally retaining one must fail elaboration.
             args += ['-DCMOD_TEST_NO_PLL']
+        if no_tm1638:
+            args += ['-DCMOD_TEST_NO_TM1638']
         for directory in [self.work, lab, board, REPO/'labs/common', REPO/'peripherals']:
             args += ['-I', str(directory)]
         sources = [FIX/'clock_primitives.sv']
         for directory in [lab, board, REPO/'labs/common', REPO/'peripherals']:
             sources += [p for p in sorted(directory.glob('*.sv')) if p.name not in ('tb.sv', 'clock_primitives.sv')]
             sources += sorted(directory.glob('*.v'))
+        if no_tm1638:
+            # Absence of the controller source makes accidental instantiation fail.
+            sources = [p for p in sources if p.name != 'tm1638_board_controller.sv']
         filelist = lab/'filelist.f'
         if filelist.exists():
             sources += [lab/s.strip() for s in filelist.read_text().splitlines() if s.strip()]
@@ -72,16 +84,28 @@ class CmodTests(unittest.TestCase):
         self.assertEqual([pins[f'ja[{i}]'] for i in range(8)],
                          ['G17','G19','N18','L18','H17','H19','J19','K18'])
         self.assertEqual(actual, (REPO/'boards/cmod_a7_35_tiny_vga_no_pll_codex/board_specific.xdc').read_bytes())
+        for no_pll in (False, True):
+            no_tm = (board_path(no_pll, True)/'board_specific.xdc').read_bytes()
+            self.assertEqual(len(before), len(no_tm.splitlines(keepends=True)))
+            for old, new in zip(before, no_tm.splitlines(keepends=True)):
+                self.assertTrue(new == old or (old.startswith(b'#') and new == old[1:]), new)
+            enabled = re.findall(r'^set_property.*get_ports \{\s*(\S+)\s*\}', no_tm.decode(), re.M)
+            self.assertEqual(set(enabled), set(manifest['enabled_ports']) - {'pio26', 'pio27', 'pio28'})
 
     def test_top_ports_have_exact_xdc_coverage(self):
-        netlist = self.compile(FIX, config='// All optional modules disabled.\n').read_text()
-        section = netlist.split('.scope module, "board_specific_top"')[1].split('.scope ')[0]
-        ports = re.findall(r'\.port_info \d+ /(INPUT|OUTPUT|INOUT) (\d+) "([^"]+)"', section)
-        expanded = set()
-        for _, width, name in ports:
-            expanded.update([name] if width == '1' else [f'{name}[{i}]' for i in range(int(width))])
-        manifest = json.loads((BOARD/'reference/source.json').read_text())
-        self.assertEqual(expanded, set(manifest['enabled_ports']))
+        for no_pll, no_tm1638 in MODES:
+            with self.subTest(no_pll=no_pll, no_tm1638=no_tm1638):
+                netlist = self.compile(FIX, config='// All optional modules disabled.\n',
+                                       no_pll=no_pll, no_tm1638=no_tm1638).read_text()
+                section = netlist.split('.scope module, "board_specific_top"')[1].split('.scope ')[0]
+                ports = re.findall(r'\.port_info \d+ /(INPUT|OUTPUT|INOUT) (\d+) "([^"]+)"', section)
+                expanded = set()
+                for _, width, name in ports:
+                    expanded.update([name] if width == '1' else [f'{name}[{i}]' for i in range(int(width))])
+                xdc = (board_path(no_pll, no_tm1638)/'board_specific.xdc').read_text()
+                constrained = re.findall(r'^set_property.*get_ports \{\s*(\S+)\s*\}', xdc, re.M)
+                self.assertEqual(expanded, set(constrained))
+                self.assertEqual(len(expanded), 32 if no_tm1638 else 35)
 
     def test_representative_labs_elaborate(self):
         labs = sorted((REPO/'labs/1_basics').glob('*/lab_top.sv'))
@@ -93,20 +117,26 @@ class CmodTests(unittest.TestCase):
             '3_music/3_11_microphone_monitor',
             '4_microarchitecture/4_1_pipelines_1/4_1_1_pow5_single_cycle',
             '4_microarchitecture/4_2_fifo/4_2_1_start_with_shift_register']]
-        for no_pll in (False, True):
+        for no_pll, no_tm1638 in MODES:
             for lab in labs:
-                with self.subTest(lab=str(lab.relative_to(REPO)), no_pll=no_pll):
-                    self.compile(lab.parent, no_pll=no_pll)
+                with self.subTest(lab=str(lab.relative_to(REPO)), no_pll=no_pll, no_tm1638=no_tm1638):
+                    self.compile(lab.parent, no_pll=no_pll, no_tm1638=no_tm1638)
 
     def test_tm_options_elaborate(self):
-        for no_pll in (False, True):
+        for no_pll, no_tm1638 in MODES:
             for option in ['', 'CONCAT_TM1638_SIGNALS_AND_REGULAR',
                            'CONCAT_REGULAR_SIGNALS_AND_TM1638',
                            'SPLIT_TM1638_DIO_INOUT_SIGNAL',
                            'USE_HCW132_VARIANT_OF_TM1638_BOARD_CONTROLLER_MODULE']:
-                with self.subTest(option=option, no_pll=no_pll):
-                    self.compile(FIX, config='`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE\n'
-                                 + (f'`define {option}\n' if option else ''), no_pll=no_pll)
+                with self.subTest(option=option, no_pll=no_pll, no_tm1638=no_tm1638):
+                    output = self.compile(FIX, config='`define INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE\n'
+                                 + (f'`define {option}\n' if option else ''), no_pll=no_pll,
+                                 no_tm1638=no_tm1638)
+                    netlist = output.read_text()
+                    if no_tm1638:
+                        self.assertNotIn('"i_tm1638"', netlist)
+                        for param in ('w_key', 'w_led'):
+                            self.assertRegex(netlist, rf'\.param/l "{param}".*\+C4<0*10>;')
 
     def test_frame_audio_microphone_and_reset(self):
         self.check_frame(no_pll=False)
@@ -114,11 +144,17 @@ class CmodTests(unittest.TestCase):
     def test_no_pll_frame_audio_microphone_and_reset(self):
         self.check_frame(no_pll=True)
 
-    def check_frame(self, no_pll):
+    def test_no_tm1638_frame_audio_microphone_and_buttons(self):
+        self.check_frame(no_pll=False, no_tm1638=True)
+
+    def test_no_pll_no_tm1638_frame_audio_microphone_and_buttons(self):
+        self.check_frame(no_pll=True, no_tm1638=True)
+
+    def check_frame(self, no_pll, no_tm1638=False):
         config = ''.join(f'`define INSTANTIATE_{s}_MODULE\n' for s in [
             'GRAPHICS_INTERFACE', 'MICROPHONE_INTERFACE', 'SOUND_OUTPUT_INTERFACE',
             'TM1638_BOARD_CONTROLLER'])
-        output = self.compile(FIX, config=config, simulate=True, no_pll=no_pll)
+        output = self.compile(FIX, config=config, simulate=True, no_pll=no_pll, no_tm1638=no_tm1638)
         result = self.run_command(['vvp', str(output)])
         self.assertIn('PASS:', result)
         print(result.strip())

@@ -95,6 +95,8 @@ def render(markdown):
             anchor = f'section-{section}'
             if label.startswith('TinyVGA:'):
                 anchor = 'tiny-vga-ordering'
+            elif label in ('Configurations without TM1638', 'Конфигурации без TM1638'):
+                anchor = 'no-tm1638'
             elif label in ('Appendix: original task and Russian translation',
                            'Приложение: исходное задание и русский перевод'):
                 anchor = 'original-task'

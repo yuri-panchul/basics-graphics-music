@@ -2,7 +2,7 @@
 
 # Cmod A7-35T + TinyVGA: breadboard assembly and first run
 
-Board configurations: **cmod_a7_35_tiny_vga_codex**, **cmod_a7_35_tiny_vga_no_pll_codex** · Digilent Cmod A7-35T rev. B · prepared 16 November 2026.
+TM1638 configurations: **cmod_a7_35_tiny_vga_codex**, **cmod_a7_35_tiny_vga_no_pll_codex** · Digilent Cmod A7-35T rev. B · prepared 16 November 2026.
 
 [Русская инструкция](assembly_ru.html) · [Markdown](assembly_en.md) · [Implementation notes](README.md)
 
@@ -11,6 +11,8 @@ This configuration connects TinyVGA through the Pmod socket, an INMP441 I²S mic
 The code and simulated signal timing have been checked. The graphics and microphone-monitor examples also passed Vivado 2026.1 synthesis, routing and bitstream generation, with positive setup/hold margins on constrained paths. The master XDC leaves external I/O delays unspecified. **Physical assembly, monitor compatibility and audio playback still require a board trial.**
 
 The frequencies and MMCM behavior below describe the default **cmod_a7_35_tiny_vga_codex** configuration. The optional **cmod_a7_35_tiny_vga_no_pll_codex** mode uses the same assembly; its differences are listed under TinyVGA.
+
+**For the two no-TM1638 configurations, read [the differences below](assembly_en.html#no-tm1638) before wiring: both onboard buttons are lab keys, there is no external display, and the TM1638 branch is omitted from the drawings.**
 
 ## 1. Parts and physical arrangement
 
@@ -180,6 +182,8 @@ Both options use the same FPGA image and three data/clock wires. The existing se
 
 ## 7. Buttons, display, GPIO and reset
 
+The first four points apply to configurations with TM1638; the no-TM1638 mapping follows below.
+
 - **BTN0** resets the MMCM and the design. Reset also asserts when clock lock is lost; it releases after three system-clock edges following lock. If lock is lost, press and release BTN0 to restart the clock manager.
 - **BTN1** is the onboard lab key. In the default duplicate mode it is ORed into `key[0]`; TM1638 S1–S8 supply `key[0]`–`key[7]`.
 - There are no slide switches. The same TM1638 buttons supply `sw[0]`–`sw[7]` as **momentary inputs**, not latched toggles. Labs requiring sustained switch combinations need the buttons held or an explicitly adapted input scheme.
@@ -187,6 +191,23 @@ Both options use the same FPGA image and three data/clock wires. The existing se
 - The active-low RGB LED is red while reset is asserted and green while running; blue is off. It is a clock/reset indicator, not a proof that every peripheral works.
 - Generic `gpio[0]`–`gpio[7]` map to DIP **1–8**. These pins are separate from accessory pins 26–34; leave them unconnected unless the chosen lab calls for them.
 - The onboard USB-UART uses `uart_txd_in` toward the FPGA and `uart_rxd_out` toward the PC. No external UART wiring is needed.
+
+### Configurations without TM1638
+
+Choose either additional configuration under **cmod_a7_35** in the board menu:
+
+| Configuration | Clock and TinyVGA output |
+| --- | --- |
+| cmod_a7_35_tiny_vga_no_tm1638_codex | 100 MHz, MMCM; 640×480 at 59.524 Hz |
+| cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex | 12 MHz, BUFG only; 305×480 at 59.835453 Hz |
+
+**Omit the entire TM1638 module, its power leads and the three signal wires to DIP 26–28.** Those three signals are absent from the FPGA top level and their master-XDC lines remain commented. Leave DIP 26–28 unconnected. The drawings show the TM1638-equipped assembly; omit that branch for these two configurations. TinyVGA, INMP441 on DIP 29–31, DAC on DIP 32–34, USB-UART and GPIO on DIP 1–8 keep their existing connections. Keep the microphone's regulated 3.3 V supply when using it. DAC power and MCLK-to-GND wiring remain as documented.
+
+**BTN0 → key[0], BTN1 → key[1]; led[0] → onboard LED0, led[1] → onboard LED1.** Pressed buttons are active high. Each button has a two-register synchronizer; mechanical debounce remains the lab's responsibility. Both lab widths are exactly two, regardless of any TM1638 concatenation option in the lab configuration. For compatibility with switch-based exercises, `sw[1:0]` duplicates these two momentary buttons and `sw[7:2]` is zero; there are no slide switches.
+
+**Neither button resets the design.** Reset is asserted at FPGA configuration and released after three system-clock edges, after MMCM lock where applicable. Loss of MMCM lock also asserts reset. Reprogram the FPGA or cycle board power to restart; the no-PLL variant has no clock-lock detector. The RGB LED still indicates reset/running. There is **no seven-segment display** and no TM1638 controller, even if the lab defines `INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE`. Display outputs from `lab_top` are unconnected. The internal `w_digit=8` compatibility parameter avoids invalid zero-width casts and slices in existing labs; it does not allocate a display or display pins. Display-only exercises have no visible digit output, and exercises needing more than two independent controls require adaptation.
+
+In bring-up step 3, check the two onboard buttons and LEDs using an appropriate basic lab instead of fitting TM1638. For the 12 MHz variant, use the no-PLL video and audio rates above. Configuration notes: [MMCM version](../cmod_a7_35_tiny_vga_no_tm1638_codex/README.md), [no-PLL version](../cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex/README.md).
 
 ## 8. Build and bring-up
 
@@ -617,6 +638,42 @@ Russian translation / Русский перевод:
 ```
 
 ### P21 · original / оригинал
+
+```text
+commit and push
+```
+
+Russian translation / Русский перевод:
+
+```text
+Создайте коммит и отправьте изменения.
+```
+
+### P22 · original / оригинал
+
+```text
+Than create two additional configuration cmod_a7_35_tiny_vga_no_tm1638_codex and cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex without the TM1638 module. The labs get the two buttons of Cmod A7 as their keys and its two LEDs as their LEDs, and there is no seven-segment display.
+```
+
+Russian translation / Русский перевод:
+
+```text
+Затем создайте две дополнительные конфигурации cmod_a7_35_tiny_vga_no_tm1638_codex и cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex без модуля TM1638. Лабораторные работы получают две кнопки Cmod A7 как свои входы key и два светодиода платы как свои выходы led; семисегментного индикатора нет.
+```
+
+### P23 · original / оригинал
+
+```text
+continue
+```
+
+Russian translation / Русский перевод:
+
+```text
+Продолжайте.
+```
+
+### P24 · original / оригинал
 
 ```text
 commit and push

@@ -18,6 +18,8 @@ The pinout and power wiring match the standard configuration:
 The XDC is an identical copy of `cmod_a7_35_tiny_vga_codex/board_specific.xdc`; the top-level
 source includes the shared wrapper with `CMOD_A7_NO_PLL` enabled.
 
+For two onboard lab keys, two onboard LEDs and no external display, select [cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex](../cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex/README.md). In that variant BTN0 is a lab key, so restart by reprogramming or cycling power.
+
 ## Video timing and resolution
 
 There are **305 × 480 drawable pixels**, with RGB222 (64 colours). The lab
@@ -95,7 +97,7 @@ constrained setup/hold timing passes. The inherited XDC does not specify
 external I/O delays. Hardware acceptance remains a separate check.
 
 From the repository root, `python3 scripts/tests/test_cmod_a7_35_tiny_vga_codex.py` exercises
-both configurations, including full frames, sync position and real-time periods,
+all four configurations, including full frames, sync position and real-time periods,
 blanking, I²S words/rates, reset, GPIO/UART, 17 lab elaborations and TM1638 options.
 The no-PLL simulation provides only a BUFG model; an accidental MMCM instance
 fails elaboration. `python3 scripts/tests/test_board_menu.py` checks selection

@@ -32,9 +32,11 @@ module board_specific_top
 
     inout        pio1, pio2, pio3, pio4, pio5, pio6, pio7, pio8,
 
+    `ifndef CMOD_A7_NO_TM1638
     inout        pio26,  // TM1638 DIO, direct; module VCC and pull-ups at 3.3 V
     output       pio27,  // TM1638 CLK, direct 3.3 V logic
     output       pio28,  // TM1638 STB, direct 3.3 V logic
+    `endif
     output       pio29,  // INMP441 SCK
     output       pio30,  // INMP441 WS
     input        pio31,  // INMP441 SD; L/R is wired to GND
@@ -44,6 +46,13 @@ module board_specific_top
 );
 
     wire clk, locked;
+
+    // Both buttons belong to the lab when the external keypad is absent.
+    `ifdef CMOD_A7_NO_TM1638
+        wire manual_reset = 1'b0;
+    `else
+        wire manual_reset = btn [0];
+    `endif
 
     `ifdef CMOD_A7_NO_PLL
     // One 12 MHz clock domain, with no PLL/MMCM or fabric-generated clock.
@@ -75,7 +84,7 @@ module board_specific_top
         .CLKFBOUT (feedback),
         .CLKOUT0  (clk_unbuffered),
         .LOCKED   (locked),
-        .RST      (btn [0]),
+        .RST      (manual_reset),
         .PWRDWN   (1'b0)
     );
 
@@ -83,9 +92,9 @@ module board_specific_top
     BUFG i_clock_buf    (.I (clk_unbuffered), .O (clk));
     `endif
 
-    // BTN0 asserts reset asynchronously; three clk edges release it.
-    // In MMCM mode, loss of lock also asserts reset.
-    wire reset_request = btn [0] | ~locked;
+    // Initialization resets every configuration; three clk edges release it.
+    // TM1638 variants also use BTN0. MMCM lock loss resets either MMCM variant.
+    wire reset_request = manual_reset | ~locked;
     (* ASYNC_REG = "TRUE" *) logic [2:0] reset_pipe = '1;
 
     always_ff @ (posedge clk or posedge reset_request)
@@ -95,6 +104,21 @@ module board_specific_top
             reset_pipe <= { reset_pipe [1:0], 1'b0 };
 
     wire rst = reset_pipe [2];
+    `ifdef CMOD_A7_NO_TM1638
+    (* ASYNC_REG = "TRUE" *) logic [1:0] button_meta, button_sync;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+        begin
+            button_meta <= '0;
+            button_sync <= '0;
+        end
+        else
+        begin
+            button_meta <= btn;
+            button_sync <= button_meta;
+        end
+    `else
     (* ASYNC_REG = "TRUE" *) logic [1:0] button_pipe;
 
     always_ff @ (posedge clk or posedge rst)
@@ -102,6 +126,7 @@ module board_specific_top
             button_pipe <= '0;
         else
             button_pipe <= { button_pipe [0], btn [1] };
+    `endif
 
     // The RGB LED is active-low: red = reset/unlocked, green = running.
     assign led0_r = ~rst;
@@ -109,19 +134,28 @@ module board_specific_top
     assign led0_b = 1'b1;
 
     // TM1638 has eight keys/LEDs/digits. Match the common concatenation options.
-    `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
+    `ifdef CMOD_A7_NO_TM1638
+        localparam w_key = 2, w_led = 2;
+    `elsif CONCAT_TM1638_SIGNALS_AND_REGULAR
         localparam w_key = 9, w_led = 10;
     `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
         localparam w_key = 9, w_led = 10;
     `else
         localparam w_key = 8, w_led = 8;
     `endif
+    // Retain legal widths for existing labs, including display-only exercises.
+    // No-TM1638 configurations leave both display outputs unconnected.
     localparam w_sw = 8, w_digit = 8;
+    `ifndef CMOD_A7_NO_TM1638
     wire [7:0] tm_key, tm_led, digit, abcdefgh;
+    `endif
     wire [w_key - 1:0] key;
     wire [w_led - 1:0] lab_led;
 
-    `ifdef CONCAT_TM1638_SIGNALS_AND_REGULAR
+    `ifdef CMOD_A7_NO_TM1638
+        assign key = button_sync;
+        assign led = lab_led;
+    `elsif CONCAT_TM1638_SIGNALS_AND_REGULAR
         assign key = { tm_key, button_pipe [1] };
         assign { tm_led, led } = lab_led;
     `elsif CONCAT_REGULAR_SIGNALS_AND_TM1638
@@ -133,8 +167,12 @@ module board_specific_top
         assign led = lab_led [1:0];
     `endif
 
-    // There are no physical slide switches. S1..S8 provide momentary sw[0..7].
+    // No physical slide switches: duplicate the available momentary buttons.
+    `ifdef CMOD_A7_NO_TM1638
+    wire [w_sw - 1:0] sw = { 6'b0, key };
+    `else
     wire [w_sw - 1:0] sw = tm_key;
+    `endif
     wire [w_x - 1:0] x;
     wire [w_y - 1:0] y;
     wire [w_red   - 1:0] red;
@@ -158,7 +196,11 @@ module board_specific_top
     (
         .clk (clk), .rst (rst), .slow_clk (slow_clk),
         .key (key), .sw (sw), .led (lab_led),
+        `ifdef CMOD_A7_NO_TM1638
+        .abcdefgh (), .digit (),
+        `else
         .abcdefgh (abcdefgh), .digit (digit),
+        `endif
         .x (x), .y (y), .red (red), .green (green), .blue (blue),
         .mic (mic), .sound (sound),
         .uart_rx (uart_txd_in), .uart_tx (uart_rxd_out),
@@ -202,6 +244,8 @@ module board_specific_top
         assign ja = 8'b10001000;  // Inactive high sync, black RGB.
     `endif
 
+    // Board selection overrides every lab-level TM1638 option.
+    `ifndef CMOD_A7_NO_TM1638
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
         wire [7:0] hgfedcba;
         for (genvar i = 0; i < 8; i++)
@@ -239,6 +283,7 @@ module board_specific_top
         assign pio26 = 1'bz;
         assign pio27 = 1'b1;
         assign pio28 = 1'b1;
+    `endif
     `endif
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE

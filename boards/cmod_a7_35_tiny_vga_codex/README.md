@@ -14,6 +14,15 @@ Target: `xc7a35tcpg236-1`, hardware-manager device `xc7a35t_0`.
 The configuration was added on branch `codex_cmod_a7`, based on main
 `905cba6f`. The retired 15T wrapper is not reused.
 
+## Additional configurations without TM1638
+
+- [cmod_a7_35_tiny_vga_no_tm1638_codex](../cmod_a7_35_tiny_vga_no_tm1638_codex/README.md): 100 MHz MMCM, 640×480.
+- [cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex](../cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex/README.md): direct 12 MHz, 305×480.
+
+Both give the lab exactly two keys (BTN0/BTN1) and two LEDs. Both buttons are synchronized and neither acts as reset. Reset occurs at configuration and, in MMCM mode, on loss of lock. There is no TM1638 controller or external seven-segment display. The lab's display outputs are unconnected; w_digit=8 remains internally for compatibility. sw[1:0] duplicates the two buttons and sw[7:2] is zero. TM1638 options in lab headers cannot override these board selections.
+
+Omit TM1638 and its wiring. DIP 26–28 have no top-level ports and retain commented XDC definitions; the other 32 scalar ports have the original constraints. Other peripherals and their power wiring are unchanged. See the [English](assembly_en.html#no-tm1638) and [Russian](assembly_ru.html#no-tm1638) instructions. The implementation and key-ordering sections below describe the original TM1638-equipped configurations.
+
 ## Implementation
 
 The master XDC is copied from Digilent revision
@@ -127,12 +136,7 @@ The TM1638 3.3 V wiring revision changes the assembly documentation and HDL
 comments only. The FPGA logic and LVCMOS33 pin constraints are identical to
 those used for the builds above; the existing bitstreams remain applicable.
 
-The six board regression tests passed, including full-frame simulations,
-elaboration of 17 labs and five TM1638 options in each clock configuration.
-All 22 board-menu tests passed across 115 configurations. Both HTML guides
-passed desktop (1440 px) and mobile (390 px)
-layout checks; their local links, diagram and bilingual prompt appendices
-were checked.
+All eight board regression tests passed across the four configurations, including full-frame simulations, 17 lab elaborations per configuration, TM1638 options, two-button synchronization and LED mapping, startup reset and MMCM lock-loss recovery. The no-TM1638 checks exclude the controller source and verify exactly 32 constrained ports. All 22 menu tests passed across 117 configurations / 54 board groups. Both HTML guides passed 32 desktop (1440 px) and mobile (390 px) views; their local links, diagrams and bilingual prompt appendices were checked.
 
 A separate batch driver builds without programming the FPGA. From a fresh
 output directory, with Vivado on PATH, substitute the repository location:

@@ -108,6 +108,21 @@
       "id": "P21",
       "original": "commit and push",
       "ru": "Создайте коммит и отправьте изменения."
+    },
+    {
+      "id": "P22",
+      "original": "Than create two additional configuration cmod_a7_35_tiny_vga_no_tm1638_codex and cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex without the TM1638 module. The labs get the two buttons of Cmod A7 as their keys and its two LEDs as their LEDs, and there is no seven-segment display.",
+      "ru": "Затем создайте две дополнительные конфигурации cmod_a7_35_tiny_vga_no_tm1638_codex и cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex без модуля TM1638. Лабораторные работы получают две кнопки Cmod A7 как свои входы key и два светодиода платы как свои выходы led; семисегментного индикатора нет."
+    },
+    {
+      "id": "P23",
+      "original": "continue",
+      "ru": "Продолжайте."
+    },
+    {
+      "id": "P24",
+      "original": "commit and push",
+      "ru": "Создайте коммит и отправьте изменения."
     }
   ]
 }

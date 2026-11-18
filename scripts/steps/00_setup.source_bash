@@ -623,6 +623,8 @@ update_fpga_toolchain_var ()
         cmod_a7                          | \
         cmod_a7_35_tiny_vga_codex        | \
         cmod_a7_35_tiny_vga_no_pll_codex | \
+        cmod_a7_35_tiny_vga_no_tm1638_codex | \
+        cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex | \
         cmod_s7                          | \
         eclypse_z7                       | \
         nexys4                           | \
