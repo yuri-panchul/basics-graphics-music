@@ -127,11 +127,11 @@ module tb;
                         $display ("Simulation succeeded");
                         `STOP_OR_FINISH;
                     end
-                end
-                else if (dAddr !== 96)
-                begin
-                    $display ("Simulation failed");
-                    `STOP_OR_FINISH;
+                    else if (dAddr !== 96)
+                    begin
+                        $display ("Simulation failed");
+                        `STOP_OR_FINISH;
+                    end
                 end
 
             `else
