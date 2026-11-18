@@ -283,6 +283,7 @@ fpga_board_base_name ()
         _no_tm1638_yosys
         _hdmi_no_tm1638
         _tm1638_yosys
+        _tiny_vga_640
         _tiny_vga_320
         _tiny_vga_304
         _hdmi_tm1638

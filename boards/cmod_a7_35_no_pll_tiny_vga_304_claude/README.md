@@ -5,7 +5,7 @@
 Board configuration `cmod_a7_35_no_pll_tiny_vga_304_claude`. Русская версия: [README_ru.md](README_ru.md).
 
 This configuration uses the hardware and the wiring of
-[cmod_a7_35_claude](../cmod_a7_35_claude/README.md): Digilent Cmod A7-35T on a breadboard
+[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md): Digilent Cmod A7-35T on a breadboard
 with TinyVGA, TM1638, an INMP441 microphone and an I2S DAC. Only the FPGA
 design differs. It has no clock generator, no MMCM or PLL: the whole design
 runs on the 12 MHz oscillator of Cmod A7.
@@ -33,7 +33,7 @@ some 3 pixels wide.
 
 The three configurations share the hardware, the pins and the wiring:
 
-| | [cmod_a7_35_claude](../cmod_a7_35_claude/README.md) | [cmod_a7_35_no_pll_tiny_vga_320_claude](../cmod_a7_35_no_pll_tiny_vga_320_claude/README.md) | cmod_a7_35_no_pll_tiny_vga_304_claude, this one |
+| | [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md) | [cmod_a7_35_no_pll_tiny_vga_320_claude](../cmod_a7_35_no_pll_tiny_vga_320_claude/README.md) | cmod_a7_35_no_pll_tiny_vga_304_claude, this one |
 |---|---|---|---|
 | Clock of the design | 50 MHz from an MMCM | 12 MHz, the oscillator | 12 MHz, the oscillator |
 | Screen the labs draw on | 640x480 | 320x480 | 304x480 |
@@ -45,14 +45,14 @@ The three configurations share the hardware, the pins and the wiring:
 | DAC sample rate | 48.8 kHz | 46.9 kHz | 46.9 kHz |
 
 Each of the three also comes without TM1638, with two buttons, two LEDs
-and no seven-segment display: [cmod_a7_35_no_tm1638_claude](../cmod_a7_35_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README.md).
+and no seven-segment display: [cmod_a7_35_tiny_vga_640_no_tm1638_claude](../cmod_a7_35_tiny_vga_640_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README.md).
 
 Choose this configuration for a design without a clock generator that a
 monitor takes for ordinary 640x480. The price is the odd width of 304 and
 pixels of slightly uneven width, visible on thin vertical lines and small
 text. [cmod_a7_35_no_pll_tiny_vga_320_claude](../cmod_a7_35_no_pll_tiny_vga_320_claude/README.md) has
 pixels of exactly two, at a line rate some monitors refuse;
-[cmod_a7_35_claude](../cmod_a7_35_claude/README.md) has the full 640x480.
+[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md) has the full 640x480.
 
 ## VGA timing
 
@@ -98,7 +98,7 @@ The labs of the repository give one pixel a clock, so this is not done here.
 
 ## What else changes at 12 MHz
 
-board_specific_top.sv is the one of [cmod_a7_35_claude](../cmod_a7_35_claude/README.md) with
+board_specific_top.sv is the one of [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md) with
 these changes:
 
 * **No MMCM.** The clock of the design is the oscillator input, `sysclk`. Its
@@ -110,7 +110,7 @@ these changes:
 * **Reset.** Without an MMCM there is no lock to wait for. The reset chain is
   all ones after configuration, so the design starts in reset and leaves it on
   the third clock edge. With TM1638, either Cmod button resets the design, as
-  in cmod_a7_35_claude.
+  in cmod_a7_35_claude_tiny_vga_640.
 * **Microphone.** The receiver makes SCK of 12 MHz / 16 = 0.75 MHz, within the
   0.5 to 3.2 MHz of INMP441, and a sample rate of 12 MHz / 1024 = 11.7 kHz.
   That passes sound up to about 5.8 kHz: enough for the voice and for musical
@@ -123,7 +123,7 @@ these changes:
 ## The hardware and the wiring
 
 The parts, the 3.3 V source, the assembly and the wiring tables are those of
-[cmod_a7_35_claude](../cmod_a7_35_claude/README.md); follow its instruction. The pins in
+[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md); follow its instruction. The pins in
 short:
 
 | Cmod A7 | Connect to |
@@ -142,10 +142,10 @@ Tapeout store sells it assembled as
 €15.00 in November 2026. It can also be ordered assembled from JLCPCB with
 `GERBER-tiny-vga.zip`, `BOM-tiny-vga.csv` and `CPL-tiny-vga.csv` from
 `pcb/jlcpcb/production_files/` of the repository; the steps are in
-[Where to get TinyVGA](../cmod_a7_35_claude/README.md#where-to-get-tinyvga)
-of cmod_a7_35_claude.
+[Where to get TinyVGA](../cmod_a7_35_claude_tiny_vga_640/README.md#where-to-get-tinyvga)
+of cmod_a7_35_claude_tiny_vga_640.
 
-The drawings of this directory are those of cmod_a7_35_claude with the name of this
+The drawings of this directory are those of cmod_a7_35_claude_tiny_vga_640 with the name of this
 configuration, for both DAC modules, WeAct I2S Earphone Module (PCM5100A) and
 GY-PCM5102 (PCM5102A).
 
@@ -173,7 +173,7 @@ the same names.
 
 In a lab directory, choose the board once with
 `./06_choose_another_fpga_board.bash` and pick `cmod_a7_35_no_pll_tiny_vga_304_claude`. Then
-build and load as for [cmod_a7_35_claude](../cmod_a7_35_claude/README.md):
+build and load as for [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md):
 
 ```bash
 ./03_synthesize_for_fpga.bash
@@ -181,7 +181,7 @@ build and load as for [cmod_a7_35_claude](../cmod_a7_35_claude/README.md):
 ```
 
 The scripts use Vivado for every board whose name starts with `cmod_a7`, so
-this configuration needs no change of the scripts. As with cmod_a7_35_claude, the
+this configuration needs no change of the scripts. As with cmod_a7_35_claude_tiny_vga_640, the
 scripts load the FPGA, not the flash: the design is gone when USB is
 unplugged.
 
@@ -200,9 +200,9 @@ all timing met at 12 MHz, a clock period of 83.3 ns:
 The builds read the sources the way the scripts do, with
 `peripherals/lab_specific_board_config.svh`, which turns on TM1638, VGA, the
 microphone and the DAC; the last line used a configuration file without
-TM1638. As the instruction of cmod_a7_35_claude explains, the Vivado script of the
+TM1638. As the instruction of cmod_a7_35_claude_tiny_vga_640 explains, the Vivado script of the
 repository does not read the `lab_specific_board_config.svh` of a lab.
-Vivado gives the design rule warning CFGBVS-1, as for cmod_a7_35_claude; it does not
+Vivado gives the design rule warning CFGBVS-1, as for cmod_a7_35_claude_tiny_vga_640; it does not
 stop the bitstream. In every build Vivado used one global clock buffer for
 the 12 MHz clock and no MMCM or PLL.
 
@@ -212,7 +212,7 @@ the 12 MHz clock and no MMCM or PLL.
 
 | File | What it is |
 |------|------------|
-| [board_specific.xdc](board_specific.xdc) | The same as in cmod_a7_35_claude: Cmod-A7-Master.xdc of Digilent, only the used lines uncommented |
+| [board_specific.xdc](board_specific.xdc) | The same as in cmod_a7_35_claude_tiny_vga_640: Cmod-A7-Master.xdc of Digilent, only the used lines uncommented |
 | [board_specific_top.sv](board_specific_top.sv) | Pin mapping, reset, the VGA timing and the instances of the lab, VGA, TM1638, microphone and DAC modules, all at 12 MHz |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams, for both DAC modules and both 3.3 V sources |
@@ -220,11 +220,11 @@ the 12 MHz clock and no MMCM or PLL.
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 
-The drawings come from the generators of cmod_a7_35_claude, run with the name of
+The drawings come from the generators of cmod_a7_35_claude_tiny_vga_640, run with the name of
 this configuration:
 
 ```bash
-cd ../cmod_a7_35_claude
+cd ../cmod_a7_35_claude_tiny_vga_640
 python3 generate_wiring_diagram.py cmod_a7_35_no_pll_tiny_vga_304_claude
 python3 generate_breadboard_diagram.py cmod_a7_35_no_pll_tiny_vga_304_claude
 cd ../cmod_a7_35_no_pll_tiny_vga_304_claude
@@ -240,14 +240,14 @@ done
 ## Appendix: the prompts
 
 The hardware and the wiring come from the prompts in the appendix of
-[cmod_a7_35_claude](../cmod_a7_35_claude/README.md#appendix-the-prompts). This configuration
+[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md#appendix-the-prompts). This configuration
 comes from the following prompts, sent by Yuri Panchul in the same Claude
 Code session on 16 and 17 November 2026, verbatim. They are all the prompts
 of the session from the first one about this configuration on, the requests
 to commit and push included, and the prompts that follow and concern this
 configuration are added here too. The prompts name the configurations as
-they were called then: the suffix `_claude` came at 00:43 and `tiny_` at
-09:47 on 17 November. The times are Pacific time (UTC−8).
+they were called then: the suffix `_claude` came at 00:43, `tiny_` at
+09:47 and `tiny_vga_640` at 10:20 on 17 November. The times are Pacific time (UTC−8).
 
 **22:10**, a question; the answer proposed two timings, A for
 cmod_a7_35_no_pll_tiny_vga_320_claude and B for this configuration:
@@ -328,4 +328,10 @@ convert all mentions to vga in configuration names and the related texts to tiny
 
 ```text
 commit and push; then rename cmod_a7_35_claude to cmod_a7_35_claude_tiny_vga_640 and cmod_a7_35_no_tm1638_claude into cmod_a7_35_tiny_vga_640_no_tm1638_claude
+```
+
+**19:00 on 17 November**:
+
+```text
+commit and push
 ```

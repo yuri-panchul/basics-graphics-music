@@ -12,8 +12,8 @@
 `endif
 
 // Digilent Cmod A7-35T on a breadboard, with the hardware and the wiring of
-// boards/cmod_a7_35_claude, but without the MMCM: the whole design runs on the
-// 12 MHz oscillator. See README.md. The breadboard holds:
+// boards/cmod_a7_35_claude_tiny_vga_640, but without the MMCM: the whole
+// design runs on the 12 MHz oscillator. See README.md. The breadboard holds:
 //
 //   * TinyVGA in the Pmod socket JA, 2 bits per color;
 //   * TM1638 module with 8 digits, 8 LEDs and 8 keys;

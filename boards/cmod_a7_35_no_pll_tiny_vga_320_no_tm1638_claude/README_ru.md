@@ -8,7 +8,7 @@
 получают две кнопки Cmod A7 в качестве своих кнопок и два её светодиода в
 качестве своих светодиодов, а семисегментного индикатора нет.** Всё остальное
 — как у cmod_a7_35_no_pll_tiny_vga_320_claude: тактовая частота 12 МГц без MMCM, VGA 320x480 с пикселями ровно в два при частоте строк 30 кГц, которую некоторые мониторы не принимают, микрофон, ЦАП, выводы и соединения. Другие конфигурации без TM1638 —
-[cmod_a7_35_no_tm1638_claude](../cmod_a7_35_no_tm1638_claude/README_ru.md), [cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README_ru.md).
+[cmod_a7_35_tiny_vga_640_no_tm1638_claude](../cmod_a7_35_tiny_vga_640_no_tm1638_claude/README_ru.md), [cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README_ru.md).
 
 ## Содержание
 
@@ -79,8 +79,8 @@ Tapeout продаёт её собранной под названием
 за 15,00 € в ноябре 2026 года. Её можно и заказать собранной на JLCPCB по
 файлам `GERBER-tiny-vga.zip`, `BOM-tiny-vga.csv` и `CPL-tiny-vga.csv` из
 каталога `pcb/jlcpcb/production_files/` репозитория; шаги описаны в разделе
-[Где взять TinyVGA](../cmod_a7_35_claude/README_ru.md#где-взять-tinyvga)
-инструкции cmod_a7_35_claude.
+[Где взять TinyVGA](../cmod_a7_35_claude_tiny_vga_640/README_ru.md#где-взять-tinyvga)
+инструкции cmod_a7_35_claude_tiny_vga_640.
 
 На рисунках этого каталога нет TM1638; они есть для обоих модулей ЦАП: WeAct
 I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на рисунках —
@@ -135,7 +135,7 @@ I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на р�
 Во всех сборках нет ошибок и критических предупреждений, и все временные
 ограничения выполнены на 12 МГц, при периоде такта 83,3 нс, без MMCM и PLL.
 Ни в одном нетлисте нет модуля TM1638. Vivado выдаёт предупреждение правил
-проектирования CFGBVS-1, как и для cmod_a7_35_claude; оно не мешает созданию
+проектирования CFGBVS-1, как и для cmod_a7_35_claude_tiny_vga_640; оно не мешает созданию
 битового потока.
 
 **На реальной плате ещё не проверено.**
@@ -152,11 +152,11 @@ I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на р�
 | README.md, README.html | Эта инструкция на английском |
 | README_ru.md, README_ru.html | Она же на русском |
 
-Рисунки делают генераторы cmod_a7_35_claude, запущенные с именем этой конфигурации;
+Рисунки делают генераторы cmod_a7_35_claude_tiny_vga_640, запущенные с именем этой конфигурации;
 для каждого имени, в котором есть `_no_tm1638`, они не рисуют TM1638:
 
 ```bash
-cd ../cmod_a7_35_claude
+cd ../cmod_a7_35_claude_tiny_vga_640
 python3 generate_wiring_diagram.py cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude
 python3 generate_breadboard_diagram.py cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude
 cd ../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude
@@ -178,8 +178,8 @@ Claude Code 16 и 17 ноября 2026 года, дословно, с перев
 все промпты сеанса, начиная с первого об этой конфигурации, включая просьбы
 сделать коммит и push; последующие промпты, которые касаются этой
 конфигурации, тоже добавляются сюда. Промпты называют конфигурации так, как
-они назывались в то время: суффикс `_claude` появился в 00:43, а `tiny_` — в
-09:47 17 ноября. Время — тихоокеанское (UTC−8).
+они назывались в то время: суффикс `_claude` появился в 00:43, `tiny_` — в
+09:47, а `tiny_vga_640` — в 10:20 17 ноября. Время — тихоокеанское (UTC−8).
 
 **23:17**:
 
@@ -268,4 +268,14 @@ commit and push; then rename cmod_a7_35_claude to cmod_a7_35_claude_tiny_vga_640
 
 ```text
 сделай коммит и push; затем переименуй cmod_a7_35_claude в cmod_a7_35_claude_tiny_vga_640, а cmod_a7_35_no_tm1638_claude — в cmod_a7_35_tiny_vga_640_no_tm1638_claude
+```
+
+**19:00, 17 ноября**:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
 ```

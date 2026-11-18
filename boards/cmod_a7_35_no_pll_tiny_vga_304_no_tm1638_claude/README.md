@@ -8,7 +8,7 @@ This is [cmod_a7_35_no_pll_tiny_vga_304_claude](../cmod_a7_35_no_pll_tiny_vga_30
 labs get the two buttons of Cmod A7 as their keys and its two LEDs as their
 LEDs, and there is no seven-segment display.** Everything else is that of
 cmod_a7_35_no_pll_tiny_vga_304_claude: the 12 MHz clock without an MMCM, VGA 304x480 at the standard line and frame rates, the microphone, the DAC, the pins and the wiring. The other configurations without TM1638 are
-[cmod_a7_35_no_tm1638_claude](../cmod_a7_35_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README.md).
+[cmod_a7_35_tiny_vga_640_no_tm1638_claude](../cmod_a7_35_tiny_vga_640_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README.md).
 
 ## Contents
 
@@ -78,8 +78,8 @@ Tapeout store sells it assembled as
 €15.00 in November 2026. It can also be ordered assembled from JLCPCB with
 `GERBER-tiny-vga.zip`, `BOM-tiny-vga.csv` and `CPL-tiny-vga.csv` from
 `pcb/jlcpcb/production_files/` of the repository; the steps are in
-[Where to get TinyVGA](../cmod_a7_35_claude/README.md#where-to-get-tinyvga)
-of cmod_a7_35_claude.
+[Where to get TinyVGA](../cmod_a7_35_claude_tiny_vga_640/README.md#where-to-get-tinyvga)
+of cmod_a7_35_claude_tiny_vga_640.
 
 The drawings of this directory have no TM1638, for both DAC modules, WeAct
 I2S Earphone Module (PCM5100A) and GY-PCM5102 (PCM5102A).
@@ -133,7 +133,7 @@ builds show that this configuration leaves it out all the same.
 All builds have no errors and no critical warnings, and meet all timing at
 12 MHz, a clock period of 83.3 ns, with no MMCM or PLL. None of the netlists
 has a TM1638 module. Vivado gives the design rule warning CFGBVS-1, as for
-cmod_a7_35_claude; it does not stop the bitstream.
+cmod_a7_35_claude_tiny_vga_640; it does not stop the bitstream.
 
 **Not yet tried on a real board.**
 
@@ -149,12 +149,12 @@ cmod_a7_35_claude; it does not stop the bitstream.
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 
-The drawings come from the generators of cmod_a7_35_claude, run with the name of
+The drawings come from the generators of cmod_a7_35_claude_tiny_vga_640, run with the name of
 this configuration; they leave out TM1638 for every name with
 `_no_tm1638` in it:
 
 ```bash
-cd ../cmod_a7_35_claude
+cd ../cmod_a7_35_claude_tiny_vga_640
 python3 generate_wiring_diagram.py cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude
 python3 generate_breadboard_diagram.py cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude
 cd ../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude
@@ -176,8 +176,8 @@ Code session on 16 and 17 November 2026, verbatim. They are all the prompts
 of the session from the first one about this configuration on, the requests
 to commit and push included, and the prompts that follow and concern this
 configuration are added here too. The prompts name the configurations as
-they were called then: the suffix `_claude` came at 00:43 and `tiny_` at
-09:47 on 17 November. The times are Pacific time (UTC−8).
+they were called then: the suffix `_claude` came at 00:43, `tiny_` at
+09:47 and `tiny_vga_640` at 10:20 on 17 November. The times are Pacific time (UTC−8).
 
 **23:17**:
 
@@ -233,4 +233,10 @@ convert all mentions to vga in configuration names and the related texts to tiny
 
 ```text
 commit and push; then rename cmod_a7_35_claude to cmod_a7_35_claude_tiny_vga_640 and cmod_a7_35_no_tm1638_claude into cmod_a7_35_tiny_vga_640_no_tm1638_claude
+```
+
+**19:00 on 17 November**:
+
+```text
+commit and push
 ```
