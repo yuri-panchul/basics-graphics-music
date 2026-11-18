@@ -59,7 +59,7 @@
 | Xilinx | Digilent | nexys_a7_50 | Artix-7 | Vivado, любая версия † | нет | нет |
 | Xilinx | Digilent | zybo_z7 | Zynq-7000 | Vivado, любая версия † | нет | нет |
 | Xilinx | QMTech | qmtech_kintex_7 | Kintex-7 | Vivado, любая версия † | нет | нет |
-| Xilinx | неизвестно | a7_lite_35t | Artix-7 | Vivado, любая версия † | всегда | HDMI/DVI |
+| Xilinx | MicroPhase | microphase_a7_lite_35t | Artix-7 | Vivado, любая версия † | всегда | HDMI/DVI |
 
 † Одна из границ этого диапазона здесь не измерена.
 
