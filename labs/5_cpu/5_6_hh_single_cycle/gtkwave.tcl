@@ -7,8 +7,14 @@ lappend all_signals tb.rst
 lappend all_signals tb.cpu.pc
 lappend all_signals tb.imAddr
 lappend all_signals tb.imData
-lappend all_signals tb.regAddr
-lappend all_signals tb.regData
+
+
+
+lappend all_signals tb.ALUResult
+
+lappend all_signals tb.we
+lappend all_signals tb.wRAMData
+lappend all_signals tb.dAddr
 
 set num_added [ gtkwave::addSignalsFromList $all_signals ]
 

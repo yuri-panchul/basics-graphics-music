@@ -12,7 +12,8 @@
 
 module instruction_rom
 #(
-    parameter SIZE = 64
+    parameter SIZE = 64,
+    parameter NAME = "program.hex"
 )
 (
     input  [31:0] a,
@@ -20,7 +21,6 @@ module instruction_rom
 );
     logic [31:0] rom [0:SIZE - 1];
     assign rd = rom [a];
-
-    initial $readmemh ("program.hex", rom);
+   initial $readmemh (NAME, rom);
 
 endmodule
