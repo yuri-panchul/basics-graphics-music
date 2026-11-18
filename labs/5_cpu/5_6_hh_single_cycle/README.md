@@ -6,6 +6,7 @@ companion - don't modify
 gtkwave.tcl - add signals for riscvsingle.sv
 instruction_rom.sv - change comment, possibly the default size
 lab_top.sv - main work, add data memory and glue logic
+prog_config.svh - defines for the software program used
 program.s - we should be able to run the original program.s as well as riscvtest.s
 README.md - this file, document the example later on
 riscvsingle.sv - add `ifdef ORIGINAL_TB around testbench

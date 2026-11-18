@@ -73,29 +73,23 @@ rars_setup ()
 
 rars_assembly ()
 {
-
     #  nc                              - Copyright notice will not be displayed
     #  a                               - assembly only, do not simulate
     #  ae<n>                           - terminate RARS with integer exit code if an assemble error occurs
     #  dump .text HexText program.hex  - dump segment .text to program.hex file in HexText format
 
+    local prog_name prog_basename
 
+    # translate every *.s file to a *.hex file,
+    # skipping directories that contain a 'no_sources_in_this_dir' marker file
 
-function tr_rars {
-  local short_name
-  for prog_name in "$@"; do
-    short_name=$(basename -s .s $prog_name)                  # "../program.s" -> "program."
-    $rars_cmd nc a ae1 dump .text HexText $short_name".hex" $prog_name
-  done
-  }
+    while IFS= read -r -d '' prog_name
+    do
+        prog_basename=$(basename -s .s "$prog_name")  # "../program.s" -> "program"
+        $rars_cmd nc a ae1 dump .text HexText "$prog_basename.hex" "$prog_name"
 
-  local files_asm=$(find .. -type d \( -path "" \
-		-o -exec test -f '{}/no_sources_in_this_dir' \; \) \
-		-prune -o  \
-        -type f -name '*.s' \
-        -print)                                  # create list *.s files
-
-  tr_rars $files_asm                                 # translate  *.s files to *.hex files
+    done < <(find .. -type d \( -path "" -o -exec test -f '{}/no_sources_in_this_dir' \; \) -prune \
+                  -o -type f -name '*.s' -print0)
 }
 
 #-----------------------------------------------------------------------------

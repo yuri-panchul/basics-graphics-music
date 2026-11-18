@@ -1,7 +1,5 @@
 `include "config.svh"
-//`define ORIGINAL_PROG              // This line determines which execution variant of the program is used — H&H or School_RISCV
-
-
+`include "prog_config.svh"
 
 module lab_top
 # (
@@ -73,71 +71,72 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [ 4:0] regAddr;  // debug access reg address
-    wire [31:0] regData;  // debug access reg data
-    wire [31:0] imAddr;   // instruction memory address
-    wire [31:0] imData;   // instruction memory data
-    wire [31:0] wRAMData; // data for writing to RAM
-    wire [31:0] rRAMData; // data read from  RAM
-    wire [31:0] dAddr;    // addres for RAM
-    wire [31:0] ALUResult;//
-    wire        we;       // enable write to data memory
-    wire [31:0] PC;       //
+    wire [ 4:0] regAddr;    // debug access reg address
+    wire [31:0] regData;    // debug access reg data
+    wire [31:0] imAddr;     // instruction memory address
+    wire [31:0] imData;     // instruction memory data
+    wire [31:0] wRAMData;   // data for writing to RAM
+    wire [31:0] rRAMData;   // data read from  RAM
+    wire [31:0] dAddr;      // addres for RAM
+    wire [31:0] ALUResult;  //
+    wire        we;         // enable write to data memory
+    wire [31:0] PC;         //
 
     riscvsingle cpu
     (
-        .clk        ( slow_clk ),
-        .reset      ( rst      ),
-        .PC         ( PC       ),
-        .Instr      ( imData   ) ,
-        .MemWrite   ( we       ),
-        .ALUResult  ( ALUResult),
-        .WriteData  ( wRAMData ),
-        .ReadData   ( rRAMData )
-    );
-    assign imAddr = PC >> 2 ;
-    assign dAddr  = ALUResult;
-
-   dmem dmem_i
-    (
-        .clk        ( clk      ),
-        .we         ( we       ),
-        .a          ( dAddr    ),
-        .wd         ( wRAMData ),
-        .rd         ( rRAMData )
+        .clk        ( slow_clk  ),
+        .reset      ( rst       ),
+        .PC         ( PC        ),
+        .Instr      ( imData    ) ,
+        .MemWrite   ( we        ),
+        .ALUResult  ( ALUResult ),
+        .WriteData  ( wRAMData  ),
+        .ReadData   ( rRAMData  )
     );
 
-`ifdef ORIGINAL_PROG
-
-    instruction_rom # (.SIZE (64), .NAME("program.hex")) rom
-    (
-        .a       ( imAddr  ),
-        .rd      ( imData  )
-    );
-`else
-    instruction_rom # (.SIZE (64), .NAME("riscvtest.hex")) rom
-    (
-        .a       ( imAddr  ),
-        .rd      ( imData  )
-    );
-`endif
     //------------------------------------------------------------------------
 
-    // assign regAddr = 5'd10;  // a0
+    assign imAddr = PC >> 2;
 
-    `ifdef ORIGINAL_PROG
-       assign led              = '0;
+    instruction_rom
+    # (
+        .SIZE (`INSTRUCTION_ROM_DEPTH),
+        .NAME (`PROGRAM_FILE_NAME)
+    )
+    i_rom
+    (
+        .a  ( imAddr ),
+        .rd ( imData )
+    );
+
+    //------------------------------------------------------------------------
+
+    assign dAddr = ALUResult;
+
+    dmem i_dmem
+    (
+        .clk ( clk      ),
+        .we  ( we       ),
+        .a   ( dAddr    ),
+        .wd  ( wRAMData ),
+        .rd  ( rRAMData )
+    );
+
+    //------------------------------------------------------------------------
+
+    `ifdef USE_RISCVTEST_HEX
+        assign led [0]            = we;
+        assign led [w_led - 1:1]  = '0;
     `else
-       assign led[0]            = we;
-       assign led[w_led-1:1]    ='0;
+        assign led                = '0;
     `endif
+
+    //------------------------------------------------------------------------
 
     localparam w_number = w_digit * 4;
 
     wire [w_number - 1:0] number
         = w_number' ( key [0] ? ALUResult : imAddr );
-
-
 
     seven_segment_display
     # (
