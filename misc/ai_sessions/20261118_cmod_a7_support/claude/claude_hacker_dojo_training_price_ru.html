@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цена тренинга BGM в Hacker Dojo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@600&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap">
+<style>
+:root {
+  --ground: #f3f5f4;
+  --surface: #ffffff;
+  --ink: #16201b;
+  --muted: #56645e;
+  --rule: #d3dcd8;
+  --accent: #0b7a4b;
+  --link: #0a6b42;
+  --soft: #e2f0e9;
+  --bar: #7f918a;
+  --bar-ours: #0b7a4b;
+  --code-bg: #e7edea;
+  --display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0f1412;
+    --surface: #161d1a;
+    --ink: #e2e9e5;
+    --muted: #9aa8a1;
+    --rule: #2a3530;
+    --accent: #24a86a;
+    --link: #5ccf96;
+    --soft: #15281f;
+    --bar: #5f6e68;
+    --bar-ours: #24a86a;
+    --code-bg: #1d2622;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0f1412;
+  --surface: #161d1a;
+  --ink: #e2e9e5;
+  --muted: #9aa8a1;
+  --rule: #2a3530;
+  --accent: #24a86a;
+  --link: #5ccf96;
+  --soft: #15281f;
+  --bar: #5f6e68;
+  --bar-ours: #24a86a;
+  --code-bg: #1d2622;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  padding: 0 20px;
+  padding-block: 0 64px;
+  background: var(--ground);
+  color: var(--ink);
+  font: 17px/1.6 var(--body);
+}
+.page { max-width: 980px; margin: 0 auto; }
+.prose { max-width: 68ch; }
+header.top { padding-block: 34px 6px; border-top: 6px solid var(--accent); margin: 0 -20px; padding-inline: 20px; }
+header.top > * { max-width: 980px; margin-inline: auto; }
+.credit { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 42px); font-weight: 600; letter-spacing: -0.005em; }
+h2 { font-size: 26px; font-weight: 600; margin: 44px 0 14px; padding-top: 28px; border-top: 1px solid var(--rule); }
+h3 { font-size: 19px; font-weight: 600; margin: 22px 0 8px; }
+.lang { color: var(--muted); font-size: 15px; margin: 10px 0 0; }
+.lede { font-size: 19px; margin: 14px 0 0; }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin-bottom: 6px; }
+a { color: var(--link); text-underline-offset: 2px; }
+a:focus-visible, .row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+code, pre { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--code-bg); padding: 0.05em 0.3em; border-radius: 3px; overflow-wrap: anywhere; }
+pre { background: var(--code-bg); padding: 12px 14px; border-radius: 4px; white-space: pre-wrap; overflow-x: auto; }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; margin: 22px 0 0; font-size: 15.5px; }
+.facts dt { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-size: 12.5px; padding-top: 3px; }
+.facts dd { margin: 0; }
+.answer {
+  margin-top: 26px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 22px 24px;
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) 1fr;
+  gap: 18px 32px;
+  align-items: start;
+}
+.answer .big { font-family: var(--display); font-size: 64px; font-weight: 600; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.answer .unit { color: var(--muted); font-size: 15px; margin-top: 8px; }
+.answer .also { margin: 16px 0 0; font-size: 15px; }
+.answer p { margin: 0 0 8px; }
+.scroll { overflow-x: auto; margin: 8px 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 2px solid var(--rule); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.strong { font-weight: 600; }
+tr.pick td { background: var(--soft); }
+.tiers td:first-child { font-weight: 600; }
+.wide { min-width: 720px; }
+.narrow { max-width: 680px; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 10px 6px; margin: 10px 0 10px; overflow-x: auto; }
+.chart { display: block; width: 100%; min-width: 640px; height: auto; }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .tick { fill: var(--muted); font: 12.5px var(--body); font-variant-numeric: tabular-nums; }
+.chart .name { fill: var(--ink); font: 600 14.5px var(--body); }
+.chart .note { fill: var(--muted); font: 12.5px var(--body); }
+.chart .value { fill: var(--ink); font: 13.5px var(--body); font-variant-numeric: tabular-nums; }
+.chart .bar { fill: var(--bar); }
+.chart .ours .bar { fill: var(--bar-ours); }
+.chart .ours .value { font-weight: 600; }
+.chart .hit { fill: transparent; }
+.chart .row:hover .hit, .chart .row:focus .hit { fill: var(--soft); }
+.caption { color: var(--muted); font-size: 14.5px; max-width: 78ch; }
+.src { font-size: 0.8em; text-decoration: none; white-space: nowrap; }
+.sources li { font-size: 15px; }
+.sources .dag { color: var(--muted); }
+footer { margin-top: 44px; color: var(--muted); font-size: 14px; }
+@media (max-width: 640px) {
+  body { font-size: 16px; padding: 0 16px; padding-block: 0 48px; }
+  header.top { margin: 0 -16px; padding-inline: 16px; }
+  .answer { grid-template-columns: 1fr; padding: 18px; }
+  .answer .big { font-size: 52px; }
+  .facts { grid-template-columns: 1fr; }
+  .facts dt { padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+<p class="credit"><em>Создано Claude Opus 5.5 (<code>claude-opus-5-5</code>) в Claude Code
+2.1.325, уровень усилий xhigh, по промптам Юрия Панчула. Дословные промпты — в
+<a href="#appendix">приложении</a>. Цены взяты с общедоступных страниц из раздела
+<a href="#sources">«Источники»</a> по состоянию на 18 ноября 2026 года.</em></p>
+<h1>Сколько брать за тренинг по BGM в Hacker Dojo</h1>
+<p class="lang"><span lang="en">English version</span>:
+<a href="claude_hacker_dojo_training_price.html" hreflang="en">claude_hacker_dojo_training_price.html</a></p>
+<p class="lede prose">Цена с человека за трёхчасовой тренинг в Hacker Dojo в Санта-Кларе — в
+сравнении с ценами похожих занятий, с комиссиями билетных сервисов и с тем, к чему привыкла
+аудитория Hacker Dojo.</p>
+<dl class="facts">
+  <dt>Тренинг</dt><dd lang="en">“How to use Claude and Codex to implement an FPGA board support package for BGM (Basic-Graphics-Music) infrastructure”</dd>
+  <dt>По-русски</dt><dd>«Как с помощью Claude и Codex реализовать пакет поддержки платы ПЛИС
+  для инфраструктуры BGM (Basic-Graphics-Music)»</dd>
+  <dt>Формат</dt><dd>3 часа: около 100 слайдов и живые демонстрации на платах Xilinx, Altera,
+  Lattice и Gowin. Слушатели смотрят; плата и ноутбук им не нужны.
+  <a href="#hands-on">Практический вариант</a> описан ниже.</dd>
+  <dt>Место</dt><dd>Hacker Dojo, 3200 Patrick Henry Dr, Suite 250, Santa Clara, CA 95054,
+  некоммерческая организация 501(c)(3) <a class="src" href="#src-1">[1]</a></dd>
+</dl>
+</header>
+
+<div class="page">
+
+<section class="answer" aria-labelledby="answer-h">
+  <div>
+    <div class="big">79 $</div>
+    <div class="unit">с человека, стандартный билет; 26 $/ч</div>
+    <p class="also">Практический класс с ноутбуком и платой для каждого:
+    <a href="#hands-on">179 $</a></p>
+  </div>
+  <div>
+    <h3 id="answer-h" style="margin-top:0">Рекомендуемые цены</h3>
+    <div class="scroll">
+    <table class="tiers">
+    <thead><tr><th>Билет</th><th class="num">Цена</th><th>Для кого</th></tr></thead>
+    <tbody>
+    <tr><td>Ранний</td><td class="num">59 $</td><td>при покупке не позже чем за три недели до тренинга</td></tr>
+    <tr class="pick"><td>Стандартный</td><td class="num">79 $</td><td>для всех остальных</td></tr>
+    <tr><td>Студенческий</td><td class="num">29 $</td><td>по студенческому билету</td></tr>
+    <tr><td>Член Hacker Dojo</td><td class="num">39 $</td><td>или бесплатно, если этого требуют правила Dojo</td></tr>
+    <tr><td>Онлайн-место</td><td class="num">29 $</td><td>только если тренинг транслируется</td></tr>
+    <tr><td>Закрытая сессия</td><td class="num">2 000 $</td><td>для команды компании до 16 человек, плюс дорога</td></tr>
+    </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+<h2>Почему 79 $</h2>
+<div class="prose">
+<p><b>Это дешевле практических семинаров по ИИ.</b> Ближайший платный аналог — «Claude Code
+for Beginners» в Frontier Tower в Сан-Франциско — стоит от 149 $ до 199 $ за
+4,5 часа, то есть 33 $/ч — 44 $/ч <a class="src" href="#src-5">[5]</a>. Но там 12 мест,
+и к каждому прилагаются ноутбук и ключ API на 7 дней. Ваш тренинг — лекция с живыми
+демонстрациями: никто не получает ни платы, ни компьютера, поэтому час должен стоить
+меньше. 79 $ — это 26 $/ч.</p>
+<p><b>Это заметно дороже обычных мероприятий Hacker Dojo, и так и должно быть.</b> Членство в
+Dojo уже включает бесплатные доклады, хакатоны и семинары <a class="src" href="#src-1">[1]</a>, собственный семинар Dojo
+по ИИ был бесплатным <a class="src" href="#src-2">[2]</a>, а для ваших Verilog Meetup там цена не указывалась <a class="src" href="#src-3">[3]</a>.
+Платный билет на единственный в своём роде тренинг — это разумно. Ранний, студенческий и
+членский билеты сохранят тех, кто приходил на бесплатные встречи.</p>
+<p><b>Обучение от производителей ПЛИС больше не задаёт высокую планку и не учит этому.</b>
+Открытые курсы Altera стоили в 2012 году 695 $ за слушателя в день <a class="src" href="#src-8">[8]</a>, а теперь
+бесплатны <a class="src" href="#src-9">[9]</a>. AMD продаёт свой 21-часовой курс по Vivado за 299 $ <a class="src" href="#src-6">[6]</a>. Ни
+один из них не охватывает четыре семейства ПЛИС в одной инфраструктуре и не учит писать и
+проверять пакет поддержки платы с помощью ИИ-агентов. Цену такому содержанию задаёт рынок
+семинаров по ИИ, а не курсы производителей.</p>
+<p><b>Такое содержание трудно найти где-то ещё.</b> Четыре семейства ПЛИС за один тренинг,
+работающий открытый репозиторий, которым слушатели смогут пользоваться дальше, и настоящие
+примеры: порты плат, сделанные Claude и Codex, в сравнении друг с другом.</p>
+<p><b>Заплатившие приходят.</b> Билет за 79 $ отсекает случайные
+регистрации. Когда на одном столе стоят четыре платы, известное число слушателей позволяет
+спланировать зал, камеру и места.</p>
+<p><b>Дороже примерно 100 $ тренинг стал бы на равных конкурировать с практическими
+семинарами</b>, в которые входит оборудование. Начните с 79 $; если
+первый тренинг заполнится за неделю до начала, ставьте на следующий 99 $.</p>
+</div>
+</section>
+
+<section id="comparables">
+<h2>Сколько стоят похожие занятия</h2>
+<div class="chart-wrap">
+<svg class="chart" viewBox="0 0 830 502" role="img" aria-label="Цена часа занятий: этот тренинг в сравнении с похожими">
+<line class="grid" x1="340.0" y1="8" x2="340.0" y2="468"/>
+<text class="tick" x="340.0" y="484" text-anchor="middle">0 $</text>
+<line class="grid" x1="428.9" y1="8" x2="428.9" y2="468"/>
+<text class="tick" x="428.9" y="484" text-anchor="middle">20 $</text>
+<line class="grid" x1="517.8" y1="8" x2="517.8" y2="468"/>
+<text class="tick" x="517.8" y="484" text-anchor="middle">40 $</text>
+<line class="grid" x1="606.7" y1="8" x2="606.7" y2="468"/>
+<text class="tick" x="606.7" y="484" text-anchor="middle">60 $</text>
+<line class="grid" x1="695.6" y1="8" x2="695.6" y2="468"/>
+<text class="tick" x="695.6" y="484" text-anchor="middle">80 $</text>
+<text class="tick" x="340" y="500">доллары США за час занятий</text>
+<g class="row" tabindex="0"><title>Открытый курс Altera, прайс-лист 2012 года, за день: 695 $ / 8,5 ч = 82 $/ч</title>
+<rect class="hit" x="0" y="8" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="28.0">Открытый курс Altera</text>
+<text class="note" x="8" y="45.0">прайс-лист 2012 года, за день</text>
+<path class="bar" d="M340 24.0 h359.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-359.4 z"/>
+<text class="value" x="711.4" y="36.0">82 $/ч</text>
+</g>
+<g class="row ours" tabindex="0"><title>Этот тренинг: практический, ноутбук и плата каждому, 3 часа: 179 $ / 3 ч = 60 $/ч</title>
+<rect class="hit" x="0" y="54" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="74.0">Этот тренинг: практический</text>
+<text class="note" x="8" y="91.0">ноутбук и плата каждому, 3 часа</text>
+<path class="bar" d="M340 70.0 h261.2 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-261.2 z"/>
+<text class="value" x="613.2" y="82.0">60 $/ч</text>
+</g>
+<g class="row" tabindex="0"><title>Claude Code for Beginners, Frontier Tower SF, обычное место: 199 $ / 4,5 ч = 44 $/ч</title>
+<rect class="hit" x="0" y="100" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="120.0">Claude Code for Beginners</text>
+<text class="note" x="8" y="137.0">Frontier Tower SF, обычное место</text>
+<path class="bar" d="M340 116.0 h192.5 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-192.5 z"/>
+<text class="value" x="544.5" y="128.0">44 $/ч</text>
+</g>
+<g class="row" tabindex="0"><title>Claude Code for Beginners, Frontier Tower SF, ранняя цена: 149 $ / 4,5 ч = 33 $/ч</title>
+<rect class="hit" x="0" y="146" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="166.0">Claude Code for Beginners</text>
+<text class="note" x="8" y="183.0">Frontier Tower SF, ранняя цена</text>
+<path class="bar" d="M340 162.0 h143.2 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-143.2 z"/>
+<text class="value" x="495.2" y="174.0">33 $/ч</text>
+</g>
+<g class="row ours" tabindex="0"><title>Этот тренинг: стандартный, Hacker Dojo, 3 часа: 79 $ / 3 ч = 26 $/ч</title>
+<rect class="hit" x="0" y="192" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="212.0">Этот тренинг: стандартный</text>
+<text class="note" x="8" y="229.0">Hacker Dojo, 3 часа</text>
+<path class="bar" d="M340 208.0 h113.0 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-113.0 z"/>
+<text class="value" x="465.0" y="220.0">26 $/ч</text>
+</g>
+<g class="row ours" tabindex="0"><title>Этот тренинг: ранний, Hacker Dojo, 3 часа: 59 $ / 3 ч = 20 $/ч</title>
+<rect class="hit" x="0" y="238" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="258.0">Этот тренинг: ранний</text>
+<text class="note" x="8" y="275.0">Hacker Dojo, 3 часа</text>
+<path class="bar" d="M340 254.0 h83.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-83.4 z"/>
+<text class="value" x="435.4" y="266.0">20 $/ч</text>
+</g>
+<g class="row" tabindex="0"><title>AMD Vivado Design Suite 3, курс на 21 час: 299 $ / 21 ч = 14 $/ч</title>
+<rect class="hit" x="0" y="284" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="304.0">AMD Vivado Design Suite 3</text>
+<text class="note" x="8" y="321.0">курс на 21 час</text>
+<path class="bar" d="M340 300.0 h59.3 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-59.3 z"/>
+<text class="value" x="411.3" y="312.0">14 $/ч</text>
+</g>
+<g class="row ours" tabindex="0"><title>Этот тренинг: студенческий, Hacker Dojo, 3 часа: 29 $ / 3 ч = 10 $/ч</title>
+<rect class="hit" x="0" y="330" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="350.0">Этот тренинг: студенческий</text>
+<text class="note" x="8" y="367.0">Hacker Dojo, 3 часа</text>
+<path class="bar" d="M340 346.0 h39.0 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-39.0 z"/>
+<text class="value" x="391.0" y="358.0">10 $/ч</text>
+</g>
+<g class="row" tabindex="0"><title>Wiki3: Own Your Own AI, семинар Hacker Dojo: 0 $ / 2,5 ч = бесплатно</title>
+<rect class="hit" x="0" y="376" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="396.0">Wiki3: Own Your Own AI</text>
+<text class="note" x="8" y="413.0">семинар Hacker Dojo</text>
+<rect class="bar" x="340" y="392.0" width="2" height="14"/>
+<text class="value" x="350.0" y="404.0">бесплатно</text>
+</g>
+<g class="row" tabindex="0"><title>Verilog Meetup, Hacker Dojo, ваша серия: 0 $ / 3 ч = цена не указана</title>
+<rect class="hit" x="0" y="422" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="442.0">Verilog Meetup</text>
+<text class="note" x="8" y="459.0">Hacker Dojo, ваша серия</text>
+<rect class="bar" x="340" y="438.0" width="2" height="14"/>
+<text class="value" x="350.0" y="450.0">цена не указана</text>
+</g>
+</svg>
+</div>
+<p class="caption">Цена часа занятий. Зелёные полосы — билеты этого тренинга, серые — другие
+занятия. Наведите указатель на строку или выберите её клавишей Tab, чтобы увидеть цену и
+длительность.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Занятие</th><th>Где</th><th class="num">Длительность</th><th class="num">Цена</th>
+<th class="num">За час</th><th>Что входит</th></tr></thead>
+<tbody>
+<tr><td>Открытый курс Altera <a class="src" href="#src-8">[8]</a></td><td>площадки Altera в Северной Америке</td><td class="num">8:30–17:00</td>
+<td class="num">695 $</td><td class="num">82 $/ч</td><td>учебные материалы; цены 2012 года</td></tr>
+<tr class="pick"><td>Этот тренинг, практический</td><td>Hacker Dojo, Санта-Клара</td><td class="num">3 ч</td>
+<td class="num">179 $</td><td class="num">60 $/ч</td><td>ноутбук и плата ПЛИС каждому, 10 или 15 мест</td></tr>
+<tr><td>Claude Code for Beginners <a class="src" href="#src-5">[5]</a></td><td>Frontier Tower, Сан-Франциско</td><td class="num">4,5 ч</td>
+<td class="num">149 $–299 $</td><td class="num">33 $/ч–44 $/ч</td>
+<td>ноутбук, ключ API на 7 дней, 12 мест; за 299 $ ещё неделя коворкинга</td></tr>
+<tr class="pick"><td>Этот тренинг, стандартный</td><td>Hacker Dojo, Санта-Клара</td><td class="num">3 ч</td>
+<td class="num">79 $</td><td class="num">26 $/ч</td><td>слайды, репозиторий, демонстрации</td></tr>
+<tr><td>AMD Vivado Design Suite 3 <a class="src" href="#src-6">[6]</a></td><td>каталог обучения AMD</td><td class="num">21 ч</td>
+<td class="num">299 $</td><td class="num">14 $/ч</td><td>12 лабораторных; 3 учебных кредита</td></tr>
+<tr><td>Wiki3: Own Your Own AI <a class="src" href="#src-2">[2]</a></td><td>Hacker Dojo, Санта-Клара</td><td class="num">2,5 ч</td>
+<td class="num">бесплатно</td><td class="num">–</td><td>мест в зале немного</td></tr>
+<tr><td>Verilog Meetup <a class="src" href="#src-3">[3]</a> <a class="src" href="#src-4">[4]</a></td><td>Hacker Dojo, Маунтин-Вью</td><td class="num">3 ч</td>
+<td class="num">не указана</td><td class="num">–</td><td>4 и 12 участников на двух страницах Luma</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="fees">
+<h2>Сколько остаётся с билета</h2>
+<p class="prose">Hacker Dojo публикует свои мероприятия на Luma. Бесплатный тариф Luma берёт
+5 % с платных билетов, а Stripe — 2,9 % плюс 30 центов <a class="src" href="#src-10">[10]</a>. Eventbrite, если комиссии
+платите вы, а не покупатель, берёт 3,7 % плюс 1,79 $ с билета и ещё 2,9 % за
+обработку платежа <a class="src" href="#src-11">[11]</a>. При таких ценах оба сервиса обходятся примерно одинаково;
+используйте Luma, где аудитория Dojo уже есть.</p>
+<div class="scroll">
+<table class="narrow">
+<thead><tr><th class="num">Билет</th><th class="num">Комиссии Luma</th><th class="num">Остаётся</th>
+<th class="num">Комиссии Eventbrite</th><th class="num">Остаётся</th></tr></thead>
+<tbody>
+<tr><td class="num">29 $</td><td class="num">2,59 $</td><td class="num strong">26,41 $</td><td class="num">3,70 $</td><td class="num">25,30 $</td></tr>
+<tr><td class="num">39 $</td><td class="num">3,38 $</td><td class="num strong">35,62 $</td><td class="num">4,36 $</td><td class="num">34,64 $</td></tr>
+<tr><td class="num">59 $</td><td class="num">4,96 $</td><td class="num strong">54,04 $</td><td class="num">5,68 $</td><td class="num">53,32 $</td></tr>
+<tr class="pick"><td class="num">79 $</td><td class="num">6,54 $</td><td class="num strong">72,46 $</td><td class="num">7,00 $</td><td class="num">72,00 $</td></tr>
+<tr><td class="num">99 $</td><td class="num">8,12 $</td><td class="num strong">90,88 $</td><td class="num">8,32 $</td><td class="num">90,68 $</td></tr>
+</tbody>
+</table>
+</div>
+<p class="prose caption">Luma Plus (59 $ в месяц при оплате за год) отменяет комиссию
+5 %; он окупается только при продажах больше примерно 1 180 $ в месяц.</p>
+</section>
+
+<section id="scenarios">
+<h2>Выручка при реалистичной посещаемости</h2>
+<p class="prose">На ваши бесплатные Verilog Meetup пришли 4 и 12 человек — по двум страницам
+Luma, где показано число участников <a class="src" href="#src-3">[3]</a>. Платный тренинг с более ясным обещанием и
+более широким продвижением может собрать больше, поэтому в таблице — от 10 до 30 человек.
+Предполагается, что 30 % билетов ранние, 50 % стандартные и 20 % студенческие, а продаются
+они через Luma.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th class="num">Слушатели</th><th class="num">Ранние + стандартные + студенческие</th>
+<th class="num">Продажи</th><th class="num">Комиссии</th><th class="num">Остаётся</th>
+<th class="num">За час работы, 45 ч</th>
+<th class="num">За час работы, 134 ч</th></tr></thead>
+<tbody>
+<tr><td class="num">10</td><td class="num">3 + 5 + 2</td><td class="num">630 $</td><td class="num">53 $</td><td class="num strong">577 $</td><td class="num">13 $/ч</td><td class="num">4 $/ч</td></tr>
+<tr><td class="num">20</td><td class="num">6 + 10 + 4</td><td class="num">1 260 $</td><td class="num">106 $</td><td class="num strong">1 154 $</td><td class="num">26 $/ч</td><td class="num">9 $/ч</td></tr>
+<tr><td class="num">30</td><td class="num">9 + 15 + 6</td><td class="num">1 890 $</td><td class="num">158 $</td><td class="num strong">1 732 $</td><td class="num">38 $/ч</td><td class="num">13 $/ч</td></tr>
+</tbody>
+</table>
+</div>
+<div class="prose">
+<p>Часы работы — это 5 часов самого дня (3 часа выступления и около 2 часов на
+подготовку зала, сборы и дорогу) плюс подготовка. Отраслевое исследование 2010 года
+оценивает в среднем 43 часа разработки на час очного обучения <a class="src" href="#src-12">[12]</a>, то есть
+129 часов на 3 часа. Значительная часть ваших материалов уже есть в
+репозитории и в отчётах сессий, поэтому второй вариант — 40 часов.</p>
+<p>В обоих случаях один открытый тренинг не окупает подготовку: при 20 слушателях у вас
+остаётся 1 154 $. Презентация окупается повторами: снова в Hacker Dojo, в
+университетах, онлайн и прежде всего на закрытых сессиях.</p>
+</div>
+</section>
+
+<section id="hands-on">
+<h2>Практический вариант: ноутбук и плата каждому</h2>
+<div class="prose">
+<p>В этом варианте вы привозите по ноутбуку на человека, со всеми четырьмя наборами
+инструментов, и по одной плате на человека из одного из четырёх семейств. Слушатели
+выбирают семейство при покупке билета; демонстрации по-прежнему показывают все четыре. В
+классе 10 или 15 человек.</p>
+<p><b>Цена: 149 $ ранний билет, 179 $ стандартный,
+99 $ студенческий.</b> Стандартное место стоит между местами Frontier
+Tower за 149 $ и 199 $ <a class="src" href="#src-5">[5]</a>, но за 3 часа вместо 4,5:
+60 $/ч — между 33 $/ч–44 $/ч
+у Frontier и 82 $/ч у курса Altera 2012 года <a class="src" href="#src-8">[8]</a>. Взамен каждый
+получает настоящую плату ПЛИС и ноутбук, на который ничего не нужно устанавливать, в классе
+на 10 или 15 человек, а не в лекционном зале.</p>
+</div>
+<h3>Оборудование</h3>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Что</th><th class="num">Цена за штуку</th><th class="num">10 мест</th>
+<th class="num">15 мест</th></tr></thead>
+<tbody>
+<tr><td>Восстановленный ноутбук, 16 ГБ ОЗУ, SSD 512 ГБ <a class="src" href="#src-13">[13]</a></td><td class="num">300 $</td><td class="num">10 шт., 3 000 $</td><td class="num">15 шт., 4 500 $</td></tr>
+<tr><td>Sipeed Tang Nano 9K (Gowin) <a class="src" href="#src-14">[14]</a></td><td class="num">36 $</td><td class="num">3 шт., 108 $</td><td class="num">4 шт., 144 $</td></tr>
+<tr><td>Terasic DE10-Lite (Altera) <a class="src" href="#src-15">[15]</a></td><td class="num">85 $</td><td class="num">3 шт., 255 $</td><td class="num">4 шт., 340 $</td></tr>
+<tr><td>Digilent Basys 3 (Xilinx) <a class="src" href="#src-16">[16]</a></td><td class="num">178 $</td><td class="num">2 шт., 356 $</td><td class="num">3 шт., 534 $</td></tr>
+<tr><td>1BitSquared iCEBreaker (Lattice) <a class="src" href="#src-17">[17]</a></td><td class="num">80 $</td><td class="num">2 шт., 160 $</td><td class="num">4 шт., 320 $</td></tr>
+<tr><td>Кабели, модуль TM1638, микрофон (оценка)</td><td class="num">20 $</td><td class="num">10 шт., 200 $</td><td class="num">15 шт., 300 $</td></tr>
+<tr class="pick"><td class="strong">Итого</td><td></td><td class="num strong">4 079 $</td><td class="num strong">6 138 $</td></tr>
+</tbody>
+</table>
+</div>
+<p class="caption">Цены — для планирования. Ноутбук заложен дороже восстановленного за
+239,99 $ по акции марта 2026 года <a class="src" href="#src-13">[13]</a>, потому что акции заканчиваются.
+Tang Nano 9K заложен по цене розницы в США с доставкой, а не за 14,99 $ у Sipeed
+из Китая <a class="src" href="#src-14">[14]</a>. Мониторы не включены: графическим лабораторным нужен монитор на каждое
+место (VGA у DE10-Lite и Basys 3, HDMI у Tang Nano 9K, DVI Pmod у iCEBreaker), иначе
+лабораторные ограничиваются светодиодами, семисегментным индикатором и звуком.</p>
+<h3>Сколько остаётся с практического класса</h3>
+<p class="prose">Все места проданы; 30 % билетов ранние, 50 % стандартные и 20 %
+студенческие, продажа через Luma. Стоимость оборудования распределена на все классы, где оно
+используется.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Оборудование</th><th class="num">10 мест: оборудование на класс</th>
+<th class="num">10 мест: остаётся</th><th class="num">15 мест: оборудование на класс</th>
+<th class="num">15 мест: остаётся</th></tr></thead>
+<tbody>
+<tr><td>Уже ваше</td><td class="num">0 $</td><td class="num strong">1 415 $</td><td class="num">0 $</td><td class="num strong">2 137 $</td></tr>
+<tr><td>Куплено, на 20 классов</td><td class="num">204 $</td><td class="num strong">1 211 $</td><td class="num">307 $</td><td class="num strong">1 830 $</td></tr>
+<tr class="pick"><td>Куплено, на 10 классов</td><td class="num">408 $</td><td class="num strong">1 007 $</td><td class="num">614 $</td><td class="num strong">1 523 $</td></tr>
+<tr><td>Куплено, на 5 классов</td><td class="num">816 $</td><td class="num strong">600 $</td><td class="num">1 228 $</td><td class="num strong">909 $</td></tr>
+<tr><td>Куплено только для этого класса</td><td class="num">4 079 $</td><td class="num strong">−2 664 $</td><td class="num">6 138 $</td><td class="num strong">−4 001 $</td></tr>
+</tbody>
+</table>
+</div>
+<div class="prose">
+<p>Если покупать оборудование ради одного класса, оно стоит больше, чем приносят билеты.
+При распределении на 10 классов класс на 10 мест оставляет 1 007 $ — против
+1 154 $ у лекции на 20 человек, — а класс на 15 мест оставляет 1 523 $. При 15
+местах это 25 $/ч за час работы, если считать 55 часов
+подготовки (40 часов лекции плюс 15 на лабораторные и настройку ноутбуков) и
+6 часов в сам день.</p>
+<p><b>Выбирайте 15 мест, если найдёте помощника.</b> Оборудование дороже (6 138 $
+против 4 079 $), но и билеты приносят больше, а постоянные часы работы те же. С
+четырьмя наборами инструментов в одном зале 15 человекам нужен помощник; 10 человек можно
+вести одному.</p>
+<p><b>Что меняется в самом тренинге.</b> 100 слайдов и лабораторные в 3 часа не
+помещаются: оставьте около 40 слайдов на первый час и отдайте два часа лабораторным или
+сделайте тренинг четырёхчасовым. Слушатели входят на ваших ноутбуках в свои учётные записи
+Claude и ChatGPT и выходят из них в конце — или вы раздаёте временные ключи API, как
+Frontier Tower; их стоимость измерьте на пробном прогоне. Возьмите запасной ноутбук и по
+запасной плате каждого семейства.</p>
+</div>
+</section>
+
+<section id="private">
+<h2>Цена закрытой сессии</h2>
+<div class="prose">
+<p>Согласно ответам на вопросы об обучении AMD, закрытые занятия обычно стоят как 10
+слушателей <a class="src" href="#src-7">[7]</a>; при 79 $ это 790 $. Цена
+Altera 2012 года за обучение на площадке заказчика — 4 500 $ в день для группы до 16
+человек <a class="src" href="#src-8">[8]</a>, то есть около 2 250 $ за полдня. 2 000 $ за трёхчасовую сессию
+для команды до 16 человек, с платами, привезёнными в компанию, укладывается в этот диапазон
+и окупает подготовку за несколько сессий.</p>
+</div>
+</section>
+
+<section id="before">
+<h2>Что сделать до объявления</h2>
+<ul class="prose">
+<li>Спросить в Hacker Dojo, может ли член Dojo брать плату за мероприятие, берёт ли Dojo
+плату за зал или долю, должны ли члены проходить бесплатно и сколько человек вмещает зал на
+3200 Patrick Henry Dr. На сайте сказано только, что члены могут запросить помещение для
+мероприятия <a class="src" href="#src-1">[1]</a>.</li>
+<li>Ограничить число мест тем, сколько людей увидят платы: около 30, с камерой над платами и
+изображением на проекторе.</li>
+<li>Заранее записать каждую демонстрацию Claude и Codex на случай, если в день тренинга сеть
+или сервис ИИ будут работать медленно.</li>
+<li>Возвращать деньги полностью при отказе не позже чем за 48 часов до начала и вести
+список ожидания.</li>
+<li>Пообещать в объявлении, что слушатели унесут с собой: слайды, репозиторий BGM и отчёты в
+<code>misc/ai_sessions</code>.</li>
+</ul>
+</section>
+
+<section id="sources">
+<h2>Источники</h2>
+<p class="prose caption">Прочитаны 18 ноября 2026 года. Пункты с пометкой † прочитаны по
+выдержке поисковой системы, потому что страница отказала в автоматическом чтении или не
+загружалась; перед цитированием их стоит проверить.</p>
+<ol class="sources">
+<li id="src-1"><a href="https://hackerdojo.org">Hacker Dojo</a>: адрес в Санта-Кларе,
+статус 501(c)(3), членство за 150 $ или 180 $ в месяц (на странице есть обе
+цены), «Free Events: Talks, hackathons, and workshops» для членов, помещение для мероприятий
+по запросу.</li>
+<li id="src-2"><a href="https://luma.com/jbh63nxa">Wiki3: Own Your Own AI Workshop</a>, Luma:
+бесплатно, 2,5 часа, Hacker Dojo в Санта-Кларе.</li>
+<li id="src-3">Verilog Meetup на Luma: <a href="https://luma.com/dlvyghdj">4 участника</a>,
+<a href="https://luma.com/gxmu601y">12 участников</a>; цена не указана.</li>
+<li id="src-4">Verilog Meetup на Meetup:
+<a href="https://www.meetup.com/hackerdojo/events/303889717">27 октября 2024 года</a> и
+<a href="https://www.meetup.com/hackerdojo/events/302519201">18 августа 2024 года</a>, с 11:00
+до 14:00.</li>
+<li id="src-5"><a href="https://luma.com/claude-code-for-beginners-1b81">Claude Code for
+Beginners</a>, Frontier Tower SF, Luma: с 17:00 до 21:30, 149 $ / 199 $ /
+299 $, 12 мест, ноутбук и ключ API на 7 дней.</li>
+<li id="src-6"><a href="https://learningcatalog-amd.netexam.com/Certification/61333/designing-fpgas-using-the-vivado-design-suite-3">Designing
+FPGAs Using the Vivado Design Suite 3</a>, AMD Customer Training Center: 299 $ или 3
+учебных кредита, 21 час. <span class="dag">†</span></li>
+<li id="src-7"><a href="https://www.amd.com/en/training/customer/adaptive-computing/faq.html">Вопросы
+и ответы об обучении AMD</a>: закрытые занятия обычно стоят как 10 слушателей.
+<span class="dag">†</span></li>
+<li id="src-8"><a href="https://datasheet.chipsmall.com/ZPLT-SEAT-1/284315.pdf">Altera
+Training Options</a>, распечатано 15 октября 2012 года: 695 $ за слушателя в день, с
+8:30 до 17:00; 4 500 $ в день для группы до 16 человек на площадке заказчика.</li>
+<li id="src-9"><a href="https://www.intel.com/content/www/us/en/support/programmable/support-resources/fpga-training/overview.html">Техническое
+обучение Altera по ПЛИС</a>: очные занятия бесплатны. <span class="dag">†</span></li>
+<li id="src-10"><a href="https://luma.com/pricing">Тарифы Luma</a> и
+<a href="https://help.luma.com/p/creating-a-paid-event">Creating a paid event</a>: 5 % на
+бесплатном тарифе, 0 % на Plus за 59 $ в месяц при оплате за год; Stripe — 2,9 %
++ 30 центов. <span class="dag">†</span></li>
+<li id="src-11"><a href="https://checkoutpage.com/blog/eventbrite-fees">Eventbrite fees
+2026</a>, Checkout Page, обзор от конкурента: 3,7 % + 1,79 $ с билета, 2,9 % за
+обработку платежа. <span class="dag">†</span></li>
+<li id="src-12"><a href="https://www.slideshare.net/slideshow/how-long-does-it-take-to-create-learning/5198860">How
+long does it take to create learning?</a>, Chapman Alliance, сентябрь 2010 года: 43 часа
+разработки на час очного обучения. <span class="dag">†</span></li>
+<li id="src-13"><a href="https://www.pcworld.com/article/3087427/this-lenovo-thinkpad-with-16gb-of-ram-is-a-total-workhorse-at-240.html">This
+Lenovo ThinkPad with 16GB of RAM is a total workhorse at $240</a>, PCWorld, 17 марта 2026
+года: ThinkPad X13 Gen 1, Core i5-10310U, 16 ГБ, SSD 512 ГБ, сертифицированный
+восстановленный, 239,99 $.</li>
+<li id="src-14"><a href="https://www.cnx-software.com/2022/01/17/tang-nano-9k-fpga-board-can-emulate-picorv32-risc-v-soft-core-with-all-peripherals/">Tang
+Nano 9K FPGA board</a>, CNX Software, январь 2022 года: от 14,99 $ у Sipeed на
+AliExpress.</li>
+<li id="src-15"><a href="https://intel.com/content/www/us/en/developer/articles/technical/fpga-academic-boards.html">FPGA
+academic boards</a>, Intel: DE10-Lite за 55 $ для университетов и 85 $ для
+остальных, у Terasic. <span class="dag">†</span></li>
+<li id="src-16"><a href="https://boards.fpgadeveloper.com/boards/Basys-3">Basys 3</a>,
+каталог плат FPGA Developer: 178 USD.</li>
+<li id="src-17"><a href="https://1bitsquared.com/collections/fpga">Магазин 1BitSquared</a>:
+iCEBreaker FPGA V1.1a, 79,95 $. <span class="dag">†</span></li>
+</ol>
+</section>
+
+<section id="appendix">
+<h2>Приложение: промпты</h2>
+<p class="prose">Промпты, которые Юрий Панчул отправил в этой сессии Claude Code 18 ноября
+2026 года, по тихоокеанскому времени (UTC−8), дословно и в переводе. В 21:26:</p>
+<pre lang="en">Suppose I make a 3-hour training session at Hacker Dojo in Santa Clara, California, with a 100-slide presentation and demo with Xilinx, Altera, Lattice and Gowin boards. The title is &quot;How to use Claude and Codex to implement an FPGA board support package for BGM (Basic-Graphics-Music) infrastructure&quot;. How much money should I charge for such training per person? Create an HTML report with a justification, put two files, in English and Russian. Add this prompt as an appending. State at the beginning a proper attribution.</pre>
+<pre>Предположим, я провожу трёхчасовой тренинг в Hacker Dojo в Санта-Кларе, Калифорния, с презентацией на 100 слайдов и демонстрацией на платах Xilinx, Altera, Lattice и Gowin. Название — «How to use Claude and Codex to implement an FPGA board support package for BGM (Basic-Graphics-Music) infrastructure». Сколько денег мне брать за такой тренинг с человека? Сделай отчёт в HTML с обоснованием, в двух файлах, на английском и на русском. Добавь этот промпт в приложение. В начале укажи надлежащее авторство.</pre>
+<p class="prose">В 21:48:</p>
+<pre lang="en">Add a scenario if I bring equipment (10 laptops) and boards (gowin, altera, xilinx, lattice) for everyone.</pre>
+<pre>Добавь сценарий, в котором я привожу оборудование (10 ноутбуков) и платы (Gowin, Altera, Xilinx, Lattice) для всех.</pre>
+<p class="prose">В 21:50 — два сообщения, отправленные, пока шёл ответ на предыдущее:</p>
+<pre lang="en">No, not each family. One board per person from one of families. Add these reports to ai_sessions in repo, to the same directory as competitive report.</pre>
+<pre>Нет, не по плате каждого семейства. Одна плата на человека, из одного из семейств. Добавь эти отчёты в ai_sessions в репозитории, в тот же каталог, что и отчёт о сравнении.</pre>
+<pre lang="en">You can also create a class for 15 people</pre>
+<pre>Можно также сделать класс на 15 человек</pre>
+</section>
+
+<footer>
+<p>Цены — в долларах США. Это расчёт цены для планирования, а не налоговая или юридическая
+консультация.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Обзор Cmod A7 от Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@500;600;700&amp;family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+:root {
+  --ground: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #151922;
+  --muted: #566073;
+  --rule: #d6dce6;
+  --accent: #0055aa;
+  --high: #aa0000;
+  --medium: #aa5500;
+  --low: #5555aa;
+  --nit: #555555;
+  --good: #005500;
+  --code-bg: #e9edf3;
+  --display: "Fira Sans Condensed", "PT Sans Narrow", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0d1015;
+    --surface: #151a23;
+    --ink: #e6e9ef;
+    --muted: #9ba5b7;
+    --rule: #2a3141;
+    --accent: #55aaff;
+    --high: #ff5555;
+    --medium: #ffaa55;
+    --low: #aaaaff;
+    --nit: #aaaaaa;
+    --good: #55aa55;
+    --code-bg: #1e2430;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0d1015;
+  --surface: #151a23;
+  --ink: #e6e9ef;
+  --muted: #9ba5b7;
+  --rule: #2a3141;
+  --accent: #55aaff;
+  --high: #ff5555;
+  --medium: #ffaa55;
+  --low: #aaaaff;
+  --nit: #aaaaaa;
+  --good: #55aa55;
+  --code-bg: #1e2430;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  padding: 0 20px 64px;
+  background: var(--ground);
+  color: var(--ink);
+  font: 17px/1.55 var(--body);
+}
+.page { max-width: 1040px; margin: 0 auto; }
+.prose { max-width: 70ch; }
+.palette {
+  display: grid;
+  grid-template-columns: repeat(64, 1fr);
+  height: 8px;
+  margin: 0 -20px;
+}
+.palette i { display: block; }
+header.top { padding-block: 36px 8px; }
+.credit { color: var(--muted); font-size: 14px; margin: 0 0 20px; }
+h1, h2, h3 {
+  font-family: var(--display);
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0;
+}
+h1 { font-size: clamp(32px, 5vw, 46px); font-weight: 700; letter-spacing: -0.01em; }
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  padding-top: 40px;
+  margin-bottom: 14px;
+  border-top: 1px solid var(--rule);
+  margin-top: 40px;
+}
+h3 { font-size: 21px; font-weight: 600; }
+.lede { font-size: 19px; margin: 14px 0 0; }
+.lang { font-size: 15px; color: var(--muted); margin: 10px 0 0; }
+.meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 18px;
+  margin: 22px 0 0;
+  font-size: 15px;
+}
+.meta dt {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12.5px;
+  padding-top: 2px;
+}
+.meta dd { margin: 0; }
+nav.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 22px;
+  font-size: 15px;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+code, pre { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--code-bg); padding: 0.05em 0.3em; border-radius: 3px; overflow-wrap: anywhere; }
+pre {
+  background: var(--code-bg);
+  padding: 12px 14px;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin-bottom: 4px; }
+.scroll { overflow-x: auto; margin: 6px 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--rule); }
+th {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--rule);
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wide { min-width: 860px; }
+.edge { white-space: nowrap; font-weight: 600; }
+.ideas td:nth-child(2) code { font-size: 0.8em; overflow-wrap: normal; }
+.edge.codex { color: var(--medium); }
+.edge.claude { color: var(--accent); }
+.edge.even { color: var(--muted); }
+.chip {
+  display: inline-block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 8px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.chip.high { color: var(--high); }
+.chip.medium { color: var(--medium); }
+.chip.low { color: var(--low); }
+.chip.nit { color: var(--nit); }
+.pass { color: var(--good); font-weight: 600; }
+.fail { color: var(--high); font-weight: 700; }
+.na { color: var(--muted); }
+.finding { padding: 16px 0 6px; border-bottom: 1px solid var(--rule); max-width: 78ch; }
+.finding:last-of-type { border-bottom: 0; }
+.finding header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 6px; }
+.where { color: var(--muted); font-size: 15px; }
+.fix b { font-weight: 600; }
+.verdict {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px 32px;
+  margin-top: 6px;
+}
+.verdict h3 { font-size: 18px; margin-bottom: 6px; }
+blockquote {
+  margin: 0 0 12px;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+}
+footer { margin-top: 48px; color: var(--muted); font-size: 14px; }
+@media (max-width: 520px) {
+  body { font-size: 16px; padding: 0 16px 48px; }
+  .palette { margin: 0 -16px; }
+  .meta { grid-template-columns: 1fr; }
+  .meta dt { padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<div class="palette" aria-hidden="true"><i style="background:#000000"></i><i style="background:#000055"></i><i style="background:#0000aa"></i><i style="background:#0000ff"></i><i style="background:#005500"></i><i style="background:#005555"></i><i style="background:#0055aa"></i><i style="background:#0055ff"></i><i style="background:#00aa00"></i><i style="background:#00aa55"></i><i style="background:#00aaaa"></i><i style="background:#00aaff"></i><i style="background:#00ff00"></i><i style="background:#00ff55"></i><i style="background:#00ffaa"></i><i style="background:#00ffff"></i><i style="background:#550000"></i><i style="background:#550055"></i><i style="background:#5500aa"></i><i style="background:#5500ff"></i><i style="background:#555500"></i><i style="background:#555555"></i><i style="background:#5555aa"></i><i style="background:#5555ff"></i><i style="background:#55aa00"></i><i style="background:#55aa55"></i><i style="background:#55aaaa"></i><i style="background:#55aaff"></i><i style="background:#55ff00"></i><i style="background:#55ff55"></i><i style="background:#55ffaa"></i><i style="background:#55ffff"></i><i style="background:#aa0000"></i><i style="background:#aa0055"></i><i style="background:#aa00aa"></i><i style="background:#aa00ff"></i><i style="background:#aa5500"></i><i style="background:#aa5555"></i><i style="background:#aa55aa"></i><i style="background:#aa55ff"></i><i style="background:#aaaa00"></i><i style="background:#aaaa55"></i><i style="background:#aaaaaa"></i><i style="background:#aaaaff"></i><i style="background:#aaff00"></i><i style="background:#aaff55"></i><i style="background:#aaffaa"></i><i style="background:#aaffff"></i><i style="background:#ff0000"></i><i style="background:#ff0055"></i><i style="background:#ff00aa"></i><i style="background:#ff00ff"></i><i style="background:#ff5500"></i><i style="background:#ff5555"></i><i style="background:#ff55aa"></i><i style="background:#ff55ff"></i><i style="background:#ffaa00"></i><i style="background:#ffaa55"></i><i style="background:#ffaaaa"></i><i style="background:#ffaaff"></i><i style="background:#ffff00"></i><i style="background:#ffff55"></i><i style="background:#ffffaa"></i><i style="background:#ffffff"></i></div>
+<div class="page">
+
+<header class="top">
+<p class="credit"><em>Создано Claude Opus 5.5 (<code>claude-opus-5-5</code>) в Claude Code
+2.1.325, уровень усилий xhigh, по промптам Юрия Панчула. Дословные промпты — в
+<a href="#appendix">приложении</a>.</em></p>
+<h1>Обзор конфигураций Cmod A7-35T от Codex</h1>
+<p class="lang"><span lang="en">English version</span>:
+<a href="claude_cmod_a7_compare_1.html" hreflang="en">claude_cmod_a7_compare_1.html</a></p>
+<p class="lede prose">Обзор четырёх конфигураций платы Digilent Cmod A7-35T, которые
+Codex сделал для basics-graphics-music, в сравнении с нашими шестью: ошибки, риски,
+идеи, которые стоит перенять, и сборки и тесты, на которых всё это основано.</p>
+<dl class="meta">
+  <dt>Codex</dt>
+  <dd>ветка <code>codex_cmod_a7</code> на коммите <code>b9fa13b2</code> (17 ноября 2026
+  года, 20:08) в <code>~/codex/basics-graphics-music</code>; только чтение, сборки и
+  тесты — в клоне</dd>
+  <dt>Наша</dt>
+  <dd>ветка <code>claude_cmod_a7</code> на коммите <code>c698aecc</code> в
+  <code>~/claude/basics-graphics-music</code></dd>
+  <dt>Общая основа</dt>
+  <dd>main на коммите <code>905cba6f</code></dd>
+  <dt>Инструменты</dt>
+  <dd>Vivado 2026.1, Icarus Verilog 12.0</dd>
+</dl>
+<nav class="toc" aria-label="Содержание">
+  <a href="#verdict">Итог</a>
+  <a href="#findings">Проблемы в ветке Codex</a>
+  <a href="#ideas">Идеи, которые стоит перенять</a>
+  <a href="#side-by-side">Сравнение по пунктам</a>
+  <a href="#verification">Сборки и тесты</a>
+  <a href="#ours">Пробелы у нас</a>
+  <a href="#merge">Слияние веток</a>
+  <a href="#appendix">Приложение</a>
+</nav>
+</header>
+
+<section id="verdict">
+<h2>Итог</h2>
+<div class="prose">
+<p>RTL у Codex добротный. Все четыре его конфигурации правильно работают в симуляции
+и собираются в Vivado, а порядок битов TinyVGA, полярности синхроимпульсов,
+последовательность сброса и форматы I²S верны. Функциональных ошибок в его HDL мы не
+нашли; однако на частоте 100 МГц у самой тяжёлой из опробованных лабораторных остаётся всего +0,693 нс запаса.</p>
+<p>Проблемы — вокруг HDL: шина 5 В на макетной плате рядом с выводами ПЛИС; вариант
+с отдельным питанием, при котором на обесточенную ПЛИС может попасть 3,3 В; строка
+каталога, которая нарушает его соглашения; заголовки «Generated by Codex» в общих
+файлах, которые Codex лишь правил; и три конфигурации без HTML и без руководства на
+русском.</p>
+<p>В верификации Codex впереди. Его самопроверяющийся тестбенч, проверку того, что XDC
+лишь раскомментирует строки Digilent, и скрипт Vivado со структурными проверками стоит
+взять как есть. Восемь выводов GPIO, светодиод сброса и работы и файлы TinyVGA,
+закреплённые за одной ревизией, — небольшие возможности, которые тоже стоит взять.</p>
+</div>
+<div class="verdict">
+  <div>
+    <h3>Где впереди Codex</h3>
+    <ul>
+      <li>Автоматические тесты в репозитории: симуляция, элаборация лабораторных,
+      происхождение XDC</li>
+      <li>Восемь выводов GPIO для лабораторных на DIP 1–8</li>
+      <li>RGB-светодиод показывает сброс и работу</li>
+      <li>Производственные файлы TinyVGA закреплены за коммитом, с SHA-256</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Где впереди мы</h3>
+    <ul>
+      <li>На макетной плате только 3,3 В; предел 0,55 В для обесточенной платы описан</li>
+      <li>У каждой конфигурации есть README.md, README_ru.md и HTML</li>
+      <li>Частота 50 МГц: у анализатора спектра запас 9,3 нс против 0,7 нс</li>
+      <li>Режим без PLL шириной 304 пикселя ближе к стандартной развёртке VGA, и ширина
+      чётная</li>
+      <li>Каталог и общие скрипты следуют соглашениям репозитория</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="findings">
+<h2>Проблемы в ветке Codex</h2>
+<p class="prose">По убыванию серьёзности. Пути указаны относительно <code>boards/</code>
+ветки Codex, если не начинаются с <code>scripts/</code>.</p>
+
+<article class="finding" id="f-5v">
+  <header>
+    <span class="chip medium">Средняя</span>
+    <h3>Шина 5 В проходит вдоль 24 выводов ПЛИС</h3>
+  </header>
+  <p class="where"><code>cmod_a7_35_tiny_vga_codex/assembly_en.md:138–153</code>,
+  <code>breadboard_dac_en.svg</code>, <code>breadboard_dac_ru.svg</code></p>
+  <p>Руководство делает левую шину питания шиной VU, то есть 5 В от USB, и проводит её
+  по всей длине макетной платы рядом с DIP 1–24, чтобы питать ЦАП и стабилизатор 3,3 В.
+  У выводов DIP нет последовательных резисторов, а таблица 7.1 руководства Digilent
+  допускает на них не более 3,75 В при включённом питании. Перемычка, воткнутая в шину
+  на одно отверстие мимо, подаст 5 В на вывод ПЛИС.</p>
+  <p class="fix"><b>Исправление:</b> сделать обе шины 3,3 В, а 5 В оставить только на
+  одном проводе от DIP 24 ко входу стабилизатора. Обе платы ЦАП работают от 3,3 В:
+  стабилизатор ME6231 на плате WeAct даёт из них около 3,2 В, в пределах 3,0–3,6 В для
+  PCM5100A, а GY-PCM5102 принимает на VIN от 3,3 до 5 В. Так сделано в нашем
+  руководстве.</p>
+</article>
+
+<article class="finding" id="f-backpower">
+  <header>
+    <span class="chip medium">Средняя</span>
+    <h3>Вариант с отдельным питанием может подать 3,3 В на обесточенную ПЛИС</h3>
+  </header>
+  <p class="where"><code>cmod_a7_35_tiny_vga_codex/assembly_en.md:58</code> и его
+  русская копия</p>
+  <p>Если напряжение на шинах проседает, руководство предлагает отдельный источник
+  питания для модулей, у которого с платой общая только земля. Если отключить USB, пока
+  этот источник включён, подтягивающие резисторы модуля TM1638 будут держать DIP 26–28 под
+  3,3 В при обесточенной ПЛИС. Таблица 7.1 допускает на обесточенном выводе DIP 0,55 В.
+  Руководство этот предел не упоминает: в нём нет ни «0.55», ни «unpowered».</p>
+  <p class="fix"><b>Исправление:</b> указать этот предел и включать и выключать питание
+  модулей только вместе с платой — или убрать этот вариант. В нашем руководстве предел
+  указан в разделе о питании.</p>
+</article>
+
+
+<article class="finding" id="f-clock">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>На 100 МГц у самой тяжёлой лабораторной запас меньше 1 нс</h3>
+  </header>
+  <p class="where"><code>cmod_a7_35_tiny_vga_codex/board_specific_top.sv:65–69</code></p>
+  <p>Codex тактирует весь проект частотой 100 МГц, чтобы <code>vga.sv</code> получал
+  пиксели 25 МГц через разрешение такта ÷4. Самая тяжёлая из опробованных
+  лабораторных работ, <code>labs/3_music/3_10_spectrum_analyzer</code>, ещё
+  укладывается во временные ограничения, но худший запас по setup у неё
+  <strong>+0,693 нс</strong> против <strong>+9,347 нс</strong> на
+  нашей частоте 50 МГц. Худший путь — 12-уровневая цепочка переноса в фильтрах
+  спектра. Сегодня это не ошибка, но студент, который добавит в эту лабораторную
+  немного логики, выйдет за временные ограничения на конфигурации Codex намного
+  раньше, чем на нашей.</p>
+  <p class="fix"><b>Исправление:</b> 50 МГц (12 × 62,5 ÷ 15, VCO 750 МГц) — частота,
+  на которой работает большинство плат репозитория, — даёт 640×480 с разрешением ÷2 и
+  вдвое удлиняет период такта каждой лабораторной.</p>
+</article>
+
+<article class="finding" id="f-catalog">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>Строка каталога нарушает его соглашения</h3>
+  </header>
+  <p class="where"><code>README.csv:48</code>, <code>README.md:5, 57, 81</code>,
+  <code>scripts/tests/test_board_menu.py:30</code></p>
+  <p>Строка называет конфигурацию, <code>cmod_a7_35_tiny_vga_codex</code>, тогда как все
+  остальные строки называют платы. Трёх её значений больше нет нигде в их столбцах:
+  «Vivado (Artix-7 device support)», где 13 других строк Xilinx говорят «Vivado, any
+  version †»; «optional», где в столбце TM1638 стоит always, never или either; и «TinyVGA
+  Pmod», где в столбце графики стоит VGA, HDMI/DVI, LCD или их сочетание. README
+  по-прежнему говорит «55 boards» и «23 of 55» при 56 строках. Тесту меню плат
+  понадобился <code>removesuffix("_codex").removesuffix("_tiny_vga")</code>, чтобы
+  свести строку обратно к <code>cmod_a7_35</code>.</p>
+  <p class="fix"><b>Исправление:</b> одна строка <code>cmod_a7_35</code> с обычными
+  значениями, счётчики исправлены на 56, тест без изменений.</p>
+</article>
+
+<article class="finding" id="f-banners">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>Заголовки «Generated by Codex» в файлах, которые Codex лишь правил</h3>
+  </header>
+  <p class="where">строка 1 файлов <code>README.md</code>,
+  <code>scripts/steps/00_setup.source_bash</code> и
+  <code>scripts/tests/test_board_menu.py</code></p>
+  <p>Codex изменил по нескольку строк в каждом из этих общих файлов, а затем поставил над
+  всем файлом заголовок «Generated by Codex GPT-6-Astra with xHigh efforts.». Так ему
+  приписывается код, написанный другими, а каждая следующая правка с помощью ИИ добавила
+  бы свой заголовок.</p>
+  <p class="fix"><b>Исправление:</b> указывать авторство в сообщении коммита или в
+  комментарии рядом с изменёнными строками.</p>
+</article>
+
+<article class="finding" id="f-docs">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>У трёх конфигураций из четырёх нет HTML и руководства на русском</h3>
+  </header>
+  <p class="where"><code>cmod_a7_35_tiny_vga_no_pll_codex/</code>,
+  <code>cmod_a7_35_tiny_vga_no_tm1638_codex/</code>,
+  <code>cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex/</code></p>
+  <p>Задание требовало инструкций в .md и HTML, на английском и на русском. В каждом из
+  этих каталогов лежит единственный английский <code>README.md</code> с коротким разделом
+  «Кратко по-русски»; полные инструкции для них — это разделы руководства основной
+  конфигурации.</p>
+  <p class="fix"><b>Исправление:</b> либо полная пара руководств для каждой конфигурации,
+  либо ясное указание, что основное руководство охватывает все четыре.</p>
+</article>
+
+<article class="finding" id="f-led">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>RGB-светодиод всё время горит зелёным на полной яркости</h3>
+  </header>
+  <p class="where"><code>cmod_a7_35_tiny_vga_codex/board_specific_top.sv:131–134</code></p>
+  <p><code>led0_g = rst</code> держит зелёный катод в нуле, поэтому всё время, пока проект
+  работает, светодиод горит с коэффициентом заполнения 100 %. Раздел 6.1 руководства
+  Digilent:</p>
+  <blockquote lang="en">Digilent strongly recommends the use of pulse-width modulation
+  (PWM) when driving the tri-color LED. Driving any of the inputs to a steady logic ‘1’
+  will result in the LED being illuminated at an uncomfortably bright level. You can avoid
+  this by ensuring that none of the tri-color signals are driven with more than 50% duty
+  cycle.</blockquote>
+  <p>В переводе: «Digilent настоятельно рекомендует управлять трёхцветным светодиодом с
+  помощью широтно-импульсной модуляции (ШИМ). Постоянная логическая „1“ на любом из
+  входов заставит светодиод светиться неприятно ярко. Этого можно избежать, если ни один
+  из сигналов трёхцветного светодиода не будет иметь коэффициент заполнения больше
+  50 %». В руководстве сказано „1“, хотя светодиод загорается от 0.</p>
+  <p class="fix"><b>Исправление:</b> стробировать оба цвета импульсами с коэффициентом
+  заполнения 1/16 от свободно считающего счётчика.</p>
+</article>
+
+<article class="finding" id="f-nits">
+  <header>
+    <span class="chip nit">Мелочи</span>
+    <h3>Мелкие замечания</h3>
+  </header>
+  <ul>
+    <li><code>scripts/steps/00_setup.source_bash:624–627</code> перечисляет для инструментария
+    Vivado четыре конфигурации по одной, с нарушенным выравниванием. Шаблон
+    <code>cmod_a7_35*</code> охватывает и их, и все будущие конфигурации.</li>
+    <li>В приложении с промптами нет времени. В него попали промпты, не имеющие отношения
+    к плате: P01 — восстановить сессию, P02 — план действий, P05 — лицензия Vivado,
+    P07–P11 — концы строк.</li>
+    <li>Ширина 305 в режиме без PLL нечётная, поэтому лабораторная, которая делит экран
+    пополам или на плитки, получает неравные части. Ширина 304 с теми же интервалами
+    гашения даёт 381 такт на строку, 31,50 кГц и 59,99 Гц: это ближе к стандартным
+    59,94 Гц, чем 59,84 Гц у ширины 305.</li>
+    <li>С TM1638 кнопка BTN1 объединяется по ИЛИ с <code>key[0]</code>. Она дублирует S1,
+    а не добавляет девятую клавишу.</li>
+  </ul>
+</article>
+</section>
+
+<section id="ideas">
+<h2>Идеи, которые стоит перенять</h2>
+<p class="prose">По соотношению пользы и трудозатрат. Если файл Codex можно перенести, он
+назван.</p>
+<div class="scroll">
+<table class="wide ideas">
+<colgroup><col style="width:16%"><col style="width:27%"><col style="width:9%"><col style="width:11%"><col></colgroup>
+<thead><tr><th>Идея</th><th>В ветке Codex</th><th>Польза</th><th>Затраты</th><th>Как мы бы её перенесли</th></tr></thead>
+<tbody>
+<tr><td>Самопроверяющийся тестбенч верхнего уровня платы</td>
+<td><code>scripts/<wbr>tests/<wbr>fixtures/<wbr>cmod_a7_35_tiny_vga_codex/<wbr>tb.sv</code></td>
+<td>Высокая</td><td>Средние</td>
+<td>Он измеряет изображение на выводах Pmod в течение целого кадра: период строки,
+положение и полярность синхроимпульсов, чёрный цвет во время гашения, порядок битов
+TinyVGA, координаты x и y лабораторной. Ещё он проверяет 24-битный отсчёт микрофона
+через I²S, слоты I²S для ЦАП и сброс после включения питания, по кнопке и при потере
+захвата MMCM. Перенести его на наши выводы (ЦАП на DIP 21–23, TM1638 на 26–28, микрофон
+на 29–32) и запускать для всех шести конфигураций.</td></tr>
+<tr><td>Элаборация многих лабораторных на каждой конфигурации</td>
+<td><code>scripts/<wbr>tests/<wbr>test_cmod_a7_35_tiny_vga_codex.py</code></td>
+<td>Высокая</td><td>Низкие</td>
+<td>Icarus за секунды элаборирует 17 лабораторных и все варианты TM1638 на каждой
+конфигурации, а в прогонах без TM1638 не подключает исходник TM1638, так что случайный
+экземпляр этого модуля приводит к ошибке. Наши проверки запускаются из временных
+скриптов, которых нет в репозитории.</td></tr>
+<tr><td>Доказать, что XDC лишь раскомментирует строки Digilent</td>
+<td><code>reference/<wbr>Cmod-A7-Master.xdc</code>, <code>reference/<wbr>source.json</code></td>
+<td>Средняя</td><td>Низкие</td>
+<td>Хранить файл Digilent вместе с его коммитом (<code>c8644a9f</code>) и SHA-256 и
+проверять, что каждая строка либо не изменена, либо равна исходной без первого
+<code>#</code>. Задание требует именно этого; тест закрепляет требование навсегда.</td></tr>
+<tr><td>Скрипт сборки Vivado, проверяющий вариант</td>
+<td><code>scripts/<wbr>tests/<wbr>build_cmod_a7_35_tiny_vga_codex.tcl</code></td>
+<td>Средняя</td><td>Низкие</td>
+<td>После синтеза он завершается с ошибкой, если в сборке без PLL есть MMCM или PLL или
+в сборке без TM1638 есть порты или ячейки TM1638; после трассировки — при отрицательном
+запасе.</td></tr>
+<tr><td>Восемь выводов GPIO для лабораторных</td>
+<td><code>board_specific_top.sv:207</code></td>
+<td>Средняя</td><td>Низкие</td>
+<td>Codex подключает <code>gpio[7:0]</code> к DIP 1–8; наша конфигурация передаёт
+фиктивный однобитный <code>gpio</code>. DIP 1–8 свободны и в нашем назначении
+выводов.</td></tr>
+<tr><td>Файлы TinyVGA, закреплённые за одной ревизией</td>
+<td><code>reference/<wbr>tiny_vga_sources.json</code>, <code>assembly_en.md:37–51</code></td>
+<td>Средняя</td><td>Низкие</td>
+<td>Дать ссылки на три производственных файла на коммите <code>a081ae63</code> с их
+SHA-256 и назвать номера LCSC двух разъёмов для монтажа в отверстия: J1 C2935938 и
+J2 C138387. Codex справедливо предупреждает, что неподтверждённые детали не попадают в
+расчёт стоимости JLCPCB, поэтому покупателю нужно проверить, что оба разъёма в нём
+есть.</td></tr>
+<tr><td>Сброс и работа на RGB-светодиоде</td>
+<td><code>board_specific_top.sv:131–134</code></td>
+<td>Низкая</td><td>Низкие</td>
+<td>Красный во время сброса, зелёный во время работы; у нас светодиод не горит. Брать
+вместе с приглушением из <a href="#f-led">замечания о светодиоде</a>.</td></tr>
+<tr><td>Освободить выводы TM1638 в конфигурациях без него</td>
+<td>три верхних уровня <code>*_no_tm1638_codex</code> и их файлы XDC</td>
+<td>Низкая</td><td>Низкие</td>
+<td>Конфигурации Codex без TM1638 не включают DIP 26–28 ни в порты, ни в XDC; наши всё
+ещё выставляют на DIP 26 и 27 высокий уровень — на случай, если туда подключено что-то
+другое.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="side-by-side">
+<h2>Сравнение по пунктам</h2>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Пункт</th><th>Codex</th><th>У нас</th><th>Перевес</th></tr></thead>
+<tbody>
+<tr><td>Конфигурации</td><td>4: 640×480 с MMCM и 305×480 без него, каждая с TM1638 и
+без</td><td>6: 640×480 с MMCM, 320×480 и 304×480 без него, каждая с TM1638 и
+без</td><td class="edge claude">У нас</td></tr>
+<tr><td>Частота при 640×480</td><td>100 МГц: 12 × 50 ÷ 6, VCO 600 МГц; разрешение
+пикселя ÷4</td><td>50 МГц: 12 × 62,5 ÷ 15, VCO 750 МГц; разрешение пикселя ÷2</td>
+<td class="edge claude">У нас</td></tr>
+<tr><td>Изображение при 640×480</td><td colspan="2">Одинаково: пиксели 25,0 МГц, строки
+31,25 кГц, кадры 59,52 Гц, RGB222, отрицательные синхроимпульсы, чёрный цвет во время
+гашения</td><td class="edge even">Поровну</td></tr>
+<tr><td>Развёртка без PLL</td><td>305 + 8 + 46 + 23 = 382 такта: 31,41 кГц,
+59,84 Гц</td><td>304 + 8 + 46 + 23 = 381 такт: 31,50 кГц, 59,99 Гц; 320 + 8 + 48 + 24 =
+400: 30,0 кГц, 57,1 Гц. Стандарт: 31,47 кГц, 59,94 Гц</td><td class="edge claude">У
+нас</td></tr>
+<tr><td>Выводы для модулей</td><td>DIP 26–34 подряд: TM1638 DIO, CLK, STB; микрофон SCK,
+WS, SD; ЦАП BCK, DIN, LRCK</td><td>ЦАП на 21–23 рядом с VU; TM1638 STB, CLK, DIO на 26–28
+рядом с GND на 25, в порядке выводов разъёма модуля; микрофон SCK, WS, L/R, SD на
+29–32</td><td class="edge even">Поровну</td></tr>
+<tr><td>L/R у INMP441</td><td>Подключён к GND</td><td>Управляется ПЛИС, DIP 31</td>
+<td class="edge codex">У Codex: на один вывод меньше</td></tr>
+<tr><td>3,3 В для модулей</td><td>Стабилизатор, питаемый от VU</td><td>Pmod TPH2 на
+собственных 3,3 В платы или стабилизатор</td><td class="edge claude">У нас</td></tr>
+<tr><td>5 В на макетной плате</td><td>Шина VU вдоль DIP 1–24, питающая ЦАП и
+стабилизатор</td><td>С TPH2 — нет; иначе — один провод от DIP 24 к стабилизатору</td>
+<td class="edge claude">У нас</td></tr>
+<tr><td>Кнопки с TM1638</td><td>BTN0 сбрасывает проект и MMCM; BTN1 дублирует S1</td>
+<td>Любая из двух кнопок — сброс</td><td class="edge even">Поровну</td></tr>
+<tr><td>Кнопки без TM1638</td><td colspan="2">Одинаково: две кнопки — это
+<code>key[1:0]</code>; кнопки сброса нет, так что зависшую лабораторную приходится
+загружать заново</td><td class="edge even">Поровну</td></tr>
+<tr><td>RGB-светодиод</td><td>Показывает сброс и работу, слишком ярко</td><td>Не
+используется</td><td class="edge codex">У Codex</td></tr>
+<tr><td>GPIO</td><td>8, DIP 1–8</td><td>Нет</td><td class="edge codex">У Codex</td></tr>
+<tr><td>USB UART</td><td colspan="2">В обеих ветках подключён к лабораторной</td>
+<td class="edge even">Поровну</td></tr>
+<tr><td>Тесты в репозитории</td><td>Тестбенч Icarus, прогон лабораторных, проверка
+происхождения XDC, скрипт Vivado</td><td>Не закоммичены; проверки запускались из
+временных скриптов</td><td class="edge codex">У Codex</td></tr>
+<tr><td>Инструкции</td><td>Полное руководство на английском и русском, .md и HTML, для
+основной конфигурации; по одному английскому README для трёх остальных</td><td>README.md,
+README_ru.md и HTML для каждой из шести</td><td class="edge claude">У нас</td></tr>
+<tr><td>Чертежи</td><td>Карта сигналов и вид макетной платы с ЦАП, каждый в английском и
+русском SVG</td><td>В каждой конфигурации четыре схемы подключения (два ЦАП × два
+источника 3,3 В) и два вида макетной платы, SVG и PNG</td><td class="edge claude">У
+нас</td></tr>
+<tr><td>Приложение с промптами</td><td>P01–P24, без времени</td><td>Каждый промпт с
+тихоокеанским временем во всех двенадцати README, с переводом в шести русских</td>
+<td class="edge claude">У нас</td></tr>
+<tr><td>Каталог и меню</td><td>Строка с именем конфигурации и новыми значениями; четыре
+имени в списке инструментария; обходной путь в тесте</td><td>Одна строка
+<code>cmod_a7_35</code>; суффиксы меню; инструментарий по шаблону
+<code>cmod_a7*</code></td><td class="edge claude">У нас</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="verification">
+<h2>Сборки и тесты</h2>
+<h3>Собственные тесты Codex</h3>
+<div class="prose">
+<p>Запускались в клоне <code>b9fa13b2</code>, так что дерево Codex осталось нетронутым.</p>
+<ul>
+<li><code>scripts/tests/test_cmod_a7_35_tiny_vga_codex.py</code>: 8 тестов, OK за 104 с.
+Четыре симуляции вывели
+<code>PASS: 640x480, reset, GPIO/UART, full VGA frame, blanking, INMP441, I2S DAC</code>
+для обеих конфигураций с MMCM и такую же строку для 305×480 для обеих конфигураций без
+PLL.</li>
+<li><code>scripts/tests/test_board_menu.py</code>: 22 теста, OK; 117 конфигураций в 54
+группах плат. Наша ветка проходит тот же тест со 119 конфигурациями в 54 группах.</li>
+</ul>
+</div>
+<h3>Vivado 2026.1, после размещения и трассировки</h3>
+<p class="prose">Один скрипт для обеих веток: синтез, <code>opt_design</code>, размещение,
+<code>phys_opt_design</code>, трассировка, xc7a35tcpg236-1. Лабораторная работа —
+<code>labs/3_music/3_0_oscilloscope</code>: она использует сразу изображение, микрофон,
+ЦАП и TM1638. Запас дан в наносекундах; отрицательный запас означает, что временные
+ограничения не выполнены.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Конфигурация</th><th>Ветка</th><th>Частота</th><th>Изображение</th><th>TM1638</th>
+<th class="num">Запас по setup</th><th class="num">Запас по hold</th><th class="num">LUT</th>
+<th class="num">Триггеры</th><th class="num">MMCM</th><th class="num">Ячейки TM1638</th><th>Результат</th></tr></thead>
+<tbody>
+<tr><td><code>cmod_a7_35_tiny_vga_codex</code></td><td>Codex</td><td>100 МГц, MMCM</td><td>640×480</td><td>да</td><td class="num"><span class="pass">+4,745</span></td><td class="num"><span class="pass">+0,131</span></td><td class="num">286</td><td class="num">199</td><td class="num">1</td><td class="num">155</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_tiny_vga_no_tm1638_codex</code></td><td>Codex</td><td>100 МГц, MMCM</td><td>640×480</td><td>нет</td><td class="num"><span class="pass">+4,349</span></td><td class="num"><span class="pass">+0,050</span></td><td class="num">207</td><td class="num">142</td><td class="num">1</td><td class="num">0</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_tiny_vga_no_pll_codex</code></td><td>Codex</td><td>12 МГц</td><td>305×480</td><td>да</td><td class="num"><span class="pass">+75,652</span></td><td class="num"><span class="pass">+0,087</span></td><td class="num">271</td><td class="num">189</td><td class="num">0</td><td class="num">146</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex</code></td><td>Codex</td><td>12 МГц</td><td>305×480</td><td>нет</td><td class="num"><span class="pass">+77,854</span></td><td class="num"><span class="pass">+0,082</span></td><td class="num">198</td><td class="num">135</td><td class="num">0</td><td class="num">0</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_claude_tiny_vga_640</code></td><td>Claude</td><td>50 МГц, MMCM</td><td>640×480</td><td>да</td><td class="num"><span class="pass">+13,986</span></td><td class="num"><span class="pass">+0,099</span></td><td class="num">284</td><td class="num">196</td><td class="num">1</td><td class="num">151</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_tiny_vga_640_no_tm1638_claude</code></td><td>Claude</td><td>50 МГц, MMCM</td><td>640×480</td><td>нет</td><td class="num"><span class="pass">+14,463</span></td><td class="num"><span class="pass">+0,084</span></td><td class="num">204</td><td class="num">140</td><td class="num">1</td><td class="num">0</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_no_pll_tiny_vga_320_claude</code></td><td>Claude</td><td>12 МГц</td><td>320×480</td><td>да</td><td class="num"><span class="pass">+75,519</span></td><td class="num"><span class="pass">+0,131</span></td><td class="num">275</td><td class="num">190</td><td class="num">0</td><td class="num">146</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude</code></td><td>Claude</td><td>12 МГц</td><td>320×480</td><td>нет</td><td class="num"><span class="pass">+77,857</span></td><td class="num"><span class="pass">+0,027</span></td><td class="num">193</td><td class="num">136</td><td class="num">0</td><td class="num">0</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_no_pll_tiny_vga_304_claude</code></td><td>Claude</td><td>12 МГц</td><td>304×480</td><td>да</td><td class="num"><span class="pass">+75,603</span></td><td class="num"><span class="pass">+0,098</span></td><td class="num">286</td><td class="num">190</td><td class="num">0</td><td class="num">150</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude</code></td><td>Claude</td><td>12 МГц</td><td>304×480</td><td>нет</td><td class="num"><span class="pass">+77,581</span></td><td class="num"><span class="pass">+0,046</span></td><td class="num">216</td><td class="num">136</td><td class="num">0</td><td class="num">0</td><td><span class="pass">собрано</span></td></tr>
+</tbody>
+</table>
+</div>
+<h3>Лабораторная потяжелее при 640×480</h3>
+<p class="prose"><code>labs/3_music/3_10_spectrum_analyzer</code> на двух конфигурациях
+640×480 с TM1638, тем же скриптом. Эта лабораторная не использует TM1638, поэтому ни в
+одной из сборок нет ячеек TM1638.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Конфигурация</th><th>Ветка</th><th>Частота</th><th>Изображение</th><th>TM1638</th>
+<th class="num">Запас по setup</th><th class="num">Запас по hold</th><th class="num">LUT</th>
+<th class="num">Триггеры</th><th class="num">MMCM</th><th class="num">Ячейки TM1638</th><th>Результат</th></tr></thead>
+<tbody>
+<tr><td><code>cmod_a7_35_tiny_vga_codex</code></td><td>Codex</td><td>100 МГц, MMCM</td><td>640×480</td><td>да</td><td class="num"><span class="pass">+0,693</span></td><td class="num"><span class="pass">+0,048</span></td><td class="num">3012</td><td class="num">1468</td><td class="num">1</td><td class="num">0</td><td><span class="pass">собрано</span></td></tr>
+<tr><td><code>cmod_a7_35_claude_tiny_vga_640</code></td><td>Claude</td><td>50 МГц, MMCM</td><td>640×480</td><td>да</td><td class="num"><span class="pass">+9,347</span></td><td class="num"><span class="pass">+0,044</span></td><td class="num">3010</td><td class="num">1467</td><td class="num">1</td><td class="num">0</td><td><span class="pass">собрано</span></td></tr>
+</tbody>
+</table>
+</div>
+<h3>Проверки по документации</h3>
+<ul class="prose">
+<li>INMP441 требует SCK 0,5–3,2 МГц и WS 7,8–50 кГц. На 12 МГц обе ветки дают 0,75 МГц и
+11,7 кГц, на 50 и 100 МГц — 3,125 МГц и 48,8 кГц. Всё в допустимых пределах.</li>
+<li>PCM5100A и PCM5102A получают свою опорную частоту из BCK при 64 BCK на кадр: 3 МГц и
+46,9 кГц на 12 МГц, 3,125 МГц и 48,8 кГц в остальных случаях. Годится и то и другое.</li>
+<li>На чертеже DIP от Digilent вывод 1 находится со стороны Pmod, а VU и GND, выводы 24 и
+25, — со стороны USB. Чертёж макетной платы у Codex с этим совпадает.</li>
+</ul>
+</section>
+
+<section id="ours">
+<h2>Пробелы у нас, замеченные при сравнении</h2>
+<ul class="prose">
+<li>Нет тестов в репозитории, нет GPIO, RGB-светодиод не используется, файлы TinyVGA не
+закреплены за ревизией: это <a href="#ideas">идеи выше</a>.</li>
+<li><code>boards/README.csv</code> указывает для <code>cmod_a7_35</code> TM1638 «always»,
+хотя у трёх из наших шести конфигураций его нет. Платы Tang с конфигурациями
+<code>_no_tm1638</code> тоже указывают «always», а icebreaker — «either», так что правило
+для этого столбца неясно: какой вариант вы хотите?</li>
+<li>Общее с Codex: без TM1638 нет кнопки сброса, а при 640×480 частота пикселей
+25,0 МГц вместо 25,175 МГц.</li>
+</ul>
+</section>
+
+<section id="merge">
+<h2>Слияние веток</h2>
+<p class="prose">Обе ветки правят <code>boards/README.csv</code>,
+<code>boards/README.md</code>, <code>boards/README.html</code>,
+<code>scripts/steps/00_setup.source_bash</code> и
+<code>scripts/tests/test_board_menu.py</code>. Ветка, которую сольют второй, получит
+конфликты во всех пяти файлах. Каталоги плат названы по-разному и не пересекаются.</p>
+</section>
+
+<section id="appendix">
+<h2>Приложение: промпты</h2>
+<p class="prose">Промпт, который Юрий Панчул отправил в этой сессии Claude Code в 20:29
+17 ноября 2026 года по тихоокеанскому времени (UTC−8), дословно:</p>
+<pre lang="en">review your compatitor&#x27;s cmod_a7 board implementations, search bor bugs and good ideas to adopt, make a competitive report in a new html file.</pre>
+<p class="prose">В переводе:</p>
+<pre>сделай обзор реализаций плат cmod_a7 у твоего конкурента, поищи ошибки и хорошие идеи, которые стоит перенять, и сделай отчёт о сравнении в новом файле HTML.</pre>
+<p class="prose">Эта русская версия сделана по промпту, отправленному в 20:45 18 ноября
+2026 года, дословно:</p>
+<pre lang="en">generate a Russian version of the competitive report</pre>
+<p class="prose">В переводе:</p>
+<pre>сделай русскую версию отчёта о сравнении</pre>
+</section>
+
+<footer>
+<p>Полоса вверху — 64 цвета RGB222, все, что может показать TinyVGA; акцентный цвет
+страницы и цвета уровней серьёзности взяты из неё.</p>
+</footer>
+
+</div>
+</body>
+</html>

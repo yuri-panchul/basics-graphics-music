@@ -1045,7 +1045,8 @@ commit and push
 ```
 
 **20:29, 17 ноября**; по нему сделан отчёт, который сравнивает эти
-конфигурации с конфигурациями Codex; отчёт лежит вне репозитория:
+конфигурации с конфигурациями Codex,
+[claude_cmod_a7_compare_1.html](../../misc/ai_sessions/20261118_cmod_a7_support/claude/claude_cmod_a7_compare_1.html):
 
 ```text
 review your compatitor's cmod_a7 board implementations, search bor bugs and good ideas to adopt, make a competitive report in a new html file.
@@ -1067,6 +1068,38 @@ yes, should say either
 ```
 
 **20:43, 18 ноября**:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
+**20:45, 18 ноября**; по нему сделана русская версия этого отчёта,
+[claude_cmod_a7_compare_1_ru.html](../../misc/ai_sessions/20261118_cmod_a7_support/claude/claude_cmod_a7_compare_1_ru.html):
+
+```text
+generate a Russian version of the competitive report
+```
+
+```text
+сделай русскую версию отчёта о сравнении
+```
+
+**21:05, 18 ноября**; по нему оба отчёта, ссылки на которые даны выше,
+добавлены в `misc/ai_sessions/20261118_cmod_a7_support/claude`:
+
+```text
+Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/claude
+```
+
+```text
+добавь свои отчёты в basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/claude
+```
+
+**21:58, 18 ноября**:
 
 ```text
 commit and push

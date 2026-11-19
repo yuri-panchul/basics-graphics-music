@@ -248,7 +248,8 @@ commit and push
 ```
 
 **20:29 on 17 November**; it produced a report that compares these
-configurations with those of Codex, kept outside the repository:
+configurations with those of Codex,
+[claude_cmod_a7_compare_1.html](../../misc/ai_sessions/20261118_cmod_a7_support/claude/claude_cmod_a7_compare_1.html):
 
 ```text
 review your compatitor's cmod_a7 board implementations, search bor bugs and good ideas to adopt, make a competitive report in a new html file.
@@ -262,6 +263,26 @@ yes, should say either
 ```
 
 **20:43 on 18 November**:
+
+```text
+commit and push
+```
+
+**20:45 on 18 November**; it produced a Russian version of that report,
+[claude_cmod_a7_compare_1_ru.html](../../misc/ai_sessions/20261118_cmod_a7_support/claude/claude_cmod_a7_compare_1_ru.html):
+
+```text
+generate a Russian version of the competitive report
+```
+
+**21:05 on 18 November**; it added both reports, linked above, to
+`misc/ai_sessions/20261118_cmod_a7_support/claude`:
+
+```text
+Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/claude
+```
+
+**21:58 on 18 November**:
 
 ```text
 commit and push

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing the Hacker Dojo BGM training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@600&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap">
+<style>
+:root {
+  --ground: #f3f5f4;
+  --surface: #ffffff;
+  --ink: #16201b;
+  --muted: #56645e;
+  --rule: #d3dcd8;
+  --accent: #0b7a4b;
+  --link: #0a6b42;
+  --soft: #e2f0e9;
+  --bar: #7f918a;
+  --bar-ours: #0b7a4b;
+  --code-bg: #e7edea;
+  --display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0f1412;
+    --surface: #161d1a;
+    --ink: #e2e9e5;
+    --muted: #9aa8a1;
+    --rule: #2a3530;
+    --accent: #24a86a;
+    --link: #5ccf96;
+    --soft: #15281f;
+    --bar: #5f6e68;
+    --bar-ours: #24a86a;
+    --code-bg: #1d2622;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0f1412;
+  --surface: #161d1a;
+  --ink: #e2e9e5;
+  --muted: #9aa8a1;
+  --rule: #2a3530;
+  --accent: #24a86a;
+  --link: #5ccf96;
+  --soft: #15281f;
+  --bar: #5f6e68;
+  --bar-ours: #24a86a;
+  --code-bg: #1d2622;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  padding: 0 20px;
+  padding-block: 0 64px;
+  background: var(--ground);
+  color: var(--ink);
+  font: 17px/1.6 var(--body);
+}
+.page { max-width: 980px; margin: 0 auto; }
+.prose { max-width: 68ch; }
+header.top { padding-block: 34px 6px; border-top: 6px solid var(--accent); margin: 0 -20px; padding-inline: 20px; }
+header.top > * { max-width: 980px; margin-inline: auto; }
+.credit { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 42px); font-weight: 600; letter-spacing: -0.005em; }
+h2 { font-size: 26px; font-weight: 600; margin: 44px 0 14px; padding-top: 28px; border-top: 1px solid var(--rule); }
+h3 { font-size: 19px; font-weight: 600; margin: 22px 0 8px; }
+.lang { color: var(--muted); font-size: 15px; margin: 10px 0 0; }
+.lede { font-size: 19px; margin: 14px 0 0; }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin-bottom: 6px; }
+a { color: var(--link); text-underline-offset: 2px; }
+a:focus-visible, .row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+code, pre { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--code-bg); padding: 0.05em 0.3em; border-radius: 3px; overflow-wrap: anywhere; }
+pre { background: var(--code-bg); padding: 12px 14px; border-radius: 4px; white-space: pre-wrap; overflow-x: auto; }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; margin: 22px 0 0; font-size: 15.5px; }
+.facts dt { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-size: 12.5px; padding-top: 3px; }
+.facts dd { margin: 0; }
+.answer {
+  margin-top: 26px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 22px 24px;
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) 1fr;
+  gap: 18px 32px;
+  align-items: start;
+}
+.answer .big { font-family: var(--display); font-size: 64px; font-weight: 600; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.answer .unit { color: var(--muted); font-size: 15px; margin-top: 8px; }
+.answer .also { margin: 16px 0 0; font-size: 15px; }
+.answer p { margin: 0 0 8px; }
+.scroll { overflow-x: auto; margin: 8px 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 2px solid var(--rule); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.strong { font-weight: 600; }
+tr.pick td { background: var(--soft); }
+.tiers td:first-child { font-weight: 600; }
+.wide { min-width: 720px; }
+.narrow { max-width: 680px; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 10px 6px; margin: 10px 0 10px; overflow-x: auto; }
+.chart { display: block; width: 100%; min-width: 640px; height: auto; }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .tick { fill: var(--muted); font: 12.5px var(--body); font-variant-numeric: tabular-nums; }
+.chart .name { fill: var(--ink); font: 600 14.5px var(--body); }
+.chart .note { fill: var(--muted); font: 12.5px var(--body); }
+.chart .value { fill: var(--ink); font: 13.5px var(--body); font-variant-numeric: tabular-nums; }
+.chart .bar { fill: var(--bar); }
+.chart .ours .bar { fill: var(--bar-ours); }
+.chart .ours .value { font-weight: 600; }
+.chart .hit { fill: transparent; }
+.chart .row:hover .hit, .chart .row:focus .hit { fill: var(--soft); }
+.caption { color: var(--muted); font-size: 14.5px; max-width: 78ch; }
+.src { font-size: 0.8em; text-decoration: none; white-space: nowrap; }
+.sources li { font-size: 15px; }
+.sources .dag { color: var(--muted); }
+footer { margin-top: 44px; color: var(--muted); font-size: 14px; }
+@media (max-width: 640px) {
+  body { font-size: 16px; padding: 0 16px; padding-block: 0 48px; }
+  header.top { margin: 0 -16px; padding-inline: 16px; }
+  .answer { grid-template-columns: 1fr; padding: 18px; }
+  .answer .big { font-size: 52px; }
+  .facts { grid-template-columns: 1fr; }
+  .facts dt { padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+<p class="credit"><em>Generated by Claude Opus 5.5 (<code>claude-opus-5-5</code>) in Claude Code
+2.1.325, effort level xhigh, using prompts from Yuri Panchul. See the verbatim prompts in the
+<a href="#appendix">Appendix</a>. The prices come from the public pages listed under
+<a href="#sources">Sources</a>, read on 18 November 2026.</em></p>
+<h1>What to charge for the BGM training at Hacker Dojo</h1>
+<p class="lang"><span lang="ru">Русская версия</span>:
+<a href="claude_hacker_dojo_training_price_ru.html" hreflang="ru">claude_hacker_dojo_training_price_ru.html</a></p>
+<p class="lede prose">A per-person price for a 3-hour session at Hacker Dojo, Santa Clara, set
+against what comparable sessions charge, what the ticketing services keep, and what the
+Hacker Dojo audience has been used to.</p>
+<dl class="facts">
+  <dt>Session</dt><dd>“How to use Claude and Codex to implement an FPGA board support package for BGM (Basic-Graphics-Music) infrastructure”</dd>
+  <dt>Format</dt><dd>3 hours: about 100 slides and live demos on Xilinx, Altera, Lattice and
+  Gowin boards. Attendees watch; they need no board or laptop. A
+  <a href="#hands-on">hands-on variant</a> follows below.</dd>
+  <dt>Venue</dt><dd>Hacker Dojo, 3200 Patrick Henry Dr, Suite 250, Santa Clara, CA 95054, a
+  501(c)(3) nonprofit <a class="src" href="#src-1">[1]</a></dd>
+</dl>
+</header>
+
+<div class="page">
+
+<section class="answer" aria-labelledby="answer-h">
+  <div>
+    <div class="big">$79</div>
+    <div class="unit">per person, standard ticket; $26/h</div>
+    <p class="also">Hands-on class with a laptop and a board for each person:
+    <a href="#hands-on">$179</a></p>
+  </div>
+  <div>
+    <h3 id="answer-h" style="margin-top:0">Recommended price list</h3>
+    <div class="scroll">
+    <table class="tiers">
+    <thead><tr><th>Ticket</th><th class="num">Price</th><th>For</th></tr></thead>
+    <tbody>
+    <tr><td>Early bird</td><td class="num">$59</td><td>until three weeks before the session</td></tr>
+    <tr class="pick"><td>Standard</td><td class="num">$79</td><td>everyone else</td></tr>
+    <tr><td>Student</td><td class="num">$29</td><td>with a student ID</td></tr>
+    <tr><td>Hacker Dojo member</td><td class="num">$39</td><td>or free, if the Dojo's rules require it</td></tr>
+    <tr><td>Online seat</td><td class="num">$29</td><td>only if the session is streamed</td></tr>
+    <tr><td>Private session</td><td class="num">$2,000</td><td>a company's team of up to 16, plus travel</td></tr>
+    </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+<h2>Why $79</h2>
+<div class="prose">
+<p><b>It sits below the hands-on AI workshops.</b> The nearest paid comparison, Frontier
+Tower's “Claude Code for Beginners” in San Francisco, charges $149 to $199 for 4.5
+hours, $33/h to $44/h <a class="src" href="#src-5">[5]</a>. But it seats 12, and each
+seat comes with a laptop and a 7-day API key. Your session is a lecture with live demos:
+nobody gets a board or a machine, so it should cost less per hour. $79 is
+$26/h.</p>
+<p><b>It sits well above Hacker Dojo's usual events, and it should.</b> The Dojo's
+membership already includes free talks, hackathons and workshops <a class="src" href="#src-1">[1]</a>, its own AI
+workshop was free <a class="src" href="#src-2">[2]</a>, and your Verilog Meetups there listed no price <a class="src" href="#src-3">[3]</a>. A paid
+ticket for a first-of-its-kind session is reasonable. The early-bird, student and member
+tiers keep the people who came to the free meetups.</p>
+<p><b>Vendor FPGA training no longer sets a high mark, and it doesn't teach this.</b>
+Altera's public classes cost $695 per student per day in 2012 <a class="src" href="#src-8">[8]</a> and are free
+now <a class="src" href="#src-9">[9]</a>. AMD lists its 21-hour Vivado course at $299 <a class="src" href="#src-6">[6]</a>. None of them covers
+four vendors in one infrastructure, or using AI agents to write and check a board support
+package. The market that prices that content is AI workshops, not vendor courses.</p>
+<p><b>The content is hard to get elsewhere.</b> Four FPGA families in one session, a
+working open-source repository the attendees can keep using, and real case studies: board
+ports done by Claude and by Codex, compared side by side.</p>
+<p><b>Paying attendees show up.</b> A ticket of $79 filters casual
+sign-ups. With four boards on one table, a known head count lets you plan the room, the
+camera and the seats.</p>
+<p><b>Above about $100 the session would compete with the hands-on workshops</b>, which
+include hardware, on equal terms. Start at $79; if the first session
+fills a week ahead, charge $99 for the next one.</p>
+</div>
+</section>
+
+<section id="comparables">
+<h2>What comparable sessions charge</h2>
+<div class="chart-wrap">
+<svg class="chart" viewBox="0 0 830 502" role="img" aria-label="Price per hour of instruction: this session against comparable sessions">
+<line class="grid" x1="340.0" y1="8" x2="340.0" y2="468"/>
+<text class="tick" x="340.0" y="484" text-anchor="middle">$0</text>
+<line class="grid" x1="428.9" y1="8" x2="428.9" y2="468"/>
+<text class="tick" x="428.9" y="484" text-anchor="middle">$20</text>
+<line class="grid" x1="517.8" y1="8" x2="517.8" y2="468"/>
+<text class="tick" x="517.8" y="484" text-anchor="middle">$40</text>
+<line class="grid" x1="606.7" y1="8" x2="606.7" y2="468"/>
+<text class="tick" x="606.7" y="484" text-anchor="middle">$60</text>
+<line class="grid" x1="695.6" y1="8" x2="695.6" y2="468"/>
+<text class="tick" x="695.6" y="484" text-anchor="middle">$80</text>
+<text class="tick" x="340" y="500">US dollars per hour of instruction</text>
+<g class="row" tabindex="0"><title>Altera public class, 2012 price sheet, per day: $695 / 8.5 h = $82/h</title>
+<rect class="hit" x="0" y="8" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="28.0">Altera public class</text>
+<text class="note" x="8" y="45.0">2012 price sheet, per day</text>
+<path class="bar" d="M340 24.0 h359.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-359.4 z"/>
+<text class="value" x="711.4" y="36.0">$82/h</text>
+</g>
+<g class="row ours" tabindex="0"><title>This session: hands-on, a laptop and a board each, 3 hours: $179 / 3 h = $60/h</title>
+<rect class="hit" x="0" y="54" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="74.0">This session: hands-on</text>
+<text class="note" x="8" y="91.0">a laptop and a board each, 3 hours</text>
+<path class="bar" d="M340 70.0 h261.2 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-261.2 z"/>
+<text class="value" x="613.2" y="82.0">$60/h</text>
+</g>
+<g class="row" tabindex="0"><title>Claude Code for Beginners, Frontier Tower SF, builder seat: $199 / 4.5 h = $44/h</title>
+<rect class="hit" x="0" y="100" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="120.0">Claude Code for Beginners</text>
+<text class="note" x="8" y="137.0">Frontier Tower SF, builder seat</text>
+<path class="bar" d="M340 116.0 h192.5 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-192.5 z"/>
+<text class="value" x="544.5" y="128.0">$44/h</text>
+</g>
+<g class="row" tabindex="0"><title>Claude Code for Beginners, Frontier Tower SF, early bird: $149 / 4.5 h = $33/h</title>
+<rect class="hit" x="0" y="146" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="166.0">Claude Code for Beginners</text>
+<text class="note" x="8" y="183.0">Frontier Tower SF, early bird</text>
+<path class="bar" d="M340 162.0 h143.2 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-143.2 z"/>
+<text class="value" x="495.2" y="174.0">$33/h</text>
+</g>
+<g class="row ours" tabindex="0"><title>This session: standard, Hacker Dojo, 3 hours: $79 / 3 h = $26/h</title>
+<rect class="hit" x="0" y="192" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="212.0">This session: standard</text>
+<text class="note" x="8" y="229.0">Hacker Dojo, 3 hours</text>
+<path class="bar" d="M340 208.0 h113.0 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-113.0 z"/>
+<text class="value" x="465.0" y="220.0">$26/h</text>
+</g>
+<g class="row ours" tabindex="0"><title>This session: early bird, Hacker Dojo, 3 hours: $59 / 3 h = $20/h</title>
+<rect class="hit" x="0" y="238" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="258.0">This session: early bird</text>
+<text class="note" x="8" y="275.0">Hacker Dojo, 3 hours</text>
+<path class="bar" d="M340 254.0 h83.4 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-83.4 z"/>
+<text class="value" x="435.4" y="266.0">$20/h</text>
+</g>
+<g class="row" tabindex="0"><title>AMD Vivado Design Suite 3, 21-hour course: $299 / 21 h = $14/h</title>
+<rect class="hit" x="0" y="284" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="304.0">AMD Vivado Design Suite 3</text>
+<text class="note" x="8" y="321.0">21-hour course</text>
+<path class="bar" d="M340 300.0 h59.3 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-59.3 z"/>
+<text class="value" x="411.3" y="312.0">$14/h</text>
+</g>
+<g class="row ours" tabindex="0"><title>This session: student, Hacker Dojo, 3 hours: $29 / 3 h = $10/h</title>
+<rect class="hit" x="0" y="330" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="350.0">This session: student</text>
+<text class="note" x="8" y="367.0">Hacker Dojo, 3 hours</text>
+<path class="bar" d="M340 346.0 h39.0 a4 4 0 0 1 4 4 v6 a4 4 0 0 1 -4 4 h-39.0 z"/>
+<text class="value" x="391.0" y="358.0">$10/h</text>
+</g>
+<g class="row" tabindex="0"><title>Wiki3: Own Your Own AI, Hacker Dojo workshop: $0 / 2.5 h = free</title>
+<rect class="hit" x="0" y="376" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="396.0">Wiki3: Own Your Own AI</text>
+<text class="note" x="8" y="413.0">Hacker Dojo workshop</text>
+<rect class="bar" x="340" y="392.0" width="2" height="14"/>
+<text class="value" x="350.0" y="404.0">free</text>
+</g>
+<g class="row" tabindex="0"><title>Verilog Meetup, Hacker Dojo, your series: $0 / 3 h = no price listed</title>
+<rect class="hit" x="0" y="422" width="830" height="46" rx="4"/>
+<text class="name" x="8" y="442.0">Verilog Meetup</text>
+<text class="note" x="8" y="459.0">Hacker Dojo, your series</text>
+<rect class="bar" x="340" y="438.0" width="2" height="14"/>
+<text class="value" x="350.0" y="450.0">no price listed</text>
+</g>
+</svg>
+</div>
+<p class="caption">Price per hour of instruction. Green bars are this session's tickets;
+grey bars are other sessions. Hover over or focus a row for its price and length.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Session</th><th>Where</th><th class="num">Length</th><th class="num">Price</th>
+<th class="num">Per hour</th><th>Included</th></tr></thead>
+<tbody>
+<tr><td>Altera public class <a class="src" href="#src-8">[8]</a></td><td>Altera sites, North America</td><td class="num">8:30–5:00</td>
+<td class="num">$695</td><td class="num">$82/h</td><td>manuals; prices from 2012</td></tr>
+<tr class="pick"><td>This session, hands-on</td><td>Hacker Dojo, Santa Clara</td><td class="num">3 h</td>
+<td class="num">$179</td><td class="num">$60/h</td><td>a laptop and an FPGA board each, 10 or 15 seats</td></tr>
+<tr><td>Claude Code for Beginners <a class="src" href="#src-5">[5]</a></td><td>Frontier Tower, San Francisco</td><td class="num">4.5 h</td>
+<td class="num">$149–$299</td><td class="num">$33/h–$44/h</td>
+<td>laptop, 7-day API key, 12 seats; $299 adds a week of coworking</td></tr>
+<tr class="pick"><td>This session, standard</td><td>Hacker Dojo, Santa Clara</td><td class="num">3 h</td>
+<td class="num">$79</td><td class="num">$26/h</td><td>slides, repository, demos</td></tr>
+<tr><td>AMD Vivado Design Suite 3 <a class="src" href="#src-6">[6]</a></td><td>AMD training catalog</td><td class="num">21 h</td>
+<td class="num">$299</td><td class="num">$14/h</td><td>12 labs; 3 training credits</td></tr>
+<tr><td>Wiki3: Own Your Own AI <a class="src" href="#src-2">[2]</a></td><td>Hacker Dojo, Santa Clara</td><td class="num">2.5 h</td>
+<td class="num">free</td><td class="num">–</td><td>limited in-person seats</td></tr>
+<tr><td>Verilog Meetup <a class="src" href="#src-3">[3]</a> <a class="src" href="#src-4">[4]</a></td><td>Hacker Dojo, Mountain View</td><td class="num">3 h</td>
+<td class="num">none listed</td><td class="num">–</td><td>4 and 12 attendees on two Luma pages</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="fees">
+<h2>What you keep per ticket</h2>
+<p class="prose">Hacker Dojo lists its events on Luma. Luma's free plan takes 5 % on paid
+tickets, and Stripe takes 2.9 % plus 30 cents <a class="src" href="#src-10">[10]</a>. Eventbrite, with the fees absorbed
+by you rather than added for the buyer, takes 3.7 % plus $1.79 a ticket, plus
+2.9 % for payment processing <a class="src" href="#src-11">[11]</a>. At these prices the two cost about the same; use Luma,
+where the Dojo's audience already is.</p>
+<div class="scroll">
+<table class="narrow">
+<thead><tr><th class="num">Ticket</th><th class="num">Luma fees</th><th class="num">You keep</th>
+<th class="num">Eventbrite fees</th><th class="num">You keep</th></tr></thead>
+<tbody>
+<tr><td class="num">$29</td><td class="num">$2.59</td><td class="num strong">$26.41</td><td class="num">$3.70</td><td class="num">$25.30</td></tr>
+<tr><td class="num">$39</td><td class="num">$3.38</td><td class="num strong">$35.62</td><td class="num">$4.36</td><td class="num">$34.64</td></tr>
+<tr><td class="num">$59</td><td class="num">$4.96</td><td class="num strong">$54.04</td><td class="num">$5.68</td><td class="num">$53.32</td></tr>
+<tr class="pick"><td class="num">$79</td><td class="num">$6.54</td><td class="num strong">$72.46</td><td class="num">$7.00</td><td class="num">$72.00</td></tr>
+<tr><td class="num">$99</td><td class="num">$8.12</td><td class="num strong">$90.88</td><td class="num">$8.32</td><td class="num">$90.68</td></tr>
+</tbody>
+</table>
+</div>
+<p class="prose caption">Luma Plus ($59 a month, billed yearly) drops the 5 % fee; it
+pays for itself only above roughly $1,180 of ticket sales a month.</p>
+</section>
+
+<section id="scenarios">
+<h2>Revenue at realistic attendance</h2>
+<p class="prose">Your free Verilog Meetups drew 4 and 12 people on the two Luma pages that
+show a count <a class="src" href="#src-3">[3]</a>. A paid session with a clearer promise and wider promotion can do better,
+so the table runs from 10 to 30. Tickets are assumed 30 % early bird, 50 % standard and 20 %
+student, sold on Luma.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th class="num">Attendees</th><th class="num">Early + standard + student</th>
+<th class="num">Ticket sales</th><th class="num">Fees</th><th class="num">You keep</th>
+<th class="num">Per hour of work, 45 h</th>
+<th class="num">Per hour of work, 134 h</th></tr></thead>
+<tbody>
+<tr><td class="num">10</td><td class="num">3 + 5 + 2</td><td class="num">$630</td><td class="num">$53</td><td class="num strong">$577</td><td class="num">$13/h</td><td class="num">$4/h</td></tr>
+<tr><td class="num">20</td><td class="num">6 + 10 + 4</td><td class="num">$1,260</td><td class="num">$106</td><td class="num strong">$1,154</td><td class="num">$26/h</td><td class="num">$9/h</td></tr>
+<tr><td class="num">30</td><td class="num">9 + 15 + 6</td><td class="num">$1,890</td><td class="num">$158</td><td class="num strong">$1,732</td><td class="num">$38/h</td><td class="num">$13/h</td></tr>
+</tbody>
+</table>
+</div>
+<div class="prose">
+<p>Hours of work are the 5 hours of the day itself (3 on stage, about 2 to set up,
+pack and travel) plus preparation. A 2010 industry study puts the average at 43 hours of
+development per hour of instructor-led training <a class="src" href="#src-12">[12]</a>, which for 3 hours is
+129 hours. Much of your material already exists in the repository and in
+the session reports, so 40 hours is the second case.</p>
+<p>Either way, one public session doesn't pay for its preparation; at 20 attendees you keep
+$1,154. The deck pays back when you repeat it: at Hacker Dojo again, at universities,
+online, and above all as private sessions.</p>
+</div>
+</section>
+
+<section id="hands-on">
+<h2>Hands-on: a laptop and a board for each person</h2>
+<div class="prose">
+<p>In this variant you bring a laptop for each person, with all four toolchains
+installed, and one board per person from one of the four families. Attendees pick the
+family when they buy the ticket; the demos still show all four. The class is 10 or 15
+people.</p>
+<p><b>Price: $149 early bird, $179 standard,
+$99 student.</b> The standard seat sits between Frontier Tower's
+$149 and $199 seats <a class="src" href="#src-5">[5]</a>, but for 3 hours instead of 4.5:
+$60/h, between Frontier's $33/h to
+$44/h and Altera's 2012 classroom rate of $82/h
+<a class="src" href="#src-8">[8]</a>. In return each person gets a real FPGA board and a laptop where nothing needs
+installing, in a class of 10 or 15 rather than a lecture hall.</p>
+</div>
+<h3>Equipment</h3>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Item</th><th class="num">Price each</th><th class="num">10 seats</th>
+<th class="num">15 seats</th></tr></thead>
+<tbody>
+<tr><td>Refurbished laptop, 16 GB RAM, 512 GB SSD <a class="src" href="#src-13">[13]</a></td><td class="num">$300</td><td class="num">10 pcs, $3,000</td><td class="num">15 pcs, $4,500</td></tr>
+<tr><td>Sipeed Tang Nano 9K (Gowin) <a class="src" href="#src-14">[14]</a></td><td class="num">$36</td><td class="num">3 pcs, $108</td><td class="num">4 pcs, $144</td></tr>
+<tr><td>Terasic DE10-Lite (Altera) <a class="src" href="#src-15">[15]</a></td><td class="num">$85</td><td class="num">3 pcs, $255</td><td class="num">4 pcs, $340</td></tr>
+<tr><td>Digilent Basys 3 (Xilinx) <a class="src" href="#src-16">[16]</a></td><td class="num">$178</td><td class="num">2 pcs, $356</td><td class="num">3 pcs, $534</td></tr>
+<tr><td>1BitSquared iCEBreaker (Lattice) <a class="src" href="#src-17">[17]</a></td><td class="num">$80</td><td class="num">2 pcs, $160</td><td class="num">4 pcs, $320</td></tr>
+<tr><td>Cables, TM1638 module, microphone (estimate)</td><td class="num">$20</td><td class="num">10 pcs, $200</td><td class="num">15 pcs, $300</td></tr>
+<tr class="pick"><td class="strong">Total</td><td></td><td class="num strong">$4,079</td><td class="num strong">$6,138</td></tr>
+</tbody>
+</table>
+</div>
+<p class="caption">Planning prices. The laptop is set above the $239.99
+refurbished deal of March 2026 <a class="src" href="#src-13">[13]</a>, because deals end. The Tang Nano 9K is set at a US
+retail price with shipping, not Sipeed's $14.99 from China <a class="src" href="#src-14">[14]</a>. Displays are
+not included: the graphics labs need one per seat (VGA on the DE10-Lite and Basys 3, HDMI on
+the Tang Nano 9K, a DVI Pmod on the iCEBreaker), or the labs keep to LEDs, the 7-segment
+display and sound.</p>
+<h3>What a hands-on class leaves you</h3>
+<p class="prose">Every seat sold; tickets 30 % early bird, 50 % standard and 20 % student,
+on Luma. The equipment cost is spread over the classes it serves.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Equipment</th><th class="num">10 seats: equipment per class</th>
+<th class="num">10 seats: you keep</th><th class="num">15 seats: equipment per class</th>
+<th class="num">15 seats: you keep</th></tr></thead>
+<tbody>
+<tr><td>Already yours</td><td class="num">$0</td><td class="num strong">$1,415</td><td class="num">$0</td><td class="num strong">$2,137</td></tr>
+<tr><td>Bought, used for 20 classes</td><td class="num">$204</td><td class="num strong">$1,211</td><td class="num">$307</td><td class="num strong">$1,830</td></tr>
+<tr class="pick"><td>Bought, used for 10 classes</td><td class="num">$408</td><td class="num strong">$1,007</td><td class="num">$614</td><td class="num strong">$1,523</td></tr>
+<tr><td>Bought, used for 5 classes</td><td class="num">$816</td><td class="num strong">$600</td><td class="num">$1,228</td><td class="num strong">$909</td></tr>
+<tr><td>Bought for this class only</td><td class="num">$4,079</td><td class="num strong">−$2,664</td><td class="num">$6,138</td><td class="num strong">−$4,001</td></tr>
+</tbody>
+</table>
+</div>
+<div class="prose">
+<p>Bought for one class, the equipment costs more than the tickets bring. Spread over 10
+classes, a 10-seat class leaves $1,007, against $1,154 for a 20-person
+lecture, and a 15-seat class leaves $1,523. For 15 seats that is
+$25/h of work, counting 55 hours of preparation (the
+lecture's 40 plus 15 to write the labs and set up the laptops) and 6
+hours on the day.</p>
+<p><b>Choose 15 seats if you can find a helper.</b> The equipment costs more
+($6,138 against $4,079), but the tickets bring more too, and the fixed hours stay
+the same. With four toolchains in one room, 15 people need a helper; you can run 10
+alone.</p>
+<p><b>What changes in the session.</b> 100 slides and labs don't fit in 3 hours: keep about
+40 slides for the first hour and give two hours to the labs, or make the session 4 hours.
+Attendees sign in to their own Claude and ChatGPT accounts on your laptops and sign out at
+the end, or you hand out temporary API keys, as Frontier Tower does; measure their cost in
+a dry run. Bring a spare laptop and a spare board of each family.</p>
+</div>
+</section>
+
+<section id="private">
+<h2>The private-session price</h2>
+<div class="prose">
+<p>AMD's training FAQ says private classes are usually priced at the cost of 10 students
+<a class="src" href="#src-7">[7]</a>; at $79 that is $790. Altera's 2012
+price for training at the customer's site was $4,500 a day for up to 16 students
+<a class="src" href="#src-8">[8]</a>, about $2,250 for half a day. $2,000 for a 3-hour session for a team of
+up to 16, with the boards brought to the company, sits in that range and covers the
+preparation within a few sessions.</p>
+</div>
+</section>
+
+<section id="before">
+<h2>Before you announce it</h2>
+<ul class="prose">
+<li>Ask Hacker Dojo whether a member may charge for an event, whether the Dojo takes a
+room fee or a share, whether members must be admitted free, and how many people the room at
+3200 Patrick Henry Dr seats. Its site says only that members can request event space
+<a class="src" href="#src-1">[1]</a>.</li>
+<li>Cap the seats at what can see the boards: about 30, with a camera on the boards and
+the image on the projector.</li>
+<li>Record each Claude and Codex demo in advance, in case the network or an AI service is
+slow on the day.</li>
+<li>Offer a full refund until 48 hours before, and keep a waiting list.</li>
+<li>Promise the take-aways in the announcement: the slides, the BGM repository, and the
+reports in <code>misc/ai_sessions</code>.</li>
+</ul>
+</section>
+
+<section id="sources">
+<h2>Sources</h2>
+<p class="prose caption">Read on 18 November 2026. Entries marked † were read through a
+search engine's extract, because the page refused automated reading or was not fetched;
+check them before quoting them.</p>
+<ol class="sources">
+<li id="src-1"><a href="https://hackerdojo.org">Hacker Dojo</a>: the Santa Clara address,
+501(c)(3) status, membership at $150 or $180 a month (the page shows both),
+“Free Events: Talks, hackathons, and workshops” for members, event space on request.</li>
+<li id="src-2"><a href="https://luma.com/jbh63nxa">Wiki3: Own Your Own AI Workshop</a>, Luma:
+free, 2.5 hours, Hacker Dojo Santa Clara.</li>
+<li id="src-3">Verilog Meetup on Luma: <a href="https://luma.com/dlvyghdj">4 attendees</a>,
+<a href="https://luma.com/gxmu601y">12 attendees</a>; no price listed.</li>
+<li id="src-4">Verilog Meetup on Meetup:
+<a href="https://www.meetup.com/hackerdojo/events/303889717">27 October 2024</a> and
+<a href="https://www.meetup.com/hackerdojo/events/302519201">18 August 2024</a>, 11:00 to 14:00.</li>
+<li id="src-5"><a href="https://luma.com/claude-code-for-beginners-1b81">Claude Code for
+Beginners</a>, Frontier Tower SF, Luma: 5:00 to 9:30 PM, $149 / $199 /
+$299, 12 seats, laptop and 7-day API key.</li>
+<li id="src-6"><a href="https://learningcatalog-amd.netexam.com/Certification/61333/designing-fpgas-using-the-vivado-design-suite-3">Designing
+FPGAs Using the Vivado Design Suite 3</a>, AMD Customer Training Center: $299 or 3
+training credits, 21 hours. <span class="dag">†</span></li>
+<li id="src-7"><a href="https://www.amd.com/en/training/customer/adaptive-computing/faq.html">AMD
+training FAQ</a>: private classes usually cost as much as 10 students. <span class="dag">†</span></li>
+<li id="src-8"><a href="https://datasheet.chipsmall.com/ZPLT-SEAT-1/284315.pdf">Altera
+Training Options</a>, printed 15 October 2012: $695 per student per day, 8:30 am to
+5:00 pm; $4,500 per day with up to 16 students at the customer's site.</li>
+<li id="src-9"><a href="https://www.intel.com/content/www/us/en/support/programmable/support-resources/fpga-training/overview.html">Altera
+FPGA technical training</a>: instructor-led classes are free. <span class="dag">†</span></li>
+<li id="src-10"><a href="https://luma.com/pricing">Luma pricing</a> and
+<a href="https://help.luma.com/p/creating-a-paid-event">Creating a paid event</a>: 5 %
+platform fee on the free plan, 0 % on Plus at $59 a month billed yearly; Stripe 2.9 %
++ 30 cents. <span class="dag">†</span></li>
+<li id="src-11"><a href="https://checkoutpage.com/blog/eventbrite-fees">Eventbrite fees
+2026</a>, Checkout Page, a competitor's summary: 3.7 % + $1.79 per ticket, 2.9 %
+processing. <span class="dag">†</span></li>
+<li id="src-12"><a href="https://www.slideshare.net/slideshow/how-long-does-it-take-to-create-learning/5198860">How
+long does it take to create learning?</a>, Chapman Alliance, September 2010: 43 hours of
+development per hour of instructor-led training. <span class="dag">†</span></li>
+<li id="src-13"><a href="https://www.pcworld.com/article/3087427/this-lenovo-thinkpad-with-16gb-of-ram-is-a-total-workhorse-at-240.html">This
+Lenovo ThinkPad with 16GB of RAM is a total workhorse at $240</a>, PCWorld, 17 March 2026:
+ThinkPad X13 Gen 1, Core i5-10310U, 16 GB, 512 GB SSD, certified refurbished,
+$239.99.</li>
+<li id="src-14"><a href="https://www.cnx-software.com/2022/01/17/tang-nano-9k-fpga-board-can-emulate-picorv32-risc-v-soft-core-with-all-peripherals/">Tang
+Nano 9K FPGA board</a>, CNX Software, January 2022: $14.99 and up from Sipeed on
+AliExpress.</li>
+<li id="src-15"><a href="https://intel.com/content/www/us/en/developer/articles/technical/fpga-academic-boards.html">FPGA
+academic boards</a>, Intel: DE10-Lite $55 academic, $85 commercial, from
+Terasic. <span class="dag">†</span></li>
+<li id="src-16"><a href="https://boards.fpgadeveloper.com/boards/Basys-3">Basys 3</a>, FPGA
+Developer board catalog: 178 USD.</li>
+<li id="src-17"><a href="https://1bitsquared.com/collections/fpga">1BitSquared FPGA store</a>:
+iCEBreaker FPGA V1.1a, $79.95. <span class="dag">†</span></li>
+</ol>
+</section>
+
+<section id="appendix">
+<h2>Appendix: the prompts</h2>
+<p class="prose">The prompts Yuri Panchul sent in this Claude Code session on 18 November
+2026, Pacific time (UTC−8), verbatim. At 21:26:</p>
+<pre>Suppose I make a 3-hour training session at Hacker Dojo in Santa Clara, California, with a 100-slide presentation and demo with Xilinx, Altera, Lattice and Gowin boards. The title is &quot;How to use Claude and Codex to implement an FPGA board support package for BGM (Basic-Graphics-Music) infrastructure&quot;. How much money should I charge for such training per person? Create an HTML report with a justification, put two files, in English and Russian. Add this prompt as an appending. State at the beginning a proper attribution.</pre>
+<p class="prose">At 21:48:</p>
+<pre>Add a scenario if I bring equipment (10 laptops) and boards (gowin, altera, xilinx, lattice) for everyone.</pre>
+<p class="prose">At 21:50, two messages sent while the answer to the previous one was in
+progress:</p>
+<pre>No, not each family. One board per person from one of families. Add these reports to ai_sessions in repo, to the same directory as competitive report.</pre>
+<pre>You can also create a class for 15 people</pre>
+</section>
+
+<footer>
+<p>Prices are in US dollars. This is a pricing analysis for planning, not tax or legal
+advice.</p>
+</footer>
+
+</div>
+</body>
+</html>
