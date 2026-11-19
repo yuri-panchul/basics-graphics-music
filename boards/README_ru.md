@@ -51,7 +51,7 @@
 | Xilinx | Digilent | arty_a7_100 | Artix-7 | Vivado, любая версия † | нет | нет |
 | Xilinx | Digilent | arty_a7_35 | Artix-7 | Vivado, любая версия † | нет | нет |
 | Xilinx | Digilent | basys3 | Artix-7 | Vivado, любая версия † | нет | VGA |
-| Xilinx | Digilent | cmod_a7_35 | Artix-7 | Vivado, любая версия † | всегда | VGA |
+| Xilinx | Digilent | cmod_a7_35 | Artix-7 | Vivado, любая версия † | на выбор | VGA |
 | Xilinx | Digilent | cmod_s7 | Spartan-7 | Vivado, любая версия † | нет | нет |
 | Xilinx | Digilent | eclypse_z7 | Zynq-7000 | Vivado, любая версия † | всегда | нет |
 | Xilinx | Digilent | nexys4 | Artix-7 | Vivado, любая версия † | нет | VGA |

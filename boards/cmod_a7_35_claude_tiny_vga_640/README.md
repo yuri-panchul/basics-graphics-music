@@ -927,6 +927,26 @@ commit and push
 commit and push
 ```
 
+**20:29 on 17 November**; it produced a report that compares these
+configurations with those of Codex, kept outside the repository:
+
+```text
+review your compatitor's cmod_a7 board implementations, search bor bugs and good ideas to adopt, make a competitive report in a new html file.
+```
+
+**20:35 on 18 November**, the answer to whether the TM1638 column of the
+catalog row `cmod_a7_35` should say "always" or "either"; it now says "either":
+
+```text
+yes, should say either
+```
+
+**20:43 on 18 November**:
+
+```text
+commit and push
+```
+
 Yuri Panchul also ran the shell command
 `git -C ~/claude/basics-graphics-music push origin claude_cmod_a7` twice, at
 18:45 and 18:46; it is a command, not a prompt, and is left out above.

@@ -341,3 +341,23 @@ commit and push
 ```text
 commit and push
 ```
+
+**20:29 on 17 November**; it produced a report that compares these
+configurations with those of Codex, kept outside the repository:
+
+```text
+review your compatitor's cmod_a7 board implementations, search bor bugs and good ideas to adopt, make a competitive report in a new html file.
+```
+
+**20:35 on 18 November**, the answer to whether the TM1638 column of the
+catalog row `cmod_a7_35` should say "always" or "either"; it now says "either":
+
+```text
+yes, should say either
+```
+
+**20:43 on 18 November**:
+
+```text
+commit and push
+```

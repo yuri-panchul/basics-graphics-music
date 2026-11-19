@@ -52,7 +52,7 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 | Xilinx | Digilent | arty_a7_100 | Artix-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | arty_a7_35 | Artix-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | basys3 | Artix-7 | Vivado, any version † | never | VGA |
-| Xilinx | Digilent | cmod_a7_35 | Artix-7 | Vivado, any version † | always | VGA |
+| Xilinx | Digilent | cmod_a7_35 | Artix-7 | Vivado, any version † | either | VGA |
 | Xilinx | Digilent | cmod_s7 | Spartan-7 | Vivado, any version † | never | none |
 | Xilinx | Digilent | eclypse_z7 | Zynq-7000 | Vivado, any version † | always | none |
 | Xilinx | Digilent | nexys4 | Artix-7 | Vivado, any version † | never | VGA |
