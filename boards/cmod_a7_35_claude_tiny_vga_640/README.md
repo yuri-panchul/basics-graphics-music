@@ -13,9 +13,14 @@ socket and 44 digital I/O pins on its DIP pins. This configuration adds:
 * **TinyVGA** in the Pmod socket JA: a VGA output, 640x480, 2 bits per color;
 * **TM1638 LED&KEY** module: 8 seven-segment digits, 8 LEDs and 8 keys;
 * **INMP441** I2S microphone module;
-* one of two I2S DAC modules for headphones or active speakers:
-  * **WeAct I2S Earphone Module** with PCM5100A and a 32 Ω, 160 mW headphone amplifier;
-  * the usual purple **GY-PCM5102** module with PCM5102A.
+* one of two I2S DAC modules:
+  * **WeAct I2S Earphone Module** with PCM5100A and a 32 Ω, 160 mW headphone
+    amplifier, for headphones or active speakers;
+  * the usual purple **GY-PCM5102** module with PCM5102A, whose line output
+    is for active speakers or an amplifier, not for headphones.
+
+DIP pins 1 to 8 are the eight GPIO pins of the labs, free for circuits of
+your own.
 
 Both DAC modules use the same three FPGA pins, so the design is the same for
 either of them; only the wiring of their power and configuration pins differs.
@@ -60,7 +65,7 @@ targets the wrong FPGA, XC7A15T, and is not used.
 | TinyVGA Pmod | By Leo Moser, [mole99/tiny-vga](https://github.com/mole99/tiny-vga). Bought assembled or ordered from JLCPCB: see [Where to get TinyVGA](#where-to-get-tinyvga). Plus a VGA cable and a monitor that accepts 640x480 at 60 Hz. |
 | TM1638 LED&KEY module | 8 digits, 8 LEDs, 8 keys, a 5-pin header VCC, GND, STB, CLK, DIO. |
 | INMP441 module | The round I2S microphone board with 6 pins. |
-| One DAC module | WeAct I2S Earphone Module (PCM5100A) or GY-PCM5102 (PCM5102A). Headphones or active speakers with a 3.5 mm plug. |
+| One DAC module | WeAct I2S Earphone Module (PCM5100A) or GY-PCM5102 (PCM5102A). For WeAct, headphones of 32 Ω or more or active speakers; for GY-PCM5102, active speakers or an amplifier, because its output is line level. Both with a 3.5 mm plug. |
 | For variant A: Digilent Pmod TPH2 | A 12-pin pass-through with a test point for each Pmod pin. It goes between JA and TinyVGA. |
 | For variant B: a 3.3 V regulator module | A 3-pin AMS1117-3.3 module, for example [Amazon B08CDMZMDN](https://www.amazon.com/dp/B08CDMZMDN), a pack of 20: 4.75 to 12 V in, 3.3 V out, up to 800 mA, about 8.6 x 12.3 mm, pins VIN, GND, VOUT. Any 3.3 V module that works from 5 V and gives at least 300 mA will do. |
 | Jumper wires | Male-to-male for the breadboard, female-to-male for the module headers and the TPH2 test point. |
@@ -86,13 +91,16 @@ price and stock. The author does not sell it directly.
 
 **Order it from JLCPCB.** The board is laid out to be made and assembled by
 [JLCPCB](https://jlcpcb.com/), and the repository holds the files for that in
-`pcb/jlcpcb/production_files/`:
+`pcb/jlcpcb/production_files/`. Take all three files from one revision. The
+links below are to revision
+[a081ae63](https://github.com/mole99/tiny-vga/tree/a081ae634119aae719237aee5c6b5e53549d1c81/pcb/jlcpcb/production_files),
+the latest in November 2026:
 
 | File | What it is |
 |------|------------|
-| `GERBER-tiny-vga.zip` | The Gerber files of the board |
-| `BOM-tiny-vga.csv` | The parts list, with the LCSC part number of each part, the Pmod plug and the VGA socket included |
-| `CPL-tiny-vga.csv` | The placement of the parts |
+| [GERBER-tiny-vga.zip](https://raw.githubusercontent.com/mole99/tiny-vga/a081ae634119aae719237aee5c6b5e53549d1c81/pcb/jlcpcb/production_files/GERBER-tiny-vga.zip) | The Gerber files of the board |
+| [BOM-tiny-vga.csv](https://raw.githubusercontent.com/mole99/tiny-vga/a081ae634119aae719237aee5c6b5e53549d1c81/pcb/jlcpcb/production_files/BOM-tiny-vga.csv) | The parts list, with the LCSC part number of each part. The two connectors are J1, the Pmod plug, LCSC C2935938, and J2, the VGA socket, LCSC C138387. |
+| [CPL-tiny-vga.csv](https://raw.githubusercontent.com/mole99/tiny-vga/a081ae634119aae719237aee5c6b5e53549d1c81/pcb/jlcpcb/production_files/CPL-tiny-vga.csv) | The placement of the parts |
 
 The steps, as in the README of the repository:
 
@@ -103,7 +111,10 @@ The steps, as in the README of the repository:
 4. Click Next and upload `BOM-tiny-vga.csv` and `CPL-tiny-vga.csv`.
 5. Check the placement of the parts in the preview: some may need to be
    rotated.
-6. Check out.
+6. Check that the order has both connectors, J1 (C2935938) and J2
+   (C138387). Both are through-hole parts; without them the board comes
+   without its Pmod plug and VGA socket.
+7. Check out.
 
 A board costs less when several are ordered at once; the author suggests
 ordering about ten and giving the spare ones to others nearby. The author is
@@ -121,12 +132,15 @@ to the power pins, so that the wires are short and grouped by module:
 
 | DIP pins | Use | Why there |
 |----------|-----|-----------|
+| 1 to 8 | GPIO pins of the labs, `gpio[0]` on DIP 1 to `gpio[7]` on DIP 8 | The first eight pins, away from the module wiring, free for circuits of your own. |
 | 21, 22, 23 | DAC BCK, DIN, LCK (WS on WeAct) | The same order as on the headers of both DAC modules. |
 | 25, 26, 27, 28 | GND, TM1638 STB, CLK, DIO | The TM1638 header is VCC, GND, STB, CLK, DIO: DIP pins 25 to 28 meet header pins GND to DIO one to one, four parallel wires. |
 | 29, 30, 31, 32 | INMP441 SCK, WS, L/R, SD | One row of the INMP441 module reads SCK, WS, L/R; SD is next to SCK in the other row. |
 
 TinyVGA plugs into the Pmod socket JA, in variant A through Pmod TPH2. The remaining DIP pins stay
 free, and the RGB LED, the buttons, the LEDs and the USB UART are on the board.
+The GPIO pins take 3.3 V logic only, like every DIP pin; see the warnings
+under [Power](#power).
 
 The constraint file [board_specific.xdc](board_specific.xdc) is
 [Cmod-A7-Master.xdc](https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc)
@@ -178,8 +192,8 @@ to DIP pin 25.
 |--------|--------|-----|
 | TM1638 | +3.3 V | Its DIO line drives an FPGA pin, and the module pulls DIO up to its own VCC. At 5 V that would put 5 V on the FPGA pin. |
 | INMP441 | +3.3 V | Its supply range is 1.62 to 3.63 V. |
-| WeAct PCM5100A | +3.3 V | VCC feeds the module's own 3.3 V regulator (ME6231), which powers the PCM5100A, and its headphone amplifier (HT97226). From 3.3 V the regulator gives about 3.2 V, within the 3.0 to 3.6 V that PCM5100A needs. |
-| GY-PCM5102 | +3.3 V | VIN accepts 3.3 to 5 V. |
+| WeAct PCM5100A | +3.3 V | VCC feeds the module's own 3.3 V regulator (ME6231), which powers the PCM5100A, and its headphone amplifier (HT97226). From 3.3 V the regulator gives about 3.2 V, within the 3.0 to 3.6 V that PCM5100A needs, but with little margin: check it as in step 11 of the assembly. |
+| GY-PCM5102 | +3.3 V | VIN is listed as 3.3 to 5 V. The usual board feeds PCM5102A through regulators of its own, so from 3.3 V the chip gets a little less; boards differ, so check it as in step 11 of the assembly. |
 
 Warnings from the Cmod A7 reference manual:
 
@@ -266,6 +280,14 @@ versions [breadboard_weact.svg](breadboard_weact.svg) and
 
 | DIP pin | FPGA pin | Port in board_specific.xdc | Signal | Connect to |
 |--------:|---------:|----------------------------|--------|------------|
+| 1 | M3 | `pio1` | `gpio[0]` | Free: GPIO of the labs |
+| 2 | L3 | `pio2` | `gpio[1]` | Free: GPIO of the labs |
+| 3 | A16 | `pio3` | `gpio[2]` | Free: GPIO of the labs |
+| 4 | K3 | `pio4` | `gpio[3]` | Free: GPIO of the labs |
+| 5 | C15 | `pio5` | `gpio[4]` | Free: GPIO of the labs |
+| 6 | H1 | `pio6` | `gpio[5]` | Free: GPIO of the labs |
+| 7 | A15 | `pio7` | `gpio[6]` | Free: GPIO of the labs |
+| 8 | B15 | `pio8` | `gpio[7]` | Free: GPIO of the labs |
 | 21 | N1 | `pio21` | `DAC_BCK` | DAC BCK |
 | 22 | N2 | `pio22` | `DAC_DIN` | DAC DIN |
 | 23 | P1 | `pio23` | `DAC_LCK` | GY-PCM5102 LCK, WeAct WS |
@@ -398,6 +420,10 @@ of the board is bridged to GND, the SCK wire to GND is not needed, but it does
 no harm. Never connect SCK to an FPGA pin: on a board with that bridge it
 would short the pin to GND.
 
+**Its 3.5 mm jack is a line output.** PCM5102A drives loads of 1 kΩ or more,
+such as the input of active speakers or of an amplifier, not headphones of
+32 Ω. Of the two modules, only WeAct has a headphone amplifier.
+
 ## Assembly, step by step
 
 Work with the USB cable unplugged.
@@ -427,8 +453,9 @@ Work with the USB cable unplugged.
    + rails to each other at the far end of the breadboard, bridging any gaps,
    as with the GND rails.
 5. **Check the power.** Plug in USB. With the multimeter, both + rails should
-   show 3.1 to 3.5 V against GND; in variant B the regulator input should
-   show about 4.5 to 5 V. Unplug USB.
+   show 3.2 to 3.5 V against GND; in variant B the regulator input should
+   show about 4.5 to 5 V. Below 3.2 V the DAC has too little margin: find the
+   cause first. Unplug USB.
 6. **Connect TM1638.** Four female-to-male wires from DIP pins 25, 26, 27 and
    28 to the TM1638 pins GND, STB, CLK and DIO, in this order, and one wire
    from VCC to the +3.3 V rail.
@@ -441,7 +468,17 @@ Work with the USB cable unplugged.
 9. **Check the wiring** against the table [Cmod A7 DIP pins](#cmod-a7-dip-pins)
    once more: no signal pin of Cmod A7 may touch a + rail, and DIP pin 24, VU,
    goes nowhere in variant A and only to the regulator input in variant B.
-10. Connect the VGA monitor and the headphones or speakers, then plug in USB.
+10. Connect the VGA monitor, and headphones (WeAct only) or active speakers,
+    then plug in USB.
+11. **Check the supply of the DAC under load.** Load a lab that plays sound,
+    for example one from `labs/3_music`, and while it plays, measure VCC on
+    WeAct or VIN on GY-PCM5102 against GND, on the pins of the module
+    itself: it should show 3.2 V or more. PCM510xA needs at least 3.0 V, and
+    both modules feed it through a regulator of their own, which takes a
+    little. Where you can reach the output of that regulator, for example
+    across its output capacitor, it should show 3.0 V or more. If the supply
+    is lower, check the + rail wiring; in variant A, try variant B, whose
+    regulator feeds only the modules.
 
 ## Building and running the labs
 
@@ -465,7 +502,7 @@ Good first labs:
 |------------|---------:|------|-----|
 | BTN0, BTN1 | A18, B18 | `btn[0]`, `btn[1]` | With TM1638, as in most labs: either button resets the design, and the labs take their keys from TM1638. Without TM1638: `key[0]` and `key[1]` of the labs. |
 | LED1, LED2 | A17, C16 | `led[0]`, `led[1]` | `led[0]` and `led[1]` of the labs; TM1638 shows all eight. |
-| RGB LED | B17, B16, C17 | `led0_b`, `led0_g`, `led0_r` | Off. Its pins are driven high, because it lights when a pin is low, and the default pull-downs of unused pins would make it glow. |
+| RGB LED | B17, B16, C17 | `led0_b`, `led0_g`, `led0_r` | Red while the design is in reset, green while it runs; blue is not used. It lights when a pin is low. At full brightness it dazzles, so the design lights it 1/16 of the time, at 12 MHz / 4096 = 2.9 kHz. |
 | USB UART | J17, J18 | `uart_txd_in`, `uart_rxd_out` | `uart_rx` and `uart_tx` of the labs. |
 
 The design is also reset after loading, until the clock generator is ready.
@@ -535,37 +572,84 @@ generate block should be checked before this goes into `vga.sv`.
 | No picture | The monitor input and the VGA cable. TinyVGA, and TPH2 in variant A, plugged with GND and VCC on those of JA. The lab must use graphics. |
 | TM1638 dark or wrong | VCC on +3.3 V. DIP 26, 27, 28 to STB, CLK, DIO, not reversed. DIP 25 to GND of the module. |
 | No sound from GY-PCM5102 | Jumper 3, XSMT, set to H. SCK to GND. VIN on +3.3 V. |
+| Weak or distorted sound from GY-PCM5102 | Its output is line level: use active speakers or an amplifier, not headphones. |
 | No sound from WeAct | /SD not connected to GND. VCC on +3.3 V. Headphones fully in the jack. |
+| Sound that crackles or drops out | The supply of the DAC under load, step 11 of the assembly. |
 | Microphone silent | VDD on +3.3 V. SD on DIP 32. L/R low, from DIP 31 or GND. |
 | A + rail is low or dead | A: the wire on test point 6 or 12 of TPH2, not another one. B: the regulator input on DIP 24, VU. Both: the two + rails joined, and any gap in a split rail bridged. |
 | The design is gone after unplugging USB | Expected: the scripts load the FPGA, not the flash. Run `./04_configure_fpga.bash`. |
 
 ## Status
 
-Built with Vivado 2026.1 by the scripts of the repository, with no errors and
-no critical warnings, and with all timing met at 50 MHz:
+Built with Vivado 2026.1 on 19 November 2026, after the six configurations got
+one shared top level, with no errors and no critical warnings, and with all
+timing met at 50 MHz. The builds ran
+[scripts/tests/build_cmod_a7_35_claude.tcl](../../scripts/tests/build_cmod_a7_35_claude.tcl),
+which reads the same sources with the same include path as the Vivado script
+of the repository:
 
 | Lab | Uses | LUTs | Registers | Worst setup slack |
 |-----|------|-----:|----------:|------------------:|
-| `labs/2_graphics/2_3_color_stripes` | VGA, TM1638 | 141 | 107 | 12.4 ns |
-| `labs/3_music/3_0_oscilloscope` | VGA, TM1638, microphone, DAC | 273 | 196 | 13.9 ns |
-| `labs/3_music/3_10_spectrum_analyzer` | VGA, TM1638, microphone, DAC | 2432 | 1536 | 8.4 ns |
+| `labs/2_graphics/2_3_color_stripes` | VGA, TM1638 | 129 | 119 | 14.5 ns |
+| `labs/3_music/3_0_oscilloscope` | VGA, TM1638, microphone, DAC | 265 | 208 | 14.4 ns |
+| `labs/3_music/3_10_spectrum_analyzer` | VGA, TM1638, microphone, DAC | 2403 | 1548 | 8.9 ns |
 
-**The Vivado script of the repository does not read the
+**TODO: the Vivado script of the repository does not read the
 `lab_specific_board_config.svh` of a lab.** `board_specific_top.sv` always gets
 `peripherals/lab_specific_board_config.svh`, which turns on TM1638, VGA, the
 microphone and the DAC. So `3_10_spectrum_analyzer`, which turns off TM1638 and
 the sound output, is built with both. This holds for every Xilinx board of the
 repository, not only for this one, and it means that with the scripts as they
-are, the Cmod A7 buttons always reset the design.
+are, the Cmod A7 buttons always reset the design. The fix is to put the lab
+directory first on the include path in
+[scripts/fpga/xilinx_vivado_synthesize.tcl](../../scripts/fpga/xilinx_vivado_synthesize.tcl).
+It changes the builds of every Xilinx board, so it is left for a change of its
+own.
 
-The other branches of `board_specific_top.sv` were built with a direct Vivado
-run that put a configuration file first on the include path:
+With cmod_a7_35_tiny_vga_640_no_tm1638_claude, which has VGA, the microphone
+and the DAC but no TM1638, `3_10_spectrum_analyzer` took 2332 LUTs and
+1489 registers, with a worst setup slack of 9.5 ns.
 
-| Lab | Configuration | LUTs | Registers | Worst setup slack |
-|-----|---------------|-----:|----------:|------------------:|
-| `labs/1_basics/1_01_and_or_not_xor_de_morgan` | No TM1638, VGA, microphone or DAC: the Cmod buttons and LEDs only | 1 | 0 | no clocked paths |
-| `labs/3_music/3_10_spectrum_analyzer` | VGA, microphone and DAC without TM1638 | 2330 | 1477 | 1.7 ns |
+[scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
+checks all six configurations without a board, with Icarus Verilog, in about
+a minute:
+
+* every `board_specific.xdc` is the file of Digilent with only some lines
+  uncommented, and its ports are exactly the ports of the top level;
+* all labs of `labs/1_basics` and eleven others elaborate with every
+  configuration, and so does a lab with TM1638, VGA, the microphone and the
+  DAC all turned off. Among them are the eight labs fixed for a board with two
+  keys, two LEDs and one digit, and
+  `labs/6_misc/6_1_geiger_muller_radiation_counter_claude`, a copy of the
+  Geiger counter lab with the same kind of fixes;
+* `SPLIT_TM1638_DIO_INOUT_SIGNAL` stops the build with an error;
+* a simulation with a test lab and models of the MMCM, the microphone and the
+  DAC checks every pin of the board: clock and reset, VGA timing and colors,
+  microphone, DAC, buttons, LEDs, RGB LED, GPIO, UART and TM1638.
+
+With `BGM_TEST_VIVADO=1` the test also builds
+`labs/3_music/3_11_microphone_monitor`, which uses VGA, TM1638, the microphone
+and the DAC, with Vivado for each configuration, one at a time, about three
+minutes each. It checks the number of MMCMs, the TM1638 controller, that
+there are no latches, the timing and the bitstream. Vivado is
+`$XILINX_VIVADO/bin/vivado` or `vivado` on `PATH`. Run it from the root of the
+repository:
+
+```bash
+python3 scripts/tests/test_cmod_a7_35_claude.py
+BGM_TEST_VIVADO=1 python3 scripts/tests/test_cmod_a7_35_claude.py
+```
+
+The Vivado run of 19 November 2026:
+
+| Configuration | Clock; TM1638 | LUTs | Registers | Worst setup slack |
+|---------------|---------------|-----:|----------:|------------------:|
+| `cmod_a7_35_claude_tiny_vga_640` | 50 MHz from the MMCM; with TM1638 | 1980 | 1365 | 7.8 ns |
+| `cmod_a7_35_tiny_vga_640_no_tm1638_claude` | 50 MHz from the MMCM; no TM1638 | 1872 | 1261 | 4.9 ns |
+| `cmod_a7_35_no_pll_tiny_vga_304_claude` | 12 MHz, no MMCM; with TM1638 | 2017 | 1361 | 67.0 ns |
+| `cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude` | 12 MHz, no MMCM; no TM1638 | 1881 | 1259 | 72.5 ns |
+| `cmod_a7_35_no_pll_tiny_vga_320_claude` | 12 MHz, no MMCM; with TM1638 | 2007 | 1361 | 69.3 ns |
+| `cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude` | 12 MHz, no MMCM; no TM1638 | 1879 | 1259 | 71.2 ns |
 
 Vivado also gives the design rule warning CFGBVS-1: the file of Digilent does
 not set the `CFGBVS` and `CONFIG_VOLTAGE` properties, and this configuration
@@ -578,7 +662,7 @@ Not yet tried on a real board.
 | File | What it is |
 |------|------------|
 | [board_specific.xdc](board_specific.xdc) | Cmod-A7-Master.xdc of Digilent, only the used lines uncommented |
-| [board_specific_top.sv](board_specific_top.sv) | Pin mapping, the 50 MHz clock generator, reset, and the instances of the lab, VGA, TM1638, microphone and DAC modules |
+| [board_specific_top.sv](board_specific_top.sv) | The top level of all six Cmod A7 configurations of Claude: pin mapping, the 50 MHz clock generator or the 12 MHz clock, reset, the RGB LED, and the instances of the lab, VGA, TM1638, microphone and DAC modules. The other five configurations define one or two macros and include it. |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
 | [generate_wiring_diagram.py](generate_wiring_diagram.py) | Makes the four wiring diagrams, `wiring_*.svg`; with a board name, those of cmod_a7_35_no_pll_tiny_vga_320_claude or cmod_a7_35_no_pll_tiny_vga_304_claude |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams |
@@ -587,6 +671,7 @@ Not yet tried on a real board.
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 | [claude_prompt.txt](claude_prompt.txt) | The task file of the first prompt, as in the appendix |
+| [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py) | The tests of the six configurations, with their testbench in [scripts/tests/fixtures/cmod_a7_35_claude](../../scripts/tests/fixtures/cmod_a7_35_claude) and the Vivado script [build_cmod_a7_35_claude.tcl](../../scripts/tests/build_cmod_a7_35_claude.tcl); see [Status](#status) |
 
 The drawings come from [generate_wiring_diagram.py](generate_wiring_diagram.py)
 and [generate_breadboard_diagram.py](generate_breadboard_diagram.py), which hold
@@ -618,6 +703,9 @@ done
   the pass-through test point header.
 * WeAct Studio, [I2S Earphone Module V1](https://github.com/WeActStudio/WeActStudio.I2SEarphoneModuleV1):
   the schematic and the header labels.
+* Texas Instruments, [PCM5102A](https://www.ti.com/product/PCM5102A) data
+  sheet, PCM510xA: the 1 kΩ minimum load of the line output and the 3.0 V
+  minimum supply.
 * GY-PCM5102: [mt32-pi wiki](https://github.com/dwhinham/mt32-pi/wiki/GY-PCM5102-DAC-module)
   and [Makerguides](https://www.makerguides.com/playing-audio-with-esp32-and-pcm5102/)
   on the solder jumpers, SCK and the supply.
@@ -963,6 +1051,95 @@ Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_supp
 ```
 
 **21:58 on 18 November**:
+
+```text
+commit and push
+```
+
+**22:11 on 18 November**; it produced a list of changes after reading Codex's
+review of these configurations:
+
+```text
+read your competitor report. List what you would change in your solution.
+```
+
+**22:20 on 18 November**, answering item 1 of that list (fix the
+configurations without TM1638); it fixed eight labs, ten after the 22:37
+prompt, instead of the board files:
+
+```text
+1. No, keep 1-digit 7-segment. This should be fixed in the examples later. Same thing for sw. Don't pad, this should be fixed in example using generate and padding. Yes, do the lab fix.
+```
+
+**22:26 on 18 November**, typed in answer to items 2 to 7 of that list but
+never sent, because the computer crashed. The text is read from a photo of
+the screen, sent at 22:39:
+
+```text
+2. merge - yes. 3 - how large are the tests? 4. don't sync the buttons. We did not have these issues yet with our labs, when we have, we will add the synchronizers. these buttons may already have the internal synchronizers (check it and report). 5. yes, correct. 6. yes, reject. 7. OK.
+```
+
+**22:35 on 18 November**, after the crash; it listed the unfinished work:
+
+```text
+recover from computer crash while you were working in this directory. List what you were doing
+```
+
+**22:37 on 18 November**; it built the fixed labs with Vivado and fixed the
+two Geiger counter labs as well, ten labs in all:
+
+```text
+yes, rerun Vivado and fix the Geiger labs
+```
+
+**22:39 on 18 November**, with the photo of the screen; it listed how it
+read the reply above and waited for a confirmation:
+
+```text
+recognize my response from this picture [Image #1] . List everything and confirm before working on it
+```
+
+**22:47 on 18 November**; it added the tests, merged the three full top
+levels into one, rejected the split DIO mode, added the GPIO pins, the RGB
+LED and the TinyVGA files of one revision, corrected the DAC instructions,
+and marked the shared Vivado script as a TODO. It explained the idea of
+leaving DIP 26 to 28 undriven and proposed to drop it:
+
+```text
+Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8 now, but note it in the report with TODO.
+```
+
+**19:19 on 19 November**; the Vivado builds for the Status of
+cmod_a7_35_claude_tiny_vga_640 had not started, because the script that
+waited for the previous Vivado run kept finding its own command line. It
+started them, added a test of a lab with TM1638, VGA, the microphone and the
+DAC all turned off, made the Vivado test count Slice LUTs, as the
+utilization report of Vivado does, instead of LUT cells, and updated the
+Status:
+
+```text
+are you done?
+```
+
+**21:09 on 19 November**; it copied the fixed Geiger counter lab into
+`labs/6_misc/6_1_geiger_muller_radiation_counter_claude`, reverted
+`6_1_geiger_muller_radiation_counter` and
+`6_1_geiger_muller_radiation_counter_on_tang_nano_9k`, and made the tests use
+the copy:
+
+```text
+Save your version of geiger_muller into 6_1_geiger_muller_radiation_counter_claude. Revert other geiger_muller variants. The first one was for DE10-Lite, the second is a work in progress. I will take care of them.
+```
+
+**21:15 on 19 November**, after Yuri Panchul corrected the parameter names
+in `4_2_5_optimized_ff_fifo_view_2_data_layout`; the tests passed again, and
+the edited labs and the Geiger counter copy elaborated for seven board sizes:
+
+```text
+is it fine now?
+```
+
+**23:38 on 19 November**; it committed and pushed the work above:
 
 ```text
 commit and push

@@ -42,7 +42,7 @@ def has_tm1638():
     """The configurations with _no_tm1638 in the name have no TM1638."""
     return "_no_tm1638" not in BOARD
 
-W, H = 1720, 1250
+W, H = 1720, 1272
 
 FONT = "DejaVu Sans, Liberation Sans, Arial, sans-serif"
 MONO = "DejaVu Sans Mono, Liberation Mono, monospace"
@@ -72,7 +72,13 @@ C = {
 X0, PITCH = 330, 34
 Y_TOP, Y_BOT = 612, 768
 
+# DIP 1 to 8 are the GPIO pins of the labs, gpio [0] to gpio [7]; nothing
+# is connected to them in these diagrams.
+
+GPIO = {pin: f"GPIO{pin - 1}" for pin in range(1, 9)}
+
 USED = {
+    **GPIO,
     21: "BCK", 22: "DIN", 23: "LCK/WS", 24: "VU",
     25: "GND", 26: "STB", 27: "CLK", 28: "DIO",
     29: "SCK", 30: "WS", 31: "L/R", 32: "SD",
@@ -266,12 +272,12 @@ def draw(variant, power):
     svg.rect(bx0, by0, bx1 - bx0, by1 - by0, C["board"], C["board_edge"], 2, 8)
     svg.rect(bx1 - 4, 660, 46, 60, "#c9ccd2", "#7d828c", 1.5, 4)
     svg.text(bx1 + 19, 695, "USB", 12, "bold", anchor="middle")
-    svg.rect(370, 655, 110, 70, C["chip"], "#000000", 1, 4)
-    svg.text(425, 695, "XC7A35T", 13, fill="#d8d8d8", anchor="middle")
-    svg.text(640, 682, "Cmod A7-35T", 26, "bold", "#ffffff", "middle")
-    svg.text(640, 706, "pins 48..25 on top, 1..24 below", 13, fill="#c7d3e6", anchor="middle")
+    svg.rect(370, 645, 110, 55, C["chip"], "#000000", 1, 4)
+    svg.text(425, 677, "XC7A35T", 13, fill="#d8d8d8", anchor="middle")
+    svg.text(640, 678, "Cmod A7-35T", 26, "bold", "#ffffff", "middle")
+    svg.text(640, 701, "pins 48..25 on top, 1..24 below", 13, fill="#c7d3e6", anchor="middle")
 
-    unconnected = (15, 16, 24) if power == "tph2" else (15, 16)
+    unconnected = (*GPIO, 15, 16, 24) if power == "tph2" else (*GPIO, 15, 16)
     labels = {pin: name for pin, name in USED.items() if tm or pin not in (26, 27, 28)}
     for pin in range(1, 49):
         x, y = pin_xy(pin)
@@ -427,6 +433,8 @@ def draw(variant, power):
     svg.text(40, 1192, "INMP441 L/R is driven low by the FPGA; you may connect it to GND instead "
                        "and leave DIP 31 free.", 14, fill=C["muted"])
     svg.text(40, 1214, pw["note"], 14, fill=C["muted"])
+    svg.text(40, 1236, "DIP 1 to 8 are the GPIO pins of the labs, gpio[0] to gpio[7]; "
+                       "nothing is connected to them here.", 14, fill=C["muted"])
 
     return svg.svg()
 

@@ -45,9 +45,11 @@
 
 ## Как это сделано
 
-В [board_specific_top.sv](board_specific_top.sv) две строки кода. Он
-определяет `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` и включает
-`board_specific_top.sv` из cmod_a7_35_no_pll_tiny_vga_304_claude, который тогда не создаёт TM1638, хотя
+В [board_specific_top.sv](board_specific_top.sv) три строки кода. Он
+определяет `CMOD_A7_NO_PLL_SCREEN_WIDTH` равным 304, как cmod_a7_35_no_pll_tiny_vga_304_claude,
+и `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` и включает
+`board_specific_top.sv` из cmod_a7_35_claude_tiny_vga_640, модуль верхнего уровня всех шести
+конфигураций, который тогда работает на 12 МГц и не создаёт TM1638, хотя
 `peripherals/lab_specific_board_config.svh` его включает. Другие платы
 репозитория без TM1638, например `tang_nano_9k_hdmi_no_tm1638`, сделаны так
 же, но некоторые из них рисуют виртуальный TM1638 на экране; эта не рисует.
@@ -138,13 +140,20 @@ I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на р�
 проектирования CFGBVS-1, как и для cmod_a7_35_claude_tiny_vga_640; оно не мешает созданию
 битового потока.
 
+Сборки выше сделаны до 18 ноября, когда у шести конфигураций появились общий
+модуль верхнего уровня, восемь выводов GPIO и RGB-светодиод. После этого
+[scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py) собрал для этой конфигурации
+`labs/3_music/3_11_microphone_monitor` в Vivado 2026.1: 1881 LUT,
+1259 регистров, худший запас по setup 72,5 нс, все временные
+ограничения выполнены.
+
 **На реальной плате ещё не проверено.**
 
 ## Файлы
 
 | Файл | Что это |
 |------|---------|
-| [board_specific_top.sv](board_specific_top.sv) | Определяет `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` и включает модуль верхнего уровня из cmod_a7_35_no_pll_tiny_vga_304_claude |
+| [board_specific_top.sv](board_specific_top.sv) | Определяет `CMOD_A7_NO_PLL_SCREEN_WIDTH` равным 304 и `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` и включает модуль верхнего уровня из cmod_a7_35_claude_tiny_vga_640 |
 | [board_specific.xdc](board_specific.xdc) | Тот же, что в cmod_a7_35_no_pll_tiny_vga_304_claude |
 | [board_specific.tcl](board_specific.tcl) | Микросхема ПЛИС для Vivado |
 | `wiring_*.svg`, `wiring_*.png` | Схемы соединений без TM1638 для обоих модулей ЦАП и обоих источников 3,3 В |
@@ -346,6 +355,141 @@ Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_supp
 ```
 
 **21:58, 18 ноября**:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
+**22:11, 18 ноября**; по нему составлен список изменений после чтения обзора
+этих конфигураций, сделанного Codex:
+
+```text
+read your competitor report. List what you would change in your solution.
+```
+
+```text
+прочитай отчёт своего конкурента. Перечисли, что бы ты изменил в своём решении.
+```
+
+**22:20, 18 ноября**, — ответ на пункт 1 этого списка (исправить конфигурации
+без TM1638); по нему исправлены восемь лабораторных работ, а после
+промпта в 22:37 — десять, а не файлы платы:
+
+```text
+1. No, keep 1-digit 7-segment. This should be fixed in the examples later. Same thing for sw. Don't pad, this should be fixed in example using generate and padding. Yes, do the lab fix.
+```
+
+```text
+1. Нет, оставь семисегментный индикатор на одну цифру. Это нужно будет исправить в примерах позже. То же самое для sw. Не дополняй, это нужно исправить в примере с помощью generate и дополнения. Да, исправь лабораторные.
+```
+
+**22:26, 18 ноября**, — набран в ответ на пункты 2–7 этого списка, но не
+отправлен, потому что компьютер упал. Текст прочитан с фотографии экрана,
+присланной в 22:39:
+
+```text
+2. merge - yes. 3 - how large are the tests? 4. don't sync the buttons. We did not have these issues yet with our labs, when we have, we will add the synchronizers. these buttons may already have the internal synchronizers (check it and report). 5. yes, correct. 6. yes, reject. 7. OK.
+```
+
+```text
+2. Объединить — да. 3 — насколько большие тесты? 4. Не синхронизируй кнопки. У нас пока не было таких проблем с нашими лабораторными; когда будут, добавим синхронизаторы. Возможно, у этих кнопок уже есть внутренние синхронизаторы (проверь и доложи). 5. Да, исправь. 6. Да, отклонить. 7. OK.
+```
+
+**22:35, 18 ноября**, после сбоя; по нему перечислена незаконченная работа:
+
+```text
+recover from computer crash while you were working in this directory. List what you were doing
+```
+
+```text
+восстановись после сбоя компьютера, пока ты работал в этом каталоге. Перечисли, что ты делал
+```
+
+**22:37, 18 ноября**; по нему исправленные лабораторные собраны в Vivado и
+исправлены ещё две лабораторные со счётчиком Гейгера, всего десять:
+
+```text
+yes, rerun Vivado and fix the Geiger labs
+```
+
+```text
+да, перезапусти Vivado и исправь лабораторные со счётчиком Гейгера
+```
+
+**22:39, 18 ноября**, с фотографией экрана; по нему перечислено, как понят
+ответ выше, и работа ждала подтверждения:
+
+```text
+recognize my response from this picture [Image #1] . List everything and confirm before working on it
+```
+
+```text
+распознай мой ответ на этой картинке [Image #1] . Перечисли всё и подтверди, прежде чем браться за работу
+```
+
+**22:47, 18 ноября**; по нему добавлены тесты, три полных модуля верхнего
+уровня объединены в один, режим с разделённым DIO отклонён, добавлены
+выводы GPIO, RGB-светодиод и файлы TinyVGA одной ревизии, исправлены
+инструкции к ЦАП, а общий скрипт Vivado отмечен как TODO. Идея оставить
+DIP 26–28 неуправляемыми объяснена, и предложено от неё отказаться:
+
+```text
+Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8 now, but note it in the report with TODO.
+```
+
+```text
+Добавь тесты. Зачем ты хочешь оставить DIP 26–28 неуправляемыми? Объясни. Пункт 8 сейчас не делай, но отметь его в отчёте как TODO.
+```
+
+**19:19, 19 ноября**; сборки Vivado для раздела «Состояние»
+cmod_a7_35_claude_tiny_vga_640 не начались, потому что скрипт, который ждал
+окончания предыдущего запуска Vivado, всё время находил собственную
+командную строку. Сборки запущены, добавлен тест упражнения с выключенными
+TM1638, VGA, микрофоном и ЦАП, тест Vivado теперь считает Slice LUT, как
+отчёт Vivado об использовании ресурсов, а не ячейки LUT, раздел «Состояние»
+обновлён:
+
+```text
+are you done?
+```
+
+```text
+Готово?
+```
+
+**21:09, 19 ноября**; исправленное упражнение со счётчиком Гейгера
+скопировано в `labs/6_misc/6_1_geiger_muller_radiation_counter_claude`,
+`6_1_geiger_muller_radiation_counter` и
+`6_1_geiger_muller_radiation_counter_on_tang_nano_9k` возвращены к прежнему
+виду, тесты теперь проверяют копию:
+
+```text
+Save your version of geiger_muller into 6_1_geiger_muller_radiation_counter_claude. Revert other geiger_muller variants. The first one was for DE10-Lite, the second is a work in progress. I will take care of them.
+```
+
+```text
+Сохрани свою версию geiger_muller в 6_1_geiger_muller_radiation_counter_claude. Верни остальные варианты geiger_muller к прежнему виду. Первый был для DE10-Lite, второй ещё в работе. Ими займусь я.
+```
+
+**21:15, 19 ноября**, после исправления имён параметров в
+`4_2_5_optimized_ff_fifo_view_2_data_layout`, внесённого Юрием Панчулом;
+тесты снова прошли, а
+исправленные упражнения и копия упражнения со счётчиком Гейгера прошли
+элаборацию для семи размеров платы:
+
+```text
+is it fine now?
+```
+
+```text
+Теперь всё в порядке?
+```
+
+**23:38, 19 ноября**; сделанное выше закоммичено и отправлено:
 
 ```text
 commit and push

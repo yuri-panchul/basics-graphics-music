@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1960" height="1186" viewBox="0 0 1960 1186">
-<rect width="1960" height="1186" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1960" height="1206" viewBox="0 0 1960 1206">
+<rect width="1960" height="1206" fill="#ffffff"/>
 <text x="40.0" y="46.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="26" font-weight="bold" fill="#1b1b1b" text-anchor="start">Breadboard layout: Cmod A7-35T, INMP441, GY-PCM5102 and the 3.3 V regulator</text>
 <text x="40.0" y="76.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Board configuration cmod_a7_35_tiny_vga_640_no_tm1638_claude, seen from above. The microphone, the DAC and the 3.3 V regulator of variant B go straight into the breadboard; TinyVGA connects as in the wiring diagrams.</text>
 <text x="40.0" y="98.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Tinted holes are the strips in use: the five holes of a strip are connected. A dot is a jumper wire in a hole.</text>
@@ -926,8 +926,8 @@
 <rect x="276.0" y="488.0" width="657.6" height="168.0" rx="6" fill="#1d3f6e" stroke="#0e2340" stroke-width="2"/>
 <rect x="927.6" y="549.2" width="26.4" height="45.6" rx="3" fill="#c9ccd2" stroke="#7d828c" stroke-width="1.5"/>
 <text x="938.4" y="576.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#1b1b1b" text-anchor="middle">USB</text>
-<rect x="408.0" y="543.2" width="86.4" height="57.6" rx="3" fill="#202020" stroke="#000000" stroke-width="1"/>
-<text x="451.2" y="576.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#d8d8d8" text-anchor="middle">XC7A35T</text>
+<rect x="408.0" y="543.2" width="86.4" height="40.8" rx="3" fill="#202020" stroke="#000000" stroke-width="1"/>
+<text x="451.2" y="567.6" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#d8d8d8" text-anchor="middle">XC7A35T</text>
 <text x="648.0" y="574.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="22" font-weight="bold" fill="#ffffff" text-anchor="middle">Cmod A7-35T</text>
 <text x="648.0" y="592.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="normal" fill="#c7d3e6" text-anchor="middle">pins 48..25 in column c, 1..24 in column g</text>
 <circle cx="360.0" cy="644.0" r="5.5" fill="#f2c14e" stroke="#5c4a12" stroke-width="1"/>
@@ -1035,6 +1035,7 @@
 <text x="384.0" y="517.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="9" font-weight="normal" fill="#ffffff" text-anchor="middle">47</text>
 <circle cx="360.0" cy="500.0" r="5.5" fill="#f2c14e" stroke="#5c4a12" stroke-width="1"/>
 <text x="360.0" y="517.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="9" font-weight="normal" fill="#ffffff" text-anchor="middle">48</text>
+<text x="444.0" y="622.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="9" font-weight="bold" fill="#9fb2cf" text-anchor="middle">GPIO 0 to 7</text>
 <rect x="254.4" y="512.0" width="24.0" height="120.0" rx="3" fill="#2a2a2a" stroke="#000000" stroke-width="1"/>
 <text x="266.4" y="648.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="bold" fill="#1b1b1b" text-anchor="middle">JA</text>
 <rect x="64.4" y="497.0" width="190.0" height="150.0" rx="6" fill="#2b2b2b" stroke="#000000" stroke-width="1.5"/>
@@ -1167,6 +1168,7 @@
 <text x="40.0" y="1078.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">Its pin order, VIN, GND, VOUT from the Cmod A7 end, and its outline come from the listing: check the labels. If VIN is at the other end, connect the module by wires as in the variant B wiring diagram.</text>
 <text x="40.0" y="1098.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">Variant A, Pmod TPH2: leave the regulator out and wire test point 6 of TPH2 to the + rail; DIP 24, VU, then stays unconnected.</text>
 <text x="40.0" y="1118.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">Keep the middle of rows 25 to 29 free for the USB plug. Unplug USB before changing the wiring.</text>
-<text x="40.0" y="1138.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">GY-PCM5102: the pin order differs between board versions: connect by the labels. SCK goes to GND. Solder jumpers: FLT L, DEMP L, XSMT H, FMT L.</text>
-<text x="40.0" y="1158.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">Only the 6-pin header may go into the breadboard: keep any other pins of the board off the holes.</text>
+<text x="40.0" y="1138.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">DIP 1 to 8 are the GPIO pins of the labs, gpio[0] to gpio[7]; nothing is connected to them here.</text>
+<text x="40.0" y="1158.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">GY-PCM5102: the pin order differs between board versions: connect by the labels. SCK goes to GND. Solder jumpers: FLT L, DEMP L, XSMT H, FMT L.</text>
+<text x="40.0" y="1178.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">Only the 6-pin header may go into the breadboard: keep any other pins of the board off the holes.</text>
 </svg>

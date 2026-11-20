@@ -55,7 +55,7 @@ close to the standard one, or [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_cla
 ## VGA timing
 
 [peripherals/vga.sv](../../peripherals/vga.sv) takes its horizontal timing as
-parameters, so it is used unchanged. board_specific_top.sv passes the timing
+parameters, so it is used unchanged. The top level passes the timing
 below; with `CLK_MHZ` and `PIXEL_MHZ` both 12, `vga.sv` moves to the next pixel
 on every clock. The vertical timing is the standard one.
 
@@ -91,7 +91,8 @@ The labs of the repository give one pixel a clock, so this is not done here.
 
 ## What else changes at 12 MHz
 
-board_specific_top.sv is the one of [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md) with
+board_specific_top.sv defines `CMOD_A7_NO_PLL_SCREEN_WIDTH` as 320 and includes the
+top level of [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md), which with this macro makes
 these changes:
 
 * **No MMCM.** The clock of the design is the oscillator input, `sysclk`. Its
@@ -122,6 +123,7 @@ short:
 | Cmod A7 | Connect to |
 |---------|------------|
 | Pmod JA | TinyVGA |
+| DIP 1 to 8 | GPIO of the labs, `gpio[0]` to `gpio[7]`; free |
 | DIP 21, 22, 23 | DAC BCK, DIN, and LCK of GY-PCM5102 or WS of WeAct |
 | DIP 24, VU | Variant A: nothing. Variant B: the regulator input only |
 | DIP 25, 26, 27, 28 | GND rail and TM1638 GND, STB, CLK, DIO |
@@ -199,6 +201,12 @@ Vivado gives the design rule warning CFGBVS-1, as for cmod_a7_35_claude_tiny_vga
 stop the bitstream. In every build Vivado used one global clock buffer for
 the 12 MHz clock and no MMCM or PLL.
 
+The builds above are from before 18 November, when the six configurations got one
+shared top level, eight GPIO pins and the RGB LED. After that change [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
+built `labs/3_music/3_11_microphone_monitor` for this configuration with
+Vivado 2026.1: 2007 LUTs, 1361 registers, worst setup slack 69.3 ns,
+all timing met.
+
 **Not yet tried on a real board or a monitor.** Whether a given monitor
 accepts the 30 kHz line is the open question of this configuration.
 
@@ -207,7 +215,7 @@ accepts the 30 kHz line is the open question of this configuration.
 | File | What it is |
 |------|------------|
 | [board_specific.xdc](board_specific.xdc) | The same as in cmod_a7_35_claude_tiny_vga_640: Cmod-A7-Master.xdc of Digilent, only the used lines uncommented |
-| [board_specific_top.sv](board_specific_top.sv) | Pin mapping, reset, the VGA timing and the instances of the lab, VGA, TM1638, microphone and DAC modules, all at 12 MHz |
+| [board_specific_top.sv](board_specific_top.sv) | Defines `CMOD_A7_NO_PLL_SCREEN_WIDTH` as 320 and includes the top level of cmod_a7_35_claude_tiny_vga_640, which then runs everything at 12 MHz with this VGA timing |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams, for both DAC modules and both 3.3 V sources |
 | `breadboard_*.svg`, `breadboard_*.png` | The breadboard layouts, for both DAC modules |
@@ -372,6 +380,95 @@ Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_supp
 ```
 
 **21:58 on 18 November**:
+
+```text
+commit and push
+```
+
+**22:11 on 18 November**; it produced a list of changes after reading Codex's
+review of these configurations:
+
+```text
+read your competitor report. List what you would change in your solution.
+```
+
+**22:20 on 18 November**, answering item 1 of that list (fix the
+configurations without TM1638); it fixed eight labs, ten after the 22:37
+prompt, instead of the board files:
+
+```text
+1. No, keep 1-digit 7-segment. This should be fixed in the examples later. Same thing for sw. Don't pad, this should be fixed in example using generate and padding. Yes, do the lab fix.
+```
+
+**22:26 on 18 November**, typed in answer to items 2 to 7 of that list but
+never sent, because the computer crashed. The text is read from a photo of
+the screen, sent at 22:39:
+
+```text
+2. merge - yes. 3 - how large are the tests? 4. don't sync the buttons. We did not have these issues yet with our labs, when we have, we will add the synchronizers. these buttons may already have the internal synchronizers (check it and report). 5. yes, correct. 6. yes, reject. 7. OK.
+```
+
+**22:35 on 18 November**, after the crash; it listed the unfinished work:
+
+```text
+recover from computer crash while you were working in this directory. List what you were doing
+```
+
+**22:37 on 18 November**; it built the fixed labs with Vivado and fixed the
+two Geiger counter labs as well, ten labs in all:
+
+```text
+yes, rerun Vivado and fix the Geiger labs
+```
+
+**22:39 on 18 November**, with the photo of the screen; it listed how it
+read the reply above and waited for a confirmation:
+
+```text
+recognize my response from this picture [Image #1] . List everything and confirm before working on it
+```
+
+**22:47 on 18 November**; it added the tests, merged the three full top
+levels into one, rejected the split DIO mode, added the GPIO pins, the RGB
+LED and the TinyVGA files of one revision, corrected the DAC instructions,
+and marked the shared Vivado script as a TODO. It explained the idea of
+leaving DIP 26 to 28 undriven and proposed to drop it:
+
+```text
+Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8 now, but note it in the report with TODO.
+```
+
+**19:19 on 19 November**; the Vivado builds for the Status of
+cmod_a7_35_claude_tiny_vga_640 had not started, because the script that
+waited for the previous Vivado run kept finding its own command line. It
+started them, added a test of a lab with TM1638, VGA, the microphone and the
+DAC all turned off, made the Vivado test count Slice LUTs, as the
+utilization report of Vivado does, instead of LUT cells, and updated the
+Status:
+
+```text
+are you done?
+```
+
+**21:09 on 19 November**; it copied the fixed Geiger counter lab into
+`labs/6_misc/6_1_geiger_muller_radiation_counter_claude`, reverted
+`6_1_geiger_muller_radiation_counter` and
+`6_1_geiger_muller_radiation_counter_on_tang_nano_9k`, and made the tests use
+the copy:
+
+```text
+Save your version of geiger_muller into 6_1_geiger_muller_radiation_counter_claude. Revert other geiger_muller variants. The first one was for DE10-Lite, the second is a work in progress. I will take care of them.
+```
+
+**21:15 on 19 November**, after Yuri Panchul corrected the parameter names
+in `4_2_5_optimized_ff_fifo_view_2_data_layout`; the tests passed again, and
+the edited labs and the Geiger counter copy elaborated for seven board sizes:
+
+```text
+is it fine now?
+```
+
+**23:38 on 19 November**; it committed and pushed the work above:
 
 ```text
 commit and push

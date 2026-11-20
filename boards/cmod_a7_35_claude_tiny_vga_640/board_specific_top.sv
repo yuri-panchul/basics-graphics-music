@@ -2,13 +2,30 @@
 `include "lab_specific_board_config.svh"
 `include "swap_bits.svh"
 
-// The board configuration cmod_a7_35_tiny_vga_640_no_tm1638_claude defines
-// the macro below and includes this file. The design then has no TM1638:
-// the two buttons and the two LEDs of Cmod A7 are the keys and the LEDs of
-// the labs, and there is no seven-segment display.
+// This file is the top level of all six Cmod A7 configurations of Claude.
+// The other five include it after defining one or two macros:
+//
+//   CMOD_A7_NO_PLL_SCREEN_WIDTH  304 or 320: no MMCM, see "VGA without
+//       a clock multiplier" below. cmod_a7_35_no_pll_tiny_vga_304_claude
+//       and cmod_a7_35_no_pll_tiny_vga_320_claude define it.
+//
+//   FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE: no TM1638. The two
+//       buttons and the two LEDs of Cmod A7 are the keys and the LEDs of the
+//       labs, and there is no seven-segment display. The three configurations
+//       with _no_tm1638 in the name define it.
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
     `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+`endif
+
+`ifdef CMOD_A7_NO_PLL_SCREEN_WIDTH
+    `define CMOD_A7_CLK_MHZ       12
+    `define CMOD_A7_PIXEL_MHZ     12
+    `define CMOD_A7_SCREEN_WIDTH  `CMOD_A7_NO_PLL_SCREEN_WIDTH
+`else
+    `define CMOD_A7_CLK_MHZ       50
+    `define CMOD_A7_PIXEL_MHZ     25
+    `define CMOD_A7_SCREEN_WIDTH  640
 `endif
 
 // Digilent Cmod A7-35T on a breadboard with:
@@ -17,23 +34,49 @@
 //   * TM1638 module with 8 digits, 8 LEDs and 8 keys;
 //   * INMP441 I2S microphone;
 //   * I2S DAC module: WeAct I2S Earphone Module (PCM5100A)
-//     or the usual purple GY-PCM5102 module (PCM5102A).
+//     or the usual purple GY-PCM5102 module (PCM5102A);
+//   * eight GPIO pins of the labs on DIP pins 1 to 8.
 //
 // board_specific.xdc is Digilent's Cmod-A7-Master.xdc with only the used
 // lines uncommented. It keeps Digilent's port names: sysclk, btn, led,
 // led0_*, ja, pioNN, uart_*. This module maps them to the signals of
 // TinyVGA, TM1638, the microphone and the DAC. pioNN is DIP pin NN.
-// See README.md for the wiring.
+// See boards/cmod_a7_35_claude_tiny_vga_640/README.md for the wiring.
 //
-// The Cmod A7 oscillator runs at 12 MHz. peripherals/vga.sv makes its
-// 25 MHz pixel rate with a clock enable, so it needs a clock of 25 MHz
-// or a multiple of it. The MMCM below makes 50 MHz from 12 MHz, the clock
-// most boards of this repository run at, and the whole design uses it.
+// The clock. The Cmod A7 oscillator runs at 12 MHz. peripherals/vga.sv
+// makes its 25 MHz pixel rate with a clock enable, so it needs a clock of
+// 25 MHz or a multiple of it. Without CMOD_A7_NO_PLL_SCREEN_WIDTH the MMCM
+// below makes 50 MHz from 12 MHz, the clock most boards of this repository
+// run at, and the whole design uses it.
+//
+// VGA without a clock multiplier. 640x480 at 60 Hz needs a pixel clock of
+// 25.175 MHz, which the 12 MHz oscillator cannot give without an MMCM or a
+// PLL. With CMOD_A7_NO_PLL_SCREEN_WIDTH the 12 MHz oscillator is the clock
+// of the whole design and the pixel clock as well, and a line is shorter:
+//
+//     304 visible + 8 front porch + 46 sync + 23 back porch = 381 clocks
+//     320 visible + 8 front porch + 48 sync + 24 back porch = 400 clocks
+//
+// 381 clocks of 12 MHz last 31.75 us, as the 800 clocks of 25.175 MHz of a
+// standard line, 31.78 us, and each part keeps its standard length: the
+// sync pulse, for example, lasts 3.83 us against 3.81 us. 400 clocks is
+// the horizontal timing of 640x480 at a 24 MHz pixel clock, with each
+// pixel two pixels of 640 wide. The vertical timing is the standard one,
+// 525 lines:
+//
+//     304: line 12 MHz / 381 = 31.50 kHz, frame 59.99 Hz  (standard 31.47 kHz, 59.94 Hz)
+//     320: line 12 MHz / 400 = 30.0 kHz,  frame 57.1 Hz
+//
+// A monitor takes either for 640x480 and samples each line at its own 640
+// points. Each of the 304 pixels covers 2.1 of them, so on a sharp pattern
+// some pixels look 2 and some 3 points wide. The 320 pixels are exactly 2
+// points wide, but 30 kHz is at the low end of what monitors accept: many
+// show the picture, some report the mode as out of range.
 
 module board_specific_top
 # (
-    parameter clk_mhz       = 50,  // The MMCM output, not the 12 MHz oscillator
-              pixel_mhz     = 25,
+    parameter clk_mhz       = `CMOD_A7_CLK_MHZ,    // 50 from the MMCM or the 12 MHz oscillator
+              pixel_mhz     = `CMOD_A7_PIXEL_MHZ,
 
               // Without TM1638 the two Cmod buttons are the keys
               // and also the switches
@@ -42,9 +85,9 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 2,
               w_digit       = 0,
-              w_gpio        = 1,   // No GPIO pins, a dummy one for the labs
+              w_gpio        = 8,   // DIP pins 1 to 8
 
-              screen_width  = 640,
+              screen_width  = `CMOD_A7_SCREEN_WIDTH,
               screen_height = 480,
 
               w_red         = 2,   // TinyVGA has 2 bits per color
@@ -71,6 +114,15 @@ module board_specific_top
 
     // DIP pins, see the pin mapping below
 
+    inout                pio1,
+    inout                pio2,
+    inout                pio3,
+    inout                pio4,
+    inout                pio5,
+    inout                pio6,
+    inout                pio7,
+    inout                pio8,
+
     output               pio21,
     output               pio22,
     output               pio23,
@@ -84,6 +136,21 @@ module board_specific_top
     output               pio31,
     input                pio32
 );
+
+    //------------------------------------------------------------------------
+    // The horizontal timing of VGA. 640 is the standard one, at 25 MHz
+    // pixels from the 50 MHz clock; 304 and 320 are in 12 MHz clocks, see
+    // the comment on top of this file. These values of 640 are the defaults
+    // of peripherals/vga.sv.
+
+    localparam h_front = screen_width == 640 ? 16 : 8,
+               h_sync  = screen_width == 640 ? 96 : screen_width == 320 ? 48 : 46,
+               h_back  = screen_width == 640 ? 48 : screen_width == 320 ? 24 : 23;
+
+    `ifdef CMOD_A7_NO_PLL_SCREEN_WIDTH
+        if (screen_width != 304 && screen_width != 320)
+            $error ("CMOD_A7_NO_PLL_SCREEN_WIDTH must be 304 or 320");
+    `endif
 
     //------------------------------------------------------------------------
     // Pin mapping
@@ -120,6 +187,10 @@ module board_specific_top
     assign ja [6] = VGA_B [0];  // Pmod pin 9
     assign ja [7] = VGA_HS;     // Pmod pin 10
 
+    // The GPIO pins of the labs are DIP pins 1 to 8, gpio [0] on DIP 1;
+    // see the gpio port of lab_top below. They are inouts, as on the other
+    // boards: a lab drives the ones it uses as outputs and reads the rest.
+
     // The DAC is on the DIP pins next to VU, pin 24
 
     assign pio21  = DAC_BCK;    // DIP 21  BCK
@@ -140,57 +211,75 @@ module board_specific_top
     assign MIC_SD = pio32;      // DIP 32  INMP441 SD
 
     //------------------------------------------------------------------------
-    // 50 MHz clock from the 12 MHz oscillator:
-    //
-    //     VCO = 12 MHz * 62.5  = 750 MHz
-    //     clk = 750 MHz / 15   =  50 MHz
-    //
-    // 750 MHz is inside the 600-1200 MHz VCO range of the MMCM in Artix-7
-    // speed grade -1, and the 12 MHz input is above its 10 MHz minimum.
+    // The clock of the design
 
-    wire clk_mmcm, clk_fb, locked;
+    wire clk, locked;
 
-    MMCME2_BASE
-    # (
-        .CLKIN1_PERIOD    ( 83.333   ),
-        .DIVCLK_DIVIDE    ( 1        ),
-        .CLKFBOUT_MULT_F  ( 62.5     ),
-        .CLKOUT0_DIVIDE_F ( 15.0     )
-    )
-    i_mmcm
-    (
-        .CLKIN1           ( sysclk   ),
-        .CLKFBIN          ( clk_fb   ),
-        .CLKFBOUT         ( clk_fb   ),
-        .CLKFBOUTB        (          ),
+    `ifdef CMOD_A7_NO_PLL_SCREEN_WIDTH
 
-        .CLKOUT0          ( clk_mmcm ),
-        .CLKOUT0B         (          ),
-        .CLKOUT1          (          ),
-        .CLKOUT1B         (          ),
-        .CLKOUT2          (          ),
-        .CLKOUT2B         (          ),
-        .CLKOUT3          (          ),
-        .CLKOUT3B         (          ),
-        .CLKOUT4          (          ),
-        .CLKOUT5          (          ),
-        .CLKOUT6          (          ),
+        // The 12 MHz oscillator is the clock of the whole design. Its pin,
+        // L17, is a clock-capable pin, and Vivado puts a global clock buffer
+        // on it. With no MMCM there is no lock to wait for.
 
-        .LOCKED           ( locked   ),
-        .PWRDWN           ( 1'b0     ),
-        .RST              ( 1'b0     )
-    );
+        assign clk    = sysclk;
+        assign locked = 1'b1;
 
-    // A clock from an MMCM reaches the logic through a global clock buffer
+    `else
 
-    wire clk;
+        // 50 MHz clock from the 12 MHz oscillator:
+        //
+        //     VCO = 12 MHz * 62.5  = 750 MHz
+        //     clk = 750 MHz / 15   =  50 MHz
+        //
+        // 750 MHz is inside the 600-1200 MHz VCO range of the MMCM in
+        // Artix-7 speed grade -1, and the 12 MHz input is above its 10 MHz
+        // minimum.
 
-    BUFG i_bufg (.I (clk_mmcm), .O (clk));
+        wire clk_mmcm, clk_fb;
+
+        MMCME2_BASE
+        # (
+            .CLKIN1_PERIOD    ( 83.333   ),
+            .DIVCLK_DIVIDE    ( 1        ),
+            .CLKFBOUT_MULT_F  ( 62.5     ),
+            .CLKOUT0_DIVIDE_F ( 15.0     )
+        )
+        i_mmcm
+        (
+            .CLKIN1           ( sysclk   ),
+            .CLKFBIN          ( clk_fb   ),
+            .CLKFBOUT         ( clk_fb   ),
+            .CLKFBOUTB        (          ),
+
+            .CLKOUT0          ( clk_mmcm ),
+            .CLKOUT0B         (          ),
+            .CLKOUT1          (          ),
+            .CLKOUT1B         (          ),
+            .CLKOUT2          (          ),
+            .CLKOUT2B         (          ),
+            .CLKOUT3          (          ),
+            .CLKOUT3B         (          ),
+            .CLKOUT4          (          ),
+            .CLKOUT5          (          ),
+            .CLKOUT6          (          ),
+
+            .LOCKED           ( locked   ),
+            .PWRDWN           ( 1'b0     ),
+            .RST              ( 1'b0     )
+        );
+
+        // A clock from an MMCM reaches the logic through a global clock buffer
+
+        BUFG i_bufg (.I (clk_mmcm), .O (clk));
+
+    `endif
 
     //------------------------------------------------------------------------
-    // Reset. It is on after power-up until the MMCM locks. With TM1638 the
-    // labs take their keys from TM1638, and either Cmod button resets the
-    // design. Without TM1638 the two buttons are the keys of the labs.
+    // Reset. It is on after power-up until the MMCM locks; without the MMCM
+    // the reset chain is all ones when the FPGA is configured, so the design
+    // starts in reset all the same. With TM1638 the labs take their keys
+    // from TM1638, and either Cmod button resets the design. Without TM1638
+    // the two buttons are the keys of the labs.
     //
     // The reset comes on at once and goes off on the third clock edge
     // after its cause is gone.
@@ -253,8 +342,6 @@ module board_specific_top
     wire  [             23:0] mic;
     wire  [             15:0] sound;
 
-    wire  [w_gpio      - 1:0] gpio_unused;
-
     //------------------------------------------------------------------------
 
     // The Cmod LEDs show the first two LEDs of the labs,
@@ -262,11 +349,20 @@ module board_specific_top
 
     assign led = lab_led [w_led - 1:0];
 
-    // The RGB LED is not used. Driving its pins high keeps it dark:
-    // the default pull-downs of unused pins would make it glow.
+    // The RGB LED shows the state of the design: red in reset, green when
+    // the design runs. At full brightness it dazzles, so it is lit 1/16 of
+    // the time, at 12 MHz / 4096 = 2.9 kHz. The counter runs on the
+    // oscillator, which runs while the MMCM is not locked as well.
 
-    assign led0_r = 1'b1;
-    assign led0_g = 1'b1;
+    logic [11:0] rgb_dim_cnt = '0;
+
+    always_ff @ (posedge sysclk)
+        rgb_dim_cnt <= rgb_dim_cnt + 1'd1;
+
+    wire rgb_dim_on = rgb_dim_cnt [11:8] == '0;
+
+    assign led0_r = ~ (rgb_dim_on &   rst);  // 0 is on
+    assign led0_g = ~ (rgb_dim_on & ~ rst);
     assign led0_b = 1'b1;
 
     //------------------------------------------------------------------------
@@ -321,12 +417,21 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( gpio_unused   )
+        .gpio          ( { pio8, pio7, pio6, pio5,     // DIP 8 to 5
+                           pio4, pio3, pio2, pio1 } )   // DIP 4 to 1
     );
 
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+
+        // peripherals/tm1638_board.sv can split DIO into an input and an
+        // output for boards that buffer it. Cmod A7 connects DIO straight
+        // to an FPGA pin, so that mode does not apply here.
+
+        `ifdef SPLIT_TM1638_DIO_INOUT_SIGNAL
+            $error ("SPLIT_TM1638_DIO_INOUT_SIGNAL is not supported on Cmod A7: TM1638 DIO is the inout pin pio28");
+        `endif
 
         wire [w_tm_key - 1:0] tm_key;
 
@@ -373,21 +478,30 @@ module board_specific_top
         assign x = w_x' (x10);
         assign y = w_y' (y10);
 
+        // With CLK_MHZ equal to PIXEL_MHZ, as without the MMCM, vga.sv moves
+        // to the next pixel on every clock. Its vertical timing is the
+        // standard one in all configurations.
+
         vga
         # (
-            .CLK_MHZ     ( clk_mhz    ),
-            .PIXEL_MHZ   ( pixel_mhz  )
+            .H_DISPLAY   ( screen_width ),
+            .H_FRONT     ( h_front      ),
+            .H_SYNC      ( h_sync       ),
+            .H_BACK      ( h_back       ),
+
+            .CLK_MHZ     ( clk_mhz      ),
+            .PIXEL_MHZ   ( pixel_mhz    )
         )
         i_vga
         (
-            .clk         ( clk        ),
-            .rst         ( rst        ),
-            .hsync       ( VGA_HS     ),
-            .vsync       ( VGA_VS     ),
-            .display_on  ( display_on ),
-            .hpos        ( x10        ),
-            .vpos        ( y10        ),
-            .pixel_clk   (            )
+            .clk         ( clk          ),
+            .rst         ( rst          ),
+            .hsync       ( VGA_HS       ),
+            .vsync       ( VGA_VS       ),
+            .display_on  ( display_on   ),
+            .hpos        ( x10          ),
+            .vpos        ( y10          ),
+            .pixel_clk   (              )
         );
 
         // A monitor expects black outside the visible area
@@ -412,6 +526,11 @@ module board_specific_top
     //------------------------------------------------------------------------
 
     `ifdef INSTANTIATE_MICROPHONE_INTERFACE_MODULE
+
+        // The receiver makes SCK of clk / 16 and takes a sample every 1024
+        // clocks: SCK of 3.125 MHz and 48.8 kHz at 50 MHz, SCK of 0.75 MHz
+        // and 11.7 kHz at 12 MHz. Both SCK rates are within the 0.5 to
+        // 3.2 MHz of INMP441.
 
         inmp441_mic_i2s_receiver
         # (
@@ -444,7 +563,10 @@ module board_specific_top
 
         // The master clock output stays unconnected. Connect SCK of
         // GY-PCM5102 to GND and leave MC of WeAct unconnected: the DAC
-        // then makes its own master clock from BCK.
+        // then makes its own master clock from BCK. At 50 MHz BCK is
+        // 50 MHz / 16 = 3.125 MHz and the sample rate 50 MHz / 1024 =
+        // 48.8 kHz; at 12 MHz BCK is 12 MHz / 4 = 3 MHz and the sample rate
+        // 12 MHz / 256 = 46.9 kHz.
 
         i2s_audio_out
         # (

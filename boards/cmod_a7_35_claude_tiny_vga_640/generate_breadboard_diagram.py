@@ -336,8 +336,8 @@ def draw(variant):
     cmid = (U[CMOD_TOP] + U[CMOD_BOT]) / 2
     svg.rect(cx1 - 6, Y(cmid) - 0.95 * P, 1.1 * P, 1.9 * P, "#c9ccd2", "#7d828c", 1.5, 3)
     svg.text(cx1 + 0.45 * P - 6, Y(cmid) + 4, "USB", 10, "bold", anchor="middle")
-    svg.rect(X(3), Y(cmid - 1.2), 3.6 * P, 2.4 * P, "#202020", "#000000", 1, 3)
-    svg.text(X(3) + 1.8 * P, Y(cmid) + 4, "XC7A35T", 11, fill="#d8d8d8", anchor="middle")
+    svg.rect(X(3), Y(cmid - 1.2), 3.6 * P, 1.7 * P, "#202020", "#000000", 1, 3)
+    svg.text(X(3) + 1.8 * P, Y(cmid - 0.35) + 4, "XC7A35T", 11, fill="#d8d8d8", anchor="middle")
     svg.text(X(13), Y(cmid) + 2, "Cmod A7-35T", 22, "bold", "#ffffff", "middle")
     svg.text(X(13), Y(cmid) + 20, "pins 48..25 in column c, 1..24 in column g", 10,
              fill="#c7d3e6", anchor="middle")
@@ -353,6 +353,11 @@ def draw(variant):
                 svg.text(x + 3.5, y + 24, CMOD_NAMES[pin], 9, "bold", color, "end", MONO, rotate=-90)
             else:
                 svg.text(x + 3.5, y - 20, CMOD_NAMES[pin], 9, "bold", color, "start", MONO, rotate=-90)
+
+    # DIP 1 to 8 are the GPIO pins of the labs; nothing is connected to them
+
+    gx, gy = xy(*dip(1))[0], xy(*dip(8))
+    svg.text((gx + gy[0]) / 2, gy[1] - 22, "GPIO 0 to 7", 9, "bold", "#9fb2cf", "middle", MONO)
 
     # Pmod JA and TinyVGA, off the end of the breadboard
 
@@ -568,7 +573,9 @@ def draw(variant):
              "Variant A, Pmod TPH2: leave the regulator out and wire test point 6 of TPH2 to the "
              "+ rail; DIP 24, VU, then stays unconnected.",
              "Keep the middle of rows 25 to 29 free for the USB plug. "
-             "Unplug USB before changing the wiring."] + dac["notes"]
+             "Unplug USB before changing the wiring.",
+             "DIP 1 to 8 are the GPIO pins of the labs, gpio[0] to gpio[7]; nothing is "
+             "connected to them here."] + dac["notes"]
     ny = 1018
     for k, s in enumerate(notes):
         svg.text(40, ny + 20 * k, s, 13, fill=C["muted"])

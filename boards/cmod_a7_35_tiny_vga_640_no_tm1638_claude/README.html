@@ -102,6 +102,7 @@
 <p>Built with Vivado 2026.1 with the configuration file of the scripts, <code>peripherals/lab_specific_board_config.svh</code>, which turns TM1638 on: the builds show that this configuration leaves it out all the same.</p>
 <div class="scroll"><table><thead><tr><th>Lab</th><th class="r">LUTs</th><th class="r">Registers</th><th class="r">Worst setup slack</th></tr></thead><tbody><tr><td><code>labs/1_basics/1_05_7seven_segment_letter</code></td><td class="r">43</td><td class="r">50</td><td class="r">15.6 ns</td></tr><tr><td><code>labs/2_graphics/2_3_color_stripes</code></td><td class="r">56</td><td class="r">51</td><td class="r">15.3 ns</td></tr><tr><td><code>labs/3_music/3_10_spectrum_analyzer</code></td><td class="r">2330</td><td class="r">1477</td><td class="r">1.8 ns</td></tr></tbody></table></div>
 <p>All builds have no errors and no critical warnings, and meet all timing at 50 MHz, a clock period of 20 ns, with the MMCM of cmod_a7_35_claude_tiny_vga_640. None of the netlists has a TM1638 module. Vivado gives the design rule warning CFGBVS-1, as for cmod_a7_35_claude_tiny_vga_640; it does not stop the bitstream.</p>
+<p>The builds above are from before 18 November, when the six configurations got one shared top level, eight GPIO pins and the RGB LED. After that change <a href="../../scripts/tests/test_cmod_a7_35_claude.py">scripts/tests/test_cmod_a7_35_claude.py</a> built <code>labs/3_music/3_11_microphone_monitor</code> for this configuration with Vivado 2026.1: 1872 LUTs, 1261 registers, worst setup slack 4.9 ns, all timing met.</p>
 <p><strong>Not yet tried on a real board.</strong></p>
 <h2 id="files">Files</h2>
 <div class="scroll"><table><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody><tr><td><a href="board_specific_top.sv">board_specific_top.sv</a></td><td>Defines <code>FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE</code> and includes the top level of cmod_a7_35_claude_tiny_vga_640</td></tr><tr><td><a href="board_specific.xdc">board_specific.xdc</a></td><td>The same as in cmod_a7_35_claude_tiny_vga_640</td></tr><tr><td><a href="board_specific.tcl">board_specific.tcl</a></td><td>FPGA part for Vivado</td></tr><tr><td><code>wiring_*.svg</code>, <code>wiring_*.png</code></td><td>The wiring diagrams without TM1638, for both DAC modules and both 3.3 V sources</td></tr><tr><td><code>breadboard_*.svg</code>, <code>breadboard_*.png</code></td><td>The breadboard layouts without TM1638, for both DAC modules</td></tr><tr><td>README.md, README.html</td><td>This instruction in English</td></tr><tr><td>README_ru.md, README_ru.html</td><td>The same in Russian</td></tr></tbody></table></div>
@@ -152,6 +153,28 @@ cmod_a7_35_no_pll_vga_320_no_tm1638</code></pre>
 <p><strong>21:05 on 18 November</strong>; it added both reports, linked above, to <code>misc/ai_sessions/20261118_cmod_a7_support/claude</code>:</p>
 <pre><code class="language-text">Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/claude</code></pre>
 <p><strong>21:58 on 18 November</strong>:</p>
+<pre><code class="language-text">commit and push</code></pre>
+<p><strong>22:11 on 18 November</strong>; it produced a list of changes after reading Codex's review of these configurations:</p>
+<pre><code class="language-text">read your competitor report. List what you would change in your solution.</code></pre>
+<p><strong>22:20 on 18 November</strong>, answering item 1 of that list (fix the configurations without TM1638); it fixed eight labs, ten after the 22:37 prompt, instead of the board files:</p>
+<pre><code class="language-text">1. No, keep 1-digit 7-segment. This should be fixed in the examples later. Same thing for sw. Don't pad, this should be fixed in example using generate and padding. Yes, do the lab fix.</code></pre>
+<p><strong>22:26 on 18 November</strong>, typed in answer to items 2 to 7 of that list but never sent, because the computer crashed. The text is read from a photo of the screen, sent at 22:39:</p>
+<pre><code class="language-text">2. merge - yes. 3 - how large are the tests? 4. don't sync the buttons. We did not have these issues yet with our labs, when we have, we will add the synchronizers. these buttons may already have the internal synchronizers (check it and report). 5. yes, correct. 6. yes, reject. 7. OK.</code></pre>
+<p><strong>22:35 on 18 November</strong>, after the crash; it listed the unfinished work:</p>
+<pre><code class="language-text">recover from computer crash while you were working in this directory. List what you were doing</code></pre>
+<p><strong>22:37 on 18 November</strong>; it built the fixed labs with Vivado and fixed the two Geiger counter labs as well, ten labs in all:</p>
+<pre><code class="language-text">yes, rerun Vivado and fix the Geiger labs</code></pre>
+<p><strong>22:39 on 18 November</strong>, with the photo of the screen; it listed how it read the reply above and waited for a confirmation:</p>
+<pre><code class="language-text">recognize my response from this picture [Image #1] . List everything and confirm before working on it</code></pre>
+<p><strong>22:47 on 18 November</strong>; it added the tests, merged the three full top levels into one, rejected the split DIO mode, added the GPIO pins, the RGB LED and the TinyVGA files of one revision, corrected the DAC instructions, and marked the shared Vivado script as a TODO. It explained the idea of leaving DIP 26 to 28 undriven and proposed to drop it:</p>
+<pre><code class="language-text">Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8 now, but note it in the report with TODO.</code></pre>
+<p><strong>19:19 on 19 November</strong>; the Vivado builds for the Status of cmod_a7_35_claude_tiny_vga_640 had not started, because the script that waited for the previous Vivado run kept finding its own command line. It started them, added a test of a lab with TM1638, VGA, the microphone and the DAC all turned off, made the Vivado test count Slice LUTs, as the utilization report of Vivado does, instead of LUT cells, and updated the Status:</p>
+<pre><code class="language-text">are you done?</code></pre>
+<p><strong>21:09 on 19 November</strong>; it copied the fixed Geiger counter lab into <code>labs/6_misc/6_1_geiger_muller_radiation_counter_claude</code>, reverted <code>6_1_geiger_muller_radiation_counter</code> and <code>6_1_geiger_muller_radiation_counter_on_tang_nano_9k</code>, and made the tests use the copy:</p>
+<pre><code class="language-text">Save your version of geiger_muller into 6_1_geiger_muller_radiation_counter_claude. Revert other geiger_muller variants. The first one was for DE10-Lite, the second is a work in progress. I will take care of them.</code></pre>
+<p><strong>21:15 on 19 November</strong>, after Yuri Panchul corrected the parameter names in <code>4_2_5_optimized_ff_fifo_view_2_data_layout</code>; the tests passed again, and the edited labs and the Geiger counter copy elaborated for seven board sizes:</p>
+<pre><code class="language-text">is it fine now?</code></pre>
+<p><strong>23:38 on 19 November</strong>; it committed and pushed the work above:</p>
 <pre><code class="language-text">commit and push</code></pre>
 </main>
 </body>
