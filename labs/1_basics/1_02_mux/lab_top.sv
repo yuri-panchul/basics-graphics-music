@@ -81,9 +81,16 @@ module lab_top
         end
         else
         begin : use_switches
-            assign sel = sw  [2];
-            assign a   = sw  [1];
-            assign b   = sw  [0];
+
+            // A board with fewer than three switches
+            // gets zeros for the missing ones
+
+            localparam w_sw_padded = w_sw >= 3 ? w_sw : 3;
+            wire [w_sw_padded - 1:0] sw_padded = w_sw_padded' (sw);
+
+            assign sel = sw_padded [2];
+            assign a   = sw_padded [1];
+            assign b   = sw_padded [0];
         end
     endgenerate
 

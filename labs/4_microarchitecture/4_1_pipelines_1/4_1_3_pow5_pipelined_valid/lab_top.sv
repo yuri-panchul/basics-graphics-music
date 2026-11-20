@@ -202,9 +202,12 @@ module lab_top
         .digit    ( digit                          )
     );
 
-    assign led[0] = data_valid_stage_1_ff;
-    assign led[1] = data_valid_stage_2_ff;
-    assign led[2] = data_valid_stage_3_ff;
-    assign led[3] = data_valid_stage_4_ff;
+    // The valid bits of the four stages, padded with zeros
+    // or cut to the number of LEDs on the board
+
+    assign led = w_led' ({ data_valid_stage_4_ff,
+                           data_valid_stage_3_ff,
+                           data_valid_stage_2_ff,
+                           data_valid_stage_1_ff });
 
 endmodule

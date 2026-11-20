@@ -82,13 +82,18 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    logic [w_digit:0] shift_reg;
+    // The shift register has at least two positions,
+    // so that the example also builds for a board with a single digit
+
+    localparam w_shift = w_digit > 1 ? w_digit : 2;
+
+    logic [w_shift - 1:0] shift_reg;
 
     always_ff @ (posedge clk or posedge rst)
-      if (rst)
-        shift_reg <= w_digit' (1);
-      else if (enable)
-        shift_reg <= { shift_reg [0], shift_reg [w_digit - 1:1] };
+        if (rst)
+            shift_reg <= w_shift' (1);
+        else if (enable)
+            shift_reg <= { shift_reg [0], shift_reg [w_shift - 1:1] };
 
     assign led = w_led' (shift_reg);
 
@@ -117,16 +122,16 @@ module lab_top
     seven_seg_encoding_e letter;
 
     always_comb
-      case (4' (shift_reg))
-      4'b1000: letter = F;
-      4'b0100: letter = P;
-      4'b0010: letter = G;
-      4'b0001: letter = A;
-      default: letter = space;
-      endcase
+        case (4' (shift_reg))
+        4'b1000: letter = F;
+        4'b0100: letter = P;
+        4'b0010: letter = G;
+        4'b0001: letter = A;
+        default: letter = space;
+        endcase
 
     assign abcdefgh = letter;
-    assign digit    = shift_reg;
+    assign digit    = w_digit' (shift_reg);
 
     // Exercise 1: Increase the frequency of enable signal
     // to the level your eyes see the letters as a solid word

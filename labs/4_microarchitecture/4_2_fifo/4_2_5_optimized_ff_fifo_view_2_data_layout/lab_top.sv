@@ -72,7 +72,12 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    localparam fifo_width = 4, fifo_depth = w_digit;
+    localparam fifo_width = 4;
+
+    // The FIFO has at least two entries, so that the example also builds
+    // for a board with a single digit; that digit shows the last entry
+
+    localparam fifo_depth = w_digit > 1 ? w_digit : 2;
 
     wire [fifo_width - 1:0] write_data;
     wire [fifo_width - 1:0] read_data;
