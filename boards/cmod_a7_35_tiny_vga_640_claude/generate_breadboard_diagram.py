@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate the breadboard layouts of the board configuration
-cmod_a7_35_claude_tiny_vga_640.
+cmod_a7_35_tiny_vga_640_claude.
 
 Unlike the wiring diagrams of generate_wiring_diagram.py, these drawings show
 the holes of a full-size breadboard, with the INMP441 microphone, the DAC
@@ -34,7 +34,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 HERE = Path(__file__).resolve().parent
-BOARD = "cmod_a7_35_claude_tiny_vga_640"  # the board directory to write to
+BOARD = "cmod_a7_35_tiny_vga_640_claude"  # the board directory to write to
 
 
 def has_tm1638():

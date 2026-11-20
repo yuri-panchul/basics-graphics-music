@@ -3,7 +3,7 @@
 #
 # vivado -mode batch -nojournal -nolog \
 #     -source scripts/tests/build_cmod_a7_35_claude.tcl \
-#     -tclargs labs/3_music/3_11_microphone_monitor cmod_a7_35_claude_tiny_vga_640
+#     -tclargs labs/3_music/3_11_microphone_monitor cmod_a7_35_tiny_vga_640_claude
 #
 # Run it in an empty directory: it writes the reports and lab.bit there.
 # The sources and the include directories are the ones of

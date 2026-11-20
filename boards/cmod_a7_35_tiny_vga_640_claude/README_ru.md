@@ -2,7 +2,7 @@
 
 # Cmod A7-35T на макетной плате с TinyVGA, TM1638, микрофоном и ЦАП I2S
 
-Конфигурация платы `cmod_a7_35_claude_tiny_vga_640`. English version: [README.md](README.md).
+Конфигурация платы `cmod_a7_35_tiny_vga_640_claude`. English version: [README.md](README.md).
 
 [Digilent Cmod A7-35T](https://digilent.com/reference/programmable-logic/cmod-a7/start)
 — это ПЛИС Artix-7 (XC7A35T-1CPG236C) на модуле в корпусе DIP с 48 выводами,
@@ -496,7 +496,7 @@ VU — это 5 В от USB за вычетом падения на диоде, 
 ## Сборка и запуск упражнений
 
 В каталоге упражнения один раз выберите плату скриптом
-`./06_choose_another_fpga_board.bash` — пункт `cmod_a7_35_claude_tiny_vga_640`. Затем
+`./06_choose_another_fpga_board.bash` — пункт `cmod_a7_35_tiny_vga_640_claude`. Затем
 `./03_synthesize_for_fpga.bash` собирает проект в Vivado и загружает его в
 ПЛИС через USB. Скрипты загружают саму ПЛИС, а не флеш-память модуля, поэтому
 после отключения питания проект пропадает; `./04_configure_fpga.bash`
@@ -659,7 +659,7 @@ BGM_TEST_VIVADO=1 python3 scripts/tests/test_cmod_a7_35_claude.py
 
 | Конфигурация | Тактовая частота; TM1638 | LUT | Регистры | Худший запас по setup |
 |--------------|--------------------------|----:|---------:|----------------------:|
-| `cmod_a7_35_claude_tiny_vga_640` | 50 МГц от MMCM; с TM1638 | 1980 | 1365 | 7,8 нс |
+| `cmod_a7_35_tiny_vga_640_claude` | 50 МГц от MMCM; с TM1638 | 1980 | 1365 | 7,8 нс |
 | `cmod_a7_35_tiny_vga_640_no_tm1638_claude` | 50 МГц от MMCM; без TM1638 | 1872 | 1261 | 4,9 нс |
 | `cmod_a7_35_no_pll_tiny_vga_304_claude` | 12 МГц, без MMCM; с TM1638 | 2017 | 1361 | 67,0 нс |
 | `cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude` | 12 МГц, без MMCM; без TM1638 | 1881 | 1259 | 72,5 нс |
@@ -1281,7 +1281,7 @@ Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8
 ```
 
 **19:19, 19 ноября**; сборки Vivado для раздела «Состояние»
-cmod_a7_35_claude_tiny_vga_640 не начались, потому что скрипт, который ждал
+cmod_a7_35_tiny_vga_640_claude не начались, потому что скрипт, который ждал
 окончания предыдущего запуска Vivado, всё время находил собственную
 командную строку. Сборки запущены, добавлен тест упражнения с выключенными
 TM1638, VGA, микрофоном и ЦАП, тест Vivado теперь считает Slice LUT, как
@@ -1325,6 +1325,53 @@ is it fine now?
 ```
 
 **23:38, 19 ноября**; сделанное выше закоммичено и отправлено:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
+**23:52, 19 ноября**; оказалось, что обзор конфигураций Codex уже лежит в
+`misc/ai_sessions/20261118_cmod_a7_support/claude` как
+`claude_cmod_a7_compare_1`, и был задан вопрос, какие файлы имелись в виду;
+вопрос пока открыт:
+
+```text
+move cmod a7 review files to ai_sessions
+```
+
+```text
+перенеси файлы обзора cmod a7 в ai_sessions
+```
+
+**23:58, 19 ноября**; объяснена идея оставить DIP 26–28 неуправляемыми в
+конфигурациях без TM1638 и рекомендовано по-прежнему держать STB и CLK в
+высоком уровне:
+
+```text
+what is the issue with DIP 26-28?
+```
+
+```text
+в чём проблема с DIP 26-28?
+```
+
+**23:58, 19 ноября**, минутой позже; конфигурация
+cmod_a7_35_claude_tiny_vga_640 переименована в cmod_a7_35_tiny_vga_640_claude,
+и старое имя заменено везде, кроме цитат промптов:
+
+```text
+Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
+```
+
+```text
+Ещё переименуй cmod_a7_35_claude_tiny_vga_640 в cmod_a7_35_tiny_vga_640_claude
+```
+
+**00:09, 20 ноября**; переименование закоммичено и отправлено:
 
 ```text
 commit and push

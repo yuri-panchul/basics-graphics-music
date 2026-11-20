@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1960" height="1206" viewBox="0 0 1960 1206">
 <rect width="1960" height="1206" fill="#ffffff"/>
 <text x="40.0" y="46.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="26" font-weight="bold" fill="#1b1b1b" text-anchor="start">Breadboard layout: Cmod A7-35T, INMP441, GY-PCM5102 and the 3.3 V regulator</text>
-<text x="40.0" y="76.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Board configuration cmod_a7_35_claude_tiny_vga_640, seen from above. The microphone, the DAC and the 3.3 V regulator of variant B go straight into the breadboard; TinyVGA and TM1638 connect as in the wiring diagrams.</text>
+<text x="40.0" y="76.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Board configuration cmod_a7_35_tiny_vga_640_claude, seen from above. The microphone, the DAC and the 3.3 V regulator of variant B go straight into the breadboard; TinyVGA and TM1638 connect as in the wiring diagrams.</text>
 <text x="40.0" y="98.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="15" font-weight="normal" fill="#5b6170" text-anchor="start">Tinted holes are the strips in use: the five holes of a strip are connected. A dot is a jumper wire in a hole.</text>
 <line x1="40.0" y1="128.0" x2="70.0" y2="128.0" stroke="#c99100" stroke-width="5" stroke-linecap="round"/>
 <text x="78.0" y="133.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start">TM1638</text>

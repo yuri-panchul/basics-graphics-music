@@ -4,10 +4,10 @@
 
 Board configuration `cmod_a7_35_tiny_vga_640_no_tm1638_claude`. Русская версия: [README_ru.md](README_ru.md).
 
-This is [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md) without the TM1638 module. **The
+This is [cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README.md) without the TM1638 module. **The
 labs get the two buttons of Cmod A7 as their keys and its two LEDs as their
 LEDs, and there is no seven-segment display.** Everything else is that of
-cmod_a7_35_claude_tiny_vga_640: VGA 640x480 through TinyVGA, the microphone, the DAC, the 50 MHz clock from the MMCM, the pins and the wiring. The other configurations without TM1638 are
+cmod_a7_35_tiny_vga_640_claude: VGA 640x480 through TinyVGA, the microphone, the DAC, the 50 MHz clock from the MMCM, the pins and the wiring. The other configurations without TM1638 are
 [cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README.md), [cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README.md).
 
 ## Contents
@@ -22,7 +22,7 @@ cmod_a7_35_claude_tiny_vga_640: VGA 640x480 through TinyVGA, the microphone, the
 
 ## What is different
 
-| | [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md) | cmod_a7_35_tiny_vga_640_no_tm1638_claude, this one |
+| | [cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README.md) | cmod_a7_35_tiny_vga_640_no_tm1638_claude, this one |
 |---|---|---|
 | Keys of the labs | 8 keys of TM1638 | BTN0 and BTN1 of Cmod A7: `key[0]` and `key[1]`, also `sw[0]` and `sw[1]` |
 | LEDs of the labs | 8 LEDs of TM1638, the first two also on LED1 and LED2 of Cmod A7 | LED1 and LED2 of Cmod A7: `led[0]` and `led[1]` |
@@ -38,27 +38,27 @@ beyond the first two is lost the same way.
 The design is in reset after loading until the MMCM locks. No button resets it: to start a lab again, load the FPGA again
 with `./04_configure_fpga.bash`.
 
-The design keeps DIP 26 and 27, the STB and CLK of TM1638 in cmod_a7_35_claude_tiny_vga_640, high,
+The design keeps DIP 26 and 27, the STB and CLK of TM1638 in cmod_a7_35_tiny_vga_640_claude, high,
 and does not drive DIP 28. Leave the three pins unconnected.
 
 ## How it is made
 
 [board_specific_top.sv](board_specific_top.sv) has two lines of code. It
 defines `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` and includes
-the `board_specific_top.sv` of cmod_a7_35_claude_tiny_vga_640, which then leaves out TM1638 even
+the `board_specific_top.sv` of cmod_a7_35_tiny_vga_640_claude, which then leaves out TM1638 even
 though `peripherals/lab_specific_board_config.svh` turns it on. Other boards
 of the repository without TM1638, such as `tang_nano_9k_hdmi_no_tm1638`, are
 made the same way, but some of them draw a virtual TM1638 on the screen; this
 one does not.
 
-[board_specific.xdc](board_specific.xdc) is the one of cmod_a7_35_claude_tiny_vga_640. It keeps the
+[board_specific.xdc](board_specific.xdc) is the one of cmod_a7_35_tiny_vga_640_claude. It keeps the
 lines of DIP 26, 27 and 28 uncommented, because the included top level still
 has these ports.
 
 ## The hardware and the wiring
 
 The parts, the 3.3 V source, the assembly and the wiring tables are those of
-[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md) without TM1638: leave out the module and
+[cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README.md) without TM1638: leave out the module and
 its five wires. DIP 25 still goes to the GND rail. The pins in short:
 
 | Cmod A7 | Connect to |
@@ -78,8 +78,8 @@ Tapeout store sells it assembled as
 €15.00 in November 2026. It can also be ordered assembled from JLCPCB with
 `GERBER-tiny-vga.zip`, `BOM-tiny-vga.csv` and `CPL-tiny-vga.csv` from
 `pcb/jlcpcb/production_files/` of the repository; the steps are in
-[Where to get TinyVGA](../cmod_a7_35_claude_tiny_vga_640/README.md#where-to-get-tinyvga)
-of cmod_a7_35_claude_tiny_vga_640.
+[Where to get TinyVGA](../cmod_a7_35_tiny_vga_640_claude/README.md#where-to-get-tinyvga)
+of cmod_a7_35_tiny_vga_640_claude.
 
 The drawings of this directory have no TM1638, for both DAC modules, WeAct
 I2S Earphone Module (PCM5100A) and GY-PCM5102 (PCM5102A).
@@ -108,7 +108,7 @@ the same names.
 
 In a lab directory, choose the board once with
 `./06_choose_another_fpga_board.bash` and pick `cmod_a7_35_tiny_vga_640_no_tm1638_claude`. Then build and load
-as for [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md):
+as for [cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README.md):
 
 ```bash
 ./03_synthesize_for_fpga.bash
@@ -131,9 +131,9 @@ builds show that this configuration leaves it out all the same.
 | `labs/3_music/3_10_spectrum_analyzer` | 2330 | 1477 | 1.8 ns |
 
 All builds have no errors and no critical warnings, and meet all timing at
-50 MHz, a clock period of 20 ns, with the MMCM of cmod_a7_35_claude_tiny_vga_640. None of the
+50 MHz, a clock period of 20 ns, with the MMCM of cmod_a7_35_tiny_vga_640_claude. None of the
 netlists has a TM1638 module. Vivado gives the design rule warning CFGBVS-1,
-as for cmod_a7_35_claude_tiny_vga_640; it does not stop the bitstream.
+as for cmod_a7_35_tiny_vga_640_claude; it does not stop the bitstream.
 
 The builds above are from before 18 November, when the six configurations got one
 shared top level, eight GPIO pins and the RGB LED. After that change [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
@@ -147,20 +147,20 @@ all timing met.
 
 | File | What it is |
 |------|------------|
-| [board_specific_top.sv](board_specific_top.sv) | Defines `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` and includes the top level of cmod_a7_35_claude_tiny_vga_640 |
-| [board_specific.xdc](board_specific.xdc) | The same as in cmod_a7_35_claude_tiny_vga_640 |
+| [board_specific_top.sv](board_specific_top.sv) | Defines `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` and includes the top level of cmod_a7_35_tiny_vga_640_claude |
+| [board_specific.xdc](board_specific.xdc) | The same as in cmod_a7_35_tiny_vga_640_claude |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams without TM1638, for both DAC modules and both 3.3 V sources |
 | `breadboard_*.svg`, `breadboard_*.png` | The breadboard layouts without TM1638, for both DAC modules |
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 
-The drawings come from the generators of cmod_a7_35_claude_tiny_vga_640, run with the name of
+The drawings come from the generators of cmod_a7_35_tiny_vga_640_claude, run with the name of
 this configuration; they leave out TM1638 for every name with
 `_no_tm1638` in it:
 
 ```bash
-cd ../cmod_a7_35_claude_tiny_vga_640
+cd ../cmod_a7_35_tiny_vga_640_claude
 python3 generate_wiring_diagram.py cmod_a7_35_tiny_vga_640_no_tm1638_claude
 python3 generate_breadboard_diagram.py cmod_a7_35_tiny_vga_640_no_tm1638_claude
 cd ../cmod_a7_35_tiny_vga_640_no_tm1638_claude
@@ -176,7 +176,7 @@ done
 ## Appendix: the prompts
 
 The rest of the design comes from the prompts in the appendix of
-[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README.md#appendix-the-prompts). This configuration
+[cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README.md#appendix-the-prompts). This configuration
 comes from the following prompts, sent by Yuri Panchul in the same Claude
 Code session on 16 and 17 November 2026, verbatim. They are all the prompts
 of the session from the first one about this configuration on, the requests
@@ -348,7 +348,7 @@ Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8
 ```
 
 **19:19 on 19 November**; the Vivado builds for the Status of
-cmod_a7_35_claude_tiny_vga_640 had not started, because the script that
+cmod_a7_35_tiny_vga_640_claude had not started, because the script that
 waited for the previous Vivado run kept finding its own command line. It
 started them, added a test of a lab with TM1638, VGA, the microphone and the
 DAC all turned off, made the Vivado test count Slice LUTs, as the
@@ -378,6 +378,37 @@ is it fine now?
 ```
 
 **23:38 on 19 November**; it committed and pushed the work above:
+
+```text
+commit and push
+```
+
+**23:52 on 19 November**; it found that its review of the Codex
+configurations was already in `misc/ai_sessions/20261118_cmod_a7_support/claude`
+as `claude_cmod_a7_compare_1` and asked which files were meant; the question
+is still open:
+
+```text
+move cmod a7 review files to ai_sessions
+```
+
+**23:58 on 19 November**; it explained the idea of leaving DIP 26 to 28
+undriven in the configurations without TM1638 and recommended keeping STB and
+CLK driven high:
+
+```text
+what is the issue with DIP 26-28?
+```
+
+**23:58 on 19 November**, a minute later; it renamed the configuration
+cmod_a7_35_claude_tiny_vga_640 to cmod_a7_35_tiny_vga_640_claude and replaced
+the old name everywhere except in the quoted prompts:
+
+```text
+Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
+```
+
+**00:09 on 20 November**; it committed and pushed the rename:
 
 ```text
 commit and push

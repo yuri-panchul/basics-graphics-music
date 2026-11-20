@@ -41,7 +41,7 @@
 // lines uncommented. It keeps Digilent's port names: sysclk, btn, led,
 // led0_*, ja, pioNN, uart_*. This module maps them to the signals of
 // TinyVGA, TM1638, the microphone and the DAC. pioNN is DIP pin NN.
-// See boards/cmod_a7_35_claude_tiny_vga_640/README.md for the wiring.
+// See boards/cmod_a7_35_tiny_vga_640_claude/README.md for the wiring.
 //
 // The clock. The Cmod A7 oscillator runs at 12 MHz. peripherals/vga.sv
 // makes its 25 MHz pixel rate with a clock enable, so it needs a clock of

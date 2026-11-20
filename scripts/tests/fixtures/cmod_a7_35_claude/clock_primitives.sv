@@ -1,5 +1,5 @@
 // Test-only models of the two Xilinx clock primitives that
-// boards/cmod_a7_35_claude_tiny_vga_640/board_specific_top.sv uses, for
+// boards/cmod_a7_35_tiny_vga_640_claude/board_specific_top.sv uses, for
 // Icarus Verilog. They model only what the tests check: the output
 // frequency of CLKOUT0 and LOCKED going high some time after the input
 // clock starts. Vivado uses the real primitives.

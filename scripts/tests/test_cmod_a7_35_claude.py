@@ -2,7 +2,7 @@
 
 Run: python3 scripts/tests/test_cmod_a7_35_claude.py
 
-The configurations are boards/cmod_a7_35_claude_tiny_vga_640, which holds the
+The configurations are boards/cmod_a7_35_tiny_vga_640_claude, which holds the
 top level, and the five that include it: without the MMCM (_no_pll_..._304,
 _no_pll_..._320) and without TM1638 (_no_tm1638). The tests check:
 
@@ -41,12 +41,12 @@ IVERILOG = shutil.which("iverilog")
 VVP = shutil.which("vvp")
 JOBS = max(1, min(4, os.cpu_count() or 1))
 
-MAIN = "cmod_a7_35_claude_tiny_vga_640"
+MAIN = "cmod_a7_35_tiny_vga_640_claude"
 
 # Configuration: (screen width, with TM1638)
 
 CONFIGS = {
-    "cmod_a7_35_claude_tiny_vga_640":                  (640, True),
+    "cmod_a7_35_tiny_vga_640_claude":                  (640, True),
     "cmod_a7_35_tiny_vga_640_no_tm1638_claude":        (640, False),
     "cmod_a7_35_no_pll_tiny_vga_304_claude":           (304, True),
     "cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude": (304, False),

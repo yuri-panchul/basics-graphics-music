@@ -4,10 +4,10 @@
 
 Конфигурация платы `cmod_a7_35_tiny_vga_640_no_tm1638_claude`. English version: [README.md](README.md).
 
-Это [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README_ru.md) без модуля TM1638. **Упражнения
+Это [cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README_ru.md) без модуля TM1638. **Упражнения
 получают две кнопки Cmod A7 в качестве своих кнопок и два её светодиода в
 качестве своих светодиодов, а семисегментного индикатора нет.** Всё остальное
-— как у cmod_a7_35_claude_tiny_vga_640: VGA 640x480 через TinyVGA, микрофон, ЦАП, тактовая частота 50 МГц от MMCM, выводы и соединения. Другие конфигурации без TM1638 —
+— как у cmod_a7_35_tiny_vga_640_claude: VGA 640x480 через TinyVGA, микрофон, ЦАП, тактовая частота 50 МГц от MMCM, выводы и соединения. Другие конфигурации без TM1638 —
 [cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude/README_ru.md), [cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude](../cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude/README_ru.md).
 
 ## Содержание
@@ -22,7 +22,7 @@
 
 ## Чем отличается
 
-| | [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README_ru.md) | cmod_a7_35_tiny_vga_640_no_tm1638_claude, эта |
+| | [cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README_ru.md) | cmod_a7_35_tiny_vga_640_no_tm1638_claude, эта |
 |---|---|---|
 | Кнопки упражнений | 8 кнопок TM1638 | BTN0 и BTN1 на Cmod A7: `key[0]` и `key[1]`, они же `sw[0]` и `sw[1]` |
 | Светодиоды упражнений | 8 светодиодов TM1638, первые два также на LED1 и LED2 Cmod A7 | LED1 и LED2 на Cmod A7: `led[0]` и `led[1]` |
@@ -39,7 +39,7 @@
 После загрузки проект находится в сбросе, пока MMCM не захватит частоту. Ни одна кнопка его не сбрасывает: чтобы начать упражнение
 заново, загрузите ПЛИС ещё раз командой `./04_configure_fpga.bash`.
 
-Проект держит выводы DIP 26 и 27, STB и CLK модуля TM1638 в cmod_a7_35_claude_tiny_vga_640, в
+Проект держит выводы DIP 26 и 27, STB и CLK модуля TM1638 в cmod_a7_35_tiny_vga_640_claude, в
 высоком уровне и не управляет выводом DIP 28. Оставьте эти три вывода
 неподключёнными.
 
@@ -47,19 +47,19 @@
 
 В [board_specific_top.sv](board_specific_top.sv) две строки кода. Он
 определяет `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` и включает
-`board_specific_top.sv` из cmod_a7_35_claude_tiny_vga_640, который тогда не создаёт TM1638, хотя
+`board_specific_top.sv` из cmod_a7_35_tiny_vga_640_claude, который тогда не создаёт TM1638, хотя
 `peripherals/lab_specific_board_config.svh` его включает. Другие платы
 репозитория без TM1638, например `tang_nano_9k_hdmi_no_tm1638`, сделаны так
 же, но некоторые из них рисуют виртуальный TM1638 на экране; эта не рисует.
 
-[board_specific.xdc](board_specific.xdc) — тот же, что у cmod_a7_35_claude_tiny_vga_640. Строки
+[board_specific.xdc](board_specific.xdc) — тот же, что у cmod_a7_35_tiny_vga_640_claude. Строки
 выводов DIP 26, 27 и 28 в нём остаются раскомментированными, потому что у
 включённого модуля верхнего уровня эти порты есть.
 
 ## Оборудование и соединения
 
 Детали, источник 3,3 В, сборка и таблицы соединений — как у
-[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README_ru.md), но без TM1638: не ставьте модуль и его
+[cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README_ru.md), но без TM1638: не ставьте модуль и его
 пять проводов. Вывод DIP 25 по-прежнему идёт на шину GND. Выводы коротко:
 
 | Cmod A7 | Подключить к |
@@ -79,8 +79,8 @@ Tapeout продаёт её собранной под названием
 за 15,00 € в ноябре 2026 года. Её можно и заказать собранной на JLCPCB по
 файлам `GERBER-tiny-vga.zip`, `BOM-tiny-vga.csv` и `CPL-tiny-vga.csv` из
 каталога `pcb/jlcpcb/production_files/` репозитория; шаги описаны в разделе
-[Где взять TinyVGA](../cmod_a7_35_claude_tiny_vga_640/README_ru.md#где-взять-tinyvga)
-инструкции cmod_a7_35_claude_tiny_vga_640.
+[Где взять TinyVGA](../cmod_a7_35_tiny_vga_640_claude/README_ru.md#где-взять-tinyvga)
+инструкции cmod_a7_35_tiny_vga_640_claude.
 
 На рисунках этого каталога нет TM1638; они есть для обоих модулей ЦАП: WeAct
 I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на рисунках —
@@ -110,7 +110,7 @@ I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на р�
 
 В каталоге упражнения один раз выберите плату командой
 `./06_choose_another_fpga_board.bash` и укажите `cmod_a7_35_tiny_vga_640_no_tm1638_claude`. Затем собирайте и
-загружайте, как для [cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README_ru.md):
+загружайте, как для [cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README_ru.md):
 
 ```bash
 ./03_synthesize_for_fpga.bash
@@ -134,8 +134,8 @@ I2S Earphone Module (PCM5100A) и GY-PCM5102 (PCM5102A). Надписи на р�
 
 Во всех сборках нет ошибок и критических предупреждений, и все временные
 ограничения выполнены на 50 МГц, при периоде такта 20 нс, с MMCM из
-cmod_a7_35_claude_tiny_vga_640. Ни в одном нетлисте нет модуля TM1638. Vivado выдаёт
-предупреждение правил проектирования CFGBVS-1, как и для cmod_a7_35_claude_tiny_vga_640; оно не
+cmod_a7_35_tiny_vga_640_claude. Ни в одном нетлисте нет модуля TM1638. Vivado выдаёт
+предупреждение правил проектирования CFGBVS-1, как и для cmod_a7_35_tiny_vga_640_claude; оно не
 мешает созданию битового потока.
 
 Сборки выше сделаны до 18 ноября, когда у шести конфигураций появились общий
@@ -151,19 +151,19 @@ cmod_a7_35_claude_tiny_vga_640. Ни в одном нетлисте нет мо�
 
 | Файл | Что это |
 |------|---------|
-| [board_specific_top.sv](board_specific_top.sv) | Определяет `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` и включает модуль верхнего уровня из cmod_a7_35_claude_tiny_vga_640 |
-| [board_specific.xdc](board_specific.xdc) | Тот же, что в cmod_a7_35_claude_tiny_vga_640 |
+| [board_specific_top.sv](board_specific_top.sv) | Определяет `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` и включает модуль верхнего уровня из cmod_a7_35_tiny_vga_640_claude |
+| [board_specific.xdc](board_specific.xdc) | Тот же, что в cmod_a7_35_tiny_vga_640_claude |
 | [board_specific.tcl](board_specific.tcl) | Микросхема ПЛИС для Vivado |
 | `wiring_*.svg`, `wiring_*.png` | Схемы соединений без TM1638 для обоих модулей ЦАП и обоих источников 3,3 В |
 | `breadboard_*.svg`, `breadboard_*.png` | Раскладки на макетной плате без TM1638 для обоих модулей ЦАП |
 | README.md, README.html | Эта инструкция на английском |
 | README_ru.md, README_ru.html | Она же на русском |
 
-Рисунки делают генераторы cmod_a7_35_claude_tiny_vga_640, запущенные с именем этой конфигурации;
+Рисунки делают генераторы cmod_a7_35_tiny_vga_640_claude, запущенные с именем этой конфигурации;
 для каждого имени, в котором есть `_no_tm1638`, они не рисуют TM1638:
 
 ```bash
-cd ../cmod_a7_35_claude_tiny_vga_640
+cd ../cmod_a7_35_tiny_vga_640_claude
 python3 generate_wiring_diagram.py cmod_a7_35_tiny_vga_640_no_tm1638_claude
 python3 generate_breadboard_diagram.py cmod_a7_35_tiny_vga_640_no_tm1638_claude
 cd ../cmod_a7_35_tiny_vga_640_no_tm1638_claude
@@ -179,7 +179,7 @@ done
 ## Приложение: промпты
 
 Остальной проект появился из промптов в приложении к
-[cmod_a7_35_claude_tiny_vga_640](../cmod_a7_35_claude_tiny_vga_640/README_ru.md#приложение-промпты). Эта конфигурация
+[cmod_a7_35_tiny_vga_640_claude](../cmod_a7_35_tiny_vga_640_claude/README_ru.md#приложение-промпты). Эта конфигурация
 появилась из следующих промптов, которые Юрий Панчул отправил в том же сеансе
 Claude Code 16 и 17 ноября 2026 года, дословно, с переводом на русский. Здесь
 все промпты сеанса, начиная с первого об этой конфигурации, включая просьбы
@@ -444,7 +444,7 @@ Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8
 ```
 
 **19:19, 19 ноября**; сборки Vivado для раздела «Состояние»
-cmod_a7_35_claude_tiny_vga_640 не начались, потому что скрипт, который ждал
+cmod_a7_35_tiny_vga_640_claude не начались, потому что скрипт, который ждал
 окончания предыдущего запуска Vivado, всё время находил собственную
 командную строку. Сборки запущены, добавлен тест упражнения с выключенными
 TM1638, VGA, микрофоном и ЦАП, тест Vivado теперь считает Slice LUT, как
@@ -488,6 +488,53 @@ is it fine now?
 ```
 
 **23:38, 19 ноября**; сделанное выше закоммичено и отправлено:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
+**23:52, 19 ноября**; оказалось, что обзор конфигураций Codex уже лежит в
+`misc/ai_sessions/20261118_cmod_a7_support/claude` как
+`claude_cmod_a7_compare_1`, и был задан вопрос, какие файлы имелись в виду;
+вопрос пока открыт:
+
+```text
+move cmod a7 review files to ai_sessions
+```
+
+```text
+перенеси файлы обзора cmod a7 в ai_sessions
+```
+
+**23:58, 19 ноября**; объяснена идея оставить DIP 26–28 неуправляемыми в
+конфигурациях без TM1638 и рекомендовано по-прежнему держать STB и CLK в
+высоком уровне:
+
+```text
+what is the issue with DIP 26-28?
+```
+
+```text
+в чём проблема с DIP 26-28?
+```
+
+**23:58, 19 ноября**, минутой позже; конфигурация
+cmod_a7_35_claude_tiny_vga_640 переименована в cmod_a7_35_tiny_vga_640_claude,
+и старое имя заменено везде, кроме цитат промптов:
+
+```text
+Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
+```
+
+```text
+Ещё переименуй cmod_a7_35_claude_tiny_vga_640 в cmod_a7_35_tiny_vga_640_claude
+```
+
+**00:09, 20 ноября**; переименование закоммичено и отправлено:
 
 ```text
 commit and push

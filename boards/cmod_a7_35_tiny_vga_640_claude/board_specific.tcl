@@ -1,3 +1,3 @@
-set fpga_board  cmod_a7_35_claude_tiny_vga_640
+set fpga_board  cmod_a7_35_tiny_vga_640_claude
 set part_name   xc7a35tcpg236-1
 set hw_device   xc7a35t_0

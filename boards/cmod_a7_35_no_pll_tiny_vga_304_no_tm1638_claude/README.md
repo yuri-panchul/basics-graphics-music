@@ -46,7 +46,7 @@ and does not drive DIP 28. Leave the three pins unconnected.
 [board_specific_top.sv](board_specific_top.sv) has three lines of code. It
 defines `CMOD_A7_NO_PLL_SCREEN_WIDTH` as 304, as cmod_a7_35_no_pll_tiny_vga_304_claude does, and
 `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE`, and includes the
-`board_specific_top.sv` of cmod_a7_35_claude_tiny_vga_640, the top level of all six configurations,
+`board_specific_top.sv` of cmod_a7_35_tiny_vga_640_claude, the top level of all six configurations,
 which then runs at 12 MHz and leaves out TM1638 even
 though `peripherals/lab_specific_board_config.svh` turns it on. Other boards
 of the repository without TM1638, such as `tang_nano_9k_hdmi_no_tm1638`, are
@@ -80,8 +80,8 @@ Tapeout store sells it assembled as
 €15.00 in November 2026. It can also be ordered assembled from JLCPCB with
 `GERBER-tiny-vga.zip`, `BOM-tiny-vga.csv` and `CPL-tiny-vga.csv` from
 `pcb/jlcpcb/production_files/` of the repository; the steps are in
-[Where to get TinyVGA](../cmod_a7_35_claude_tiny_vga_640/README.md#where-to-get-tinyvga)
-of cmod_a7_35_claude_tiny_vga_640.
+[Where to get TinyVGA](../cmod_a7_35_tiny_vga_640_claude/README.md#where-to-get-tinyvga)
+of cmod_a7_35_tiny_vga_640_claude.
 
 The drawings of this directory have no TM1638, for both DAC modules, WeAct
 I2S Earphone Module (PCM5100A) and GY-PCM5102 (PCM5102A).
@@ -135,7 +135,7 @@ builds show that this configuration leaves it out all the same.
 All builds have no errors and no critical warnings, and meet all timing at
 12 MHz, a clock period of 83.3 ns, with no MMCM or PLL. None of the netlists
 has a TM1638 module. Vivado gives the design rule warning CFGBVS-1, as for
-cmod_a7_35_claude_tiny_vga_640; it does not stop the bitstream.
+cmod_a7_35_tiny_vga_640_claude; it does not stop the bitstream.
 
 The builds above are from before 18 November, when the six configurations got one
 shared top level, eight GPIO pins and the RGB LED. After that change [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
@@ -149,7 +149,7 @@ all timing met.
 
 | File | What it is |
 |------|------------|
-| [board_specific_top.sv](board_specific_top.sv) | Defines `CMOD_A7_NO_PLL_SCREEN_WIDTH` as 304 and `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` and includes the top level of cmod_a7_35_claude_tiny_vga_640 |
+| [board_specific_top.sv](board_specific_top.sv) | Defines `CMOD_A7_NO_PLL_SCREEN_WIDTH` as 304 and `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` and includes the top level of cmod_a7_35_tiny_vga_640_claude |
 | [board_specific.xdc](board_specific.xdc) | The same as in cmod_a7_35_no_pll_tiny_vga_304_claude |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams without TM1638, for both DAC modules and both 3.3 V sources |
@@ -157,12 +157,12 @@ all timing met.
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 
-The drawings come from the generators of cmod_a7_35_claude_tiny_vga_640, run with the name of
+The drawings come from the generators of cmod_a7_35_tiny_vga_640_claude, run with the name of
 this configuration; they leave out TM1638 for every name with
 `_no_tm1638` in it:
 
 ```bash
-cd ../cmod_a7_35_claude_tiny_vga_640
+cd ../cmod_a7_35_tiny_vga_640_claude
 python3 generate_wiring_diagram.py cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude
 python3 generate_breadboard_diagram.py cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude
 cd ../cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude
@@ -350,7 +350,7 @@ Add the tests. Why do you want to make DIP 26–28 undriven? Explain. Don't do 8
 ```
 
 **19:19 on 19 November**; the Vivado builds for the Status of
-cmod_a7_35_claude_tiny_vga_640 had not started, because the script that
+cmod_a7_35_tiny_vga_640_claude had not started, because the script that
 waited for the previous Vivado run kept finding its own command line. It
 started them, added a test of a lab with TM1638, VGA, the microphone and the
 DAC all turned off, made the Vivado test count Slice LUTs, as the
@@ -380,6 +380,37 @@ is it fine now?
 ```
 
 **23:38 on 19 November**; it committed and pushed the work above:
+
+```text
+commit and push
+```
+
+**23:52 on 19 November**; it found that its review of the Codex
+configurations was already in `misc/ai_sessions/20261118_cmod_a7_support/claude`
+as `claude_cmod_a7_compare_1` and asked which files were meant; the question
+is still open:
+
+```text
+move cmod a7 review files to ai_sessions
+```
+
+**23:58 on 19 November**; it explained the idea of leaving DIP 26 to 28
+undriven in the configurations without TM1638 and recommended keeping STB and
+CLK driven high:
+
+```text
+what is the issue with DIP 26-28?
+```
+
+**23:58 on 19 November**, a minute later; it renamed the configuration
+cmod_a7_35_claude_tiny_vga_640 to cmod_a7_35_tiny_vga_640_claude and replaced
+the old name everywhere except in the quoted prompts:
+
+```text
+Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
+```
+
+**00:09 on 20 November**; it committed and pushed the rename:
 
 ```text
 commit and push
