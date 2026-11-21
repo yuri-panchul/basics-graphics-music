@@ -115,10 +115,11 @@ No special steps are required. You can use any terminal including built-in.
 ## ASIC synthesis
 
 The labs can also be turned into a chip layout with the open-source
-[LibreLane](https://github.com/librelane/librelane) flow on Linux.
-Put the LibreLane AppImage into your home directory and run
-`07_synthesize_for_asic.bash` in a lab directory; the script starts
-the AppImage itself. See [ASIC synthesis with LibreLane](./docs/LibreLane.md).
+[LibreLane](https://github.com/librelane/librelane) flow.
+Run `07_synthesize_for_asic.bash` in a lab directory. On Linux, the script
+offers to download LibreLane the first time and then starts it itself.
+On Windows, it continues in WSL2. On macOS, it explains how to install
+LibreLane with Nix. See [ASIC synthesis with LibreLane](./docs/LibreLane.md).
 
 # Compatible Hardware
 

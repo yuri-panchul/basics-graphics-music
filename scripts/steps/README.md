@@ -79,16 +79,26 @@ For example, `/home/verilog/AMD/2026.1/Vivado` is discovered when `$HOME` is `/h
 
 The ASIC scripts (`07_synthesize_for_asic.bash`, `08_visualize_asic_synthesis_results_1.bash` and `09_visualize_asic_synthesis_results_2.bash`) look for LibreLane only. Other scripts skip this step. See [docs/LibreLane.md](../../docs/LibreLane.md) for the installation.
 
-1. If `LIBRELANE_PATH` is defined, prepend it to `PATH`.
+1. The viewers 08 and 09 first check that 07 has made results for the lab. Without them, they stop and say to run 07 first, before anything below.
 
-2. If `librelane` is in `PATH`, consider setup done. This is the case inside a Nix shell or inside an interactive shell of the LibreLane AppImage.
+2. If `LIBRELANE_PATH` is defined, prepend it to `PATH`.
 
-3. Otherwise, look for the LibreLane AppImage. If `LIBRELANE_APPIMAGE` is defined, use that file. Otherwise, use the newest `librelane*<machine>*.AppImage` in `$HOME` or in `$HOME/Downloads`, where `<machine>` is the output of `uname -m`, for example `librelane-devshell-x86_64.AppImage`. If the file is not executable, make it executable.
+3. If `librelane` is in `PATH`, consider setup done. This is the case inside a Nix shell or inside an interactive shell of the LibreLane AppImage.
 
-4. Start the AppImage with the command `true`. If it works, the scripts run `<AppImage> librelane <arguments>`: the AppImage runs the command inside its environment and exits with its status. The user does not need to start the AppImage first.
+4. In Git Bash or Cygwin on Windows, run the same lab script again in WSL2 and exit with its status: `wsl.exe --cd <lab directory> -e bash ./<script>`. Before that, check that WSL2 is installed, that it is not WSL 1, and that the scripts do not have Windows line endings, and say how to fix each.
 
-5. If the AppImage cannot start, usually with "cannot unshare" because the system disables unprivileged user namespaces, and `bwrap` works, the scripts run LibreLane under `bwrap`. They mount the AppImage with `--appimage-mount`, run its entrypoint under `bwrap` with the AppImage's `/nix` in place and every other top-level directory of the system bound as is, and unmount the AppImage afterwards. ALT Linux disables unprivileged user namespaces by default and installs `bwrap` setuid root, so this works there without root.
+5. On macOS, stop and print the Nix installation steps of the LibreLane guide. macOS has no AppImage.
 
-6. Otherwise, stop with an error that names the commands enabling unprivileged user namespaces.
+6. Otherwise, look for the LibreLane AppImage. If `LIBRELANE_APPIMAGE` is defined, use that file. Otherwise, use the newest `librelane*<machine>*.AppImage` in `$HOME` or in `$HOME/Downloads`, where `<machine>` is the output of `uname -m`, for example `librelane-devshell-x86_64.AppImage`.
+
+7. If there is no AppImage, offer to download the AppImage of `librelane_version` (3.0.17) from the LibreLane releases into `$HOME`. Before asking, check that `$HOME` has 4 GB free. The download goes to a `.part` file, which a later run continues if the download stops. Then check the file's size and SHA-256 sum, rename it and make it executable.
+
+8. If the file is not executable, make it executable.
+
+9. Start the AppImage with the command `true`. If it works, the scripts run `<AppImage> librelane <arguments>`: the AppImage runs the command inside its environment and exits with its status. The user does not need to start the AppImage first.
+
+10. If the AppImage cannot start, usually with "cannot unshare" because the system disables unprivileged user namespaces, and `bwrap` works, the scripts run LibreLane under `bwrap`. They mount the AppImage with `--appimage-mount`, run its entrypoint under `bwrap` with the AppImage's `/nix` in place and every other top-level directory of the system bound as is, and unmount the AppImage afterwards. ALT Linux disables unprivileged user namespaces by default and installs `bwrap` setuid root, so this works there without root.
+
+11. Otherwise, find the reason and stop with the commands that fix it: installing FUSE, the AppArmor setting of Ubuntu 24.04 and newer, `kernel.unprivileged_userns_clone` or `user.max_user_namespaces`. The scripts do not run these commands, since they need root.
 
 The results go to `librelane_designs/<lab>` in the root of the package: `07_synthesize_for_asic.bash` copies the sources there and runs `librelane --flow Classic config.tcl`, and the viewers open the last run with the `OpenInOpenROAD` and `OpenInKLayout` flows.
