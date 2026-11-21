@@ -1,0 +1,105 @@
+# "FPGA NIOS KIT Board Cyclone IV" by TodayStart, sold by BETTERSHENGSUN.
+# The seller publishes no schematic. The sources of these pins:
+#
+#   [R] The pin table of a buyer, Peter I., in a review of 5 May 2022,
+#       misc/000_todo/bettershengsun/noname1_c4.png: clock, keys, LEDs,
+#       seven-segment display, VGA and buzzer.
+#
+#   [S] The silkscreen of header P4 in the seller's photo,
+#       misc/000_todo/bettershengsun/H47bad920b01740718ad3f20b1eaf5ac4X.jpg:
+#       "P142 P141" ... "P121 P120", the FPGA pins of its 8 labeled columns.
+#
+# See README.md for what is assumed and how to check it.
+
+  set_global_assignment -name DEVICE EP4CE6E22C8
+# set_global_assignment -name DEVICE EP4CE10E22C8
+
+set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+
+# [R] 50 MHz
+
+set_location_assignment PIN_25  -to CLK
+
+# [R] button[0] to button[3]. KEY_N[3] is the reset.
+
+set_location_assignment PIN_67  -to KEY_N[0]
+set_location_assignment PIN_66  -to KEY_N[1]
+set_location_assignment PIN_65  -to KEY_N[2]
+set_location_assignment PIN_64  -to KEY_N[3]
+
+# [R] led[0] to led[4]. The sixth LED, D7, is wired to a pin that
+# cannot drive it, according to the review.
+
+set_location_assignment PIN_28  -to LED_N[0]
+set_location_assignment PIN_33  -to LED_N[1]
+set_location_assignment PIN_32  -to LED_N[2]
+set_location_assignment PIN_30  -to LED_N[3]
+set_location_assignment PIN_34  -to LED_N[4]
+
+# [R] seven_seg[0] to seven_seg[7], assumed to be the segments a to g and
+# the dot. ABCDEFGH_N[7] is segment a, ABCDEFGH_N[0] is the dot.
+
+set_location_assignment PIN_73  -to ABCDEFGH_N[7]
+set_location_assignment PIN_74  -to ABCDEFGH_N[6]
+set_location_assignment PIN_75  -to ABCDEFGH_N[5]
+set_location_assignment PIN_76  -to ABCDEFGH_N[4]
+set_location_assignment PIN_77  -to ABCDEFGH_N[3]
+set_location_assignment PIN_80  -to ABCDEFGH_N[2]
+set_location_assignment PIN_83  -to ABCDEFGH_N[1]
+set_location_assignment PIN_84  -to ABCDEFGH_N[0]
+
+# [R] seven_seg_tr[0] to seven_seg_tr[3], the digit transistors
+
+set_location_assignment PIN_98  -to DIGIT_N[0]
+set_location_assignment PIN_87  -to DIGIT_N[1]
+set_location_assignment PIN_86  -to DIGIT_N[2]
+set_location_assignment PIN_85  -to DIGIT_N[3]
+
+# [R] One bit per color
+
+set_location_assignment PIN_7   -to VGA_HSYNC
+set_location_assignment PIN_3   -to VGA_VSYNC
+set_location_assignment PIN_2   -to VGA_R
+set_location_assignment PIN_11  -to VGA_G
+set_location_assignment PIN_10  -to VGA_B
+
+# [R] Left unassigned: an output that a lab does not use is driven low,
+# which may make the buzzer sound all the time.
+
+# set_location_assignment PIN_99  -to BUZZER
+
+# [S] Header P4: each signal on both pins of one column
+
+set_location_assignment PIN_142 -to DAC_BCK[0]
+set_location_assignment PIN_141 -to DAC_BCK[1]
+
+set_location_assignment PIN_138 -to DAC_DIN[0]
+set_location_assignment PIN_137 -to DAC_DIN[1]
+
+set_location_assignment PIN_136 -to DAC_LRCK[0]
+set_location_assignment PIN_135 -to DAC_LRCK[1]
+
+set_location_assignment PIN_133 -to MIC_SD[0]
+set_location_assignment PIN_132 -to MIC_SD[1]
+
+set_location_assignment PIN_129 -to MIC_VDD[0]
+set_location_assignment PIN_128 -to MIC_VDD[1]
+
+set_location_assignment PIN_127 -to MIC_GND[0]
+set_location_assignment PIN_126 -to MIC_GND[1]
+
+set_location_assignment PIN_125 -to MIC_WS[0]
+set_location_assignment PIN_124 -to MIC_WS[1]
+
+set_location_assignment PIN_121 -to MIC_SCK[0]
+set_location_assignment PIN_120 -to MIC_SCK[1]
+
+# The pin of the MIC_SD column without the microphone reads 1
+
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to MIC_SD[*]
+
+# Not known yet: the UART through the MAX232 and the DB9 connector,
+# the LCD1602/LCD12864 header, the three unlabeled columns of P4,
+# the SDRAM, DS1302, DS18B20 and the infrared receiver.

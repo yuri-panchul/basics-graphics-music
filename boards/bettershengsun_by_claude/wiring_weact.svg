@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="700" viewBox="0 0 1040 700" font-family="DejaVu Sans, Arial, sans-serif">
+<rect width="1040" height="700" fill="#ffffff"/>
+<text x="520.0" y="32" font-size="20" text-anchor="middle" font-weight="bold" fill="#212529">Microphone INMP441 and DAC WeAct PCM5100A on header P4</text>
+<rect x="30" y="70" width="980" height="210" rx="10" fill="#dbe4ff" stroke="#364fc7" stroke-width="2"/>
+<text x="990" y="90" font-size="12" text-anchor="end" font-weight="normal" fill="#364fc7">edge of the board</text>
+<rect x="52" y="102" width="116" height="76" fill="none" stroke="#495057" stroke-dasharray="4 3"/>
+<text x="45" y="58" font-size="13" text-anchor="start" font-weight="bold" fill="#495057">JP2: power for the DAC, measure it first (step 3)</text>
+<rect x="63" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="70" cy="120" r="4" fill="#adb5bd"/>
+<rect x="63" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="70" cy="160" r="4" fill="#adb5bd"/>
+<rect x="103" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="110" cy="120" r="4" fill="#adb5bd"/>
+<rect x="103" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="110" cy="160" r="4" fill="#adb5bd"/>
+<rect x="143" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="150" cy="120" r="4" fill="#adb5bd"/>
+<rect x="143" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="150" cy="160" r="4" fill="#adb5bd"/>
+<rect x="232" y="102" width="436" height="76" fill="none" stroke="#495057"/>
+<text x="224" y="145" font-size="16" text-anchor="end" font-weight="bold" fill="#212529">P4</text>
+<text x="290" y="194" font-size="11" text-anchor="middle" font-weight="normal" fill="#868e96">not used</text>
+<rect x="243" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="250" cy="120" r="4" fill="#adb5bd"/>
+<rect x="243" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="250" cy="160" r="4" fill="#adb5bd"/>
+<rect x="283" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="290" cy="120" r="4" fill="#adb5bd"/>
+<rect x="283" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="290" cy="160" r="4" fill="#adb5bd"/>
+<rect x="323" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="330" cy="120" r="4" fill="#adb5bd"/>
+<rect x="323" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="330" cy="160" r="4" fill="#adb5bd"/>
+<rect x="363" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="370" cy="120" r="4" fill="#d9480f"/>
+<rect x="363" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="370" cy="160" r="4" fill="#d9480f"/>
+<text x="370" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#d9480f">BCK</text>
+<text x="370" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P142</text>
+<text x="370" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P141</text>
+<rect x="403" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="410" cy="120" r="4" fill="#c99400"/>
+<rect x="403" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="410" cy="160" r="4" fill="#c99400"/>
+<text x="410" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#c99400">DIN</text>
+<text x="410" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P138</text>
+<text x="410" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P137</text>
+<rect x="443" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="450" cy="120" r="4" fill="#7048e8"/>
+<rect x="443" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="450" cy="160" r="4" fill="#7048e8"/>
+<text x="450" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#7048e8">LRCK</text>
+<text x="450" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P136</text>
+<text x="450" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P135</text>
+<rect x="483" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="490" cy="120" r="4" fill="#2b8a3e"/>
+<rect x="483" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="490" cy="160" r="4" fill="#2b8a3e"/>
+<text x="490" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#2b8a3e">SD</text>
+<text x="490" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P133</text>
+<text x="490" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P132</text>
+<rect x="523" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="530" cy="120" r="4" fill="#e03131"/>
+<rect x="523" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="530" cy="160" r="4" fill="#e03131"/>
+<text x="530" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#e03131">3.3 V</text>
+<text x="530" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P129</text>
+<text x="530" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P128</text>
+<rect x="563" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="570" cy="120" r="4" fill="#212529"/>
+<rect x="563" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="570" cy="160" r="4" fill="#212529"/>
+<text x="570" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#212529">GND</text>
+<text x="570" y="80" font-size="11" text-anchor="middle" font-weight="bold" fill="#868e96">L/R</text>
+<text x="570" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P127</text>
+<text x="570" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P126</text>
+<rect x="603" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="610" cy="120" r="4" fill="#0c8599"/>
+<rect x="603" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="610" cy="160" r="4" fill="#0c8599"/>
+<text x="610" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#0c8599">WS</text>
+<text x="610" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P125</text>
+<text x="610" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P124</text>
+<rect x="643" y="113" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="650" cy="120" r="4" fill="#1971c2"/>
+<rect x="643" y="153" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="650" cy="160" r="4" fill="#1971c2"/>
+<text x="650" y="94" font-size="11" text-anchor="middle" font-weight="bold" fill="#1971c2">SCK</text>
+<text x="650" y="190" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P121</text>
+<text x="650" y="204" font-size="11" text-anchor="middle" font-weight="normal" fill="#212529">P120</text>
+<text x="700" y="140" font-size="13" text-anchor="start" font-weight="normal" fill="#364fc7">Each wire may go to either pin</text>
+<text x="700" y="160" font-size="13" text-anchor="start" font-weight="normal" fill="#364fc7">of its column: both pins carry</text>
+<text x="700" y="180" font-size="13" text-anchor="start" font-weight="normal" fill="#364fc7">the same signal.</text>
+<rect x="60" y="538" width="300" height="100" rx="6" fill="#f8f0fc" stroke="#862e9c" stroke-width="2"/>
+<text x="210.0" y="628" font-size="13" text-anchor="middle" font-weight="bold" fill="#862e9c">WeAct I2S Earphone Module (PCM5100A)</text>
+<rect x="83" y="553" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="90" cy="560" r="4" fill="#adb5bd"/>
+<text x="90" y="590" font-size="12" text-anchor="middle" font-weight="normal" fill="#212529">VCC</text>
+<rect x="123" y="553" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="130" cy="560" r="4" fill="#adb5bd"/>
+<text x="130" y="590" font-size="12" text-anchor="middle" font-weight="normal" fill="#212529">GND</text>
+<rect x="163" y="553" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="170" cy="560" r="4" fill="#adb5bd"/>
+<text x="170" y="590" font-size="12" text-anchor="middle" font-weight="normal" fill="#212529">/SD</text>
+<rect x="203" y="553" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="210" cy="560" r="4" fill="#adb5bd"/>
+<text x="210" y="590" font-size="12" text-anchor="middle" font-weight="normal" fill="#212529">MC</text>
+<rect x="243" y="553" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="250" cy="560" r="4" fill="#adb5bd"/>
+<text x="250" y="590" font-size="12" text-anchor="middle" font-weight="normal" fill="#212529">BCK</text>
+<rect x="283" y="553" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="290" cy="560" r="4" fill="#adb5bd"/>
+<text x="290" y="590" font-size="12" text-anchor="middle" font-weight="normal" fill="#212529">DIN</text>
+<rect x="323" y="553" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="330" cy="560" r="4" fill="#adb5bd"/>
+<text x="330" y="590" font-size="12" text-anchor="middle" font-weight="normal" fill="#212529">WS</text>
+<text x="102" y="190" font-size="11" text-anchor="end" font-weight="bold" fill="#e03131">3.3–5 V</text>
+<text x="174" y="190" font-size="11" text-anchor="start" font-weight="bold" fill="#212529">GND</text>
+<polyline points="90,560 90,330 110,330 110,160" fill="none" stroke="#e03131" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="130,560 130,352 150,352 150,160" fill="none" stroke="#212529" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<text x="170" y="606" font-size="10" text-anchor="middle" font-weight="normal" fill="#868e96">free</text>
+<text x="210" y="606" font-size="10" text-anchor="middle" font-weight="normal" fill="#868e96">free</text>
+<polyline points="250,560 250,374 370,374 370,160" fill="none" stroke="#d9480f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="290,560 290,396 410,396 410,160" fill="none" stroke="#c99400" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="330,560 330,418 450,418 450,160" fill="none" stroke="#7048e8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<circle cx="820" cy="560" r="74" fill="#212529" stroke="#c99400" stroke-width="5"/>
+<text x="820" y="662" font-size="13" text-anchor="middle" font-weight="bold" fill="#212529">INMP441, chip side up</text>
+<text x="820" y="680" font-size="11" text-anchor="middle" font-weight="normal" fill="#495057">VDD and GND come from FPGA pins</text>
+<rect x="773" y="519" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="780" cy="526" r="4" fill="#adb5bd"/>
+<text x="780" y="550" font-size="11" text-anchor="middle" font-weight="normal" fill="#ffffff">L/R</text>
+<rect x="813" y="519" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="820" cy="526" r="4" fill="#adb5bd"/>
+<text x="820" y="550" font-size="11" text-anchor="middle" font-weight="normal" fill="#ffffff">WS</text>
+<rect x="853" y="519" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="860" cy="526" r="4" fill="#adb5bd"/>
+<text x="860" y="550" font-size="11" text-anchor="middle" font-weight="normal" fill="#ffffff">SCK</text>
+<rect x="773" y="587" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="780" cy="594" r="4" fill="#adb5bd"/>
+<text x="780" y="580" font-size="11" text-anchor="middle" font-weight="normal" fill="#ffffff">GND</text>
+<rect x="813" y="587" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="820" cy="594" r="4" fill="#adb5bd"/>
+<text x="820" y="580" font-size="11" text-anchor="middle" font-weight="normal" fill="#ffffff">VDD</text>
+<rect x="853" y="587" width="14" height="14" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/><circle cx="860" cy="594" r="4" fill="#adb5bd"/>
+<text x="860" y="580" font-size="11" text-anchor="middle" font-weight="normal" fill="#ffffff">SD</text>
+<polyline points="780,526 780,380 586,380 586,120 570,120" fill="none" stroke="#868e96" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="820,526 820,356 610,356 610,160" fill="none" stroke="#0c8599" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="860,526 860,332 650,332 650,160" fill="none" stroke="#1971c2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="780,594 780,610 684,610 684,404 570,404 570,160" fill="none" stroke="#212529" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="820,594 820,622 672,622 672,428 530,428 530,160" fill="none" stroke="#e03131" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+<polyline points="860,594 860,634 660,634 660,452 490,452 490,160" fill="none" stroke="#2b8a3e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+</svg>

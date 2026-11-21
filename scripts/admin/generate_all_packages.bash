@@ -27,6 +27,7 @@ update_fpga_toolchain_var ()
         ;;
 
         alinx_ax4010*                    | \
+        bettershengsun*                  | \
         c5gx*                            | \
         de0_cv                           | \
         de0_nano*                        | \

@@ -1,6 +1,6 @@
 # FPGA boards in basics-graphics-music
 
-55 boards, one line each. The Quartus ranges are **measured**: each installed version was asked whether it can build the board's exact part. A range marked with a dagger reaches past the versions available here, so its boundary is not measured.
+56 boards, one line each. The Quartus ranges are **measured**: each installed version was asked whether it can build the board's exact part. A range marked with a dagger reaches past the versions available here, so its boundary is not measured.
 
 Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under /opt, and 26.1.1 Pro. The repository states no version requirement for Vivado, Gowin EDA or the Yosys flow, so those entries are the author's knowledge.
 
@@ -28,6 +28,7 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 | Altera | Terasic | de25_nano | Agilex 5 | Quartus Pro 26.1.1 | either | HDMI/DVI |
 | Altera | Terasic | de2_115 | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
 | Altera | Terasic | terasic_sockit | Cyclone V | Quartus 13.0sp1 through 25.1std | never | VGA |
+| Altera | TodayStart | bettershengsun | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
 | Altera | ZEOWAA | zeowaa | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA |
 | Altera | unknown | emooc_cc | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | none |
 | Altera | unknown | rzrd | Cyclone IV E | Quartus 13.0sp1 through 25.1std | never | VGA + LCD |
@@ -75,4 +76,4 @@ Versions probed: 13.0sp1, 13.1 and 25.1std under the home directory, 21.1 under 
 * **MAX 10** — 21.1 and 25.1std build it, 13.x do not; the 14.0.2 bound is not measured here
 * **MAX II** — all four free editions build it
 
-Ranges fully measured for 23 of 55 boards.
+Ranges fully measured for 24 of 56 boards.
