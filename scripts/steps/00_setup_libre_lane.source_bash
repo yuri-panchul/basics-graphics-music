@@ -29,42 +29,215 @@ fi
 
 #-----------------------------------------------------------------------------
 
-librelane_setup()
+librelane_setup ()
 {
-    if ! [[ $script =~ asic ]]; then
+    if ! [[ $script =~ asic ]]
+    then
         return
     fi
 
-    if [ -v LIBRELANE_PATH ]; then
+    local appimage candidate architecture
+    librelane_command=()
+
+    # An explicit AppImage takes precedence even inside a native tool shell.
+
+    if [ -v LIBRELANE_APPIMAGE ]
+    then
+        appimage=$LIBRELANE_APPIMAGE
+
+        if [ -z "$appimage" ] || [ ! -f "$appimage" ] || [ ! -x "$appimage" ]
+        then
+            info "error: LIBRELANE_APPIMAGE must name an executable AppImage file:" \
+                 "'$appimage'. See scripts/README_librelane.md."
+
+            return 1
+        fi
+
+        appimage=$(readlink -f "$appimage")
+        librelane_command=("$appimage" librelane)
+        info "Using LibreLane AppImage: $appimage"
+        return
+    fi
+
+    # Keep the existing directory override for native installations.
+
+    if [ -v LIBRELANE_PATH ]
+    then
+        if [ -z "$LIBRELANE_PATH" ] || [ ! -f "$LIBRELANE_PATH/librelane" ] ||
+           [ ! -x "$LIBRELANE_PATH/librelane" ]
+        then
+            info "error: LIBRELANE_PATH must name a directory containing" \
+                 "an executable librelane. Use LIBRELANE_APPIMAGE for an AppImage file."
+
+            return 1
+        fi
+
+        LIBRELANE_PATH=$(readlink -f "$LIBRELANE_PATH")
         export PATH="${LIBRELANE_PATH}:$PATH"
     fi
 
-    if  ! is_command_available librelane ; then
-        error "Cannot find librelane binary for ASIC synthesis." \
-              "Librelane can be installed via Nix and sourcing into" \
-              "a Nix development shell with \'nix develop\', or by" \
-              "specifying a custom Librelane binary path with" \
-              "LIBRELANE_PATH"
+    # Reuse a native installation or an already active Nix/AppImage shell.
+
+    if is_command_available librelane
+    then
+        librelane_command=(librelane)
+        return
     fi
+
+    architecture=$(uname -m)
+
+    for candidate in "$HOME/librelane-devshell-$architecture.AppImage" \
+                     "$HOME/Downloads/librelane-devshell-$architecture.AppImage"
+    do
+        if [ -f "$candidate" ] && [ -x "$candidate" ]
+        then
+            appimage=$(readlink -f "$candidate")
+            librelane_command=("$appimage" librelane)
+            info "Using LibreLane AppImage: $appimage"
+            return
+        fi
+    done
+
+    info "error: Cannot find a LibreLane runtime." \
+         "Put the executable librelane-devshell-$architecture.AppImage" \
+         "in your home or Downloads directory, or set LIBRELANE_APPIMAGE" \
+         "to its absolute filename. Native librelane on PATH and" \
+         "LIBRELANE_PATH directories are also supported." \
+         "See scripts/README_librelane.md."
+
+    return 1
+}
+
+#-----------------------------------------------------------------------------
+
+run_librelane ()
+{
+    # Quoted array expansion preserves each command and argument as one word.
+    "${librelane_command[@]}" "$@"
+}
+
+#-----------------------------------------------------------------------------
+
+synthesize_for_asic_librelane ()
+{
+    local design_dir="$package_dir/librelane_designs/$lab_name"
+    local f
+
+    mkdir -p "$design_dir/src"
+
+    rm -f "$design_dir"/*.tcl \
+          "$design_dir/src"/*.{v,vh,sv,svh} \
+          "$design_dir/src"/*.hex
+
+    cp "$script_dir/asic/"*.tcl "$design_dir"
+
+    if [ -f ../asic_config.tcl ]
+    then
+        cp -f ../asic_config.tcl "$design_dir/config.tcl"
+    fi
+
+    cp "$script_dir/asic/asic_top.sv" "$design_dir/src"
+
+    for f in \
+        config.svh \
+        counter_with_enable.sv \
+        seven_segment_display.sv \
+        shift_reg.sv \
+        strobe_gen.sv
+    do
+        cp -f "$lab_dir/common/$f" "$design_dir/src"
+    done
+
+    cp "$script_dir/asic/define_gowin_or_nothing.svh" "$design_dir/src"
+
+    "$find_to_run" .. \
+           -type d -name run -prune \
+        -o -type f \
+        \( \
+                 -name '*.sv' -not -name tb.sv \
+            -o   -name '*.svh' \
+            -o   -name '*.v' \
+            -o   -name '*.vh' \
+            -o   -name '*.hex' \
+        \) \
+        -print0 \
+        | while IFS= read -r -d '' f
+          do
+              cp -f -- "$f" "$design_dir/src"
+          done
+
+    rars_assembly
+
+    if [ -f program.hex ]
+    then
+        cp -f program.hex "$design_dir/src"
+    fi
+
+    (
+        cd "$design_dir" || exit
+        run_librelane --flow Classic "$@" "$design_dir/config.tcl"
+    ) || return $?
+
+    info "Done running LibreLane. The run and its reports are in $design_dir"
 }
 
 #-----------------------------------------------------------------------------
 
 run_librelane_layout_viewer ()
 {
-    viewer="${1-}"
+    # The '-' expansion supplies an empty string when no viewer was passed.
+    local viewer="${1-}"
 
-    if [ -z "$viewer" ]; then
+    if [ "$#" -gt 0 ]
+    then
+        shift
+    fi
+
+    if [ -z "$viewer" ]
+    then
+        # The ':-' expansion defaults an unset or empty selection to OpenROAD.
         viewer="${LAYOUT_VIEWER:-openroad}"
     fi
 
-    [ "$viewer" == "klayout"  ] ||
-    [ "$viewer" == "openroad" ] ||
-    error 'Invalid layout viewer. Valid layout viewers are "klayout" and "openroad"'
+    local flow argument
 
-    design_dir="$package_dir/librelane_designs/$lab_name"
+    case "$viewer" in
+        openroad ) flow=OpenInOpenROAD ;;
+        klayout  ) flow=OpenInKLayout  ;;
+        * )
+            info 'error: Invalid layout viewer. Choose "klayout" or "openroad".'
+            return 1
+        ;;
+    esac
 
-    pushd $design_dir &> /dev/null
-    librelane --last-run --flow openin$viewer ./config.tcl
-    popd
+    local design_dir="$package_dir/librelane_designs/$lab_name"
+
+    if [ ! -f "$design_dir/config.tcl" ]
+    then
+        info "error: No staged ASIC configuration at $design_dir/config.tcl." \
+             "Run 07_synthesize_for_asic.bash for this lab first."
+
+        return 1
+    fi
+
+    local -a run_selection=(--last-run)
+
+    # LibreLane rejects combining --last-run with an explicit --run-tag.
+
+    for argument in "$@"
+    do
+        case "$argument" in
+            --run-tag | --run-tag=* | --last-run )
+                run_selection=()
+                break
+            ;;
+        esac
+    done
+
+    (
+        cd "$design_dir" || exit
+
+        # Quoted array expansion omits the default when the caller selects a run.
+        run_librelane --flow "$flow" "${run_selection[@]}" "$@" ./config.tcl
+    )
 }

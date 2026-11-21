@@ -1,5 +1,12 @@
 # Notes on Bash scripts
 
+## ASIC synthesis with LibreLane
+
+The ASIC scripts can start the LibreLane AppImage directly from an ordinary
+terminal. See [the AppImage workflow](README_librelane.md) for installation,
+automatic discovery, synthesis and viewer commands, runtime overrides, and
+troubleshooting.
+
 ## Choosing an FPGA board
 
 The board menu in `steps/00_setup.source_bash` first lists board names or
