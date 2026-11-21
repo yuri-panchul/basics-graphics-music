@@ -74,3 +74,21 @@ TODO: This is inconsistent with Linux, Altera and Xilinx. Need to review.
    Discovery tries `/usr/bin/sort`, `/bin/sort`, then `sort` from `PATH`, checking version-sorting support before use. This avoids Windows' native `sort.exe`. If no compatible Unix utility is available, it warns and uses `sort` from `PATH` without options as a Windows fallback. The fallback utility controls alphabetical ordering and equal-version ties, which may differ from Unix sort. This ordering may select an older version; set `XILINX_VIVADO` to override it. Sorting failures still report an error.
 
 For example, `/home/verilog/AMD/2026.1/Vivado` is discovered when `$HOME` is `/home/verilog`. To select it explicitly, set `XILINX_VIVADO=/home/verilog/AMD/2026.1/Vivado`; to search its parent, set `XILINX_HOME=/home/verilog`.
+
+## LibreLane
+
+The ASIC scripts (`07_synthesize_for_asic.bash`, `08_visualize_asic_synthesis_results_1.bash` and `09_visualize_asic_synthesis_results_2.bash`) look for LibreLane only. Other scripts skip this step. See [docs/LibreLane.md](../../docs/LibreLane.md) for the installation.
+
+1. If `LIBRELANE_PATH` is defined, prepend it to `PATH`.
+
+2. If `librelane` is in `PATH`, consider setup done. This is the case inside a Nix shell or inside an interactive shell of the LibreLane AppImage.
+
+3. Otherwise, look for the LibreLane AppImage. If `LIBRELANE_APPIMAGE` is defined, use that file. Otherwise, use the newest `librelane*<machine>*.AppImage` in `$HOME` or in `$HOME/Downloads`, where `<machine>` is the output of `uname -m`, for example `librelane-devshell-x86_64.AppImage`. If the file is not executable, make it executable.
+
+4. Start the AppImage with the command `true`. If it works, the scripts run `<AppImage> librelane <arguments>`: the AppImage runs the command inside its environment and exits with its status. The user does not need to start the AppImage first.
+
+5. If the AppImage cannot start, usually with "cannot unshare" because the system disables unprivileged user namespaces, and `bwrap` works, the scripts run LibreLane under `bwrap`. They mount the AppImage with `--appimage-mount`, run its entrypoint under `bwrap` with the AppImage's `/nix` in place and every other top-level directory of the system bound as is, and unmount the AppImage afterwards. ALT Linux disables unprivileged user namespaces by default and installs `bwrap` setuid root, so this works there without root.
+
+6. Otherwise, stop with an error that names the commands enabling unprivileged user namespaces.
+
+The results go to `librelane_designs/<lab>` in the root of the package: `07_synthesize_for_asic.bash` copies the sources there and runs `librelane --flow Classic config.tcl`, and the viewers open the last run with the `OpenInOpenROAD` and `OpenInKLayout` flows.

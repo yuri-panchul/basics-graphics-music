@@ -218,7 +218,7 @@ remove_macos_quarantine_attr ()
 #
 #   Intel FPGA Quartus and Questa, licensed by Intel from Siemens EDA
 #   Gowin IDE
-#   Open Lane
+#   LibreLane
 #   Icarus Verilog
 #
 #-----------------------------------------------------------------------------

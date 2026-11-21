@@ -112,6 +112,14 @@ No special steps are required. You can use any terminal including built-in.
     brew install bash
     ```
 
+## ASIC synthesis
+
+The labs can also be turned into a chip layout with the open-source
+[LibreLane](https://github.com/librelane/librelane) flow on Linux.
+Put the LibreLane AppImage into your home directory and run
+`07_synthesize_for_asic.bash` in a lab directory; the script starts
+the AppImage itself. See [ASIC synthesis with LibreLane](./docs/LibreLane.md).
+
 # Compatible Hardware
 
 To support educators worldwide, we support a wide variety of hardware across all manufacturers and price ranges, with several dozen different variants in total. See [./boards](./boards/) for more information.

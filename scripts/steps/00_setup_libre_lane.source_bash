@@ -28,43 +28,701 @@ then
 fi
 
 #-----------------------------------------------------------------------------
+#
+#   LibreLane, an open-source RTL-to-GDSII flow for ASIC.
+#   See docs/LibreLane.md for the installation.
+#
+#   The ASIC scripts run the "librelane" command in one of three ways:
+#
+#   1. path: "librelane" is in PATH, for example inside a Nix shell,
+#      inside an interactive AppImage shell, or with LIBRELANE_PATH
+#      set to the directory of the librelane binary.
+#
+#   2. appimage: through the LibreLane AppImage, which the scripts
+#      start themselves. "librelane-devshell-x86_64.AppImage librelane
+#      <arguments>" runs the command inside the AppImage environment
+#      and exits. The AppImage needs unprivileged user namespaces.
+#
+#   3. bwrap: through the same AppImage and bwrap, when the system
+#      disables unprivileged user namespaces but has bwrap installed
+#      setuid root, as ALT Linux does by default. The scripts mount
+#      the AppImage with --appimage-mount and run its environment
+#      under bwrap with the AppImage's /nix in place.
+#
+#   The AppImage is LIBRELANE_APPIMAGE if it is set. Otherwise it is
+#   the newest librelane*<machine>*.AppImage in the home directory
+#   or in ~/Downloads, where <machine> is the output of "uname -m".
+#   If there is none, the scripts offer to download the AppImage
+#   of librelane_version into the home directory.
+#
+#   Git Bash on Windows cannot run LibreLane, so there the ASIC
+#   scripts run themselves again in WSL2. macOS has no AppImage,
+#   so there the scripts explain how to install LibreLane with Nix.
+#
+#-----------------------------------------------------------------------------
 
-librelane_setup()
+librelane_version=3.0.17
+librelane_design_dir="$package_dir/librelane_designs/$lab_name"
+
+#-----------------------------------------------------------------------------
+
+librelane_print_commands ()
 {
-    if ! [[ $script =~ asic ]]; then
+    printf "\n" 1>&2
+    printf "    %s\n" "$@" 1>&2
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_install_command ()
+{
+    if is_command_available apt-get
+    then
+        echo "sudo apt-get install -y $1"
+    elif is_command_available dnf
+    then
+        echo "sudo dnf install -y $1"
+    elif is_command_available zypper
+    then
+        echo "sudo zypper install -y $1"
+    elif is_command_available pacman
+    then
+        echo "sudo pacman -S $1"
+    else
+        echo "install the $1 package with the package manager of your Linux"
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_read_sysctl ()
+{
+    # Prints nothing if the kernel has no such setting
+    cat "/proc/sys/$1" 2> /dev/null || true
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_has_results ()
+{
+       [ -f "$librelane_design_dir/config.tcl" ]  \
+    && [ -n "$(ls -A "$librelane_design_dir/runs" 2> /dev/null)" ]
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_find_appimage ()
+{
+    local candidate machine
+
+    librelane_appimage=
+
+    if [ -n "${LIBRELANE_APPIMAGE-}" ]
+    then
+        [ -f "$LIBRELANE_APPIMAGE" ] ||
+            error "LIBRELANE_APPIMAGE is set to \"$LIBRELANE_APPIMAGE\","  \
+                  "but there is no such file"
+
+        librelane_appimage=$LIBRELANE_APPIMAGE
         return
     fi
 
-    if [ -v LIBRELANE_PATH ]; then
-        export PATH="${LIBRELANE_PATH}:$PATH"
+    machine=$(uname -m)
+
+    # A pattern without a match stays as is and fails the -f test
+
+    for candidate in                                    \
+        "$HOME"/librelane*"$machine"*.AppImage          \
+        "$HOME"/Downloads/librelane*"$machine"*.AppImage
+    do
+        if    [ -f "$candidate" ]                       \
+           && {    [ -z "$librelane_appimage" ]         \
+                || [ "$candidate" -nt "$librelane_appimage" ] ; }
+        then
+            librelane_appimage=$candidate
+        fi
+    done
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_download_appimage ()
+{
+    local answer free_kb machine name part part_size sha256 size status=0 url
+
+    machine=$(uname -m)
+
+    # The sizes and SHA-256 sums are from the release page of librelane_version
+
+    case $machine in
+        x86_64 )
+            size=1398049312
+            sha256=c8ef5ae26b1fc53dd1dd30fe2f1a1da6ab0fdf471dd5a94c2b85d2b3db36833c
+        ;;
+
+        aarch64 )
+            size=1346203296
+            sha256=902311ed81828b8b5c64a8759b718c1df62f64c2936bee7e6c800b99c25a5b34
+        ;;
+
+        * )
+            error "LibreLane has AppImages only for x86_64 and aarch64"  \
+                  "computers, and this computer is $machine."          \
+                  "See docs/LibreLane.md for other installations."
+        ;;
+    esac
+
+    name=librelane-devshell-$machine.AppImage
+    url=https://github.com/librelane/librelane/releases/download/$librelane_version/$name
+    librelane_appimage=$HOME/$name
+    part=$librelane_appimage.part
+
+    info "LibreLane is not installed. The ASIC scripts can download it:"     \
+         "the LibreLane $librelane_version AppImage, 1.4 GB,"                \
+         "into \"$librelane_appimage\". The first ASIC synthesis then"       \
+         "downloads the SkyWater 130 nm PDK into ~/.ciel: 0.34 GB,"           \
+         "2.2 GB on disk."
+
+    # In the output of "df -P", the 4th field of the 2nd line is the free space
+    free_kb=$(df -Pk "$HOME" 2> /dev/null | awk 'NR == 2 { print $4 }')
+
+    if    [[ $free_kb =~ ^[0-9]+$ ]]  \
+       && [ "$free_kb" -lt $((4 * 1024 * 1024)) ]
+    then
+        error "There is only $((free_kb / 1024 / 1024)) GB of free space"  \
+              "in \"$HOME\". LibreLane needs about 4 GB there,"           \
+              "and each ASIC synthesis run about 1 GB more."
     fi
 
-    if  ! is_command_available librelane ; then
-        error "Cannot find librelane binary for ASIC synthesis." \
-              "Librelane can be installed via Nix and sourcing into" \
-              "a Nix development shell with \'nix develop\', or by" \
-              "specifying a custom Librelane binary path with" \
-              "LIBRELANE_PATH"
+    # "read -p" shows no prompt when the input is not a terminal,
+    # as in WSL started from Git Bash, so printf shows it instead
+
+    printf "\nDownload LibreLane now? [Y/n] " 1>&2
+    read -r answer || answer=n
+
+    case $answer in
+        "" | [Yy]* ) ;;
+
+        * ) error "LibreLane is not installed. See docs/LibreLane.md" ;;
+    esac
+
+    part_size=$(stat -c %s "$part" 2> /dev/null || echo 0)
+
+    # A file left by a stopped download is continued, unless it is too big
+
+    if [ "$part_size" -gt "$size" ]
+    then
+        rm -f "$part"
+        part_size=0
     fi
+
+    if [ "$part_size" -lt "$size" ]
+    then
+        if [ "$part_size" -gt 0 ]
+        then
+            info "Continuing the download that stopped before"
+        fi
+
+        if is_command_available curl
+        then
+            curl -fL --retry 3 --progress-bar -C - -o "$part" "$url"  \
+                || status=$?
+        elif is_command_available wget
+        then
+            wget -c -O "$part" "$url" || status=$?
+        else
+            error "Cannot download LibreLane: there is no curl or wget."  \
+                  "To install curl: $(librelane_install_command curl)"
+        fi
+
+        if [ $status != 0 ]
+        then
+            error "The download of \"$url\" stopped."                \
+                  "Run \"$script\" again to continue it."            \
+                  "If it keeps stopping, download the file with a"  \
+                  "browser into your home directory."
+        fi
+    fi
+
+    info "Checking the downloaded file"
+
+    if ! printf "%s  %s\n" "$sha256" "$part" | sha256sum -c --status
+    then
+        rm -f "$part"
+
+        error "The downloaded file is damaged, so it is deleted."  \
+              "Run \"$script\" again to download it again."
+    fi
+
+    mv -f "$part" "$librelane_appimage"
+    chmod a+x "$librelane_appimage"
+    info "LibreLane is downloaded into \"$librelane_appimage\""
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_explain_appimage_failure ()
+{
+    local output=$1 last_line
+
+    # ##*$'\n' removes everything up to the last newline: the last line stays
+    last_line=${output##*$'\n'}
+
+    # #"$librelane_appimage: " removes the path of the AppImage from the start
+    last_line=${last_line#"$librelane_appimage: "}
+
+    if    ! is_command_available fusermount3  \
+       && ! is_command_available fusermount
+    then
+        info "The LibreLane AppImage cannot start: \"$last_line\"."  \
+             "It needs FUSE, which is not installed. To install it:"
+
+        librelane_print_commands "$(librelane_install_command fuse3)"
+        error "Then run \"$script\" again. See docs/LibreLane.md"
+    fi
+
+    if ! [ -e /dev/fuse ]
+    then
+        info "The LibreLane AppImage cannot start: \"$last_line\"."  \
+             "It needs FUSE, and this system has no /dev/fuse."     \
+             "To load FUSE, run:"
+
+        librelane_print_commands "sudo modprobe fuse"
+        error "Then run \"$script\" again. See docs/LibreLane.md"
+    fi
+
+    if [ "$(librelane_read_sysctl kernel/apparmor_restrict_unprivileged_userns)" = 1 ]
+    then
+        info "The LibreLane AppImage cannot start: \"$last_line\"."          \
+             "Ubuntu 24.04 and newer, and the systems based on them, such"  \
+             "as Lubuntu, Kubuntu, Xubuntu and Linux Mint 22, do not let"   \
+             "programs like the AppImage use unprivileged user namespaces."  \
+             "To allow it, run these commands once."                         \
+             "They ask for your password:"
+
+        librelane_print_commands                                         \
+            "sudo apt-get install -y uidmap"                             \
+            "echo \"kernel.apparmor_restrict_unprivileged_userns = 0\" | sudo tee /etc/sysctl.d/99-userns.conf && sudo sysctl --system"
+
+        error "Then run \"$script\" again. See docs/LibreLane.md"
+    fi
+
+    if [ "$(librelane_read_sysctl kernel/unprivileged_userns_clone)" = 0 ]
+    then
+        info "The LibreLane AppImage cannot start: \"$last_line\"."     \
+             "It needs unprivileged user namespaces, which this system"  \
+             "disables, and there is no setuid bwrap to use instead."    \
+             "To enable them, run this command once as root:"
+
+        librelane_print_commands  \
+            "echo \"kernel.unprivileged_userns_clone = 1\" | sudo tee /etc/sysctl.d/99-userns.conf && sudo sysctl --system"
+
+        error "Then run \"$script\" again. See docs/LibreLane.md"
+    fi
+
+    if [ "$(librelane_read_sysctl user/max_user_namespaces)" = 0 ]
+    then
+        info "The LibreLane AppImage cannot start: \"$last_line\"."     \
+             "It needs unprivileged user namespaces, which this system"  \
+             "disables. To enable them, run this command once as root:"
+
+        librelane_print_commands  \
+            "echo \"user.max_user_namespaces = 15000\" | sudo tee /etc/sysctl.d/99-userns.conf && sudo sysctl --system"
+
+        error "Then run \"$script\" again. See docs/LibreLane.md"
+    fi
+
+    info "The LibreLane AppImage \"$librelane_appimage\" cannot start."  \
+         "Its messages:"
+
+    printf "\n%s\n" "$output" 1>&2
+    error "See docs/LibreLane.md"
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_run_in_wsl ()
+{
+    local lab_dir_windows status=0 wsl_kernel=
+
+    if    ! is_command_available wsl.exe  \
+       || ! wsl_kernel=$(wsl.exe -e uname -r 2> /dev/null)
+    then
+        info "LibreLane runs on Linux. On Windows, the ASIC scripts run it"  \
+             "in WSL2, the Linux inside Windows, which is not installed."   \
+             "To install it:"
+
+        librelane_print_commands                                                   \
+            "1. Open PowerShell as Administrator and run: wsl --install -d Ubuntu"  \
+            "2. Restart Windows."                                                  \
+            "3. Open Ubuntu from the Start menu and choose a user name and password."
+
+        error "Then run \"$script\" again in Git Bash. See docs/LibreLane.md"
+    fi
+
+    if ! [[ $wsl_kernel =~ WSL2 ]]
+    then
+        info "LibreLane needs WSL2, and the Linux in WSL here runs in WSL 1."  \
+             "To convert it, run these commands in PowerShell, with the"      \
+             "name that the first command shows in place of Ubuntu:"
+
+        librelane_print_commands   \
+            "wsl --list --verbose"  \
+            "wsl --set-version Ubuntu 2"
+
+        error "Then run \"$script\" again in Git Bash. See docs/LibreLane.md"
+    fi
+
+    if grep -q $'\r' "$script_dir/steps/00_setup.source_bash"
+    then
+        info "The scripts in \"$package_dir\" have Windows line endings,"   \
+             "which the Linux in WSL2 cannot run. Git changes the line"    \
+             "endings when its core.autocrlf setting is true. To get a"     \
+             "copy of the repository that works, run in Git Bash:"
+
+        librelane_print_commands  \
+            "git clone --config core.autocrlf=input https://github.com/yuri-panchul/basics-graphics-music.git"
+
+        error "Then run \"$script\" in the new copy. See docs/LibreLane.md"
+    fi
+
+    # cygpath -w turns a Git Bash path like /c/... into a Windows path like C:\...
+    lab_dir_windows=$(cygpath -w "$(readlink -f ..)")
+
+    info "LibreLane runs on Linux, so \"$script\" continues in WSL2"
+
+    # MSYS_NO_PATHCONV=1 stops Git Bash from changing the arguments of wsl.exe
+    MSYS_NO_PATHCONV=1 wsl.exe --cd "$lab_dir_windows" -e bash "./$script" || status=$?
+
+    exit $status
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_explain_macos ()
+{
+    info "LibreLane has no AppImage for macOS. On a Mac, install it with Nix,"  \
+         "as the LibreLane installation guide describes:"
+
+    librelane_print_commands                                                         \
+        "1. Install Nix. It asks for your password and takes about 5 minutes:"       \
+        ""                                                                           \
+        "   curl --proto '=https' --tlsv1.2 -fsSL https://artifacts.nixos.org/nix-installer | sh -s -- install --no-confirm --extra-conf \"" \
+        "       extra-substituters = https://nix-cache.fossi-foundation.org"          \
+        "       extra-trusted-public-keys = nix-cache.fossi-foundation.org:3+K59iFwXqKsL7BNu6Guy0v+uTlwsxYQxjspXzqLYQs=" \
+        "       extra-experimental-features = nix-command flakes"                    \
+        "   \""                                                                      \
+        ""                                                                           \
+        "2. Close all terminals, open a new one and get LibreLane:"                  \
+        ""                                                                           \
+        "   git clone --branch $librelane_version https://github.com/librelane/librelane ~/librelane" \
+        ""                                                                           \
+        "3. Each time, start the LibreLane shell first. The first time takes"        \
+        "   about 10 minutes:"                                                       \
+        ""                                                                           \
+        "   cd ~/librelane && nix-shell"                                             \
+        ""                                                                           \
+        "   Then, in that shell, go to the lab and run \"$script\" again."
+
+    error "See docs/LibreLane.md"
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_setup ()
+{
+    local appimage_output
+
+    librelane_runner=
+
+    if ! [[ $script =~ asic ]]
+    then
+        return
+    fi
+
+    # Without the results of 07, the viewers stop with a message
+    # before they need LibreLane
+
+    if [[ $script =~ visualize ]] && ! librelane_has_results
+    then
+        return
+    fi
+
+    if [ -n "${LIBRELANE_PATH-}" ]
+    then
+        export PATH="$LIBRELANE_PATH:$PATH"
+    fi
+
+    if is_command_available librelane
+    then
+        librelane_runner=path
+        return
+    fi
+
+    case $OSTYPE in
+        cygwin | msys ) librelane_run_in_wsl    ;;
+        darwin*       ) librelane_explain_macos ;;
+    esac
+
+    librelane_find_appimage
+
+    if [ -z "$librelane_appimage" ]
+    then
+        librelane_download_appimage
+    fi
+
+    if ! [ -x "$librelane_appimage" ]
+    then
+        chmod u+x "$librelane_appimage"
+    fi
+
+    if appimage_output=$("$librelane_appimage" true 2>&1)
+    then
+        librelane_runner=appimage
+        return
+    fi
+
+    if    is_command_available bwrap  \
+       && librelane_run_with_bwrap true &> /dev/null
+    then
+        info "Unprivileged user namespaces are disabled,"   \
+             "so the LibreLane AppImage runs under bwrap"
+
+        librelane_runner=bwrap
+        return
+    fi
+
+    librelane_explain_appimage_failure "$appimage_output"
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_unmount_appimage ()
+{
+    if [ -n "${librelane_mount_pid-}" ]
+    then
+        kill "$librelane_mount_pid" 2> /dev/null || true
+        wait "$librelane_mount_pid" 2> /dev/null || true
+        librelane_mount_pid=
+    fi
+
+    if [ -n "${librelane_mount_log-}" ]
+    then
+        rm -f "$librelane_mount_log"
+        librelane_mount_log=
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_run_with_bwrap ()
+{
+    local dir entrypoint i mount_dir status=0
+    local -a binds=()
+
+    librelane_mount_log=$(mktemp)
+
+    # The background job below ignores Ctrl-C, so the traps stop it
+
+    trap librelane_unmount_appimage EXIT
+    trap 'exit 130' INT TERM
+
+    # --appimage-mount mounts the AppImage, prints the mount point
+    # and waits until it is killed
+
+    "$librelane_appimage" --appimage-mount > "$librelane_mount_log" 2>&1 &
+    librelane_mount_pid=$!
+    mount_dir=
+
+    for i in {1..100}
+    do
+        mount_dir=$(head -n 1 "$librelane_mount_log")
+
+        if    { [ -n "$mount_dir" ] && [ -d "$mount_dir/nix" ] ; }  \
+           || ! kill -0 "$librelane_mount_pid" 2> /dev/null
+        then
+            break
+        fi
+
+        sleep 0.1
+    done
+
+    if [ -z "$mount_dir" ] || ! [ -d "$mount_dir/nix" ]
+    then
+        librelane_unmount_appimage
+        trap - EXIT INT TERM
+        return 1
+    fi
+
+    # The same file system as the AppImage's own start gives:
+    # every top-level directory of the system and the AppImage's /nix
+
+    for dir in /*
+    do
+        case $dir in
+            /dev | /nix | /proc ) continue ;;
+        esac
+
+        if [ -L "$dir" ]
+        then
+            binds+=(--symlink "$(readlink "$dir")" "$dir")
+        elif [ -d "$dir" ]
+        then
+            binds+=(--bind "$dir" "$dir")
+        fi
+    done
+
+    entrypoint=$(readlink "$mount_dir/entrypoint")
+
+    # --unshare-pid and --die-with-parent end every process of the run
+    # together with bwrap, so none keeps running after Ctrl-C
+    # when the AppImage is no longer mounted
+
+    bwrap "${binds[@]}"                    \
+          --dev-bind /dev /dev             \
+          --unshare-pid                    \
+          --proc /proc                     \
+          --die-with-parent                \
+          --ro-bind "$mount_dir/nix" /nix  \
+          --chdir "$PWD"                   \
+          "$entrypoint" "$@"               \
+        || status=$?
+
+    librelane_unmount_appimage
+    trap - EXIT INT TERM
+
+    return $status
+}
+
+#-----------------------------------------------------------------------------
+
+run_librelane ()
+{
+    case "${librelane_runner-}" in
+        path     ) librelane "$@"                          ;;
+        appimage ) "$librelane_appimage" librelane "$@"    ;;
+        bwrap    ) librelane_run_with_bwrap librelane "$@" ;;
+
+        *) error "LibreLane is not set up for \"$script\"" ;;
+    esac
+}
+
+#-----------------------------------------------------------------------------
+
+librelane_synthesize_for_asic ()
+{
+    local design_dir=$librelane_design_dir f
+
+    mkdir -p "$design_dir/src"
+
+    # :? stops the script if design_dir is empty, instead of removing from /
+    rm -rf "${design_dir:?}"/*.tcl                \
+           "${design_dir:?}/src"/*.{v,vh,sv,svh}  \
+           "${design_dir:?}/src"/*.hex
+
+    #-------------------------------------------------------------------------
+
+    cp "$script_dir/asic/"*.tcl "$design_dir"
+
+    if [ -f ../asic_config.tcl ]
+    then
+        cp -f ../asic_config.tcl "$design_dir/config.tcl"
+    fi
+
+    #-------------------------------------------------------------------------
+
+    cp "$script_dir/asic/asic_top.sv" "$design_dir/src"
+
+    # config.svh includes define_gowin_or_nothing.svh from the peripherals
+    cp -f "$peripheral_dir/define_gowin_or_nothing.svh" "$design_dir/src"
+
+    for f in                      \
+        config.svh                \
+        counter_with_enable.sv    \
+        seven_segment_display.sv  \
+        shift_reg.sv              \
+        strobe_gen.sv
+    do
+        cp -f "$lab_dir/common/$f" "$design_dir/src"
+    done
+
+    $find_to_run ..                             \
+           -type d -name run -prune             \
+        -o -type f                              \
+        \(                                      \
+                 -name '*.sv' -not -name tb.sv  \
+            -o   -name '*.svh'                  \
+            -o   -name '*.v'                    \
+            -o   -name '*.vh'                   \
+            -o   -name '*.hex'                  \
+        \)                                      \
+        -print                                  \
+        | xargs -I % cp -f % "$design_dir/src"
+
+    #-------------------------------------------------------------------------
+
+    rars_assembly
+
+    if [ -f program.hex ]
+    then
+        cp -f program.hex "$design_dir/src"
+    fi
+
+    #-------------------------------------------------------------------------
+
+    info "Running the LibreLane flow. For a small lab, it takes about"   \
+         "20 minutes on a 4-core computer, most of it in the design"     \
+         "rule checks at the end."
+
+    pushd "$design_dir" > /dev/null
+    run_librelane --flow Classic "$design_dir/config.tcl"
+    popd > /dev/null
+
+    info "Done running the LibreLane flow."  \
+         "The runs and their reports are in \"$design_dir/runs\""
 }
 
 #-----------------------------------------------------------------------------
 
 run_librelane_layout_viewer ()
 {
+    local design_dir=$librelane_design_dir flow viewer
+
     viewer="${1-}"
 
-    if [ -z "$viewer" ]; then
+    if [ -z "$viewer" ]
+    then
         viewer="${LAYOUT_VIEWER:-openroad}"
     fi
 
-    [ "$viewer" == "klayout"  ] ||
-    [ "$viewer" == "openroad" ] ||
-    error 'Invalid layout viewer. Valid layout viewers are "klayout" and "openroad"'
+    case $viewer in
+        klayout  ) flow=OpenInKLayout  ;;
+        openroad ) flow=OpenInOpenROAD ;;
 
-    design_dir="$package_dir/librelane_designs/$lab_name"
+        *) error 'Invalid layout viewer. Valid layout viewers are "klayout" and "openroad"' ;;
+    esac
 
-    pushd $design_dir &> /dev/null
-    librelane --last-run --flow openin$viewer ./config.tcl
-    popd
+    if ! librelane_has_results
+    then
+        error "There are no ASIC synthesis results for the lab \"$lab_name\""  \
+              "in \"$design_dir/runs\"."                                       \
+              "Run 07_synthesize_for_asic.bash first."
+    fi
+
+    # QT_QPA_PLATFORM=offscreen runs the viewers without a screen, for tests
+
+    if    [ "$OSTYPE" = linux-gnu ]                     \
+       && [ -z "${DISPLAY-}${WAYLAND_DISPLAY-}" ]       \
+       && [ "${QT_QPA_PLATFORM-}" != offscreen ]
+    then
+        error "The layout viewers need a graphical desktop, and this"     \
+              "terminal has none: DISPLAY is not set. Run the script in"  \
+              "a terminal of the desktop. Over ssh, connect with"         \
+              "\"ssh -X\". In WSL, run \"wsl --update\" in PowerShell"    \
+              "to get graphics."
+    fi
+
+    pushd "$design_dir" > /dev/null
+    run_librelane --last-run --flow $flow ./config.tcl
+    popd > /dev/null
 }
