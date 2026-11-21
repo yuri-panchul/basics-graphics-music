@@ -1,6 +1,6 @@
 # Плата BETTERSHENGSUN на Cyclone IV с микрофоном и ЦАП I2S
 
-*Создано Claude Code 2.1.329, модель Claude Opus 5.5 (claude-opus-5-5), 20 ноября 2026 года. Конфигурация платы `bettershengsun_by_claude`. На железе ещё не проверено. English version: [README.md](README.md).*
+*Создано Claude Code 2.1.329, модель Claude Opus 5.5 (claude-opus-5-5), 20 ноября 2026 года. Конфигурация платы `bettershengsun_claude_alt`. На железе ещё не проверено. English version: [README.md](README.md).*
 
 Эту плату продаёт на AliExpress магазин BETTERSHENGSUN. На шелкографии она
 названа «FPGA NIOS KIT Board Cyclone IV». Водяной знак на фотографиях
@@ -26,6 +26,14 @@
 
 * WeAct I2S Earphone Module, с PCM5100A и усилителем для наушников;
 * GY-PCM5102, с PCM5102A и линейным выходом.
+
+Эта конфигурация, `bettershengsun_claude_alt`, — первая версия. Её
+`board_specific.qsf` называет выводы разъёма P4 по сигналам микрофона и ЦАП,
+и она питает микрофон в любой лабораторной. Конфигурация
+[`bettershengsun_claude`](../bettershengsun_claude/) следует подходу других
+плат этого репозитория: выводы P4 называются `GPIO`, а микрофон и ЦАП
+пользуются ими только в тех лабораторных, которым они нужны. Подключение у
+обеих одинаковое.
 
 ## Содержание
 
@@ -102,8 +110,8 @@ VIN им можно подавать от 3,3 до 5 В. Питание берё
 ## Шаг за шагом
 
 1. **Выберите плату.** В каталоге любой лабораторной запустите
-   `./06_choose_another_fpga_board.bash` и выберите `bettershengsun`, а затем
-   `bettershengsun_by_claude`, если меню спросит конфигурацию.
+   `./06_choose_another_fpga_board.bash` и выберите `bettershengsun`,
+   а затем конфигурацию `bettershengsun_claude_alt`.
 2. **Загрузите лабораторную, ничего не подключая к P4.** Например, в
    `labs/1_basics/1_01_and_or_not_xor_de_morgan` запустите
    `./03_synthesize_for_fpga.bash`. Скрипт соберёт лабораторную и загрузит её
@@ -113,7 +121,7 @@ VIN им можно подавать от 3,3 до 5 В. Питание берё
 4. Коснитесь красным щупом обоих штырей столбца P129 P128: на каждом должно
    быть 3,3 В. На обоих штырях столбца P127 P126 должно быть 0 В. Если это не
    так, остановитесь и проверьте, что выбрана конфигурация
-   `bettershengsun_by_claude`.
+   `bettershengsun_claude_alt`.
 5. Коснитесь каждого из шести штырей JP2. Запишите, на каких 3,3 или 5 В, а на
    каких 0 В. Нужен один штырь с напряжением от 3,3 до 5 В и один или два с
    0 В. Если таких штырей на JP2 нет, не гадайте: возьмите вывод 1 (GND) и
@@ -399,4 +407,28 @@ commit and push
 
 ```text
 закоммить и запушь
+```
+
+### Запрос 4, 20 ноября 2026 года, 23:26
+
+```text
+Don't call any pins in .qsf file for this board DAC_ or MIC_ . Basics-Graphics-Music (BGM) repo does BGM-specific pin mapping for lab_top via code in board_specific_lab.sv . The board manufacturer does not know about BGM signals. So those pins should be called GPIO (inout in lab_top). I also don't see a point to assign 1 to any GPIO pin if mic is not present. REname your directory claude_bettershengsun_alt and implement another claude_bettershengsun following these repository approach. Also add this prompt to READMEs
+```
+
+#### Перевод на русский
+
+```text
+Не называй никакие выводы в файле .qsf для этой платы DAC_ или MIC_. Репозиторий Basics-Graphics-Music (BGM) делает специфичное для BGM отображение выводов на lab_top кодом в board_specific_lab.sv. Производитель платы ничего не знает о сигналах BGM. Поэтому эти выводы должны называться GPIO (inout в lab_top). Я также не вижу смысла выдавать 1 на какой-либо вывод GPIO, если микрофона нет. Переименуй свой каталог в claude_bettershengsun_alt и сделай ещё один, claude_bettershengsun, следуя этому подходу репозитория. Также добавь этот запрос в README.
+```
+
+### Запрос 5, 21 ноября 2026 года, 07:07
+
+```text
+rename claude_bettershengsun_alt to bettershengsun_claude_alt ; rename claude_bettershengsun to bettershengsun_claude
+```
+
+#### Перевод на русский
+
+```text
+переименуй claude_bettershengsun_alt в bettershengsun_claude_alt; переименуй claude_bettershengsun в bettershengsun_claude
 ```

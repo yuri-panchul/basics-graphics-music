@@ -160,7 +160,7 @@ Your contributions are welcome.
 | Xilinx Artix-7     | Nexys A7            | [`nexys_a7`](./boards/nexys_a7/)                     | [Vivado](./docs/vivado_installation_guide/readme.md) |
 | Altera Cyclone IV  | Pisword S6          | [`piswords6`](./boards/piswords6/)                   | [Intel Quartus Prime Lite](./docs/IntelQuartus.md)   |
 | Altera Cyclone IV  | Saylinx             | [`saylinx`](./boards/saylinx/) <br/> [`saylinx_pmod_mic3`](./boards/saylinx_pmod_mic3/) |  [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
-| Altera Cyclone IV  | BETTERSHENGSUN (TodayStart) | [`bettershengsun_by_claude`](./boards/bettershengsun_by_claude/) | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
+| Altera Cyclone IV  | BETTERSHENGSUN (TodayStart) | [`bettershengsun_claude`](./boards/bettershengsun_claude/) <br/> [`bettershengsun_claude_alt`](./boards/bettershengsun_claude_alt/) | [Intel Quartus Prime Lite](./docs/IntelQuartus.md) |
 | Xilinx Kintex 7    | [QMTech Kintex 7](https://github.com/carlosedp/QMTechBaseBoard) | [`qmtech_kintex_7`](./boards/qmtech_kintex_7/)       | [Vivado](./docs/vivado_installation_guide/readme.md) |
 | Xilinx Zynq-7000   | Zybo Z7             | [`zybo_z7`](./boards/zybo_z7/)                       | [Vivado](./docs/vivado_installation_guide/readme.md) |
 ### External hardware

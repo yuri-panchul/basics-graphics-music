@@ -300,10 +300,12 @@ fpga_board_base_name ()
         _dvi_24b
         _no_hdmi
         _bright
+        _claude
         _no_dvi
         _tm1638
         _vga666
         _50mhz
+        _codex
         _yosys
         _bare
         _hdmi
