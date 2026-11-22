@@ -354,10 +354,15 @@ def draw(variant):
             else:
                 svg.text(x + 3.5, y - 20, CMOD_NAMES[pin], 9, "bold", color, "start", MONO, rotate=-90)
 
-    # DIP 1 to 8 are the GPIO pins of the labs; nothing is connected to them
+    # The GPIO pins of the labs, in the order of the DIP pins; nothing is
+    # connected to them. Pins 48 to 33 run left to right, so the labels of
+    # the top row count down.
 
-    gx, gy = xy(*dip(1))[0], xy(*dip(8))
-    svg.text((gx + gy[0]) / 2, gy[1] - 22, "GPIO 0 to 7", 9, "bold", "#9fb2cf", "middle", MONO)
+    for first, last, label in ((1, 14, "GPIO 0 to 13"), (17, 20, "GPIO 14 to 17"),
+                               (48, 33, "GPIO 33 to 18")):
+        (x0, y0), (x1, _) = xy(*dip(first)), xy(*dip(last))
+        gy = y0 + 31 if dip(first)[1] == CMOD_TOP else y0 - 22
+        svg.text((x0 + x1) / 2, gy, label, 9, "bold", "#9fb2cf", "middle", MONO)
 
     # Pmod JA and TinyVGA, off the end of the breadboard
 
@@ -574,8 +579,8 @@ def draw(variant):
              "+ rail; DIP 24, VU, then stays unconnected.",
              "Keep the middle of rows 25 to 29 free for the USB plug. "
              "Unplug USB before changing the wiring.",
-             "DIP 1 to 8 are the GPIO pins of the labs, gpio[0] to gpio[7]; nothing is "
-             "connected to them here."] + dac["notes"]
+             "DIP 1 to 14, 17 to 20 and 33 to 48 are the GPIO pins of the labs, gpio[0] to "
+             "gpio[33]; nothing is connected to them here."] + dac["notes"]
     ny = 1018
     for k, s in enumerate(notes):
         svg.text(40, ny + 20 * k, s, 13, fill=C["muted"])

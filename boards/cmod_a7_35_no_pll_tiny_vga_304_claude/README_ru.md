@@ -133,11 +133,12 @@ board_specific_top.sv определяет `CMOD_A7_NO_PLL_SCREEN_WIDTH` рав�
 | Cmod A7 | Подключить к |
 |---------|--------------|
 | Pmod JA | TinyVGA |
-| DIP с 1 по 8 | GPIO упражнений, с `gpio[0]` по `gpio[7]`; свободны |
+| DIP с 1 по 14, с 17 по 20 | GPIO упражнений, с `gpio[0]` по `gpio[17]`; свободны |
 | DIP 21, 22, 23 | ЦАП BCK, DIN и LCK у GY-PCM5102 или WS у WeAct |
 | DIP 24, VU | Вариант A: ничего. Вариант B: только вход стабилизатора |
 | DIP 25, 26, 27, 28 | Шина GND и TM1638 GND, STB, CLK, DIO |
 | DIP 29, 30, 31, 32 | INMP441 SCK, WS, L/R, SD |
+| DIP с 33 по 48 | GPIO упражнений, с `gpio[18]` по `gpio[33]`; свободны |
 
 **TinyVGA.** Выход VGA — это TinyVGA, плата Pmod, которую сделал Leo Moser, в
 разъёме Pmod JA; её проект лежит в
@@ -211,7 +212,8 @@ Tapeout продаёт её собранной под названием
 глобальный тактовый буфер для частоты 12 МГц и ни одного MMCM или PLL.
 
 Сборки выше сделаны до 18 ноября, когда у шести конфигураций появились общий
-модуль верхнего уровня, восемь выводов GPIO и RGB-светодиод. После этого
+модуль верхнего уровня, восемь выводов GPIO и RGB-светодиод, а 21 ноября
+выводов GPIO стало 34. После этих изменений
 [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py) собрал для этой конфигурации
 `labs/3_music/3_11_microphone_monitor` в Vivado 2026.1: 2017 LUT,
 1361 регистр, худший запас по setup 67,0 нс, все временные
@@ -647,6 +649,39 @@ Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
 ```
 
 **00:09, 20 ноября**; переименование закоммичено и отправлено:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
+**16:36, 21 ноября**; объяснено, что восемь выводов GPIO взяты из
+конфигураций Codex, а не из ограничений платы:
+
+```text
+put this on hold. switch back to cmod a7 branch . what is the reason you use only 8 gpio pins for the user in cmod a7?
+```
+
+```text
+отложи это. переключись обратно на ветку cmod a7. по какой причине ты даёшь пользователю в cmod a7 только 8 выводов gpio?
+```
+
+**16:41, 21 ноября**; все 34 цифровых вывода DIP, не занятые TM1638,
+микрофоном и ЦАП, стали выводами GPIO упражнений, с `gpio[0]` по
+`gpio[33]`:
+
+```text
+don't pay attention to Geiger or other labs for gpio matter for this board. Make all gpios available to the user except for the pins used by tm1638, microphone and dac.
+```
+
+```text
+не обращай внимания на Geiger и другие упражнения в вопросе gpio для этой платы. Сделай все gpio доступными пользователю, кроме выводов, занятых tm1638, микрофоном и ЦАП.
+```
+
+**18:41, 21 ноября**; 34 вывода GPIO закоммичены и отправлены:
 
 ```text
 commit and push

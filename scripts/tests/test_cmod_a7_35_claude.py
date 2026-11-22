@@ -65,7 +65,7 @@ USED_PORTS = (
     | {f"btn[{i}]" for i in range(2)}
     | {f"led[{i}]" for i in range(2)}
     | {f"ja[{i}]" for i in range(8)}
-    | {f"pio{i}" for i in [*range(1, 9), 21, 22, 23, 26, 27, 28, 29, 30, 31, 32]}
+    | {f"pio{i}" for i in [*range(1, 15), *range(17, 24), *range(26, 49)]}
 )
 
 LABS = sorted(p.parent for p in (REPO / "labs/1_basics").glob("*/lab_top.sv")) + [

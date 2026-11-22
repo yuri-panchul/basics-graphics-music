@@ -61,6 +61,6 @@ module lab_top
 
     assign sound    = 16'h5a3c;
     assign uart_tx  = uart_rx;
-    assign gpio     = w_gpio'  (8'ha6);
+    assign gpio     = w_gpio'  (64'h9c5a_3e71_d2b6_48a6);
 
 endmodule

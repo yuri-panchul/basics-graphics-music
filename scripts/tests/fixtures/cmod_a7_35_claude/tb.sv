@@ -52,7 +52,11 @@ module tb;
     logic       uart_txd_in = 1'b1;
     wire        uart_rxd_out;
 
-    wire        pio1, pio2, pio3, pio4, pio5, pio6, pio7, pio8;
+    wire        pio1,  pio2,  pio3,  pio4,  pio5,  pio6,  pio7,         // GPIO
+                pio8,  pio9,  pio10, pio11, pio12, pio13, pio14,
+                pio17, pio18, pio19, pio20,
+                pio33, pio34, pio35, pio36, pio37, pio38, pio39, pio40,
+                pio41, pio42, pio43, pio44, pio45, pio46, pio47, pio48;
     wire        pio21, pio22, pio23;   // DAC BCK, DIN, LCK
     wire        pio26, pio27;          // TM1638 STB, CLK
     tri1        pio28;                 // TM1638 DIO, pulled up on the module
@@ -60,6 +64,10 @@ module tb;
     logic       pio32 = 1'b0;          // INMP441 SD
 
     always # (sysclk_period / 2) sysclk = ~ sysclk;
+
+    // The GPIO pattern that lab_top.sv of this directory drives
+
+    localparam [63:0] gpio_pattern = 64'h9c5a_3e71_d2b6_48a6;
 
     board_specific_top dut (.*);
 
@@ -318,9 +326,22 @@ module tb;
 
         // Pins that do not depend on time
 
-        if ({ pio8, pio7, pio6, pio5, pio4, pio3, pio2, pio1 } !== 8'ha6)
-            fail ($sformatf ("GPIO pins DIP 8 to 1 are %b, expected 10100110",
-                             { pio8, pio7, pio6, pio5, pio4, pio3, pio2, pio1 }));
+        // lab_top.sv drives a pattern on its GPIO; gpio [0] is DIP 1,
+        // gpio [14] DIP 17 and gpio [18] DIP 33
+
+        begin
+            logic [33:0] gpio_pins;
+
+            gpio_pins = { pio48, pio47, pio46, pio45, pio44, pio43, pio42, pio41,
+                          pio40, pio39, pio38, pio37, pio36, pio35, pio34, pio33,
+                          pio20, pio19, pio18, pio17,
+                          pio14, pio13, pio12, pio11, pio10, pio9,  pio8,  pio7,
+                          pio6,  pio5,  pio4,  pio3,  pio2,  pio1 };
+
+            if (gpio_pins !== gpio_pattern [33:0])
+                fail ($sformatf ("GPIO pins DIP 48 to 1 are %b, expected %b",
+                                 gpio_pins, gpio_pattern [33:0]));
+        end
 
         uart_txd_in = 1'b0;
         # 1;

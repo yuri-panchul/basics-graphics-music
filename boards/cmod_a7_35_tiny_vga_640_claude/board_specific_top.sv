@@ -35,7 +35,8 @@
 //   * INMP441 I2S microphone;
 //   * I2S DAC module: WeAct I2S Earphone Module (PCM5100A)
 //     or the usual purple GY-PCM5102 module (PCM5102A);
-//   * eight GPIO pins of the labs on DIP pins 1 to 8.
+//   * 34 GPIO pins of the labs: every digital DIP pin that the modules
+//     above do not use.
 //
 // board_specific.xdc is Digilent's Cmod-A7-Master.xdc with only the used
 // lines uncommented. It keeps Digilent's port names: sysclk, btn, led,
@@ -85,7 +86,7 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 2,
               w_digit       = 0,
-              w_gpio        = 8,   // DIP pins 1 to 8
+              w_gpio        = 34,  // DIP pins 1-14, 17-20, 33-48
 
               screen_width  = `CMOD_A7_SCREEN_WIDTH,
               screen_height = 480,
@@ -122,6 +123,17 @@ module board_specific_top
     inout                pio6,
     inout                pio7,
     inout                pio8,
+    inout                pio9,
+    inout                pio10,
+    inout                pio11,
+    inout                pio12,
+    inout                pio13,
+    inout                pio14,
+
+    inout                pio17,
+    inout                pio18,
+    inout                pio19,
+    inout                pio20,
 
     output               pio21,
     output               pio22,
@@ -134,7 +146,24 @@ module board_specific_top
     output               pio29,
     output               pio30,
     output               pio31,
-    input                pio32
+    input                pio32,
+
+    inout                pio33,
+    inout                pio34,
+    inout                pio35,
+    inout                pio36,
+    inout                pio37,
+    inout                pio38,
+    inout                pio39,
+    inout                pio40,
+    inout                pio41,
+    inout                pio42,
+    inout                pio43,
+    inout                pio44,
+    inout                pio45,
+    inout                pio46,
+    inout                pio47,
+    inout                pio48
 );
 
     //------------------------------------------------------------------------
@@ -187,9 +216,17 @@ module board_specific_top
     assign ja [6] = VGA_B [0];  // Pmod pin 9
     assign ja [7] = VGA_HS;     // Pmod pin 10
 
-    // The GPIO pins of the labs are DIP pins 1 to 8, gpio [0] on DIP 1;
-    // see the gpio port of lab_top below. They are inouts, as on the other
-    // boards: a lab drives the ones it uses as outputs and reads the rest.
+    // The GPIO pins of the labs are all the digital DIP pins that TM1638,
+    // the microphone and the DAC do not use, in the order of the DIP pins:
+    //
+    //     gpio [13: 0]  DIP  1 to 14
+    //     gpio [17:14]  DIP 17 to 20
+    //     gpio [33:18]  DIP 33 to 48
+    //
+    // DIP 15 and 16 are analog inputs, and DIP 24 and 25 are VU and GND.
+    // See the gpio port of lab_top below. The GPIO pins are inouts, as on
+    // the other boards: a lab drives the ones it uses as outputs and reads
+    // the rest.
 
     // The DAC is on the DIP pins next to VU, pin 24
 
@@ -417,8 +454,15 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( { pio8, pio7, pio6, pio5,     // DIP 8 to 5
-                           pio4, pio3, pio2, pio1 } )   // DIP 4 to 1
+        .gpio          ( { pio48, pio47, pio46, pio45,   // gpio [33:30]
+                           pio44, pio43, pio42, pio41,   // gpio [29:26]
+                           pio40, pio39, pio38, pio37,   // gpio [25:22]
+                           pio36, pio35, pio34, pio33,   // gpio [21:18]
+                           pio20, pio19, pio18, pio17,   // gpio [17:14]
+                           pio14, pio13, pio12, pio11,   // gpio [13:10]
+                           pio10, pio9,  pio8,  pio7,    // gpio [ 9: 6]
+                           pio6,  pio5,  pio4,  pio3,    // gpio [ 5: 2]
+                           pio2,  pio1 } )               // gpio [ 1: 0]
     );
 
     //------------------------------------------------------------------------

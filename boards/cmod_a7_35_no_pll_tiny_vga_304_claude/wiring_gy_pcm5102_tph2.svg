@@ -26,46 +26,52 @@
 <rect x="290" y="588" width="860" height="204" rx="8" fill="#1d3f6e" stroke="#0e2340" stroke-width="2"/>
 <rect x="1146" y="660" width="46" height="60" rx="4" fill="#c9ccd2" stroke="#7d828c" stroke-width="1.5"/>
 <text x="1169" y="695" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="middle">USB</text>
-<rect x="370" y="645" width="110" height="55" rx="4" fill="#202020" stroke="#000000" stroke-width="1"/>
-<text x="425" y="677" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#d8d8d8" text-anchor="middle">XC7A35T</text>
-<text x="640" y="678" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">Cmod A7-35T</text>
-<text x="640" y="701" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#c7d3e6" text-anchor="middle">pins 48..25 on top, 1..24 below</text>
+<rect x="370" y="677" width="110" height="32" rx="4" fill="#202020" stroke="#000000" stroke-width="1"/>
+<text x="425" y="698" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#d8d8d8" text-anchor="middle">XC7A35T</text>
+<text x="640" y="699" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle">Cmod A7-35T</text>
+<text x="900" y="698" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#c7d3e6" text-anchor="middle">pins 48..25 on top, 1..24 below</text>
 <circle cx="330" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="330" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">1</text>
-<text x="334" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 334 742)">GPIO0</text>
+<text x="334" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 334 742)">GP0</text>
 <circle cx="364" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="364" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">2</text>
-<text x="368" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 368 742)">GPIO1</text>
+<text x="368" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 368 742)">GP1</text>
 <circle cx="398" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="398" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">3</text>
-<text x="402" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 402 742)">GPIO2</text>
+<text x="402" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 402 742)">GP2</text>
 <circle cx="432" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="432" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">4</text>
-<text x="436" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 436 742)">GPIO3</text>
+<text x="436" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 436 742)">GP3</text>
 <circle cx="466" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="466" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">5</text>
-<text x="470" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 470 742)">GPIO4</text>
+<text x="470" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 470 742)">GP4</text>
 <circle cx="500" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="500" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">6</text>
-<text x="504" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 504 742)">GPIO5</text>
+<text x="504" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 504 742)">GP5</text>
 <circle cx="534" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="534" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">7</text>
-<text x="538" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 538 742)">GPIO6</text>
+<text x="538" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 538 742)">GP6</text>
 <circle cx="568" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="568" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">8</text>
-<text x="572" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 572 742)">GPIO7</text>
+<text x="572" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 572 742)">GP7</text>
 <circle cx="602" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="602" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">9</text>
+<text x="606" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 606 742)">GP8</text>
 <circle cx="636" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="636" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">10</text>
+<text x="640" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 640 742)">GP9</text>
 <circle cx="670" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="670" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">11</text>
+<text x="674" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 674 742)">GP10</text>
 <circle cx="704" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="704" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">12</text>
+<text x="708" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 708 742)">GP11</text>
 <circle cx="738" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="738" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">13</text>
+<text x="742" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 742 742)">GP12</text>
 <circle cx="772" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="772" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">14</text>
+<text x="776" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 776 742)">GP13</text>
 <circle cx="806" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="806" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">15</text>
 <text x="810" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 810 742)">AIN</text>
@@ -74,12 +80,16 @@
 <text x="844" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 844 742)">AIN</text>
 <circle cx="874" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="874" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">17</text>
+<text x="878" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 878 742)">GP14</text>
 <circle cx="908" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="908" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">18</text>
+<text x="912" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 912 742)">GP15</text>
 <circle cx="942" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="942" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">19</text>
+<text x="946" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 946 742)">GP16</text>
 <circle cx="976" cy="768" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="976" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">20</text>
+<text x="980" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="start" transform="rotate(-90 980 742)">GP17</text>
 <circle cx="1010" cy="768" r="6" fill="#f2c14e" stroke="#5c4a12" stroke-width="1"/>
 <text x="1010" y="755" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">21</text>
 <text x="1014" y="742" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#ffe08a" text-anchor="start" transform="rotate(-90 1014 742)">BCK</text>
@@ -118,36 +128,52 @@
 <text x="878" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#ffe08a" text-anchor="end" transform="rotate(-90 878 646)">SD</text>
 <circle cx="840" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="840" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">33</text>
+<text x="844" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 844 646)">GP18</text>
 <circle cx="806" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="806" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">34</text>
+<text x="810" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 810 646)">GP19</text>
 <circle cx="772" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="772" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">35</text>
+<text x="776" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 776 646)">GP20</text>
 <circle cx="738" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="738" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">36</text>
+<text x="742" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 742 646)">GP21</text>
 <circle cx="704" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="704" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">37</text>
+<text x="708" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 708 646)">GP22</text>
 <circle cx="670" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="670" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">38</text>
+<text x="674" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 674 646)">GP23</text>
 <circle cx="636" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="636" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">39</text>
+<text x="640" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 640 646)">GP24</text>
 <circle cx="602" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="602" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">40</text>
+<text x="606" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 606 646)">GP25</text>
 <circle cx="568" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="568" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">41</text>
+<text x="572" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 572 646)">GP26</text>
 <circle cx="534" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="534" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">42</text>
+<text x="538" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 538 646)">GP27</text>
 <circle cx="500" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="500" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">43</text>
+<text x="504" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 504 646)">GP28</text>
 <circle cx="466" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="466" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">44</text>
+<text x="470" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 470 646)">GP29</text>
 <circle cx="432" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="432" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">45</text>
+<text x="436" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 436 646)">GP30</text>
 <circle cx="398" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="398" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">46</text>
+<text x="402" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 402 646)">GP31</text>
 <circle cx="364" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="364" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">47</text>
+<text x="368" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 368 646)">GP32</text>
 <circle cx="330" cy="612" r="6" fill="#9aa3b2" stroke="#5c4a12" stroke-width="1"/>
 <text x="330" y="634" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">48</text>
+<text x="334" y="646" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="bold" fill="#9fb2cf" text-anchor="end" transform="rotate(-90 334 646)">GP33</text>
 <rect x="256" y="620" width="40" height="140" rx="3" fill="#2a2a2a" stroke="#000000" stroke-width="1"/>
 <text x="276" y="775" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="middle">JA</text>
 <rect x="105" y="615" width="147" height="150" rx="6" fill="#2e5a3c" stroke="#14301e" stroke-width="1.5"/>
@@ -271,5 +297,5 @@
 <text x="40" y="1170" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">SCK to GND. Solder jumpers on the back: FLT L, DEMP L, XSMT H, FMT L.</text>
 <text x="40" y="1192" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">INMP441 L/R is driven low by the FPGA; you may connect it to GND instead and leave DIP 31 free.</text>
 <text x="40" y="1214" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">Unplug USB before changing the wiring. VU, DIP 24, stays unconnected: there is no 5 V on the breadboard, and the DIP pins take 3.3 V at most.</text>
-<text x="40" y="1236" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">DIP 1 to 8 are the GPIO pins of the labs, gpio[0] to gpio[7]; nothing is connected to them here.</text>
+<text x="40" y="1236" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">DIP 1 to 14, 17 to 20 and 33 to 48 are the GPIO pins of the labs, gpio[0] to gpio[33]; GPn is gpio[n]. Nothing is connected to them here.</text>
 </svg>

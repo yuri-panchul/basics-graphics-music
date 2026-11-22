@@ -139,7 +139,8 @@ cmod_a7_35_tiny_vga_640_claude. Ни в одном нетлисте нет мо�
 мешает созданию битового потока.
 
 Сборки выше сделаны до 18 ноября, когда у шести конфигураций появились общий
-модуль верхнего уровня, восемь выводов GPIO и RGB-светодиод. После этого
+модуль верхнего уровня, восемь выводов GPIO и RGB-светодиод, а 21 ноября
+выводов GPIO стало 34. После этих изменений
 [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py) собрал для этой конфигурации
 `labs/3_music/3_11_microphone_monitor` в Vivado 2026.1: 1872 LUT,
 1261 регистр, худший запас по setup 4,9 нс, все временные
@@ -535,6 +536,39 @@ Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
 ```
 
 **00:09, 20 ноября**; переименование закоммичено и отправлено:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
+**16:36, 21 ноября**; объяснено, что восемь выводов GPIO взяты из
+конфигураций Codex, а не из ограничений платы:
+
+```text
+put this on hold. switch back to cmod a7 branch . what is the reason you use only 8 gpio pins for the user in cmod a7?
+```
+
+```text
+отложи это. переключись обратно на ветку cmod a7. по какой причине ты даёшь пользователю в cmod a7 только 8 выводов gpio?
+```
+
+**16:41, 21 ноября**; все 34 цифровых вывода DIP, не занятые TM1638,
+микрофоном и ЦАП, стали выводами GPIO упражнений, с `gpio[0]` по
+`gpio[33]`:
+
+```text
+don't pay attention to Geiger or other labs for gpio matter for this board. Make all gpios available to the user except for the pins used by tm1638, microphone and dac.
+```
+
+```text
+не обращай внимания на Geiger и другие упражнения в вопросе gpio для этой платы. Сделай все gpio доступными пользователю, кроме выводов, занятых tm1638, микрофоном и ЦАП.
+```
+
+**18:41, 21 ноября**; 34 вывода GPIO закоммичены и отправлены:
 
 ```text
 commit and push

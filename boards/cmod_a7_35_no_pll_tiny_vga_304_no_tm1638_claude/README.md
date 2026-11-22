@@ -138,7 +138,8 @@ has a TM1638 module. Vivado gives the design rule warning CFGBVS-1, as for
 cmod_a7_35_tiny_vga_640_claude; it does not stop the bitstream.
 
 The builds above are from before 18 November, when the six configurations got one
-shared top level, eight GPIO pins and the RGB LED. After that change [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
+shared top level, eight GPIO pins and the RGB LED, and on 21 November the GPIO
+grew to 34 pins. After these changes [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
 built `labs/3_music/3_11_microphone_monitor` for this configuration with
 Vivado 2026.1: 1881 LUTs, 1259 registers, worst setup slack 72.5 ns,
 all timing met.
@@ -411,6 +412,27 @@ Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
 ```
 
 **00:09 on 20 November**; it committed and pushed the rename:
+
+```text
+commit and push
+```
+
+**16:36 on 21 November**; it answered that the eight GPIO pins came from
+the configurations of Codex, not from a limit of the board:
+
+```text
+put this on hold. switch back to cmod a7 branch . what is the reason you use only 8 gpio pins for the user in cmod a7?
+```
+
+**16:41 on 21 November**; it made all 34 digital DIP pins that TM1638, the
+microphone and the DAC do not use the GPIO pins of the labs, `gpio[0]` to
+`gpio[33]`:
+
+```text
+don't pay attention to Geiger or other labs for gpio matter for this board. Make all gpios available to the user except for the pins used by tm1638, microphone and dac.
+```
+
+**18:41 on 21 November**; it committed and pushed the 34 GPIO pins:
 
 ```text
 commit and push

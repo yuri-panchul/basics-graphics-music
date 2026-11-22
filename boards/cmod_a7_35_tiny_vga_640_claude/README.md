@@ -19,8 +19,8 @@ socket and 44 digital I/O pins on its DIP pins. This configuration adds:
   * the usual purple **GY-PCM5102** module with PCM5102A, whose line output
     is for active speakers or an amplifier, not for headphones.
 
-DIP pins 1 to 8 are the eight GPIO pins of the labs, free for circuits of
-your own.
+The 34 digital DIP pins that the modules do not use are the GPIO pins of the
+labs, `gpio[0]` to `gpio[33]`, free for circuits of your own.
 
 Both DAC modules use the same three FPGA pins, so the design is the same for
 either of them; only the wiring of their power and configuration pins differs.
@@ -132,13 +132,15 @@ to the power pins, so that the wires are short and grouped by module:
 
 | DIP pins | Use | Why there |
 |----------|-----|-----------|
-| 1 to 8 | GPIO pins of the labs, `gpio[0]` on DIP 1 to `gpio[7]` on DIP 8 | The first eight pins, away from the module wiring, free for circuits of your own. |
+| 1 to 14 | GPIO pins of the labs, `gpio[0]` on DIP 1 to `gpio[13]` on DIP 14 | Every digital DIP pin that the modules do not use is a GPIO pin of the labs, free for circuits of your own. The GPIO pins are numbered in the order of the DIP pins. |
+| 17 to 20 | GPIO pins of the labs, `gpio[14]` on DIP 17 to `gpio[17]` on DIP 20 | The same. |
 | 21, 22, 23 | DAC BCK, DIN, LCK (WS on WeAct) | The same order as on the headers of both DAC modules. |
 | 25, 26, 27, 28 | GND, TM1638 STB, CLK, DIO | The TM1638 header is VCC, GND, STB, CLK, DIO: DIP pins 25 to 28 meet header pins GND to DIO one to one, four parallel wires. |
 | 29, 30, 31, 32 | INMP441 SCK, WS, L/R, SD | One row of the INMP441 module reads SCK, WS, L/R; SD is next to SCK in the other row. |
+| 33 to 48 | GPIO pins of the labs, `gpio[18]` on DIP 33 to `gpio[33]` on DIP 48 | The same. |
 
-TinyVGA plugs into the Pmod socket JA, in variant A through Pmod TPH2. The remaining DIP pins stay
-free, and the RGB LED, the buttons, the LEDs and the USB UART are on the board.
+TinyVGA plugs into the Pmod socket JA, in variant A through Pmod TPH2. DIP 15 and 16, the analog
+inputs, stay unused, and the RGB LED, the buttons, the LEDs and the USB UART are on the board.
 The GPIO pins take 3.3 V logic only, like every DIP pin; see the warnings
 under [Power](#power).
 
@@ -288,6 +290,17 @@ versions [breadboard_weact.svg](breadboard_weact.svg) and
 | 6 | H1 | `pio6` | `gpio[5]` | Free: GPIO of the labs |
 | 7 | A15 | `pio7` | `gpio[6]` | Free: GPIO of the labs |
 | 8 | B15 | `pio8` | `gpio[7]` | Free: GPIO of the labs |
+| 9 | A14 | `pio9` | `gpio[8]` | Free: GPIO of the labs |
+| 10 | J3 | `pio10` | `gpio[9]` | Free: GPIO of the labs |
+| 11 | J1 | `pio11` | `gpio[10]` | Free: GPIO of the labs |
+| 12 | K2 | `pio12` | `gpio[11]` | Free: GPIO of the labs |
+| 13 | L1 | `pio13` | `gpio[12]` | Free: GPIO of the labs |
+| 14 | L2 | `pio14` | `gpio[13]` | Free: GPIO of the labs |
+| 15, 16 | — | — | Analog inputs | Nothing |
+| 17 | M1 | `pio17` | `gpio[14]` | Free: GPIO of the labs |
+| 18 | N3 | `pio18` | `gpio[15]` | Free: GPIO of the labs |
+| 19 | P3 | `pio19` | `gpio[16]` | Free: GPIO of the labs |
+| 20 | M2 | `pio20` | `gpio[17]` | Free: GPIO of the labs |
 | 21 | N1 | `pio21` | `DAC_BCK` | DAC BCK |
 | 22 | N2 | `pio22` | `DAC_DIN` | DAC DIN |
 | 23 | P1 | `pio23` | `DAC_LCK` | GY-PCM5102 LCK, WeAct WS |
@@ -300,6 +313,22 @@ versions [breadboard_weact.svg](breadboard_weact.svg) and
 | 30 | T2 | `pio30` | `MIC_WS` | INMP441 WS |
 | 31 | U1 | `pio31` | `MIC_LR` | INMP441 L/R |
 | 32 | W2 | `pio32` | `MIC_SD` | INMP441 SD |
+| 33 | V2 | `pio33` | `gpio[18]` | Free: GPIO of the labs |
+| 34 | W3 | `pio34` | `gpio[19]` | Free: GPIO of the labs |
+| 35 | V3 | `pio35` | `gpio[20]` | Free: GPIO of the labs |
+| 36 | W5 | `pio36` | `gpio[21]` | Free: GPIO of the labs |
+| 37 | V4 | `pio37` | `gpio[22]` | Free: GPIO of the labs |
+| 38 | U4 | `pio38` | `gpio[23]` | Free: GPIO of the labs |
+| 39 | V5 | `pio39` | `gpio[24]` | Free: GPIO of the labs |
+| 40 | W4 | `pio40` | `gpio[25]` | Free: GPIO of the labs |
+| 41 | U5 | `pio41` | `gpio[26]` | Free: GPIO of the labs |
+| 42 | U2 | `pio42` | `gpio[27]` | Free: GPIO of the labs |
+| 43 | W6 | `pio43` | `gpio[28]` | Free: GPIO of the labs |
+| 44 | U3 | `pio44` | `gpio[29]` | Free: GPIO of the labs |
+| 45 | U7 | `pio45` | `gpio[30]` | Free: GPIO of the labs |
+| 46 | W7 | `pio46` | `gpio[31]` | Free: GPIO of the labs |
+| 47 | U8 | `pio47` | `gpio[32]` | Free: GPIO of the labs |
+| 48 | V8 | `pio48` | `gpio[33]` | Free: GPIO of the labs |
 
 ### TinyVGA in Pmod JA
 
@@ -640,7 +669,8 @@ python3 scripts/tests/test_cmod_a7_35_claude.py
 BGM_TEST_VIVADO=1 python3 scripts/tests/test_cmod_a7_35_claude.py
 ```
 
-The Vivado run of 19 November 2026:
+The Vivado run of 19 November 2026; the run of 21 November, with 34 GPIO
+pins, gave the same figures:
 
 | Configuration | Clock; TM1638 | LUTs | Registers | Worst setup slack |
 |---------------|---------------|-----:|----------:|------------------:|
@@ -1176,6 +1206,28 @@ Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
 commit and push
 ```
 
+**16:36 on 21 November**; it answered that the eight GPIO pins came from
+the configurations of Codex, not from a limit of the board:
+
+```text
+put this on hold. switch back to cmod a7 branch . what is the reason you use only 8 gpio pins for the user in cmod a7?
+```
+
+**16:41 on 21 November**; it made all 34 digital DIP pins that TM1638, the
+microphone and the DAC do not use the GPIO pins of the labs, `gpio[0]` to
+`gpio[33]`:
+
+```text
+don't pay attention to Geiger or other labs for gpio matter for this board. Make all gpios available to the user except for the pins used by tm1638, microphone and dac.
+```
+
+**18:41 on 21 November**; it committed and pushed the 34 GPIO pins:
+
+```text
+commit and push
+```
+
 Yuri Panchul also ran the shell command
 `git -C ~/claude/basics-graphics-music push origin claude_cmod_a7` twice, at
-18:45 and 18:46; it is a command, not a prompt, and is left out above.
+18:45 and 18:46 on 16 November; it is a command, not a prompt, and is left
+out above.

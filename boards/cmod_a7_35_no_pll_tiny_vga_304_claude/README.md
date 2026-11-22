@@ -130,11 +130,12 @@ short:
 | Cmod A7 | Connect to |
 |---------|------------|
 | Pmod JA | TinyVGA |
-| DIP 1 to 8 | GPIO of the labs, `gpio[0]` to `gpio[7]`; free |
+| DIP 1 to 14, 17 to 20 | GPIO of the labs, `gpio[0]` to `gpio[17]`; free |
 | DIP 21, 22, 23 | DAC BCK, DIN, and LCK of GY-PCM5102 or WS of WeAct |
 | DIP 24, VU | Variant A: nothing. Variant B: the regulator input only |
 | DIP 25, 26, 27, 28 | GND rail and TM1638 GND, STB, CLK, DIO |
 | DIP 29, 30, 31, 32 | INMP441 SCK, WS, L/R, SD |
+| DIP 33 to 48 | GPIO of the labs, `gpio[18]` to `gpio[33]`; free |
 
 **TinyVGA.** The VGA output is TinyVGA, the Pmod board of Leo Moser, in Pmod
 socket JA; its design files are in
@@ -209,7 +210,8 @@ stop the bitstream. In every build Vivado used one global clock buffer for
 the 12 MHz clock and no MMCM or PLL.
 
 The builds above are from before 18 November, when the six configurations got one
-shared top level, eight GPIO pins and the RGB LED. After that change [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
+shared top level, eight GPIO pins and the RGB LED, and on 21 November the GPIO
+grew to 34 pins. After these changes [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py)
 built `labs/3_music/3_11_microphone_monitor` for this configuration with
 Vivado 2026.1: 2017 LUTs, 1361 registers, worst setup slack 67.0 ns,
 all timing met.
@@ -506,6 +508,27 @@ Also rename cmod_a7_35_claude_tiny_vga_640 into cmod_a7_35_tiny_vga_640_claude
 ```
 
 **00:09 on 20 November**; it committed and pushed the rename:
+
+```text
+commit and push
+```
+
+**16:36 on 21 November**; it answered that the eight GPIO pins came from
+the configurations of Codex, not from a limit of the board:
+
+```text
+put this on hold. switch back to cmod a7 branch . what is the reason you use only 8 gpio pins for the user in cmod a7?
+```
+
+**16:41 on 21 November**; it made all 34 digital DIP pins that TM1638, the
+microphone and the DAC do not use the GPIO pins of the labs, `gpio[0]` to
+`gpio[33]`:
+
+```text
+don't pay attention to Geiger or other labs for gpio matter for this board. Make all gpios available to the user except for the pins used by tm1638, microphone and dac.
+```
+
+**18:41 on 21 November**; it committed and pushed the 34 GPIO pins:
 
 ```text
 commit and push
