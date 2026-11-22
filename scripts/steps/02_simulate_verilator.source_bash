@@ -1,0 +1,157 @@
+# This file is sourced by 02_simulate_rtl.source_bash before FPGA setup.
+
+set -Eeuo pipefail
+
+run_verilator ()
+{
+    local package_dir exercise_dir version simulator viewer
+    package_dir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/../..")
+    exercise_dir=$(readlink -f "$(dirname "$0")")
+
+    simulator=verilator
+
+    if [ -x "$package_dir/tools/verilator-5.030/bin/verilator" ]
+    then
+        simulator="$package_dir/tools/verilator-5.030/bin/verilator"
+    fi
+
+    # :- uses the local installation or PATH when the override is unset or empty.
+    simulator=${VERILATOR:-$simulator}
+
+    if ! command -v "$simulator" > /dev/null
+    then
+        printf 'Verilator not found: %s\n' "$simulator" >&2
+        return 1
+    fi
+
+    version=$("$simulator" --version)
+
+    if ! [[ $version =~ Verilator[[:space:]]+([0-9]+)\. ]] ||
+       (( BASH_REMATCH[1] < 5 ))
+    then
+        printf 'Verilator 5.x or newer is required for SystemVerilog delays; found: %s\n' "$version" >&2
+        printf 'Install Verilator 5.x and a timing-capable compiler (GCC 10+), then retry.\n' >&2
+        return 1
+    fi
+
+    if [ ! -f "$exercise_dir/tb.sv" ]
+    then
+        printf 'No tb.sv in %s; this exercise needs a testbench.\n' "$exercise_dir" >&2
+        return 1
+    fi
+
+    mkdir -p "$exercise_dir/run"
+    cd "$exercise_dir/run"
+
+    if [ -f ../program.s ]
+    then
+        java -jar "$package_dir/bin/rars1_6.jar" nc a ae1 \
+            dump .text HexText program.hex ../program.s
+    fi
+
+    # Bind tracing into tb so existing GTKWave signal paths stay unchanged.
+
+    cat > verilator_trace.sv <<'SV'
+module bgm_verilator_trace;
+    initial begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0, tb);
+    end
+endmodule
+bind tb bgm_verilator_trace bgm_trace();
+SV
+
+    local -a sources=() library_sources=() viewer_options=()
+    local source_file
+
+    for source_file in ../*.sv ../*.v
+    do
+        if [ -f "$source_file" ]
+        then
+            sources+=("$source_file")
+        fi
+    done
+
+    # Some shared files contain modules whose names differ from the filename.
+    # Explicit library files let Verilator resolve those modules too.
+
+    for source_file in "$package_dir/labs/common"/*.sv "$package_dir/labs/common"/*.v \
+                       "$package_dir/peripherals"/*.sv "$package_dir/peripherals"/*.v
+    do
+        if [ -f "$source_file" ]
+        then
+            library_sources+=(-v "$source_file")
+        fi
+    done
+
+    # :- supplies defaults without requiring exported environment variables.
+    local jobs=${VERILATOR_JOBS:-2} headless=${SIM_HEADLESS:-0}
+
+    # :- lets a caller choose the compiler without changing the system default.
+    local cxx=${VERILATOR_CXX:-g++}
+
+    if [ "$cxx" = g++ ] && command -v g++-10 > /dev/null &&
+       [ "$(g++ -dumpversion | cut -d. -f1)" -lt 10 ]
+    then
+        cxx=g++-10
+    fi
+
+    if ! [[ $jobs =~ ^[1-9][0-9]*$ ]]
+    then
+        printf 'VERILATOR_JOBS must be a positive integer.\n' >&2
+        return 1
+    fi
+
+    if ! command -v "$cxx" > /dev/null
+    then
+        printf 'C++ compiler not found: %s\n' "$cxx" >&2
+        return 1
+    fi
+
+    "$simulator" --binary --timing --trace --assert -Wno-fatal \
+        --top-module tb --main-top-name - --Mdir obj_dir -o sim_verilator -j "$jobs" \
+        -MAKEFLAGS "CXX=$cxx LINK=$cxx" \
+        -I.. -I../cpu -I"$package_dir/labs/common" -I"$package_dir/peripherals" \
+        -y .. -y ../cpu -y "$package_dir/labs/common" -y "$package_dir/peripherals" \
+        +libext+.sv+.v "${sources[@]}" "${library_sources[@]}" verilator_trace.sv \
+        2>&1 | tee verilator_build.log
+
+    ./obj_dir/sim_verilator 2>&1 | tee verilator_run.log
+
+    # Several teaching testbenches report errors with $display and exit normally.
+
+    if grep -Eq '(^|[[:space:]])(ERROR|FAIL)([[:space:]:]|$)' verilator_run.log
+    then
+        printf 'Testbench reported a failure; see %s/verilator_run.log\n' "$PWD" >&2
+        return 1
+    fi
+
+    if [ ! -s dump.vcd ]
+    then
+        printf 'Simulation produced no dump.vcd.\n' >&2
+        return 1
+    fi
+
+    if [ "$headless" = 1 ]
+    then
+        return 0
+    fi
+
+    # :- defaults to GTKWave; paths with spaces remain a single argument.
+    viewer=${GTKWAVE:-gtkwave}
+
+    if ! command -v "$viewer" > /dev/null
+    then
+        printf 'Waveform saved to %s/dump.vcd (GTKWave not found).\n' "$PWD"
+        return 0
+    fi
+
+    if [ -f ../gtkwave.tcl ]
+    then
+        viewer_options+=(--script ../gtkwave.tcl)
+    fi
+
+    "$viewer" dump.vcd "${viewer_options[@]}" &
+}
+
+run_verilator
