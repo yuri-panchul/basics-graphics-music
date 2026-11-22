@@ -265,11 +265,8 @@ Vector versions: [wiring_weact_tph2.svg](wiring_weact_tph2.svg),
 
 Instead of hanging the microphone and the DAC on female-to-male wires, you can
 plug both straight into the breadboard, together with the regulator of variant B,
-and connect their strips with male-to-male wires. Separate drawings show this layout:
-[breadboard_weact.png](breadboard_weact.png) with the WeAct module and
-[breadboard_gy_pcm5102.png](breadboard_gy_pcm5102.png) with GY-PCM5102; vector
-versions [breadboard_weact.svg](breadboard_weact.svg) and
-[breadboard_gy_pcm5102.svg](breadboard_gy_pcm5102.svg). In short:
+and connect their strips with male-to-male wires, as the two drawings below
+show. In short:
 
 * Cmod A7 goes in at the end of the breadboard, rows 40 to 63, with DIP pins
   25 to 48 in column c and 1 to 24 in column g: DIP 24 and 25, VU and GND, are
@@ -302,6 +299,17 @@ versions [breadboard_weact.svg](breadboard_weact.svg) and
   the bottom rails.
 * In variant A, leave the regulator and its 5 V wire out and wire test point
   6 of TPH2 to the + rail as above.
+
+With the WeAct I2S Earphone Module:
+
+![Breadboard layout with WeAct PCM5100A](breadboard_weact.png)
+
+With GY-PCM5102:
+
+![Breadboard layout with GY-PCM5102](breadboard_gy_pcm5102.png)
+
+Vector versions: [breadboard_weact.svg](breadboard_weact.svg),
+[breadboard_gy_pcm5102.svg](breadboard_gy_pcm5102.svg).
 
 ## Wiring tables
 
@@ -1492,6 +1500,21 @@ Now I want big changes to increase usability
 
 **22:23 on 21 November**; it committed and pushed the new pin plan, the
 tests, the drawings and the READMEs:
+
+```text
+commit and push
+```
+
+**22:25 on 21 November**; the two breadboard layouts, linked from the text
+until then, now show in
+[Microphone, DAC and regulator plugged into the breadboard](#microphone-dac-and-regulator-plugged-into-the-breadboard):
+
+```text
+why didn't you put breadboard_gy_pcm5102.png breadboard_weact.png to README?
+```
+
+**22:49 on 21 November**; it committed and pushed the breadboard layouts
+shown in the README:
 
 ```text
 commit and push
