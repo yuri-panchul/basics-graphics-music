@@ -49,6 +49,7 @@ targets the wrong FPGA, XC7A15T, and is not used.
 * [Building and running the labs](#building-and-running-the-labs)
 * [Buttons and LEDs](#buttons-and-leds)
 * [Clock and VGA](#clock-and-vga)
+* [The other five configurations](#the-other-five-configurations)
 * [Troubleshooting](#troubleshooting)
 * [Status](#status)
 * [Files](#files)
@@ -144,6 +145,12 @@ inputs, stay unused, and the RGB LED, the buttons, the LEDs and the USB UART are
 The GPIO pins take 3.3 V logic only, like every DIP pin; see the warnings
 under [Power](#power).
 
+[gpio_layouts.png](gpio_layouts.png) shows the pins three ways: every
+digital I/O pin of Cmod A7 apart from the labs, the GPIO pins of the labs
+with TM1638, the microphone and the DAC, and those without TM1638.
+
+![The digital I/O pins of Cmod A7 and the GPIO pins of the labs](gpio_layouts.png)
+
 The constraint file [board_specific.xdc](board_specific.xdc) is
 [Cmod-A7-Master.xdc](https://github.com/Digilent/digilent-xdc/blob/master/Cmod-A7-Master.xdc)
 of Digilent, with only the lines of the used pins uncommented and nothing else
@@ -217,7 +224,9 @@ Warnings from the Cmod A7 reference manual:
 There is one diagram for each 3.3 V source and DAC module; only the power
 wiring and the DAC differ. The diagrams show Cmod A7 from the component side,
 turned so that the Pmod socket is on the left: DIP pins 48 to 25 are along the
-top edge and 1 to 24 along the bottom edge.
+top edge and 1 to 24 along the bottom edge. All six configurations use these
+drawings; [without TM1638](#without-tm1638), leave out the module and its
+five wires.
 
 ### Variant A: 3.3 V from Pmod TPH2
 
@@ -516,7 +525,8 @@ In a lab directory, choose the board once with
 `./03_synthesize_for_fpga.bash` builds the design with Vivado and loads it into
 the FPGA over USB. The scripts load the FPGA itself, not the flash memory of the
 board, so the design is lost when the power goes off; `./04_configure_fpga.bash`
-loads it again.
+loads it again. The other five configurations are built the same way; see
+[The other five configurations](#the-other-five-configurations).
 
 Good first labs:
 
@@ -538,8 +548,8 @@ The design is also reset after loading, until the clock generator is ready.
 Without TM1638 there is no reset button: both buttons are keys. With the
 scripts of the repository as they are, though, TM1638 is always on for this
 board; see [Status](#status). For a design without TM1638, with two buttons,
-two LEDs and no seven-segment display, use
-[cmod_a7_35_tiny_vga_640_no_tm1638_claude](../cmod_a7_35_tiny_vga_640_no_tm1638_claude/README.md).
+two LEDs and no seven-segment display, use one of the configurations
+[without TM1638](#without-tm1638).
 
 ## Clock and VGA
 
@@ -567,11 +577,12 @@ The labs get `clk_mhz = 50`.
 
 **Without the MMCM.** Two other board configurations use the same hardware
 and wiring and run the whole design from the 12 MHz oscillator:
-[cmod_a7_35_no_pll_tiny_vga_320_claude](../cmod_a7_35_no_pll_tiny_vga_320_claude/README.md) draws
+`cmod_a7_35_no_pll_tiny_vga_320_claude` draws
 320x480 with every pixel exactly two wide, at a line rate of 30 kHz that
 some monitors refuse, and
-[cmod_a7_35_no_pll_tiny_vga_304_claude](../cmod_a7_35_no_pll_tiny_vga_304_claude/README.md) draws 304x480 at
-the standard line and frame rates. Their instructions compare the three.
+`cmod_a7_35_no_pll_tiny_vga_304_claude` draws 304x480 at
+the standard line and frame rates.
+[Without the MMCM](#without-the-mmcm-320x480-and-304x480) compares the three.
 
 **A proposed change to vga.sv, not made here.** `vga.sv` does not notice a
 clock it cannot divide: with `CLK_MHZ` below `PIXEL_MHZ`, or not a multiple of
@@ -593,6 +604,181 @@ would turn this into a clear error message:
 
 Whether every synthesis tool the repository uses accepts `$error` in a
 generate block should be checked before this goes into `vga.sv`.
+
+## The other five configurations
+
+The six configurations share the hardware, the pins, the wiring, the drawings
+and the top level, [board_specific_top.sv](board_specific_top.sv) of this
+directory. Each of the other five directories holds only a
+`board_specific_top.sv` that defines one or two macros and includes this one,
+the same `board_specific.xdc`, `board_specific.tcl`, and a short README that
+points here.
+
+| Configuration | Clock of the design | Screen of the labs | TM1638 | Its board_specific_top.sv defines |
+|---------------|---------------------|--------------------|--------|-----------------------------------|
+| `cmod_a7_35_tiny_vga_640_claude`, this one | 50 MHz from the MMCM | 640x480 | Yes | Nothing, it is the top level |
+| `cmod_a7_35_tiny_vga_640_no_tm1638_claude` | 50 MHz from the MMCM | 640x480 | No | `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE` |
+| `cmod_a7_35_no_pll_tiny_vga_320_claude` | 12 MHz, the oscillator | 320x480 | Yes | `CMOD_A7_NO_PLL_SCREEN_WIDTH` as 320 |
+| `cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude` | 12 MHz, the oscillator | 320x480 | No | Both |
+| `cmod_a7_35_no_pll_tiny_vga_304_claude` | 12 MHz, the oscillator | 304x480 | Yes | `CMOD_A7_NO_PLL_SCREEN_WIDTH` as 304 |
+| `cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude` | 12 MHz, the oscillator | 304x480 | No | Both |
+
+Build any of them as in [Building and running the labs](#building-and-running-the-labs),
+with its name picked in `./06_choose_another_fpga_board.bash`; the scripts use
+Vivado for every board whose name starts with `cmod_a7`. [Status](#status)
+gives the Vivado figures of all six.
+
+### Without the MMCM: 320x480 and 304x480
+
+`cmod_a7_35_no_pll_tiny_vga_320_claude` and
+`cmod_a7_35_no_pll_tiny_vga_304_claude`, and their versions without TM1638,
+have no clock generator, no MMCM or PLL: the whole design runs on the 12 MHz
+oscillator of Cmod A7. The standard 640x480 picture at 60 Hz needs a pixel
+clock of 25.175 MHz, which 12 MHz cannot give without a clock generator, so
+the pixel clock is 12 MHz itself:
+
+* **320x480.** A line has half as many pixels: the labs draw on a screen of
+  320x480, and the monitor shows each pixel two pixels of 640 wide. The line
+  rate is 30.0 kHz instead of 31.47 kHz, and **some monitors refuse it**.
+* **304x480.** Each part of a line keeps its standard length in time, so the
+  line and frame rates are those of 640x480: 31.50 kHz and 59.99 Hz. The
+  monitor, which takes the signal for 640x480, shows each pixel 2.1 pixels of
+  640 wide: some pixels look 2 and some 3 pixels wide.
+
+| | cmod_a7_35_tiny_vga_640_claude | cmod_a7_35_no_pll_tiny_vga_320_claude | cmod_a7_35_no_pll_tiny_vga_304_claude |
+|---|---|---|---|
+| Clock of the design | 50 MHz from an MMCM | 12 MHz, the oscillator | 12 MHz, the oscillator |
+| Screen the labs draw on | 640x480 | 320x480 | 304x480 |
+| Width of a pixel on the monitor, in pixels of 640 | 1 | 2 | 2.1: some 2, some 3 |
+| Line rate | 31.25 kHz | 30.0 kHz | 31.50 kHz |
+| Frame rate | 59.5 Hz | 57.1 Hz | 59.99 Hz |
+| Monitors | Accept it | Some refuse 30 kHz | Accept it as 640x480 |
+| Microphone sample rate | 48.8 kHz | 11.7 kHz | 11.7 kHz |
+| DAC sample rate | 48.8 kHz | 46.9 kHz | 46.9 kHz |
+
+Choose 320x480 to see a design without a clock generator with clean pixels of
+exactly two monitor pixels each. If your monitor shows no picture or reports
+the mode as out of range, use 304x480, whose timing is close to the standard
+one, so that a monitor takes it for ordinary 640x480. The price of 304 is the
+odd width and pixels of slightly uneven width, visible on thin vertical lines
+and small text. For the full 640x480, use this configuration. Neither 320 nor
+304 has been tried on a real board or a monitor yet; whether a given monitor
+accepts the 30 kHz line of 320 is the open question.
+
+**VGA timing.** [peripherals/vga.sv](../../peripherals/vga.sv) takes its
+horizontal timing as parameters, so it is used unchanged. The top level passes
+the timing below; with `CLK_MHZ` and `PIXEL_MHZ` both 12, `vga.sv` moves to
+the next pixel on every clock. The vertical timing is the standard one.
+
+| Part of a line | Standard 640x480, 25.175 MHz | 320x480 at 12 MHz | 304x480 at 12 MHz |
+|----------------|------------------------------|-------------------|-------------------|
+| Visible | 640 pixels, 25.42 µs | 320 clocks, 26.67 µs | 304 clocks, 25.33 µs |
+| Front porch | 16 pixels, 0.64 µs | 8 clocks, 0.67 µs | 8 clocks, 0.67 µs |
+| Sync pulse, low | 96 pixels, 3.81 µs | 48 clocks, 4.00 µs | 46 clocks, 3.83 µs |
+| Back porch | 48 pixels, 1.91 µs | 24 clocks, 2.00 µs | 23 clocks, 1.92 µs |
+| Whole line | 800 pixels, 31.78 µs, 31.47 kHz | 400 clocks, 33.33 µs, 30.00 kHz | 381 clocks, 31.75 µs, 31.50 kHz |
+| Frame | 525 lines, 59.94 Hz | 525 lines, 57.14 Hz | 525 lines, 59.99 Hz |
+
+For 320x480, each clock count is half the pixel count of the standard, so the
+monitor gets the signal of 640x480 run from a 24 MHz pixel clock, with every
+pixel repeated. Running 640x480 from 24 MHz is a known trick: many monitors
+show it. But 30 kHz is the lowest line rate that many monitors accept at all,
+and some refuse it.
+
+For 304x480, each part of the line is within 0.1 µs of its standard length,
+and the line and frame rates are within 0.1 % of the standard ones, inside the
+tolerance of VGA. The number of clocks a line, 381, is the one that comes
+closest: the 12 MHz clock cannot divide a line into the standard 800 parts. A
+monitor that takes the signal for 640x480 samples the visible part of each
+line at its own 640 points. With 304 pixels, each pixel covers 640 / 304 = 2.1
+points, so most pixels take 2 points and every tenth or so takes 3. On a
+picture of large areas this does not show; on a pattern of one-pixel stripes
+it does.
+
+With either, if the picture is there but shifted or blurred, use the automatic
+adjustment of the monitor.
+
+The labs see `screen_width` of 320 or 304 and `screen_height = 480`. A lab
+that sizes its drawing from these parameters fills the screen, stretched about
+twice in width: a circle looks like an ellipse. A lab that draws at fixed
+coordinates beyond x = 319, or x = 303, draws outside the screen.
+
+A simulation of `vga.sv` with these parameters at 12 MHz measured, for
+320x480, a line of 400 clocks, a sync pulse of 48 clocks and 320 visible
+clocks a line: 30.000 kHz and 57.143 Hz; for 304x480, a line of 381 clocks, a
+sync pulse of 46 clocks and 304 visible clocks a line: 31.496 kHz and
+59.993 Hz. Both had a frame of 525 lines with 480 visible and a vertical sync
+pulse of 2 lines.
+
+A full 640 pixel line at 12 MHz would need two pixels a clock, one on each
+edge of the clock, with the double data rate output registers of the FPGA.
+The labs of the repository give one pixel a clock, so this is not done here.
+
+**What else changes at 12 MHz.** With `CMOD_A7_NO_PLL_SCREEN_WIDTH` defined,
+board_specific_top.sv makes these changes:
+
+* **No MMCM.** The clock of the design is the oscillator input, `sysclk`. Its
+  pin, L17, is a clock-capable pin, and Vivado puts a global clock buffer on it.
+  The constraint of the clock, 83.33 ns, is the one of Digilent in
+  board_specific.xdc.
+* **All modules get `clk_mhz = 12`**: the lab, TM1638, the microphone and the
+  DAC. They derive their timing from it.
+* **Reset.** Without an MMCM there is no lock to wait for. The reset chain is
+  all ones after configuration, so the design starts in reset and leaves it on
+  the third clock edge. With TM1638, either Cmod button resets the design, as
+  at 50 MHz.
+* **Microphone.** The receiver makes SCK of 12 MHz / 16 = 0.75 MHz, within the
+  0.5 to 3.2 MHz of INMP441, and a sample rate of 12 MHz / 1024 = 11.7 kHz.
+  That passes sound up to about 5.8 kHz: enough for the voice and for musical
+  notes, while the labs that show a spectrum show a narrower one.
+* **DAC.** The I2S output makes BCK of 3 MHz and a sample rate of
+  12 MHz / 256 = 46.9 kHz, with the same ratios as at 50 MHz.
+* **TM1638.** Its driver divides `clk_mhz` down to its serial clock, so it
+  works as before.
+
+### Without TM1638
+
+`cmod_a7_35_tiny_vga_640_no_tm1638_claude`,
+`cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude` and
+`cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude` are the three
+configurations above without the TM1638 module. **The labs get the two
+buttons of Cmod A7 as their keys and its two LEDs as their LEDs, and there is
+no seven-segment display.** Everything else, the clock, VGA, the microphone,
+the DAC and the pins, is that of the same configuration with TM1638. For the
+wiring, leave out the module and its five wires; DIP 25 still goes to the GND
+rail.
+
+| | With TM1638 | Without TM1638 |
+|---|---|---|
+| Keys of the labs | 8 keys of TM1638 | BTN0 and BTN1 of Cmod A7: `key[0]` and `key[1]`, also `sw[0]` and `sw[1]` |
+| LEDs of the labs | 8 LEDs of TM1638, the first two also on LED1 and LED2 of Cmod A7 | LED1 and LED2 of Cmod A7: `led[0]` and `led[1]` |
+| Seven-segment display | 8 digits of TM1638 | None |
+| Reset button | Either Cmod button | None: both buttons are keys |
+| DIP 26, 27, 28 | TM1638 STB, CLK, DIO | Unconnected |
+
+A button gives 1 when pressed; an LED lights on 1. The labs get one
+seven-segment digit that goes nowhere, so a lab that drives a display builds
+and runs, and its display output is lost. Whatever a lab shows on LEDs
+beyond the first two is lost the same way.
+
+The design is in reset after loading until the MMCM locks, or at 12 MHz for
+the first three clock cycles. No button resets it: to start a lab again, load
+the FPGA again with `./04_configure_fpga.bash`.
+
+The design keeps DIP 26 and 27, the STB and CLK of TM1638, high, and does not
+drive DIP 28. Leave the three pins unconnected; they are not GPIO pins of the
+labs, so `gpio[n]` is on the same DIP pin in all six configurations.
+
+Their board_specific_top.sv defines
+`FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE`, and for 320 and 304
+also `CMOD_A7_NO_PLL_SCREEN_WIDTH`, and includes the top level of this
+directory, which then leaves out TM1638 even though
+`peripherals/lab_specific_board_config.svh` turns it on. Other boards of the
+repository without TM1638, such as `tang_nano_9k_hdmi_no_tm1638`, are made the
+same way, but some of them draw a virtual TM1638 on the screen; these do not.
+Their board_specific.xdc is the one of this directory: it keeps the lines of
+DIP 26, 27 and 28 uncommented, because the included top level still has these
+ports.
 
 ## Troubleshooting
 
@@ -694,24 +880,28 @@ Not yet tried on a real board.
 | [board_specific.xdc](board_specific.xdc) | Cmod-A7-Master.xdc of Digilent, only the used lines uncommented |
 | [board_specific_top.sv](board_specific_top.sv) | The top level of all six Cmod A7 configurations of Claude: pin mapping, the 50 MHz clock generator or the 12 MHz clock, reset, the RGB LED, and the instances of the lab, VGA, TM1638, microphone and DAC modules. The other five configurations define one or two macros and include it. |
 | [board_specific.tcl](board_specific.tcl) | FPGA part for Vivado |
-| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Makes the four wiring diagrams, `wiring_*.svg`; with a board name, those of cmod_a7_35_no_pll_tiny_vga_320_claude or cmod_a7_35_no_pll_tiny_vga_304_claude |
+| [generate_wiring_diagram.py](generate_wiring_diagram.py) | Makes the four wiring diagrams, `wiring_*.svg` |
 | `wiring_*.svg`, `wiring_*.png` | The wiring diagrams |
-| [generate_breadboard_diagram.py](generate_breadboard_diagram.py) | Makes the two breadboard layouts, `breadboard_*.svg`; with a board name, those of the other two configurations |
+| [generate_breadboard_diagram.py](generate_breadboard_diagram.py) | Makes the two breadboard layouts, `breadboard_*.svg` |
 | `breadboard_*.svg`, `breadboard_*.png` | The breadboard layouts with the microphone, the DAC and the regulator plugged in |
+| [generate_gpio_diagram.py](generate_gpio_diagram.py) | Makes `gpio_layouts.svg` |
+| `gpio_layouts.svg`, `gpio_layouts.png` | The digital I/O pins of Cmod A7 and the GPIO pins of the labs, with and without TM1638 |
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 | [claude_prompt.txt](claude_prompt.txt) | The task file of the first prompt, as in the appendix |
 | [scripts/tests/test_cmod_a7_35_claude.py](../../scripts/tests/test_cmod_a7_35_claude.py) | The tests of the six configurations, with their testbench in [scripts/tests/fixtures/cmod_a7_35_claude](../../scripts/tests/fixtures/cmod_a7_35_claude) and the Vivado script [build_cmod_a7_35_claude.tcl](../../scripts/tests/build_cmod_a7_35_claude.tcl); see [Status](#status) |
 
-The drawings come from [generate_wiring_diagram.py](generate_wiring_diagram.py)
-and [generate_breadboard_diagram.py](generate_breadboard_diagram.py), which hold
-a copy of the pin data; keep them in step with board_specific_top.sv.
+The drawings come from [generate_wiring_diagram.py](generate_wiring_diagram.py),
+[generate_breadboard_diagram.py](generate_breadboard_diagram.py) and
+[generate_gpio_diagram.py](generate_gpio_diagram.py), which hold a copy of the
+pin data; keep them in step with board_specific_top.sv.
 
 ```bash
 python3 generate_wiring_diagram.py
 python3 generate_breadboard_diagram.py
+python3 generate_gpio_diagram.py
 
-for f in wiring_*.svg breadboard_*.svg
+for f in wiring_*.svg breadboard_*.svg gpio_layouts.svg
 do
     # ${f%.svg} is the file name without the .svg suffix
     inkscape "$f" --export-type=png --export-dpi=96 \
@@ -1222,6 +1412,31 @@ don't pay attention to Geiger or other labs for gpio matter for this board. Make
 ```
 
 **18:41 on 21 November**; it committed and pushed the 34 GPIO pins:
+
+```text
+commit and push
+```
+
+**18:47 on 21 November**; it drew gpio_layouts.png: every digital I/O pin
+of Cmod A7, the GPIO pins of the labs with TM1638, the microphone and the DAC,
+and those without TM1638:
+
+```text
+draw a picture with three layouts: board with all available digital gpio pins marked (without the context of bgm), board with gpio available pins on a config with tm1638 (and mic and dac), board in a config without tm1638.
+```
+
+**19:15 on 21 November**; it kept the drawings, gpio_layouts.png among
+them, only in this directory, removed them and the HTML files from the other
+five, cut their READMEs to short pointers to this one, and moved what was
+particular to them into
+[The other five configurations](#the-other-five-configurations):
+
+```text
+no, keep this file only in one configuration cmod_a7_35_tiny_vga_640_claude, the main one. Generally, remove all the identical pictures from other cmod_a7 configuration directories. There are too many of them. It is enough to keep a short README.md file pointing to the main configuration in English and in Russian for documentation. implement it
+```
+
+**19:36 on 21 November**; it committed and pushed the pin picture and the
+short READMEs of the other five configurations:
 
 ```text
 commit and push

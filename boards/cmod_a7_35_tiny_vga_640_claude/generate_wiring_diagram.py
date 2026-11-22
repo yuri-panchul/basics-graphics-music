@@ -6,12 +6,9 @@ Run from any directory:
 
     python3 generate_wiring_diagram.py
 
-The boards cmod_a7_35_no_pll_tiny_vga_320_claude and
-cmod_a7_35_no_pll_tiny_vga_304_claude share this wiring. Give the name of
-one of them to write its drawings into its own directory, with its name in
-the drawings:
-
-    python3 generate_wiring_diagram.py cmod_a7_35_no_pll_tiny_vga_320_claude
+The other five Cmod A7 configurations share this wiring and use the
+drawings of this directory; those without TM1638 leave out the module
+and its wires.
 
 It writes four diagrams, one for each pair of 3.3 V source and DAC module:
 
@@ -30,17 +27,11 @@ Convert them to PNG, for example with Inkscape:
 The pin data below must match board_specific_top.sv.
 """
 
-import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
 HERE = Path(__file__).resolve().parent
-BOARD = "cmod_a7_35_tiny_vga_640_claude"  # the board directory to write to
-
-
-def has_tm1638():
-    """The configurations with _no_tm1638 in the name have no TM1638."""
-    return "_no_tm1638" not in BOARD
+BOARD = "cmod_a7_35_tiny_vga_640_claude"  # the name in the drawings
 
 W, H = 1720, 1272
 
@@ -234,8 +225,7 @@ def draw(variant, power):
 
     # Title and legend
 
-    tm = has_tm1638()
-    svg.text(40, 46, f"Cmod A7-35T + TinyVGA + {'TM1638 + ' if tm else ''}INMP441 + "
+    svg.text(40, 46, f"Cmod A7-35T + TinyVGA + TM1638 + INMP441 + "
                      f"{dac['short']}, "
                      f"{pw['title']}", 26, "bold")
     svg.text(40, 76, f"Board configuration {BOARD}. The Cmod A7 sits in a breadboard across "
@@ -243,8 +233,8 @@ def draw(variant, power):
     svg.text(40, 98, "Cmod A7 is seen from the component side. Each board pin shows its DIP "
                      "pin number; the used pins also show their signal.", 15, fill=C["muted"])
 
-    legend = [("TM1638", C["TM"])] if tm else []
-    legend += [("INMP441", C["MIC"]), ("DAC", C["DAC"]), ("+3.3 V", C["3V3"])]
+    legend = [("TM1638", C["TM"]), ("INMP441", C["MIC"]), ("DAC", C["DAC"]),
+              ("+3.3 V", C["3V3"])]
     if power == "regulator":
         legend.append(("+5 V (VU)", C["5V"]))
     legend.append(("GND", C["GND"]))
@@ -283,7 +273,7 @@ def draw(variant, power):
     svg.text(900, 698, "pins 48..25 on top, 1..24 below", 12, fill="#c7d3e6", anchor="middle")
 
     unconnected = (*GPIO, 15, 16, 24) if power == "tph2" else (*GPIO, 15, 16)
-    labels = {pin: name for pin, name in USED.items() if tm or pin not in (26, 27, 28)}
+    labels = USED
     for pin in range(1, 49):
         x, y = pin_xy(pin)
         used = pin in labels and pin not in unconnected
@@ -380,30 +370,23 @@ def draw(variant, power):
         svg.wire([(x, y), (x, lanes[pin]), (mic[label], lanes[pin]),
                   (mic[label], Y_TOP_MODULE_PINS)], C["MIC"])
 
-    if tm:
-        # TM1638, above the board on the right
+    # TM1638, above the board on the right
 
-        module(svg, 1130, 1450, Y_TOP_MODULE_PINS, "TM1638 LED&KEY",
-               "8 digits, 8 LEDs, 8 keys; 3.3 V", C["TM"], TM_PINS, below=False)
-        tm = dict(TM_PINS)
-        svg.wire([(tm["VCC"], Y_TOP_MODULE_PINS), (tm["VCC"], Y_3V3)], C["3V3"])
-        svg.dot(tm["VCC"], Y_3V3, C["3V3"])
+    module(svg, 1130, 1450, Y_TOP_MODULE_PINS, "TM1638 LED&KEY",
+           "8 digits, 8 LEDs, 8 keys; 3.3 V", C["TM"], TM_PINS, below=False)
+    tm = dict(TM_PINS)
+    svg.wire([(tm["VCC"], Y_TOP_MODULE_PINS), (tm["VCC"], Y_3V3)], C["3V3"])
+    svg.dot(tm["VCC"], Y_3V3, C["3V3"])
 
-        # The module is to the right of its pins: the leftmost pin takes the
-        # lane nearest to the module.
+    # The module is to the right of its pins: the leftmost pin takes the
+    # lane nearest to the module.
 
-        lanes = {28: 425, 27: 445, 26: 465, 25: 485}
-        for pin, label, color in ((28, "DIO", C["TM"]), (27, "CLK", C["TM"]),
-                                  (26, "STB", C["TM"]), (25, "GND", C["GND"])):
-            x, y = pin_xy(pin)
-            svg.wire([(x, y), (x, lanes[pin]), (tm[label], lanes[pin]),
-                      (tm[label], Y_TOP_MODULE_PINS)], color)
-    else:
-        svg.text(1130, 300, "No TM1638 in this configuration:", 15, "bold")
-        for i, s in enumerate(("the labs use the two buttons and the",
-                               "two LEDs of Cmod A7. DIP 26, 27 and 28",
-                               "stay unconnected.")):
-            svg.text(1130, 324 + 20 * i, s, 14, fill=C["muted"])
+    lanes = {28: 425, 27: 445, 26: 465, 25: 485}
+    for pin, label, color in ((28, "DIO", C["TM"]), (27, "CLK", C["TM"]),
+                              (26, "STB", C["TM"]), (25, "GND", C["GND"])):
+        x, y = pin_xy(pin)
+        svg.wire([(x, y), (x, lanes[pin]), (tm[label], lanes[pin]),
+                  (tm[label], Y_TOP_MODULE_PINS)], color)
 
     # DAC, below the board
 
@@ -446,17 +429,9 @@ def draw(variant, power):
 
 
 def main():
-    global BOARD
-    if len(sys.argv) > 2:
-        sys.exit(f"usage: {Path(sys.argv[0]).name} [board directory name]")
-    if len(sys.argv) == 2:
-        BOARD = sys.argv[1]
-    out_dir = HERE.parent / BOARD
-    if not (out_dir / "board_specific_top.sv").is_file():
-        sys.exit(f"{out_dir} is not a board directory")
     for variant in DACS:
         for power in POWER:
-            out = out_dir / f"wiring_{variant}_{power}.svg"
+            out = HERE / f"wiring_{variant}_{power}.svg"
             out.write_text(draw(variant, power), encoding="utf-8")
             print(f"wrote {out.relative_to(HERE.parent)}")
 
