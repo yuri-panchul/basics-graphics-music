@@ -6,7 +6,7 @@
 // See assembly_en.md / assembly_ru.md for connector numbering and supply levels.
 module board_specific_top
 # (
-    parameter w_gpio        = 8,
+    parameter w_gpio        = 44,
     `ifdef CMOD_A7_NO_PLL
               screen_width  = 305,
     `else
@@ -30,19 +30,13 @@ module board_specific_top
     input        uart_txd_in,
     output       uart_rxd_out,
 
+    // All digital DIP header pins, named exactly as in Digilent's XDC.
     inout        pio1, pio2, pio3, pio4, pio5, pio6, pio7, pio8,
-
-    `ifndef CMOD_A7_NO_TM1638
-    inout        pio26,  // TM1638 DIO, direct; module VCC and pull-ups at 3.3 V
-    output       pio27,  // TM1638 CLK, direct 3.3 V logic
-    output       pio28,  // TM1638 STB, direct 3.3 V logic
-    `endif
-    output       pio29,  // INMP441 SCK
-    output       pio30,  // INMP441 WS
-    input        pio31,  // INMP441 SD; L/R is wired to GND
-    output       pio32,  // DAC BCK
-    output       pio33,  // DAC DIN
-    output       pio34   // DAC LRCK / WS; DAC SCK / MCLK is wired to GND
+    inout        pio9, pio10, pio11, pio12, pio13, pio14, pio17, pio18,
+    inout        pio19, pio20, pio21, pio22, pio23, pio26, pio27, pio28,
+    inout        pio29, pio30, pio31, pio32, pio33, pio34, pio35, pio36,
+    inout        pio37, pio38, pio39, pio40, pio41, pio42, pio43, pio44,
+    inout        pio45, pio46, pio47, pio48
 );
 
     wire clk, locked;
@@ -204,7 +198,14 @@ module board_specific_top
         .x (x), .y (y), .red (red), .green (green), .blue (blue),
         .mic (mic), .sound (sound),
         .uart_rx (uart_txd_in), .uart_tx (uart_rxd_out),
-        .gpio ({ pio8, pio7, pio6, pio5, pio4, pio3, pio2, pio1 })
+        // gpio[0:13]=DIP1:14, [14:20]=DIP17:23, [21:43]=DIP26:48.
+        // Labs leave accessory-owned bits at Z while their controller is enabled.
+        .gpio ({ pio48, pio47, pio46, pio45, pio44, pio43, pio42, pio41,
+                 pio40, pio39, pio38, pio37, pio36, pio35, pio34, pio33,
+                 pio32, pio31, pio30, pio29, pio28, pio27, pio26,
+                 pio23, pio22, pio21, pio20, pio19, pio18, pio17,
+                 pio14, pio13, pio12, pio11, pio10, pio9, pio8, pio7,
+                 pio6, pio5, pio4, pio3, pio2, pio1 })
     );
 
     `ifdef INSTANTIATE_GRAPHICS_INTERFACE_MODULE
@@ -281,8 +282,8 @@ module board_specific_top
     `else
         assign tm_key = '0;
         assign pio26 = 1'bz;
-        assign pio27 = 1'b1;
-        assign pio28 = 1'b1;
+        assign pio27 = 1'bz;
+        assign pio28 = 1'bz;
     `endif
     `endif
 
@@ -295,8 +296,8 @@ module board_specific_top
         );
     `else
         assign mic = '0;
-        assign pio29 = 1'b0;
-        assign pio30 = 1'b0;
+        assign pio29 = 1'bz;
+        assign pio30 = 1'bz;
     `endif
 
     `ifdef INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE
@@ -308,9 +309,9 @@ module board_specific_top
             .mclk (), .bclk (pio32), .sdata (pio33), .lrclk (pio34)
         );
     `else
-        assign pio32 = 1'b0;
-        assign pio33 = 1'b0;
-        assign pio34 = 1'b0;
+        assign pio32 = 1'bz;
+        assign pio33 = 1'bz;
+        assign pio34 = 1'bz;
     `endif
 
 endmodule

@@ -6,6 +6,15 @@ Select **cmod_a7_35 → cmod_a7_35_tiny_vga_no_tm1638_codex** in the board menu.
 
 TinyVGA hardware: [mole99/tiny-vga](https://github.com/mole99/tiny-vga). [Retail and JLCPCB ordering](../cmod_a7_35_tiny_vga_codex/assembly_en.html#tiny-vga-ordering).
 
+## Full GPIO bus / Полная шина GPIO
+
+This variant exposes **all 44 digital DIP GPIOs** to `lab_top.gpio[43:0]`, with 62 constrained scalar top-level ports. With microphone and DAC enabled, **38 pins are free: DIP 1–14, 17–23, 26–28 and 35–48**. DIP 26–28 are ordinary GPIO because TM1638 is absent.
+
+Все 44 цифровых DIP-вывода доступны через `lab_top.gpio[43:0]`. При включённых микрофоне и ЦАП свободны **38 выводов: DIP 1–14, 17–23, 26–28 и 35–48**.
+
+Disabled accessory interfaces release their GPIO drivers; disconnect modules before repurposing their pins. All 44 bits are usable with the three interfaces disabled. Enabled accessory bits must be left at Z by the lab. Mapping: [English](../cmod_a7_35_tiny_vga_codex/assembly_en.html#gpio) · [Русский](../cmod_a7_35_tiny_vga_codex/assembly_ru.html#gpio). Current tests and builds: [GPIO_VALIDATION.md](../cmod_a7_35_tiny_vga_codex/GPIO_VALIDATION.md).
+
+
 ## Lab inputs, LEDs and reset
 
 | Lab signal | Cmod hardware |
@@ -21,9 +30,9 @@ There is **no seven-segment display** and no TM1638 controller, even when a lab 
 
 ## Wiring and clock
 
-Omit the TM1638 module and all five of its wires. **Leave DIP 26–28 unconnected**: the top level has no pio26/pio27/pio28 ports, and their original master-XDC lines remain commented. The remaining **32 scalar ports** retain their original constraints. The XDC differs from the preserved Digilent master only by uncommenting used definitions.
+Omit the TM1638 module and all five of its wires. **DIP 26–28 are free GPIOs**: their inout ports and original master-XDC constraints remain present. All **62 scalar ports** retain their original definitions. The XDC differs from the preserved Digilent master only by uncommenting used definitions.
 
-TinyVGA remains on Pmod. INMP441 stays on DIP 29–31 and the DAC on DIP 32–34. Keep the microphone's regulated 3.3 V rail when using it. DAC supply wiring and MCLK-to-GND connection, USB-UART and GPIO 1–8 are unchanged. The shared drawings show the TM1638-equipped assembly; omit its branch. Full instructions: [English](../cmod_a7_35_tiny_vga_codex/assembly_en.html#no-tm1638) · [Русский](../cmod_a7_35_tiny_vga_codex/assembly_ru.html#no-tm1638).
+TinyVGA remains on Pmod. INMP441 stays on DIP 29–31 and the DAC on DIP 32–34. Keep the microphone's regulated 3.3 V rail when using it. DAC supply wiring and MCLK-to-GND connection, USB-UART are unchanged; GPIO now covers all 44 digital DIP contacts. The shared drawings show the TM1638-equipped assembly; omit its branch. Full instructions: [English](../cmod_a7_35_tiny_vga_codex/assembly_en.html#no-tm1638) · [Русский](../cmod_a7_35_tiny_vga_codex/assembly_ru.html#no-tm1638).
 
 The onboard 12 MHz clock feeds an MMCM generating a 100 MHz system clock. TinyVGA supplies **640×480 at 59.524 Hz**, with a 25 MHz pixel rate and negative syncs. DAC BCK/LRCK and microphone SCK/WS are 3.125 MHz / 48.828125 kHz.
 
@@ -40,18 +49,18 @@ vivado -mode batch -source /path/to/basics-graphics-music/scripts/tests/build_cm
     -tclargs labs/2_graphics/2_1_rectangle_ellipse_parabola cmod_a7_35_tiny_vga_no_tm1638_codex
 ```
 
-The driver checks the absence of TM1638 pins/controller cells, reports clocks, utilization, DRC and timing, then writes **cmod_a7_35_tiny_vga_no_tm1638_codex.bit** after constrained setup/hold timing passes. External I/O delays are unspecified in the inherited XDC. Hardware and monitor testing remain outstanding.
+The driver checks the absence of TM1638 controller cells and presence of all 44 GPIO ports, reports clocks, utilization, DRC and timing, then writes **cmod_a7_35_tiny_vga_no_tm1638_codex.bit** after constrained setup/hold timing passes. External I/O delays are unspecified in the inherited XDC. Hardware and monitor testing remain outstanding.
 
 From the repository root, `python3 scripts/tests/test_cmod_a7_35_tiny_vga_codex.py` checks all four configurations, including independent/simultaneous button presses, LED mapping, reset, a complete video frame, microphone data and I²S audio. No-TM1638 simulations exclude the controller source so accidental instantiation fails. `python3 scripts/tests/test_board_menu.py` checks selection and Vivado dispatch.
 
-Vivado 2026.1 validation on 17 November 2026 built the rectangle/ellipse/parabola example through bitstream generation: **setup WNS +5.654 ns, hold WHS +0.131 ns**, 133 LUTs and 57 registers. The routed design uses two BUFGs and one MMCM and has no TM1638 controller. DRC reports zero errors; the inherited CFGBVS-1 warning and graphics-lab DSP pipelining recommendations remain. There are no unclocked registers or unconstrained internal endpoints. External I/O delays remain unspecified. Eight board regression tests and all 22 menu tests passed; both shared HTML guides passed desktop/mobile checks. No physical hardware was programmed or tested.
+**Historical result before the full-GPIO expansion; rebuild the current sources.** Vivado 2026.1 validation on 17 November 2026 built the rectangle/ellipse/parabola example through bitstream generation: **setup WNS +5.654 ns, hold WHS +0.131 ns**, 133 LUTs and 57 registers. The routed design uses two BUFGs and one MMCM and has no TM1638 controller. DRC reports zero errors; the inherited CFGBVS-1 warning and graphics-lab DSP pipelining recommendations remain. There are no unclocked registers or unconstrained internal endpoints. External I/O delays remain unspecified. Eight board regression tests and all 22 menu tests passed; both shared HTML guides passed desktop/mobile checks. No physical hardware was programmed or tested.
 
 ## Кратко по-русски
 
-В меню выберите **cmod_a7_35 → cmod_a7_35_tiny_vga_no_tm1638_codex**. TM1638 отсутствует; DIP 26–28 оставьте свободными. Две кнопки Cmod подключены к **key[1:0]**, два светодиода — к **led[1:0]**; BTN0 соответствует биту 0, BTN1 — биту 1. Ни одна кнопка не вызывает сброс. Для перезапуска повторно запрограммируйте FPGA или выключите и включите питание. Семисегментного индикатора нет: выходы индикатора работы неподключены. Параметр w_digit=8 сохраняет совместимость существующих работ. sw[1:0] дублирует кнопки, sw[7:2]=0. MMCM формирует системные 100 МГц из входных 12 МГц. TinyVGA выдаёт 640×480 при 59,524 Гц. Частота пикселей 25 МГц; BCK/SCK звуковых интерфейсов 3,125 МГц, LRCK/WS — 48,828125 кГц.
+В меню выберите **cmod_a7_35 → cmod_a7_35_tiny_vga_no_tm1638_codex**. TM1638 отсутствует; DIP 26–28 доступны как GPIO. Две кнопки Cmod подключены к **key[1:0]**, два светодиода — к **led[1:0]**; BTN0 соответствует биту 0, BTN1 — биту 1. Ни одна кнопка не вызывает сброс. Для перезапуска повторно запрограммируйте FPGA или выключите и включите питание. Семисегментного индикатора нет: выходы индикатора работы неподключены. Параметр w_digit=8 сохраняет совместимость существующих работ. sw[1:0] дублирует кнопки, sw[7:2]=0. MMCM формирует системные 100 МГц из входных 12 МГц. TinyVGA выдаёт 640×480 при 59,524 Гц. Частота пикселей 25 МГц; BCK/SCK звуковых интерфейсов 3,125 МГц, LRCK/WS — 48,828125 кГц.
 
 Подключение TinyVGA, микрофона и ЦАП описано в [русской инструкции](../cmod_a7_35_tiny_vga_codex/assembly_ru.html#no-tm1638); исключите ветвь TM1638 на рисунках. Приведённая команда Vivado создаёт битовый файл без программирования платы.
 
 ## Prompt appendices / Приложения с запросами
 
-The shared instructions include the [original task and Russian translation](../cmod_a7_35_tiny_vga_codex/assembly_en.html#original-task) and [related user prompts](../cmod_a7_35_tiny_vga_codex/assembly_en.html#follow-up-prompts), including this configuration request (P22) and continuation (P23). [Русские приложения](../cmod_a7_35_tiny_vga_codex/assembly_ru.html#follow-up-prompts). Append subsequent related requests to the main board's `reference/follow_up_prompts.json` and regenerate both guides with `build_docs.py`.
+The shared instructions include the [original task and Russian translation](../cmod_a7_35_tiny_vga_codex/assembly_en.html#original-task) and [related user prompts](../cmod_a7_35_tiny_vga_codex/assembly_en.html#follow-up-prompts), including this configuration request (P22), the full-GPIO request (P36), and their continuations. [Русские приложения](../cmod_a7_35_tiny_vga_codex/assembly_ru.html#follow-up-prompts). Append subsequent related requests to the main board's `reference/follow_up_prompts.json` and regenerate both guides with `build_docs.py`.

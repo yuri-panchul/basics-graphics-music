@@ -35,13 +35,14 @@ class CmodTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         return r.stdout + r.stderr
 
-    def compile(self, lab, config=None, simulate=False, no_pll=False, no_tm1638=False):
+    def compile(self, lab, config=None, simulate=False, no_pll=False, no_tm1638=False, testbench='tb.sv', defines=()):
         board = board_path(no_pll, no_tm1638)
         if config is not None:
             (self.work / 'lab_specific_board_config.svh').write_text(config)
         output = self.work / 'test.vvp'
         args = ['iverilog', '-g2012', '-DNO_SIMULATION', '-s',
                 'tb' if simulate else 'board_specific_top', '-o', str(output)]
+        args += ['-D'+d for d in defines]
         if no_pll:
             # No MMCM model is available: accidentally retaining one must fail elaboration.
             args += ['-DCMOD_TEST_NO_PLL']
@@ -51,16 +52,16 @@ class CmodTests(unittest.TestCase):
             args += ['-I', str(directory)]
         sources = [FIX/'clock_primitives.sv']
         for directory in [lab, board, REPO/'labs/common', REPO/'peripherals']:
-            sources += [p for p in sorted(directory.glob('*.sv')) if p.name not in ('tb.sv', 'clock_primitives.sv')]
+            sources += [p for p in sorted(directory.glob('*.sv')) if p.name not in ('tb.sv', 'gpio_tb.sv', 'clock_primitives.sv')]
             sources += sorted(directory.glob('*.v'))
         if no_tm1638:
             # Absence of the controller source makes accidental instantiation fail.
-            sources = [p for p in sources if p.name != 'tm1638_board_controller.sv']
+            sources = [p for p in sources if p.name != 'tm1638_board.sv']
         filelist = lab/'filelist.f'
         if filelist.exists():
             sources += [lab/s.strip() for s in filelist.read_text().splitlines() if s.strip()]
         if simulate:
-            sources.append(FIX/'tb.sv')
+            sources.append(FIX/testbench)
         self.run_command(args + list(map(str, sources)))
         return output
 
@@ -69,12 +70,17 @@ class CmodTests(unittest.TestCase):
         actual = (BOARD/'board_specific.xdc').read_bytes()
         manifest = json.loads((BOARD/'reference/source.json').read_text())
         self.assertEqual(hashlib.sha256(original).hexdigest(), manifest['sha256'])
+        clock = next(line[1:] for line in original.splitlines() if line.startswith(b'#create_clock '))
+        for mode in MODES:
+            constraints = (board_path(*mode)/'board_specific.xdc').read_bytes()
+            self.assertIn(clock, constraints.splitlines())
+            self.assertEqual(constraints, actual)
         before, after = original.splitlines(keepends=True), actual.splitlines(keepends=True)
         self.assertEqual(len(before), len(after))
         for old, new in zip(before, after):
             self.assertTrue(new == old or (old.startswith(b'#') and new == old[1:]), new)
         pairs = re.findall(r'^set_property -dict \{ PACKAGE_PIN (\S+)\s+IOSTANDARD LVCMOS33 \} \[get_ports \{\s*(\S+)\s*\}\]', actual.decode(), re.M)
-        self.assertEqual(len(pairs), 35)
+        self.assertEqual(len(pairs), 62)
         self.assertEqual(len(set(pin for pin, _ in pairs)), len(pairs))
         self.assertEqual({port for _, port in pairs}, set(manifest['enabled_ports']))
         # Independently selected connector positions: no accessory shares a pin.
@@ -90,7 +96,7 @@ class CmodTests(unittest.TestCase):
             for old, new in zip(before, no_tm.splitlines(keepends=True)):
                 self.assertTrue(new == old or (old.startswith(b'#') and new == old[1:]), new)
             enabled = re.findall(r'^set_property.*get_ports \{\s*(\S+)\s*\}', no_tm.decode(), re.M)
-            self.assertEqual(set(enabled), set(manifest['enabled_ports']) - {'pio26', 'pio27', 'pio28'})
+            self.assertEqual(set(enabled), set(manifest['enabled_ports']))
 
     def test_top_ports_have_exact_xdc_coverage(self):
         for no_pll, no_tm1638 in MODES:
@@ -105,7 +111,10 @@ class CmodTests(unittest.TestCase):
                 xdc = (board_path(no_pll, no_tm1638)/'board_specific.xdc').read_text()
                 constrained = re.findall(r'^set_property.*get_ports \{\s*(\S+)\s*\}', xdc, re.M)
                 self.assertEqual(expanded, set(constrained))
-                self.assertEqual(len(expanded), 32 if no_tm1638 else 35)
+                self.assertEqual(len(expanded), 62)
+                directions = {name: direction for direction, _, name in ports}
+                for pin in list(range(1,15)) + list(range(17,24)) + list(range(26,49)):
+                    self.assertEqual(directions[f'pio{pin}'], 'INOUT')
 
     def test_representative_labs_elaborate(self):
         labs = sorted((REPO/'labs/1_basics').glob('*/lab_top.sv'))
@@ -137,6 +146,17 @@ class CmodTests(unittest.TestCase):
                         self.assertNotIn('"i_tm1638"', netlist)
                         for param in ('w_key', 'w_led'):
                             self.assertRegex(netlist, rf'\.param/l "{param}".*\+C4<0*10>;')
+
+    def test_full_gpio_bus_and_accessory_release(self):
+        active = ''.join(f'`define INSTANTIATE_{s}_MODULE\n' for s in [
+            'MICROPHONE_INTERFACE', 'SOUND_OUTPUT_INTERFACE', 'TM1638_BOARD_CONTROLLER'])
+        for no_pll, no_tm1638 in MODES:
+            for enabled in (False, True):
+                with self.subTest(no_pll=no_pll, no_tm1638=no_tm1638, accessories=enabled):
+                    output = self.compile(FIX, config=active if enabled else '// Accessories off.\n',
+                        simulate=True, no_pll=no_pll, no_tm1638=no_tm1638,
+                        testbench='gpio_tb.sv', defines=['CMOD_TEST_GPIO_ACTIVE'] if enabled else [])
+                    self.assertIn('PASS: full GPIO', self.run_command(['vvp', str(output)]))
 
     def test_frame_audio_microphone_and_reset(self):
         self.check_frame(no_pll=False)

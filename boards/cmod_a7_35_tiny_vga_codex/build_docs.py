@@ -95,6 +95,8 @@ def render(markdown):
             anchor = f'section-{section}'
             if label.startswith('TinyVGA:'):
                 anchor = 'tiny-vga-ordering'
+            elif label in ('Full GPIO bus and available pins', 'Полная шина GPIO и свободные выводы'):
+                anchor = 'gpio'
             elif label in ('Configurations without TM1638', 'Конфигурации без TM1638'):
                 anchor = 'no-tm1638'
             elif label in ('Appendix: original task and Russian translation',
@@ -160,7 +162,7 @@ for language in ('en', 'ru'):
     navigation = f'<nav aria-label="{label}"><strong>{label}</strong>{toc}</nav>'
     content = content[:first_section] + navigation + content[first_section:]
     first_title = content.index('<h1')
-    toolbar = f'<div class="toolbar"><span>BGM · codex_cmod_a7 · 2026-11-17</span><button onclick="window.print()">{print_label}</button></div>'
+    toolbar = f'<div class="toolbar"><span>BGM · codex_cmod_a7 · 2026-11-21</span><button onclick="window.print()">{print_label}</button></div>'
     content = content[:first_title] + toolbar + content[first_title:]
     page = f'''<!doctype html>
 <html lang="{language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(title)}</title><style>{STYLE}</style></head>

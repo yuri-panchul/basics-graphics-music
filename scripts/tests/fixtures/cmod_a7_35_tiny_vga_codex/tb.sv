@@ -16,24 +16,29 @@ module tb;
     wire [1:0] led;
     wire led0_r, led0_g, led0_b;
     wire [7:0] ja;
-    wire [7:0] gpio;
+    tri [43:0] gpio;
     reg uart_txd_in=1;
     wire uart_rxd_out;
-    tri1 pio26;
-    wire pio27, pio28, pio29, pio30, pio32, pio33, pio34;
-    reg pio31=0;
+    `ifndef CMOD_TEST_NO_TM1638
+        pullup (gpio[21]);
+    `endif
+    wire pio27=gpio[22], pio28=gpio[23], pio29=gpio[24], pio30=gpio[25];
+    wire pio32=gpio[27], pio33=gpio[28], pio34=gpio[29];
+    reg mic_data=0;
+    assign gpio[26]=mic_data;
     board_specific_top dut
     (
         .sysclk(sysclk), .btn(btn), .led(led),
         .led0_r(led0_r), .led0_g(led0_g), .led0_b(led0_b), .ja(ja),
         .uart_txd_in(uart_txd_in), .uart_rxd_out(uart_rxd_out),
-        .pio1(gpio[0]), .pio2(gpio[1]), .pio3(gpio[2]), .pio4(gpio[3]),
-        .pio5(gpio[4]), .pio6(gpio[5]), .pio7(gpio[6]), .pio8(gpio[7]),
-        `ifndef CMOD_TEST_NO_TM1638
-        .pio26(pio26), .pio27(pio27), .pio28(pio28),
-        `endif
-        .pio29(pio29),
-        .pio30(pio30), .pio31(pio31), .pio32(pio32), .pio33(pio33), .pio34(pio34)
+        .pio1(gpio[0]), .pio2(gpio[1]), .pio3(gpio[2]), .pio4(gpio[3]), .pio5(gpio[4]), .pio6(gpio[5]),
+        .pio7(gpio[6]), .pio8(gpio[7]), .pio9(gpio[8]), .pio10(gpio[9]), .pio11(gpio[10]), .pio12(gpio[11]),
+        .pio13(gpio[12]), .pio14(gpio[13]), .pio17(gpio[14]), .pio18(gpio[15]), .pio19(gpio[16]), .pio20(gpio[17]),
+        .pio21(gpio[18]), .pio22(gpio[19]), .pio23(gpio[20]), .pio26(gpio[21]), .pio27(gpio[22]), .pio28(gpio[23]),
+        .pio29(gpio[24]), .pio30(gpio[25]), .pio31(gpio[26]), .pio32(gpio[27]), .pio33(gpio[28]), .pio34(gpio[29]),
+        .pio35(gpio[30]), .pio36(gpio[31]), .pio37(gpio[32]), .pio38(gpio[33]), .pio39(gpio[34]), .pio40(gpio[35]),
+        .pio41(gpio[36]), .pio42(gpio[37]), .pio43(gpio[38]), .pio44(gpio[39]), .pio45(gpio[40]), .pio46(gpio[41]),
+        .pio47(gpio[42]), .pio48(gpio[43])
     );
 
     initial begin
@@ -49,10 +54,10 @@ module tb;
         if(pio30!=mic_ws) begin
             mic_ws=pio30;
             mic_bit=0;
-            pio31=0;
+            mic_data=0;
         end else begin
             mic_bit=mic_bit+1;
-            pio31=(!pio30 && mic_bit>=1 && mic_bit<=24) ? MIC_SAMPLE[24-mic_bit] : 1'b0;
+            mic_data=(!pio30 && mic_bit>=1 && mic_bit<=24) ? MIC_SAMPLE[24-mic_bit] : 1'b0;
         end
     end
 
@@ -133,7 +138,7 @@ module tb;
         if(dut.rst!==1) $fatal(1,"Reset released too early");
         repeat(2) @(negedge dut.clk);
         if(dut.rst!==0 || led0_g!==0 || led0_b!==1) $fatal(1,"Reset release / LED polarity");
-        if(gpio!==8'ha6) $fatal(1,"GPIO bit numbering");
+        if(gpio[7:0]!==8'ha6) $fatal(1,"GPIO bit numbering");
         uart_txd_in=0; #1;
         if(uart_rxd_out!==0) $fatal(1,"USB UART direction");
         `ifdef CMOD_TEST_NO_TM1638

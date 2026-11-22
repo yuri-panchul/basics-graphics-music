@@ -21,7 +21,7 @@ The configuration was added on branch `codex_cmod_a7`, based on main
 
 Both give the lab exactly two keys (BTN0/BTN1) and two LEDs. Both buttons are synchronized and neither acts as reset. Reset occurs at configuration and, in MMCM mode, on loss of lock. There is no TM1638 controller or external seven-segment display. The lab's display outputs are unconnected; w_digit=8 remains internally for compatibility. sw[1:0] duplicates the two buttons and sw[7:2] is zero. TM1638 options in lab headers cannot override these board selections.
 
-Omit TM1638 and its wiring. DIP 26–28 have no top-level ports and retain commented XDC definitions; the other 32 scalar ports have the original constraints. Other peripherals and their power wiring are unchanged. See the [English](assembly_en.html#no-tm1638) and [Russian](assembly_ru.html#no-tm1638) instructions. The implementation and key-ordering sections below describe the original TM1638-equipped configurations.
+Omit TM1638 and its wiring. DIP 26–28 remain available as GPIO; all four variants now have the same 62 constrained scalar ports, including all 44 digital DIP GPIOs. Other peripherals and their power wiring are unchanged. See the [English](assembly_en.html#no-tm1638) and [Russian](assembly_ru.html#no-tm1638) instructions. The implementation and key-ordering sections below describe the original TM1638-equipped configurations.
 
 ## Implementation
 
@@ -30,8 +30,8 @@ The master XDC is copied from Digilent revision
 required lines was removed. All remaining bytes, port names, package pins,
 I/O standards and the 83.33 ns clock constraint are unchanged. The original
 is preserved under `reference/` with its SHA-256 and retrieval date. There
-are 35 constrained scalar pins, including the clock, UART, local LEDs/buttons,
-eight Pmod signals, eight generic GPIOs, and nine accessory signals.
+are 62 constrained scalar pins in every configuration: clock, UART, local LEDs/buttons,
+eight Pmod signals and all 44 digital DIP GPIOs. Peripheral functions share the GPIO bus.
 
 The 12 MHz oscillator drives `MMCME2_BASE`: divide 1, multiply 50, divide 6.
 Its 600 MHz VCO produces a 100 MHz system clock through a BUFG, with a BUFG
@@ -55,7 +55,7 @@ blanking counters use 10-bit vertical position; the lab gets its usual
 
 Physical mappings are entirely inside `board_specific_top.sv`:
 
-- `gpio[0..7]` → pio1..pio8.
+- `gpio[0..13]` → pio1..pio14; `gpio[14..20]` → pio17..pio23; `gpio[21..43]` → pio26..pio48. All are `inout`.
 - TM1638 DIO/CLK/STB → pio26/27/28 directly; module VCC and all signal
   pull-ups use the accessory 3.3 V supply.
 - INMP441 SCK/WS/SD → pio29/30/31; L/R wired to ground.
@@ -70,10 +70,21 @@ reported 3.3 V TM1638 operation and distinguish it from Titan's electrical
 characterization at 4.5–5.5 V; check the actual module during bring-up.
 
 The wrapper honors the common `INSTANTIATE_*` macros for video, TM1638,
-microphone and audio. Disabled outputs have explicit inactive values; the
-disabled TM1638 DIO is high-impedance. The default TM1638 is the eight-key
+microphone and audio. Disabling an accessory releases all of its GPIO drivers to high impedance; the lab can reuse those bits after disconnecting the module. Enabled accessory bits must be left at Z by the lab. The default TM1638 is the eight-key
 LED&KEY variant. Split-DIO mode and the first eight keys of the HCW132 variant
 also elaborate, but the assembly instructions describe the standard board.
+
+## Available GPIO pins
+
+All four configurations pass `w_gpio=44` and the complete digital DIP bus to `lab_top`.
+
+| Accessories enabled | Free physical DIP pins | Count |
+| --- | --- | --- |
+| Microphone + DAC + TM1638 | **1–14, 17–23, 35–48** | **35** |
+| Microphone + DAC, no TM1638 | **1–14, 17–23, 26–28, 35–48** | **38** |
+| All three interfaces disabled | **1–14, 17–23, 26–48** | **44** |
+
+Accessory bus bits: TM1638 `gpio[23:21]`, microphone `gpio[26:24]`, DAC `gpio[29:27]`. Pmod remains assigned to TinyVGA. DIP 15/16 are separate analog connections; 24/25 are supply/ground. See the [complete English mapping](assembly_en.html#gpio) and [русская таблица](assembly_ru.html#gpio) for pin indices and GPIO ownership.
 
 ## Key and LED ordering
 
@@ -114,29 +125,9 @@ configuration variants, reset/lock handling, GPIO/UART direction, a complete
 samples and stereo I²S framing. The second exercises real board selection
 and toolchain dispatch without modifying a user's saved selection.
 
-Vivado 2026.1 successfully built both examples outside the execution
-sandbox; the sandbox had prevented license detection. Results on 2026-11-16:
+The current full-GPIO implementation is checked across all four configurations. See [GPIO_VALIDATION.md](GPIO_VALIDATION.md) for current regression and Vivado results. Earlier 2026-11-16/17 bitstreams predate this interface expansion and must be rebuilt.
 
-| Lab | Setup WNS | Hold WHS | LUTs | Registers | Bitstream |
-| --- | --- | --- | --- | --- | --- |
-| `2_graphics/2_1_rectangle_ellipse_parabola` | +5.220 ns | +0.109 ns | 206 | 115 | Generated |
-| `3_music/3_11_microphone_monitor` | +2.351 ns | +0.034 ns | 2011 | 1356 | Generated |
-
-Both builds have zero setup/hold failing endpoints and zero DRC errors.
-DRC warnings remain: `CFGBVS-1` because the master XDC does not specify
-configuration-bank voltage properties, plus DSP pipelining recommendations
-in the graphics lab. Neither warning was suppressed. The real 12 MHz input,
-MMCM feedback and nominal 100 MHz output are recognized, with no unclocked
-registers or unconstrained internal endpoints. External I/O delays are not
-specified by the preserved Digilent master XDC, so passing constrained-path
-timing does not establish external-interface timing closure. Physical board
-testing remains outstanding.
-
-The TM1638 3.3 V wiring revision changes the assembly documentation and HDL
-comments only. The FPGA logic and LVCMOS33 pin constraints are identical to
-those used for the builds above; the existing bitstreams remain applicable.
-
-All eight board regression tests passed across the four configurations, including full-frame simulations, 17 lab elaborations per configuration, TM1638 options, two-button synchronization and LED mapping, startup reset and MMCM lock-loss recovery. The no-TM1638 checks exclude the controller source and verify exactly 32 constrained ports. All 22 menu tests passed across 117 configurations / 54 board groups. Both HTML guides passed 32 desktop (1440 px) and mobile (390 px) views; their local links, diagrams and bilingual prompt appendices were checked.
+Nine board tests cover 62-port XDC preservation/coverage, 17 lab elaborations per configuration, full-frame audio/video checks, reset/buttons, and bidirectional tests of every available GPIO bit. They verify 35 usable pins with all accessories enabled, 38 without TM1638, and all 44 with the accessory interfaces disabled. No-TM1638 builds exclude the actual controller source and verify its absence while retaining pio26–28 as GPIO.
 
 A separate batch driver builds without programming the FPGA. From a fresh
 output directory, with Vivado on PATH, substitute the repository location:
@@ -173,4 +164,4 @@ breadboard row numbers, DIP pins and DAC header contacts.
 
 ## Prompt appendices
 
-The instructions include the [original task](assembly_en.html#original-task) and [related user prompts](assembly_en.html#follow-up-prompts), including the TinyVGA request and the review-before-commit workflow. Future related requests are appended to `reference/follow_up_prompts.json` in the main board directory and rendered into both language editions by `build_docs.py`.
+The instructions include the [original task](assembly_en.html#original-task) and [related user prompts](assembly_en.html#follow-up-prompts), including the TinyVGA request, the full-GPIO request (P36), and the review-before-commit workflow. Future related requests are appended to `reference/follow_up_prompts.json` in the main board directory and rendered into both language editions by `build_docs.py`.

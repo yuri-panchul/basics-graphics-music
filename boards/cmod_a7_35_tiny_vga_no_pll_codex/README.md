@@ -20,6 +20,15 @@ source includes the shared wrapper with `CMOD_A7_NO_PLL` enabled.
 
 For two onboard lab keys, two onboard LEDs and no external display, select [cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex](../cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex/README.md). In that variant BTN0 is a lab key, so restart by reprogramming or cycling power.
 
+## Full GPIO bus / Полная шина GPIO
+
+This variant exposes **all 44 digital DIP GPIOs** to `lab_top.gpio[43:0]`, with 62 constrained scalar top-level ports. With microphone, DAC and TM1638 enabled, **35 pins are free: DIP 1–14, 17–23 and 35–48**.
+
+Все 44 цифровых DIP-вывода доступны через `lab_top.gpio[43:0]`. При включённых микрофоне, ЦАП и TM1638 свободны **35 выводов: DIP 1–14, 17–23 и 35–48**.
+
+Disabled accessory interfaces release their GPIO drivers; disconnect modules before repurposing their pins. All 44 bits are usable with the three interfaces disabled. Enabled accessory bits must be left at Z by the lab. Mapping: [English](../cmod_a7_35_tiny_vga_codex/assembly_en.html#gpio) · [Русский](../cmod_a7_35_tiny_vga_codex/assembly_ru.html#gpio). Current tests and builds: [GPIO_VALIDATION.md](../cmod_a7_35_tiny_vga_codex/GPIO_VALIDATION.md).
+
+
 ## Video timing and resolution
 
 There are **305 × 480 drawable pixels**, with RGB222 (64 colours). The lab
@@ -103,7 +112,7 @@ The no-PLL simulation provides only a BUFG model; an accidental MMCM instance
 fails elaboration. `python3 scripts/tests/test_board_menu.py` checks selection
 and Vivado dispatch.
 
-Vivado 2026.1 validation on 17 November 2026 produced both bitstreams:
+**Historical result before the full-GPIO expansion; rebuild the current sources.** Vivado 2026.1 validation on 17 November 2026 produced both bitstreams:
 
 | Lab | Setup WNS | Hold WHS | LUTs | Registers |
 | --- | --- | --- | --- | --- |
@@ -135,4 +144,4 @@ BCK 3 МГц, LRCK 46,875 кГц. Частоты микрофона: SCK 750 к�
 
 ## Prompt appendices
 
-The instructions include the [original task](../cmod_a7_35_tiny_vga_codex/assembly_en.html#original-task) and [related user prompts](../cmod_a7_35_tiny_vga_codex/assembly_en.html#follow-up-prompts), including the TinyVGA request and the review-before-commit workflow. Future related requests are appended to `reference/follow_up_prompts.json` in the main board directory and rendered into both language editions by `build_docs.py`.
+The instructions include the [original task](../cmod_a7_35_tiny_vga_codex/assembly_en.html#original-task) and [related user prompts](../cmod_a7_35_tiny_vga_codex/assembly_en.html#follow-up-prompts), including the TinyVGA request, the full-GPIO request (P36), and the review-before-commit workflow. Future related requests are appended to `reference/follow_up_prompts.json` in the main board directory and rendered into both language editions by `build_docs.py`.

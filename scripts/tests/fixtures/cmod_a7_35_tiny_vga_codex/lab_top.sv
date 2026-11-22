@@ -1,6 +1,6 @@
 module lab_top
 # (
-    parameter clk_mhz=100, w_key=8, w_sw=8, w_led=8, w_digit=8, w_gpio=8,
+    parameter clk_mhz=100, w_key=8, w_sw=8, w_led=8, w_digit=8, w_gpio=44,
               screen_width=640, screen_height=480, w_red=2, w_green=2, w_blue=2,
               w_x=$clog2(screen_width), w_y=$clog2(screen_height)
 )
@@ -30,5 +30,11 @@ module lab_top
     assign blue = 2'b11;
     assign sound = 16'h5a3c;
     assign uart_tx = uart_rx;
-    assign gpio = 8'ha6;
+    // Only the first eight spare bits are driven by the default frame fixture.
+    // GPIO tests explicitly control direction on each of the 44 contacts.
+    logic [w_gpio-1:0] gpio_drive = 'ha6;
+    logic [w_gpio-1:0] gpio_oe = 'hff;
+    for (genvar i=0; i<w_gpio; i=i+1) begin
+        assign gpio[i] = gpio_oe[i] ? gpio_drive[i] : 1'bz;
+    end
 endmodule

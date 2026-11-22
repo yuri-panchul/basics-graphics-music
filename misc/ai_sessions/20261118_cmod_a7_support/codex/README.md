@@ -11,7 +11,7 @@ Reviewed commits:
 - Claude: `c698aecc8f87293ddfe7400f52b24257142a0c7d`.
 - Codex: `b9fa13b2899fd2dc73290172e7776afb49364690`.
 
-The review covers six Claude variants and four Codex variants. It ran 170 representative lab elaborations, six Claude video/audio simulations, ten constraint audits, targeted reproductions and an independent Vivado build. No hardware was programmed or tested. Implementation changes remain recommendations. The review began on 17 November and was completed on 18 November 2026.
+The review covers six Claude variants and four Codex variants. It ran 170 representative lab elaborations, six Claude video/audio simulations, ten constraint audits, targeted reproductions and an independent Vivado build. No hardware was programmed or tested. The original review presents implementation changes as recommendations. The review began on 17 November and was completed on 18 November 2026.
 
 Supporting evidence, source snapshots, reproduction scripts, browser previews and the prompt-history working copy are stored locally outside the repository:
 
@@ -19,4 +19,10 @@ Supporting evidence, source snapshots, reproduction scripts, browser previews an
 
 The report identifies local evidence files by name without linking to absent repository attachments. Public source citations remain clickable. The earlier local review directory retains the original build artifacts.
 
-The local `build_report.py` regenerates the English report; `build_report_ru.py` regenerates both editions using the preserved local evidence and prompt history. The user authorized committing and pushing these report files. Implementation fixes remain proposals.
+The local `build_report.py` regenerates the English report; `build_report_ru.py` regenerates both editions using the preserved local evidence and prompt history. The user authorized committing and pushing these report files. Those review proposals refer to the reviewed commits; subsequent changes are recorded separately below.
+
+## Full GPIO update, 21 November 2026
+
+All four current Codex configurations now expose the 44 digital DIP GPIOs through `lab_top.gpio[43:0]`. With microphone, DAC and TM1638 enabled, **35 pins are free: DIP 1–14, 17–23 and 35–48**. Without TM1638, **38 pins are free**, including DIP 26–28. Disabled accessory interfaces release their pin drivers.
+
+The reports include a dated implementation update and the verbatim GPIO request (P36), with Russian translation in the prompt appendix. Their original comparison results still describe the reviewed commits. Current mapping: [English](../../../../boards/cmod_a7_35_tiny_vga_codex/assembly_en.html#gpio) · [Русский](../../../../boards/cmod_a7_35_tiny_vga_codex/assembly_ru.html#gpio). Current checks: [GPIO_VALIDATION.md](../../../../boards/cmod_a7_35_tiny_vga_codex/GPIO_VALIDATION.md).

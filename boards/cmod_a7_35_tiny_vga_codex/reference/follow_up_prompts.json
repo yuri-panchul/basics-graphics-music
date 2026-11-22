@@ -123,6 +123,81 @@
       "id": "P24",
       "original": "commit and push",
       "ru": "Создайте коммит и отправьте изменения."
+    },
+    {
+      "id": "P25",
+      "original": "review your compatitor's cmod_a7 board implementations, search bor bugs and good ideas to adopt, make a competitive report in a new html file.",
+      "ru": "Проверьте реализации платы cmod_a7 вашего конкурента, найдите ошибки и хорошие идеи для заимствования и подготовьте сравнительный отчёт в новом HTML-файле."
+    },
+    {
+      "id": "P26",
+      "original": "continue",
+      "ru": "Продолжайте."
+    },
+    {
+      "id": "P27",
+      "original": "continue",
+      "ru": "Продолжайте."
+    },
+    {
+      "id": "P28",
+      "original": "continue",
+      "ru": "Продолжайте."
+    },
+    {
+      "id": "P29",
+      "original": "continue",
+      "ru": "Продолжайте."
+    },
+    {
+      "id": "P30",
+      "original": "Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/codex",
+      "ru": "Добавьте свои отчёты в basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/codex."
+    },
+    {
+      "id": "P31",
+      "original": "do not add evidence and reproduction scripts to basics-graphics-music repo. The report and README.md only. Store other stuff locally in your directory",
+      "ru": "Не добавляйте материалы проверки и скрипты воспроизведения в репозиторий basics-graphics-music. Только отчёт и README.md. Остальное храните локально в своём каталоге."
+    },
+    {
+      "id": "P32",
+      "original": "make a russian version of this report and store it in the same place in repo",
+      "ru": "Сделайте русскую версию этого отчёта и сохраните её в том же каталоге репозитория."
+    },
+    {
+      "id": "P33",
+      "original": "commit and push",
+      "ru": "Создайте коммит и отправьте изменения."
+    },
+    {
+      "id": "P34",
+      "original": "read your competitor report. List what you would change in your solution.",
+      "ru": "Прочитайте отчёт конкурента. Перечислите, что вы изменили бы в своём решении."
+    },
+    {
+      "id": "P35",
+      "original": "what is the reason you use only 8 gpio pins for the user in cmod a7?",
+      "ru": "Почему в Cmod A7 вы предоставляете пользователю только 8 выводов GPIO?"
+    },
+    {
+      "id": "P36",
+      "original": "update everything to put full GPIO bus available. Give user the pins which are not occupied by mc. dac and tm1638. Update all the docs. Add this prompt to the other places you added the related cmod a7 prompt",
+      "ru": "Обновите всё, чтобы была доступна полная шина GPIO. Укажите пользователю выводы, не занятые микрофоном, ЦАП и TM1638. Обновите всю документацию. Добавьте этот запрос в другие места, куда вы добавляли связанные запросы о Cmod A7."
+    },
+    {
+      "id": "P37",
+      "original": "continue",
+      "ru": "Продолжайте."
+    },
+    {
+      "id": "P38",
+      "original": "commit and push",
+      "ru": "Создайте коммит и отправьте изменения."
+    },
+    {
+      "id": "P39",
+      "original": "commit and push",
+      "ru": "Создайте коммит и отправьте изменения."
     }
   ]
 }

@@ -189,8 +189,29 @@ The first four points apply to configurations with TM1638; the no-TM1638 mapping
 - There are no slide switches. The same TM1638 buttons supply `sw[0]`–`sw[7]` as **momentary inputs**, not latched toggles. Labs requiring sustained switch combinations need the buttons held or an explicitly adapted input scheme.
 - The two onboard LEDs duplicate the lowest two lab LED bits. The TM1638 shows all eight lab LED bits and eight digits. The common concatenation macros are also supported; their alternate key/LED ordering is described in the implementation notes.
 - The active-low RGB LED is red while reset is asserted and green while running; blue is off. It is a clock/reset indicator, not a proof that every peripheral works.
-- Generic `gpio[0]`–`gpio[7]` map to DIP **1–8**. These pins are separate from accessory pins 26–34; leave them unconnected unless the chosen lab calls for them.
+- The lab receives all **44 digital DIP GPIOs**; the mapping and free pins are listed below.
 - The onboard USB-UART uses `uart_txd_in` toward the FPGA and `uart_rxd_out` toward the PC. No external UART wiring is needed.
+
+### Full GPIO bus and available pins
+
+All four configurations expose the same **44-bit bus** `lab_top.gpio[43:0]`. Every digital DIP port in Digilent's master XDC is declared `inout`; accessory functions are assigned inside `board_specific_top.sv`. The pin-to-bit mapping stays identical when a peripheral is disabled or a no-TM1638 configuration is selected.
+
+**With microphone, DAC and TM1638 enabled, the 35 free digital pins are DIP 1–14, 17–23 and 35–48.** In either no-TM1638 configuration, **DIP 26–28 are also free: 38 pins total**. These are physical DIP numbers; `gpio` indices differ after the gaps in the header numbering.
+
+| Lab bus bits | Physical DIP pins / manufacturer ports | Use |
+| --- | --- | --- |
+| `gpio[13:0]` | DIP 1–14 / pio1–pio14 | 14 free GPIOs |
+| `gpio[20:14]` | DIP 17–23 / pio17–pio23 | 7 free GPIOs |
+| `gpio[23:21]` | DIP 26–28 / pio26–pio28 | TM1638 DIO, CLK, STB; free when TM1638 is disabled or absent |
+| `gpio[26:24]` | DIP 29–31 / pio29–pio31 | INMP441 SCK, WS, SD; free when its interface is disabled |
+| `gpio[29:27]` | DIP 32–34 / pio32–pio34 | DAC BCK, DIN, LRCK; free when its interface is disabled |
+| `gpio[43:30]` | DIP 35–48 / pio35–pio48 | 14 free GPIOs |
+
+Within each row the lowest bus index maps to the lowest DIP number: `gpio[0]=pio1`, `gpio[14]=pio17`, `gpio[21]=pio26`, `gpio[30]=pio35`, `gpio[43]=pio48`. DIP 15/16 are the separate analog-input connections; DIP 24 is VU and DIP 25 is GND. They are not GPIO bus entries. Pmod JA remains assigned to TinyVGA.
+
+A lab must leave accessory-owned bits at **Z** while their controllers are enabled. To reuse those pins, leave the corresponding `INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE`, `INSTANTIATE_MICROPHONE_INTERFACE_MODULE` or `INSTANTIATE_SOUND_OUTPUT_INTERFACE_MODULE` macro undefined in a lab-local `lab_specific_board_config.svh`, and disconnect the external module before changing its pins' purpose. The default peripheral configuration defines these interfaces when no lab-local file overrides it. A no-TM1638 board configuration always disables its controller, regardless of the lab macro.
+
+Disabled accessory outputs are high impedance rather than tied to idle logic levels. With all three interfaces disabled, all **44 DIP GPIOs** are available to the lab. The microphone sample supplied to the lab is zero when its receiver is disabled. No GPIO pin supplies module power or ground.
 
 ### Configurations without TM1638
 
@@ -201,7 +222,7 @@ Choose either additional configuration under **cmod_a7_35** in the board menu:
 | cmod_a7_35_tiny_vga_no_tm1638_codex | 100 MHz, MMCM; 640×480 at 59.524 Hz |
 | cmod_a7_35_tiny_vga_no_pll_no_tm1638_codex | 12 MHz, BUFG only; 305×480 at 59.835453 Hz |
 
-**Omit the entire TM1638 module, its power leads and the three signal wires to DIP 26–28.** Those three signals are absent from the FPGA top level and their master-XDC lines remain commented. Leave DIP 26–28 unconnected. The drawings show the TM1638-equipped assembly; omit that branch for these two configurations. TinyVGA, INMP441 on DIP 29–31, DAC on DIP 32–34, USB-UART and GPIO on DIP 1–8 keep their existing connections. Keep the microphone's regulated 3.3 V supply when using it. DAC power and MCLK-to-GND wiring remain as documented.
+**Omit the entire TM1638 module, its power leads and the three signal wires to DIP 26–28.** DIP 26–28 remain bidirectional top-level GPIO ports with their original XDC constraints; they are available to the lab as `gpio[23:21]`. The drawings show the TM1638-equipped assembly; omit that branch for these two configurations. TinyVGA, INMP441 on DIP 29–31, DAC on DIP 32–34, USB-UART keep their existing connections; the lab now receives the full 44-bit GPIO bus. Keep the microphone's regulated 3.3 V supply when using it. DAC power and MCLK-to-GND wiring remain as documented.
 
 **BTN0 → key[0], BTN1 → key[1]; led[0] → onboard LED0, led[1] → onboard LED1.** Pressed buttons are active high. Each button has a two-register synchronizer; mechanical debounce remains the lab's responsibility. Both lab widths are exactly two, regardless of any TM1638 concatenation option in the lab configuration. For compatibility with switch-based exercises, `sw[1:0]` duplicates these two momentary buttons and `sw[7:2]` is zero; there are no slide switches.
 
@@ -674,6 +695,186 @@ Russian translation / Русский перевод:
 ```
 
 ### P24 · original / оригинал
+
+```text
+commit and push
+```
+
+Russian translation / Русский перевод:
+
+```text
+Создайте коммит и отправьте изменения.
+```
+
+### P25 · original / оригинал
+
+```text
+review your compatitor's cmod_a7 board implementations, search bor bugs and good ideas to adopt, make a competitive report in a new html file.
+```
+
+Russian translation / Русский перевод:
+
+```text
+Проверьте реализации платы cmod_a7 вашего конкурента, найдите ошибки и хорошие идеи для заимствования и подготовьте сравнительный отчёт в новом HTML-файле.
+```
+
+### P26 · original / оригинал
+
+```text
+continue
+```
+
+Russian translation / Русский перевод:
+
+```text
+Продолжайте.
+```
+
+### P27 · original / оригинал
+
+```text
+continue
+```
+
+Russian translation / Русский перевод:
+
+```text
+Продолжайте.
+```
+
+### P28 · original / оригинал
+
+```text
+continue
+```
+
+Russian translation / Русский перевод:
+
+```text
+Продолжайте.
+```
+
+### P29 · original / оригинал
+
+```text
+continue
+```
+
+Russian translation / Русский перевод:
+
+```text
+Продолжайте.
+```
+
+### P30 · original / оригинал
+
+```text
+Add your reports to basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/codex
+```
+
+Russian translation / Русский перевод:
+
+```text
+Добавьте свои отчёты в basics-graphics-music/misc/ai_sessions/20261118_cmod_a7_support/codex.
+```
+
+### P31 · original / оригинал
+
+```text
+do not add evidence and reproduction scripts to basics-graphics-music repo. The report and README.md only. Store other stuff locally in your directory
+```
+
+Russian translation / Русский перевод:
+
+```text
+Не добавляйте материалы проверки и скрипты воспроизведения в репозиторий basics-graphics-music. Только отчёт и README.md. Остальное храните локально в своём каталоге.
+```
+
+### P32 · original / оригинал
+
+```text
+make a russian version of this report and store it in the same place in repo
+```
+
+Russian translation / Русский перевод:
+
+```text
+Сделайте русскую версию этого отчёта и сохраните её в том же каталоге репозитория.
+```
+
+### P33 · original / оригинал
+
+```text
+commit and push
+```
+
+Russian translation / Русский перевод:
+
+```text
+Создайте коммит и отправьте изменения.
+```
+
+### P34 · original / оригинал
+
+```text
+read your competitor report. List what you would change in your solution.
+```
+
+Russian translation / Русский перевод:
+
+```text
+Прочитайте отчёт конкурента. Перечислите, что вы изменили бы в своём решении.
+```
+
+### P35 · original / оригинал
+
+```text
+what is the reason you use only 8 gpio pins for the user in cmod a7?
+```
+
+Russian translation / Русский перевод:
+
+```text
+Почему в Cmod A7 вы предоставляете пользователю только 8 выводов GPIO?
+```
+
+### P36 · original / оригинал
+
+```text
+update everything to put full GPIO bus available. Give user the pins which are not occupied by mc. dac and tm1638. Update all the docs. Add this prompt to the other places you added the related cmod a7 prompt
+```
+
+Russian translation / Русский перевод:
+
+```text
+Обновите всё, чтобы была доступна полная шина GPIO. Укажите пользователю выводы, не занятые микрофоном, ЦАП и TM1638. Обновите всю документацию. Добавьте этот запрос в другие места, куда вы добавляли связанные запросы о Cmod A7.
+```
+
+### P37 · original / оригинал
+
+```text
+continue
+```
+
+Russian translation / Русский перевод:
+
+```text
+Продолжайте.
+```
+
+### P38 · original / оригинал
+
+```text
+commit and push
+```
+
+Russian translation / Русский перевод:
+
+```text
+Создайте коммит и отправьте изменения.
+```
+
+### P39 · original / оригинал
 
 ```text
 commit and push

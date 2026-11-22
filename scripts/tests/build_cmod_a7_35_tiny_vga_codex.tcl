@@ -25,20 +25,30 @@ foreach source [glob $lab/*.sv] {
 read_verilog -sv [glob $board/*.sv]
 read_xdc $board/board_specific.xdc
 synth_design -top board_specific_top -part $part_name -verilog_define XILINX_VIVADO
+if {[llength [get_clocks -quiet sys_clk_pin]] != 1} {
+    error "Missing Digilent sys_clk_pin timing constraint"
+}
 if {[string match *_no_pll_* $board_name]} {
     set clock_managers [get_cells -hier -filter {REF_NAME =~ MMCME* || REF_NAME =~ PLLE*}]
     if {[llength $clock_managers] != 0} { error "No-PLL configuration contains a clock manager" }
     puts "CMOD_A7_NO_PLL_CHECK: zero PLL/MMCM cells"
 }
 if {[string match *_no_tm1638_* $board_name]} {
-    if {[llength [get_ports -quiet {pio26 pio27 pio28}]] != 0} {
-        error "No-TM1638 configuration exposes TM1638 pins"
-    }
     if {[llength [get_cells -quiet -hier -filter {NAME =~ *i_tm1638*}]] != 0} {
         error "No-TM1638 configuration contains a TM1638 controller"
     }
-    puts "CMOD_A7_NO_TM1638_CHECK: no TM1638 ports or controller cells"
+    puts "CMOD_A7_NO_TM1638_CHECK: no controller; pio26..28 remain available as GPIO"
 }
+# Every digital DIP contact remains an inout port, including disabled accessories.
+set dip_pins {1 2 3 4 5 6 7 8 9 10 11 12 13 14 17 18 19 20 21 22 23 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48}
+foreach pin $dip_pins {
+    set port [get_ports -quiet pio$pin]
+    if {[llength $port] != 1 || [get_property DIRECTION $port] ne "INOUT"} {
+        error "Missing bidirectional GPIO pio$pin"
+    }
+    if {[get_property PACKAGE_PIN $port] eq ""} { error "Unconstrained pio$pin" }
+}
+puts "CMOD_A7_GPIO_CHECK: 44 bidirectional DIP ports, 62 total scalar ports"
 opt_design
 place_design
 phys_opt_design
@@ -46,12 +56,16 @@ route_design
 report_timing_summary -file timing_summary.rpt
 report_drc -file drc.rpt
 report_clocks -file clocks.rpt
+report_io -file io.rpt
 report_utilization -file utilization.rpt
 write_checkpoint -force routed.dcp
 
 # These checks cover constrained paths; the reports also list unconstrained I/O.
 set setup_slack [get_property SLACK [get_timing_paths -delay_type max -max_paths 1]]
 set hold_slack [get_property SLACK [get_timing_paths -delay_type min -max_paths 1]]
+if {![string is double -strict $setup_slack] || ![string is double -strict $hold_slack]} {
+    error "Missing constrained timing paths: setup=$setup_slack hold=$hold_slack"
+}
 if {$setup_slack < 0 || $hold_slack < 0} {
     error "Timing failed: setup slack $setup_slack ns, hold slack $hold_slack ns"
 }
