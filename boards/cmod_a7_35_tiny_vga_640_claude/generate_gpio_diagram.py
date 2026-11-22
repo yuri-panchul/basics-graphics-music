@@ -39,7 +39,6 @@ C = {
     "analog": "#7b4fa8",
     "vu": "#b0182a",
     "gnd": "#222222",
-    "free": "#9aa3b2",
     "board": "#1d3f6e",
     "board_edge": "#0e2340",
     "chip": "#202020",
@@ -66,10 +65,12 @@ JA_PINS = [("JA1", "G17"), ("JA2", "G19"), ("JA3", "N18"), ("JA4", "L18"),
 
 DIGITAL_PINS = (*range(1, 15), *range(17, 24), *range(26, 49))
 
-# The GPIO pins of the labs, in the order of the DIP pins, as in
-# board_specific_top.sv: gpio [n] is on GPIO_PINS [n].
+# The GPIO pins of the labs, as in board_specific_top.sv: gpio [n] is on
+# GPIO_PINS [n]. They run from DIP 48 down to 26, then from DIP 1 to 11,
+# and without TM1638 on to its pins, DIP 12 to 14.
 
-GPIO_PINS = (*range(1, 15), *range(17, 21), *range(33, 49))
+GPIO_PINS = (*range(48, 25, -1), *range(1, 12))
+GPIO_PINS_NO_TM = (*GPIO_PINS, 12, 13, 14)
 
 CONFIGS_TM = ("cmod_a7_35_tiny_vga_640_claude",
               "cmod_a7_35_no_pll_tiny_vga_304_claude",
@@ -133,19 +134,20 @@ def layouts():
     board = dict(power)
     board.update({pin: (FPGA_PIN[pin], "io") for pin in DIGITAL_PINS})
 
-    with_tm = dict(power)
+    modules = {17: ("SCK", "mic"), 18: ("WS", "mic"), 19: ("L/R", "mic"),
+               20: ("SD", "mic"),
+               21: ("BCK", "dac"), 22: ("DIN", "dac"), 23: ("LCK/WS", "dac")}
+
+    with_tm = {**power, **modules}
     with_tm.update({pin: (f"gpio[{n}]", "io") for n, pin in enumerate(GPIO_PINS)})
-    with_tm.update({21: ("BCK", "dac"), 22: ("DIN", "dac"), 23: ("LCK/WS", "dac"),
-                    26: ("STB", "tm"), 27: ("CLK", "tm"), 28: ("DIO", "tm"),
-                    29: ("SCK", "mic"), 30: ("WS", "mic"), 31: ("L/R", "mic"),
-                    32: ("SD", "mic")})
+    with_tm.update({12: ("STB", "tm"), 13: ("CLK", "tm"), 14: ("DIO", "tm")})
 
-    without_tm = dict(with_tm)
-    without_tm.update({26: ("high", "free"), 27: ("high", "free"), 28: ("hi-Z", "free")})
+    without_tm = {**power, **modules}
+    without_tm.update({pin: (f"gpio[{n}]", "io") for n, pin in enumerate(GPIO_PINS_NO_TM)})
 
-    gpio_groups = [(1, 14, "gpio[0..13]", "io"), (15, 16, "analog", "analog"),
-                   (17, 20, "gpio[14..17]", "io"), (21, 23, "DAC", "dac"),
-                   (29, 32, "INMP441", "mic"), (33, 48, "gpio[18..33]", "io")]
+    gpio_groups = [(26, 48, "gpio[0..22]", "io"), (1, 11, "gpio[23..33]", "io"),
+                   (15, 16, "analog", "analog"), (17, 20, "INMP441", "mic"),
+                   (21, 23, "DAC", "dac")]
 
     return [
         {
@@ -170,13 +172,13 @@ def layouts():
             "title": "2. The labs, with TM1638, the microphone and the DAC",
             "subtitle": "Configurations " + ", ".join(CONFIGS_TM),
             "pins": with_tm,
-            "groups": [*gpio_groups, (26, 28, "TM1638", "tm")],
+            "groups": [*gpio_groups, (12, 14, "TM1638", "tm")],
             "ja": "vga",
             "notes": [("34 GPIO pins of the labs:", "bold"),
-                      ("gpio[0] to gpio[33], in the order of the", None),
-                      ("DIP pins: DIP 1 to 14, 17 to 20, 33 to 48.", None),
-                      ("DAC on DIP 21 to 23, TM1638 on 26 to 28,", None),
-                      ("INMP441 on 29 to 32, TinyVGA in Pmod JA.", None),
+                      ("gpio[0] to gpio[22] on DIP 48 down to 26,", None),
+                      ("gpio[23] to gpio[33] on DIP 1 to 11.", None),
+                      ("TM1638 on DIP 12 to 14, INMP441 on 17 to 20,", None),
+                      ("DAC on 21 to 23, TinyVGA in Pmod JA.", None),
                       ("TM1638 gives the keys, the LEDs and the", None),
                       ("display; either button resets the design.", None)],
         },
@@ -184,13 +186,12 @@ def layouts():
             "title": "3. The labs, without TM1638",
             "subtitle": "Configurations " + ", ".join(CONFIGS_NO_TM),
             "pins": without_tm,
-            "groups": [*gpio_groups, (26, 28, "not GPIO", "free")],
+            "groups": [*gpio_groups, (12, 14, "gpio[34..36]", "io")],
             "ja": "vga",
-            "notes": [("The same 34 GPIO pins:", "bold"),
-                      ("gpio[n] is on the same DIP pin in all six", None),
-                      ("configurations. DIP 26 to 28 are not GPIO:", None),
-                      ("the design drives 26 and 27 high and leaves", None),
-                      ("28 undriven; connect nothing to them.", None),
+            "notes": [("37 GPIO pins of the labs:", "bold"),
+                      ("the 34 of the configurations with TM1638,", None),
+                      ("on the same DIP pins, and gpio[34] to", None),
+                      ("gpio[36] on DIP 12 to 14, the pins of TM1638.", None),
                       ("The two buttons are the keys of the labs,", None),
                       ("the two LEDs are led[0] and led[1].", None)],
         },
@@ -279,7 +280,7 @@ def draw():
 
     legend = [("digital I/O, GPIO", "io"), ("DAC", "dac"), ("TM1638", "tm"),
               ("INMP441", "mic"), ("analog input", "analog"), ("VU, 5 V", "vu"),
-              ("GND", "gnd"), ("not GPIO, no module", "free")]
+              ("GND", "gnd")]
     x = 40
     for label, kind in legend:
         svg.pin(x + 7, 97, C[kind])
@@ -290,8 +291,8 @@ def draw():
         draw_panel(svg, Y_PANELS + i * PANEL_H, layout)
 
     svg.text(40, H - 16, "The GPIO pins take 3.3 V logic only, like every pin of Cmod A7. "
-                         "gpio[n] of the labs is DIP pin n + 1 for n up to 13, n + 3 up to "
-                         "17, n + 15 up to 33.", 14, fill=C["muted"])
+                         "gpio[n] of the labs is DIP pin 48 - n for n up to 22, and DIP pin "
+                         "n - 22 from n = 23 on.", 14, fill=C["muted"])
     return svg.svg()
 
 

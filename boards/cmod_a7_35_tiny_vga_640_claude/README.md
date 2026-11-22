@@ -20,7 +20,9 @@ socket and 44 digital I/O pins on its DIP pins. This configuration adds:
     is for active speakers or an amplifier, not for headphones.
 
 The 34 digital DIP pins that the modules do not use are the GPIO pins of the
-labs, `gpio[0]` to `gpio[33]`, free for circuits of your own.
+labs, `gpio[0]` to `gpio[33]`, free for circuits of your own: a whole side of
+the board, DIP 26 to 48, and DIP 1 to 11. Without TM1638 its three pins are
+`gpio[34]` to `gpio[36]` as well.
 
 Both DAC modules use the same three FPGA pins, so the design is the same for
 either of them; only the wiring of their power and configuration pins differs.
@@ -128,20 +130,25 @@ component side, with the Pmod socket at the top: pins 1 to 24 run down the
 left side, pins 25 to 48 run up the right side. Pin 24, VU, and pin 25, GND,
 are the two pins at the USB end; pins 15 and 16 are analog inputs.
 
-All the module wiring is put in the 8 pins at the USB end of each side, next
-to the power pins, so that the wires are short and grouped by module:
+All the modules are on the side of DIP 1 to 24, near its USB end, so that the
+other side, DIP 26 to 48, is free from end to end:
 
 | DIP pins | Use | Why there |
 |----------|-----|-----------|
-| 1 to 14 | GPIO pins of the labs, `gpio[0]` on DIP 1 to `gpio[13]` on DIP 14 | Every digital DIP pin that the modules do not use is a GPIO pin of the labs, free for circuits of your own. The GPIO pins are numbered in the order of the DIP pins. |
-| 17 to 20 | GPIO pins of the labs, `gpio[14]` on DIP 17 to `gpio[17]` on DIP 20 | The same. |
+| 48 down to 26 | GPIO pins of the labs, `gpio[0]` on DIP 48 to `gpio[22]` on DIP 26 | A whole side of free pins, numbered from the Pmod end. |
+| 1 to 11 | GPIO pins of the labs, `gpio[23]` on DIP 1 to `gpio[33]` on DIP 11 | The other free pins, numbered on from the Pmod end of the other side. |
+| 12, 13, 14 | TM1638 STB, CLK, DIO; without TM1638, `gpio[34]` to `gpio[36]` | The order of STB, CLK and DIO on the TM1638 header: three parallel wires. |
+| 15, 16 | Unused | Analog inputs only. |
+| 17, 18, 19, 20 | INMP441 SCK, WS, L/R, SD | One row of the INMP441 module reads SCK, WS, L/R; SD is next to SCK in the other row. |
 | 21, 22, 23 | DAC BCK, DIN, LCK (WS on WeAct) | The same order as on the headers of both DAC modules. |
-| 25, 26, 27, 28 | GND, TM1638 STB, CLK, DIO | The TM1638 header is VCC, GND, STB, CLK, DIO: DIP pins 25 to 28 meet header pins GND to DIO one to one, four parallel wires. |
-| 29, 30, 31, 32 | INMP441 SCK, WS, L/R, SD | One row of the INMP441 module reads SCK, WS, L/R; SD is next to SCK in the other row. |
-| 33 to 48 | GPIO pins of the labs, `gpio[18]` on DIP 33 to `gpio[33]` on DIP 48 | The same. |
+| 24, 25 | VU and GND | The power pins at the USB end. |
 
-TinyVGA plugs into the Pmod socket JA, in variant A through Pmod TPH2. DIP 15 and 16, the analog
-inputs, stay unused, and the RGB LED, the buttons, the LEDs and the USB UART are on the board.
+Every digital DIP pin that the modules do not use is a GPIO pin of the labs,
+free for circuits of your own: 34 with TM1638 and 37 without it. `gpio[n]` is
+DIP 48 − n for n up to 22, and DIP n − 22 from n = 23 on.
+
+TinyVGA plugs into the Pmod socket JA, in variant A through Pmod TPH2. The RGB
+LED, the buttons, the LEDs and the USB UART are on the board.
 The GPIO pins take 3.3 V logic only, like every DIP pin; see the warnings
 under [Power](#power).
 
@@ -174,7 +181,7 @@ Choose one of two ways to bring 3.3 V to the breadboard:
 | | A: Pmod TPH2 | B: 3.3 V regulator |
 |---|--------------|--------------------|
 | The part | Digilent Pmod TPH2: it passes all 12 Pmod pins straight through and has a test point for each, numbered as the Pmod pins | A 3.3 V regulator module, for example AMS1117-3.3 |
-| Where it goes | Between JA and TinyVGA | In the free area of the breadboard beyond the USB end |
+| Where it goes | Between JA and TinyVGA | Away from the DIP pins: in the free rows beyond TinyVGA, or off the breadboard on wires |
 | Where the 3.3 V comes from | The 3.3 V rail of Cmod A7, from test point 6 of TPH2; test point 12 is 3.3 V as well | VU, DIP pin 24 |
 | Power wires | One: test point 6 to the + rail | Three: DIP 24 to the input, the output to the + rail, GND to a GND rail |
 | 5 V on the breadboard | None: VU stays unconnected | One wire, from DIP 24 to the regulator input |
@@ -191,7 +198,7 @@ Use the two rail pairs of the breadboard like this:
 
 | Rail pair | + rail | − rail |
 |-----------|--------|--------|
-| On the side of DIP pins 25 to 48 | +3.3 V, from test point 6 of TPH2 (A) or from the regulator output (B) | GND |
+| On the side of DIP pins 25 to 48 | +3.3 V, from test point 6 of TPH2 (A); the regulator output (B) may go to either + rail | GND |
 | On the side of DIP pins 1 to 24 | +3.3 V, joined to the other + rail | GND |
 
 Connect the two + rails to each other, and the two GND rails to each other and
@@ -224,9 +231,10 @@ Warnings from the Cmod A7 reference manual:
 There is one diagram for each 3.3 V source and DAC module; only the power
 wiring and the DAC differ. The diagrams show Cmod A7 from the component side,
 turned so that the Pmod socket is on the left: DIP pins 48 to 25 are along the
-top edge and 1 to 24 along the bottom edge. All six configurations use these
-drawings; [without TM1638](#without-tm1638), leave out the module and its
-five wires.
+top edge and 1 to 24 along the bottom edge. The USB end of Cmod A7 is at the
+end of the breadboard, so that the USB cable leaves it, and TinyVGA lies over
+the breadboard at the other end. All six configurations use these drawings;
+[without TM1638](#without-tm1638), leave out the module and its five wires.
 
 ### Variant A: 3.3 V from Pmod TPH2
 
@@ -263,27 +271,37 @@ and connect their strips with male-to-male wires. Separate drawings show this la
 versions [breadboard_weact.svg](breadboard_weact.svg) and
 [breadboard_gy_pcm5102.svg](breadboard_gy_pcm5102.svg). In short:
 
-* Cmod A7 goes in with DIP pins 25 to 48 in column c and 1 to 24 in column g.
-  That leaves holes a and b free on one side, h, i and j on the other.
+* Cmod A7 goes in at the end of the breadboard, rows 40 to 63, with DIP pins
+  25 to 48 in column c and 1 to 24 in column g: DIP 24 and 25, VU and GND, are
+  in row 63, the last one. The USB plug is off the end of the breadboard, so
+  the USB cable does not cross it. That leaves holes a and b free on one side,
+  h, i and j on the other.
+* TinyVGA, in JA at the other end of Cmod A7, lies over rows 28 to 39, its
+  VGA socket facing up. In variant A, TPH2 between JA and TinyVGA takes about
+  8 rows more: keep rows 23 to 39 free of modules.
+* The modules go into the free rows at the far end: the regulator in rows 4 to
+  6, the DAC in rows 9 to 15 and INMP441 in rows 19 to 21. The wires from DIP
+  17 to 24 leave their strips by hole j and run left over hole row h, so that
+  holes i and j of the GPIO strips stay free.
 * INMP441 goes across the center channel like a 6-pin DIP chip, label side
-  up, in rows 44 to 46: SCK, WS and L/R in column e, SD, VDD and GND in
-  column f. Its L/R goes to the GND rail, so DIP 31 stays free.
-* The DAC goes in by its header in column j, the WeAct module in rows 30 to
-  36, GY-PCM5102 in rows 31 to 36. Its body and jack hang over the bottom
-  rails and the edge of the breadboard, so its power and GND wires go to the
-  top rails. Only the main header of GY-PCM5102 may go into the holes, and
-  its outline in the drawing is approximate.
+  up: L/R, WS and SCK in column f, GND, VDD and SD in column e. Its L/R goes
+  to the GND rail, so DIP 19 stays free; the wire of SD crosses the channel
+  just past the microphone.
+* The DAC goes in by its header in column j. Its body and jack hang over the
+  bottom rails and the edge of the breadboard, so its power and GND wires go
+  to the top rails. Only the main header of GY-PCM5102 may go into the holes,
+  and its outline in the drawing is approximate.
 * The regulator, a 3-pin AMS1117-3.3 module, goes in by its header in column
-  j, rows 24 to 26, so that VIN is in the strip of DIP 24, VU: no wire carries
-  5 V. Its body hangs over the bottom rails; its GND goes to the GND rail at
-  row 22 and its VOUT to the + rail at row 28.
-* The drawing follows the pin order of the listing, VIN, GND, VOUT from the
-  Cmod A7 end, and the outline of the module is approximate: check the labels
-  on yours. If VIN is at the other end, connect the module with
-  female-to-male wires as in the variant B wiring diagram instead.
-* Keep the middle of rows 25 to 29 free for the USB plug.
-* In variant A, leave the regulator out and wire test point 6 of TPH2 to the
-  + rail as above. TinyVGA and TM1638 connect as in the wiring diagrams.
+  j, away from the DIP pins of Cmod A7, where there is room for it. One wire,
+  the only one with 5 V, brings VU from the strip of DIP 24 to VIN. Its body
+  hangs over the bottom rails, so its GND and VOUT go to the top rails. The
+  drawing follows the pin order of the listing, VIN, GND, VOUT, and the
+  outline of the module is approximate: check the labels on yours.
+* TM1638 stays off the breadboard, on female-to-male wires as in the wiring
+  diagrams: STB, CLK and DIO from hole j of rows 51 to 53, VCC and GND from
+  the bottom rails.
+* In variant A, leave the regulator and its 5 V wire out and wire test point
+  6 of TPH2 to the + rail as above.
 
 ## Wiring tables
 
@@ -291,53 +309,53 @@ versions [breadboard_weact.svg](breadboard_weact.svg) and
 
 | DIP pin | FPGA pin | Port in board_specific.xdc | Signal | Connect to |
 |--------:|---------:|----------------------------|--------|------------|
-| 1 | M3 | `pio1` | `gpio[0]` | Free: GPIO of the labs |
-| 2 | L3 | `pio2` | `gpio[1]` | Free: GPIO of the labs |
-| 3 | A16 | `pio3` | `gpio[2]` | Free: GPIO of the labs |
-| 4 | K3 | `pio4` | `gpio[3]` | Free: GPIO of the labs |
-| 5 | C15 | `pio5` | `gpio[4]` | Free: GPIO of the labs |
-| 6 | H1 | `pio6` | `gpio[5]` | Free: GPIO of the labs |
-| 7 | A15 | `pio7` | `gpio[6]` | Free: GPIO of the labs |
-| 8 | B15 | `pio8` | `gpio[7]` | Free: GPIO of the labs |
-| 9 | A14 | `pio9` | `gpio[8]` | Free: GPIO of the labs |
-| 10 | J3 | `pio10` | `gpio[9]` | Free: GPIO of the labs |
-| 11 | J1 | `pio11` | `gpio[10]` | Free: GPIO of the labs |
-| 12 | K2 | `pio12` | `gpio[11]` | Free: GPIO of the labs |
-| 13 | L1 | `pio13` | `gpio[12]` | Free: GPIO of the labs |
-| 14 | L2 | `pio14` | `gpio[13]` | Free: GPIO of the labs |
+| 1 | M3 | `pio1` | `gpio[23]` | Free: GPIO of the labs |
+| 2 | L3 | `pio2` | `gpio[24]` | Free: GPIO of the labs |
+| 3 | A16 | `pio3` | `gpio[25]` | Free: GPIO of the labs |
+| 4 | K3 | `pio4` | `gpio[26]` | Free: GPIO of the labs |
+| 5 | C15 | `pio5` | `gpio[27]` | Free: GPIO of the labs |
+| 6 | H1 | `pio6` | `gpio[28]` | Free: GPIO of the labs |
+| 7 | A15 | `pio7` | `gpio[29]` | Free: GPIO of the labs |
+| 8 | B15 | `pio8` | `gpio[30]` | Free: GPIO of the labs |
+| 9 | A14 | `pio9` | `gpio[31]` | Free: GPIO of the labs |
+| 10 | J3 | `pio10` | `gpio[32]` | Free: GPIO of the labs |
+| 11 | J1 | `pio11` | `gpio[33]` | Free: GPIO of the labs |
+| 12 | K2 | `pio12` | `TM_STB`; without TM1638 `gpio[34]` | TM1638 STB; without TM1638, free |
+| 13 | L1 | `pio13` | `TM_CLK`; without TM1638 `gpio[35]` | TM1638 CLK; without TM1638, free |
+| 14 | L2 | `pio14` | TM1638 DIO; without TM1638 `gpio[36]` | TM1638 DIO; without TM1638, free |
 | 15, 16 | — | — | Analog inputs | Nothing |
-| 17 | M1 | `pio17` | `gpio[14]` | Free: GPIO of the labs |
-| 18 | N3 | `pio18` | `gpio[15]` | Free: GPIO of the labs |
-| 19 | P3 | `pio19` | `gpio[16]` | Free: GPIO of the labs |
-| 20 | M2 | `pio20` | `gpio[17]` | Free: GPIO of the labs |
+| 17 | M1 | `pio17` | `MIC_SCK` | INMP441 SCK |
+| 18 | N3 | `pio18` | `MIC_WS` | INMP441 WS |
+| 19 | P3 | `pio19` | `MIC_LR` | INMP441 L/R |
+| 20 | M2 | `pio20` | `MIC_SD` | INMP441 SD |
 | 21 | N1 | `pio21` | `DAC_BCK` | DAC BCK |
 | 22 | N2 | `pio22` | `DAC_DIN` | DAC DIN |
 | 23 | P1 | `pio23` | `DAC_LCK` | GY-PCM5102 LCK, WeAct WS |
 | 24 | — | — | VU, about 5 V | A: nothing. B: the regulator input, and nothing else |
-| 25 | — | — | GND | GND rail and TM1638 GND |
-| 26 | R3 | `pio26` | `TM_STB` | TM1638 STB |
-| 27 | T3 | `pio27` | `TM_CLK` | TM1638 CLK |
-| 28 | R2 | `pio28` | TM1638 DIO | TM1638 DIO |
-| 29 | T1 | `pio29` | `MIC_SCK` | INMP441 SCK |
-| 30 | T2 | `pio30` | `MIC_WS` | INMP441 WS |
-| 31 | U1 | `pio31` | `MIC_LR` | INMP441 L/R |
-| 32 | W2 | `pio32` | `MIC_SD` | INMP441 SD |
-| 33 | V2 | `pio33` | `gpio[18]` | Free: GPIO of the labs |
-| 34 | W3 | `pio34` | `gpio[19]` | Free: GPIO of the labs |
-| 35 | V3 | `pio35` | `gpio[20]` | Free: GPIO of the labs |
-| 36 | W5 | `pio36` | `gpio[21]` | Free: GPIO of the labs |
-| 37 | V4 | `pio37` | `gpio[22]` | Free: GPIO of the labs |
-| 38 | U4 | `pio38` | `gpio[23]` | Free: GPIO of the labs |
-| 39 | V5 | `pio39` | `gpio[24]` | Free: GPIO of the labs |
-| 40 | W4 | `pio40` | `gpio[25]` | Free: GPIO of the labs |
-| 41 | U5 | `pio41` | `gpio[26]` | Free: GPIO of the labs |
-| 42 | U2 | `pio42` | `gpio[27]` | Free: GPIO of the labs |
-| 43 | W6 | `pio43` | `gpio[28]` | Free: GPIO of the labs |
-| 44 | U3 | `pio44` | `gpio[29]` | Free: GPIO of the labs |
-| 45 | U7 | `pio45` | `gpio[30]` | Free: GPIO of the labs |
-| 46 | W7 | `pio46` | `gpio[31]` | Free: GPIO of the labs |
-| 47 | U8 | `pio47` | `gpio[32]` | Free: GPIO of the labs |
-| 48 | V8 | `pio48` | `gpio[33]` | Free: GPIO of the labs |
+| 25 | — | — | GND | GND rail |
+| 26 | R3 | `pio26` | `gpio[22]` | Free: GPIO of the labs |
+| 27 | T3 | `pio27` | `gpio[21]` | Free: GPIO of the labs |
+| 28 | R2 | `pio28` | `gpio[20]` | Free: GPIO of the labs |
+| 29 | T1 | `pio29` | `gpio[19]` | Free: GPIO of the labs |
+| 30 | T2 | `pio30` | `gpio[18]` | Free: GPIO of the labs |
+| 31 | U1 | `pio31` | `gpio[17]` | Free: GPIO of the labs |
+| 32 | W2 | `pio32` | `gpio[16]` | Free: GPIO of the labs |
+| 33 | V2 | `pio33` | `gpio[15]` | Free: GPIO of the labs |
+| 34 | W3 | `pio34` | `gpio[14]` | Free: GPIO of the labs |
+| 35 | V3 | `pio35` | `gpio[13]` | Free: GPIO of the labs |
+| 36 | W5 | `pio36` | `gpio[12]` | Free: GPIO of the labs |
+| 37 | V4 | `pio37` | `gpio[11]` | Free: GPIO of the labs |
+| 38 | U4 | `pio38` | `gpio[10]` | Free: GPIO of the labs |
+| 39 | V5 | `pio39` | `gpio[9]` | Free: GPIO of the labs |
+| 40 | W4 | `pio40` | `gpio[8]` | Free: GPIO of the labs |
+| 41 | U5 | `pio41` | `gpio[7]` | Free: GPIO of the labs |
+| 42 | U2 | `pio42` | `gpio[6]` | Free: GPIO of the labs |
+| 43 | W6 | `pio43` | `gpio[5]` | Free: GPIO of the labs |
+| 44 | U3 | `pio44` | `gpio[4]` | Free: GPIO of the labs |
+| 45 | U7 | `pio45` | `gpio[3]` | Free: GPIO of the labs |
+| 46 | W7 | `pio46` | `gpio[2]` | Free: GPIO of the labs |
+| 47 | U8 | `pio47` | `gpio[1]` | Free: GPIO of the labs |
+| 48 | V8 | `pio48` | `gpio[0]` | Free: GPIO of the labs |
 
 ### TinyVGA in Pmod JA
 
@@ -374,7 +392,7 @@ Variant B, regulator module; the pins may be labeled VIN, GND, VOUT:
 |---------------|------------|
 | IN | DIP 24, VU |
 | GND | GND rail |
-| OUT | + rail on the side of DIP pins 25 to 48 |
+| OUT | A + rail; the two are joined |
 
 VU is USB 5 V less the drop of a diode, so it can be a little under the 4.75 V for which
 the AMS1117-3.3 module is rated. AMS1117 needs at most 1.3 V more at its input than at
@@ -388,10 +406,10 @@ In both variants, join the two + rails to each other.
 | TM1638 pin | Connect to |
 |------------|------------|
 | VCC | +3.3 V rail |
-| GND | DIP 25 |
-| STB | DIP 26 |
-| CLK | DIP 27 |
-| DIO | DIP 28 |
+| GND | GND rail |
+| STB | DIP 12 |
+| CLK | DIP 13 |
+| DIO | DIP 14 |
 
 ### INMP441
 
@@ -400,15 +418,15 @@ one row reads SCK, WS, L/R and the other SD, VDD, GND, with SD next to SCK.
 
 | INMP441 pin | Connect to |
 |-------------|------------|
-| SCK | DIP 29 |
-| WS | DIP 30 |
-| L/R | DIP 31 |
-| SD | DIP 32 |
+| SCK | DIP 17 |
+| WS | DIP 18 |
+| L/R | DIP 19 |
+| SD | DIP 20 |
 | VDD | +3.3 V rail |
 | GND | GND rail |
 
 The FPGA drives L/R low, which selects the left channel, as on the other boards
-of the repository. You may instead connect L/R to GND and leave DIP 31 free.
+of the repository. You may instead connect L/R to GND and leave DIP 19 free.
 
 ### DAC: WeAct I2S Earphone Module V1 (PCM5100A)
 
@@ -467,17 +485,19 @@ such as the input of active speakers or of an amplifier, not headphones of
 Work with the USB cable unplugged.
 
 1. **Place Cmod A7.** Push it into the breadboard across the center channel,
-   at one end of the breadboard, with the Pmod socket over the end of the
-   breadboard and the USB connector pointing inward. DIP pins 1 and 48 go into
-   the first row of holes. The two rows of pins are 0.6 inch apart, so one of
-   them ends up one hole from the channel and the other two holes from it:
-   every pin keeps two or three free holes in its row for the wires.
+   at one end of the breadboard, with the USB connector over the end of the
+   breadboard and the Pmod socket pointing inward. DIP pins 24 and 25, VU and
+   GND, go into the last row of holes, so that the USB cable leaves the
+   breadboard without crossing it. The two rows of pins are 0.6 inch apart,
+   so one of them ends up one hole from the channel and the other two holes
+   from it: every pin keeps two or three free holes in its row for the wires.
 2. **Plug in TinyVGA.** In variant A, push TPH2 into JA, then TinyVGA into
    TPH2; in variant B, push TinyVGA straight into JA. Keep all component sides
    up, and check that pins 5, 6, 11 and 12, GND and VCC, meet those of the
    socket each time: a Pmod plugged in the wrong way puts 3.3 V on signal
-   pins. The Pmod boards and the VGA cable hang off the end of the breadboard;
-   support the cable so that its weight does not lever the Pmod socket.
+   pins. The Pmod boards lie over the breadboard and the VGA socket of
+   TinyVGA faces up; support the VGA cable so that its weight does not lever
+   the Pmod socket. Keep the rows under them free of modules.
 3. **Make the GND rails.** Connect DIP pin 25 to the − rail on the side of
    pins 25 to 48, and connect the two − rails to each other at the far end of
    the breadboard. On many breadboards the rails are split in the middle, as a
@@ -485,19 +505,19 @@ Work with the USB cable unplugged.
 4. **Make the +3.3 V rails.** In variant A, connect test point 6 of TPH2 to
    the + rail on the side of pins 25 to 48 with a female-to-male wire, and
    leave DIP pin 24, VU, unconnected. In variant B, put the regulator module
-   in the free area beyond the USB end; connect its input to DIP pin 24, VU,
-   which is the only 5 V wire, its GND to a GND rail and its output to the
-   + rail on the side of pins 25 to 48. In both variants, connect the two
+   in the free rows at the far end of the breadboard, away from the DIP pins;
+   connect its input to DIP pin 24, VU, which is the only 5 V wire, its GND to
+   a GND rail and its output to a + rail. In both variants, connect the two
    + rails to each other at the far end of the breadboard, bridging any gaps,
    as with the GND rails.
 5. **Check the power.** Plug in USB. With the multimeter, both + rails should
    show 3.2 to 3.5 V against GND; in variant B the regulator input should
    show about 4.5 to 5 V. Below 3.2 V the DAC has too little margin: find the
    cause first. Unplug USB.
-6. **Connect TM1638.** Four female-to-male wires from DIP pins 25, 26, 27 and
-   28 to the TM1638 pins GND, STB, CLK and DIO, in this order, and one wire
-   from VCC to the +3.3 V rail.
-7. **Connect INMP441.** Wires from DIP pins 29, 30, 31 and 32 to SCK, WS, L/R
+6. **Connect TM1638.** Three female-to-male wires from DIP pins 12, 13 and
+   14 to the TM1638 pins STB, CLK and DIO, in this order, and two from its
+   GND and VCC to a GND rail and the +3.3 V rail. Without TM1638, skip this.
+7. **Connect INMP441.** Wires from DIP pins 17, 18, 19 and 20 to SCK, WS, L/R
    and SD; VDD to the +3.3 V rail, GND to a GND rail.
 8. **Connect the DAC.** Wires from DIP pins 21, 22 and 23 to BCK, DIN and LCK
    (WS on WeAct); VCC or VIN to the +3.3 V rail, GND to a GND rail. On
@@ -743,10 +763,10 @@ board_specific_top.sv makes these changes:
 `cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude` are the three
 configurations above without the TM1638 module. **The labs get the two
 buttons of Cmod A7 as their keys and its two LEDs as their LEDs, and there is
-no seven-segment display.** Everything else, the clock, VGA, the microphone,
-the DAC and the pins, is that of the same configuration with TM1638. For the
-wiring, leave out the module and its five wires; DIP 25 still goes to the GND
-rail.
+no seven-segment display, and DIP 12 to 14, the pins of TM1638, are three
+more GPIO pins.** Everything else, the clock, VGA, the microphone, the DAC and
+the other pins, is that of the same configuration with TM1638. For the
+wiring, leave out the module and its five wires.
 
 | | With TM1638 | Without TM1638 |
 |---|---|---|
@@ -754,7 +774,8 @@ rail.
 | LEDs of the labs | 8 LEDs of TM1638, the first two also on LED1 and LED2 of Cmod A7 | LED1 and LED2 of Cmod A7: `led[0]` and `led[1]` |
 | Seven-segment display | 8 digits of TM1638 | None |
 | Reset button | Either Cmod button | None: both buttons are keys |
-| DIP 26, 27, 28 | TM1638 STB, CLK, DIO | Unconnected |
+| DIP 12, 13, 14 | TM1638 STB, CLK, DIO | `gpio[34]` to `gpio[36]` |
+| GPIO pins of the labs | 34 | 37 |
 
 A button gives 1 when pressed; an LED lights on 1. The labs get one
 seven-segment digit that goes nowhere, so a lab that drives a display builds
@@ -765,9 +786,8 @@ The design is in reset after loading until the MMCM locks, or at 12 MHz for
 the first three clock cycles. No button resets it: to start a lab again, load
 the FPGA again with `./04_configure_fpga.bash`.
 
-The design keeps DIP 26 and 27, the STB and CLK of TM1638, high, and does not
-drive DIP 28. Leave the three pins unconnected; they are not GPIO pins of the
-labs, so `gpio[n]` is on the same DIP pin in all six configurations.
+`gpio[0]` to `gpio[33]` are on the same DIP pins as with TM1638, so a circuit
+on the GPIO pins works with all six configurations.
 
 Their board_specific_top.sv defines
 `FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE`, and for 320 and 304
@@ -776,21 +796,20 @@ directory, which then leaves out TM1638 even though
 `peripherals/lab_specific_board_config.svh` turns it on. Other boards of the
 repository without TM1638, such as `tang_nano_9k_hdmi_no_tm1638`, are made the
 same way, but some of them draw a virtual TM1638 on the screen; these do not.
-Their board_specific.xdc is the one of this directory: it keeps the lines of
-DIP 26, 27 and 28 uncommented, because the included top level still has these
-ports.
+Their board_specific.xdc is the one of this directory, with the lines of all
+44 digital DIP pins uncommented: the included top level has a port for each.
 
 ## Troubleshooting
 
 | Symptom | Check |
 |---------|-------|
 | No picture | The monitor input and the VGA cable. TinyVGA, and TPH2 in variant A, plugged with GND and VCC on those of JA. The lab must use graphics. |
-| TM1638 dark or wrong | VCC on +3.3 V. DIP 26, 27, 28 to STB, CLK, DIO, not reversed. DIP 25 to GND of the module. |
+| TM1638 dark or wrong | VCC on +3.3 V, GND on a GND rail. DIP 12, 13, 14 to STB, CLK, DIO, not reversed. |
 | No sound from GY-PCM5102 | Jumper 3, XSMT, set to H. SCK to GND. VIN on +3.3 V. |
 | Weak or distorted sound from GY-PCM5102 | Its output is line level: use active speakers or an amplifier, not headphones. |
 | No sound from WeAct | /SD not connected to GND. VCC on +3.3 V. Headphones fully in the jack. |
 | Sound that crackles or drops out | The supply of the DAC under load, step 11 of the assembly. |
-| Microphone silent | VDD on +3.3 V. SD on DIP 32. L/R low, from DIP 31 or GND. |
+| Microphone silent | VDD on +3.3 V. SD on DIP 20. L/R low, from DIP 19 or GND. |
 | A + rail is low or dead | A: the wire on test point 6 or 12 of TPH2, not another one. B: the regulator input on DIP 24, VU. Both: the two + rails joined, and any gap in a split rail bridged. |
 | The design is gone after unplugging USB | Expected: the scripts load the FPGA, not the flash. Run `./04_configure_fpga.bash`. |
 
@@ -855,17 +874,17 @@ python3 scripts/tests/test_cmod_a7_35_claude.py
 BGM_TEST_VIVADO=1 python3 scripts/tests/test_cmod_a7_35_claude.py
 ```
 
-The Vivado run of 19 November 2026; the run of 21 November, with 34 GPIO
-pins, gave the same figures:
+The Vivado run of 21 November 2026, after the pins of the modules moved to
+DIP 12 to 23:
 
 | Configuration | Clock; TM1638 | LUTs | Registers | Worst setup slack |
 |---------------|---------------|-----:|----------:|------------------:|
-| `cmod_a7_35_tiny_vga_640_claude` | 50 MHz from the MMCM; with TM1638 | 1980 | 1365 | 7.8 ns |
-| `cmod_a7_35_tiny_vga_640_no_tm1638_claude` | 50 MHz from the MMCM; no TM1638 | 1872 | 1261 | 4.9 ns |
-| `cmod_a7_35_no_pll_tiny_vga_304_claude` | 12 MHz, no MMCM; with TM1638 | 2017 | 1361 | 67.0 ns |
-| `cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude` | 12 MHz, no MMCM; no TM1638 | 1881 | 1259 | 72.5 ns |
-| `cmod_a7_35_no_pll_tiny_vga_320_claude` | 12 MHz, no MMCM; with TM1638 | 2007 | 1361 | 69.3 ns |
-| `cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude` | 12 MHz, no MMCM; no TM1638 | 1879 | 1259 | 71.2 ns |
+| `cmod_a7_35_tiny_vga_640_claude` | 50 MHz from the MMCM; with TM1638 | 1980 | 1365 | 7.5 ns |
+| `cmod_a7_35_tiny_vga_640_no_tm1638_claude` | 50 MHz from the MMCM; no TM1638 | 1872 | 1261 | 11.8 ns |
+| `cmod_a7_35_no_pll_tiny_vga_304_claude` | 12 MHz, no MMCM; with TM1638 | 2017 | 1361 | 68.9 ns |
+| `cmod_a7_35_no_pll_tiny_vga_304_no_tm1638_claude` | 12 MHz, no MMCM; no TM1638 | 1878 | 1259 | 71.2 ns |
+| `cmod_a7_35_no_pll_tiny_vga_320_claude` | 12 MHz, no MMCM; with TM1638 | 2016 | 1361 | 63.4 ns |
+| `cmod_a7_35_no_pll_tiny_vga_320_no_tm1638_claude` | 12 MHz, no MMCM; no TM1638 | 1880 | 1259 | 70.7 ns |
 
 Vivado also gives the design rule warning CFGBVS-1: the file of Digilent does
 not set the `CFGBVS` and `CONFIG_VOLTAGE` properties, and this configuration
@@ -1437,6 +1456,42 @@ no, keep this file only in one configuration cmod_a7_35_tiny_vga_640_claude, the
 
 **19:36 on 21 November**; it committed and pushed the pin picture and the
 short READMEs of the other five configurations:
+
+```text
+commit and push
+```
+
+**19:38 on 21 November**; it tagged commit ed9a4168 as
+`cmod_a7_pin_layout_1_claude` and pushed the tag:
+
+```text
+put a git tag cmod_a7_pin_layout_1_claude in the repo so we can restore this version if necessary
+```
+
+**19:57 on 21 November**; it moved INMP441 to DIP 17 to 20 and TM1638 to DIP
+12 to 14, numbered the GPIO pins from DIP 48 down to 26 and on from DIP 1 to
+11, made DIP 12 to 14 `gpio[34]` to `gpio[36]` without TM1638, and moved
+Cmod A7 to the end of the breadboard, with the regulator away from its pins.
+The prompt says `GPIO [24]` and `pins 48-24`; DIP 25 and 24 are GND and VU,
+so the GPIO pins of that side end with `gpio[22]` on DIP 26, as the next part
+of the prompt, `GPIO [23]` on DIP 1, needs:
+
+```text
+Now I want big changes to increase usability 
+
+1. Put INMP pins to pins 17-20.
+
+2. Put TM1638 pins to pins 12-14, but only for configuration with TM1638.
+
+3. Make GPIO[0], GPIO[1] ... GPIO [24] to be pins 48-24 and GPIO [23] ... GPIO 33] to be pins 1-11. Then for no_TM1638 also map GPIO [34] ... [36] to 12..14.
+
+4. I want to put the board on a breadboard in a way that 5V and GND are the last, not in the middle of the breadboard. The issue with the current breadboard layout - USB cable crosses the board. I am not worried of VGA cable because VGA connector faces up on this board.
+
+5. the voltage  regulator can be outside the board pins because it is too tight near the FPGA board pins anyway.
+```
+
+**22:23 on 21 November**; it committed and pushed the new pin plan, the
+tests, the drawings and the READMEs:
 
 ```text
 commit and push

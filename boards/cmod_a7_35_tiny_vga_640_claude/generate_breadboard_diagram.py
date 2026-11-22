@@ -76,8 +76,8 @@ def rail_hole(row):
 
 
 P = 24             # pixels per 0.1 inch
-BX, BY = 360, 380  # position of row 1, rail TO
-W = 1960
+BX, BY = 360, 200  # position of row 1, rail TO
+W = 2000
 
 
 def X(row):
@@ -94,70 +94,80 @@ def xy(row, u):
     return X(row), Y(u)
 
 
-# Cmod A7 sits across the channel with DIP pins 1 and 48 in row 1: pins 25 to
-# 48 in column c, two holes from the channel, and pins 1 to 24 in column g,
-# one hole from it. Row r holds DIP pins 49 - r and r. This leaves holes a
-# and b free on one side and h, i and j on the other.
+# Cmod A7 sits across the channel at the end of the breadboard, with DIP
+# pins 24 and 25, VU and GND, in row 63, the last one: the USB plug is off
+# the end of the breadboard, and the USB cable leaves it. Pins 25 to 48 are
+# in column c, two holes from the channel, and pins 1 to 24 in column g, one
+# hole from it; row r holds DIP pins 88 - r and r - 39. This leaves holes a
+# and b free on one side and h, i and j on the other. TinyVGA, in the Pmod
+# socket at the other end, lies over the breadboard, its VGA socket facing
+# up, and the modules go in the rows beyond it.
 
 CMOD_TOP, CMOD_BOT = "c", "g"
+CMOD_ROW = 40  # the row of DIP pins 1 and 48
 
 
 def dip(pin):
     """The breadboard position of a DIP pin of Cmod A7."""
     if pin <= 24:
-        return pin, CMOD_BOT
-    return 49 - pin, CMOD_TOP
+        return CMOD_ROW - 1 + pin, CMOD_BOT
+    return CMOD_ROW + 48 - pin, CMOD_TOP
 
 
-CMOD_NAMES = {21: "BCK", 22: "DIN", 23: "LCK", 24: "VU", 25: "GND", 26: "STB", 27: "CLK",
-              28: "DIO", 29: "SCK", 30: "WS", 31: "L/R", 32: "SD"}
-CMOD_FREE = (31,)  # DIP 31 stays free: INMP441 L/R goes to GND here
+CMOD_NAMES = {12: "STB", 13: "CLK", 14: "DIO", 17: "SCK", 18: "WS", 19: "L/R", 20: "SD",
+              21: "BCK", 22: "DIN", 23: "LCK", 24: "VU", 25: "GND"}
+CMOD_FREE = (19,)  # DIP 19 stays free: INMP441 L/R goes to GND here
 
 # The 3.3 V regulator of variant B: a 3-pin AMS1117-3.3 module, as Amazon
 # B08CDMZMDN, listed as about 8.6 x 12.3 mm with the pins VIN, GND, VOUT. It
-# goes in by its header in column j, with VIN in the strip of DIP 24, VU, so
-# that no wire carries 5 V, and its body hangs over the bottom rails. The
-# outline and the pin order come from the listing, not from a drawing.
+# goes in by its header in column j, away from Cmod A7, and its body hangs
+# over the bottom rails. One wire brings it 5 V from DIP 24, VU. The outline
+# and the pin order come from the listing, not from a drawing.
 
-REG_ROW = 24
+REG_ROW = 4
 REG_PINS = ["VIN", "GND", "VOUT"]
 REG_MARGIN = 0.69  # from the outer pins to the board edges, in pitches
 REG_DEPTH = 4.85   # the board from its header edge, in pitches
 
 # INMP441 sits across the channel like a 6-pin DIP chip: its two rows of
-# three pins are 0.3 inch apart, in columns e and f.
+# three pins are 0.3 inch apart, in columns e and f. It is turned so that
+# SCK, the pin nearest to Cmod A7, and WS are in the strips that the wires
+# from Cmod A7 reach without crossing the channel.
 
-MIC_ROW = 44
-MIC_TOP = ["SCK", "WS", "L/R"]   # column e, rows MIC_ROW to MIC_ROW + 2
-MIC_BOT = ["SD", "VDD", "GND"]   # column f, SD opposite SCK
+MIC_ROW = 19
+MIC_TOP = ["GND", "VDD", "SD"]   # column e, rows MIC_ROW to MIC_ROW + 2
+MIC_BOT = ["L/R", "WS", "SCK"]   # column f, SCK opposite SD
 
 # The DAC modules go in by their header, in column j, with the module body
 # and the headphone jack hanging over the rails and the edge of the
 # breadboard. "body" is (rows before the first pin, rows after the last pin,
-# depth beyond column j), in pitches.
+# depth beyond column j), in pitches. "end" is the hole where the wires from
+# Cmod A7 end: below the lanes of the wires for WeAct, above them for
+# GY-PCM5102, whose pins come in the other order.
 
 DACS = {
     "weact": {
         "title": "WeAct I2S Earphone Module V1",
         "subtitle": "PCM5100A; 28.0 x 18.2 mm",
         "short": "WeAct PCM5100A",
-        "row": 30,
+        "row": 9,
         "pins": ["WS", "DIN", "BCK", "MC", "/SD", "GND", "VCC"],
-        "ends": {"WS": "i", "DIN": "i", "BCK": "h"},
+        "end": "i",
         "body": (0.6, 0.6, 10.4),
         "exact": True,
         "power": "VCC",
         "nc": ["MC", "/SD"],
         "notes": ["WeAct: /SD and MC stay unconnected; the module pulls /SD up and MC down.",
-                  "Put the module in label side up, so that WS is the pin nearest to Cmod A7."],
+                  "Put the module in label side up, its jack toward the edge of the breadboard: "
+                  "WS goes in row 9 and VCC in row 15."],
     },
     "gy_pcm5102": {
         "title": "GY-PCM5102",
         "subtitle": "PCM5102A; outline approximate",
         "short": "GY-PCM5102",
-        "row": 31,
+        "row": 9,
         "pins": ["SCK", "BCK", "DIN", "LCK", "GND", "VIN"],
-        "ends": {"BCK": "g", "DIN": "h", "LCK": "i"},
+        "end": "g",
         "body": (1.0, 2.5, 8.6),
         "exact": False,
         "power": "VIN",
@@ -168,6 +178,15 @@ DACS = {
                   "off the holes."],
     },
 }
+
+# The wires from Cmod A7 to the modules leave the strips of DIP 17 to 24 by
+# hole j and run left in lanes over hole row h, so that holes i and j of the
+# GPIO strips stay free. A wire from a pin further right takes a lane
+# further up and goes further left, so that the wires do not cross on their
+# way; only SD of INMP441 crosses the lanes of the DAC and the regulator,
+# to reach the other side of the channel.
+
+LANES = {24: 11.75, 23: 11.95, 22: 12.15, 21: 12.35, 20: 12.55, 18: 12.75, 17: 12.95}
 
 
 class Svg:
@@ -242,6 +261,20 @@ def strip(svg, row, top, color):
     svg.rect(X(row) - 0.42 * P, Y(u0) - 0.42 * P, 0.84 * P, 4.84 * P, color, rx=5, opacity=0.22)
 
 
+def lane_wire(svg, dip_pin, row1, u1, color):
+    """From hole j of the strip of a DIP pin up to its lane, left along the
+    lane and into hole u1 of row row1."""
+    r0 = dip(dip_pin)[0]
+    lane = Y(LANES[dip_pin])
+    x0, y0 = xy(r0, "j")
+    x1, y1 = xy(row1, u1)
+    d = (f"M{x0:.1f},{y0:.1f} C{x0:.1f},{lane:.1f} {x0:.1f},{lane:.1f} {x0 - 0.5 * P:.1f},{lane:.1f} "
+         f"L{x1 + 0.5 * P:.1f},{lane:.1f} C{x1:.1f},{lane:.1f} {x1:.1f},{lane:.1f} {x1:.1f},{y1:.1f}")
+    svg.wire(d, color, 3)
+    wire_end(svg, r0, "j", color)
+    wire_end(svg, row1, u1, color)
+
+
 def draw(variant):
     dac = DACS[variant]
     svg = Svg()
@@ -250,19 +283,18 @@ def draw(variant):
 
     svg.text(40, 46, f"Breadboard layout: Cmod A7-35T, INMP441, {dac['short']} "
                      f"and the 3.3 V regulator", 26, "bold")
-    svg.text(40, 76, f"Board configuration {BOARD}, seen from above. The microphone, the DAC "
-                     "and the 3.3 V regulator of variant B go straight into the breadboard; "
-                     "TinyVGA and TM1638 connect as in the wiring diagrams.", 15,
-             fill=C["muted"])
+    svg.text(40, 76, f"Board configuration {BOARD}, seen from above. Cmod A7 is at the end of "
+                     "the breadboard, its USB plug off the end; the microphone, the DAC and the "
+                     "3.3 V regulator of variant B go into the free rows.", 15, fill=C["muted"])
     svg.text(40, 98, "Tinted holes are the strips in use: the five holes of a strip are "
                      "connected. A dot is a jumper wire in a hole.", 15, fill=C["muted"])
     legend = [("TM1638", C["TM"]), ("INMP441", C["MIC"]), ("DAC", C["DAC"]),
-              ("+3.3 V", C["3V3"]), ("GND", C["GND"])]
+              ("+3.3 V", C["3V3"]), ("GND", C["GND"]), ("+5 V (VU)", C["5V"])]
     x = 40
     for label, color in legend:
         svg.line(x, 128, x + 30, 128, color, 5)
         svg.text(x + 38, 133, label, 14)
-        x += 115
+        x += 125
     svg.rect(x, 121, 30, 14, C["5V"], rx=3, opacity=0.3)
     svg.text(x + 38, 133, "VU strip, about 5 V", 14)
 
@@ -287,27 +319,26 @@ def draw(variant):
         for u in (2, 15.1):
             svg.text(X(row), Y(u) + 4, str(row), 10, fill=C["muted"], anchor="middle", family=MONO)
     for col in "abcdefghij":
-        svg.text(X(ROWS) + 1.0 * P, Y(col) + 4, col, 11, fill=C["muted"], anchor="middle",
+        svg.text(X(1) - 0.8 * P, Y(col) + 4, col, 11, fill=C["muted"], anchor="middle",
                  family=MONO)
     for rail, name in RAILS.items():
         color = C["3V3"] if name.startswith("+") else C["GND"]
-        svg.text(X(ROWS) + 0.95 * P, Y(rail) + 4, "+" if name.startswith("+") else "−", 13,
+        svg.text(X(1) - 0.8 * P, Y(rail) + 4, "+" if name.startswith("+") else "−", 13,
                  "bold", color, "middle")
 
     # Tint the strips in use
 
-    tints = [(17, True, C["MIC"]), (19, True, C["MIC"]), (20, True, C["MIC"]),
-             (21, True, C["TM"]), (22, True, C["TM"]), (23, True, C["TM"])]
-    tints += [(24, True, C["GND"]),
-              (21, False, C["DAC"]), (22, False, C["DAC"]), (23, False, C["DAC"])]
+    tints = [(dip(25)[0], True, C["GND"]), (dip(24)[0], False, C["5V"])]
+    tints += [(dip(p)[0], False, C["DAC"]) for p in (21, 22, 23)]
+    tints += [(dip(p)[0], False, C["MIC"]) for p in (17, 18, 20)]
+    tints += [(dip(p)[0], False, C["TM"]) for p in (12, 13, 14)]
     for k, name in enumerate(REG_PINS):
         tints.append((REG_ROW + k, False, {"VIN": C["5V"], "GND": C["GND"],
                                            "VOUT": C["3V3"]}[name]))
+    tint_of = {"GND": C["GND"], "L/R": C["GND"], "VDD": C["3V3"]}
     for k in range(3):
-        tints.append((MIC_ROW + k, True, C["GND"] if MIC_TOP[k] == "L/R" else C["MIC"]))
-        bot = MIC_BOT[k]
-        tints.append((MIC_ROW + k, False, C["3V3"] if bot == "VDD" else
-                      C["GND"] if bot == "GND" else C["MIC"]))
+        tints.append((MIC_ROW + k, True, tint_of.get(MIC_TOP[k], C["MIC"])))
+        tints.append((MIC_ROW + k, False, tint_of.get(MIC_BOT[k], C["MIC"])))
     for k, name in enumerate(dac["pins"]):
         if name in dac["nc"]:
             continue
@@ -317,18 +348,21 @@ def draw(variant):
     for row, top, color in tints:
         strip(svg, row, top, color)
 
-    # Cmod A7
+    # Cmod A7, its USB plug off the end of the breadboard
 
-    cx0, cx1 = X(1) - 3.5 * P, X(24) + 0.9 * P
+    cx0, cx1 = X(CMOD_ROW) - 3.5 * P, X(ROWS) + 0.9 * P
     cy0, cy1 = Y(CMOD_TOP) - 0.5 * P, Y(CMOD_BOT) + 0.5 * P
-    svg.rect(cx0, cy0, cx1 - cx0, cy1 - cy0, C["board"], C["board_edge"], 2, 6)
     cmid = (U[CMOD_TOP] + U[CMOD_BOT]) / 2
+    svg.line(cx1 + 1.0 * P, Y(cmid), W - 10, Y(cmid), "#7d828c", 12)
+    svg.text(W - 14, Y(cmid) - 14, "USB cable", 12, "bold", C["muted"], "end")
+    svg.rect(cx0, cy0, cx1 - cx0, cy1 - cy0, C["board"], C["board_edge"], 2, 6)
     svg.rect(cx1 - 6, Y(cmid) - 0.95 * P, 1.1 * P, 1.9 * P, "#c9ccd2", "#7d828c", 1.5, 3)
     svg.text(cx1 + 0.45 * P - 6, Y(cmid) + 4, "USB", 10, "bold", anchor="middle")
-    svg.rect(X(3), Y(cmid - 1.2), 3.6 * P, 1.7 * P, "#202020", "#000000", 1, 3)
-    svg.text(X(3) + 1.8 * P, Y(cmid - 0.35) + 4, "XC7A35T", 11, fill="#d8d8d8", anchor="middle")
-    svg.text(X(13), Y(cmid) + 2, "Cmod A7-35T", 22, "bold", "#ffffff", "middle")
-    svg.text(X(13), Y(cmid) + 20, "pins 48..25 in column c, 1..24 in column g", 10,
+    svg.rect(X(CMOD_ROW + 2), Y(cmid - 1.2), 3.6 * P, 1.7 * P, "#202020", "#000000", 1, 3)
+    svg.text(X(CMOD_ROW + 2) + 1.8 * P, Y(cmid - 0.35) + 4, "XC7A35T", 11, fill="#d8d8d8",
+             anchor="middle")
+    svg.text(X(CMOD_ROW + 12), Y(cmid) + 2, "Cmod A7-35T", 22, "bold", "#ffffff", "middle")
+    svg.text(X(CMOD_ROW + 12), Y(cmid) + 20, "pins 48..25 in column c, 1..24 in column g", 10,
              fill="#c7d3e6", anchor="middle")
     for pin in range(1, 49):
         row, col = dip(pin)
@@ -343,52 +377,83 @@ def draw(variant):
             else:
                 svg.text(x + 3.5, y - 20, CMOD_NAMES[pin], 9, "bold", color, "start", MONO, rotate=-90)
 
-    # The GPIO pins of the labs, in the order of the DIP pins; nothing is
-    # connected to them. Pins 48 to 33 run left to right, so the labels of
-    # the top row count down.
+    # The GPIO pins of the labs; nothing is connected to them. They start at
+    # DIP 48 and run down the top row, then go on from DIP 1.
 
-    for first, last, label in ((1, 14, "GPIO 0 to 13"), (17, 20, "GPIO 14 to 17"),
-                               (48, 33, "GPIO 33 to 18")):
+    for first, last, label in ((48, 26, "GPIO 0 to 22"), (1, 11, "GPIO 23 to 33")):
         (x0, y0), (x1, _) = xy(*dip(first)), xy(*dip(last))
         gy = y0 + 31 if dip(first)[1] == CMOD_TOP else y0 - 22
         svg.text((x0 + x1) / 2, gy, label, 9, "bold", "#9fb2cf", "middle", MONO)
 
-    # Pmod JA and TinyVGA, off the end of the breadboard
+    # Pmod JA and TinyVGA, which lies over the breadboard
 
     svg.rect(cx0 - 0.9 * P, Y(cmid - 2.5), 1.0 * P, 5 * P, "#2a2a2a", "#000000", 1, 3)
     svg.text(cx0 - 0.4 * P, Y(cmid + 2.5) + 16, "JA", 11, "bold", anchor="middle")
     tv1 = cx0 - 0.9 * P
     tv0 = tv1 - 190
-    svg.rect(tv0, Y(cmid) - 75, 190, 150, "#2b2b2b", "#000000", 1.5, 6)
-    svg.rect(tv0 - 28, Y(cmid) - 40, 34, 80, "#4a4f57", "#000000", 1, 4)
-    svg.text(tv0 + 95, Y(cmid) - 42, "TinyVGA", 17, "bold", "#ffffff", "middle")
-    for k, s in enumerate(("in Pmod JA;", "in variant A", "through Pmod TPH2")):
-        svg.text(tv0 + 95, Y(cmid) - 18 + 18 * k, s, 12, fill="#d0d0d0", anchor="middle")
+    svg.rect(tv0, Y(cmid) - 75, 190, 150, "#2b2b2b", "#000000", 1.5, 6, opacity=0.93)
+    svg.rect(tv0 + 20, Y(cmid) - 40, 80, 34, "#4a4f57", "#000000", 1, 4)
+    svg.text(tv0 + 60, Y(cmid) - 18, "VGA, up", 11, "bold", "#ffffff", "middle")
+    svg.text(tv0 + 95, Y(cmid) - 52, "TinyVGA", 17, "bold", "#ffffff", "middle")
+    for k, s in enumerate(("over the breadboard;", "in variant A", "through Pmod TPH2")):
+        svg.text(tv0 + 95, Y(cmid) + 18 + 18 * k, s, 12, fill="#d0d0d0", anchor="middle")
 
-    # TM1638, off the breadboard above it, and its wires
+    # TM1638, off the breadboard below it, and its wires
 
-    tm_y = Y("TO") - 6.6 * P
-    tm_pins = [("DIO", 21), ("CLK", 22), ("STB", 23), ("GND", 24), ("VCC", 25)]
-    svg.rect(X(19), tm_y - 3.6 * P, X(34) - X(19), 3.6 * P, "#f3f1ea", "#8a8577", 1.5, 6)
-    svg.rect(X(19), tm_y - 3.6 * P, 10, 3.6 * P, C["TM"], rx=3)
-    svg.text(X(19) + 22, tm_y - 2.55 * P, "TM1638 LED&KEY, off the breadboard", 14, "bold")
-    svg.text(X(19) + 22, tm_y - 1.75 * P, "female-to-male wires to its 5-pin header", 11,
-             fill=C["muted"])
+    tm_y = Y("BO") + 3.4 * P
+    first = dip(12)[0] - 2
+    tm_pins = [("VCC", first), ("GND", first + 1), ("STB", first + 2), ("CLK", first + 3),
+               ("DIO", first + 4)]
+    tx0, tx1 = X(first - 9), X(first + 12)
+    svg.rect(tx0, tm_y, tx1 - tx0, 3.6 * P, "#f3f1ea", "#8a8577", 1.5, 6)
+    svg.rect(tx0, tm_y + 3.6 * P - 10, tx1 - tx0, 10, C["TM"], rx=3)
+    svg.text(tx0 + 16, tm_y + 1.35 * P, "TM1638 LED&KEY,", 14, "bold")
+    svg.text(tx0 + 16, tm_y + 2.15 * P, "off the breadboard, on", 11, fill=C["muted"])
+    svg.text(tx0 + 16, tm_y + 2.75 * P, "female-to-male wires", 11, fill=C["muted"])
     for name, row in tm_pins:
         svg.circle(X(row), tm_y, 5, "#f2c14e", "#5c4a12", 1)
-        svg.text(X(row), tm_y - 10, name, 9, "bold", anchor="middle", family=MONO)
-    for name, row in tm_pins[:4]:
-        color = C["GND"] if name == "GND" else C["TM"]
-        svg.wire(f"M{X(row):.1f},{Y('a'):.1f} L{X(row):.1f},{tm_y:.1f}", color)
-        wire_end(svg, row, "a", color)
-    svg.wire(f"M{X(25):.1f},{Y('TO'):.1f} L{X(25):.1f},{tm_y:.1f}", C["3V3"])
-    wire_end(svg, 25, "TO", C["3V3"])
+        svg.text(X(row), tm_y + 18, name, 9, "bold", anchor="middle", family=MONO)
+    for (name, row), dip_pin in zip(tm_pins[2:], (12, 13, 14)):
+        svg.wire(f"M{X(row):.1f},{Y('j'):.1f} L{X(row):.1f},{tm_y:.1f}", C["TM"])
+        wire_end(svg, row, "j", C["TM"])
+    for (name, row), rail, color in ((tm_pins[0], "BI", C["3V3"]), (tm_pins[1], "BO", C["GND"])):
+        svg.wire(f"M{X(row):.1f},{Y(rail):.1f} L{X(row):.1f},{tm_y:.1f}", color)
+        wire_end(svg, row, rail, color)
 
     # DIP 25, GND, to the top GND rail
 
-    svg.wire(path([(24, "c"), (26, "TI")]), C["GND"])
-    wire_end(svg, 24, "c", C["GND"])
-    wire_end(svg, 26, "TI", C["GND"])
+    r25 = dip(25)[0]
+    svg.wire(path([(r25, "a"), (r25, "TI")]), C["GND"])
+    wire_end(svg, r25, "a", C["GND"])
+    wire_end(svg, r25, "TI", C["GND"])
+
+    # The regulator, plugged in by its header in column j. Its body hangs
+    # over the bottom rails, so GND and VOUT go to the top rails.
+
+    reg_row = {name: REG_ROW + k for k, name in enumerate(REG_PINS)}
+    r_first, r_last = REG_ROW, REG_ROW + len(REG_PINS) - 1
+    rx0, rx1 = X(r_first - REG_MARGIN), X(r_last + REG_MARGIN)
+    ry0 = Y("j") - 0.5 * P
+    ry1 = ry0 + REG_DEPTH * P
+    svg.rect(rx0, ry0, rx1 - rx0, ry1 - ry0, "#dde7f3", "#4f6f99", 1.5, 4, opacity=0.95,
+             dash="7 4")
+    chip_w, chip_h = 2.3 * P, 1.45 * P
+    chip_x, chip_y = (rx0 + rx1) / 2 - chip_w / 2, ry1 - chip_h - 0.35 * P
+    svg.rect(chip_x + 0.3 * P, chip_y - 0.45 * P, chip_w - 0.6 * P, 0.5 * P, "#8d939c", rx=1)
+    svg.rect(chip_x, chip_y, chip_w, chip_h, "#262626", "#000000", 1, 2)
+    svg.text((rx0 + rx1) / 2, chip_y + chip_h / 2 + 3, "AMS1117", 8, "bold", "#d8d8d8",
+             "middle")
+    for name, row in reg_row.items():
+        x, y = xy(row, "j")
+        svg.circle(x, y, 5.5, "#f2c14e", "#5c4a12", 1)
+        svg.text(x + 3.5, y + 14, name, 10, "bold", anchor="end", family=MONO, rotate=-90)
+    for name, rail, color in (("GND", "TI", C["GND"]), ("VOUT", "TO", C["3V3"])):
+        r = reg_row[name]
+        svg.wire(path([(r, "f"), (r, rail)]), color)
+        wire_end(svg, r, "f", color)
+        wire_end(svg, r, rail, color)
+    svg.text(rx1, ry1 + 18, "3.3 V regulator, AMS1117-3.3 module", 12, "bold", anchor="end")
+    svg.text(rx1, ry1 + 34, "outline approximate", 11, fill=C["muted"], anchor="end")
 
     # The DAC module, plugged in by its header in column j
 
@@ -413,75 +478,18 @@ def draw(variant):
         if name in dac["nc"]:
             svg.text(x, Y("j") + 2.25 * P, "n.c.", 9, fill=C["muted"], anchor="middle")
 
-    # Cmod A7 to the DAC. The wires run in three lanes, BCK highest, between
-    # the edge of Cmod A7 and the wires of the regulator; each ends in the
-    # hole of its DAC strip that keeps them from crossing.
-
-    pin_row = {name: row0 + k for k, name in enumerate(dac["pins"])}
-    lck = "WS" if "WS" in pin_row else "LCK"
-    for dip_pin, name, start, lane in ((21, "BCK", "h", 11.7), (22, "DIN", "i", 12.1),
-                                       (23, lck, "i", 12.5)):
-        r1, u1 = pin_row[name], U[dac["ends"][name]]
-        a, b = dip_pin + 1.3, r1 - 1.4  # the straight part along the lane
-        d = path([(dip_pin, start), (dip_pin + 0.3, lane), (dip_pin + 0.8, lane), (a, lane),
-                  (a + (b - a) / 3, lane), (b - (b - a) / 3, lane), (b, lane),
-                  (r1 - 0.6, lane), (r1, lane + 0.3 * (u1 - lane)), (r1, u1)])
-        svg.wire(d, C["DAC"])
-        wire_end(svg, dip_pin, start, C["DAC"])
-        wire_end(svg, r1, u1, C["DAC"])
-
     # DAC power, and SCK of GY-PCM5102, to the top rails: the module covers
     # the bottom rails next to it.
 
-    r_gnd, r_pwr = pin_row["GND"], pin_row[dac["power"]]
-    svg.wire(path([(r_gnd, "f"), (r_gnd, "TI")]), C["GND"])
-    wire_end(svg, r_gnd, "f", C["GND"])
-    wire_end(svg, r_gnd, "TI", C["GND"])
-    d = path([(r_pwr, "f"), (r_pwr + 0.15, 4.0), (r_pwr + 1.1, 1.6), (r_pwr + 2, "TO")])
-    svg.wire(d, C["3V3"])
-    wire_end(svg, r_pwr, "f", C["3V3"])
-    wire_end(svg, r_pwr + 2, "TO", C["3V3"])
+    pin_row = {name: row0 + k for k, name in enumerate(dac["pins"])}
+    power = [("GND", "TI", C["GND"]), (dac["power"], "TO", C["3V3"])]
     if "SCK" in pin_row:
-        r_sck = pin_row["SCK"]
-        svg.wire(path([(r_sck, "f"), (r_sck + 1, "TI")]), C["GND"])
-        wire_end(svg, r_sck, "f", C["GND"])
-        wire_end(svg, r_sck + 1, "TI", C["GND"])
-
-    # The regulator, plugged in by its header in column j, VIN in the strip
-    # of DIP 24. Its body hangs over the bottom rails, so GND goes to the GND
-    # rail before it and VOUT to the + rail after it, both under the DAC wires.
-
-    reg_row = {name: REG_ROW + k for k, name in enumerate(REG_PINS)}
-    r_first, r_last = REG_ROW, REG_ROW + len(REG_PINS) - 1
-    rx0, rx1 = X(r_first - REG_MARGIN), X(r_last + REG_MARGIN)
-    ry0 = Y("j") - 0.5 * P
-    ry1 = ry0 + REG_DEPTH * P
-    svg.rect(rx0, ry0, rx1 - rx0, ry1 - ry0, "#dde7f3", "#4f6f99", 1.5, 4, opacity=0.95,
-             dash="7 4")
-    chip_w, chip_h = 2.3 * P, 1.45 * P
-    chip_x, chip_y = (rx0 + rx1) / 2 - chip_w / 2, ry1 - chip_h - 0.35 * P
-    svg.rect(chip_x + 0.3 * P, chip_y - 0.45 * P, chip_w - 0.6 * P, 0.5 * P, "#8d939c", rx=1)
-    svg.rect(chip_x, chip_y, chip_w, chip_h, "#262626", "#000000", 1, 2)
-    svg.text((rx0 + rx1) / 2, chip_y + chip_h / 2 + 3, "AMS1117", 8, "bold", "#d8d8d8",
-             "middle")
-    for name, row in reg_row.items():
-        x, y = xy(row, "j")
-        svg.circle(x, y, 5.5, "#f2c14e", "#5c4a12", 1)
-        svg.text(x + 3.5, y + 14, name, 10, "bold", anchor="end", family=MONO, rotate=-90)
-
-    r = reg_row["GND"]
-    svg.wire(path([(r, "i"), (r - 0.6, 13.15), (r - 1.1, 13.15), (r - 1.6, 13.15),
-                   (r - 2.4, 13.15), (r - 3.0, 14.0), (r - 3.0, "BO")]), C["GND"])
-    wire_end(svg, r, "i", C["GND"])
-    wire_end(svg, r - 3, "BO", C["GND"])
-    r = reg_row["VOUT"]
-    svg.wire(path([(r, "i"), (r + 1.5, 13.05), (r + 2.0, 13.8), (r + 2.0, "BI")]), C["3V3"])
-    wire_end(svg, r, "i", C["3V3"])
-    wire_end(svg, r + 2, "BI", C["3V3"])
-
-    svg.text(rx1, ry1 + 18, "3.3 V regulator, AMS1117-3.3 module", 12, "bold", anchor="end")
-    svg.text(rx1, ry1 + 34, "VIN in the strip of DIP 24, VU; outline approximate", 11,
-             fill=C["muted"], anchor="end")
+        power.append(("SCK", "TI", C["GND"]))
+    for name, rail, color in power:
+        r = pin_row[name]
+        svg.wire(path([(r, "f"), (r, rail)]), color)
+        wire_end(svg, r, "f", color)
+        wire_end(svg, r, rail, color)
 
     # INMP441, across the channel
 
@@ -493,82 +501,89 @@ def draw(variant):
             svg.circle(x, y, 5.5, "#f2c14e", "#5c4a12", 1)
             svg.text(x, y + ly * P, names[k], 9, "bold", "#ffffff", "middle", MONO)
     svg.text(mx, my + 4, "INMP441", 10, "bold", "#d8d8d8", "middle")
-    svg.text(mx + 3.1 * P, my - 0.2 * P, "INMP441,", 12, "bold")
-    svg.text(mx + 3.1 * P, my + 0.5 * P, "label side up", 11, fill=C["muted"])
+    svg.text(X(MIC_ROW + 5.4), Y(CHANNEL) - 3, "INMP441,", 11, "bold")
+    svg.text(X(MIC_ROW + 5.4), Y(CHANNEL) + 11, "label side up", 11, fill=C["muted"])
 
     # INMP441 power and L/R
 
-    r_sck, r_ws, r_lr = MIC_ROW, MIC_ROW + 1, MIC_ROW + 2
-    svg.wire(path([(r_lr, "b"), (r_lr + 1, "TI")]), C["GND"])
-    wire_end(svg, r_lr, "b", C["GND"])
-    wire_end(svg, r_lr + 1, "TI", C["GND"])
-    svg.wire(path([(r_ws, "j"), (r_ws, "BI")]), C["3V3"])
-    wire_end(svg, r_ws, "j", C["3V3"])
-    wire_end(svg, r_ws, "BI", C["3V3"])
-    svg.wire(path([(r_lr, "j"), (r_lr + 3, "BO")]), C["GND"])
-    wire_end(svg, r_lr, "j", C["GND"])
-    wire_end(svg, r_lr + 3, "BO", C["GND"])
+    top = {name: MIC_ROW + k for k, name in enumerate(MIC_TOP)}
+    bot = {name: MIC_ROW + k for k, name in enumerate(MIC_BOT)}
+    for name, rail, color in (("GND", "TI", C["GND"]), ("VDD", "TO", C["3V3"])):
+        svg.wire(path([(top[name], "a"), (top[name], rail)]), color)
+        wire_end(svg, top[name], "a", color)
+        wire_end(svg, top[name], rail, color)
+    svg.wire(path([(bot["L/R"], "j"), (bot["L/R"], "BO")]), C["GND"])
+    wire_end(svg, bot["L/R"], "j", C["GND"])
+    wire_end(svg, bot["L/R"], "BO", C["GND"])
 
-    # Cmod A7 to INMP441: curves over the TM1638 wires; SD comes down to
-    # the other side of the channel just before the microphone.
+    # Cmod A7 to the modules, along the lanes. SD goes up through the
+    # channel just past the microphone, over the other lanes, and back to
+    # its strip on the far side.
 
-    for dip_pin, row1, height in ((29, r_sck, -2.0), (30, r_ws, -3.0)):
-        r0 = dip(dip_pin)[0]
-        d = path([(r0, "a"), (r0 - 0.3, height - 1.5), (row1 + 0.9, height - 1.0), (row1, "a")])
-        svg.wire(d, C["MIC"])
-        wire_end(svg, r0, "a", C["MIC"])
-        wire_end(svg, row1, "a", C["MIC"])
-    r0 = dip(32)[0]
-    sd_x = MIC_ROW - 2.5
-    d = path([(r0, "a"), (r0 - 0.3, -6.0), (sd_x, -6.0), (sd_x, 2.0),
-              (sd_x, 6.0), (sd_x, 9.5), (sd_x + 0.6, 11.2),
-              (sd_x + 1.2, 12.6), (MIC_ROW - 0.6, 12.4), (MIC_ROW, "h")])
-    svg.wire(d, C["MIC"])
-    wire_end(svg, r0, "a", C["MIC"])
-    wire_end(svg, MIC_ROW, "h", C["MIC"])
+    dac_end = dac["end"]
+    lck = "WS" if "WS" in pin_row else "LCK"
+    lane_wire(svg, 24, reg_row["VIN"], "i", C["5V"])
+    for dip_pin, name in ((23, lck), (22, "DIN"), (21, "BCK")):
+        lane_wire(svg, dip_pin, pin_row[name], dac_end, C["DAC"])
+    lane_wire(svg, 18, bot["WS"], "i", C["MIC"])
+    lane_wire(svg, 17, bot["SCK"], "i", C["MIC"])
+
+    r0 = dip(20)[0]
+    lane = LANES[20]
+    sd_row = top["SD"]
+    turn = MIC_ROW + 4.6
+    d = path([(r0, "j"), (r0, lane), (r0, lane), (r0 - 0.5, lane)])
+    d += (f" L{X(turn + 0.6):.1f},{Y(lane):.1f}"
+          f" C{X(turn):.1f},{Y(lane):.1f} {X(turn):.1f},{Y('b'):.1f} {X(turn - 1.0):.1f},{Y('b'):.1f}"
+          f" L{X(sd_row):.1f},{Y('b'):.1f}")
+    svg.wire(d, C["MIC"], 3)
+    wire_end(svg, r0, "j", C["MIC"])
+    wire_end(svg, sd_row, "b", C["MIC"])
 
     # Join the + rails and the GND rails at the far end of the breadboard
 
-    jr = ROWS - 1
-    d = path([(jr, "TO"), (jr + 3.2, 3.0), (jr + 3.2, 13.0), (jr, "BI")])
+    d = path([(1, "TO"), (1 - 3.2, 3.0), (1 - 3.2, 13.0), (1, "BI")])
     svg.wire(d, C["3V3"])
-    wire_end(svg, jr, "TO", C["3V3"])
-    wire_end(svg, jr, "BI", C["3V3"])
-    d = path([(jr - 1, "TI"), (jr + 4.6, 2.0), (jr + 4.6, 15.0), (jr - 1, "BO")])
+    wire_end(svg, 1, "TO", C["3V3"])
+    wire_end(svg, 1, "BI", C["3V3"])
+    d = path([(2, "TI"), (2 - 4.6, 2.0), (2 - 4.6, 15.0), (2, "BO")])
     svg.wire(d, C["GND"])
-    wire_end(svg, jr - 1, "TI", C["GND"])
-    wire_end(svg, jr - 1, "BO", C["GND"])
+    wire_end(svg, 2, "TI", C["GND"])
+    wire_end(svg, 2, "BO", C["GND"])
 
     # Labels of the rails
 
-    svg.text(X(1) - 1.0 * P, Y("TO") - 0.75 * P, "+3.3 V from the regulator (variant A: from TPH2)",
-             11, "bold", C["3V3"])
-    svg.text(X(1) - 1.0 * P, Y("BO") + 1.0 * P + 4, "Both + rails and both GND rails are joined "
-             "at the far end.", 11, "bold", C["GND"])
+    svg.text(X(1) - 1.0 * P, Y("TO") - 0.75 * P, "+3.3 V from the regulator (variant A: from TPH2). "
+             "Both + rails and both GND rails are joined at this end.", 11, "bold", C["3V3"])
 
     # Notes
 
-    notes = ["INMP441 goes across the center channel like a 6-pin DIP chip, SCK, WS, L/R on the "
-             "side of DIP 25 to 48. L/R goes to GND here, so DIP 31 stays free.",
+    notes = [f"Cmod A7 goes in rows {CMOD_ROW} to 63, DIP 25 to 48 in column c and 1 to 24 in "
+             "column g, so that DIP 24 and 25, VU and GND, are in row 63, the last one: the USB "
+             "plug is off the end of the breadboard.",
+             "TinyVGA lies over rows 28 to 39, its VGA socket facing up; in variant A, Pmod TPH2 "
+             "between JA and TinyVGA takes about 8 rows more. Keep rows 23 to 39 free of modules.",
+             "The wires from DIP 17 to 24 leave their strips by hole j and run left over hole row h "
+             "to the modules: holes i and j of the GPIO strips stay free. SD crosses the channel "
+             "past the microphone.",
+             "TM1638 is off the breadboard, on female-to-male wires: STB, CLK and DIO from hole j "
+             "of rows 51 to 53, VCC and GND from the bottom rails.",
+             "INMP441 goes across the center channel like a 6-pin DIP chip: L/R, WS, SCK in "
+             "column f, GND, VDD, SD in column e. L/R goes to GND here, so DIP 19 stays free.",
              "The DAC goes in by its header in column j; its body and jack hang over the bottom "
              "rails and the edge of the breadboard, so it takes its power from the top rails.",
-             "The regulator of variant B is a 3-pin AMS1117-3.3 module, as Amazon B08CDMZMDN. It "
-             "goes in by its header in column j, rows 24 to 26, so VIN is in the strip of DIP 24, "
-             "VU, and no wire carries 5 V.",
-             "Its pin order, VIN, GND, VOUT from the Cmod A7 end, and its outline come from the "
-             "listing: check the labels. If VIN is at the other end, connect the module by wires "
-             "as in the variant B wiring diagram.",
-             "Variant A, Pmod TPH2: leave the regulator out and wire test point 6 of TPH2 to the "
-             "+ rail; DIP 24, VU, then stays unconnected.",
-             "Keep the middle of rows 25 to 29 free for the USB plug. "
-             "Unplug USB before changing the wiring.",
-             "DIP 1 to 14, 17 to 20 and 33 to 48 are the GPIO pins of the labs, gpio[0] to "
-             "gpio[33]; nothing is connected to them here."] + dac["notes"]
-    ny = 1018
+             "The regulator of variant B is a 3-pin AMS1117-3.3 module, as Amazon B08CDMZMDN, in "
+             "column j, rows 4 to 6, away from Cmod A7: the one red wire brings it 5 V from DIP 24, "
+             "VU. Its pin order and outline come from the listing: check the labels.",
+             "Variant A, Pmod TPH2: leave the regulator and its 5 V wire out, and wire test point 6 "
+             "of TPH2 to the + rail. Unplug USB before changing the wiring.",
+             "DIP 48 to 26 and 1 to 11 are the GPIO pins of the labs, gpio[0] to gpio[33]; nothing "
+             "is connected to them here."] + dac["notes"]
+    ny = tm_y + 3.6 * P + 60
     for k, s in enumerate(notes):
         svg.text(40, ny + 20 * k, s, 13, fill=C["muted"])
 
-    return svg.svg(ny + 20 * len(notes) + 8)
+    return svg.svg(int(ny + 20 * len(notes) + 8))
 
 
 def main():

@@ -53,15 +53,15 @@ module tb;
     wire        uart_rxd_out;
 
     wire        pio1,  pio2,  pio3,  pio4,  pio5,  pio6,  pio7,         // GPIO
-                pio8,  pio9,  pio10, pio11, pio12, pio13, pio14,
-                pio17, pio18, pio19, pio20,
+                pio8,  pio9,  pio10, pio11,
+                pio26, pio27, pio28, pio29, pio30, pio31, pio32,
                 pio33, pio34, pio35, pio36, pio37, pio38, pio39, pio40,
                 pio41, pio42, pio43, pio44, pio45, pio46, pio47, pio48;
+    wire        pio12, pio13;          // TM1638 STB, CLK, or GPIO without TM1638
+    tri1        pio14;                 // TM1638 DIO, pulled up on the module, or GPIO
+    wire        pio17, pio18, pio19;   // INMP441 SCK, WS, L/R
+    logic       pio20 = 1'b0;          // INMP441 SD
     wire        pio21, pio22, pio23;   // DAC BCK, DIN, LCK
-    wire        pio26, pio27;          // TM1638 STB, CLK
-    tri1        pio28;                 // TM1638 DIO, pulled up on the module
-    wire        pio29, pio30, pio31;   // INMP441 SCK, WS, L/R
-    logic       pio32 = 1'b0;          // INMP441 SD
 
     always # (sysclk_period / 2) sysclk = ~ sysclk;
 
@@ -101,13 +101,13 @@ module tb;
     // It reads WS 1 ns after the falling edge of SCK: both change on the
     // same clock edge of the FPGA.
 
-    always @ (negedge pio29)
+    always @ (negedge pio17)
     begin
         # 1;
 
-        if (pio30 != mic_ws_seen)
+        if (pio18 != mic_ws_seen)
         begin
-            mic_ws_seen = pio30;
+            mic_ws_seen = pio18;
             mic_bit     = 0;
         end
         else
@@ -115,7 +115,7 @@ module tb;
             mic_bit ++;
         end
 
-        pio32 <= pio30 == pio31 && mic_bit >= 1 && mic_bit <= 24 ?
+        pio20 <= pio18 == pio19 && mic_bit >= 1 && mic_bit <= 24 ?
                      mic_sample [24 - mic_bit] : 1'b0;
     end
 
@@ -189,7 +189,7 @@ module tb;
             n_frames ++;
         end
 
-    always @ (posedge pio30)
+    always @ (posedge pio18)
         if (! dut.rst)
         begin
             if (last_mic_ws > 0 && ! near ($realtime - last_mic_ws, clocks_per_mic * clk_period))
@@ -326,21 +326,31 @@ module tb;
 
         // Pins that do not depend on time
 
-        // lab_top.sv drives a pattern on its GPIO; gpio [0] is DIP 1,
-        // gpio [14] DIP 17 and gpio [18] DIP 33
+        // lab_top.sv drives a pattern on its GPIO; gpio [0] is DIP 48,
+        // gpio [22] DIP 26, gpio [23] DIP 1 and, without TM1638,
+        // gpio [34] DIP 12
 
         begin
-            logic [33:0] gpio_pins;
+            logic [36:0] gpio_pins;
 
-            gpio_pins = { pio48, pio47, pio46, pio45, pio44, pio43, pio42, pio41,
-                          pio40, pio39, pio38, pio37, pio36, pio35, pio34, pio33,
-                          pio20, pio19, pio18, pio17,
-                          pio14, pio13, pio12, pio11, pio10, pio9,  pio8,  pio7,
-                          pio6,  pio5,  pio4,  pio3,  pio2,  pio1 };
+            gpio_pins = { pio14, pio13, pio12,
+                          pio11, pio10, pio9,  pio8,  pio7,  pio6,  pio5,  pio4,
+                          pio3,  pio2,  pio1,
+                          pio26, pio27, pio28, pio29, pio30, pio31, pio32, pio33,
+                          pio34, pio35, pio36, pio37, pio38, pio39, pio40, pio41,
+                          pio42, pio43, pio44, pio45, pio46, pio47, pio48 };
 
-            if (gpio_pins !== gpio_pattern [33:0])
-                fail ($sformatf ("GPIO pins DIP 48 to 1 are %b, expected %b",
-                                 gpio_pins, gpio_pattern [33:0]));
+            if (with_tm1638)
+            begin
+                if (gpio_pins [33:0] !== gpio_pattern [33:0])
+                    fail ($sformatf ("GPIO pins DIP 11 to 1, 26 to 48 are %b, expected %b",
+                                     gpio_pins [33:0], gpio_pattern [33:0]));
+            end
+            else if (gpio_pins !== gpio_pattern [36:0])
+            begin
+                fail ($sformatf ("GPIO pins DIP 14 to 1, 26 to 48 are %b, expected %b",
+                                 gpio_pins, gpio_pattern [36:0]));
+            end
         end
 
         uart_txd_in = 1'b0;
@@ -351,17 +361,8 @@ module tb;
 
         uart_txd_in = 1'b1;
 
-        if (pio31 !== 1'b0)
+        if (pio19 !== 1'b0)
             fail ("INMP441 L/R must select the left channel");
-
-        if (! with_tm1638)
-        begin
-            if (pio26 !== 1'b1 || pio27 !== 1'b1)
-                fail ("TM1638 STB and CLK must stay high without TM1638");
-
-            if ($sformatf ("%v", pio28) != "Pu1")
-                fail ($sformatf ("DIO must not be driven without TM1638, it is %v", pio28));
-        end
 
         check_rgb (0);
 
@@ -442,7 +443,7 @@ module tb;
         if (with_tm1638)
         begin
             fork : tm1638_activity
-                @ (negedge pio26);
+                @ (negedge pio12);
                 # 2_000_000 fail ("TM1638 STB never went low");
             join_any
 

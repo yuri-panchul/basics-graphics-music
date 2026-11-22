@@ -11,11 +11,15 @@
 //
 //   FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE: no TM1638. The two
 //       buttons and the two LEDs of Cmod A7 are the keys and the LEDs of the
-//       labs, and there is no seven-segment display. The three configurations
+//       labs, and there is no seven-segment display, and DIP 12 to 14, the
+//       pins of TM1638, are three more GPIO pins. The three configurations
 //       with _no_tm1638 in the name define it.
 
 `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
-    `undef INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `undef  INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+    `define CMOD_A7_W_GPIO        37
+`else
+    `define CMOD_A7_W_GPIO        34
 `endif
 
 `ifdef CMOD_A7_NO_PLL_SCREEN_WIDTH
@@ -35,8 +39,8 @@
 //   * INMP441 I2S microphone;
 //   * I2S DAC module: WeAct I2S Earphone Module (PCM5100A)
 //     or the usual purple GY-PCM5102 module (PCM5102A);
-//   * 34 GPIO pins of the labs: every digital DIP pin that the modules
-//     above do not use.
+//   * 34 GPIO pins of the labs, 37 without TM1638: every digital DIP pin
+//     that the modules above do not use.
 //
 // board_specific.xdc is Digilent's Cmod-A7-Master.xdc with only the used
 // lines uncommented. It keeps Digilent's port names: sysclk, btn, led,
@@ -86,7 +90,7 @@ module board_specific_top
               w_sw          = 0,
               w_led         = 2,
               w_digit       = 0,
-              w_gpio        = 34,  // DIP pins 1-14, 17-20, 33-48
+              w_gpio        = `CMOD_A7_W_GPIO,  // 34, or 37 without TM1638
 
               screen_width  = `CMOD_A7_SCREEN_WIDTH,
               screen_height = 480,
@@ -126,28 +130,27 @@ module board_specific_top
     inout                pio9,
     inout                pio10,
     inout                pio11,
-    inout                pio12,
-    inout                pio13,
+
+    inout                pio12,         // TM1638 STB, CLK and DIO,
+    inout                pio13,         // or GPIO pins without TM1638
     inout                pio14,
 
-    inout                pio17,
-    inout                pio18,
-    inout                pio19,
-    inout                pio20,
+    output               pio17,         // INMP441 SCK, WS, L/R and SD
+    output               pio18,
+    output               pio19,
+    input                pio20,
 
-    output               pio21,
+    output               pio21,         // DAC BCK, DIN and LCK
     output               pio22,
     output               pio23,
 
-    output               pio26,
-    output               pio27,
+    inout                pio26,
+    inout                pio27,
     inout                pio28,
-
-    output               pio29,
-    output               pio30,
-    output               pio31,
-    input                pio32,
-
+    inout                pio29,
+    inout                pio30,
+    inout                pio31,
+    inout                pio32,
     inout                pio33,
     inout                pio34,
     inout                pio35,
@@ -217,35 +220,40 @@ module board_specific_top
     assign ja [7] = VGA_HS;     // Pmod pin 10
 
     // The GPIO pins of the labs are all the digital DIP pins that TM1638,
-    // the microphone and the DAC do not use, in the order of the DIP pins:
+    // the microphone and the DAC do not use. They start at DIP 48 and run
+    // down the side of DIP 48 to 26, then go on from DIP 1:
     //
-    //     gpio [13: 0]  DIP  1 to 14
-    //     gpio [17:14]  DIP 17 to 20
-    //     gpio [33:18]  DIP 33 to 48
+    //     gpio [22: 0]  DIP 48 down to 26: gpio [0] is DIP 48
+    //     gpio [33:23]  DIP  1 to 11:      gpio [23] is DIP 1
+    //     gpio [36:34]  DIP 12 to 14, only without TM1638
     //
     // DIP 15 and 16 are analog inputs, and DIP 24 and 25 are VU and GND.
     // See the gpio port of lab_top below. The GPIO pins are inouts, as on
     // the other boards: a lab drives the ones it uses as outputs and reads
     // the rest.
 
-    // The DAC is on the DIP pins next to VU, pin 24
+    // All the modules are on the side of DIP 1 to 24, near its end with
+    // VU, pin 24: TM1638 on DIP 12 to 14, the microphone on 17 to 20 and
+    // the DAC on 21 to 23. The other side, DIP 26 to 48, is all GPIO.
 
     assign pio21  = DAC_BCK;    // DIP 21  BCK
     assign pio22  = DAC_DIN;    // DIP 22  DIN
     assign pio23  = DAC_LCK;    // DIP 23  LCK on GY-PCM5102, WS on WeAct
 
-    // TM1638 and the microphone are on the DIP pins next to GND, pin 25.
-    // DIP pins 25 to 28 are GND, STB, CLK and DIO, the order of the pins
-    // GND, STB, CLK and DIO on the TM1638 header. DIP 28, pio28, is DIO,
-    // an inout connected in the tm1638_board_controller instance below.
+    assign pio17  = MIC_SCK;    // DIP 17  INMP441 SCK
+    assign pio18  = MIC_WS;     // DIP 18  INMP441 WS
+    assign pio19  = MIC_LR;     // DIP 19  INMP441 L/R
+    assign MIC_SD = pio20;      // DIP 20  INMP441 SD
 
-    assign pio26  = TM_STB;     // DIP 26  TM1638 STB
-    assign pio27  = TM_CLK;     // DIP 27  TM1638 CLK
+    // DIP 12 to 14 are STB, CLK and DIO, the order of these pins on the
+    // TM1638 header. DIP 14, pio14, is DIO, an inout connected in the
+    // tm1638_board_controller instance below. Without TM1638 the three
+    // pins are gpio [34] to gpio [36].
 
-    assign pio29  = MIC_SCK;    // DIP 29  INMP441 SCK
-    assign pio30  = MIC_WS;     // DIP 30  INMP441 WS
-    assign pio31  = MIC_LR;     // DIP 31  INMP441 L/R
-    assign MIC_SD = pio32;      // DIP 32  INMP441 SD
+    `ifndef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+        assign pio12 = TM_STB;  // DIP 12  TM1638 STB
+        assign pio13 = TM_CLK;  // DIP 13  TM1638 CLK
+    `endif
 
     //------------------------------------------------------------------------
     // The clock of the design
@@ -454,15 +462,28 @@ module board_specific_top
 
         .mic           ( mic           ),
         .sound         ( sound         ),
-        .gpio          ( { pio48, pio47, pio46, pio45,   // gpio [33:30]
-                           pio44, pio43, pio42, pio41,   // gpio [29:26]
-                           pio40, pio39, pio38, pio37,   // gpio [25:22]
-                           pio36, pio35, pio34, pio33,   // gpio [21:18]
-                           pio20, pio19, pio18, pio17,   // gpio [17:14]
-                           pio14, pio13, pio12, pio11,   // gpio [13:10]
-                           pio10, pio9,  pio8,  pio7,    // gpio [ 9: 6]
-                           pio6,  pio5,  pio4,  pio3,    // gpio [ 5: 2]
-                           pio2,  pio1 } )               // gpio [ 1: 0]
+    `ifdef FORCE_NO_INSTANTIATE_TM1638_BOARD_CONTROLLER_MODULE
+        .gpio          ( { pio14, pio13, pio12,          // gpio [36:34]
+                           pio11, pio10, pio9,  pio8,    // gpio [33:30]
+                           pio7,  pio6,  pio5,  pio4,    // gpio [29:26]
+                           pio3,  pio2,  pio1,           // gpio [25:23]
+                           pio26, pio27, pio28, pio29,   // gpio [22:19]
+                           pio30, pio31, pio32, pio33,   // gpio [18:15]
+                           pio34, pio35, pio36, pio37,   // gpio [14:11]
+                           pio38, pio39, pio40, pio41,   // gpio [10: 7]
+                           pio42, pio43, pio44, pio45,   // gpio [ 6: 3]
+                           pio46, pio47, pio48 } )       // gpio [ 2: 0]
+    `else
+        .gpio          ( { pio11, pio10, pio9,  pio8,    // gpio [33:30]
+                           pio7,  pio6,  pio5,  pio4,    // gpio [29:26]
+                           pio3,  pio2,  pio1,           // gpio [25:23]
+                           pio26, pio27, pio28, pio29,   // gpio [22:19]
+                           pio30, pio31, pio32, pio33,   // gpio [18:15]
+                           pio34, pio35, pio36, pio37,   // gpio [14:11]
+                           pio38, pio39, pio40, pio41,   // gpio [10: 7]
+                           pio42, pio43, pio44, pio45,   // gpio [ 6: 3]
+                           pio46, pio47, pio48 } )       // gpio [ 2: 0]
+    `endif
     );
 
     //------------------------------------------------------------------------
@@ -474,7 +495,7 @@ module board_specific_top
         // to an FPGA pin, so that mode does not apply here.
 
         `ifdef SPLIT_TM1638_DIO_INOUT_SIGNAL
-            $error ("SPLIT_TM1638_DIO_INOUT_SIGNAL is not supported on Cmod A7: TM1638 DIO is the inout pin pio28");
+            $error ("SPLIT_TM1638_DIO_INOUT_SIGNAL is not supported on Cmod A7: TM1638 DIO is the inout pin pio14");
         `endif
 
         wire [w_tm_key - 1:0] tm_key;
@@ -497,7 +518,7 @@ module board_specific_top
             .digit    ( lab_digit  ),
             .ledr     ( lab_led    ),
             .keys     ( tm_key     ),
-            .sio_data ( pio28      ),  // DIP 28  TM1638 DIO
+            .sio_data ( pio14      ),  // DIP 14  TM1638 DIO
             .sio_clk  ( TM_CLK     ),
             .sio_stb  ( TM_STB     )
         );

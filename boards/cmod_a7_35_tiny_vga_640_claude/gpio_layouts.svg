@@ -16,8 +16,6 @@
 <text x="670" y="102" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start">VU, 5 V</text>
 <circle cx="763" cy="97" r="7" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
 <text x="776" y="102" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start">GND</text>
-<circle cx="837" cy="97" r="7" fill="#9aa3b2" stroke="#ffffff" stroke-width="1.5"/>
-<text x="850" y="102" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#1b1b1b" text-anchor="start">not GPIO, no module</text>
 <rect x="20" y="118" width="1600" height="402" rx="10" fill="#f6f6f3" stroke="#d6d6cf" stroke-width="1.5"/>
 <text x="40" y="152" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1b1b1b" text-anchor="start">1. Cmod A7-35T: every digital I/O pin</text>
 <text x="40" y="174" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">The board alone, apart from the labs. Each digital pin shows its FPGA pin.</text>
@@ -221,64 +219,64 @@
 <text x="940" y="769" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#c7d3e6" text-anchor="middle">pins 48..25 on top, 1..24 below</text>
 <circle cx="330" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="330" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">1</text>
-<text x="334" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 334 836)">gpio[0]</text>
+<text x="334" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 334 836)">gpio[23]</text>
 <circle cx="364" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="364" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">2</text>
-<text x="368" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 368 836)">gpio[1]</text>
+<text x="368" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 368 836)">gpio[24]</text>
 <circle cx="398" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="398" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">3</text>
-<text x="402" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 402 836)">gpio[2]</text>
+<text x="402" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 402 836)">gpio[25]</text>
 <circle cx="432" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="432" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">4</text>
-<text x="436" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 436 836)">gpio[3]</text>
+<text x="436" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 436 836)">gpio[26]</text>
 <circle cx="466" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="466" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">5</text>
-<text x="470" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 470 836)">gpio[4]</text>
+<text x="470" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 470 836)">gpio[27]</text>
 <circle cx="500" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="500" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">6</text>
-<text x="504" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 504 836)">gpio[5]</text>
+<text x="504" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 504 836)">gpio[28]</text>
 <circle cx="534" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="534" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">7</text>
-<text x="538" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 538 836)">gpio[6]</text>
+<text x="538" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 538 836)">gpio[29]</text>
 <circle cx="568" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="568" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">8</text>
-<text x="572" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 572 836)">gpio[7]</text>
+<text x="572" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 572 836)">gpio[30]</text>
 <circle cx="602" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="602" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">9</text>
-<text x="606" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 606 836)">gpio[8]</text>
+<text x="606" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 606 836)">gpio[31]</text>
 <circle cx="636" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="636" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">10</text>
-<text x="640" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 640 836)">gpio[9]</text>
+<text x="640" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 640 836)">gpio[32]</text>
 <circle cx="670" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="670" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">11</text>
-<text x="674" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 674 836)">gpio[10]</text>
-<circle cx="704" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="674" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 674 836)">gpio[33]</text>
+<circle cx="704" cy="808" r="7" fill="#c99100" stroke="#ffffff" stroke-width="1.5"/>
 <text x="704" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">12</text>
-<text x="708" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 708 836)">gpio[11]</text>
-<circle cx="738" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="708" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#c99100" text-anchor="end" transform="rotate(-90 708 836)">STB</text>
+<circle cx="738" cy="808" r="7" fill="#c99100" stroke="#ffffff" stroke-width="1.5"/>
 <text x="738" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">13</text>
-<text x="742" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 742 836)">gpio[12]</text>
-<circle cx="772" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="742" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#c99100" text-anchor="end" transform="rotate(-90 742 836)">CLK</text>
+<circle cx="772" cy="808" r="7" fill="#c99100" stroke="#ffffff" stroke-width="1.5"/>
 <text x="772" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">14</text>
-<text x="776" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 776 836)">gpio[13]</text>
+<text x="776" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#c99100" text-anchor="end" transform="rotate(-90 776 836)">DIO</text>
 <circle cx="806" cy="808" r="7" fill="#7b4fa8" stroke="#ffffff" stroke-width="1.5"/>
 <text x="806" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">15</text>
 <text x="810" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#7b4fa8" text-anchor="end" transform="rotate(-90 810 836)">analog</text>
 <circle cx="840" cy="808" r="7" fill="#7b4fa8" stroke="#ffffff" stroke-width="1.5"/>
 <text x="840" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">16</text>
 <text x="844" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#7b4fa8" text-anchor="end" transform="rotate(-90 844 836)">analog</text>
-<circle cx="874" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="874" cy="808" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="874" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">17</text>
-<text x="878" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 878 836)">gpio[14]</text>
-<circle cx="908" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="878" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 878 836)">SCK</text>
+<circle cx="908" cy="808" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="908" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">18</text>
-<text x="912" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 912 836)">gpio[15]</text>
-<circle cx="942" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="912" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 912 836)">WS</text>
+<circle cx="942" cy="808" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="942" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">19</text>
-<text x="946" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 946 836)">gpio[16]</text>
-<circle cx="976" cy="808" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="946" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 946 836)">L/R</text>
+<circle cx="976" cy="808" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="976" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">20</text>
-<text x="980" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 980 836)">gpio[17]</text>
+<text x="980" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 980 836)">SD</text>
 <circle cx="1010" cy="808" r="7" fill="#8c5a3c" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1010" y="795" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">21</text>
 <text x="1014" y="836" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#8c5a3c" text-anchor="end" transform="rotate(-90 1014 836)">BCK</text>
@@ -294,89 +292,87 @@
 <circle cx="1112" cy="718" r="7" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1112" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">25</text>
 <text x="1116" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#222222" text-anchor="start" transform="rotate(-90 1116 690)">GND</text>
-<circle cx="1078" cy="718" r="7" fill="#c99100" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="1078" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1078" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">26</text>
-<text x="1082" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#c99100" text-anchor="start" transform="rotate(-90 1082 690)">STB</text>
-<circle cx="1044" cy="718" r="7" fill="#c99100" stroke="#ffffff" stroke-width="1.5"/>
+<text x="1082" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 1082 690)">gpio[22]</text>
+<circle cx="1044" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1044" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">27</text>
-<text x="1048" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#c99100" text-anchor="start" transform="rotate(-90 1048 690)">CLK</text>
-<circle cx="1010" cy="718" r="7" fill="#c99100" stroke="#ffffff" stroke-width="1.5"/>
+<text x="1048" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 1048 690)">gpio[21]</text>
+<circle cx="1010" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1010" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">28</text>
-<text x="1014" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#c99100" text-anchor="start" transform="rotate(-90 1014 690)">DIO</text>
-<circle cx="976" cy="718" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="1014" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 1014 690)">gpio[20]</text>
+<circle cx="976" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="976" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">29</text>
-<text x="980" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 980 690)">SCK</text>
-<circle cx="942" cy="718" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="980" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 980 690)">gpio[19]</text>
+<circle cx="942" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="942" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">30</text>
-<text x="946" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 946 690)">WS</text>
-<circle cx="908" cy="718" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="946" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 946 690)">gpio[18]</text>
+<circle cx="908" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="908" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">31</text>
-<text x="912" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 912 690)">L/R</text>
-<circle cx="874" cy="718" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="912" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 912 690)">gpio[17]</text>
+<circle cx="874" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="874" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">32</text>
-<text x="878" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 878 690)">SD</text>
+<text x="878" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 878 690)">gpio[16]</text>
 <circle cx="840" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="840" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">33</text>
-<text x="844" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 844 690)">gpio[18]</text>
+<text x="844" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 844 690)">gpio[15]</text>
 <circle cx="806" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="806" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">34</text>
-<text x="810" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 810 690)">gpio[19]</text>
+<text x="810" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 810 690)">gpio[14]</text>
 <circle cx="772" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="772" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">35</text>
-<text x="776" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 776 690)">gpio[20]</text>
+<text x="776" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 776 690)">gpio[13]</text>
 <circle cx="738" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="738" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">36</text>
-<text x="742" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 742 690)">gpio[21]</text>
+<text x="742" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 742 690)">gpio[12]</text>
 <circle cx="704" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="704" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">37</text>
-<text x="708" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 708 690)">gpio[22]</text>
+<text x="708" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 708 690)">gpio[11]</text>
 <circle cx="670" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="670" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">38</text>
-<text x="674" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 674 690)">gpio[23]</text>
+<text x="674" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 674 690)">gpio[10]</text>
 <circle cx="636" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="636" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">39</text>
-<text x="640" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 640 690)">gpio[24]</text>
+<text x="640" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 640 690)">gpio[9]</text>
 <circle cx="602" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="602" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">40</text>
-<text x="606" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 606 690)">gpio[25]</text>
+<text x="606" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 606 690)">gpio[8]</text>
 <circle cx="568" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="568" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">41</text>
-<text x="572" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 572 690)">gpio[26]</text>
+<text x="572" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 572 690)">gpio[7]</text>
 <circle cx="534" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="534" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">42</text>
-<text x="538" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 538 690)">gpio[27]</text>
+<text x="538" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 538 690)">gpio[6]</text>
 <circle cx="500" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="500" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">43</text>
-<text x="504" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 504 690)">gpio[28]</text>
+<text x="504" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 504 690)">gpio[5]</text>
 <circle cx="466" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="466" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">44</text>
-<text x="470" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 470 690)">gpio[29]</text>
+<text x="470" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 470 690)">gpio[4]</text>
 <circle cx="432" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="432" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">45</text>
-<text x="436" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 436 690)">gpio[30]</text>
+<text x="436" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 436 690)">gpio[3]</text>
 <circle cx="398" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="398" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">46</text>
-<text x="402" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 402 690)">gpio[31]</text>
+<text x="402" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 402 690)">gpio[2]</text>
 <circle cx="364" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="364" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">47</text>
-<text x="368" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 368 690)">gpio[32]</text>
+<text x="368" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 368 690)">gpio[1]</text>
 <circle cx="330" cy="718" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="330" y="741" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">48</text>
-<text x="334" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 334 690)">gpio[33]</text>
-<line x1="320" y1="906" x2="782" y2="906" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
-<text x="551.0" y="925" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[0..13]</text>
+<text x="334" y="690" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 334 690)">gpio[0]</text>
+<line x1="320" y1="622" x2="1088" y2="622" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
+<text x="704.0" y="613" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[0..22]</text>
+<line x1="320" y1="906" x2="680" y2="906" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
+<text x="500.0" y="925" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[23..33]</text>
 <line x1="796" y1="906" x2="850" y2="906" stroke="#7b4fa8" stroke-width="4" stroke-linecap="round"/>
 <text x="823.0" y="925" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#7b4fa8" text-anchor="middle">analog</text>
-<line x1="864" y1="906" x2="986" y2="906" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
-<text x="925.0" y="925" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[14..17]</text>
+<line x1="864" y1="906" x2="986" y2="906" stroke="#1a9a9a" stroke-width="4" stroke-linecap="round"/>
+<text x="925.0" y="925" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a9a9a" text-anchor="middle">INMP441</text>
 <line x1="1000" y1="906" x2="1088" y2="906" stroke="#8c5a3c" stroke-width="4" stroke-linecap="round"/>
 <text x="1044.0" y="925" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#8c5a3c" text-anchor="middle">DAC</text>
-<line x1="864" y1="622" x2="986" y2="622" stroke="#1a9a9a" stroke-width="4" stroke-linecap="round"/>
-<text x="925.0" y="613" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a9a9a" text-anchor="middle">INMP441</text>
-<line x1="320" y1="622" x2="850" y2="622" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
-<text x="585.0" y="613" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[18..33]</text>
-<line x1="1000" y1="622" x2="1088" y2="622" stroke="#c99100" stroke-width="4" stroke-linecap="round"/>
-<text x="1044.0" y="613" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#c99100" text-anchor="middle">TM1638</text>
+<line x1="694" y1="906" x2="782" y2="906" stroke="#c99100" stroke-width="4" stroke-linecap="round"/>
+<text x="738.0" y="925" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#c99100" text-anchor="middle">TM1638</text>
 <rect x="256" y="708" width="40" height="110" rx="3" fill="#2a2a2a" stroke="#000000" stroke-width="1"/>
 <text x="276" y="768" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">JA</text>
 <rect x="60" y="703" width="180" height="120" rx="6" fill="#2b2b2b" stroke="#000000" stroke-width="1.5"/>
@@ -385,10 +381,10 @@
 <text x="150" y="778" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#d0d0d0" text-anchor="middle">all 8 I/O pins</text>
 <text x="150" y="804" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffe08a" text-anchor="middle">not GPIO</text>
 <text x="1215" y="658" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="bold" fill="#1b1b1b" text-anchor="start">34 GPIO pins of the labs:</text>
-<text x="1215" y="682" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">gpio[0] to gpio[33], in the order of the</text>
-<text x="1215" y="706" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">DIP pins: DIP 1 to 14, 17 to 20, 33 to 48.</text>
-<text x="1215" y="730" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">DAC on DIP 21 to 23, TM1638 on 26 to 28,</text>
-<text x="1215" y="754" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">INMP441 on 29 to 32, TinyVGA in Pmod JA.</text>
+<text x="1215" y="682" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">gpio[0] to gpio[22] on DIP 48 down to 26,</text>
+<text x="1215" y="706" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">gpio[23] to gpio[33] on DIP 1 to 11.</text>
+<text x="1215" y="730" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">TM1638 on DIP 12 to 14, INMP441 on 17 to 20,</text>
+<text x="1215" y="754" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">DAC on 21 to 23, TinyVGA in Pmod JA.</text>
 <text x="1215" y="778" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">TM1638 gives the keys, the LEDs and the</text>
 <text x="1215" y="802" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">display; either button resets the design.</text>
 <rect x="20" y="958" width="1600" height="402" rx="10" fill="#f6f6f3" stroke="#d6d6cf" stroke-width="1.5"/>
@@ -403,64 +399,64 @@
 <text x="940" y="1189" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#c7d3e6" text-anchor="middle">pins 48..25 on top, 1..24 below</text>
 <circle cx="330" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="330" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">1</text>
-<text x="334" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 334 1256)">gpio[0]</text>
+<text x="334" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 334 1256)">gpio[23]</text>
 <circle cx="364" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="364" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">2</text>
-<text x="368" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 368 1256)">gpio[1]</text>
+<text x="368" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 368 1256)">gpio[24]</text>
 <circle cx="398" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="398" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">3</text>
-<text x="402" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 402 1256)">gpio[2]</text>
+<text x="402" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 402 1256)">gpio[25]</text>
 <circle cx="432" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="432" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">4</text>
-<text x="436" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 436 1256)">gpio[3]</text>
+<text x="436" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 436 1256)">gpio[26]</text>
 <circle cx="466" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="466" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">5</text>
-<text x="470" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 470 1256)">gpio[4]</text>
+<text x="470" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 470 1256)">gpio[27]</text>
 <circle cx="500" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="500" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">6</text>
-<text x="504" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 504 1256)">gpio[5]</text>
+<text x="504" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 504 1256)">gpio[28]</text>
 <circle cx="534" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="534" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">7</text>
-<text x="538" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 538 1256)">gpio[6]</text>
+<text x="538" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 538 1256)">gpio[29]</text>
 <circle cx="568" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="568" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">8</text>
-<text x="572" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 572 1256)">gpio[7]</text>
+<text x="572" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 572 1256)">gpio[30]</text>
 <circle cx="602" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="602" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">9</text>
-<text x="606" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 606 1256)">gpio[8]</text>
+<text x="606" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 606 1256)">gpio[31]</text>
 <circle cx="636" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="636" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">10</text>
-<text x="640" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 640 1256)">gpio[9]</text>
+<text x="640" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 640 1256)">gpio[32]</text>
 <circle cx="670" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="670" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">11</text>
-<text x="674" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 674 1256)">gpio[10]</text>
+<text x="674" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 674 1256)">gpio[33]</text>
 <circle cx="704" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="704" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">12</text>
-<text x="708" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 708 1256)">gpio[11]</text>
+<text x="708" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 708 1256)">gpio[34]</text>
 <circle cx="738" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="738" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">13</text>
-<text x="742" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 742 1256)">gpio[12]</text>
+<text x="742" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 742 1256)">gpio[35]</text>
 <circle cx="772" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="772" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">14</text>
-<text x="776" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 776 1256)">gpio[13]</text>
+<text x="776" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 776 1256)">gpio[36]</text>
 <circle cx="806" cy="1228" r="7" fill="#7b4fa8" stroke="#ffffff" stroke-width="1.5"/>
 <text x="806" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">15</text>
 <text x="810" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#7b4fa8" text-anchor="end" transform="rotate(-90 810 1256)">analog</text>
 <circle cx="840" cy="1228" r="7" fill="#7b4fa8" stroke="#ffffff" stroke-width="1.5"/>
 <text x="840" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">16</text>
 <text x="844" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#7b4fa8" text-anchor="end" transform="rotate(-90 844 1256)">analog</text>
-<circle cx="874" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="874" cy="1228" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="874" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">17</text>
-<text x="878" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 878 1256)">gpio[14]</text>
-<circle cx="908" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="878" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 878 1256)">SCK</text>
+<circle cx="908" cy="1228" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="908" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">18</text>
-<text x="912" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 912 1256)">gpio[15]</text>
-<circle cx="942" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="912" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 912 1256)">WS</text>
+<circle cx="942" cy="1228" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="942" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">19</text>
-<text x="946" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 946 1256)">gpio[16]</text>
-<circle cx="976" cy="1228" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
+<text x="946" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 946 1256)">L/R</text>
+<circle cx="976" cy="1228" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
 <text x="976" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">20</text>
-<text x="980" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="end" transform="rotate(-90 980 1256)">gpio[17]</text>
+<text x="980" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="end" transform="rotate(-90 980 1256)">SD</text>
 <circle cx="1010" cy="1228" r="7" fill="#8c5a3c" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1010" y="1215" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">21</text>
 <text x="1014" y="1256" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#8c5a3c" text-anchor="end" transform="rotate(-90 1014 1256)">BCK</text>
@@ -476,89 +472,87 @@
 <circle cx="1112" cy="1138" r="7" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1112" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">25</text>
 <text x="1116" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#222222" text-anchor="start" transform="rotate(-90 1116 1110)">GND</text>
-<circle cx="1078" cy="1138" r="7" fill="#9aa3b2" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="1078" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1078" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">26</text>
-<text x="1082" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#9aa3b2" text-anchor="start" transform="rotate(-90 1082 1110)">high</text>
-<circle cx="1044" cy="1138" r="7" fill="#9aa3b2" stroke="#ffffff" stroke-width="1.5"/>
+<text x="1082" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 1082 1110)">gpio[22]</text>
+<circle cx="1044" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1044" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">27</text>
-<text x="1048" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#9aa3b2" text-anchor="start" transform="rotate(-90 1048 1110)">high</text>
-<circle cx="1010" cy="1138" r="7" fill="#9aa3b2" stroke="#ffffff" stroke-width="1.5"/>
+<text x="1048" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 1048 1110)">gpio[21]</text>
+<circle cx="1010" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="1010" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">28</text>
-<text x="1014" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#9aa3b2" text-anchor="start" transform="rotate(-90 1014 1110)">hi-Z</text>
-<circle cx="976" cy="1138" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="1014" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 1014 1110)">gpio[20]</text>
+<circle cx="976" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="976" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">29</text>
-<text x="980" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 980 1110)">SCK</text>
-<circle cx="942" cy="1138" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="980" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 980 1110)">gpio[19]</text>
+<circle cx="942" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="942" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">30</text>
-<text x="946" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 946 1110)">WS</text>
-<circle cx="908" cy="1138" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="946" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 946 1110)">gpio[18]</text>
+<circle cx="908" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="908" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">31</text>
-<text x="912" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 912 1110)">L/R</text>
-<circle cx="874" cy="1138" r="7" fill="#1a9a9a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="912" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 912 1110)">gpio[17]</text>
+<circle cx="874" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="874" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">32</text>
-<text x="878" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#1a9a9a" text-anchor="start" transform="rotate(-90 878 1110)">SD</text>
+<text x="878" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 878 1110)">gpio[16]</text>
 <circle cx="840" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="840" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">33</text>
-<text x="844" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 844 1110)">gpio[18]</text>
+<text x="844" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 844 1110)">gpio[15]</text>
 <circle cx="806" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="806" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">34</text>
-<text x="810" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 810 1110)">gpio[19]</text>
+<text x="810" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 810 1110)">gpio[14]</text>
 <circle cx="772" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="772" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">35</text>
-<text x="776" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 776 1110)">gpio[20]</text>
+<text x="776" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 776 1110)">gpio[13]</text>
 <circle cx="738" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="738" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">36</text>
-<text x="742" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 742 1110)">gpio[21]</text>
+<text x="742" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 742 1110)">gpio[12]</text>
 <circle cx="704" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="704" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">37</text>
-<text x="708" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 708 1110)">gpio[22]</text>
+<text x="708" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 708 1110)">gpio[11]</text>
 <circle cx="670" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="670" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">38</text>
-<text x="674" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 674 1110)">gpio[23]</text>
+<text x="674" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 674 1110)">gpio[10]</text>
 <circle cx="636" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="636" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">39</text>
-<text x="640" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 640 1110)">gpio[24]</text>
+<text x="640" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 640 1110)">gpio[9]</text>
 <circle cx="602" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="602" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">40</text>
-<text x="606" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 606 1110)">gpio[25]</text>
+<text x="606" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 606 1110)">gpio[8]</text>
 <circle cx="568" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="568" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">41</text>
-<text x="572" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 572 1110)">gpio[26]</text>
+<text x="572" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 572 1110)">gpio[7]</text>
 <circle cx="534" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="534" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">42</text>
-<text x="538" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 538 1110)">gpio[27]</text>
+<text x="538" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 538 1110)">gpio[6]</text>
 <circle cx="500" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="500" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">43</text>
-<text x="504" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 504 1110)">gpio[28]</text>
+<text x="504" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 504 1110)">gpio[5]</text>
 <circle cx="466" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="466" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">44</text>
-<text x="470" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 470 1110)">gpio[29]</text>
+<text x="470" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 470 1110)">gpio[4]</text>
 <circle cx="432" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="432" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">45</text>
-<text x="436" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 436 1110)">gpio[30]</text>
+<text x="436" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 436 1110)">gpio[3]</text>
 <circle cx="398" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="398" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">46</text>
-<text x="402" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 402 1110)">gpio[31]</text>
+<text x="402" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 402 1110)">gpio[2]</text>
 <circle cx="364" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="364" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">47</text>
-<text x="368" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 368 1110)">gpio[32]</text>
+<text x="368" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 368 1110)">gpio[1]</text>
 <circle cx="330" cy="1138" r="7" fill="#2f8f4e" stroke="#ffffff" stroke-width="1.5"/>
 <text x="330" y="1161" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ffffff" text-anchor="middle">48</text>
-<text x="334" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 334 1110)">gpio[33]</text>
-<line x1="320" y1="1326" x2="782" y2="1326" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
-<text x="551.0" y="1345" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[0..13]</text>
+<text x="334" y="1110" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="12" font-weight="bold" fill="#2f8f4e" text-anchor="start" transform="rotate(-90 334 1110)">gpio[0]</text>
+<line x1="320" y1="1042" x2="1088" y2="1042" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
+<text x="704.0" y="1033" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[0..22]</text>
+<line x1="320" y1="1326" x2="680" y2="1326" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
+<text x="500.0" y="1345" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[23..33]</text>
 <line x1="796" y1="1326" x2="850" y2="1326" stroke="#7b4fa8" stroke-width="4" stroke-linecap="round"/>
 <text x="823.0" y="1345" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#7b4fa8" text-anchor="middle">analog</text>
-<line x1="864" y1="1326" x2="986" y2="1326" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
-<text x="925.0" y="1345" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[14..17]</text>
+<line x1="864" y1="1326" x2="986" y2="1326" stroke="#1a9a9a" stroke-width="4" stroke-linecap="round"/>
+<text x="925.0" y="1345" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a9a9a" text-anchor="middle">INMP441</text>
 <line x1="1000" y1="1326" x2="1088" y2="1326" stroke="#8c5a3c" stroke-width="4" stroke-linecap="round"/>
 <text x="1044.0" y="1345" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#8c5a3c" text-anchor="middle">DAC</text>
-<line x1="864" y1="1042" x2="986" y2="1042" stroke="#1a9a9a" stroke-width="4" stroke-linecap="round"/>
-<text x="925.0" y="1033" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a9a9a" text-anchor="middle">INMP441</text>
-<line x1="320" y1="1042" x2="850" y2="1042" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
-<text x="585.0" y="1033" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[18..33]</text>
-<line x1="1000" y1="1042" x2="1088" y2="1042" stroke="#9aa3b2" stroke-width="4" stroke-linecap="round"/>
-<text x="1044.0" y="1033" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#9aa3b2" text-anchor="middle">not GPIO</text>
+<line x1="694" y1="1326" x2="782" y2="1326" stroke="#2f8f4e" stroke-width="4" stroke-linecap="round"/>
+<text x="738.0" y="1345" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="bold" fill="#2f8f4e" text-anchor="middle">gpio[34..36]</text>
 <rect x="256" y="1128" width="40" height="110" rx="3" fill="#2a2a2a" stroke="#000000" stroke-width="1"/>
 <text x="276" y="1188" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">JA</text>
 <rect x="60" y="1123" width="180" height="120" rx="6" fill="#2b2b2b" stroke="#000000" stroke-width="1.5"/>
@@ -566,12 +560,11 @@
 <text x="150" y="1180" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#d0d0d0" text-anchor="middle">in Pmod JA,</text>
 <text x="150" y="1198" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#d0d0d0" text-anchor="middle">all 8 I/O pins</text>
 <text x="150" y="1224" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffe08a" text-anchor="middle">not GPIO</text>
-<text x="1215" y="1078" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="bold" fill="#1b1b1b" text-anchor="start">The same 34 GPIO pins:</text>
-<text x="1215" y="1102" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">gpio[n] is on the same DIP pin in all six</text>
-<text x="1215" y="1126" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">configurations. DIP 26 to 28 are not GPIO:</text>
-<text x="1215" y="1150" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">the design drives 26 and 27 high and leaves</text>
-<text x="1215" y="1174" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">28 undriven; connect nothing to them.</text>
-<text x="1215" y="1198" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">The two buttons are the keys of the labs,</text>
-<text x="1215" y="1222" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">the two LEDs are led[0] and led[1].</text>
-<text x="40" y="1402" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">The GPIO pins take 3.3 V logic only, like every pin of Cmod A7. gpio[n] of the labs is DIP pin n + 1 for n up to 13, n + 3 up to 17, n + 15 up to 33.</text>
+<text x="1215" y="1078" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="bold" fill="#1b1b1b" text-anchor="start">37 GPIO pins of the labs:</text>
+<text x="1215" y="1102" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">the 34 of the configurations with TM1638,</text>
+<text x="1215" y="1126" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">on the same DIP pins, and gpio[34] to</text>
+<text x="1215" y="1150" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">gpio[36] on DIP 12 to 14, the pins of TM1638.</text>
+<text x="1215" y="1174" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">The two buttons are the keys of the labs,</text>
+<text x="1215" y="1198" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">the two LEDs are led[0] and led[1].</text>
+<text x="40" y="1402" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#5b6170" text-anchor="start">The GPIO pins take 3.3 V logic only, like every pin of Cmod A7. gpio[n] of the labs is DIP pin 48 - n for n up to 22, and DIP pin n - 22 from n = 23 on.</text>
 </svg>
