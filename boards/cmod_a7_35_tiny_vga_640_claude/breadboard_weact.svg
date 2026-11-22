@@ -916,9 +916,9 @@
 <rect x="1549.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#c99100" stroke="none" stroke-width="1" opacity="0.22"/>
 <rect x="1573.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#c99100" stroke="none" stroke-width="1" opacity="0.22"/>
 <rect x="1597.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#c99100" stroke="none" stroke-width="1" opacity="0.22"/>
-<rect x="421.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#b0182a" stroke="none" stroke-width="1" opacity="0.22"/>
-<rect x="445.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#222222" stroke="none" stroke-width="1" opacity="0.22"/>
-<rect x="469.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#ef7d1a" stroke="none" stroke-width="1" opacity="0.22"/>
+<rect x="421.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#222222" stroke="none" stroke-width="1" opacity="0.22"/>
+<rect x="445.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#ef7d1a" stroke="none" stroke-width="1" opacity="0.22"/>
+<rect x="469.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#b0182a" stroke="none" stroke-width="1" opacity="0.22"/>
 <rect x="781.9" y="261.9" width="20.2" height="116.2" rx="5" fill="#222222" stroke="none" stroke-width="1" opacity="0.22"/>
 <rect x="781.9" y="429.9" width="20.2" height="116.2" rx="5" fill="#222222" stroke="none" stroke-width="1" opacity="0.22"/>
 <rect x="805.9" y="261.9" width="20.2" height="116.2" rx="5" fill="#ef7d1a" stroke="none" stroke-width="1" opacity="0.22"/>
@@ -1092,26 +1092,25 @@
 <path d="M1848.0,272.0 L1848.0,224.0" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="1848.0" cy="272.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
 <circle cx="1848.0" cy="224.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
-<rect x="415.4" y="524.0" width="81.1" height="116.4" rx="4" fill="#dde7f3" stroke="#4f6f99" stroke-width="1.5" opacity="0.95" stroke-dasharray="7 4"/>
-<rect x="435.6" y="586.4" width="40.8" height="12.0" rx="1" fill="#8d939c" stroke="none" stroke-width="1"/>
-<rect x="428.4" y="597.2" width="55.2" height="34.8" rx="2" fill="#262626" stroke="#000000" stroke-width="1"/>
-<text x="456.0" y="617.6" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="8" font-weight="bold" fill="#d8d8d8" text-anchor="middle">AMS1117</text>
+<rect x="420.0" y="524.0" width="72.0" height="24.0" rx="2" fill="#2a2a2a" stroke="#000000" stroke-width="1" opacity="0.9"/>
+<rect x="415.4" y="548.0" width="81.1" height="15.1" rx="1" fill="#2f5fb0" stroke="#173a73" stroke-width="1"/>
 <circle cx="432.0" cy="536.0" r="5.5" fill="#f2c14e" stroke="#5c4a12" stroke-width="1"/>
-<text x="435.5" y="550.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="10" font-weight="bold" fill="#1b1b1b" text-anchor="end" transform="rotate(-90 435.5 550.0)">VIN</text>
+<text x="432.0" y="558.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">GND</text>
 <circle cx="456.0" cy="536.0" r="5.5" fill="#f2c14e" stroke="#5c4a12" stroke-width="1"/>
-<text x="459.5" y="550.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="10" font-weight="bold" fill="#1b1b1b" text-anchor="end" transform="rotate(-90 459.5 550.0)">GND</text>
+<text x="456.0" y="558.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">OUT</text>
 <circle cx="480.0" cy="536.0" r="5.5" fill="#f2c14e" stroke="#5c4a12" stroke-width="1"/>
-<text x="483.5" y="550.0" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="10" font-weight="bold" fill="#1b1b1b" text-anchor="end" transform="rotate(-90 483.5 550.0)">VOUT</text>
-<path d="M456.0,440.0 L456.0,224.0" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M456.0,440.0 L456.0,224.0" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="456.0" cy="440.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
-<circle cx="456.0" cy="224.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
-<path d="M480.0,440.0 L480.0,200.0" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M480.0,440.0 L480.0,200.0" fill="none" stroke="#ef7d1a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="480.0" cy="440.0" r="5.5" fill="#ef7d1a" stroke="#ffffff" stroke-width="1.5"/>
-<circle cx="480.0" cy="200.0" r="5.5" fill="#ef7d1a" stroke="#ffffff" stroke-width="1.5"/>
-<text x="496.6" y="658.4" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="end">3.3 V regulator, AMS1117-3.3 module</text>
-<text x="496.6" y="674.4" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="end">outline approximate</text>
+<text x="480.0" y="558.8" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">VIN</text>
+<path d="M432.0,440.0 L432.0,224.0" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M432.0,440.0 L432.0,224.0" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="432.0" cy="440.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="432.0" cy="224.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M456.0,440.0 L456.0,200.0" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M456.0,440.0 L456.0,200.0" fill="none" stroke="#ef7d1a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="456.0" cy="440.0" r="5.5" fill="#ef7d1a" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="456.0" cy="200.0" r="5.5" fill="#ef7d1a" stroke="#ffffff" stroke-width="1.5"/>
+<text x="496.6" y="658.4" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1b1b1b" text-anchor="end">3.3 V regulator, AMS1117-3.3 module,</text>
+<text x="496.6" y="674.4" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="end">standing on its header, labels toward</text>
+<text x="496.6" y="689.4" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#5b6170" text-anchor="end">the channel: GND, OUT, VIN in rows 4 to 6</text>
 <rect x="525.6" y="521.6" width="196.8" height="264.0" rx="5" fill="#ece6dc" stroke="#8a8577" stroke-width="1.5" opacity="0.95"/>
 <rect x="525.6" y="775.6" width="196.8" height="10.0" rx="3" fill="#8c5a3c" stroke="none" stroke-width="1"/>
 <rect x="541.4" y="732.8" width="43.2" height="62.4" rx="3" fill="#3a3a3a" stroke="#000000" stroke-width="1"/>
@@ -1170,10 +1169,10 @@
 <path d="M792.0,536.0 L792.0,608.0" fill="none" stroke="#222222" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="792.0" cy="536.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
 <circle cx="792.0" cy="608.0" r="5.5" fill="#222222" stroke="#ffffff" stroke-width="1.5"/>
-<path d="M1848.0,536.0 C1848.0,482.0 1848.0,482.0 1836.0,482.0 L444.0,482.0 C432.0,482.0 432.0,482.0 432.0,512.0" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M1848.0,536.0 C1848.0,482.0 1848.0,482.0 1836.0,482.0 L444.0,482.0 C432.0,482.0 432.0,482.0 432.0,512.0" fill="none" stroke="#b0182a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1848.0,536.0 C1848.0,482.0 1848.0,482.0 1836.0,482.0 L492.0,482.0 C480.0,482.0 480.0,482.0 480.0,512.0" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1848.0,536.0 C1848.0,482.0 1848.0,482.0 1836.0,482.0 L492.0,482.0 C480.0,482.0 480.0,482.0 480.0,512.0" fill="none" stroke="#b0182a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="1848.0" cy="536.0" r="5.5" fill="#b0182a" stroke="#ffffff" stroke-width="1.5"/>
-<circle cx="432.0" cy="512.0" r="5.5" fill="#b0182a" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="480.0" cy="512.0" r="5.5" fill="#b0182a" stroke="#ffffff" stroke-width="1.5"/>
 <path d="M1824.0,536.0 C1824.0,486.8 1824.0,486.8 1812.0,486.8 L564.0,486.8 C552.0,486.8 552.0,486.8 552.0,512.0" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M1824.0,536.0 C1824.0,486.8 1824.0,486.8 1812.0,486.8 L564.0,486.8 C552.0,486.8 552.0,486.8 552.0,512.0" fill="none" stroke="#8c5a3c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="1824.0" cy="536.0" r="5.5" fill="#8c5a3c" stroke="#ffffff" stroke-width="1.5"/>
@@ -1213,7 +1212,7 @@
 <text x="40.0" y="896.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">TM1638 is off the breadboard, on female-to-male wires: STB, CLK and DIO from hole j of rows 51 to 53, VCC and GND from the bottom rails.</text>
 <text x="40.0" y="916.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">INMP441 goes across the center channel like a 6-pin DIP chip: L/R, WS, SCK in column f, GND, VDD, SD in column e. L/R goes to GND here, so DIP 19 stays free.</text>
 <text x="40.0" y="936.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">The DAC goes in by its header in column j; its body and jack hang over the bottom rails and the edge of the breadboard, so it takes its power from the top rails.</text>
-<text x="40.0" y="956.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">The regulator of variant B is a 3-pin AMS1117-3.3 module, as Amazon B08CDMZMDN, in column j, rows 4 to 6, away from Cmod A7: the one red wire brings it 5 V from DIP 24, VU. Its pin order and outline come from the listing: check the labels.</text>
+<text x="40.0" y="956.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">The regulator of variant B, an AMS1117-3.3 module, Amazon B08CDMZMDN, stands on its header in column j, labels toward the channel: GND, OUT, VIN in rows 4, 5, 6. OUT is the middle pin. The one red wire brings VIN 5 V from DIP 24, VU.</text>
 <text x="40.0" y="976.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">Variant A, Pmod TPH2: leave the regulator and its 5 V wire out, and wire test point 6 of TPH2 to the + rail. Unplug USB before changing the wiring.</text>
 <text x="40.0" y="996.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">DIP 48 to 26 and 1 to 11 are the GPIO pins of the labs, gpio[0] to gpio[33]; nothing is connected to them here.</text>
 <text x="40.0" y="1016.0" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="13" font-weight="normal" fill="#5b6170" text-anchor="start">WeAct: /SD and MC stay unconnected; the module pulls /SD up and MC down.</text>

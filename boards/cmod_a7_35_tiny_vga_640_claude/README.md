@@ -70,7 +70,7 @@ targets the wrong FPGA, XC7A15T, and is not used.
 | INMP441 module | The round I2S microphone board with 6 pins. |
 | One DAC module | WeAct I2S Earphone Module (PCM5100A) or GY-PCM5102 (PCM5102A). For WeAct, headphones of 32 Ω or more or active speakers; for GY-PCM5102, active speakers or an amplifier, because its output is line level. Both with a 3.5 mm plug. |
 | For variant A: Digilent Pmod TPH2 | A 12-pin pass-through with a test point for each Pmod pin. It goes between JA and TinyVGA. |
-| For variant B: a 3.3 V regulator module | A 3-pin AMS1117-3.3 module, for example [Amazon B08CDMZMDN](https://www.amazon.com/dp/B08CDMZMDN), a pack of 20: 4.75 to 12 V in, 3.3 V out, up to 800 mA, about 8.6 x 12.3 mm, pins VIN, GND, VOUT. Any 3.3 V module that works from 5 V and gives at least 300 mA will do. |
+| For variant B: a 3.3 V regulator module | A 3-pin AMS1117-3.3 module, for example [Amazon B08CDMZMDN](https://www.amazon.com/dp/B08CDMZMDN), a pack of 20: 4.75 to 12 V in, 3.3 V out, up to 800 mA, about 8.6 x 12.3 mm, with a power LED and the pins VIN, OUT, GND, in this order, on a right-angle header. Any 3.3 V module that works from 5 V and gives at least 300 mA will do. |
 | Jumper wires | Male-to-male for the breadboard, female-to-male for the module headers and the TPH2 test point. |
 | Multimeter | To check the power rails before the modules are connected. |
 
@@ -288,12 +288,13 @@ show. In short:
   bottom rails and the edge of the breadboard, so its power and GND wires go
   to the top rails. Only the main header of GY-PCM5102 may go into the holes,
   and its outline in the drawing is approximate.
-* The regulator, a 3-pin AMS1117-3.3 module, goes in by its header in column
-  j, away from the DIP pins of Cmod A7, where there is room for it. One wire,
-  the only one with 5 V, brings VU from the strip of DIP 24 to VIN. Its body
-  hangs over the bottom rails, so its GND and VOUT go to the top rails. The
-  drawing follows the pin order of the listing, VIN, GND, VOUT, and the
-  outline of the module is approximate: check the labels on yours.
+* The regulator, a 3-pin AMS1117-3.3 module, stands on its right-angle header
+  in column j, away from the DIP pins of Cmod A7, where there is room for it.
+  Its labels face the channel: GND in row 4, OUT in row 5, VIN in row 6. OUT
+  is the middle pin, not GND. Its board then stands between column j and the
+  bottom rails, and hole i stays free. One wire, the only one with 5 V, brings
+  VU from the strip of DIP 24 to VIN. GND and OUT go to the top rails, because
+  the board of the module is in the way of the bottom ones.
 * TM1638 stays off the breadboard, on female-to-male wires as in the wiring
   diagrams: STB, CLK and DIO from hole j of rows 51 to 53, VCC and GND from
   the bottom rails.
@@ -310,6 +311,12 @@ With GY-PCM5102:
 
 Vector versions: [breadboard_weact.svg](breadboard_weact.svg),
 [breadboard_gy_pcm5102.svg](breadboard_gy_pcm5102.svg).
+
+The regulator module of Amazon B08CDMZMDN, label side: its pins are VIN,
+OUT and GND, in this order, on a right-angle header, so the module stands on
+the breadboard. D1 is its power LED.
+
+![The AMS1117-3.3 regulator module, its pins labeled VIN, OUT, GND](regulator.jpg)
 
 ## Wiring tables
 
@@ -394,13 +401,14 @@ Variant A, Pmod TPH2:
 | Its Pmod socket | TinyVGA |
 | Test point 6 | + rail on the side of DIP pins 25 to 48 |
 
-Variant B, regulator module; the pins may be labeled VIN, GND, VOUT:
+Variant B, the regulator module. Its pins are labeled VIN, OUT and GND, in
+this order: OUT is the middle pin, not GND.
 
 | Regulator pin | Connect to |
 |---------------|------------|
-| IN | DIP 24, VU |
-| GND | GND rail |
+| VIN | DIP 24, VU |
 | OUT | A + rail; the two are joined |
+| GND | GND rail |
 
 VU is USB 5 V less the drop of a diode, so it can be a little under the 4.75 V for which
 the AMS1117-3.3 module is rated. AMS1117 needs at most 1.3 V more at its input than at
@@ -514,14 +522,14 @@ Work with the USB cable unplugged.
    the + rail on the side of pins 25 to 48 with a female-to-male wire, and
    leave DIP pin 24, VU, unconnected. In variant B, put the regulator module
    in the free rows at the far end of the breadboard, away from the DIP pins;
-   connect its input to DIP pin 24, VU, which is the only 5 V wire, its GND to
-   a GND rail and its output to a + rail. In both variants, connect the two
-   + rails to each other at the far end of the breadboard, bridging any gaps,
-   as with the GND rails.
+   connect its VIN to DIP pin 24, VU, which is the only 5 V wire, its GND to
+   a GND rail and its OUT, the middle pin, to a + rail. In both variants,
+   connect the two + rails to each other at the far end of the breadboard,
+   bridging any gaps, as with the GND rails.
 5. **Check the power.** Plug in USB. With the multimeter, both + rails should
-   show 3.2 to 3.5 V against GND; in variant B the regulator input should
-   show about 4.5 to 5 V. Below 3.2 V the DAC has too little margin: find the
-   cause first. Unplug USB.
+   show 3.2 to 3.5 V against GND; in variant B the LED of the regulator
+   module lights, and its VIN should show about 4.5 to 5 V. Below 3.2 V the
+   DAC has too little margin: find the cause first. Unplug USB.
 6. **Connect TM1638.** Three female-to-male wires from DIP pins 12, 13 and
    14 to the TM1638 pins STB, CLK and DIO, in this order, and two from its
    GND and VCC to a GND rail and the +3.3 V rail. Without TM1638, skip this.
@@ -818,7 +826,7 @@ Their board_specific.xdc is the one of this directory, with the lines of all
 | No sound from WeAct | /SD not connected to GND. VCC on +3.3 V. Headphones fully in the jack. |
 | Sound that crackles or drops out | The supply of the DAC under load, step 11 of the assembly. |
 | Microphone silent | VDD on +3.3 V. SD on DIP 20. L/R low, from DIP 19 or GND. |
-| A + rail is low or dead | A: the wire on test point 6 or 12 of TPH2, not another one. B: the regulator input on DIP 24, VU. Both: the two + rails joined, and any gap in a split rail bridged. |
+| A + rail is low or dead | A: the wire on test point 6 or 12 of TPH2, not another one. B: VIN of the regulator on DIP 24, VU, and OUT, its middle pin, on a + rail; its LED lights when VIN has power. Both: the two + rails joined, and any gap in a split rail bridged. |
 | The design is gone after unplugging USB | Expected: the scripts load the FPGA, not the flash. Run `./04_configure_fpga.bash`. |
 
 ## Status
@@ -913,6 +921,7 @@ Not yet tried on a real board.
 | `breadboard_*.svg`, `breadboard_*.png` | The breadboard layouts with the microphone, the DAC and the regulator plugged in |
 | [generate_gpio_diagram.py](generate_gpio_diagram.py) | Makes `gpio_layouts.svg` |
 | `gpio_layouts.svg`, `gpio_layouts.png` | The digital I/O pins of Cmod A7 and the GPIO pins of the labs, with and without TM1638 |
+| [regulator.jpg](regulator.jpg) | A photo of the regulator module of variant B, Amazon B08CDMZMDN, with the labels of its pins |
 | README.md, README.html | This instruction in English |
 | README_ru.md, README_ru.html | The same in Russian |
 | [claude_prompt.txt](claude_prompt.txt) | The task file of the first prompt, as in the appendix |
@@ -1515,6 +1524,42 @@ why didn't you put breadboard_gy_pcm5102.png breadboard_weact.png to README?
 
 **22:49 on 21 November**; it committed and pushed the breadboard layouts
 shown in the README:
+
+```text
+commit and push
+```
+
+**22:54 on 21 November**; it checked the regulator of variant B against the
+listing, without changing anything: Amazon refused to serve the page, and the
+listing as found by search agrees with the README in the chip, the voltages,
+the current and the size, but nothing shows the order of the pins, so check
+the labels on the module:
+
+```text
+check whether this voltage regulator is compatible with the regulator I bought https://www.amazon.com/dp/B08CDMZMDN
+```
+
+**23:24 on 21 November**; the photo of the module, outside the repository,
+shows its pins labeled VIN, OUT and GND, in this order, on a
+right-angle header, and a power LED; the drawings had GND in the middle. The
+breadboard layouts now stand the module on its header, labels toward the
+channel, with GND, OUT and VIN in rows 4, 5 and 6; the wiring diagrams, the
+parts list, the regulator table, the assembly steps and troubleshooting
+follow the labels:
+
+```text
+See the photo picture ~/claude/cmod_a7/regulator.jpg
+```
+
+**23:32 on 21 November**; the photo is now regulator.jpg in this directory,
+480 pixels wide and without its metadata, shown after the breadboard layouts:
+
+```text
+yes, add it
+```
+
+**23:37 on 21 November**; it committed and pushed the pin order of the
+regulator and its photo:
 
 ```text
 commit and push

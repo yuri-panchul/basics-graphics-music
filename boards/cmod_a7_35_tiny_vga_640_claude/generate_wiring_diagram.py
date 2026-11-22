@@ -149,8 +149,10 @@ POWER = {
 
 # The regulator hangs below the breadboard under DIP 24, VU, away from the
 # DIP pins: its input wire, the only 5 V wire, goes straight up to DIP 24.
+# Its pins are labeled VIN, OUT and GND, in this order with the pins down;
+# drawn with the pins up, as here, they read GND, OUT, VIN.
 
-LDO = {"x0": 1405, "x1": 1615, "pins": [("OUT", 1450), ("GND", 1486), ("IN", 1522)]}
+LDO = {"x0": 1405, "x1": 1615, "pins": [("GND", 1450), ("OUT", 1486), ("VIN", 1522)]}
 
 
 class Svg:

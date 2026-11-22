@@ -118,16 +118,20 @@ CMOD_NAMES = {12: "STB", 13: "CLK", 14: "DIO", 17: "SCK", 18: "WS", 19: "L/R", 2
               21: "BCK", 22: "DIN", 23: "LCK", 24: "VU", 25: "GND"}
 CMOD_FREE = (19,)  # DIP 19 stays free: INMP441 L/R goes to GND here
 
-# The 3.3 V regulator of variant B: a 3-pin AMS1117-3.3 module, as Amazon
-# B08CDMZMDN, listed as about 8.6 x 12.3 mm with the pins VIN, GND, VOUT. It
-# goes in by its header in column j, away from Cmod A7, and its body hangs
-# over the bottom rails. One wire brings it 5 V from DIP 24, VU. The outline
-# and the pin order come from the listing, not from a drawing.
+# The 3.3 V regulator of variant B: a 3-pin AMS1117-3.3 module, Amazon
+# B08CDMZMDN, about 8.6 x 12.3 mm. A photo of the module shows its pins
+# labeled VIN, OUT and GND, in this order, on a right-angle header whose
+# plastic sits on the labeled side, and a power LED. It stands on its header
+# in column j, away from Cmod A7, its labels toward the channel: GND, OUT
+# and VIN in rows 4, 5 and 6. Its board stands over the gap between column
+# j and the bottom rails, so hole i stays free. One wire brings VIN 5 V from
+# DIP 24, VU.
 
 REG_ROW = 4
-REG_PINS = ["VIN", "GND", "VOUT"]
+REG_PINS = ["GND", "OUT", "VIN"]
 REG_MARGIN = 0.69  # from the outer pins to the board edges, in pitches
-REG_DEPTH = 4.85   # the board from its header edge, in pitches
+REG_HEADER = 1.0   # the plastic of the header across the pins, in pitches
+REG_PCB = 0.63     # the board, 1.6 mm thick, next to the plastic
 
 # INMP441 sits across the channel like a 6-pin DIP chip: its two rows of
 # three pins are 0.3 inch apart, in columns e and f. It is turned so that
@@ -334,7 +338,7 @@ def draw(variant):
     tints += [(dip(p)[0], False, C["TM"]) for p in (12, 13, 14)]
     for k, name in enumerate(REG_PINS):
         tints.append((REG_ROW + k, False, {"VIN": C["5V"], "GND": C["GND"],
-                                           "VOUT": C["3V3"]}[name]))
+                                           "OUT": C["3V3"]}[name]))
     tint_of = {"GND": C["GND"], "L/R": C["GND"], "VDD": C["3V3"]}
     for k in range(3):
         tints.append((MIC_ROW + k, True, tint_of.get(MIC_TOP[k], C["MIC"])))
@@ -427,33 +431,34 @@ def draw(variant):
     wire_end(svg, r25, "a", C["GND"])
     wire_end(svg, r25, "TI", C["GND"])
 
-    # The regulator, plugged in by its header in column j. Its body hangs
-    # over the bottom rails, so GND and VOUT go to the top rails.
+    # The regulator, standing on its header in column j, its labels toward
+    # the channel. Seen from above: the plastic of the header over the pins
+    # and the edge of its board beyond them. The board stands between column
+    # j and the bottom rails, so GND and OUT go to the top rails.
 
     reg_row = {name: REG_ROW + k for k, name in enumerate(REG_PINS)}
     r_first, r_last = REG_ROW, REG_ROW + len(REG_PINS) - 1
+    hy0 = Y("j") - REG_HEADER / 2 * P
+    svg.rect(X(r_first - 0.5), hy0, X(r_last + 0.5) - X(r_first - 0.5), REG_HEADER * P,
+             "#2a2a2a", "#000000", 1, 2, opacity=0.9)
     rx0, rx1 = X(r_first - REG_MARGIN), X(r_last + REG_MARGIN)
-    ry0 = Y("j") - 0.5 * P
-    ry1 = ry0 + REG_DEPTH * P
-    svg.rect(rx0, ry0, rx1 - rx0, ry1 - ry0, "#dde7f3", "#4f6f99", 1.5, 4, opacity=0.95,
-             dash="7 4")
-    chip_w, chip_h = 2.3 * P, 1.45 * P
-    chip_x, chip_y = (rx0 + rx1) / 2 - chip_w / 2, ry1 - chip_h - 0.35 * P
-    svg.rect(chip_x + 0.3 * P, chip_y - 0.45 * P, chip_w - 0.6 * P, 0.5 * P, "#8d939c", rx=1)
-    svg.rect(chip_x, chip_y, chip_w, chip_h, "#262626", "#000000", 1, 2)
-    svg.text((rx0 + rx1) / 2, chip_y + chip_h / 2 + 3, "AMS1117", 8, "bold", "#d8d8d8",
-             "middle")
+    py0 = hy0 + REG_HEADER * P
+    svg.rect(rx0, py0, rx1 - rx0, REG_PCB * P, "#2f5fb0", "#173a73", 1, 1)
     for name, row in reg_row.items():
         x, y = xy(row, "j")
         svg.circle(x, y, 5.5, "#f2c14e", "#5c4a12", 1)
-        svg.text(x + 3.5, y + 14, name, 10, "bold", anchor="end", family=MONO, rotate=-90)
-    for name, rail, color in (("GND", "TI", C["GND"]), ("VOUT", "TO", C["3V3"])):
+        svg.text(x, py0 + REG_PCB * P / 2 + 3.2, name, 9, "bold", "#ffffff", "middle", MONO)
+    for name, rail, color in (("GND", "TI", C["GND"]), ("OUT", "TO", C["3V3"])):
         r = reg_row[name]
         svg.wire(path([(r, "f"), (r, rail)]), color)
         wire_end(svg, r, "f", color)
         wire_end(svg, r, rail, color)
-    svg.text(rx1, ry1 + 18, "3.3 V regulator, AMS1117-3.3 module", 12, "bold", anchor="end")
-    svg.text(rx1, ry1 + 34, "outline approximate", 11, fill=C["muted"], anchor="end")
+    ry1 = Y("j") + 4.35 * P
+    svg.text(rx1, ry1 + 18, "3.3 V regulator, AMS1117-3.3 module,", 12, "bold", anchor="end")
+    svg.text(rx1, ry1 + 34, "standing on its header, labels toward", 11, fill=C["muted"],
+             anchor="end")
+    svg.text(rx1, ry1 + 49, "the channel: GND, OUT, VIN in rows 4 to 6", 11, fill=C["muted"],
+             anchor="end")
 
     # The DAC module, plugged in by its header in column j
 
@@ -572,9 +577,9 @@ def draw(variant):
              "column f, GND, VDD, SD in column e. L/R goes to GND here, so DIP 19 stays free.",
              "The DAC goes in by its header in column j; its body and jack hang over the bottom "
              "rails and the edge of the breadboard, so it takes its power from the top rails.",
-             "The regulator of variant B is a 3-pin AMS1117-3.3 module, as Amazon B08CDMZMDN, in "
-             "column j, rows 4 to 6, away from Cmod A7: the one red wire brings it 5 V from DIP 24, "
-             "VU. Its pin order and outline come from the listing: check the labels.",
+             "The regulator of variant B, an AMS1117-3.3 module, Amazon B08CDMZMDN, stands on its "
+             "header in column j, labels toward the channel: GND, OUT, VIN in rows 4, 5, 6. OUT is "
+             "the middle pin. The one red wire brings VIN 5 V from DIP 24, VU.",
              "Variant A, Pmod TPH2: leave the regulator and its 5 V wire out, and wire test point 6 "
              "of TPH2 to the + rail. Unplug USB before changing the wiring.",
              "DIP 48 to 26 and 1 to 11 are the GPIO pins of the labs, gpio[0] to gpio[33]; nothing "
