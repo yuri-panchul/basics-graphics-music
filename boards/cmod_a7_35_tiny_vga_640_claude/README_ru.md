@@ -1845,6 +1845,28 @@ commit and push
 сделай коммит и push
 ```
 
+**23:38, 21 ноября**; коммит 628ca988 помечен тегом
+`cmod_a7_pin_layout_2_claude`, тег отправлен:
+
+```text
+put a git tag cmod_a7_pin_layout_2_claude
+```
+
+```text
+поставь тег git cmod_a7_pin_layout_2_claude
+```
+
+**23:38, 21 ноября**; две предыдущие записи этого приложения закоммичены и
+отправлены:
+
+```text
+commit and push
+```
+
+```text
+сделай коммит и push
+```
+
 Кроме того, Юрий Панчул дважды, 16 ноября в 18:45 и 18:46, выполнил команду
 оболочки `git -C ~/claude/basics-graphics-music push origin claude_cmod_a7`; это
 команда, а не промпт, поэтому её здесь нет.

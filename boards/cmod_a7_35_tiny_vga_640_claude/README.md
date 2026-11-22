@@ -1565,6 +1565,20 @@ regulator and its photo:
 commit and push
 ```
 
+**23:38 on 21 November**; it tagged commit 628ca988 as
+`cmod_a7_pin_layout_2_claude` and pushed the tag:
+
+```text
+put a git tag cmod_a7_pin_layout_2_claude
+```
+
+**23:38 on 21 November**; it committed and pushed the two entries above in
+this appendix:
+
+```text
+commit and push
+```
+
 Yuri Panchul also ran the shell command
 `git -C ~/claude/basics-graphics-music push origin claude_cmod_a7` twice, at
 18:45 and 18:46 on 16 November; it is a command, not a prompt, and is left
