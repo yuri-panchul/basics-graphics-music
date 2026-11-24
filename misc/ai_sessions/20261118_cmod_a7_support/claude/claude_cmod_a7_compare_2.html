@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cmod A7 review 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&amp;family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+:root {
+  --ground: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #151922;
+  --muted: #566073;
+  --rule: #d6dce6;
+  --accent: #0055aa;
+  --high: #aa0000;
+  --medium: #aa5500;
+  --low: #5555aa;
+  --nit: #555555;
+  --good: #005500;
+  --code-bg: #e9edf3;
+  --display: "Barlow Semi Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0d1015;
+    --surface: #151a23;
+    --ink: #e6e9ef;
+    --muted: #9ba5b7;
+    --rule: #2a3141;
+    --accent: #55aaff;
+    --high: #ff5555;
+    --medium: #ffaa55;
+    --low: #aaaaff;
+    --nit: #aaaaaa;
+    --good: #55aa55;
+    --code-bg: #1e2430;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0d1015;
+  --surface: #151a23;
+  --ink: #e6e9ef;
+  --muted: #9ba5b7;
+  --rule: #2a3141;
+  --accent: #55aaff;
+  --high: #ff5555;
+  --medium: #ffaa55;
+  --low: #aaaaff;
+  --nit: #aaaaaa;
+  --good: #55aa55;
+  --code-bg: #1e2430;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  padding: 0 20px 64px;
+  background: var(--ground);
+  color: var(--ink);
+  font: 17px/1.55 var(--body);
+}
+.page { max-width: 1040px; margin: 0 auto; }
+.prose { max-width: 70ch; }
+.palette {
+  display: grid;
+  grid-template-columns: repeat(64, 1fr);
+  height: 8px;
+  margin: 0 -20px;
+}
+.palette i { display: block; }
+header.top { padding-block: 36px 8px; }
+.credit { color: var(--muted); font-size: 14px; margin: 0 0 20px; }
+h1, h2, h3 {
+  font-family: var(--display);
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0;
+}
+h1 { font-size: clamp(32px, 5vw, 46px); font-weight: 700; letter-spacing: -0.01em; }
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  padding-top: 40px;
+  margin-bottom: 14px;
+  border-top: 1px solid var(--rule);
+  margin-top: 40px;
+}
+h3 { font-size: 21px; font-weight: 600; }
+.lede { font-size: 19px; margin: 14px 0 0; }
+.lang { font-size: 15px; color: var(--muted); margin: 10px 0 0; }
+.meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 18px;
+  margin: 22px 0 0;
+  font-size: 15px;
+}
+.meta dt {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12.5px;
+  padding-top: 2px;
+}
+.meta dd { margin: 0; }
+nav.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 22px;
+  font-size: 15px;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+code, pre { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--code-bg); padding: 0.05em 0.3em; border-radius: 3px; overflow-wrap: anywhere; }
+pre {
+  background: var(--code-bg);
+  padding: 12px 14px;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin-bottom: 4px; }
+.scroll { overflow-x: auto; margin: 6px 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--rule); }
+th {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--rule);
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wide { min-width: 860px; }
+.edge { white-space: nowrap; font-weight: 600; }
+.ideas td:nth-child(2) code { font-size: 0.8em; overflow-wrap: normal; }
+.edge.codex { color: var(--medium); }
+.edge.claude { color: var(--accent); }
+.edge.even { color: var(--muted); }
+.chip {
+  display: inline-block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 8px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.chip.high { color: var(--high); }
+.chip.medium { color: var(--medium); }
+.chip.low { color: var(--low); }
+.chip.nit { color: var(--nit); }
+.pass { color: var(--good); font-weight: 600; }
+.fail { color: var(--high); font-weight: 700; }
+.na { color: var(--muted); }
+.finding { padding: 16px 0 6px; border-bottom: 1px solid var(--rule); max-width: 78ch; }
+.finding:last-of-type { border-bottom: 0; }
+.finding header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 6px; }
+.where { color: var(--muted); font-size: 15px; }
+.fix b { font-weight: 600; }
+.verdict {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px 32px;
+  margin-top: 6px;
+}
+.verdict h3 { font-size: 18px; margin-bottom: 6px; }
+blockquote {
+  margin: 0 0 12px;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+}
+footer { margin-top: 48px; color: var(--muted); font-size: 14px; }
+@media (max-width: 520px) {
+  body { font-size: 16px; padding: 0 16px 48px; }
+  .palette { margin: 0 -16px; }
+  .meta { grid-template-columns: 1fr; }
+  .meta dt { padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
+#verification h3 { margin: 30px 0 8px; }
+th code { text-transform: none; }
+</style>
+</head>
+<body>
+<div class="palette" aria-hidden="true"><i style="background:#000000"></i><i style="background:#000055"></i><i style="background:#0000aa"></i><i style="background:#0000ff"></i><i style="background:#005500"></i><i style="background:#005555"></i><i style="background:#0055aa"></i><i style="background:#0055ff"></i><i style="background:#00aa00"></i><i style="background:#00aa55"></i><i style="background:#00aaaa"></i><i style="background:#00aaff"></i><i style="background:#00ff00"></i><i style="background:#00ff55"></i><i style="background:#00ffaa"></i><i style="background:#00ffff"></i><i style="background:#550000"></i><i style="background:#550055"></i><i style="background:#5500aa"></i><i style="background:#5500ff"></i><i style="background:#555500"></i><i style="background:#555555"></i><i style="background:#5555aa"></i><i style="background:#5555ff"></i><i style="background:#55aa00"></i><i style="background:#55aa55"></i><i style="background:#55aaaa"></i><i style="background:#55aaff"></i><i style="background:#55ff00"></i><i style="background:#55ff55"></i><i style="background:#55ffaa"></i><i style="background:#55ffff"></i><i style="background:#aa0000"></i><i style="background:#aa0055"></i><i style="background:#aa00aa"></i><i style="background:#aa00ff"></i><i style="background:#aa5500"></i><i style="background:#aa5555"></i><i style="background:#aa55aa"></i><i style="background:#aa55ff"></i><i style="background:#aaaa00"></i><i style="background:#aaaa55"></i><i style="background:#aaaaaa"></i><i style="background:#aaaaff"></i><i style="background:#aaff00"></i><i style="background:#aaff55"></i><i style="background:#aaffaa"></i><i style="background:#aaffff"></i><i style="background:#ff0000"></i><i style="background:#ff0055"></i><i style="background:#ff00aa"></i><i style="background:#ff00ff"></i><i style="background:#ff5500"></i><i style="background:#ff5555"></i><i style="background:#ff55aa"></i><i style="background:#ff55ff"></i><i style="background:#ffaa00"></i><i style="background:#ffaa55"></i><i style="background:#ffaaaa"></i><i style="background:#ffaaff"></i><i style="background:#ffff00"></i><i style="background:#ffff55"></i><i style="background:#ffffaa"></i><i style="background:#ffffff"></i></div>
+<div class="page">
+
+<header class="top">
+<p class="credit"><em>Generated by Claude Opus 5.5 (<code>claude-opus-5-5</code>) in Claude Code
+2.1.330, using a prompt from Yuri Panchul. See the verbatim prompt in the
+<a href="#appendix">Appendix</a>.</em></p>
+<h1>Cmod A7-35T, Claude against Codex: the second review</h1>
+<p class="lang"><span lang="ru">Русская версия</span>:
+<a href="claude_cmod_a7_compare_2_ru.html" hreflang="ru">claude_cmod_a7_compare_2_ru.html</a></p>
+<p class="lede prose">Our six Digilent Cmod A7-35T configurations for basics-graphics-music set
+against Codex's four, now that both sides have moved on: Codex gave the labs the whole
+44-pin GPIO bus, and we moved every module to one side of the board, gave the labs the
+free pins in the order Yuri Panchul asked for, and redrew the breadboard. Bugs, risks,
+ideas worth taking, and the builds and tests behind them.</p>
+<dl class="meta">
+  <dt>Codex</dt>
+  <dd>branch <code>codex_cmod_a7</code> at <code>3f16c1de</code> (21 November 2026, 22:11),
+  in <code>~/codex/basics-graphics-music</code>; read only, built and tested in an exported copy</dd>
+  <dt>Ours</dt>
+  <dd>branch <code>claude_cmod_a7</code> at <code>434bc311</code> (21 November 2026, 23:38);
+  the tag <code>cmod_a7_pin_layout_2_claude</code> is on <code>628ca988</code>, the same design</dd>
+  <dt>Both from</dt>
+  <dd>main at <code>905cba6f</code></dd>
+  <dt>First round</dt>
+  <dd>ours, <a href="claude_cmod_a7_compare_1.html">claude_cmod_a7_compare_1.html</a>
+  (17 November, Codex at <code>b9fa13b2</code>); Codex's,
+  <code>misc/ai_sessions/20261118_cmod_a7_support/codex/competitive_review.html</code> on its
+  branch (18 November, ours at <code>c698aecc</code>)</dd>
+  <dt>Tools</dt>
+  <dd>Vivado 2026.1, Icarus Verilog 12.0, on one 4-core PC, one Vivado build of ours at a time</dd>
+</dl>
+<nav class="toc" aria-label="Contents">
+  <a href="#verdict">Verdict</a>
+  <a href="#since">Since the first round</a>
+  <a href="#findings">Problems in Codex's branch</a>
+  <a href="#ours">Gaps in ours</a>
+  <a href="#ideas">Ideas to adopt</a>
+  <a href="#side-by-side">Side by side</a>
+  <a href="#verification">Builds and tests</a>
+  <a href="#merge">Merging both</a>
+  <a href="#appendix">Appendix</a>
+</nav>
+</header>
+
+<section id="verdict">
+<h2>Verdict</h2>
+<div class="prose">
+<p>Both are working designs, and neither has an HDL bug that we could find. Both test
+suites pass at the pushed commits. Every configuration with TM1638, on both sides,
+elaborates every lab that builds on any configuration at all. The two
+<code>board_specific.xdc</code> files are byte for byte the same: both uncomment the same
+63 lines of Digilent's file, 62 ports and the clock. What separates them is design choices, the breadboard and
+the documentation.</p>
+<p>Codex is ahead on the lab interface: an internal 8-digit, 8-switch placeholder keeps
+unmodified labs compiling without TM1638, the buttons go through synchronizers, the
+split-DIO and HCW132 options of TM1638 are supported, its GPIO test drives every pin both ways,
+and a script in the repository builds its HTML and its drawings in both languages.</p>
+<p>Ours is ahead on the bench: hole-by-hole breadboard layouts for both DACs with the
+microphone and the regulator plugged in, the regulator Yuri Panchul bought with its
+pin order taken from their photo, the USB plug off the end of the breadboard, a single
+5 V wire and no 5 V rail, a GPIO bus made only of free pins in the order they asked for,
+and half the clock rate: the heaviest lab we built keeps +8.459 ns of setup slack at our 50 MHz, against +0.693 ns at Codex's 100 MHz.</p>
+<p>Two problems in Codex's branch matter most. The first round's 5 V rail beside 24
+FPGA pins is still there. And the peripheral pins are now inside the labs' GPIO bus:
+the guide tells a lab to reclaim them through a lab-local header that the normal
+Vivado flow does not read, so a lab that does it gets two drivers on a pin. In ours,
+the configurations without TM1638 still depend on edits to the labs, and three labs on
+our branch still fail on them; and the script that makes our README HTML lives
+outside the repository.</p>
+</div>
+<div class="verdict">
+  <div>
+    <h3>Where Codex is ahead</h3>
+    <ul>
+      <li>Without TM1638, unmodified labs: 84 of 88 elaborate, against 76 of 88 on ours</li>
+      <li>Two-register synchronizers on the buttons</li>
+      <li>Split-DIO, HCW132 and the CONCAT key orders of TM1638 supported</li>
+      <li>GPIO test drives and reads every pin, and checks the release to Z</li>
+      <li>The DAC runs from 5 V, with headroom for its own regulator</li>
+      <li>HTML and drawings built by scripts in the repository; drawings in Russian too</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Where ours is ahead</h3>
+    <ul>
+      <li>Breadboard layouts to the hole for both DACs, microphone and regulator plugged in</li>
+      <li>The bought regulator, VIN, OUT, GND, checked against a photo</li>
+      <li>One 5 V wire, no 5 V rail; the unpowered 0.55 V limit stated</li>
+      <li>GPIO bus of free pins only: no pin a lab must leave alone</li>
+      <li>50 MHz: the spectrum analyzer keeps +8.459 ns of slack, against +0.693 ns</li>
+      <li>Two no-PLL modes, 304 and 320 columns; tests in a third of the time</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="since">
+<h2>Since the first round</h2>
+<p class="prose">What became of the findings of both first-round reviews. “Ours” and
+“Codex” name the branch the finding was about.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Finding</th><th>About</th><th>Raised by</th><th>Now</th></tr></thead>
+<tbody>
+<tr><td>5 V rail along 24 FPGA pins</td><td>Codex</td><td>us</td><td class="fail">Open: <code>assembly_en.md:138–153</code></td></tr>
+<tr><td>Separate supply can back-power an unpowered FPGA; 0.55 V limit not stated</td><td>Codex</td><td>us</td><td class="fail">Open: <code>assembly_en.md:58</code>; “0.55” and “unpowered” still absent</td></tr>
+<tr><td>100 MHz leaves the spectrum analyzer under 1 ns of slack</td><td>Codex</td><td>us</td><td>Rebuilt below: still +0.693 ns on Codex's, against +8.459 ns on ours (+9.347 ns in the first round, before our pin change)</td></tr>
+<tr><td>Catalog row names a configuration</td><td>Codex</td><td>us</td><td class="fail">Open: <code>boards/README.csv</code> row <code>cmod_a7_35_tiny_vga_codex</code></td></tr>
+<tr><td>Banners on shared scripts Codex only edited</td><td>Codex</td><td>us</td><td>Open, but Yuri Panchul asked Codex to mark its text (Codex prompt P20): a merge note</td></tr>
+<tr><td>F01: the Vivado flow ignores a lab's own <code>lab_specific_board_config.svh</code></td><td>both</td><td>Codex</td><td class="fail">Open in both: a TODO in our README, by Yuri Panchul's decision; Codex's build driver works around it, the flow is unchanged</td></tr>
+<tr><td>F02: one-digit placeholder breaks two labs</td><td>ours</td><td>Codex</td><td>Fixed in the labs, as Yuri Panchul chose; one copy missed, see <a href="#g-labs">below</a></td></tr>
+<tr><td>F03: two-bit <code>sw</code> leaves the mux undefined</td><td>ours</td><td>Codex</td><td class="pass">Fixed: <code>1_02_mux</code> pads <code>sw</code> with zeros</td></tr>
+<tr><td>F04: no button synchronizer</td><td>ours</td><td>Codex</td><td>Not adopted, by Yuri Panchul's decision</td></tr>
+<tr><td>F05: split-DIO breaks elaboration</td><td>ours</td><td>Codex</td><td class="pass">Fixed: a clear <code>$error</code>, under test</td></tr>
+<tr><td>F06: GY-PCM5102 is a line output</td><td>ours</td><td>Codex</td><td class="pass">Fixed in the README</td></tr>
+<tr><td>F07: DAC supply margin at 3.3 V</td><td>ours</td><td>Codex</td><td>A measurement under load added (assembly step 11); still 3.3 V</td></tr>
+<tr><td>F08: controller-exclusion test filtered the wrong file</td><td>Codex</td><td>Codex</td><td class="pass">Fixed: <code>test_cmod_a7_35_tiny_vga_codex.py:59</code></td></tr>
+<tr><td>Ideas we took: tests, XDC provenance, Vivado assertions, GPIO, reset/run LED, pinned TinyVGA files</td><td>ours</td><td>us</td><td class="pass">All in our branch</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="findings">
+<h2>Problems in Codex's branch</h2>
+<p class="prose">Ranked by severity. Paths are relative to <code>boards/cmod_a7_35_tiny_vga_codex/</code>
+of Codex's branch unless they start with <code>labs/</code>, <code>scripts/</code> or <code>boards/</code>.</p>
+
+<article class="finding" id="f-bus">
+  <header>
+    <span class="chip medium">Medium</span>
+    <h3>Peripheral pins sit inside the labs' GPIO bus, and the way to reclaim them does not work in the normal build</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:202–208</code>, <code>assembly_en.md:197–214</code></p>
+  <p>Codex passes all 44 DIP pins to <code>lab_top</code> as <code>gpio[43:0]</code>, and nine of them,
+  <code>gpio[21]</code> to <code>gpio[29]</code> on DIP 26–34, are also driven by the TM1638,
+  microphone and DAC instances. The guide says a lab “must leave accessory-owned bits at Z”,
+  and that to reuse them it should leave the interface macro undefined “in a lab-local
+  <code>lab_specific_board_config.svh</code>”.</p>
+  <p>That second instruction runs into F01, which Codex itself reproduced: the normal flow,
+  <code>scripts/fpga/xilinx_vivado_synthesize.tcl</code>, does not put the lab directory on the
+  include path, so it reads <code>peripherals/lab_specific_board_config.svh</code>, which turns all
+  three interfaces on. A lab that follows the guide keeps the controller's driver and adds
+  its own, two drivers on one pin. Codex's own build driver puts the lab first, so its
+  tests never meet the case. The free pins also come with a gap: a lab that needs more than
+  21 consecutive pins runs into <code>gpio[21]</code>.</p>
+  <p class="fix"><b>Fix:</b> fix F01 first, then check in the top level, at elaboration, that a lab
+  does not drive a pin whose interface is on; or keep peripheral pins out of the bus, as ours
+  does.</p>
+</article>
+
+<article class="finding" id="f-5v">
+  <header>
+    <span class="chip medium">Medium</span>
+    <h3>A 5 V rail still runs along 24 FPGA pins</h3>
+  </header>
+  <p class="where"><code>assembly_en.md:138–153</code>, <code>breadboard_dac_en.svg</code>, <code>breadboard_dac_ru.svg</code></p>
+  <p>Unchanged since the first round. The left power rail is VU, about 5 V, for the full
+  length of the 30-row breadboard, beside the strips of DIP 1–24. The DIP pins have no series
+  resistors and take 3.75 V at most while the board is powered, so a jumper one hole off puts
+  5 V on an FPGA pin. Codex feeds the DAC from that rail, which gives the DAC's own regulator
+  headroom: a good reason, but one wire from DIP 24 does the same without a rail.</p>
+  <p class="fix"><b>Fix:</b> run the DAC supply and the regulator input on single wires from the
+  strip of DIP 24, and make both rails 3.3 V and GND.</p>
+</article>
+
+<article class="finding" id="f-backpower">
+  <header>
+    <span class="chip medium">Medium</span>
+    <h3>The separate-supply option can still feed 3.3 V into an unpowered FPGA</h3>
+  </header>
+  <p class="where"><code>assembly_en.md:58</code> and <code>assembly_ru.md</code></p>
+  <p>Unchanged since the first round. If the rails sag, the guide offers a separate accessory
+  supply with only the grounds shared. With USB unplugged and that supply on, the pull-ups of
+  the TM1638 module hold DIP 26–28 at 3.3 V against an unpowered FPGA, whose pins take
+  0.55 V at most. The guide still does not state the limit.</p>
+  <p class="fix"><b>Fix:</b> state the limit and switch both supplies together, or drop the option.</p>
+</article>
+
+<article class="finding" id="f-labs">
+  <header>
+    <span class="chip low">Low</span>
+    <h3>Without TM1638, four labs fail, two of them ones our branch fixed</h3>
+  </header>
+  <p class="where"><code>labs/4_microarchitecture/4_1_pipelines_1/4_1_3_pow5_pipelined_valid/lab_top.sv:207</code>,
+  <code>4_1_4_pow5_pipelined_valid_solution/lab_top.sv:183</code>, <code>labs/3_music/3_12_acoustic_locator/lab_top.sv:126</code>,
+  <code>labs/5_cpu/5_3_picorv32/lab_top.sv:120</code></p>
+  <p>Codex's report says its 17-lab matrix passes on all four configurations, which is true of
+  those 17. Over every lab, its two configurations without TM1638 elaborate 84 of 88: both
+  <code>pow5</code> labs write <code>led[2]</code> on a board with two LEDs, and so do
+  <code>3_12_acoustic_locator</code> and <code>5_3_picorv32</code>. With the labs of our branch,
+  which fix both <code>pow5</code> labs, Codex's configurations reach 87 of 89. The last two fail
+  on ours as well.</p>
+  <p class="fix"><b>Fix:</b> take our <code>pow5</code> fixes; fix the other two labs for boards with
+  two LEDs in both branches.</p>
+</article>
+
+<article class="finding" id="f-clock">
+  <header>
+    <span class="chip low">Low</span>
+    <h3>100 MHz still leaves the spectrum analyzer under 1 ns of slack</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:65–71</code></p>
+  <p>Codex clocks everything at 100 MHz so that <code>vga.sv</code> gets its 25 MHz pixel rate
+  as a ÷4 enable. In one flow for both, with the lab's own header, the spectrum analyzer meets
+  timing on Codex's configuration with <strong>+0.693 ns</strong> of setup slack, against
+  <strong>+8.459 ns</strong> on ours at 50 MHz, from the same 2,325 LUTs. The microphone monitor,
+  each with its own driver, keeps +1.860 ns against our +7.474 ns.</p>
+  <p>On both sides the worst path is not logic but the reset register reaching the asynchronous
+  clears of the spectrum filters: no logic between them, and 7.9 ns of routing on Codex's (10.2 ns
+  on ours). Codex's worst logic path is a 12-level carry chain in the filters, with +2.026 ns.
+  Not a bug today, but a student who adds a little logic to these labs will miss timing on
+  Codex's configuration long before ours.</p>
+  <p class="fix"><b>Fix:</b> none needed now. Replicating the reset register, on both sides,
+  would win back most of the reset routing.</p>
+</article>
+
+<article class="finding" id="f-catalog">
+  <header>
+    <span class="chip low">Low</span>
+    <h3>The catalog row names a configuration, and the menu test hides it</h3>
+  </header>
+  <p class="where"><code>boards/README.csv</code>, <code>scripts/tests/test_board_menu.py:30</code></p>
+  <p>The catalog lists physical boards, one row per model; Codex's row is
+  <code>cmod_a7_35_tiny_vga_codex</code>, and the board-menu test strips <code>_codex</code> and
+  <code>_tiny_vga</code> from catalog names to make it match. Our row is <code>cmod_a7_35</code>,
+  the board, and the test needs no change.</p>
+  <p class="fix"><b>Fix:</b> name the row <code>cmod_a7_35</code> and drop the <code>removesuffix</code> calls.</p>
+</article>
+
+<article class="finding" id="f-led">
+  <header>
+    <span class="chip nit">Nit</span>
+    <h3>The RGB LED is lit at full brightness</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:126–128</code></p>
+  <p>Red during reset, green while running, as ours, but driven at a constant level. The
+  Cmod's RGB LED at full drive dazzles; ours lights it 1/16 of the time, at 2.9 kHz.</p>
+</article>
+
+<article class="finding" id="f-dup">
+  <header>
+    <span class="chip nit">Nit</span>
+    <h3>A second copy of the review sits in the board directory</h3>
+  </header>
+  <p class="where"><code>competitive_review.html</code></p>
+  <p>The board directory holds a 58 KB <code>competitive_review.html</code> with the same text as
+  <code>misc/ai_sessions/20261118_cmod_a7_support/codex/competitive_review.html</code>. Reports
+  belong in <code>misc/ai_sessions</code>; the board directory is what students open.</p>
+</article>
+
+<article class="finding" id="f-drawing">
+  <header>
+    <span class="chip nit">Nit</span>
+    <h3>The breadboard drawing covers the DAC only</h3>
+  </header>
+  <p class="where"><code>breadboard_dac_en.svg</code>, <code>wiring.svg</code></p>
+  <p>The breadboard drawing shows WeAct and a generic regulator beside the breadboard, with
+  TM1638 and INMP441 left to a connection map that is “not to scale”. The regulator's pin
+  order is left open; the module of Amazon B08CDMZMDN reads VIN, OUT, GND, with OUT in the
+  middle, as the photo in our README shows.</p>
+</article>
+</section>
+
+<section id="ours">
+<h2>Gaps in ours</h2>
+<p class="prose">The same scrutiny, turned on our branch. Paths are relative to
+<code>boards/cmod_a7_35_tiny_vga_640_claude/</code> unless they start with <code>labs/</code> or <code>scripts/</code>.</p>
+
+<article class="finding" id="g-labs">
+  <header>
+    <span class="chip medium">Medium</span>
+    <h3>Without TM1638, our configurations depend on edits to the labs, and one copy was missed</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:362–373</code>,
+  <code>labs/9_events/2024_08_31_meetup_in_la/9_5_make_shift_register_low_power/shift_register_with_valid_and_debug.sv:26</code></p>
+  <p>Our configurations without TM1638 give the labs one digit and two switches, and we fixed
+  eight labs to cope, as Yuri Panchul chose. On our branch they elaborate 84 of 89 labs; with
+  main's labs, without those fixes, 76 of 88. Of the five failures on our branch, two are the
+  labs that fail on Codex's too; one is a copy of the FIFO file we fixed in
+  <code>4_2_1</code>, which <code>9_events/…/9_5_make_shift_register_low_power</code> carries
+  unfixed; and two are the original Geiger counter labs, which Yuri Panchul is handling
+  (our <code>6_1_geiger_muller_radiation_counter_claude</code> copy passes).</p>
+  <p class="fix"><b>Fix:</b> apply the <code>4_2_1</code> fix to the <code>9_5</code> copy. Or, if Yuri
+  Panchul agrees, take Codex's internal width of eight digits and switches and keep the one
+  digit and two keys on the board side only; Yuri Panchul chose the lab edits before.</p>
+</article>
+
+<article class="finding" id="g-html">
+  <header>
+    <span class="chip low">Low</span>
+    <h3>The script that makes our HTML is not in the repository</h3>
+  </header>
+  <p class="where"><code>README.html</code>, <code>README_ru.html</code>; made by <code>~/claude/cmod_a7/make_html.py</code></p>
+  <p>The README says nothing of how the HTML is made, and the script is outside the
+  repository, so whoever edits <code>README.md</code> next cannot rebuild <code>README.html</code>.
+  Codex keeps <code>build_docs.py</code> next to its guides.</p>
+  <p class="fix"><b>Fix:</b> move the script into the board directory and name it in the Files table.</p>
+</article>
+
+<article class="finding" id="g-gpio-test">
+  <header>
+    <span class="chip low">Low</span>
+    <h3>Our GPIO test checks the outputs only</h3>
+  </header>
+  <p class="where"><code>scripts/tests/fixtures/cmod_a7_35_claude/tb.sv:329–352</code></p>
+  <p>Our test lab drives one 64-bit pattern, and the testbench checks that it reaches all 34 or
+  37 pins in order. That catches a wrong mapping, but no input path is tested, and neither is
+  the release to Z. Codex's <code>gpio_tb.sv</code> drives each pin from outside high and low,
+  reads it inside, drives it from inside, and releases it.</p>
+</article>
+
+<article class="finding" id="g-buttons">
+  <header>
+    <span class="chip low">Low</span>
+    <h3>Buttons go to the labs unsynchronized, and the TM1638 options are ignored</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:333</code>, <code>:528</code>, <code>:497–498</code></p>
+  <p>Without TM1638, <code>btn</code> goes straight to <code>key</code> and <code>sw</code>; Yuri
+  Panchul decided against synchronizers. With TM1638, both buttons reset the design, so the
+  DUPLICATE and CONCAT key orders have nothing to add and are ignored; split DIO stops the
+  build with an <code>$error</code>, and HCW132's sixteen keys meet an eight-bit wire. No lab
+  turns these options on today.</p>
+</article>
+
+<article class="finding" id="g-dac">
+  <header>
+    <span class="chip low">Low</span>
+    <h3>The DAC runs from 3.3 V, with little margin on WeAct</h3>
+  </header>
+  <p class="where"><code>README.md</code>, Power section and assembly step 11</p>
+  <p>WeAct's own ME6231 regulator turns our 3.3 V into about 3.2 V for a PCM5100A that needs
+  3.0 V. We ask for a measurement under load; Codex sidesteps it by feeding the module 5 V.</p>
+</article>
+
+<article class="finding" id="g-flow">
+  <header>
+    <span class="chip nit">Nit</span>
+    <h3>Our Vivado driver skips <code>phys_opt_design</code></h3>
+  </header>
+  <p class="where"><code>scripts/tests/build_cmod_a7_35_claude.tcl:96–98</code></p>
+  <p>The normal flow runs <code>phys_opt_design</code> after placement; our driver does not, so its
+  slack figures are a little pessimistic. Codex's driver runs it.</p>
+</article>
+
+<article class="finding" id="g-ru">
+  <header>
+    <span class="chip nit">Nit</span>
+    <h3>Our drawings are in English only</h3>
+  </header>
+  <p>The Russian README shows the English drawings. Codex draws its DAC breadboard in both
+  languages and labels its connection map in both.</p>
+</article>
+</section>
+
+<section id="ideas">
+<h2>Ideas to adopt</h2>
+<p class="prose">From Codex into ours, cheapest first. Each is a proposal; none was applied
+for this review.</p>
+<div class="scroll">
+<table class="wide ideas">
+<thead><tr><th>Idea</th><th>Where in Codex's branch</th><th>What it takes in ours</th></tr></thead>
+<tbody>
+<tr><td>Fix the missed lab copy</td><td>—</td><td>The <code>4_2_1</code> change applied to <code>9_5_make_shift_register_low_power</code></td></tr>
+<tr><td>Bidirectional GPIO test with release to Z</td><td><code>scripts/tests/fixtures/cmod_a7_35_tiny_vga_codex/gpio_tb.sv</code></td><td>A test lab with <code>gpio_oe</code> and <code>gpio_drive</code>, and a loop over our 34 or 37 pins</td></tr>
+<tr><td>HTML built inside the repository</td><td><code>build_docs.py</code></td><td>Move <code>make_html.py</code> into the board directory</td></tr>
+<tr><td><code>phys_opt_design</code> in the build driver</td><td><code>scripts/tests/build_cmod_a7_35_tiny_vga_codex.tcl</code></td><td>One line</td></tr>
+<tr><td>Russian drawings</td><td><code>breadboard_dac_ru.svg</code>, <code>draw_breadboard.py</code></td><td>A language argument for our three generators</td></tr>
+<tr><td>DAC from 5 V as an option</td><td><code>assembly_en.md:114–155</code></td><td>A second single wire from the strip of DIP 24 to the DAC's VCC or VIN, no rail; the 3.3 V feed stays the default</td></tr>
+<tr><td>Split-DIO supported instead of refused</td><td><code>board_specific_top.sv</code>, the <code>SPLIT_TM1638_DIO_INOUT_SIGNAL</code> branch</td><td>A tri-state on <code>pio14</code> and three ports</td></tr>
+<tr><td>Internal widths of eight digits and switches without TM1638</td><td><code>board_specific_top.sv:142</code></td><td>Needs Yuri Panchul's agreement: the choice was to keep one digit and fix the labs</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="side-by-side">
+<h2>Side by side</h2>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th></th><th>Ours</th><th>Codex</th></tr></thead>
+<tbody>
+<tr><td>Configurations</td><td>6: 640×480 at 50 MHz, 304×480 and 320×480 at 12 MHz; each with and without TM1638</td><td>4: 640×480 at 100 MHz, 305×480 at 12 MHz; each with and without TM1638</td></tr>
+<tr><td>Clock</td><td>MMCM 12 × 62.5 / 15 = 50 MHz, VCO 750 MHz</td><td>MMCM 12 × 50 / 6 = 100 MHz, VCO 600 MHz, the lowest the −1 part allows</td></tr>
+<tr><td>No-PLL VGA</td><td>304 columns, 381 clocks a line, 59.99 Hz; or 320 columns, 400 clocks, 57.14 Hz</td><td>305 columns, 382 clocks a line, 59.84 Hz</td></tr>
+<tr><td>TM1638</td><td>DIP 12, 13, 14: STB, CLK, DIO</td><td>DIP 26, 27, 28: DIO, CLK, STB</td></tr>
+<tr><td>INMP441</td><td>DIP 17–20: SCK, WS, L/R, SD; L/R driven low, or tied to GND</td><td>DIP 29–31: SCK, WS, SD; L/R tied to GND</td></tr>
+<tr><td>DAC</td><td>DIP 21–23: BCK, DIN, LCK/WS, next to VU</td><td>DIP 32–34: BCK, DIN, LRCK</td></tr>
+<tr><td>Lab GPIO</td><td>34 pins with TM1638, 37 without; free pins only; <code>gpio[0]</code> = DIP 48 down to DIP 26, then DIP 1 up, as asked</td><td>44-bit bus, nine bits taken by the modules: 35 free with TM1638, 38 without, 44 with all three interfaces off</td></tr>
+<tr><td>Buttons with TM1638</td><td>Either button resets</td><td>BTN0 resets, BTN1 is <code>key[0]</code>, synchronized</td></tr>
+<tr><td>Buttons without TM1638</td><td><code>key[1:0]</code>, straight</td><td><code>key[1:0]</code>, two-register synchronizers</td></tr>
+<tr><td>Lab widths without TM1638</td><td>1 digit, 2 keys, 2 switches</td><td>8 digits and 8 switches inside, 2 keys</td></tr>
+<tr><td>RGB LED</td><td>Red in reset, green running, at 1/16 brightness</td><td>Red in reset, green running, full brightness</td></tr>
+<tr><td>Supply for the modules</td><td>A: 3.3 V from Pmod TPH2; B: AMS1117-3.3 module from VU. All modules on 3.3 V; one 5 V wire</td><td>DAC from VU on a 5 V rail; a 3.3 V regulator for TM1638 and INMP441</td></tr>
+<tr><td>Breadboard</td><td>Full size, Cmod in rows 40–63, USB plug off the end; regulator, DAC and INMP441 in the holes; TM1638 on wires</td><td>30 rows, Cmod in rows 4–27, USB plug off the end; DAC and regulator beside the breadboard on wires</td></tr>
+<tr><td>Drawings</td><td>4 wiring diagrams, 2 breadboard layouts (both DACs), the GPIO pin picture, the regulator's photo; English</td><td>A connection map in both languages, a WeAct breadboard drawing in English and in Russian</td></tr>
+<tr><td>Documents</td><td>README in English and Russian, Markdown and HTML; short pointer READMEs in both languages in the other five directories</td><td>README, assembly guides in English and Russian, Markdown and HTML, <code>GPIO_VALIDATION.md</code>; English READMEs in the other three directories</td></tr>
+<tr><td>Prompt appendix</td><td>Every prompt with its Pacific time, English and Russian</td><td>P01–P39, untimed, from <code>reference/follow_up_prompts.json</code></td></tr>
+<tr><td>Tests</td><td>9 tests, 78 s; Vivado for all six configurations with <code>BGM_TEST_VIVADO=1</code></td><td>9 tests, 226 s; a separate Vivado driver</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="verification">
+<h2>Builds and tests</h2>
+
+<h3>Each branch's own tests</h3>
+<p class="prose">Run on exported copies of the two pushed commits, one suite at a time.</p>
+<div class="scroll">
+<table>
+<thead><tr><th>Suite</th><th>Ours, <code>434bc311</code></th><th>Codex, <code>3f16c1de</code></th></tr></thead>
+<tbody>
+<tr><td>Board tests</td><td class="pass">9 passed, 78 s (the Vivado test skipped)</td><td class="pass">9 passed, 226 s</td></tr>
+<tr><td><code>test_board_menu.py</code></td><td class="pass">22 passed, 119 configurations</td><td class="pass">22 passed, 117 configurations</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Every lab on every configuration</h3>
+<p class="prose">Icarus Verilog elaboration of each directory with a <code>lab_top.sv</code>, with
+the lab directory first on the include path, 2,030 compiles in one minute. Thirteen labs fail
+on every configuration of both branches, from missing sources or unfinished code, and are left
+out: the figures count the other 88 labs of main and 89 of ours, which has the Geiger
+<code>_claude</code> copy. Each branch is run with its own labs and with the other's.</p>
+<div class="scroll">
+<table>
+<thead><tr><th>Configurations</th><th>Labs</th><th class="num">With TM1638</th><th class="num">Without TM1638</th></tr></thead>
+<tbody>
+<tr><td>Ours</td><td>ours</td><td class="num pass">89 / 89</td><td class="num">84 / 89</td></tr>
+<tr><td>Ours</td><td>Codex's, as main</td><td class="num pass">88 / 88</td><td class="num fail">76 / 88</td></tr>
+<tr><td>Codex</td><td>Codex's, as main</td><td class="num pass">88 / 88</td><td class="num">84 / 88</td></tr>
+<tr><td>Codex</td><td>ours</td><td class="num pass">89 / 89</td><td class="num pass">87 / 89</td></tr>
+</tbody>
+</table>
+</div>
+<p class="prose">Each figure holds for every configuration in its group: the three of ours, or
+the two of Codex's, give the same count. Failures without TM1638:</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Lab</th><th>Ours, our labs</th><th>Ours, main's</th><th>Codex, main's</th><th>Codex, our labs</th><th>Cause</th></tr></thead>
+<tbody>
+<tr><td><code>3_music/3_12_acoustic_locator</code></td><td class="fail">fails</td><td class="fail">fails</td><td class="fail">fails</td><td class="fail">fails</td><td><code>led[2]</code> with two LEDs</td></tr>
+<tr><td><code>5_cpu/5_3_picorv32</code></td><td class="fail">fails</td><td class="fail">fails</td><td class="fail">fails</td><td class="fail">fails</td><td><code>led[-2:0]</code> with two LEDs</td></tr>
+<tr><td><code>4_1_3</code> and <code>4_1_4</code> <code>pow5</code></td><td class="pass">pass</td><td class="fail">fail</td><td class="fail">fail</td><td class="pass">pass</td><td><code>led[2]</code>; fixed on our branch</td></tr>
+<tr><td><code>9_events/…/9_5_make_shift_register_low_power</code></td><td class="fail">fails</td><td class="fail">fails</td><td class="pass">passes</td><td class="pass">passes</td><td><code>valid[-1:0]</code> from one digit</td></tr>
+<tr><td>Both original Geiger labs</td><td class="fail">fail</td><td class="fail">fail</td><td class="pass">pass</td><td class="pass">pass</td><td>A zero repeat count from one digit</td></tr>
+<tr><td><code>1_08_7segment_word</code>, FIFO <code>4_2_1</code>, <code>4_2_2</code>, <code>4_2_3</code>, <code>4_2_5</code></td><td class="pass">pass</td><td class="fail">fail</td><td class="pass">pass</td><td class="pass">pass</td><td>One digit; fixed on our branch</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Vivado</h3>
+<p class="prose">Two kinds of build, one at a time. With each branch's own driver, which
+is what each branch documents; ours skips <code>phys_opt_design</code>. And one shared flow for both,
+written for this review and kept outside the repository: the lab directory first on the include
+path, then <code>opt_design</code>, <code>place_design</code>, <code>phys_opt_design</code> and
+<code>route_design</code>, as the normal flow does. LUTs and registers are the Slice LUTs and Slice
+Registers of <code>report_utilization</code>. All builds met timing; none was programmed into a board.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Lab</th><th>Flow</th><th class="num">Ours, 50 MHz</th><th class="num">Codex, 100 MHz</th></tr></thead>
+<tbody>
+<tr><td><code>3_10_spectrum_analyzer</code></td><td>shared; both built for this review</td>
+<td class="num">+8.459 ns / +0.073 ns<br>2,325 LUTs, 1,479 regs</td>
+<td class="num">+0.693 ns / +0.048 ns<br>2,325 LUTs, 1,468 regs</td></tr>
+<tr><td><code>3_11_microphone_monitor</code></td><td>own drivers; ours on 21 November, 20:24, Codex's for this review</td>
+<td class="num">+7.474 ns / +0.069 ns<br>1,980 LUTs, 1,365 regs</td>
+<td class="num">+1.860 ns / +0.109 ns<br>2,011 LUTs, 1,356 regs</td></tr>
+<tr><td><code>2_1_rectangle_ellipse_parabola</code></td><td>own drivers; ours for this review, Codex's from its <code>GPIO_VALIDATION.md</code></td>
+<td class="num">+14.969 ns / +0.138 ns<br>207 LUTs, 122 regs</td>
+<td class="num">+5.095 ns / +0.131 ns</td></tr>
+<tr><td><code>3_11_microphone_monitor</code>, 12 MHz, no PLL, with TM1638</td><td>own drivers, as each branch documents</td>
+<td class="num">304: +68.943 ns<br>320: +63.443 ns</td>
+<td class="num">305: +70.596 ns</td></tr>
+</tbody>
+</table>
+</div>
+<p class="prose">Setup / hold slack. The worst path of both spectrum builds is the reset register
+to the asynchronous clears, with no logic between them; see <a href="#f-clock">the finding above</a>.</p>
+
+<h3>Static checks</h3>
+<ul class="prose">
+  <li>The two <code>board_specific.xdc</code> files are identical, and both are Digilent's file at
+  <code>c8644a9f</code> (SHA-256 <code>56568df3…</code>) with 63 lines uncommented: 62 ports
+  and the clock.</li>
+  <li>TinyVGA bit order, sync polarities and blanking match on both sides: <code>ja</code> =
+  R1, G1, B1, VS, R0, G0, B0, HS.</li>
+  <li>Both reset chains assert at once and release on the third clock edge; Codex's releases
+  after MMCM lock, ours too.</li>
+  <li>Neither design was programmed into a board, and no monitor, audio load or supply was
+  measured.</li>
+</ul>
+</section>
+
+<section id="merge">
+<h2>Merging both</h2>
+<div class="prose">
+<p>The two branches can live side by side under one <code>cmod_a7_35</code> menu entry: their
+directory names differ by the <code>_claude</code> and <code>_codex</code> suffixes, and both
+suffixes are in <code>fpga_board_base_name</code>. Three files conflict:</p>
+<ul>
+  <li><code>boards/README.csv</code>: one row for the board, <code>cmod_a7_35</code>, as ours, with
+  its TM1638 column “either”;</li>
+  <li><code>scripts/steps/00_setup.source_bash</code>: both add suffixes and Xilinx toolchain names;
+  our glob <code>cmod_a7*</code> covers Codex's four names, and the banner line Codex put at its
+  top would sit over a file it edited in eight lines;</li>
+  <li><code>scripts/tests/test_board_menu.py</code>: Codex's <code>removesuffix</code> change is not
+  needed with a <code>cmod_a7_35</code> row.</li>
+</ul>
+<p>The pin plans are incompatible: a bitstream from one branch needs that branch's wiring.
+The eight lab fixes on our branch help Codex's configurations too (87 of 89 labs instead of
+84 of 88) and any other board with one digit or two LEDs.</p>
+</div>
+</section>
+
+<section id="appendix">
+<h2>Appendix: the prompt</h2>
+<p class="prose">The prompt Yuri Panchul sent in this Claude Code session at 23:39 on
+21 November 2026, Pacific time (UTC−8), verbatim:</p>
+<pre>make a comprehensive review against your competitor; generate an HTML file, add it to the repo</pre>
+</section>
+
+<footer>
+<p>The strip at the top holds the 64 colours of RGB222, all that TinyVGA can show; the
+page's accent and severity colours are taken from it.</p>
+</footer>
+
+</div>
+
+</body>
+</html>

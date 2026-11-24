@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Обзор Cmod A7, второй</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@500;600;700&amp;family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+:root {
+  --ground: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #151922;
+  --muted: #566073;
+  --rule: #d6dce6;
+  --accent: #0055aa;
+  --high: #aa0000;
+  --medium: #aa5500;
+  --low: #5555aa;
+  --nit: #555555;
+  --good: #005500;
+  --code-bg: #e9edf3;
+  --display: "Fira Sans Condensed", "PT Sans Narrow", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0d1015;
+    --surface: #151a23;
+    --ink: #e6e9ef;
+    --muted: #9ba5b7;
+    --rule: #2a3141;
+    --accent: #55aaff;
+    --high: #ff5555;
+    --medium: #ffaa55;
+    --low: #aaaaff;
+    --nit: #aaaaaa;
+    --good: #55aa55;
+    --code-bg: #1e2430;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0d1015;
+  --surface: #151a23;
+  --ink: #e6e9ef;
+  --muted: #9ba5b7;
+  --rule: #2a3141;
+  --accent: #55aaff;
+  --high: #ff5555;
+  --medium: #ffaa55;
+  --low: #aaaaff;
+  --nit: #aaaaaa;
+  --good: #55aa55;
+  --code-bg: #1e2430;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  padding: 0 20px 64px;
+  background: var(--ground);
+  color: var(--ink);
+  font: 17px/1.55 var(--body);
+}
+.page { max-width: 1040px; margin: 0 auto; }
+.prose { max-width: 70ch; }
+.palette {
+  display: grid;
+  grid-template-columns: repeat(64, 1fr);
+  height: 8px;
+  margin: 0 -20px;
+}
+.palette i { display: block; }
+header.top { padding-block: 36px 8px; }
+.credit { color: var(--muted); font-size: 14px; margin: 0 0 20px; }
+h1, h2, h3 {
+  font-family: var(--display);
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0;
+}
+h1 { font-size: clamp(32px, 5vw, 46px); font-weight: 700; letter-spacing: -0.01em; }
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  padding-top: 40px;
+  margin-bottom: 14px;
+  border-top: 1px solid var(--rule);
+  margin-top: 40px;
+}
+h3 { font-size: 21px; font-weight: 600; }
+.lede { font-size: 19px; margin: 14px 0 0; }
+.lang { font-size: 15px; color: var(--muted); margin: 10px 0 0; }
+.meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 18px;
+  margin: 22px 0 0;
+  font-size: 15px;
+}
+.meta dt {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12.5px;
+  padding-top: 2px;
+}
+.meta dd { margin: 0; }
+nav.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 22px;
+  font-size: 15px;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+code, pre { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--code-bg); padding: 0.05em 0.3em; border-radius: 3px; overflow-wrap: anywhere; }
+pre {
+  background: var(--code-bg);
+  padding: 12px 14px;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin-bottom: 4px; }
+.scroll { overflow-x: auto; margin: 6px 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--rule); }
+th {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--rule);
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wide { min-width: 860px; }
+.edge { white-space: nowrap; font-weight: 600; }
+.ideas td:nth-child(2) code { font-size: 0.8em; overflow-wrap: normal; }
+.edge.codex { color: var(--medium); }
+.edge.claude { color: var(--accent); }
+.edge.even { color: var(--muted); }
+.chip {
+  display: inline-block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 8px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.chip.high { color: var(--high); }
+.chip.medium { color: var(--medium); }
+.chip.low { color: var(--low); }
+.chip.nit { color: var(--nit); }
+.pass { color: var(--good); font-weight: 600; }
+.fail { color: var(--high); font-weight: 700; }
+.na { color: var(--muted); }
+.finding { padding: 16px 0 6px; border-bottom: 1px solid var(--rule); max-width: 78ch; }
+.finding:last-of-type { border-bottom: 0; }
+.finding header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 6px; }
+.where { color: var(--muted); font-size: 15px; }
+.fix b { font-weight: 600; }
+.verdict {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px 32px;
+  margin-top: 6px;
+}
+.verdict h3 { font-size: 18px; margin-bottom: 6px; }
+blockquote {
+  margin: 0 0 12px;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+}
+footer { margin-top: 48px; color: var(--muted); font-size: 14px; }
+@media (max-width: 520px) {
+  body { font-size: 16px; padding: 0 16px 48px; }
+  .palette { margin: 0 -16px; }
+  .meta { grid-template-columns: 1fr; }
+  .meta dt { padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
+#verification h3 { margin: 30px 0 8px; }
+th code { text-transform: none; }
+</style>
+</head>
+<body>
+<div class="palette" aria-hidden="true"><i style="background:#000000"></i><i style="background:#000055"></i><i style="background:#0000aa"></i><i style="background:#0000ff"></i><i style="background:#005500"></i><i style="background:#005555"></i><i style="background:#0055aa"></i><i style="background:#0055ff"></i><i style="background:#00aa00"></i><i style="background:#00aa55"></i><i style="background:#00aaaa"></i><i style="background:#00aaff"></i><i style="background:#00ff00"></i><i style="background:#00ff55"></i><i style="background:#00ffaa"></i><i style="background:#00ffff"></i><i style="background:#550000"></i><i style="background:#550055"></i><i style="background:#5500aa"></i><i style="background:#5500ff"></i><i style="background:#555500"></i><i style="background:#555555"></i><i style="background:#5555aa"></i><i style="background:#5555ff"></i><i style="background:#55aa00"></i><i style="background:#55aa55"></i><i style="background:#55aaaa"></i><i style="background:#55aaff"></i><i style="background:#55ff00"></i><i style="background:#55ff55"></i><i style="background:#55ffaa"></i><i style="background:#55ffff"></i><i style="background:#aa0000"></i><i style="background:#aa0055"></i><i style="background:#aa00aa"></i><i style="background:#aa00ff"></i><i style="background:#aa5500"></i><i style="background:#aa5555"></i><i style="background:#aa55aa"></i><i style="background:#aa55ff"></i><i style="background:#aaaa00"></i><i style="background:#aaaa55"></i><i style="background:#aaaaaa"></i><i style="background:#aaaaff"></i><i style="background:#aaff00"></i><i style="background:#aaff55"></i><i style="background:#aaffaa"></i><i style="background:#aaffff"></i><i style="background:#ff0000"></i><i style="background:#ff0055"></i><i style="background:#ff00aa"></i><i style="background:#ff00ff"></i><i style="background:#ff5500"></i><i style="background:#ff5555"></i><i style="background:#ff55aa"></i><i style="background:#ff55ff"></i><i style="background:#ffaa00"></i><i style="background:#ffaa55"></i><i style="background:#ffaaaa"></i><i style="background:#ffaaff"></i><i style="background:#ffff00"></i><i style="background:#ffff55"></i><i style="background:#ffffaa"></i><i style="background:#ffffff"></i></div>
+<div class="page">
+
+<header class="top">
+<p class="credit"><em>Создано Claude Opus 5.5 (<code>claude-opus-5-5</code>) в Claude Code
+2.1.330 по промптам Юрия Панчула. Дословные промпты — в
+<a href="#appendix">приложении</a>.</em></p>
+<h1>Cmod A7-35T, Claude против Codex: второй обзор</h1>
+<p class="lang"><span lang="en">English version</span>:
+<a href="claude_cmod_a7_compare_2.html" hreflang="en">claude_cmod_a7_compare_2.html</a></p>
+<p class="lede prose">Наши шесть конфигураций платы Digilent Cmod A7-35T для
+basics-graphics-music в сравнении с четырьмя конфигурациями Codex после того, как обе
+стороны продвинулись: Codex отдал упражнениям всю 44-битную шину GPIO, а мы перенесли все
+модули на одну сторону платы, отдали упражнениям свободные выводы в порядке, запрошенном
+Юрием Панчулом, и заново нарисовали макетную плату. Ошибки, риски, идеи, которые стоит
+перенять, и сборки и тесты, на которых всё это основано.</p>
+<dl class="meta">
+  <dt>Codex</dt>
+  <dd>ветка <code>codex_cmod_a7</code> на коммите <code>3f16c1de</code> (21 ноября 2026, 22:11),
+  в <code>~/codex/basics-graphics-music</code>; только чтение, сборки и тесты — в экспортированной копии</dd>
+  <dt>Наша</dt>
+  <dd>ветка <code>claude_cmod_a7</code> на коммите <code>434bc311</code> (21 ноября 2026, 23:38);
+  тег <code>cmod_a7_pin_layout_2_claude</code> стоит на <code>628ca988</code>, это та же схема</dd>
+  <dt>Общая основа</dt>
+  <dd>main на коммите <code>905cba6f</code></dd>
+  <dt>Первый раунд</dt>
+  <dd>наш, <a href="claude_cmod_a7_compare_1_ru.html">claude_cmod_a7_compare_1_ru.html</a>
+  (17 ноября, Codex на <code>b9fa13b2</code>); отчёт Codex,
+  <code>misc/ai_sessions/20261118_cmod_a7_support/codex/competitive_review_ru.html</code> в его
+  ветке (18 ноября, наша на <code>c698aecc</code>)</dd>
+  <dt>Инструменты</dt>
+  <dd>Vivado 2026.1, Icarus Verilog 12.0, на одном 4-ядерном ПК, наши сборки Vivado — по одной</dd>
+</dl>
+<nav class="toc" aria-label="Содержание">
+  <a href="#verdict">Итог</a>
+  <a href="#since">После первого раунда</a>
+  <a href="#findings">Проблемы в ветке Codex</a>
+  <a href="#ours">Пробелы в нашей</a>
+  <a href="#ideas">Что перенять</a>
+  <a href="#side-by-side">Рядом</a>
+  <a href="#verification">Сборки и тесты</a>
+  <a href="#merge">Слияние веток</a>
+  <a href="#appendix">Приложение</a>
+</nav>
+</header>
+
+<section id="verdict">
+<h2>Итог</h2>
+<div class="prose">
+<p>Обе схемы работают, и ни в одной мы не нашли ошибки в HDL. Оба набора тестов проходят
+на отправленных коммитах. Каждая конфигурация с TM1638, с обеих сторон, собирает каждое
+упражнение, которое вообще собирается хоть на какой-то конфигурации. Два файла
+<code>board_specific.xdc</code> совпадают байт в байт: оба раскомментируют одни и те же
+63 строки файла Digilent — 62 порта и тактовый сигнал. Различаются проектные решения,
+макетная плата и документация.</p>
+<p>Codex впереди по интерфейсу упражнений: внутренняя заглушка на 8 цифр и 8 переключателей
+позволяет собирать немодифицированные упражнения без TM1638, кнопки проходят через
+синхронизаторы, поддержаны режимы split-DIO и HCW132 модуля TM1638, его тест GPIO гоняет
+каждый вывод в обе стороны, а HTML и рисунки на обоих языках собирает скрипт в репозитории.</p>
+<p>Мы впереди на макетной плате: раскладки с точностью до отверстия для обоих ЦАП, с
+вставленными микрофоном и стабилизатором; стабилизатор, купленный Юрием Панчулом, с порядком
+выводов по фотографии Юрия Панчула; штекер USB за краем макетной платы; один провод с 5 В и
+никакой шины 5 В; шина GPIO только из свободных выводов в запрошенном порядке; и
+вдвое меньшая тактовая частота: самое тяжёлое собранное нами упражнение сохраняет +8,459 нс запаса по установке на наших 50 МГц против +0,693 нс на 100 МГц у Codex.</p>
+<p>Важнее всего две проблемы в ветке Codex. Шина 5 В рядом с 24 выводами ПЛИС из первого
+раунда осталась на месте. А выводы модулей теперь входят в шину GPIO упражнений: инструкция
+предлагает освободить их через локальный заголовок упражнения, который обычный маршрут Vivado
+не читает, так что упражнение, которое так сделает, получит на выводе два драйвера. У нас
+конфигурации без TM1638 по-прежнему зависят от правок в упражнениях, и три упражнения в нашей
+ветке на них всё ещё не собираются; а скрипт, который делает HTML нашего README, лежит вне
+репозитория.</p>
+</div>
+<div class="verdict">
+  <div>
+    <h3>Где впереди Codex</h3>
+    <ul>
+      <li>Без TM1638 немодифицированные упражнения: собираются 84 из 88, у нас 76 из 88</li>
+      <li>Двухрегистровые синхронизаторы на кнопках</li>
+      <li>Поддержаны split-DIO, HCW132 и порядки клавиш CONCAT модуля TM1638</li>
+      <li>Тест GPIO подаёт и читает каждый вывод и проверяет отпускание в Z</li>
+      <li>ЦАП питается от 5 В, с запасом для его собственного стабилизатора</li>
+      <li>HTML и рисунки собирают скрипты в репозитории; рисунки есть и на русском</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Где впереди мы</h3>
+    <ul>
+      <li>Раскладки на макетной плате с точностью до отверстия для обоих ЦАП, с микрофоном и стабилизатором</li>
+      <li>Купленный стабилизатор, VIN, OUT, GND, сверен с фотографией</li>
+      <li>Один провод с 5 В, без шины 5 В; предел 0,55 В для обесточенной платы указан</li>
+      <li>Шина GPIO только из свободных выводов: нет выводов, которые упражнение обязано не трогать</li>
+      <li>50 МГц: у анализатора спектра +8,459 нс запаса против +0,693 нс</li>
+      <li>Два режима без PLL, 304 и 320 столбцов; тесты втрое быстрее</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="since">
+<h2>После первого раунда</h2>
+<p class="prose">Что стало с замечаниями обоих обзоров первого раунда. «Наша» и «Codex» —
+ветка, к которой относится замечание.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Замечание</th><th>Ветка</th><th>Кто нашёл</th><th>Сейчас</th></tr></thead>
+<tbody>
+<tr><td>Шина 5 В вдоль 24 выводов ПЛИС</td><td>Codex</td><td>мы</td><td class="fail">Открыто: <code>assembly_en.md:138–153</code></td></tr>
+<tr><td>Отдельный источник может подать питание на обесточенную ПЛИС; предел 0,55 В не указан</td><td>Codex</td><td>мы</td><td class="fail">Открыто: <code>assembly_en.md:58</code>; «0.55» и «unpowered» по-прежнему нет</td></tr>
+<tr><td>На 100 МГц у анализатора спектра меньше 1 нс запаса</td><td>Codex</td><td>мы</td><td>Пересобрано ниже: у Codex по-прежнему +0,693 нс, у нас +8,459 нс (+9,347 нс в первом раунде, до нашей смены выводов)</td></tr>
+<tr><td>Строка каталога названа по конфигурации</td><td>Codex</td><td>мы</td><td class="fail">Открыто: в <code>boards/README.csv</code> строка <code>cmod_a7_35_tiny_vga_codex</code></td></tr>
+<tr><td>Пометки на общих скриптах, которые Codex лишь правил</td><td>Codex</td><td>мы</td><td>Открыто, но Codex помечает свой текст по просьбе Юрия Панчула (промпт Codex P20): заметка к слиянию</td></tr>
+<tr><td>F01: маршрут Vivado не видит собственный <code>lab_specific_board_config.svh</code> упражнения</td><td>обе</td><td>Codex</td><td class="fail">Открыто в обеих: TODO в нашем README по решению Юрия Панчула; скрипт сборки Codex обходит проблему, сам маршрут не изменён</td></tr>
+<tr><td>F02: заглушка на одну цифру ломает два упражнения</td><td>наша</td><td>Codex</td><td>Исправлено в упражнениях, по выбору Юрия Панчула; одна копия пропущена, см. <a href="#g-labs">ниже</a></td></tr>
+<tr><td>F03: двухбитный <code>sw</code> оставляет мультиплексор неопределённым</td><td>наша</td><td>Codex</td><td class="pass">Исправлено: <code>1_02_mux</code> дополняет <code>sw</code> нулями</td></tr>
+<tr><td>F04: нет синхронизатора кнопок</td><td>наша</td><td>Codex</td><td>Не принято, по решению Юрия Панчула</td></tr>
+<tr><td>F05: split-DIO ломает элаборацию</td><td>наша</td><td>Codex</td><td class="pass">Исправлено: понятный <code>$error</code>, под тестом</td></tr>
+<tr><td>F06: GY-PCM5102 — линейный выход</td><td>наша</td><td>Codex</td><td class="pass">Исправлено в README</td></tr>
+<tr><td>F07: запас питания ЦАП на 3,3 В</td><td>наша</td><td>Codex</td><td>Добавлено измерение под нагрузкой (шаг сборки 11); по-прежнему 3,3 В</td></tr>
+<tr><td>F08: тест исключения контроллера фильтровал не тот файл</td><td>Codex</td><td>Codex</td><td class="pass">Исправлено: <code>test_cmod_a7_35_tiny_vga_codex.py:59</code></td></tr>
+<tr><td>Перенятые нами идеи: тесты, происхождение XDC, проверки в Vivado, GPIO, светодиод сброса и работы, закреплённые файлы TinyVGA</td><td>наша</td><td>мы</td><td class="pass">Всё в нашей ветке</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="findings">
+<h2>Проблемы в ветке Codex</h2>
+<p class="prose">По убыванию серьёзности. Пути указаны относительно
+<code>boards/cmod_a7_35_tiny_vga_codex/</code> ветки Codex, если они не начинаются с
+<code>labs/</code>, <code>scripts/</code> или <code>boards/</code>.</p>
+
+<article class="finding" id="f-bus">
+  <header>
+    <span class="chip medium">Средняя</span>
+    <h3>Выводы модулей входят в шину GPIO упражнений, а способ их освободить не работает в обычной сборке</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:202–208</code>, <code>assembly_en.md:197–214</code></p>
+  <p>Codex передаёт в <code>lab_top</code> все 44 вывода DIP как <code>gpio[43:0]</code>, и девять из
+  них, с <code>gpio[21]</code> по <code>gpio[29]</code> на DIP 26–34, заодно ведут экземпляры
+  TM1638, микрофона и ЦАП. Инструкция говорит, что упражнение «должно оставлять биты модулей в
+  Z», а чтобы использовать их, должно оставить макрос интерфейса неопределённым «в локальном
+  <code>lab_specific_board_config.svh</code>» упражнения.</p>
+  <p>Второе указание упирается в F01, который Codex сам воспроизвёл: обычный маршрут,
+  <code>scripts/fpga/xilinx_vivado_synthesize.tcl</code>, не добавляет каталог упражнения в пути
+  поиска включаемых файлов, поэтому читает <code>peripherals/lab_specific_board_config.svh</code>, а
+  тот включает все три интерфейса. Упражнение, которое последует инструкции, оставит драйвер
+  контроллера и добавит свой — два драйвера на одном выводе. Скрипт сборки самого Codex ставит
+  каталог упражнения первым, поэтому его тесты на этот случай не натыкаются. Кроме того, в
+  свободных выводах есть разрыв: упражнению, которому нужно больше 21 вывода подряд, мешает
+  <code>gpio[21]</code>.</p>
+  <p class="fix"><b>Исправление:</b> сначала исправить F01, затем проверять в модуле верхнего
+  уровня при элаборации, что упражнение не ведёт вывод включённого интерфейса; или не включать
+  выводы модулей в шину, как у нас.</p>
+</article>
+
+<article class="finding" id="f-5v">
+  <header>
+    <span class="chip medium">Средняя</span>
+    <h3>Шина 5 В по-прежнему идёт вдоль 24 выводов ПЛИС</h3>
+  </header>
+  <p class="where"><code>assembly_en.md:138–153</code>, <code>breadboard_dac_en.svg</code>, <code>breadboard_dac_ru.svg</code></p>
+  <p>Без изменений с первого раунда. Левая шина питания — VU, около 5 В, по всей длине
+  30-рядной макетной платы, рядом с полосами выводов DIP 1–24. На выводах DIP нет
+  последовательных резисторов, и при включённом питании они выдерживают не больше 3,75 В, так
+  что перемычка, вставленная на одно отверстие мимо, подаст 5 В на вывод ПЛИС. Codex питает от
+  этой шины ЦАП, что даёт запас собственному стабилизатору ЦАП: причина хорошая, но то же самое
+  даёт один провод от DIP 24, без шины.</p>
+  <p class="fix"><b>Исправление:</b> подавать питание ЦАП и вход стабилизатора отдельными
+  проводами от полосы DIP 24, а обе шины сделать 3,3 В и GND.</p>
+</article>
+
+<article class="finding" id="f-backpower">
+  <header>
+    <span class="chip medium">Средняя</span>
+    <h3>Вариант с отдельным источником по-прежнему может подать 3,3 В на обесточенную ПЛИС</h3>
+  </header>
+  <p class="where"><code>assembly_en.md:58</code> и <code>assembly_ru.md</code></p>
+  <p>Без изменений с первого раунда. Если шины проседают, инструкция предлагает отдельный
+  источник для модулей с общей только землёй. Если отключить USB, а этот источник оставить
+  включённым, подтяжки модуля TM1638 держат DIP 26–28 на 3,3 В при обесточенной ПЛИС, выводы
+  которой выдерживают не больше 0,55 В. Инструкция этот предел по-прежнему не называет.</p>
+  <p class="fix"><b>Исправление:</b> указать предел и включать и выключать оба источника вместе
+  или убрать этот вариант.</p>
+</article>
+
+<article class="finding" id="f-labs">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>Без TM1638 не собираются четыре упражнения, два из них исправлены в нашей ветке</h3>
+  </header>
+  <p class="where"><code>labs/4_microarchitecture/4_1_pipelines_1/4_1_3_pow5_pipelined_valid/lab_top.sv:207</code>,
+  <code>4_1_4_pow5_pipelined_valid_solution/lab_top.sv:183</code>, <code>labs/3_music/3_12_acoustic_locator/lab_top.sv:126</code>,
+  <code>labs/5_cpu/5_3_picorv32/lab_top.sv:120</code></p>
+  <p>В отчёте Codex сказано, что его набор из 17 упражнений проходит на всех четырёх
+  конфигурациях, и для этих 17 это так. По всем упражнениям его две конфигурации без TM1638
+  собирают 84 из 88: оба упражнения <code>pow5</code> пишут в <code>led[2]</code> на плате с двумя
+  светодиодами, как и <code>3_12_acoustic_locator</code> и <code>5_3_picorv32</code>. С
+  упражнениями нашей ветки, где оба <code>pow5</code> исправлены, конфигурации Codex собирают 87
+  из 89. Последние два не собираются и у нас.</p>
+  <p class="fix"><b>Исправление:</b> взять наши исправления <code>pow5</code>; в обеих ветках
+  исправить оставшиеся два упражнения для плат с двумя светодиодами.</p>
+</article>
+
+<article class="finding" id="f-clock">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>На 100 МГц у анализатора спектра по-прежнему меньше 1 нс запаса</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:65–71</code></p>
+  <p>Codex тактирует всё на 100 МГц, чтобы <code>vga.sv</code> получал частоту
+  пикселей 25 МГц как разрешение ÷4. В одном маршруте для обеих сторон, с собственным
+  заголовком упражнения, анализатор спектра укладывается во время на конфигурации Codex с
+  запасом по установке <strong>+0,693 нс</strong> против <strong>+8,459 нс</strong> у нас на
+  50 МГц, из тех же 2325 LUT. Монитор микрофона, каждый со своим скриптом сборки, сохраняет
+  +1,860 нс против наших +7,474 нс.</p>
+  <p>У обеих сторон худший путь — не логика, а регистр сброса, доходящий до асинхронных
+  сбросов фильтров спектра: между ними нет логики, а трассировка занимает 7,9 нс у Codex
+  (10,2 нс у нас). Худший логический путь Codex — 12-уровневая цепочка переноса в фильтрах, с
+  +2,026 нс. Сегодня это не ошибка, но студент, добавивший в эти упражнения немного логики,
+  выйдет за время на конфигурации Codex намного раньше, чем на нашей.</p>
+  <p class="fix"><b>Исправление:</b> сейчас не нужно. Размножение регистра сброса, у обеих
+  сторон, вернуло бы большую часть времени трассировки сброса.</p>
+</article>
+
+<article class="finding" id="f-catalog">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>Строка каталога названа по конфигурации, а тест меню это скрывает</h3>
+  </header>
+  <p class="where"><code>boards/README.csv</code>, <code>scripts/tests/test_board_menu.py:30</code></p>
+  <p>Каталог перечисляет физические платы, по строке на модель; строка Codex —
+  <code>cmod_a7_35_tiny_vga_codex</code>, и тест меню плат отрезает от названий в каталоге
+  <code>_codex</code> и <code>_tiny_vga</code>, чтобы она совпала. Наша строка —
+  <code>cmod_a7_35</code>, сама плата, и тест менять не нужно.</p>
+  <p class="fix"><b>Исправление:</b> назвать строку <code>cmod_a7_35</code> и убрать вызовы
+  <code>removesuffix</code>.</p>
+</article>
+
+<article class="finding" id="f-led">
+  <header>
+    <span class="chip nit">Мелочь</span>
+    <h3>RGB-светодиод горит на полную яркость</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:126–128</code></p>
+  <p>Красный во время сброса, зелёный в работе, как у нас, но с постоянным уровнем. На полной
+  яркости RGB-светодиод Cmod слепит; наш горит 1/16 времени, на 2,9 кГц.</p>
+</article>
+
+<article class="finding" id="f-dup">
+  <header>
+    <span class="chip nit">Мелочь</span>
+    <h3>Вторая копия обзора лежит в каталоге платы</h3>
+  </header>
+  <p class="where"><code>competitive_review.html</code></p>
+  <p>В каталоге платы лежит <code>competitive_review.html</code> на 58 КБ с тем же текстом, что и
+  <code>misc/ai_sessions/20261118_cmod_a7_support/codex/competitive_review.html</code>. Отчётам место
+  в <code>misc/ai_sessions</code>; каталог платы открывают студенты.</p>
+</article>
+
+<article class="finding" id="f-drawing">
+  <header>
+    <span class="chip nit">Мелочь</span>
+    <h3>Рисунок макетной платы показывает только ЦАП</h3>
+  </header>
+  <p class="where"><code>breadboard_dac_en.svg</code>, <code>wiring.svg</code></p>
+  <p>На рисунке макетной платы — WeAct и условный стабилизатор рядом с ней, а TM1638 и INMP441
+  оставлены схеме соединений «не в масштабе». Порядок выводов стабилизатора не указан; модуль
+  Amazon B08CDMZMDN подписан VIN, OUT, GND, OUT посередине, как показывает фотография в нашем
+  README.</p>
+</article>
+</section>
+
+<section id="ours">
+<h2>Пробелы в нашей ветке</h2>
+<p class="prose">Та же строгость к нашей ветке. Пути указаны относительно
+<code>boards/cmod_a7_35_tiny_vga_640_claude/</code>, если они не начинаются с <code>labs/</code> или
+<code>scripts/</code>.</p>
+
+<article class="finding" id="g-labs">
+  <header>
+    <span class="chip medium">Средняя</span>
+    <h3>Без TM1638 наши конфигурации зависят от правок в упражнениях, и одна копия пропущена</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:362–373</code>,
+  <code>labs/9_events/2024_08_31_meetup_in_la/9_5_make_shift_register_low_power/shift_register_with_valid_and_debug.sv:26</code></p>
+  <p>Наши конфигурации без TM1638 дают упражнениям одну цифру и два переключателя, и мы
+  исправили восемь упражнений, чтобы они с этим справлялись, — таков выбор Юрия Панчула. В
+  нашей ветке они собирают 84 из 89 упражнений; с упражнениями main, без этих правок, — 76 из 88.
+  Из пяти неудач в нашей ветке два упражнения не собираются и у Codex; одно — копия файла FIFO,
+  исправленного нами в <code>4_2_1</code>, которую
+  <code>9_events/…/9_5_make_shift_register_low_power</code> несёт без исправления; и два — исходные
+  упражнения со счётчиком Гейгера, которыми занимается Юрий Панчул (наша копия
+  <code>6_1_geiger_muller_radiation_counter_claude</code> собирается).</p>
+  <p class="fix"><b>Исправление:</b> перенести исправление <code>4_2_1</code> в копию <code>9_5</code>.
+  Или, если Юрий Панчул согласится, взять внутреннюю ширину Codex в восемь цифр и
+  переключателей, а одну цифру и две клавиши оставить только на стороне платы; раньше выбор был
+  в пользу правок в упражнениях.</p>
+</article>
+
+<article class="finding" id="g-html">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>Скрипт, который делает наш HTML, не лежит в репозитории</h3>
+  </header>
+  <p class="where"><code>README.html</code>, <code>README_ru.html</code>; их делает <code>~/claude/cmod_a7/make_html.py</code></p>
+  <p>README ничего не говорит о том, как делается HTML, а скрипт лежит вне репозитория, так что
+  тот, кто следующим поправит <code>README.md</code>, не сможет пересобрать <code>README.html</code>.
+  Codex держит <code>build_docs.py</code> рядом со своими инструкциями.</p>
+  <p class="fix"><b>Исправление:</b> перенести скрипт в каталог платы и указать его в таблице файлов.</p>
+</article>
+
+<article class="finding" id="g-gpio-test">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>Наш тест GPIO проверяет только выходы</h3>
+  </header>
+  <p class="where"><code>scripts/tests/fixtures/cmod_a7_35_claude/tb.sv:329–352</code></p>
+  <p>Наше тестовое упражнение выдаёт один 64-битный узор, и тестбенч проверяет, что он по порядку
+  доходит до всех 34 или 37 выводов. Это ловит неверное соответствие, но ни один путь на вход не
+  проверяется, как и отпускание в Z. <code>gpio_tb.sv</code> Codex подаёт на каждый вывод снаружи
+  высокий и низкий уровень, читает его внутри, ведёт его изнутри и отпускает.</p>
+</article>
+
+<article class="finding" id="g-buttons">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>Кнопки идут в упражнения без синхронизации, а режимы TM1638 не учитываются</h3>
+  </header>
+  <p class="where"><code>board_specific_top.sv:333</code>, <code>:528</code>, <code>:497–498</code></p>
+  <p>Без TM1638 <code>btn</code> идёт прямо в <code>key</code> и <code>sw</code>; синхронизаторы отклонены
+  по решению Юрия Панчула. С TM1638 обе кнопки сбрасывают схему, так что порядкам клавиш DUPLICATE
+  и CONCAT нечего добавить, и они не учитываются; split-DIO останавливает сборку через
+  <code>$error</code>, а шестнадцать клавиш HCW132 попадают в восьмибитный провод. Сегодня ни одно
+  упражнение эти режимы не включает.</p>
+</article>
+
+<article class="finding" id="g-dac">
+  <header>
+    <span class="chip low">Низкая</span>
+    <h3>ЦАП питается от 3,3 В, и у WeAct запас мал</h3>
+  </header>
+  <p class="where"><code>README.md</code>, раздел о питании и шаг сборки 11</p>
+  <p>Собственный стабилизатор WeAct, ME6231, делает из наших 3,3 В около 3,2 В для PCM5100A,
+  которому нужно 3,0 В. Мы просим измерить напряжение под нагрузкой; Codex обходит вопрос,
+  подавая на модуль 5 В.</p>
+</article>
+
+<article class="finding" id="g-flow">
+  <header>
+    <span class="chip nit">Мелочь</span>
+    <h3>Наш скрипт сборки Vivado пропускает <code>phys_opt_design</code></h3>
+  </header>
+  <p class="where"><code>scripts/tests/build_cmod_a7_35_claude.tcl:96–98</code></p>
+  <p>Обычный маршрут выполняет <code>phys_opt_design</code> после размещения; наш скрипт — нет,
+  поэтому его запас по времени немного занижен. Скрипт Codex этот шаг выполняет.</p>
+</article>
+
+<article class="finding" id="g-ru">
+  <header>
+    <span class="chip nit">Мелочь</span>
+    <h3>Наши рисунки только на английском</h3>
+  </header>
+  <p>Русский README показывает английские рисунки. Codex рисует свою макетную плату с ЦАП на
+  обоих языках и подписывает схему соединений на обоих.</p>
+</article>
+</section>
+
+<section id="ideas">
+<h2>Что перенять</h2>
+<p class="prose">Из ветки Codex в нашу, от дешёвого к дорогому. Это предложения; для этого
+обзора ничего не применялось.</p>
+<div class="scroll">
+<table class="wide ideas">
+<thead><tr><th>Идея</th><th>Где в ветке Codex</th><th>Чего это стоит у нас</th></tr></thead>
+<tbody>
+<tr><td>Исправить пропущенную копию упражнения</td><td>—</td><td>Правка <code>4_2_1</code>, перенесённая в <code>9_5_make_shift_register_low_power</code></td></tr>
+<tr><td>Двунаправленный тест GPIO с отпусканием в Z</td><td><code>scripts/tests/fixtures/cmod_a7_35_tiny_vga_codex/gpio_tb.sv</code></td><td>Тестовое упражнение с <code>gpio_oe</code> и <code>gpio_drive</code> и цикл по нашим 34 или 37 выводам</td></tr>
+<tr><td>HTML, собираемый внутри репозитория</td><td><code>build_docs.py</code></td><td>Перенести <code>make_html.py</code> в каталог платы</td></tr>
+<tr><td><code>phys_opt_design</code> в скрипте сборки</td><td><code>scripts/tests/build_cmod_a7_35_tiny_vga_codex.tcl</code></td><td>Одна строка</td></tr>
+<tr><td>Русские рисунки</td><td><code>breadboard_dac_ru.svg</code>, <code>draw_breadboard.py</code></td><td>Аргумент языка у наших трёх генераторов</td></tr>
+<tr><td>ЦАП от 5 В как вариант</td><td><code>assembly_en.md:114–155</code></td><td>Второй отдельный провод от полосы DIP 24 к VCC или VIN ЦАП, без шины; питание 3,3 В остаётся по умолчанию</td></tr>
+<tr><td>Поддержать split-DIO вместо отказа</td><td><code>board_specific_top.sv</code>, ветка <code>SPLIT_TM1638_DIO_INOUT_SIGNAL</code></td><td>Тристабильный буфер на <code>pio14</code> и три порта</td></tr>
+<tr><td>Внутренняя ширина в восемь цифр и переключателей без TM1638</td><td><code>board_specific_top.sv:142</code></td><td>Нужно согласие Юрия Панчула: выбор был в пользу одной цифры и правок в упражнениях</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="side-by-side">
+<h2>Рядом</h2>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th></th><th>Наша</th><th>Codex</th></tr></thead>
+<tbody>
+<tr><td>Конфигурации</td><td>6: 640×480 на 50 МГц, 304×480 и 320×480 на 12 МГц; каждая с TM1638 и без</td><td>4: 640×480 на 100 МГц, 305×480 на 12 МГц; каждая с TM1638 и без</td></tr>
+<tr><td>Такт</td><td>MMCM 12 × 62,5 / 15 = 50 МГц, VCO 750 МГц</td><td>MMCM 12 × 50 / 6 = 100 МГц, VCO 600 МГц, нижний предел для кристалла −1</td></tr>
+<tr><td>VGA без PLL</td><td>304 столбца, 381 такт на строку, 59,99 Гц; или 320 столбцов, 400 тактов, 57,14 Гц</td><td>305 столбцов, 382 такта на строку, 59,84 Гц</td></tr>
+<tr><td>TM1638</td><td>DIP 12, 13, 14: STB, CLK, DIO</td><td>DIP 26, 27, 28: DIO, CLK, STB</td></tr>
+<tr><td>INMP441</td><td>DIP 17–20: SCK, WS, L/R, SD; L/R ведётся нулём или соединяется с GND</td><td>DIP 29–31: SCK, WS, SD; L/R соединён с GND</td></tr>
+<tr><td>ЦАП</td><td>DIP 21–23: BCK, DIN, LCK/WS, рядом с VU</td><td>DIP 32–34: BCK, DIN, LRCK</td></tr>
+<tr><td>GPIO упражнений</td><td>34 вывода с TM1638, 37 без; только свободные; <code>gpio[0]</code> = DIP 48 вниз до DIP 26, затем от DIP 1 вверх, как было запрошено</td><td>44-битная шина, девять бит заняты модулями: 35 свободных с TM1638, 38 без, 44 при всех трёх выключенных интерфейсах</td></tr>
+<tr><td>Кнопки с TM1638</td><td>Любая кнопка — сброс</td><td>BTN0 — сброс, BTN1 — <code>key[0]</code>, с синхронизацией</td></tr>
+<tr><td>Кнопки без TM1638</td><td><code>key[1:0]</code>, напрямую</td><td><code>key[1:0]</code>, двухрегистровые синхронизаторы</td></tr>
+<tr><td>Ширины упражнений без TM1638</td><td>1 цифра, 2 клавиши, 2 переключателя</td><td>8 цифр и 8 переключателей внутри, 2 клавиши</td></tr>
+<tr><td>RGB-светодиод</td><td>Красный при сбросе, зелёный в работе, на 1/16 яркости</td><td>Красный при сбросе, зелёный в работе, на полной яркости</td></tr>
+<tr><td>Питание модулей</td><td>A: 3,3 В от Pmod TPH2; B: модуль AMS1117-3.3 от VU. Все модули на 3,3 В; один провод с 5 В</td><td>ЦАП от VU через шину 5 В; стабилизатор 3,3 В для TM1638 и INMP441</td></tr>
+<tr><td>Макетная плата</td><td>Полноразмерная, Cmod в рядах 40–63, штекер USB за краем; стабилизатор, ЦАП и INMP441 в отверстиях; TM1638 на проводах</td><td>30 рядов, Cmod в рядах 4–27, штекер USB за краем; ЦАП и стабилизатор рядом с макетной платой на проводах</td></tr>
+<tr><td>Рисунки</td><td>4 схемы соединений, 2 раскладки на макетной плате (оба ЦАП), рисунок выводов GPIO, фотография стабилизатора; на английском</td><td>Схема соединений на двух языках, рисунок макетной платы с WeAct на английском и на русском</td></tr>
+<tr><td>Документы</td><td>README на английском и русском, Markdown и HTML; короткие README-указатели на двух языках в остальных пяти каталогах</td><td>README, инструкции по сборке на английском и русском, Markdown и HTML, <code>GPIO_VALIDATION.md</code>; английские README в остальных трёх каталогах</td></tr>
+<tr><td>Приложение с промптами</td><td>Каждый промпт с тихоокеанским временем, на английском и русском</td><td>P01–P39 без времени, из <code>reference/follow_up_prompts.json</code></td></tr>
+<tr><td>Тесты</td><td>9 тестов, 78 с; Vivado для всех шести конфигураций при <code>BGM_TEST_VIVADO=1</code></td><td>9 тестов, 226 с; отдельный скрипт сборки Vivado</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="verification">
+<h2>Сборки и тесты</h2>
+
+<h3>Собственные тесты каждой ветки</h3>
+<p class="prose">На экспортированных копиях обоих отправленных коммитов, по одному набору за раз.</p>
+<div class="scroll">
+<table>
+<thead><tr><th>Набор</th><th>Наша, <code>434bc311</code></th><th>Codex, <code>3f16c1de</code></th></tr></thead>
+<tbody>
+<tr><td>Тесты платы</td><td class="pass">9 прошли, 78 с (тест Vivado пропущен)</td><td class="pass">9 прошли, 226 с</td></tr>
+<tr><td><code>test_board_menu.py</code></td><td class="pass">22 прошли, 119 конфигураций</td><td class="pass">22 прошли, 117 конфигураций</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Каждое упражнение на каждой конфигурации</h3>
+<p class="prose">Элаборация в Icarus Verilog каждого каталога с <code>lab_top.sv</code>, с каталогом
+упражнения первым в путях поиска включаемых файлов: 2030 компиляций за минуту. Тринадцать
+упражнений не собираются ни на одной конфигурации обеих веток — из-за недостающих исходников или
+незаконченного кода — и в подсчёт не входят: цифры считают остальные 88 упражнений main и 89
+наших, где есть копия <code>_claude</code> счётчика Гейгера. Каждая ветка прогнана со своими
+упражнениями и с упражнениями другой.</p>
+<div class="scroll">
+<table>
+<thead><tr><th>Конфигурации</th><th>Упражнения</th><th class="num">С TM1638</th><th class="num">Без TM1638</th></tr></thead>
+<tbody>
+<tr><td>Наши</td><td>наши</td><td class="num pass">89 / 89</td><td class="num">84 / 89</td></tr>
+<tr><td>Наши</td><td>Codex, как в main</td><td class="num pass">88 / 88</td><td class="num fail">76 / 88</td></tr>
+<tr><td>Codex</td><td>Codex, как в main</td><td class="num pass">88 / 88</td><td class="num">84 / 88</td></tr>
+<tr><td>Codex</td><td>наши</td><td class="num pass">89 / 89</td><td class="num pass">87 / 89</td></tr>
+</tbody>
+</table>
+</div>
+<p class="prose">Каждая цифра верна для каждой конфигурации своей группы: три наши или две
+Codex дают один и тот же счёт. Неудачи без TM1638:</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Упражнение</th><th>Наши, наши упражнения</th><th>Наши, main</th><th>Codex, main</th><th>Codex, наши упражнения</th><th>Причина</th></tr></thead>
+<tbody>
+<tr><td><code>3_music/3_12_acoustic_locator</code></td><td class="fail">нет</td><td class="fail">нет</td><td class="fail">нет</td><td class="fail">нет</td><td><code>led[2]</code> при двух светодиодах</td></tr>
+<tr><td><code>5_cpu/5_3_picorv32</code></td><td class="fail">нет</td><td class="fail">нет</td><td class="fail">нет</td><td class="fail">нет</td><td><code>led[-2:0]</code> при двух светодиодах</td></tr>
+<tr><td><code>4_1_3</code> и <code>4_1_4</code> <code>pow5</code></td><td class="pass">да</td><td class="fail">нет</td><td class="fail">нет</td><td class="pass">да</td><td><code>led[2]</code>; исправлено в нашей ветке</td></tr>
+<tr><td><code>9_events/…/9_5_make_shift_register_low_power</code></td><td class="fail">нет</td><td class="fail">нет</td><td class="pass">да</td><td class="pass">да</td><td><code>valid[-1:0]</code> из-за одной цифры</td></tr>
+<tr><td>Оба исходных упражнения со счётчиком Гейгера</td><td class="fail">нет</td><td class="fail">нет</td><td class="pass">да</td><td class="pass">да</td><td>Нулевой счётчик повторения из-за одной цифры</td></tr>
+<tr><td><code>1_08_7segment_word</code>, FIFO <code>4_2_1</code>, <code>4_2_2</code>, <code>4_2_3</code>, <code>4_2_5</code></td><td class="pass">да</td><td class="fail">нет</td><td class="pass">да</td><td class="pass">да</td><td>Одна цифра; исправлено в нашей ветке</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Vivado</h3>
+<p class="prose">Два вида сборки, по одной за раз. Со скриптом сборки каждой ветки —
+так, как каждая ветка документирует; наш пропускает <code>phys_opt_design</code>. И один общий
+маршрут для обеих, написанный для этого обзора и хранящийся вне репозитория: каталог упражнения
+первым в путях поиска включаемых файлов, затем <code>opt_design</code>, <code>place_design</code>,
+<code>phys_opt_design</code> и <code>route_design</code>, как в обычном маршруте. LUT и регистры —
+Slice LUTs и Slice Registers из <code>report_utilization</code>. Все сборки уложились во время; ни
+одна не загружалась в плату.</p>
+<div class="scroll">
+<table class="wide">
+<thead><tr><th>Упражнение</th><th>Маршрут</th><th class="num">Наша, 50 МГц</th><th class="num">Codex, 100 МГц</th></tr></thead>
+<tbody>
+<tr><td><code>3_10_spectrum_analyzer</code></td><td>общий; обе собраны для этого обзора</td>
+<td class="num">+8,459 нс / +0,073 нс<br>2325 LUT, 1479 рег.</td>
+<td class="num">+0,693 нс / +0,048 нс<br>2325 LUT, 1468 рег.</td></tr>
+<tr><td><code>3_11_microphone_monitor</code></td><td>свои скрипты; наша — 21 ноября в 20:24, Codex — для этого обзора</td>
+<td class="num">+7,474 нс / +0,069 нс<br>1980 LUT, 1365 рег.</td>
+<td class="num">+1,860 нс / +0,109 нс<br>2011 LUT, 1356 рег.</td></tr>
+<tr><td><code>2_1_rectangle_ellipse_parabola</code></td><td>свои скрипты; наша — для этого обзора, Codex — из его <code>GPIO_VALIDATION.md</code></td>
+<td class="num">+14,969 нс / +0,138 нс<br>207 LUT, 122 рег.</td>
+<td class="num">+5,095 нс / +0,131 нс</td></tr>
+<tr><td><code>3_11_microphone_monitor</code>, 12 МГц, без PLL, с TM1638</td><td>свои скрипты, как документирует каждая ветка</td>
+<td class="num">304: +68,943 нс<br>320: +63,443 нс</td>
+<td class="num">305: +70,596 нс</td></tr>
+</tbody>
+</table>
+</div>
+<p class="prose">Запас по установке / удержанию. Худший путь обеих сборок анализатора спектра —
+от регистра сброса к асинхронным сбросам, без логики между ними; см.
+<a href="#f-clock">замечание выше</a>.</p>
+
+<h3>Статические проверки</h3>
+<ul class="prose">
+  <li>Два файла <code>board_specific.xdc</code> одинаковы, и оба — файл Digilent на коммите
+  <code>c8644a9f</code> (SHA-256 <code>56568df3…</code>) с 63 раскомментированными строками: 62 порта
+  и такт.</li>
+  <li>Порядок битов TinyVGA, полярности синхроимпульсов и гашение совпадают у обеих сторон:
+  <code>ja</code> = R1, G1, B1, VS, R0, G0, B0, HS.</li>
+  <li>Обе цепочки сброса включаются сразу и отпускают на третьем фронте такта; и у Codex, и у
+  нас — после захвата частоты MMCM.</li>
+  <li>Ни одна схема не загружалась в плату; монитор, звуковая нагрузка и питание не
+  измерялись.</li>
+</ul>
+</section>
+
+<section id="merge">
+<h2>Слияние веток</h2>
+<div class="prose">
+<p>Обе ветки могут жить рядом под одним пунктом меню <code>cmod_a7_35</code>: названия их
+каталогов различаются суффиксами <code>_claude</code> и <code>_codex</code>, и оба суффикса есть в
+<code>fpga_board_base_name</code>. Конфликтуют три файла:</p>
+<ul>
+  <li><code>boards/README.csv</code>: одна строка для платы, <code>cmod_a7_35</code>, как у нас, со
+  значением «either» в столбце TM1638;</li>
+  <li><code>scripts/steps/00_setup.source_bash</code>: обе ветки добавляют суффиксы и имена для
+  набора инструментов Xilinx; наш шаблон <code>cmod_a7*</code> покрывает четыре имени Codex, а
+  пометка, которую Codex поставил в начало файла, оказалась бы над файлом, где он поправил
+  восемь строк;</li>
+  <li><code>scripts/tests/test_board_menu.py</code>: правка Codex с <code>removesuffix</code> не нужна
+  при строке <code>cmod_a7_35</code>.</li>
+</ul>
+<p>Планы выводов несовместимы: битовому потоку одной ветки нужна разводка той же ветки.
+Восемь исправлений упражнений из нашей ветки помогают и конфигурациям Codex (87 из 89 упражнений
+вместо 84 из 88), и любой другой плате с одной цифрой или двумя светодиодами.</p>
+</div>
+</section>
+
+<section id="appendix">
+<h2>Приложение: промпты</h2>
+<p class="prose">Промпт Юрия Панчула, отправленный в этой сессии Claude Code в 23:39
+21 ноября 2026 года по тихоокеанскому времени (UTC−8), дословно:</p>
+<pre lang="en">make a comprehensive review against your competitor; generate an HTML file, add it to the repo</pre>
+<p class="prose">В переводе:</p>
+<pre>сделай всесторонний обзор в сравнении с твоим конкурентом; создай файл HTML и добавь его в репозиторий</pre>
+<p class="prose">Эта русская версия сделана по промпту, отправленному в 08:03 22 ноября
+2026 года, дословно:</p>
+<pre lang="en">add Russian version</pre>
+<p class="prose">В переводе:</p>
+<pre>добавь русскую версию</pre>
+</section>
+
+<footer>
+<p>Полоса вверху — 64 цвета RGB222, все, что может показать TinyVGA; акцентный цвет
+страницы и цвета уровней серьёзности взяты из неё.</p>
+</footer>
+
+</div>
+
+</body>
+</html>
