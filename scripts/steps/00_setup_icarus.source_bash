@@ -117,15 +117,30 @@ run_icarus_verilog ()
 
     #-------------------------------------------------------------------------
 
-    shopt -s nullglob
+    if [ -f ../sv_file_list.f ]
+    then
+        # Icarus resolves command-file paths from its working directory.
+        # Compile from the lab so list entries are lab-relative, but keep
+        # the output and subsequent simulation in run/.
 
-    iverilog "$icarus_language_option" -s tb                                 \
-         -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals"  \
-            ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv   \
-            ../*.v                                                           \
-        2>&1 | tee "$log"
+        (
+            cd ..
 
-    shopt -u nullglob
+            iverilog "$icarus_language_option" -s tb -o run/a.out             \
+                -I run -I . -I cpu -I "$lab_dir/common"                     \
+                -I "$package_dir/peripherals" -f sv_file_list.f
+        ) 2>&1 | tee "$log"
+    else
+        shopt -s nullglob
+
+        iverilog "$icarus_language_option" -s tb                                 \
+             -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals"  \
+                ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv   \
+                ../*.v                                                           \
+            2>&1 | tee "$log"
+
+        shopt -u nullglob
+    fi
 
     #-------------------------------------------------------------------------
 

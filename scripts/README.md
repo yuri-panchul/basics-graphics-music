@@ -141,6 +141,53 @@ Run the isolated regression suite without Quartus installed:
 python3 scripts/tests/test_quartus_discovery.py
 ```
 
+## Icarus Verilog source lists
+
+When `02_simulate_rtl.bash` selects Icarus Verilog, it checks for
+`sv_file_list.f` beside the lab's script (one directory above `run/`). If
+present, this file replaces **all** automatic source discovery, including
+the shared sources in `labs/common` and `peripherals`. Include the `tb`
+testbench, `lab_top.sv` when used, and every required dependency. For example:
+
+```text
+# Put packages before the modules that use them.
+rtl/types_pkg.sv
+rtl/core.sv
+lab_top.sv
+tb.sv
+```
+
+Paths are relative to the lab directory, not `run/`; absolute paths also work.
+Shared sources must be listed explicitly when needed. For a lab under
+`labs/1_basics/<lab>`, their paths start with `../../common/` and
+`../../../peripherals/`. The existing APS list in `labs/5_cpu/5_5_aps` is
+incomplete for standalone simulation: it omits `tb.sv` and `lab_top.sv`.
+
+The script passes the list directly to `iverilog -f`, preserving its order
+and using the native [Icarus command-file format](https://steveicarus.github.io/iverilog/usage/command_files.html).
+Use one source path per line, without shell quotes or wildcards. Blank lines,
+comments, `+incdir+`, `+define+`, and nested `-f` lists are supported by Icarus.
+Paths inside nested lists also resolve from the lab directory. A path containing
+spaces stays on one unquoted line.
+
+Compilation runs in the lab directory and writes `run/a.out`. The existing
+language-version selection and `-s tb` remain in use. Include search paths
+cover the lab, its `cpu` and `run` directories, `labs/common`, and
+`peripherals`; include paths do not automatically compile their source files.
+Assembly, `vvp`, memory files, and waveforms continue to use `run/`.
+A missing listed source, malformed list, or incomplete design fails compilation
+without falling back to discovery or running an old `a.out`.
+
+Without `sv_file_list.f`, the script retains its original source globs:
+lab `*.sv`, `labs/common/*.sv`, `peripherals/*.sv`, then lab `*.v`.
+The existing Questa selection is unchanged.
+
+Run the regression tests with Bash, Python 3, `iverilog`, and `vvp` installed:
+
+```sh
+python3 -B scripts/tests/test_icarus_file_list.py
+```
+
 ## Strict Bash settings
 
 [The article about these settings.](https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail)
