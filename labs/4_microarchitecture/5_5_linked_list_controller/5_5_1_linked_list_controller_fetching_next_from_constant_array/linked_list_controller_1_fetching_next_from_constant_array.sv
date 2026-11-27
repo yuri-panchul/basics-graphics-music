@@ -29,10 +29,10 @@ import linked_list_controller_configuration_and_types_package::*;
 
     wire data_t [memory_depth - 1:0] constant_data_array =
     '{
-        1: "A",  5: "B",  3: "C", 10:   0,         // ABC
-        2: "D",  4:   0,                           // D
+        1: "D",  5: "E",  3: "F", 10:   0,         // DEF
+        2: "C",  4:   0,                           // C
         6:  0,                                     //
-        7: "E", 15: "F",  8:   0,                  // EF
+        7: "A", 15: "B",  8:   0,                  // AB
         9: "G", 14: "H", 11: "I", 13: "J", 12: 0,  // GHIJ
         default: 0
     };
@@ -50,18 +50,18 @@ import linked_list_controller_configuration_and_types_package::*;
     begin
         next_pointers = '0;       constant_data_array = '0;
 
-        next_pointers [ 1] =  5;  constant_data_array [ 1] = "A";  // ABC
-        next_pointers [ 5] =  3;  constant_data_array [ 5] = "B";
-        next_pointers [ 3] = 10;  constant_data_array [ 3] = "C";
+        next_pointers [ 1] =  5;  constant_data_array [ 1] = "D";  // DEF
+        next_pointers [ 5] =  3;  constant_data_array [ 5] = "E";
+        next_pointers [ 3] = 10;  constant_data_array [ 3] = "F";
         next_pointers [10] =  0;  constant_data_array [10] =  0;
 
-        next_pointers [ 2] =  4;  constant_data_array [ 2] = "D";  // D
+        next_pointers [ 2] =  4;  constant_data_array [ 2] = "C";  // C
         next_pointers [ 4] =  0;  constant_data_array [ 4] =  0;
 
         next_pointers [ 6] =  0;  constant_data_array [ 6] =  0;   // Empty
 
-        next_pointers [ 7] = 15;  constant_data_array [ 7] = "E";  // EF
-        next_pointers [15] =  8;  constant_data_array [15] = "F";
+        next_pointers [ 7] = 15;  constant_data_array [ 7] = "A";  // AB
+        next_pointers [15] =  8;  constant_data_array [15] = "B";
         next_pointers [ 8] =  0;  constant_data_array [ 8] =  0;
 
         next_pointers [ 9] = 14;  constant_data_array [ 9] = "G";  // GHIJ
