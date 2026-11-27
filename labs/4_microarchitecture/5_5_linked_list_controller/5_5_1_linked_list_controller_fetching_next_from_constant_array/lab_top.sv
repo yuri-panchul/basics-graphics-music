@@ -105,7 +105,7 @@ module lab_top
         .out_data
     );
 
-    assign led      = out_data_valid ? out_data : '0;
+    assign led      = out_data_valid ? w_led' (out_data) : '0;
     assign abcdefgh = out_data_valid ? seven_segment_alphabet (out_data) : '0;
     assign digit    = w_digit' (1);
 
