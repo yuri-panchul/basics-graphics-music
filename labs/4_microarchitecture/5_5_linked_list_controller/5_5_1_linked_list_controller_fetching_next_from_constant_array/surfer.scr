@@ -1,7 +1,15 @@
 variable_add tb.clk
 variable_add tb.rst
 variable_add tb.key
-variable_add tb.i_lab_top.cnt
 variable_add tb.i_lab_top.led
 variable_add tb.i_lab_top.abcdefgh
-variable_add tb.i_lab_top.digit
+
+variable_add tb.i_lab_top.start_pointer
+variable_add tb.i_lab_top.start_pointer_valid
+variable_add tb.i_lab_top.start_pointer_ready
+
+variable_add tb.i_lab_top.out_data_valid
+variable_add tb.i_lab_top.out_data
+
+item_focus d
+item_set_format ASCII
