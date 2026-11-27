@@ -1,5 +1,4 @@
 `include "config.svh"
-`include "linked_list_controller_configuration_and_types_package.sv"
 
 module lab_top
 # (
