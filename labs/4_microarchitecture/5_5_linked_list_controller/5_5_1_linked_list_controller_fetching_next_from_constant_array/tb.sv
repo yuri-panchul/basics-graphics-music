@@ -1,5 +1,11 @@
 `include "config.svh"
 
+// sv_file_list.f lists tb.sv for the Icarus simulation. The Vivado flow
+// reads the same list for synthesis, where config.svh defines SYNTHESIS
+// instead of SIMULATION, so the testbench is skipped there.
+
+`ifdef SIMULATION
+
 module tb;
 
     localparam clk_mhz = 1,
@@ -82,3 +88,5 @@ module tb;
     end
 
 endmodule
+
+`endif  // ifdef SIMULATION

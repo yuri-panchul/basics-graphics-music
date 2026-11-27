@@ -117,12 +117,45 @@ run_icarus_verilog ()
 
     #-------------------------------------------------------------------------
 
+    # If the lab has sv_file_list.f, compile the lab's own files in the
+    # order the list gives, instead of all ../*.sv and ../*.v files.
+    # This is needed when a package has to be compiled before the files
+    # that import it. The list has to include tb.sv. Its paths are
+    # relative to the lab directory, as in the Vivado flow.
+
+    local sv_file_list=../sv_file_list.f
+    local lab_sv_files=()
+    local lab_v_files=()
+    local line
+
     shopt -s nullglob
 
+    if [ -f "$sv_file_list" ]
+    then
+        while IFS= read -r line || [ -n "$line" ]
+        do
+            # ${line%$'\r'} removes a trailing carriage return,
+            # so a list with Windows line endings works too
+            line=${line%$'\r'}
+
+            if [ -n "$line" ]
+            then
+                lab_sv_files+=("../$line")
+            fi
+        done < "$sv_file_list"
+    else
+        lab_sv_files=(../*.sv)
+        lab_v_files=(../*.v)
+    fi
+
+    # ${array[@]+"${array[@]}"} expands to the array elements, or to nothing
+    # for an empty array; a plain "${array[@]}" fails under set -u in Bash
+    # older than 4.4, such as the Bash 3.2 that comes with macOS
     iverilog "$icarus_language_option" -s tb                                 \
          -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals"  \
-            ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv   \
-            ../*.v                                                           \
+            ${lab_sv_files[@]+"${lab_sv_files[@]}"}                          \
+            "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv           \
+            ${lab_v_files[@]+"${lab_v_files[@]}"}                            \
         2>&1 | tee "$log"
 
     shopt -u nullglob
