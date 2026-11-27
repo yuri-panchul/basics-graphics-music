@@ -1,4 +1,5 @@
 `include "config.svh"
+`include "linked_list_controller_configuration_and_types_package.sv"
 
 module lab_top
 # (
@@ -83,8 +84,8 @@ module lab_top
 
     start_pointer_request_generator i_spr
     (
-        .clock  ( slow_clock ),
-        .reset  ( reset      ),
+        .clock  ( slow_clk ),
+        .reset  ( rst      ),
 
         .start_pointer,
         .start_pointer_valid,
@@ -93,8 +94,8 @@ module lab_top
 
     linked_list_controller_1_fetching_next_from_constant_array i_llc
     (
-        .clock  ( slow_clock ),
-        .reset  ( reset      ),
+        .clock  ( slow_clk ),
+        .reset  ( rst      ),
 
         .start_pointer,
         .start_pointer_valid,
