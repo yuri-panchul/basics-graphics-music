@@ -117,12 +117,44 @@ run_icarus_verilog ()
 
     #-------------------------------------------------------------------------
 
+    # A lab sv_file_list.f replaces the ../*.sv and ../*.v listing.
+    # Paths in that file are relative to the lab directory, one source
+    # per line, in compile order. Blank lines and comments are skipped.
+    # labs/common and peripherals are still compiled after those sources.
+
+    local sv_file_list=../sv_file_list.f
+    local -a lab_sources=()
+    local -a lab_v_files=()
+    local line
+
     shopt -s nullglob
 
+    if [ -f "$sv_file_list" ]
+    then
+        while IFS= read -r line || [ -n "$line" ]
+        do
+            line=${line%$'\r'}
+            line="${line#"${line%%[![:space:]]*}"}"
+            line="${line%"${line##*[![:space:]]}"}"
+
+            case $line in
+                '' | \#* | //* ) continue ;;
+            esac
+
+            lab_sources+=("../$line")
+        done < "$sv_file_list"
+    else
+        lab_sources=(../*.sv)
+        lab_v_files=(../*.v)
+    fi
+
+    # ${name[@]+"${name[@]}"} is empty when the array is empty. A plain
+    # "${name[@]}" under set -u fails on Bash 3.2, which macOS still ships.
     iverilog "$icarus_language_option" -s tb                                 \
          -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals"  \
-            ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv   \
-            ../*.v                                                           \
+            ${lab_sources[@]+"${lab_sources[@]}"}                            \
+            "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv           \
+            ${lab_v_files[@]+"${lab_v_files[@]}"}                            \
         2>&1 | tee "$log"
 
     shopt -u nullglob
