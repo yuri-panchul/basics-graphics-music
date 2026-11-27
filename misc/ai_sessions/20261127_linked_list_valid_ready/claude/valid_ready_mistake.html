@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How I was wrong to call Yuri&#x27;s valid/ready non-standard</title>
+<style>
+:root {
+  --bg: #fbfaf7; --fg: #1c1d21; --muted: #5d5f6b; --rule: #e3e0d8; --panel: #f2f0ea; --code-bg: #f4f2ec;
+  --accent: #0b5cad; --valid: #1f5fd0; --ready: #0b8a5b; --load: #b45309; --xfer: #0b8a5b;
+  --a: #c0392b; --b: #6d3fc0; --band: rgba(11, 138, 91, 0.12);
+  --k: #7b3fa0; --c: #6b7280; --s: #a3460f; --n: #0b6e75; --d: #8a5a00;
+  --add: #e3f4e8; --del: #fbe8e6; --quote: #eef3fb; --mine: #fdf3e7;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15161a; --fg: #e6e4df; --muted: #a2a3ad; --rule: #2d2f36; --panel: #1f2126; --code-bg: #1b1d22;
+    --accent: #79b0ff; --valid: #74a3ff; --ready: #3fcf95; --load: #f2a54c; --xfer: #3fcf95;
+    --a: #ff7b6b; --b: #b99dff; --band: rgba(63, 207, 149, 0.14);
+    --k: #d3a9ff; --c: #8d96a3; --s: #f1a86a; --n: #5ccbd4; --d: #e5b443;
+    --add: #13301f; --del: #3a1c1b; --quote: #1a2333; --mine: #2b2216;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif; }
+main { max-width: 940px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { border-bottom: 1px solid var(--rule); padding-bottom: 18px; margin-bottom: 8px; }
+.eyebrow { max-width: none; margin: 0; color: var(--muted); font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+h1 { font-size: 30px; line-height: 1.2; margin: 8px 0 8px; text-wrap: balance; }
+h2 { font-size: 21px; margin: 40px 0 10px; text-wrap: balance; }
+.byline { margin: 0; color: var(--muted); font-size: 14px; }
+a { color: var(--accent); }
+p, li { max-width: 72ch; }
+code, pre, .wv text { font-family: ui-monospace, "SFMono-Regular", "JetBrains Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace; }
+code { font-size: 0.88em; background: var(--panel); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.summary { background: var(--panel); border-left: 4px solid var(--a); padding: 4px 20px 8px; margin-top: 24px; border-radius: 0 8px 8px 0; }
+.summary h2 { margin-top: 14px; }
+.exchange { border: 1px solid var(--rule); border-radius: 8px; padding: 6px 16px 10px; margin: 14px 0; }
+.who { margin: 8px 0 2px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+blockquote { margin: 0; padding: 8px 14px; border-radius: 6px; max-width: 72ch; }
+blockquote.prompt { background: var(--quote); border-left: 3px solid var(--accent); font-family: ui-monospace, "DejaVu Sans Mono", Menlo, monospace; font-size: 14px; overflow-wrap: anywhere; }
+blockquote.mine { background: var(--mine); border-left: 3px solid var(--a); }
+blockquote.big { font-size: 15px; }
+.translation { color: var(--muted); font-style: italic; margin: 6px 0 4px; }
+figure { margin: 16px 0 20px; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; max-width: 80ch; }
+.key { display: block; margin-top: 4px; }
+.ka { color: var(--a); } .kb { color: var(--b); } .kl { color: var(--load); } .kx { color: var(--xfer); }
+.code { display: flex; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; overflow-x: auto; }
+.code pre { margin: 0; padding: 12px 14px; font-size: 13px; line-height: 1.5; }
+.code pre.ln { color: var(--muted); text-align: right; border-right: 1px solid var(--rule); user-select: none; padding-right: 10px; }
+.code pre.src { flex: 1; min-width: 0; }
+.c { color: var(--c); font-style: italic; } .s { color: var(--s); } .k { color: var(--k); font-weight: 600; }
+.n { color: var(--n); } .d { color: var(--d); }
+.diff span { display: block; min-height: 1.5em; }
+.diff .add { background: var(--add); } .diff .del { background: var(--del); } .diff .hunk { color: var(--muted); }
+.wave-wrap { overflow-x: auto; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 6px 0; }
+.wv { display: block; }
+.wv text { fill: var(--fg); font-size: 12px; }
+.wv .tick { fill: var(--muted); font-size: 10.5px; }
+.wv .grid { stroke: var(--rule); stroke-width: 1; }
+.wv .sig { fill: none; stroke: var(--fg); stroke-width: 1.6; }
+.wv .sig.valid { stroke: var(--valid); stroke-width: 2.2; }
+.wv .sig.ready { stroke: var(--ready); stroke-width: 2.2; }
+.wv .bus { fill: var(--panel); stroke: var(--fg); stroke-width: 1.2; }
+.wv .bus.data { stroke: var(--accent); }
+.wv .idle { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 2 3; }
+.wv .band { fill: var(--band); }
+.wv .mark { stroke-width: 1.8; }
+.wv .m-load { stroke: var(--load); stroke-dasharray: 5 3; }
+.wv .m-xfer { stroke: var(--xfer); }
+.wv .m-a { stroke: var(--a); stroke-dasharray: 5 3; }
+.wv .m-b { stroke: var(--b); }
+.wv .mlabel { font-weight: 700; font-size: 12px; }
+.wv .l-load { fill: var(--load); } .wv .l-xfer { fill: var(--xfer); } .wv .l-a { fill: var(--a); } .wv .l-b { fill: var(--b); }
+table { border-collapse: collapse; font-size: 14px; }
+th, td { border: 1px solid var(--rule); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--panel); }
+.lists { display: block; overflow-x: auto; margin: 10px 0 18px; }
+.lists td { font-family: ui-monospace, "DejaVu Sans Mono", Menlo, monospace; white-space: nowrap; }
+.table-wrap { overflow-x: auto; margin: 12px 0 18px; }
+.cmp td:first-child { color: var(--muted); }
+ol.rules li { margin-bottom: 6px; }
+.appendix ol > li { margin-bottom: 14px; }
+.appendix blockquote { margin-top: 4px; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <p class="eyebrow">basics-graphics-music · lab 5_5_1, linked list controller · 27 November 2026</p>
+  <h1>How I was wrong to call Yuri's valid/ready non-standard</h1>
+  <p class="byline">Written by Claude (Opus 5.5) at Yuri's request · <a href="valid_ready_mistake_ru.html" lang="ru">Русская версия</a></p>
+</header>
+
+<section class="summary">
+  <h2>In short</h2>
+  <p>In this session I said several times that the handshake between <code>start_pointer_request_generator</code> and <code>linked_list_controller_1_fetching_next_from_constant_array</code> was not standard valid/ready. I then "fixed" the controller and listed 20 "non-standard" clock edges.</p>
+  <p><strong>That was wrong.</strong> Under the AXI handshake rules, a transfer happens on the rising edge where VALID and READY are both 1. Until that edge the source must keep VALID and the data steady, and the destination is free to look at the data early. Yuri's controller reads the start pointer when a list starts and raises READY on the list's last entry, so each pointer is read once and acknowledged once.</p>
+  <p>My change was a different design choice: acknowledge at the start of the list instead of the end. It didn't fix any protocol problem.</p>
+</section>
+
+<section>
+  <h2>1. The design</h2>
+  <p>The lab has a generator that sends start pointers and a controller that follows a linked list stored in constant tables. The controller outputs one table entry per clock. Each list ends with a node whose data is 0 and whose next pointer is 0:</p>
+  <table class="lists">
+    <tr><th>Start pointer</th><td>1</td><td>2</td><td>6</td><td>7</td><td>9</td></tr>
+    <tr><th>Nodes</th><td>1 → 5 → 3 → 10</td><td>2 → 4</td><td>6</td><td>7 → 15 → 8</td><td>9 → 14 → 11 → 13 → 12</td></tr>
+    <tr><th>Output</th><td>A B C 0</td><td>D 0</td><td>0</td><td>E F 0</td><td>G H I J 0</td></tr>
+  </table>
+  <p>Here is the controller's handshake logic, unchanged in Yuri's commit <code>709da7c2</code>:</p>
+  <figure class="codefig"><div class="code"><pre class="ln" aria-hidden="true">76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103</pre><pre class="src">    pointer_t current_pointer, next_pointer;
+    <span class="k">logic</span> next_pointer_valid;
+
+    <span class="k">always_comb</span>
+    <span class="k">begin</span>
+        next_pointer = <span class="n">&#x27;0</span>;
+
+        <span class="k">if</span> (out_data_valid)
+            next_pointer = next_pointers [current_pointer];
+        <span class="k">else</span> <span class="k">if</span> (start_pointer_valid)
+            next_pointer = start_pointer;
+
+        next_pointer_valid = (next_pointer != <span class="n">&#x27;0</span>);
+    <span class="k">end</span>
+
+    <span class="k">always_ff</span> @ (<span class="k">posedge</span> clock)
+        <span class="k">if</span> (reset)
+            out_data_valid &lt;= <span class="n">1&#x27;b0</span>;
+        <span class="k">else</span>
+            out_data_valid &lt;= next_pointer_valid;
+
+    <span class="k">always_ff</span> @ (<span class="k">posedge</span> clock)
+    <span class="k">begin</span>
+        current_pointer &lt;= next_pointer;
+        out_data        &lt;= constant_data_array [next_pointer];
+    <span class="k">end</span>
+
+    <span class="k">assign</span> start_pointer_ready = ~ next_pointer_valid;</pre></div><figcaption><code>linked_list_controller_1_fetching_next_from_constant_array.sv</code>, lines 76–103</figcaption></figure>
+  <p>Here is the committed generator, which sends eight requests. It advances its counter on <code>start_pointer_ready</code>:</p>
+  <figure class="codefig"><div class="code"><pre class="ln" aria-hidden="true">12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre><pre class="src">    <span class="k">logic</span> [<span class="n">3</span>:<span class="n">0</span>] n_request;
+
+    <span class="k">always_ff</span> @ (<span class="k">posedge</span> clock)
+        <span class="k">if</span> (reset)
+            n_request &lt;= <span class="n">&#x27;0</span>;
+        <span class="k">else</span> <span class="k">if</span> (start_pointer_ready)
+            n_request &lt;= n_request + <span class="n">4&#x27;d1</span>;
+
+    <span class="k">assign</span> start_pointer_valid = (n_request != <span class="n">4&#x27;d8</span>);
+
+    <span class="k">always_comb</span>
+        <span class="k">case</span> (n_request)
+        <span class="n">4&#x27;d0</span>:    start_pointer = pointer_t&#x27; (<span class="n">7</span>);
+        <span class="n">4&#x27;d1</span>:    start_pointer = pointer_t&#x27; (<span class="n">6</span>);
+        <span class="n">4&#x27;d2</span>:    start_pointer = pointer_t&#x27; (<span class="n">2</span>);
+        <span class="n">4&#x27;d3</span>:    start_pointer = pointer_t&#x27; (<span class="n">1</span>);
+        <span class="n">4&#x27;d4</span>:    start_pointer = pointer_t&#x27; (<span class="n">0</span>);
+        <span class="k">default</span>: start_pointer = pointer_t&#x27; (<span class="n">9</span>);
+        <span class="k">endcase</span></pre></div><figcaption><code>start_pointer_request_generator.sv</code> at commit 709da7c2, lines 12–30</figcaption></figure>
+  <p>For the one-list test, Yuri replaced the sequence with a constant request:</p>
+  <figure class="codefig"><div class="code"><pre class="ln" aria-hidden="true">34
+35</pre><pre class="src">    <span class="k">assign</span> start_pointer_valid = <span class="n">1&#x27;b1</span>;
+    <span class="k">assign</span> start_pointer       = pointer_t&#x27; (<span class="n">1</span>);</pre></div><figcaption><code>start_pointer_request_generator.sv</code> in the working tree (uncommitted)</figcaption></figure>
+</section>
+
+<section>
+  <h2>2. What I said</h2>
+  <p>Here are my exact words, with the prompt each one answered:</p>
+  <div class="exchange"><p class="who">Prompt</p><blockquote class="prompt">fix synthax error in …/lab_top.sv</blockquote><p class="who">My reply (excerpt)</p><blockquote class="mine">One thing in the design, which I left alone: <code>start_pointer_ready = ~ next_pointer_valid</code> is high in the cycle the controller is <em>not</em> taking a pointer. The generator moves on in that cycle. That works for this sequence, but it isn't standard valid/ready.</blockquote></div><div class="exchange"><p class="who">Prompt</p><blockquote class="prompt">what about now?</blockquote><p class="who">My reply (excerpt)</p><blockquote class="mine">The handshake still has the issue I mentioned: the controller takes a start pointer while <code>start_pointer_ready</code> is 0, and the generator moves on later, when <code>ready</code> is 1. It gives the right sequence here, but it isn't standard valid/ready.</blockquote></div><div class="exchange"><p class="who">Prompt</p><blockquote class="prompt">fix it for the standard valid/ready</blockquote><p class="who">My reply (excerpt)</p><blockquote class="mine">The controller now uses standard valid/ready: a start pointer moves only in a cycle where <code>start_pointer_valid</code> and <code>start_pointer_ready</code> are both 1. Only the controller changed; your generator was already correct.</blockquote></div><div class="exchange"><p class="who">Prompt</p><blockquote class="prompt">in what clock cycles (simulation time) I can see a non-standard valid/ready bahaviour if I stash the changes?</blockquote><p class="who">My reply (excerpt)</p><blockquote class="mine">With both files stashed, 20 rising edges show non-standard valid/ready behaviour, between 45 ns and 505 ns.</blockquote></div>
+</section>
+
+<section>
+  <h2>3. My assumptions</h2>
+  <ol>
+    <li><strong>The transfer is the cycle in which the destination starts using the data.</strong> So <code>start_pointer_ready</code> should be 1 in exactly the cycle where the controller loads <code>start_pointer</code>.</li>
+    <li><strong>READY = 1 means "I am taking the data now".</strong> So READY = 1 in a cycle where the controller doesn't load the pointer looked like the destination dropping data.</li>
+    <li><strong>The destination must not use the data before it acknowledges it.</strong> This is a habit from FIFOs and skid buffers, which take data on <code>valid &amp; ready</code>. It is a design convention, not a protocol rule.</li>
+    <li>I didn't check any of this against the AXI specification before stating it as fact.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>4. My line of thought</h2>
+  <ol>
+    <li>In the <code>always_comb</code> block, the branch <code>else if (start_pointer_valid) next_pointer = start_pointer;</code> has no <code>start_pointer_ready</code> in its condition.</li>
+    <li><code>assign start_pointer_ready = ~ next_pointer_valid;</code> means that in the cycle where the controller loads a non-zero pointer, <code>next_pointer_valid</code> is 1, so <code>ready</code> is 0.</li>
+    <li>Together with assumption 1, that read as "loads while ready = 0, and raises ready when it doesn't load", which I called non-standard.</li>
+    <li>When asked to fix it, I moved the acknowledgment to the start of the list:</li>
+  </ol>
+  <figure class="codefig"><div class="code"><pre class="src diff"><span class="hunk">@@ -76,13 +76,25 @@ import linked_list_controller_configuration_and_types_package::*;</span><span class="ctx">     pointer_t current_pointer, next_pointer;</span><span class="ctx">     logic next_pointer_valid;</span><span class="ctx"> </span><span class="add">+    // The controller is busy while it walks a list,</span><span class="add">+    // i.e. while the current node has a next node.</span><span class="add">+</span><span class="add">+    wire list_continues</span><span class="add">+        = out_data_valid &amp; (next_pointers [current_pointer] != &#x27;0);</span><span class="add">+</span><span class="add">+    // Standard valid/ready handshake: a start pointer is transferred</span><span class="add">+    // in a clock cycle when both start_pointer_valid</span><span class="add">+    // and start_pointer_ready are 1.</span><span class="add">+</span><span class="add">+    assign start_pointer_ready = ~ list_continues;</span><span class="add">+</span><span class="ctx">     always_comb</span><span class="ctx">     begin</span><span class="ctx">         next_pointer = &#x27;0;</span><span class="ctx"> </span><span class="del">-        if (out_data_valid)</span><span class="add">+        if (list_continues)</span><span class="ctx">             next_pointer = next_pointers [current_pointer];</span><span class="del">-        else if (start_pointer_valid)</span><span class="add">+        else if (start_pointer_valid &amp; start_pointer_ready)</span><span class="ctx">             next_pointer = start_pointer;</span><span class="ctx"> </span><span class="ctx">         next_pointer_valid = (next_pointer != &#x27;0);</span><span class="hunk">@@ -100,6 +112,4 @@ import linked_list_controller_configuration_and_types_package::*;</span><span class="ctx">         out_data        &lt;= constant_data_array [next_pointer];</span><span class="ctx">     end</span><span class="ctx"> </span><span class="del">-    assign start_pointer_ready = ~ next_pointer_valid;</span><span class="del">-</span><span class="ctx"> endmodule</span></pre></div><figcaption>My change to the controller, now in <code>stash@{0}</code></figcaption></figure>
+  <ol start="5">
+    <li>When asked for the clock edges, I wrote a checker whose rules were my assumptions:</li>
+  </ol>
+  <figure class="codefig"><div class="code"><pre class="src"><span class="c">// My checker (scratch file vr_check.sv), committed controller</span>
+
+<span class="k">wire</span> taken = v &amp; ! odv;   <span class="c">// controller loads start_pointer at this edge</span>
+
+<span class="k">if</span> (taken &amp; ! r)          <span class="c">// &quot;A&quot;: loads while ready = 0</span>
+    ...
+<span class="k">if</span> (v &amp; r &amp; ! taken)      <span class="c">// &quot;B&quot;: valid = ready = 1, but no load</span>
+    ...
+<span class="k">if</span> (n != prev_n &amp; ! prev_v)  <span class="c">// &quot;C&quot;: generator counted a transfer while valid = 0</span>
+    ...</pre></div><figcaption>The three rules of my checker, shortened</figcaption></figure>
+  <p>It reported 20 edges. The check was circular: it encoded my assumption, so its result couldn't test that assumption. Here are the first edges it flagged, in the committed eight-request test:</p>
+  <figure class="wavefig"><div class="wave-wrap"><svg class="wv" width="912" height="350" viewBox="0 0 912 350" role="img" aria-label="Multi-list test with my A and B labels"><desc>Committed controller and generator; edges marked A and B by the wrong checker.</desc><rect class="band" x="336.0" y="42" width="40" height="274"/><rect class="band" x="416.0" y="42" width="40" height="274"/><rect class="band" x="536.0" y="42" width="40" height="274"/><rect class="band" x="736.0" y="42" width="40" height="274"/><rect class="band" x="776.0" y="42" width="40" height="274"/><line class="grid" x1="176.0" y1="42" x2="176.0" y2="316"/><text class="tick" x="176.0" y="332" text-anchor="middle">25</text><line class="grid" x1="216.0" y1="42" x2="216.0" y2="316"/><text class="tick" x="216.0" y="332" text-anchor="middle">35</text><line class="grid" x1="256.0" y1="42" x2="256.0" y2="316"/><text class="tick" x="256.0" y="332" text-anchor="middle">45</text><line class="grid" x1="296.0" y1="42" x2="296.0" y2="316"/><text class="tick" x="296.0" y="332" text-anchor="middle">55</text><line class="grid" x1="336.0" y1="42" x2="336.0" y2="316"/><text class="tick" x="336.0" y="332" text-anchor="middle">65</text><line class="grid" x1="376.0" y1="42" x2="376.0" y2="316"/><text class="tick" x="376.0" y="332" text-anchor="middle">75</text><line class="grid" x1="416.0" y1="42" x2="416.0" y2="316"/><text class="tick" x="416.0" y="332" text-anchor="middle">85</text><line class="grid" x1="456.0" y1="42" x2="456.0" y2="316"/><text class="tick" x="456.0" y="332" text-anchor="middle">95</text><line class="grid" x1="496.0" y1="42" x2="496.0" y2="316"/><text class="tick" x="496.0" y="332" text-anchor="middle">105</text><line class="grid" x1="536.0" y1="42" x2="536.0" y2="316"/><text class="tick" x="536.0" y="332" text-anchor="middle">115</text><line class="grid" x1="576.0" y1="42" x2="576.0" y2="316"/><text class="tick" x="576.0" y="332" text-anchor="middle">125</text><line class="grid" x1="616.0" y1="42" x2="616.0" y2="316"/><text class="tick" x="616.0" y="332" text-anchor="middle">135</text><line class="grid" x1="656.0" y1="42" x2="656.0" y2="316"/><text class="tick" x="656.0" y="332" text-anchor="middle">145</text><line class="grid" x1="696.0" y1="42" x2="696.0" y2="316"/><text class="tick" x="696.0" y="332" text-anchor="middle">155</text><line class="grid" x1="736.0" y1="42" x2="736.0" y2="316"/><text class="tick" x="736.0" y="332" text-anchor="middle">165</text><line class="grid" x1="776.0" y1="42" x2="776.0" y2="316"/><text class="tick" x="776.0" y="332" text-anchor="middle">175</text><line class="grid" x1="816.0" y1="42" x2="816.0" y2="316"/><text class="tick" x="816.0" y="332" text-anchor="middle">185</text><line class="grid" x1="856.0" y1="42" x2="856.0" y2="316"/><text class="tick" x="856.0" y="332" text-anchor="middle">195</text><line class="grid" x1="896.0" y1="42" x2="896.0" y2="316"/><text class="tick" x="896.0" y="332" text-anchor="middle">205</text><text class="tick" x="164" y="332" text-anchor="end">ns</text><line class="mark m-a" x1="256.0" y1="18" x2="256.0" y2="316"/><line class="mark m-a" x1="416.0" y1="18" x2="416.0" y2="316"/><line class="mark m-a" x1="496.0" y1="18" x2="496.0" y2="316"/><line class="mark m-a" x1="616.0" y1="18" x2="616.0" y2="316"/><line class="mark m-a" x1="856.0" y1="18" x2="856.0" y2="316"/><line class="mark m-b" x1="376.0" y1="34" x2="376.0" y2="316"/><line class="mark m-b" x1="456.0" y1="34" x2="456.0" y2="316"/><line class="mark m-b" x1="576.0" y1="34" x2="576.0" y2="316"/><line class="mark m-b" x1="776.0" y1="34" x2="776.0" y2="316"/><text class="name" x="164" y="64.0" text-anchor="end">slow_clk</text><polyline class="sig " points="176.0,68.0 176.0,68.0 176.0,52.0 196.0,52.0 196.0,68.0 216.0,68.0 216.0,68.0 216.0,52.0 236.0,52.0 236.0,68.0 256.0,68.0 256.0,68.0 256.0,52.0 276.0,52.0 276.0,68.0 296.0,68.0 296.0,68.0 296.0,52.0 316.0,52.0 316.0,68.0 336.0,68.0 336.0,68.0 336.0,52.0 356.0,52.0 356.0,68.0 376.0,68.0 376.0,68.0 376.0,52.0 396.0,52.0 396.0,68.0 416.0,68.0 416.0,68.0 416.0,52.0 436.0,52.0 436.0,68.0 456.0,68.0 456.0,68.0 456.0,52.0 476.0,52.0 476.0,68.0 496.0,68.0 496.0,68.0 496.0,52.0 516.0,52.0 516.0,68.0 536.0,68.0 536.0,68.0 536.0,52.0 556.0,52.0 556.0,68.0 576.0,68.0 576.0,68.0 576.0,52.0 596.0,52.0 596.0,68.0 616.0,68.0 616.0,68.0 616.0,52.0 636.0,52.0 636.0,68.0 656.0,68.0 656.0,68.0 656.0,52.0 676.0,52.0 676.0,68.0 696.0,68.0 696.0,68.0 696.0,52.0 716.0,52.0 716.0,68.0 736.0,68.0 736.0,68.0 736.0,52.0 756.0,52.0 756.0,68.0 776.0,68.0 776.0,68.0 776.0,52.0 796.0,52.0 796.0,68.0 816.0,68.0 816.0,68.0 816.0,52.0 836.0,52.0 836.0,68.0 856.0,68.0 856.0,68.0 856.0,52.0 876.0,52.0 876.0,68.0 896.0,68.0"/><text class="name" x="164" y="94.0" text-anchor="end">rst</text><polyline class="sig " points="176.0,82.0 216.0,82.0 216.0,98.0 256.0,98.0 296.0,98.0 336.0,98.0 376.0,98.0 416.0,98.0 456.0,98.0 496.0,98.0 536.0,98.0 576.0,98.0 616.0,98.0 656.0,98.0 696.0,98.0 736.0,98.0 776.0,98.0 816.0,98.0 856.0,98.0 896.0,98.0"/><text class="name" x="164" y="124.0" text-anchor="end">start_pointer_valid</text><polyline class="sig valid" points="176.0,112.0 216.0,112.0 256.0,112.0 296.0,112.0 336.0,112.0 376.0,112.0 416.0,112.0 456.0,112.0 496.0,112.0 536.0,112.0 576.0,112.0 616.0,112.0 656.0,112.0 696.0,112.0 736.0,112.0 776.0,112.0 816.0,112.0 856.0,112.0 896.0,112.0"/><text class="name" x="164" y="154.0" text-anchor="end">start_pointer_ready</text><polyline class="sig ready" points="176.0,158.0 216.0,158.0 256.0,158.0 296.0,158.0 336.0,158.0 336.0,142.0 376.0,142.0 376.0,158.0 416.0,158.0 416.0,142.0 456.0,142.0 456.0,158.0 496.0,158.0 536.0,158.0 536.0,142.0 576.0,142.0 576.0,158.0 616.0,158.0 656.0,158.0 696.0,158.0 736.0,158.0 736.0,142.0 776.0,142.0 816.0,142.0 816.0,158.0 856.0,158.0 896.0,158.0"/><text class="name" x="164" y="184.0" text-anchor="end">start_pointer</text><polygon class="bus " points="176.0,180.0 180.0,172 372.0,172 376.0,180.0 372.0,188 180.0,188"/><text class="val" x="276.0" y="184.0" text-anchor="middle">7</text><polygon class="bus " points="376.0,180.0 380.0,172 452.0,172 456.0,180.0 452.0,188 380.0,188"/><text class="val" x="416.0" y="184.0" text-anchor="middle">6</text><polygon class="bus " points="456.0,180.0 460.0,172 572.0,172 576.0,180.0 572.0,188 460.0,188"/><text class="val" x="516.0" y="184.0" text-anchor="middle">2</text><polygon class="bus " points="576.0,180.0 580.0,172 772.0,172 776.0,180.0 772.0,188 580.0,188"/><text class="val" x="676.0" y="184.0" text-anchor="middle">1</text><polygon class="bus " points="776.0,180.0 780.0,172 812.0,172 816.0,180.0 812.0,188 780.0,188"/><text class="val" x="796.0" y="184.0" text-anchor="middle">0</text><polygon class="bus " points="816.0,180.0 820.0,172 892.0,172 896.0,180.0 892.0,188 820.0,188"/><text class="val" x="856.0" y="184.0" text-anchor="middle">9</text><text class="name" x="164" y="214.0" text-anchor="end">i_spr.n_request</text><polygon class="bus " points="176.0,210.0 180.0,202 372.0,202 376.0,210.0 372.0,218 180.0,218"/><text class="val" x="276.0" y="214.0" text-anchor="middle">0</text><polygon class="bus " points="376.0,210.0 380.0,202 452.0,202 456.0,210.0 452.0,218 380.0,218"/><text class="val" x="416.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="456.0,210.0 460.0,202 572.0,202 576.0,210.0 572.0,218 460.0,218"/><text class="val" x="516.0" y="214.0" text-anchor="middle">2</text><polygon class="bus " points="576.0,210.0 580.0,202 772.0,202 776.0,210.0 772.0,218 580.0,218"/><text class="val" x="676.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="776.0,210.0 780.0,202 812.0,202 816.0,210.0 812.0,218 780.0,218"/><text class="val" x="796.0" y="214.0" text-anchor="middle">4</text><polygon class="bus " points="816.0,210.0 820.0,202 892.0,202 896.0,210.0 892.0,218 820.0,218"/><text class="val" x="856.0" y="214.0" text-anchor="middle">5</text><text class="name" x="164" y="244.0" text-anchor="end">i_llc.current_pointer</text><line class="idle" x1="176.0" y1="240.0" x2="256.0" y2="240.0"/><polygon class="bus " points="256.0,240.0 260.0,232 292.0,232 296.0,240.0 292.0,248 260.0,248"/><text class="val" x="276.0" y="244.0" text-anchor="middle">7</text><polygon class="bus " points="296.0,240.0 300.0,232 332.0,232 336.0,240.0 332.0,248 300.0,248"/><text class="val" x="316.0" y="244.0" text-anchor="middle">15</text><polygon class="bus " points="336.0,240.0 340.0,232 372.0,232 376.0,240.0 372.0,248 340.0,248"/><text class="val" x="356.0" y="244.0" text-anchor="middle">8</text><line class="idle" x1="376.0" y1="240.0" x2="416.0" y2="240.0"/><polygon class="bus " points="416.0,240.0 420.0,232 452.0,232 456.0,240.0 452.0,248 420.0,248"/><text class="val" x="436.0" y="244.0" text-anchor="middle">6</text><line class="idle" x1="456.0" y1="240.0" x2="496.0" y2="240.0"/><polygon class="bus " points="496.0,240.0 500.0,232 532.0,232 536.0,240.0 532.0,248 500.0,248"/><text class="val" x="516.0" y="244.0" text-anchor="middle">2</text><polygon class="bus " points="536.0,240.0 540.0,232 572.0,232 576.0,240.0 572.0,248 540.0,248"/><text class="val" x="556.0" y="244.0" text-anchor="middle">4</text><line class="idle" x1="576.0" y1="240.0" x2="616.0" y2="240.0"/><polygon class="bus " points="616.0,240.0 620.0,232 652.0,232 656.0,240.0 652.0,248 620.0,248"/><text class="val" x="636.0" y="244.0" text-anchor="middle">1</text><polygon class="bus " points="656.0,240.0 660.0,232 692.0,232 696.0,240.0 692.0,248 660.0,248"/><text class="val" x="676.0" y="244.0" text-anchor="middle">5</text><polygon class="bus " points="696.0,240.0 700.0,232 732.0,232 736.0,240.0 732.0,248 700.0,248"/><text class="val" x="716.0" y="244.0" text-anchor="middle">3</text><polygon class="bus " points="736.0,240.0 740.0,232 772.0,232 776.0,240.0 772.0,248 740.0,248"/><text class="val" x="756.0" y="244.0" text-anchor="middle">10</text><line class="idle" x1="776.0" y1="240.0" x2="856.0" y2="240.0"/><polygon class="bus " points="856.0,240.0 860.0,232 892.0,232 896.0,240.0 892.0,248 860.0,248"/><text class="val" x="876.0" y="244.0" text-anchor="middle">9</text><text class="name" x="164" y="274.0" text-anchor="end">out_data_valid</text><polyline class="sig " points="176.0,278.0 216.0,278.0 256.0,278.0 256.0,262.0 296.0,262.0 336.0,262.0 376.0,262.0 376.0,278.0 416.0,278.0 416.0,262.0 456.0,262.0 456.0,278.0 496.0,278.0 496.0,262.0 536.0,262.0 576.0,262.0 576.0,278.0 616.0,278.0 616.0,262.0 656.0,262.0 696.0,262.0 736.0,262.0 776.0,262.0 776.0,278.0 816.0,278.0 856.0,278.0 856.0,262.0 896.0,262.0"/><text class="name" x="164" y="304.0" text-anchor="end">out_data</text><line class="idle" x1="176.0" y1="300.0" x2="256.0" y2="300.0"/><polygon class="bus data" points="256.0,300.0 260.0,292 292.0,292 296.0,300.0 292.0,308 260.0,308"/><text class="val" x="276.0" y="304.0" text-anchor="middle">E</text><polygon class="bus data" points="296.0,300.0 300.0,292 332.0,292 336.0,300.0 332.0,308 300.0,308"/><text class="val" x="316.0" y="304.0" text-anchor="middle">F</text><polygon class="bus data" points="336.0,300.0 340.0,292 372.0,292 376.0,300.0 372.0,308 340.0,308"/><text class="val" x="356.0" y="304.0" text-anchor="middle">0</text><line class="idle" x1="376.0" y1="300.0" x2="416.0" y2="300.0"/><polygon class="bus data" points="416.0,300.0 420.0,292 452.0,292 456.0,300.0 452.0,308 420.0,308"/><text class="val" x="436.0" y="304.0" text-anchor="middle">0</text><line class="idle" x1="456.0" y1="300.0" x2="496.0" y2="300.0"/><polygon class="bus data" points="496.0,300.0 500.0,292 532.0,292 536.0,300.0 532.0,308 500.0,308"/><text class="val" x="516.0" y="304.0" text-anchor="middle">D</text><polygon class="bus data" points="536.0,300.0 540.0,292 572.0,292 576.0,300.0 572.0,308 540.0,308"/><text class="val" x="556.0" y="304.0" text-anchor="middle">0</text><line class="idle" x1="576.0" y1="300.0" x2="616.0" y2="300.0"/><polygon class="bus data" points="616.0,300.0 620.0,292 652.0,292 656.0,300.0 652.0,308 620.0,308"/><text class="val" x="636.0" y="304.0" text-anchor="middle">A</text><polygon class="bus data" points="656.0,300.0 660.0,292 692.0,292 696.0,300.0 692.0,308 660.0,308"/><text class="val" x="676.0" y="304.0" text-anchor="middle">B</text><polygon class="bus data" points="696.0,300.0 700.0,292 732.0,292 736.0,300.0 732.0,308 700.0,308"/><text class="val" x="716.0" y="304.0" text-anchor="middle">C</text><polygon class="bus data" points="736.0,300.0 740.0,292 772.0,292 776.0,300.0 772.0,308 740.0,308"/><text class="val" x="756.0" y="304.0" text-anchor="middle">0</text><line class="idle" x1="776.0" y1="300.0" x2="856.0" y2="300.0"/><polygon class="bus data" points="856.0,300.0 860.0,292 892.0,292 896.0,300.0 892.0,308 860.0,308"/><text class="val" x="876.0" y="304.0" text-anchor="middle">G</text><text class="mlabel l-a" x="256.0" y="14" text-anchor="middle">A</text><text class="mlabel l-a" x="416.0" y="14" text-anchor="middle">A</text><text class="mlabel l-a" x="496.0" y="14" text-anchor="middle">A</text><text class="mlabel l-a" x="616.0" y="14" text-anchor="middle">A</text><text class="mlabel l-a" x="856.0" y="14" text-anchor="middle">A</text><text class="mlabel l-b" x="376.0" y="30" text-anchor="middle">B</text><text class="mlabel l-b" x="456.0" y="30" text-anchor="middle">B</text><text class="mlabel l-b" x="576.0" y="30" text-anchor="middle">B</text><text class="mlabel l-b" x="776.0" y="30" text-anchor="middle">B</text></svg></div>
+  <figcaption>Committed controller and generator. Each column is one clock cycle, and markers sit on the rising edge where the event happens. Shaded columns have valid = ready = 1, so a transfer happens at the edge that ends them.
+  <span class="key"><b class="ka">A</b> (45, 85, 105, 135, 195 ns): what I called "takes the pointer while ready = 0". In fact the controller reads a pointer that the source must keep steady anyway, which the rules allow.</span>
+  <span class="key"><b class="kb">B</b> (75, 95, 125, 175 ns): what I called "valid = ready = 1, but the pointer is ignored". In fact this is the handshake that completes the transfer of the pointer read earlier.</span></figcaption></figure>
+</section>
+
+<section>
+  <h2>5. What was incorrect</h2>
+  <p>The handshake rules in the AMBA AXI Protocol Specification (Arm IHI 0022, "Handshake process"), paraphrased:</p>
+  <ol class="rules">
+    <li>The source asserts VALID when the information is available. It must not wait for READY before asserting VALID.</li>
+    <li>Once VALID is asserted, the source keeps VALID asserted and the information unchanged until the rising clock edge where VALID and READY are both high. That edge is the transfer.</li>
+    <li>The destination may assert READY before VALID, or wait for VALID before asserting READY. It may also deassert READY before VALID arrives.</li>
+    <li>The rules don't say what the destination does with the information before the transfer. Because the source must hold it steady, reading it early is safe.</li>
+  </ol>
+  <p>Checked against these rules:</p>
+  <ul>
+    <li><strong>"A" edges:</strong> the controller reads a pointer that rule 2 guarantees will stay put. Nothing requires READY to be 1 when the destination first looks at the data.</li>
+    <li><strong>"B" edges:</strong> these are the transfers. The source moves on, and the controller, having already used the pointer, doesn't use it again.</li>
+    <li><strong>"C" edge (375 ns):</strong> the committed generator counted a transfer on <code>ready</code> alone while <code>valid</code> was 0, so <code>valid</code> came back for an extra request. That is a counting bug inside the generator; on the wire it is just a new VALID, not a protocol violation. Yuri had already changed the generator to <code>start_pointer_valid &amp; start_pointer_ready</code>.</li>
+    <li><strong>READY depending on VALID:</strong> <code>ready = ~ next_pointer_valid</code> depends on <code>start_pointer_valid</code>. Rule 3 allows this. The forbidden dependency is the other way round, VALID waiting for READY, and here VALID never depends on READY.</li>
+  </ul>
+  <p>So my "fix" didn't repair a protocol problem. It only moved the acknowledgment from the end of the list to its start.</p>
+</section>
+
+<section>
+  <h2>6. Yuri's correction</h2>
+  <blockquote class="prompt big">look at the current test with only 1 list. valid is accepted only after all the list is fetched. I do not see anything non-standard in it. if valid is not acknowledged by ready it is supposed to stay high and input valid pointer is supposed to be stable. This is the rules of AXI protocol.</blockquote>
+  <p>This is the AXI rule set, and the one-list test shows it directly. <code>start_pointer_valid</code> stays 1 and the pointer stays 1 until <code>start_pointer_ready</code> rises on the last entry of each <code>ABC</code> list:</p>
+  <figure class="wavefig"><div class="wave-wrap"><svg class="wv" width="912" height="320" viewBox="0 0 912 320" role="img" aria-label="One-list test, committed controller"><desc>start_pointer_valid stays 1 with pointer 1; ready rises on the last entry of each ABC list.</desc><rect class="band" x="376.0" y="42" width="40" height="244"/><rect class="band" x="576.0" y="42" width="40" height="244"/><rect class="band" x="776.0" y="42" width="40" height="244"/><line class="grid" x1="176.0" y1="42" x2="176.0" y2="286"/><text class="tick" x="176.0" y="302" text-anchor="middle">25</text><line class="grid" x1="216.0" y1="42" x2="216.0" y2="286"/><text class="tick" x="216.0" y="302" text-anchor="middle">35</text><line class="grid" x1="256.0" y1="42" x2="256.0" y2="286"/><text class="tick" x="256.0" y="302" text-anchor="middle">45</text><line class="grid" x1="296.0" y1="42" x2="296.0" y2="286"/><text class="tick" x="296.0" y="302" text-anchor="middle">55</text><line class="grid" x1="336.0" y1="42" x2="336.0" y2="286"/><text class="tick" x="336.0" y="302" text-anchor="middle">65</text><line class="grid" x1="376.0" y1="42" x2="376.0" y2="286"/><text class="tick" x="376.0" y="302" text-anchor="middle">75</text><line class="grid" x1="416.0" y1="42" x2="416.0" y2="286"/><text class="tick" x="416.0" y="302" text-anchor="middle">85</text><line class="grid" x1="456.0" y1="42" x2="456.0" y2="286"/><text class="tick" x="456.0" y="302" text-anchor="middle">95</text><line class="grid" x1="496.0" y1="42" x2="496.0" y2="286"/><text class="tick" x="496.0" y="302" text-anchor="middle">105</text><line class="grid" x1="536.0" y1="42" x2="536.0" y2="286"/><text class="tick" x="536.0" y="302" text-anchor="middle">115</text><line class="grid" x1="576.0" y1="42" x2="576.0" y2="286"/><text class="tick" x="576.0" y="302" text-anchor="middle">125</text><line class="grid" x1="616.0" y1="42" x2="616.0" y2="286"/><text class="tick" x="616.0" y="302" text-anchor="middle">135</text><line class="grid" x1="656.0" y1="42" x2="656.0" y2="286"/><text class="tick" x="656.0" y="302" text-anchor="middle">145</text><line class="grid" x1="696.0" y1="42" x2="696.0" y2="286"/><text class="tick" x="696.0" y="302" text-anchor="middle">155</text><line class="grid" x1="736.0" y1="42" x2="736.0" y2="286"/><text class="tick" x="736.0" y="302" text-anchor="middle">165</text><line class="grid" x1="776.0" y1="42" x2="776.0" y2="286"/><text class="tick" x="776.0" y="302" text-anchor="middle">175</text><line class="grid" x1="816.0" y1="42" x2="816.0" y2="286"/><text class="tick" x="816.0" y="302" text-anchor="middle">185</text><line class="grid" x1="856.0" y1="42" x2="856.0" y2="286"/><text class="tick" x="856.0" y="302" text-anchor="middle">195</text><line class="grid" x1="896.0" y1="42" x2="896.0" y2="286"/><text class="tick" x="896.0" y="302" text-anchor="middle">205</text><text class="tick" x="164" y="302" text-anchor="end">ns</text><line class="mark m-xfer" x1="416.0" y1="18" x2="416.0" y2="286"/><line class="mark m-xfer" x1="616.0" y1="18" x2="616.0" y2="286"/><line class="mark m-xfer" x1="816.0" y1="18" x2="816.0" y2="286"/><line class="mark m-load" x1="256.0" y1="34" x2="256.0" y2="286"/><line class="mark m-load" x1="456.0" y1="34" x2="456.0" y2="286"/><line class="mark m-load" x1="656.0" y1="34" x2="656.0" y2="286"/><line class="mark m-load" x1="856.0" y1="34" x2="856.0" y2="286"/><text class="name" x="164" y="64.0" text-anchor="end">slow_clk</text><polyline class="sig " points="176.0,68.0 176.0,68.0 176.0,52.0 196.0,52.0 196.0,68.0 216.0,68.0 216.0,68.0 216.0,52.0 236.0,52.0 236.0,68.0 256.0,68.0 256.0,68.0 256.0,52.0 276.0,52.0 276.0,68.0 296.0,68.0 296.0,68.0 296.0,52.0 316.0,52.0 316.0,68.0 336.0,68.0 336.0,68.0 336.0,52.0 356.0,52.0 356.0,68.0 376.0,68.0 376.0,68.0 376.0,52.0 396.0,52.0 396.0,68.0 416.0,68.0 416.0,68.0 416.0,52.0 436.0,52.0 436.0,68.0 456.0,68.0 456.0,68.0 456.0,52.0 476.0,52.0 476.0,68.0 496.0,68.0 496.0,68.0 496.0,52.0 516.0,52.0 516.0,68.0 536.0,68.0 536.0,68.0 536.0,52.0 556.0,52.0 556.0,68.0 576.0,68.0 576.0,68.0 576.0,52.0 596.0,52.0 596.0,68.0 616.0,68.0 616.0,68.0 616.0,52.0 636.0,52.0 636.0,68.0 656.0,68.0 656.0,68.0 656.0,52.0 676.0,52.0 676.0,68.0 696.0,68.0 696.0,68.0 696.0,52.0 716.0,52.0 716.0,68.0 736.0,68.0 736.0,68.0 736.0,52.0 756.0,52.0 756.0,68.0 776.0,68.0 776.0,68.0 776.0,52.0 796.0,52.0 796.0,68.0 816.0,68.0 816.0,68.0 816.0,52.0 836.0,52.0 836.0,68.0 856.0,68.0 856.0,68.0 856.0,52.0 876.0,52.0 876.0,68.0 896.0,68.0"/><text class="name" x="164" y="94.0" text-anchor="end">rst</text><polyline class="sig " points="176.0,82.0 216.0,82.0 216.0,98.0 256.0,98.0 296.0,98.0 336.0,98.0 376.0,98.0 416.0,98.0 456.0,98.0 496.0,98.0 536.0,98.0 576.0,98.0 616.0,98.0 656.0,98.0 696.0,98.0 736.0,98.0 776.0,98.0 816.0,98.0 856.0,98.0 896.0,98.0"/><text class="name" x="164" y="124.0" text-anchor="end">start_pointer_valid</text><polyline class="sig valid" points="176.0,112.0 216.0,112.0 256.0,112.0 296.0,112.0 336.0,112.0 376.0,112.0 416.0,112.0 456.0,112.0 496.0,112.0 536.0,112.0 576.0,112.0 616.0,112.0 656.0,112.0 696.0,112.0 736.0,112.0 776.0,112.0 816.0,112.0 856.0,112.0 896.0,112.0"/><text class="name" x="164" y="154.0" text-anchor="end">start_pointer_ready</text><polyline class="sig ready" points="176.0,158.0 216.0,158.0 256.0,158.0 296.0,158.0 336.0,158.0 376.0,158.0 376.0,142.0 416.0,142.0 416.0,158.0 456.0,158.0 496.0,158.0 536.0,158.0 576.0,158.0 576.0,142.0 616.0,142.0 616.0,158.0 656.0,158.0 696.0,158.0 736.0,158.0 776.0,158.0 776.0,142.0 816.0,142.0 816.0,158.0 856.0,158.0 896.0,158.0"/><text class="name" x="164" y="184.0" text-anchor="end">start_pointer</text><polygon class="bus " points="176.0,180.0 180.0,172 892.0,172 896.0,180.0 892.0,188 180.0,188"/><text class="val" x="536.0" y="184.0" text-anchor="middle">1</text><text class="name" x="164" y="214.0" text-anchor="end">i_llc.current_pointer</text><line class="idle" x1="176.0" y1="210.0" x2="256.0" y2="210.0"/><polygon class="bus " points="256.0,210.0 260.0,202 292.0,202 296.0,210.0 292.0,218 260.0,218"/><text class="val" x="276.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="296.0,210.0 300.0,202 332.0,202 336.0,210.0 332.0,218 300.0,218"/><text class="val" x="316.0" y="214.0" text-anchor="middle">5</text><polygon class="bus " points="336.0,210.0 340.0,202 372.0,202 376.0,210.0 372.0,218 340.0,218"/><text class="val" x="356.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="376.0,210.0 380.0,202 412.0,202 416.0,210.0 412.0,218 380.0,218"/><text class="val" x="396.0" y="214.0" text-anchor="middle">10</text><line class="idle" x1="416.0" y1="210.0" x2="456.0" y2="210.0"/><polygon class="bus " points="456.0,210.0 460.0,202 492.0,202 496.0,210.0 492.0,218 460.0,218"/><text class="val" x="476.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="496.0,210.0 500.0,202 532.0,202 536.0,210.0 532.0,218 500.0,218"/><text class="val" x="516.0" y="214.0" text-anchor="middle">5</text><polygon class="bus " points="536.0,210.0 540.0,202 572.0,202 576.0,210.0 572.0,218 540.0,218"/><text class="val" x="556.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="576.0,210.0 580.0,202 612.0,202 616.0,210.0 612.0,218 580.0,218"/><text class="val" x="596.0" y="214.0" text-anchor="middle">10</text><line class="idle" x1="616.0" y1="210.0" x2="656.0" y2="210.0"/><polygon class="bus " points="656.0,210.0 660.0,202 692.0,202 696.0,210.0 692.0,218 660.0,218"/><text class="val" x="676.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="696.0,210.0 700.0,202 732.0,202 736.0,210.0 732.0,218 700.0,218"/><text class="val" x="716.0" y="214.0" text-anchor="middle">5</text><polygon class="bus " points="736.0,210.0 740.0,202 772.0,202 776.0,210.0 772.0,218 740.0,218"/><text class="val" x="756.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="776.0,210.0 780.0,202 812.0,202 816.0,210.0 812.0,218 780.0,218"/><text class="val" x="796.0" y="214.0" text-anchor="middle">10</text><line class="idle" x1="816.0" y1="210.0" x2="856.0" y2="210.0"/><polygon class="bus " points="856.0,210.0 860.0,202 892.0,202 896.0,210.0 892.0,218 860.0,218"/><text class="val" x="876.0" y="214.0" text-anchor="middle">1</text><text class="name" x="164" y="244.0" text-anchor="end">out_data_valid</text><polyline class="sig " points="176.0,248.0 216.0,248.0 256.0,248.0 256.0,232.0 296.0,232.0 336.0,232.0 376.0,232.0 416.0,232.0 416.0,248.0 456.0,248.0 456.0,232.0 496.0,232.0 536.0,232.0 576.0,232.0 616.0,232.0 616.0,248.0 656.0,248.0 656.0,232.0 696.0,232.0 736.0,232.0 776.0,232.0 816.0,232.0 816.0,248.0 856.0,248.0 856.0,232.0 896.0,232.0"/><text class="name" x="164" y="274.0" text-anchor="end">out_data</text><line class="idle" x1="176.0" y1="270.0" x2="256.0" y2="270.0"/><polygon class="bus data" points="256.0,270.0 260.0,262 292.0,262 296.0,270.0 292.0,278 260.0,278"/><text class="val" x="276.0" y="274.0" text-anchor="middle">A</text><polygon class="bus data" points="296.0,270.0 300.0,262 332.0,262 336.0,270.0 332.0,278 300.0,278"/><text class="val" x="316.0" y="274.0" text-anchor="middle">B</text><polygon class="bus data" points="336.0,270.0 340.0,262 372.0,262 376.0,270.0 372.0,278 340.0,278"/><text class="val" x="356.0" y="274.0" text-anchor="middle">C</text><polygon class="bus data" points="376.0,270.0 380.0,262 412.0,262 416.0,270.0 412.0,278 380.0,278"/><text class="val" x="396.0" y="274.0" text-anchor="middle">0</text><line class="idle" x1="416.0" y1="270.0" x2="456.0" y2="270.0"/><polygon class="bus data" points="456.0,270.0 460.0,262 492.0,262 496.0,270.0 492.0,278 460.0,278"/><text class="val" x="476.0" y="274.0" text-anchor="middle">A</text><polygon class="bus data" points="496.0,270.0 500.0,262 532.0,262 536.0,270.0 532.0,278 500.0,278"/><text class="val" x="516.0" y="274.0" text-anchor="middle">B</text><polygon class="bus data" points="536.0,270.0 540.0,262 572.0,262 576.0,270.0 572.0,278 540.0,278"/><text class="val" x="556.0" y="274.0" text-anchor="middle">C</text><polygon class="bus data" points="576.0,270.0 580.0,262 612.0,262 616.0,270.0 612.0,278 580.0,278"/><text class="val" x="596.0" y="274.0" text-anchor="middle">0</text><line class="idle" x1="616.0" y1="270.0" x2="656.0" y2="270.0"/><polygon class="bus data" points="656.0,270.0 660.0,262 692.0,262 696.0,270.0 692.0,278 660.0,278"/><text class="val" x="676.0" y="274.0" text-anchor="middle">A</text><polygon class="bus data" points="696.0,270.0 700.0,262 732.0,262 736.0,270.0 732.0,278 700.0,278"/><text class="val" x="716.0" y="274.0" text-anchor="middle">B</text><polygon class="bus data" points="736.0,270.0 740.0,262 772.0,262 776.0,270.0 772.0,278 740.0,278"/><text class="val" x="756.0" y="274.0" text-anchor="middle">C</text><polygon class="bus data" points="776.0,270.0 780.0,262 812.0,262 816.0,270.0 812.0,278 780.0,278"/><text class="val" x="796.0" y="274.0" text-anchor="middle">0</text><line class="idle" x1="816.0" y1="270.0" x2="856.0" y2="270.0"/><polygon class="bus data" points="856.0,270.0 860.0,262 892.0,262 896.0,270.0 892.0,278 860.0,278"/><text class="val" x="876.0" y="274.0" text-anchor="middle">A</text><text class="mlabel l-xfer" x="416.0" y="14" text-anchor="middle">transfer</text><text class="mlabel l-xfer" x="616.0" y="14" text-anchor="middle">transfer</text><text class="mlabel l-xfer" x="816.0" y="14" text-anchor="middle">transfer</text><text class="mlabel l-load" x="256.0" y="30" text-anchor="middle">load</text><text class="mlabel l-load" x="456.0" y="30" text-anchor="middle">load</text><text class="mlabel l-load" x="656.0" y="30" text-anchor="middle">load</text><text class="mlabel l-load" x="856.0" y="30" text-anchor="middle">load</text></svg></div>
+  <figcaption>The one-list test with Yuri's controller. <b class="kl">load</b>: the controller reads the pointer (45, 95, 145, 195 ns). <b class="kx">transfer</b>: valid = ready = 1 (85, 135, 185 ns). Each load is followed by exactly one transfer, and the source holds the pointer in between.</figcaption></figure>
+</section>
+
+<section>
+  <h2>7. Checking after the correction</h2>
+  <p>Over the whole 535 ns one-list run (Icarus Verilog 12.0, the lab's <code>tb.sv</code>):</p>
+  <ul>
+    <li>10 transfers and 10 loads, with every load followed by exactly one transfer before the next load.</li>
+    <li>0 violations of the source rule: whenever <code>valid</code> is 1 and <code>ready</code> is 0, the next cycle still has <code>valid</code> = 1 and the same pointer.</li>
+  </ul>
+  <figure class="codefig"><div class="code"><pre class="src"><span class="c">// Source-side AXI rule, checked on every rising edge (scratch file axi_trace.sv)</span>
+
+<span class="k">if</span> (prev_v &amp; ! prev_r &amp; (! v | p != prev_p))
+    source_errors ++;   <span class="c">// valid dropped or pointer changed before the handshake</span></pre></div><figcaption>The source-side rule, as checked here</figcaption></figure>
+</section>
+
+<section>
+  <h2>8. Final conclusion</h2>
+  <p><strong>Yuri's controller is a standard valid/ready (AXI-style) destination.</strong> It reads the start pointer early and acknowledges it on the last entry of the list. My variant acknowledges at the start instead. Both follow the rules; they differ in timing:</p>
+  <div class="table-wrap"><table class="cmp"><tr><th></th><th>Yuri's controller (commit 709da7c2)</th><th>My variant (in stash@{0})</th></tr>
+<tr><td>When <code>start_pointer_ready</code> is 1</td><td>on the list's last entry</td><td>whenever no list is in progress</td></tr>
+<tr><td>When the transfer happens</td><td>at the end of the list</td><td>when the list starts</td></tr>
+<tr><td>How long the source waits</td><td>the whole list</td><td>nothing extra</td></tr>
+<tr><td>Cycles per <code>ABC</code> list</td><td>5 (one idle cycle between lists)</td><td>4 (lists back to back)</td></tr>
+<tr><td>Transfers in the 535 ns test</td><td>10</td><td>13</td></tr>
+<tr><td>Source-rule violations</td><td>0</td><td>0</td></tr></table></div>
+  <figure class="wavefig"><div class="wave-wrap"><svg class="wv" width="912" height="320" viewBox="0 0 912 320" role="img" aria-label="One-list test, my variant"><desc>Acknowledge at the start of the list; lists run back to back.</desc><rect class="band" x="216.0" y="42" width="40" height="244"/><rect class="band" x="376.0" y="42" width="40" height="244"/><rect class="band" x="536.0" y="42" width="40" height="244"/><rect class="band" x="696.0" y="42" width="40" height="244"/><rect class="band" x="856.0" y="42" width="40" height="244"/><line class="grid" x1="176.0" y1="42" x2="176.0" y2="286"/><text class="tick" x="176.0" y="302" text-anchor="middle">25</text><line class="grid" x1="216.0" y1="42" x2="216.0" y2="286"/><text class="tick" x="216.0" y="302" text-anchor="middle">35</text><line class="grid" x1="256.0" y1="42" x2="256.0" y2="286"/><text class="tick" x="256.0" y="302" text-anchor="middle">45</text><line class="grid" x1="296.0" y1="42" x2="296.0" y2="286"/><text class="tick" x="296.0" y="302" text-anchor="middle">55</text><line class="grid" x1="336.0" y1="42" x2="336.0" y2="286"/><text class="tick" x="336.0" y="302" text-anchor="middle">65</text><line class="grid" x1="376.0" y1="42" x2="376.0" y2="286"/><text class="tick" x="376.0" y="302" text-anchor="middle">75</text><line class="grid" x1="416.0" y1="42" x2="416.0" y2="286"/><text class="tick" x="416.0" y="302" text-anchor="middle">85</text><line class="grid" x1="456.0" y1="42" x2="456.0" y2="286"/><text class="tick" x="456.0" y="302" text-anchor="middle">95</text><line class="grid" x1="496.0" y1="42" x2="496.0" y2="286"/><text class="tick" x="496.0" y="302" text-anchor="middle">105</text><line class="grid" x1="536.0" y1="42" x2="536.0" y2="286"/><text class="tick" x="536.0" y="302" text-anchor="middle">115</text><line class="grid" x1="576.0" y1="42" x2="576.0" y2="286"/><text class="tick" x="576.0" y="302" text-anchor="middle">125</text><line class="grid" x1="616.0" y1="42" x2="616.0" y2="286"/><text class="tick" x="616.0" y="302" text-anchor="middle">135</text><line class="grid" x1="656.0" y1="42" x2="656.0" y2="286"/><text class="tick" x="656.0" y="302" text-anchor="middle">145</text><line class="grid" x1="696.0" y1="42" x2="696.0" y2="286"/><text class="tick" x="696.0" y="302" text-anchor="middle">155</text><line class="grid" x1="736.0" y1="42" x2="736.0" y2="286"/><text class="tick" x="736.0" y="302" text-anchor="middle">165</text><line class="grid" x1="776.0" y1="42" x2="776.0" y2="286"/><text class="tick" x="776.0" y="302" text-anchor="middle">175</text><line class="grid" x1="816.0" y1="42" x2="816.0" y2="286"/><text class="tick" x="816.0" y="302" text-anchor="middle">185</text><line class="grid" x1="856.0" y1="42" x2="856.0" y2="286"/><text class="tick" x="856.0" y="302" text-anchor="middle">195</text><line class="grid" x1="896.0" y1="42" x2="896.0" y2="286"/><text class="tick" x="896.0" y="302" text-anchor="middle">205</text><text class="tick" x="164" y="302" text-anchor="end">ns</text><line class="mark m-xfer" x1="256.0" y1="18" x2="256.0" y2="286"/><line class="mark m-xfer" x1="416.0" y1="18" x2="416.0" y2="286"/><line class="mark m-xfer" x1="576.0" y1="18" x2="576.0" y2="286"/><line class="mark m-xfer" x1="736.0" y1="18" x2="736.0" y2="286"/><line class="mark m-xfer" x1="896.0" y1="18" x2="896.0" y2="286"/><text class="name" x="164" y="64.0" text-anchor="end">slow_clk</text><polyline class="sig " points="176.0,68.0 176.0,68.0 176.0,52.0 196.0,52.0 196.0,68.0 216.0,68.0 216.0,68.0 216.0,52.0 236.0,52.0 236.0,68.0 256.0,68.0 256.0,68.0 256.0,52.0 276.0,52.0 276.0,68.0 296.0,68.0 296.0,68.0 296.0,52.0 316.0,52.0 316.0,68.0 336.0,68.0 336.0,68.0 336.0,52.0 356.0,52.0 356.0,68.0 376.0,68.0 376.0,68.0 376.0,52.0 396.0,52.0 396.0,68.0 416.0,68.0 416.0,68.0 416.0,52.0 436.0,52.0 436.0,68.0 456.0,68.0 456.0,68.0 456.0,52.0 476.0,52.0 476.0,68.0 496.0,68.0 496.0,68.0 496.0,52.0 516.0,52.0 516.0,68.0 536.0,68.0 536.0,68.0 536.0,52.0 556.0,52.0 556.0,68.0 576.0,68.0 576.0,68.0 576.0,52.0 596.0,52.0 596.0,68.0 616.0,68.0 616.0,68.0 616.0,52.0 636.0,52.0 636.0,68.0 656.0,68.0 656.0,68.0 656.0,52.0 676.0,52.0 676.0,68.0 696.0,68.0 696.0,68.0 696.0,52.0 716.0,52.0 716.0,68.0 736.0,68.0 736.0,68.0 736.0,52.0 756.0,52.0 756.0,68.0 776.0,68.0 776.0,68.0 776.0,52.0 796.0,52.0 796.0,68.0 816.0,68.0 816.0,68.0 816.0,52.0 836.0,52.0 836.0,68.0 856.0,68.0 856.0,68.0 856.0,52.0 876.0,52.0 876.0,68.0 896.0,68.0"/><text class="name" x="164" y="94.0" text-anchor="end">rst</text><polyline class="sig " points="176.0,82.0 216.0,82.0 216.0,98.0 256.0,98.0 296.0,98.0 336.0,98.0 376.0,98.0 416.0,98.0 456.0,98.0 496.0,98.0 536.0,98.0 576.0,98.0 616.0,98.0 656.0,98.0 696.0,98.0 736.0,98.0 776.0,98.0 816.0,98.0 856.0,98.0 896.0,98.0"/><text class="name" x="164" y="124.0" text-anchor="end">start_pointer_valid</text><polyline class="sig valid" points="176.0,112.0 216.0,112.0 256.0,112.0 296.0,112.0 336.0,112.0 376.0,112.0 416.0,112.0 456.0,112.0 496.0,112.0 536.0,112.0 576.0,112.0 616.0,112.0 656.0,112.0 696.0,112.0 736.0,112.0 776.0,112.0 816.0,112.0 856.0,112.0 896.0,112.0"/><text class="name" x="164" y="154.0" text-anchor="end">start_pointer_ready</text><polyline class="sig ready" points="176.0,142.0 216.0,142.0 256.0,142.0 256.0,158.0 296.0,158.0 336.0,158.0 376.0,158.0 376.0,142.0 416.0,142.0 416.0,158.0 456.0,158.0 496.0,158.0 536.0,158.0 536.0,142.0 576.0,142.0 576.0,158.0 616.0,158.0 656.0,158.0 696.0,158.0 696.0,142.0 736.0,142.0 736.0,158.0 776.0,158.0 816.0,158.0 856.0,158.0 856.0,142.0 896.0,142.0"/><text class="name" x="164" y="184.0" text-anchor="end">start_pointer</text><polygon class="bus " points="176.0,180.0 180.0,172 892.0,172 896.0,180.0 892.0,188 180.0,188"/><text class="val" x="536.0" y="184.0" text-anchor="middle">1</text><text class="name" x="164" y="214.0" text-anchor="end">i_llc.current_pointer</text><line class="idle" x1="176.0" y1="210.0" x2="256.0" y2="210.0"/><polygon class="bus " points="256.0,210.0 260.0,202 292.0,202 296.0,210.0 292.0,218 260.0,218"/><text class="val" x="276.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="296.0,210.0 300.0,202 332.0,202 336.0,210.0 332.0,218 300.0,218"/><text class="val" x="316.0" y="214.0" text-anchor="middle">5</text><polygon class="bus " points="336.0,210.0 340.0,202 372.0,202 376.0,210.0 372.0,218 340.0,218"/><text class="val" x="356.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="376.0,210.0 380.0,202 412.0,202 416.0,210.0 412.0,218 380.0,218"/><text class="val" x="396.0" y="214.0" text-anchor="middle">10</text><polygon class="bus " points="416.0,210.0 420.0,202 452.0,202 456.0,210.0 452.0,218 420.0,218"/><text class="val" x="436.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="456.0,210.0 460.0,202 492.0,202 496.0,210.0 492.0,218 460.0,218"/><text class="val" x="476.0" y="214.0" text-anchor="middle">5</text><polygon class="bus " points="496.0,210.0 500.0,202 532.0,202 536.0,210.0 532.0,218 500.0,218"/><text class="val" x="516.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="536.0,210.0 540.0,202 572.0,202 576.0,210.0 572.0,218 540.0,218"/><text class="val" x="556.0" y="214.0" text-anchor="middle">10</text><polygon class="bus " points="576.0,210.0 580.0,202 612.0,202 616.0,210.0 612.0,218 580.0,218"/><text class="val" x="596.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="616.0,210.0 620.0,202 652.0,202 656.0,210.0 652.0,218 620.0,218"/><text class="val" x="636.0" y="214.0" text-anchor="middle">5</text><polygon class="bus " points="656.0,210.0 660.0,202 692.0,202 696.0,210.0 692.0,218 660.0,218"/><text class="val" x="676.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="696.0,210.0 700.0,202 732.0,202 736.0,210.0 732.0,218 700.0,218"/><text class="val" x="716.0" y="214.0" text-anchor="middle">10</text><polygon class="bus " points="736.0,210.0 740.0,202 772.0,202 776.0,210.0 772.0,218 740.0,218"/><text class="val" x="756.0" y="214.0" text-anchor="middle">1</text><polygon class="bus " points="776.0,210.0 780.0,202 812.0,202 816.0,210.0 812.0,218 780.0,218"/><text class="val" x="796.0" y="214.0" text-anchor="middle">5</text><polygon class="bus " points="816.0,210.0 820.0,202 852.0,202 856.0,210.0 852.0,218 820.0,218"/><text class="val" x="836.0" y="214.0" text-anchor="middle">3</text><polygon class="bus " points="856.0,210.0 860.0,202 892.0,202 896.0,210.0 892.0,218 860.0,218"/><text class="val" x="876.0" y="214.0" text-anchor="middle">10</text><text class="name" x="164" y="244.0" text-anchor="end">out_data_valid</text><polyline class="sig " points="176.0,248.0 216.0,248.0 256.0,248.0 256.0,232.0 296.0,232.0 336.0,232.0 376.0,232.0 416.0,232.0 456.0,232.0 496.0,232.0 536.0,232.0 576.0,232.0 616.0,232.0 656.0,232.0 696.0,232.0 736.0,232.0 776.0,232.0 816.0,232.0 856.0,232.0 896.0,232.0"/><text class="name" x="164" y="274.0" text-anchor="end">out_data</text><line class="idle" x1="176.0" y1="270.0" x2="256.0" y2="270.0"/><polygon class="bus data" points="256.0,270.0 260.0,262 292.0,262 296.0,270.0 292.0,278 260.0,278"/><text class="val" x="276.0" y="274.0" text-anchor="middle">A</text><polygon class="bus data" points="296.0,270.0 300.0,262 332.0,262 336.0,270.0 332.0,278 300.0,278"/><text class="val" x="316.0" y="274.0" text-anchor="middle">B</text><polygon class="bus data" points="336.0,270.0 340.0,262 372.0,262 376.0,270.0 372.0,278 340.0,278"/><text class="val" x="356.0" y="274.0" text-anchor="middle">C</text><polygon class="bus data" points="376.0,270.0 380.0,262 412.0,262 416.0,270.0 412.0,278 380.0,278"/><text class="val" x="396.0" y="274.0" text-anchor="middle">0</text><polygon class="bus data" points="416.0,270.0 420.0,262 452.0,262 456.0,270.0 452.0,278 420.0,278"/><text class="val" x="436.0" y="274.0" text-anchor="middle">A</text><polygon class="bus data" points="456.0,270.0 460.0,262 492.0,262 496.0,270.0 492.0,278 460.0,278"/><text class="val" x="476.0" y="274.0" text-anchor="middle">B</text><polygon class="bus data" points="496.0,270.0 500.0,262 532.0,262 536.0,270.0 532.0,278 500.0,278"/><text class="val" x="516.0" y="274.0" text-anchor="middle">C</text><polygon class="bus data" points="536.0,270.0 540.0,262 572.0,262 576.0,270.0 572.0,278 540.0,278"/><text class="val" x="556.0" y="274.0" text-anchor="middle">0</text><polygon class="bus data" points="576.0,270.0 580.0,262 612.0,262 616.0,270.0 612.0,278 580.0,278"/><text class="val" x="596.0" y="274.0" text-anchor="middle">A</text><polygon class="bus data" points="616.0,270.0 620.0,262 652.0,262 656.0,270.0 652.0,278 620.0,278"/><text class="val" x="636.0" y="274.0" text-anchor="middle">B</text><polygon class="bus data" points="656.0,270.0 660.0,262 692.0,262 696.0,270.0 692.0,278 660.0,278"/><text class="val" x="676.0" y="274.0" text-anchor="middle">C</text><polygon class="bus data" points="696.0,270.0 700.0,262 732.0,262 736.0,270.0 732.0,278 700.0,278"/><text class="val" x="716.0" y="274.0" text-anchor="middle">0</text><polygon class="bus data" points="736.0,270.0 740.0,262 772.0,262 776.0,270.0 772.0,278 740.0,278"/><text class="val" x="756.0" y="274.0" text-anchor="middle">A</text><polygon class="bus data" points="776.0,270.0 780.0,262 812.0,262 816.0,270.0 812.0,278 780.0,278"/><text class="val" x="796.0" y="274.0" text-anchor="middle">B</text><polygon class="bus data" points="816.0,270.0 820.0,262 852.0,262 856.0,270.0 852.0,278 820.0,278"/><text class="val" x="836.0" y="274.0" text-anchor="middle">C</text><polygon class="bus data" points="856.0,270.0 860.0,262 892.0,262 896.0,270.0 892.0,278 860.0,278"/><text class="val" x="876.0" y="274.0" text-anchor="middle">0</text><text class="mlabel l-xfer" x="256.0" y="14" text-anchor="middle">transfer + load</text><text class="mlabel l-xfer" x="416.0" y="14" text-anchor="middle">transfer + load</text><text class="mlabel l-xfer" x="576.0" y="14" text-anchor="middle">transfer + load</text><text class="mlabel l-xfer" x="736.0" y="14" text-anchor="middle">transfer + load</text><text class="mlabel l-xfer" x="896.0" y="14" text-anchor="middle">transfer + load</text></svg></div>
+  <figcaption>My variant on the same one-list test. The transfer and the load happen on the same edge (45, 85, 125, 165, 205 ns), and lists follow each other without an idle cycle.</figcaption></figure>
+  <p>Which one the lab should use is a teaching decision, not a correctness question. Acknowledging at the end is simpler and shows that READY can come long after VALID. Acknowledging at the start frees the source earlier and removes the idle cycle.</p>
+</section>
+
+<section>
+  <h2>9. What I take from this</h2>
+  <ul>
+    <li>Check a protocol claim against the protocol's rules, not against a design habit.</li>
+    <li>A checker has to encode the specification. Mine encoded my assumption, so its 20 "violations" proved nothing.</li>
+    <li>Keep "breaks the protocol" separate from "is a different microarchitecture".</li>
+    <li>When a claim is challenged, run the smallest case. One list settled this question.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>10. Repository state</h2>
+  <ul>
+    <li>Working tree: the controller is Yuri's, as committed in <code>709da7c2</code>. The generator has the uncommitted one-list test.</li>
+    <li><code>stash@{0}</code>: my controller variant together with Yuri's generator fix, <code>start_pointer_valid &amp; start_pointer_ready</code>.</li>
+    <li>This report: <code>misc/ai_sessions/20261127_linked_list_valid_ready/claude/</code>, untracked.</li>
+    <li>The waveforms are drawn from the simulation, sampled in the middle of each clock cycle, with <code>tb.sv</code> driving <code>slow_clk</code> from <code>clk</code> (10 ns period).</li>
+  </ul>
+</section>
+
+<section class="appendix">
+  <h2>Appendix A. Prompts, verbatim</h2>
+  <ol><li><blockquote class="prompt">fix synthax error in /home/verilog/projects/basics-graphics-music/labs/4_microarchitecture/5_5_linked_list_controller/5_5_1_linked_list_controller_fetching_next_from_constant_array/lab_top.sv</blockquote></li><li><blockquote class="prompt">what about now?</blockquote></li><li><blockquote class="prompt">fix it for the standard valid/ready</blockquote></li><li><blockquote class="prompt">in what clock cycles (simulation time) I can see a non-standard valid/ready bahaviour if I stash the changes?</blockquote></li><li><blockquote class="prompt">look at the current test with only 1 list. valid is accepted only after all the list is fetched. I do not see anything non-standard in it. if valid is not acknowledged by ready it is supposed to stay high and input valid pointer is supposed to be stable. This is the rules of AXI protocol.</blockquote></li><li><blockquote class="prompt">create a report in a separate HTML file &quot;how I was wrong to call Yuri&#x27;s valid/ready non-standard&quot;. Describe your assumptions, line of thought, what was incorrect, my correction and your final conclusion. Make two versions - English and Russian. Illustrate with waveforms and code.</blockquote></li></ol>
+</section>
+
+</main>
+</body>
+</html>
