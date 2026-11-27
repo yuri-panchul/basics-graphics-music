@@ -70,108 +70,42 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire [7:0] req;
+    `include "seven_segment_alphabet_function.svh"
 
-    generate
-        if (w_key >= 3)
-        begin : use_keys
-            assign req = 8' (key);
-        end
-        else
-        begin : use_keys_and_switches
-            assign req = 8' ({ sw, key });
-        end
-    endgenerate
+    import linked_list_controller_configuration_and_types_package::*;
 
-    wire [7:0] gnt1, gnt2;
+    pointer_t start_pointer;
+    wire      start_pointer_valid;
+    wire      start_pointer_ready;
 
-    assign led      = w_led' (gnt1);
-    assign abcdefgh = gnt2;
-    assign digit    = w_digit' (gnt2);
+    wire      out_data_valid;
+    data_t    out_data;
 
-    wire enable;
-
-    //------------------------------------------------------------------------
-
-    `ifdef IMPLEMENTATION_1
-
-    // Generate a strobe signal 3 times a second
-
-    strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (3))
-    i_strobe_gen
+    start_pointer_request_generator i_spr
     (
-        .clk    ( clk    ),
-        .rst    ( rst    ),
-        .strobe ( enable )
+        .clock  ( slow_clock ),
+        .reset  ( reset      ),
+
+        .start_pointer,
+        .start_pointer_valid,
+        .start_pointer_ready
     );
 
-       arbiter_1_dumb_big_blob
-    // arbiter_2_rotate_priority_rotate_verbose
-    // arbiter_3_rotate_priority_case_rotate
-    // arbiter_4_rotate_priority_3_assigns_rotate
-    // arbiter_5_rotate_priority_rotate_brief
-    arb1
+    linked_list_controller_1_fetching_next_from_constant_array i_llc
     (
-        .clk ( clk    ),
-        .rst ( rst    ),
-        .ena ( enable ),
-        .req ( req    ),
-        .gnt ( gnt1   )
+        .clock  ( slow_clock ),
+        .reset  ( reset      ),
+
+        .start_pointer,
+        .start_pointer_valid,
+        .start_pointer_ready,
+
+        .out_data_valid,
+        .out_data
     );
 
-    // arbiter_1_dumb_big_blob
-       arbiter_2_rotate_priority_rotate_verbose
-    // arbiter_3_rotate_priority_case_rotate
-    // arbiter_4_rotate_priority_3_assigns_rotate
-    // arbiter_5_rotate_priority_rotate_brief
-    arb2
-    (
-        .clk ( clk    ),
-        .rst ( rst    ),
-        .ena ( enable ),
-        .req ( req    ),
-        .gnt ( gnt2   )
-    );
-
-    `endif
-
-    //------------------------------------------------------------------------
-
-    `ifdef IMPLEMENTATION_2
-
-    // New shorter System Verilog syntax
-
-    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
-    i_strobe_gen (.strobe (enable), .*);
-
-    strobe_gen # (.width (24)) enable_src (.strobe (enable), .*);
-
-    arbiter_3_rotate_priority_case_rotate arb1
-        (.ena (enable), .gnt (gnt1), .*);
-
-    arbiter_4_rotate_priority_3_assigns_rotate arb2
-        (.ena (enable), .gnt (gnt2), .*);
-
-    `endif
-
-    //------------------------------------------------------------------------
-
-    `ifdef IMPLEMENTATION_3
-
-    // Passing signals by position - not recommended.
-    // Can lead to difficult to debug bugs
-    // in industrial code with many signals.
-
-    strobe_gen # (.clk_mhz (clk_mhz), .strobe_hz (3))
-    i_strobe_gen (clk, rst, enable);
-
-    arbiter_1_dumb_big_blob
-    arb1 (clk, rst, enable, req, gnt1);
-
-    arbiter_5_rotate_priority_rotate_brief
-    arb2 (clk, rst, enable, req, gnt2);
-
-    `endif
+    assign led      = out_data_valid ? out_data : '0;
+    assign abcdefgh = out_data_valid ? seven_segment_alphabet (out_data) : '0;
+    assign digit    = w_digit' (1);
 
 endmodule
