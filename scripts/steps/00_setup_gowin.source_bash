@@ -330,15 +330,15 @@ setup_run_directory_for_fpga_synthesis_gowin ()
     do
         # TODO: Remove else after testing on Linux and Windows
 
-        filelist="$verilog_src_dir/filelist.f"
+        sv_file_list="$verilog_src_dir/sv_file_list.f"
         max_depth_opt="-maxdepth 2"
 
-        # If current directory contains filelist.f, then we import files
+        # If current directory contains sv_file_list.f, then we import files
         # placed in subdirectories according to this file
         # and restrict find command to maxdepth=1
 
-#        if [ -f "$filelist" ] ; then
-#            echo "import_files -fileList $(adj_path_for_gowin_win "$filelist")" >> "$dir/fpga_project.tcl"
+#        if [ -f "$sv_file_list" ] ; then
+#            echo "import_files -fileList $(adj_path_for_gowin_win "$sv_file_list")" >> "$dir/fpga_project.tcl"
 #            max_depth_opt="-maxdepth 1"
 #        fi
 

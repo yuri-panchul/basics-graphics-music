@@ -27,10 +27,10 @@ foreach file [glob ../*.{v,sv}] {
     }
 }
 
-set filelist "../filelist.f"
+set sv_file_list "../sv_file_list.f"
 
-if {[file exists $filelist]} {
-    set fp [open $filelist r]
+if {[file exists $sv_file_list]} {
+    set fp [open $sv_file_list r]
     while {[gets $fp line] >= 0} {
         if {$line ne ""} {
             read_verilog -sv ../$line
