@@ -55,57 +55,31 @@ import linked_list_controller_configuration_and_types_package::*;
     // the same two tables are filled by individual assignments.
 
     pointer_t [memory_depth - 1:0] next_pointers;
+    data_t    [memory_depth - 1:0] constant_data_array;
 
     always_comb
     begin
-        next_pointers = '0;
+        next_pointers = '0;       constant_data_array = '0;
 
-        next_pointers [ 1] =  5;  // ABC
-        next_pointers [ 5] =  3;
-        next_pointers [ 3] = 10;
-        next_pointers [10] =  0;
+        next_pointers [ 1] =  5;  constant_data_array [ 1] = "A";  // ABC
+        next_pointers [ 5] =  3;  constant_data_array [ 5] = "B";
+        next_pointers [ 3] = 10;  constant_data_array [ 3] = "C";
+        next_pointers [10] =  0;  constant_data_array [10] =  0;
 
-        next_pointers [ 2] =  4;  // D
-        next_pointers [ 4] =  0;
+        next_pointers [ 2] =  4;  constant_data_array [ 2] = "D";  // D
+        next_pointers [ 4] =  0;  constant_data_array [ 4] =  0;
 
-        next_pointers [ 6] =  0;  // Empty
+        next_pointers [ 6] =  0;  constant_data_array [ 6] =  0;   // Empty
 
-        next_pointers [ 7] = 15;  // EF
-        next_pointers [15] =  8;
-        next_pointers [ 8] =  0;
+        next_pointers [ 7] = 15;  constant_data_array [ 7] = "E";  // EF
+        next_pointers [15] =  8;  constant_data_array [15] = "F";
+        next_pointers [ 8] =  0;  constant_data_array [ 8] =  0;
 
-        next_pointers [ 9] = 14;  // GHIJ
-        next_pointers [14] = 11;
-        next_pointers [11] = 13;
-        next_pointers [13] = 12;
-        next_pointers [12] =  0;
-    end
-
-    data_t [memory_depth - 1:0] constant_data_array;
-
-    always_comb
-    begin
-        constant_data_array = '0;
-
-        constant_data_array [ 1] = "A";  // ABC
-        constant_data_array [ 5] = "B";
-        constant_data_array [ 3] = "C";
-        constant_data_array [10] =  0;
-
-        constant_data_array [ 2] = "D";  // D
-        constant_data_array [ 4] =  0;
-
-        constant_data_array [ 6] =  0;   // Empty
-
-        constant_data_array [ 7] = "E";  // EF
-        constant_data_array [15] = "F";
-        constant_data_array [ 8] =  0;
-
-        constant_data_array [ 9] = "G";  // GHIJ
-        constant_data_array [14] = "H";
-        constant_data_array [11] = "I";
-        constant_data_array [13] = "J";
-        constant_data_array [12] =  0;
+        next_pointers [ 9] = 14;  constant_data_array [ 9] = "G";  // GHIJ
+        next_pointers [14] = 11;  constant_data_array [14] = "H";
+        next_pointers [11] = 13;  constant_data_array [11] = "I";
+        next_pointers [13] = 12;  constant_data_array [13] = "J";
+        next_pointers [12] =  0;  constant_data_array [12] =  0;
     end
 
     `endif
