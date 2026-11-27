@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module linked_list_controller_1_fetching_next_from_constant_array
 import linked_list_controller_configuration_and_types_package::*;
 (

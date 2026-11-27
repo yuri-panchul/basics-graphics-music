@@ -1,3 +1,5 @@
+`include "config.svh"
+
 module start_pointer_request_generator
 import linked_list_controller_configuration_and_types_package::*;
 (
@@ -14,7 +16,7 @@ import linked_list_controller_configuration_and_types_package::*;
     always_ff @ (posedge clock)
         if (reset)
             n_request <= '0;
-        else if (start_pointer_ready)
+        else if (start_pointer_valid & start_pointer_ready)
             n_request <= n_request + 4'd1;
 
     assign start_pointer_valid = (n_request != 4'd8);
