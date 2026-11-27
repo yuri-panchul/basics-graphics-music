@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparing bash coding skills: Claude, Codex, and Grok 4.7</title>
+<style>
+  :root {
+    --ground: #f4f1ea;
+    --surface: #fffdf8;
+    --ink: #1c1915;
+    --muted: #5e574e;
+    --rule: #ddd6c8;
+    --code-bg: #efeae1;
+    --claude: #6d3cc4;
+    --claude-bg: #f3eefe;
+    --codex: #0f6b4c;
+    --codex-bg: #e7f5ef;
+    --grok: #9a4b12;
+    --grok-bg: #f8efe6;
+    --bad: #8d1d1d;
+    --bad-bg: #f8e8e6;
+    --ok: #1d5c32;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #141311;
+      --surface: #1d1b18;
+      --ink: #f3efe6;
+      --muted: #b7afa3;
+      --rule: #3a342c;
+      --code-bg: #12110f;
+      --claude: #d2b8ff;
+      --claude-bg: #2a2238;
+      --codex: #8ed9b8;
+      --codex-bg: #15261f;
+      --grok: #f0b27a;
+      --grok-bg: #2c2118;
+      --bad: #f0a8a2;
+      --bad-bg: #2c1816;
+      --ok: #9ddeaf;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 17px/1.55 Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  }
+  main { max-width: 52rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+  header.banner {
+    background: var(--grok-bg);
+    border: 1px solid var(--rule);
+    border-left: 6px solid var(--grok);
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  header.banner p { margin: 0.2rem 0; }
+  h1, h2, h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; line-height: 1.2; }
+  h1 { font-size: 1.85rem; margin: 0 0 0.6rem; }
+  h2 { font-size: 1.35rem; margin-top: 2.2rem; border-top: 1px solid var(--rule); padding-top: 1.1rem; }
+  h3 { font-size: 1.05rem; margin-bottom: 0.3rem; }
+  p, li { color: var(--ink); }
+  .muted, figcaption, .note { color: var(--muted); }
+  a { color: inherit; }
+  code, pre {
+    font-family: "IBM Plex Mono", ui-monospace, "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 0.86rem;
+  }
+  code { background: var(--code-bg); padding: 0.05rem 0.28rem; }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--rule);
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+    line-height: 1.45;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.4rem; font-size: 0.95rem; }
+  th, td { border: 1px solid var(--rule); padding: 0.45rem 0.55rem; vertical-align: top; text-align: left; }
+  th { background: var(--code-bg); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .card { border: 1px solid var(--rule); background: var(--surface); padding: 0.2rem 1rem 0.6rem; margin: 1rem 0; }
+  .card.claude { border-top: 4px solid var(--claude); }
+  .card.codex { border-top: 4px solid var(--codex); }
+  .card.grok { border-top: 4px solid var(--grok); }
+  .pro li::marker { color: var(--ok); }
+  .con li::marker { color: var(--bad); }
+  ul { padding-left: 1.2rem; }
+  .kicker { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.78rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+
+<header class="banner">
+  <p class="kicker">Report author</p>
+  <p><strong>Grok 4.7</strong>, written by the same model whose script is one of the three under review. The comparison below is of the files on disk. It is not an independent review.</p>
+</header>
+
+<h1>Three Icarus Verilog file-list edits, compared with the baseline</h1>
+<p class="muted">Session directory <code>misc/ai_sessions/20261127_icarus_verilog_script_update</code>. Date of the files read: 27 November 2026.</p>
+
+<p>Each engineer changed only the compile step inside <code>run_icarus_verilog</code> in <code>scripts/steps/00_setup_icarus.source_bash</code>. The rest of that file, including version detection, <code>vvp</code>, and GTKWave, is unchanged. All three commits have the same parent, <code>42d96ecb</code> (“Removed include for package”). The baseline file in <code>~/projects/basics-graphics-music</code> matches that parent.</p>
+
+<table>
+  <thead>
+    <tr><th>Engineer</th><th>Clone and branch</th><th>Commit</th><th>Diff against baseline</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Claude</td>
+      <td><code>~/claude/basics-graphics-music</code><br><code>sv_file_list_icarus_claude</code></td>
+      <td><code>dc104a94</code><br>Icarus: compile the lab files from sv_file_list.f when the lab has one</td>
+      <td>35 insertions, 2 deletions</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td><code>~/codex/basics-graphics-music</code><br><code>sv_file_list_icarus_codex</code></td>
+      <td><code>8cb33921</code><br>Support explicit source lists for Icarus simulation</td>
+      <td>23 insertions, 8 deletions</td>
+    </tr>
+    <tr>
+      <td>Grok 4.7</td>
+      <td><code>~/grok/basics-graphics-music</code><br><code>sv_file_list_icarus_grok</code></td>
+      <td><code>814c3b61</code><br>Use sv_file_list.f for Icarus when a lab provides one.</td>
+      <td>34 insertions, 2 deletions</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>What the baseline does</h2>
+<p>The script runs in the lab’s <code>run/</code> directory. With <code>nullglob</code> on, it compiles every lab <code>../*.sv</code>, then every <code>labs/common/*.sv</code>, then every <code>peripherals/*.sv</code>, then every lab <code>../*.v</code>:</p>
+<pre>iverilog "$icarus_language_option" -s tb \
+    -I .. -I ../cpu -I "$lab_dir/common" -I "$package_dir/peripherals" \
+    ../*.sv "$lab_dir/common"/*.sv "$package_dir/peripherals"/*.sv \
+    ../*.v</pre>
+<p>The shell expands the lab globs in alphabetical order. That order is why a package file can be compiled after a module that imports it. <code>sv_file_list.f</code> exists so a lab can name sources in compile order. Paths in the two lists that are in the tree are relative to the lab directory. The linked-list list names the package, the controller, the request generator, <code>lab_top.sv</code>, and <code>tb.sv</code>. The APS list names headers and sources under <code>pkg/</code>, <code>aps_cpu/</code>, and other subdirectories. It does not name <code>lab_top.sv</code> or <code>tb.sv</code>. Neither list names <code>labs/common</code> or <code>peripherals</code>.</p>
+<p>On this machine, Icarus Verilog 12.0’s <code>-f</code> reads a command file relative to the compiler’s working directory. Blank lines, <code>#</code> comments, and <code>//</code> comments are ignored. A name ending in CR+LF still opened the file. A missing name is a preprocessor error. Those checks are about <code>-f</code>, which only Codex uses.</p>
+
+<h2>Claude</h2>
+<div class="card claude">
+<p>Claude keeps the baseline command and replaces only the two lab globs. If <code>../sv_file_list.f</code> exists, a <code>while read</code> loop strips a trailing CR, skips an empty line, and appends <code>../</code> plus the rest of the line. Every accepted line goes into <code>lab_sv_files</code>, including a <code>.v</code> or <code>.svh</code> name. <code>labs/common</code> and <code>peripherals</code> are still globbed afterward. If the list is absent, <code>../*.sv</code> is passed before those libraries and <code>../*.v</code> after them, which is the baseline order. Empty arrays are expanded as <code>${array[@]+"${array[@]}"}</code> so <code>set -u</code> does not fail on Bash 3.2 or on Bash older than 4.4.</p>
+<h3>Pros</h3>
+<ul class="pro">
+  <li>The comment states the real constraint: a package must be compiled before the files that import it, the list has to contain <code>tb.sv</code>, and the paths match the Vivado flow (<code>../</code> plus a lab-relative name).</li>
+  <li>The CR strip is both implemented and explained, so a list saved with Windows line endings still yields a usable path.</li>
+  <li>The empty-array comment names the actual range, Bash older than 4.4, and gives macOS Bash 3.2 as the example. That is the accurate form of this portability note.</li>
+  <li>Shared libraries stay on the command line. A lab list that only names lab files still compiles <code>labs/common</code> and <code>peripherals</code>, as the baseline did.</li>
+  <li>Include paths and the compiler’s working directory stay at the baseline. Quoted includes and <code>vvp a.out</code> keep their old meaning.</li>
+  <li>The loop is short. A reader can see that each line becomes one filename argument.</li>
+  <li>Labs with no <code>sv_file_list.f</code> keep the baseline glob order, including <code>../*.v</code> after the libraries.</li>
+</ul>
+<h3>Cons</h3>
+<ul class="con">
+  <li>A <code>#</code> or <code>//</code> comment is not empty, so it is passed to <code>iverilog</code> as a filename. Icarus then reports a missing file. The lists in the tree have no comments today. A note added to a list breaks the compile.</li>
+  <li>Leading or trailing spaces are kept. <code>  tb.sv</code> becomes the path <code>../  tb.sv</code>.</li>
+  <li>The array is named <code>lab_sv_files</code> even when the line is a <code>.v</code> or <code>.svh</code> file. The name describes the no-list path, not the list path.</li>
+  <li>The script still lists <code>labs/common/*.sv</code> and <code>peripherals/*.sv</code> itself. That preserves baseline behavior. It is not a full stop to “listing the files by itself.”</li>
+  <li>Lines are always filenames. A list entry that was meant as an <code>iverilog</code> option, such as <code>-I somewhere</code>, becomes one broken path. The current lists do not contain options.</li>
+  <li>For the APS list, <code>lab_top.sv</code> and <code>tb.sv</code> are omitted because the list omits them and the lab glob is no longer used. <code>-s tb</code> then fails. The comment warns about <code>tb.sv</code>, and the APS list does not follow that warning.</li>
+</ul>
+</div>
+
+<h2>Codex</h2>
+<div class="card codex">
+<p>Codex treats <code>sv_file_list.f</code> as an Icarus command file. When the file exists, a subshell <code>cd</code>s to the lab directory and runs:</p>
+<pre>iverilog "$icarus_language_option" -s tb -o run/a.out \
+    -I run -I . -I cpu \
+    -I "$lab_dir/common" -I "$package_dir/peripherals" \
+    -f sv_file_list.f</pre>
+<p><code>-o run/a.out</code> puts the simulator back where <code>vvp a.out</code> expects it. The subshell ends before <code>vvp</code>, so GTKWave still starts in <code>run/</code>. The <code>else</code> branch is the baseline command, copied rather than rebuilt. <code>nullglob</code> is enabled only on that branch.</p>
+<h3>Pros</h3>
+<ul class="pro">
+  <li>This is the smallest change that hands the list to Icarus instead of reimplementing a parser. Blank lines, <code>#</code> comments, <code>//</code> comments, and CR+LF names are handled by Icarus 12.0’s <code>-f</code>, as checked for this report.</li>
+  <li>The comment explains a real compiler rule: <code>-f</code> paths are relative to the working directory, not to the list file. The <code>cd ..</code> is the direct consequence, and <code>-o run/a.out</code> keeps the rest of the function working.</li>
+  <li><code>-I .</code> and <code>-I cpu</code> are the lab-directory equivalents of the baseline’s <code>-I ..</code> and <code>-I ../cpu</code>. The rewrite matches the new working directory.</li>
+  <li>The subshell confines <code>cd</code>. A failed <code>cd</code> or <code>iverilog</code> still fails the pipeline under <code>pipefail</code>.</li>
+  <li>There is no Bash array, no <code>set -u</code> empty-array hazard, and no hand-written trim.</li>
+  <li>The no-list path is the original command, not a reconstruction. It cannot drift from the baseline by accident.</li>
+  <li><code>nullglob</code> is not turned on for the list path, so a later failure cannot leave it set.</li>
+</ul>
+<h3>Cons</h3>
+<ul class="con">
+  <li>The list replaces every source argument, not only the lab globs. <code>labs/common/*.sv</code> and <code>peripherals/*.sv</code> are not compiled. Both lists in the tree omit those directories. A lab that instantiates a module from either directory fails until someone copies those files into the list. Header search still works, because <code>-I</code> for those directories remains.</li>
+  <li>The compiler’s working directory moves from <code>run/</code> to the lab. A quoted include that is found relative to the current directory can now resolve to a different file. The baseline looked up such names from <code>run/</code>.</li>
+  <li><code>-I run</code> is new. The baseline did not search the simulation directory. A generated file in <code>run/</code> whose name matches an include can hide the intended header.</li>
+  <li><code>-f</code> is a command file, not a filename list. A future line that starts with an option is an <code>iverilog</code> option. Claude and Grok would pass that same line as one filename. The current lists are filenames only, so this does not fire today.</li>
+  <li>The comment does not say that <code>tb.sv</code> has to be in the list. For APS, it is not, and <code>-s tb</code> fails. The same gap exists in the other two edits. Codex’s comment does not warn about it.</li>
+  <li>Behavior of comments and CR depends on the installed Icarus. The check for this report was version 12.0. The script does not probe <code>-f</code>.</li>
+</ul>
+</div>
+
+<h2>Grok 4.7</h2>
+<div class="card grok">
+<p>Grok uses the same shape as Claude. The list replaces <code>../*.sv</code> and <code>../*.v</code>. Each kept line is prefixed with <code>../</code>. <code>labs/common</code> and <code>peripherals</code> still follow. The no-list path still puts <code>../*.v</code> after the libraries. The extra parsing, relative to Claude, is whitespace trimming and skipping lines that are empty or that start with <code>#</code> or <code>//</code> after trimming. The array is named <code>lab_sources</code>. The empty-array expansion is the same <code>${name[@]+"${name[@]}"}</code> form.</p>
+<h3>Pros</h3>
+<ul class="pro">
+  <li>Comments and blank lines are ignored in the shell, so a list with notes does not become a missing-file error. Claude would pass those lines through. Codex gets the same result only because Icarus <code>-f</code> ignores them.</li>
+  <li>Leading and trailing whitespace is removed, and a CR is removed before that. <code>  tb.sv</code> and a Windows line both become <code>../tb.sv</code>.</li>
+  <li><code>lab_sources</code> does not claim that every entry is SystemVerilog. A <code>.v</code> or <code>.svh</code> line is still compiled, in list order.</li>
+  <li>Shared <code>labs/common</code> and <code>peripherals</code> sources stay on the command line, so the edit does not drop modules the baseline always compiled.</li>
+  <li>Include paths and the working directory stay at the baseline. <code>vvp a.out</code> does not need a new <code>-o</code> path.</li>
+  <li><code>local -a</code> makes the two arrays explicit. The no-list branch preserves baseline order: lab <code>.sv</code>, common, peripherals, lab <code>.v</code>.</li>
+  <li>The empty-array expansion is safe under <code>set -u</code> on the Bash versions where <code>"${array[@]}"</code> is an error for an empty array.</li>
+</ul>
+<h3>Cons</h3>
+<ul class="con">
+  <li>The comment is thinner than Claude’s. It does not say why order matters, it does not say the list must include <code>tb.sv</code>, and it does not point at the Vivado convention of <code>../</code> plus a lab-relative path. A later editor can break the contract without a comment to catch it.</li>
+  <li>The portability comment says the empty-array form is for Bash 3.2 on macOS. The failure also happens on Bash 4.0 through 4.3. Claude’s wording, “older than 4.4, such as Bash 3.2,” is the better one.</li>
+  <li>The trim uses two nested parameter expansions. They do trim both ends, including an all-whitespace line, but they are harder to audit than Claude’s <code>[ -n "$line" ]</code> test.</li>
+  <li>A filename that actually starts with <code>#</code> or <code>//</code> is dropped. That is unlikely in this repository. It is still a silent filter.</li>
+  <li>The script still globs <code>labs/common</code> and <code>peripherals</code>. Like Claude, it does not stop listing every source itself.</li>
+  <li>The same APS hole remains. That list has no <code>lab_top.sv</code> and no <code>tb.sv</code>, and the lab glob is skipped, so <code>-s tb</code> fails. Grok’s comment does not mention this.</li>
+  <li>The design is the same manual parser as Claude’s, with a stricter line filter. It does not use <code>iverilog -f</code>, so comment handling is now two implementations: this shell filter, and Icarus’s own command-file syntax if someone later switches to <code>-f</code>.</li>
+</ul>
+</div>
+
+<h2>Behavior that the three files actually produce</h2>
+<table>
+  <thead>
+    <tr><th>Question</th><th>Claude</th><th>Codex</th><th>Grok 4.7</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>No <code>sv_file_list.f</code></td><td>Baseline order, rebuilt with two arrays</td><td>Baseline command, copied</td><td>Baseline order, rebuilt with two arrays</td></tr>
+    <tr><td>Lab sources when the list exists</td><td>List order, each line prefixed with <code>../</code></td><td>Whatever <code>-f</code> reads, from the lab directory</td><td>List order, each kept line prefixed with <code>../</code></td></tr>
+    <tr><td><code>labs/common/*.sv</code> and <code>peripherals/*.sv</code></td><td>Still compiled</td><td>Not compiled. Directories stay on <code>-I</code> only</td><td>Still compiled</td></tr>
+    <tr><td>Compiler working directory</td><td><code>run/</code></td><td>Lab directory, inside a subshell</td><td><code>run/</code></td></tr>
+    <tr><td>Blank line</td><td>Skipped</td><td>Ignored by Icarus 12.0 <code>-f</code></td><td>Skipped</td></tr>
+    <tr><td><code>#</code> or <code>//</code> comment</td><td>Passed as a filename. Compile fails</td><td>Ignored by Icarus 12.0 <code>-f</code></td><td>Skipped</td></tr>
+    <tr><td>Trailing CR</td><td>Stripped in Bash</td><td>Accepted by Icarus 12.0 <code>-f</code> in the check for this report</td><td>Stripped in Bash</td></tr>
+    <tr><td>Leading or trailing spaces</td><td>Kept. Path is wrong</td><td>Left to <code>-f</code>. Not retested as a spaced name</td><td>Trimmed</td></tr>
+    <tr><td>Line that is an <code>iverilog</code> option</td><td>One filename argument</td><td>A compiler option</td><td>One filename argument</td></tr>
+    <tr><td>APS list, which omits <code>tb.sv</code> and <code>lab_top.sv</code></td><td><code>-s tb</code> fails. Common modules still compiled</td><td><code>-s tb</code> fails. Common modules not compiled</td><td><code>-s tb</code> fails. Common modules still compiled</td></tr>
+    <tr><td>Empty-array <code>set -u</code> hazard</td><td>Guarded, and the comment is precise</td><td>Does not arise</td><td>Guarded. The comment names only Bash 3.2</td></tr>
+  </tbody>
+</table>
+
+<h2>How the approaches differ</h2>
+<p>Codex answered the request by giving the list to <code>iverilog -f</code> and deleting the source globs from that branch. The result is short, and the shell does not grow a parser. The cost is that the baseline’s shared-library sources disappear, the compiler runs in another directory, and one new include directory appears. That is a different compile from the one the script has been doing, even for a list that is only a lab-local ordering file.</p>
+<p>Claude and Grok answered by replacing the lab globs and leaving the shared libraries in place. For the linked-list list, which already names <code>tb.sv</code> and the package first, both produce the same source order plus the old common and peripheral files. Claude writes the contract in the comment and keeps the parser minimal, at the cost of treating comments and padded lines as filenames. Grok filters those lines and names the array for mixed sources, at the cost of a denser trim and a comment that leaves out the <code>tb.sv</code> requirement and the Bash 4.0–4.3 case.</p>
+<p>None of the three adds top-level lab files that the list forgot. The APS list is the existing example. A compatible reading of “use the list instead of listing the lab files,” which is what Claude and Grok implemented, still needs <code>tb.sv</code> in that list before Icarus can simulate APS. Codex needs that too, and it also needs every common or peripheral module the lab instantiates.</p>
+
+<h2>Appendix: prompt</h2>
+<pre>Read the following files:
+
+~/projects/basics-graphics-music/scripts/steps/00_setup_icarus.source_bash - the baseline
+~/claude/basics-graphics-music/scripts/steps/00_setup_icarus.source_bash
+~/codex/basics-graphics-music/scripts/steps/00_setup_icarus.source_bash
+~/grok/basics-graphics-music/scripts/steps/00_setup_icarus.source_bash
+
+Check the differences against baseline. Write an HTML report with the name   comparing_bash_coding_skills_by_three_llms_by_{model name}.html and put it into 
+your branch in basics-graphics-music/misc/ai_sessions/20261127_icarus_verilog_script_update
+
+Compare all three competing LLM enginers in their coding approaches. List all pros and cons.
+Put your model name at the beginning of the report. Add this prompt in the appendix.</pre>
+
+</main>
+</body>
+</html>
