@@ -126,8 +126,8 @@ run_icarus_verilog ()
         (
             cd ..
 
-            iverilog "$icarus_language_option" -s tb -o run/a.out             \
-                -I run -I . -I cpu -I "$lab_dir/common"                     \
+            iverilog "$icarus_language_option" -s tb -o run/a.out                \
+                -I run -I . -I cpu -I "$lab_dir/common"                          \
                 -I "$package_dir/peripherals" -f sv_file_list.f
         ) 2>&1 | tee "$log"
     else
